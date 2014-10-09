@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
+ * 测试从静安语料库提取短语
  * @author hankcs
  */
 public class TestPhrase extends TestCase
