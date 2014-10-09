@@ -35,27 +35,27 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
             occurrence.addAll(sentence);
         }
         occurrence.compute();
-        System.out.println(occurrence);
-        for (PairFrequency phrase : occurrence.getPhraseByMi())
-        {
-            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tmi=" + phrase.mi + " , ") ;
-        }
-        System.out.println();
-        for (PairFrequency phrase : occurrence.getPhraseByLe())
-        {
-            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tle=" + phrase.le + " , ");
-        }
-        System.out.println();
-        for (PairFrequency phrase : occurrence.getPhraseByRe())
-        {
-            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tre=" + phrase.re + " , ");
-        }
-        System.out.println();
-        for (PairFrequency phrase : occurrence.getPhraseByScore())
-        {
-            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tscore=" + phrase.score + " , ");
-        }
-        System.out.println();
+//        System.out.println(occurrence);
+//        for (PairFrequency phrase : occurrence.getPhraseByMi())
+//        {
+//            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tmi=" + phrase.mi + " , ") ;
+//        }
+//        System.out.println();
+//        for (PairFrequency phrase : occurrence.getPhraseByLe())
+//        {
+//            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tle=" + phrase.le + " , ");
+//        }
+//        System.out.println();
+//        for (PairFrequency phrase : occurrence.getPhraseByRe())
+//        {
+//            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tre=" + phrase.re + " , ");
+//        }
+//        System.out.println();
+//        for (PairFrequency phrase : occurrence.getPhraseByScore())
+//        {
+//            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tscore=" + phrase.score + " , ");
+//        }
+//        System.out.println();
         for (PairFrequency phrase : occurrence.getPhraseByScore())
         {
             if (phraseList.size() == size) break;
@@ -86,8 +86,8 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
                 "在通信物理层等一维信息领域目前常用的算法：无线领域的RRM、RTT，传送领域的调制解调、信道均衡、信号检测、网络优化、信号分解等。\n" +
                 "另外数据挖掘、互联网搜索算法也成为当今的热门方向。\n" +
                 "算法工程师逐渐往人工智能方向发展。";
-        System.out.println(text);
-        List<String> phraseList = exactor.exactPhrase(text, 5);
+//        System.out.println(text);
+        List<String> phraseList = exactor.exactPhrase(text, 10);
         System.out.println(phraseList);
     }
 }

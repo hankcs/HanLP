@@ -259,7 +259,7 @@ public class Occurrence
 
     public void addAll(List<WordResult> resultList)
     {
-        System.out.println(resultList);
+//        System.out.println(resultList);
         String[] termList = new String[resultList.size()];
         int i = 0;
         for (WordResult word : resultList)
