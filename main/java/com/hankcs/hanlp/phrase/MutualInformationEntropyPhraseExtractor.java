@@ -56,6 +56,7 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
 //            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tscore=" + phrase.score + " , ");
 //        }
 //        System.out.println();
+
         for (PairFrequency phrase : occurrence.getPhraseByScore())
         {
             if (phraseList.size() == size) break;
