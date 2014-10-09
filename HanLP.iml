@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/main/resource" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/test/java" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/data/corpus" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: junit:junit:4.7" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.4" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:0.9.28" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:0.9.28" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.6.4" level="project" />
+    <orderEntry type="library" name="Maven: org.ahocorasick:ahocorasick:0.2.4" level="project" />
+  </component>
+</module>
+

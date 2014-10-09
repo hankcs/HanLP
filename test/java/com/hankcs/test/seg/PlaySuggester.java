@@ -1,0 +1,73 @@
+/*
+ * <summary></summary>
+ * <author>He Han</author>
+ * <email>hankcs.cn@gmail.com</email>
+ * <create-date>2014/9/13 22:19</create-date>
+ *
+ * <copyright file="PlaySuggester.java" company="上海林原信息科技有限公司">
+ * Copyright (c) 2003-2014, 上海林原信息科技有限公司. All Right Reserved, http://www.linrunsoft.com/
+ * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
+ * </copyright>
+ */
+package com.hankcs.test.seg;
+
+import com.hankcs.hanlp.suggest.ISuggester;
+import com.hankcs.hanlp.suggest.Suggester;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+/**
+ * @author hankcs
+ */
+public class PlaySuggester
+{
+    public static void main(String[] args) throws Exception
+    {
+        testSuggest();
+    }
+    public static void testSuggest() throws Exception
+    {
+        ISuggester ISuggester = new Suggester();
+        String line;
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("data/title.txt")));
+            while ((line = br.readLine()) != null)
+            {
+                line = line.trim();
+                if (line.length() <= 3 || line.length() > 20) continue;
+                System.out.println("正在读入并处理 " + line);
+                ISuggester.addSentence(line);
+            }
+            br.close();
+        }
+        String[] testCaseArray = new String[]
+                {
+                        "护照丢了",
+                        "租房",
+                        "假日安排",
+                        "身份证丢了",
+                        "就医",
+                        "孩子上学",
+                        "教室资格", // 就算用户输了错别字，也可以矫正一部分
+                };
+        for (String key : testCaseArray)
+        {
+            runCase(ISuggester, key);
+        }
+        Scanner scanner = new Scanner(System.in);
+        while ((line = scanner.nextLine()).length() > 0
+                )
+        {
+            runCase(ISuggester, line);
+        }
+    }
+
+    public static void runCase(ISuggester ISuggester, String key)
+    {
+        long start = System.currentTimeMillis();
+        System.out.println(key + " " + ISuggester.suggest(key, 10) + " " + (System.currentTimeMillis() - start) + "ms");
+    }
+}
