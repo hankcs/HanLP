@@ -62,7 +62,9 @@ public class Vertex
      */
     public Vertex(String word, String realWord, CoreDictionary.Attribute attribute)
     {
-        if (attribute != null && attribute.nature != null && attribute.nature.length == 1)
+        assert word.length() > 0 : "构造空白节点会导致死循环！";
+        if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.n, 1);   // 安全起见
+        if (attribute.nature.length == 1)
         {
             switch (attribute.nature[0])
             {

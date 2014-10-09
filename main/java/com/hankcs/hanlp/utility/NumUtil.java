@@ -25,25 +25,4 @@ public class NumUtil
         }
         return false;
     }
-
-    /**
-     * 是否是数字、连字符的情况，如：３-4月
-     *
-     * @param pos
-     * @param str
-     * @return
-     */
-    public static boolean isNumDelimiter(int pos, String str)
-    {
-        if (str != null && str.length() > 1)
-        {
-            String first = str.substring(0, 1);
-            // //27904='m'*256 29696='t'*256
-            if ((Math.abs(pos) == POSTag.NUM || Math.abs(pos) == POSTag.TIME)
-                    && ("—".equals(first) || "-".equals(first)))
-                return true;
-        }
-        return false;
-    }
-
 }

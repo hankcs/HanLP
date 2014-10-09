@@ -28,7 +28,7 @@ public class BiGramDictionary
     static DoubleArrayTrie<Integer> trie;
 
     public final static String path = "data/dictionary/CoreNatureDictionary.ngram.txt";
-    public static int totalFrequency = 0;
+    public static final int totalFrequency = 37545990;
 //    public final static String path = "data/dictionary/BiGramDictionary.txt";
     // 自动加载词典
     static
@@ -122,19 +122,21 @@ public class BiGramDictionary
     {
         try
         {
-
+            long start = System.currentTimeMillis();
             DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(path + ".value.dat")));
             int size = in.readInt();
             Integer[] value = new Integer[size];
             for (int i = 0; i < size; ++i)
             {
                 value[i] = in.readInt();
-                totalFrequency += value[i];
+//                totalFrequency += value[i];
             }
+//            System.out.println(totalFrequency);
             in.close();
-            logger.trace("值{}加载完毕", path + ".value.dat");
+            logger.trace("值{}加载完毕，耗时{}ms", path + ".value.dat", System.currentTimeMillis() - start);
+            start = System.currentTimeMillis();
             if (!trie.load(path + ".trie.dat", value)) return false;
-            logger.trace("双数组{}加载完毕", path + ".trie.dat");
+            logger.trace("双数组{}加载完毕，耗时{}ms", path + ".trie.dat", System.currentTimeMillis() - start);
         }
         catch (Exception e)
         {

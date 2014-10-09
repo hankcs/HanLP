@@ -32,7 +32,7 @@ import java.util.*;
  */
 public class Segment
 {
-//    static Logger logger = LoggerFactory.getLogger(Segment.class);
+    static Logger logger = LoggerFactory.getLogger(Segment.class);
 
     Config config;
 
@@ -45,9 +45,9 @@ public class Segment
      * 设为索引模式
      * @return
      */
-    public Segment setIndexMode()
+    public Segment enableIndexMode(boolean enable)
     {
-        config.indexMode = true;
+        config.indexMode = enable;
         return this;
     }
 
@@ -174,7 +174,7 @@ public class Segment
             Nature currentNature = current.getNature();
             if (currentNature == Nature.nx && (next.hasNature(Nature.q) || next.hasNature(Nature.n)))
             {
-                String[] param = current.realWord.split("-");
+                String[] param = current.realWord.split("-", 1);
                 if (param.length == 2)
                 {
                     if (Utility.isAllNum(param[0]) && Utility.isAllNum(param[1]))
@@ -326,7 +326,7 @@ public class Segment
     {
         WordNet wordNetOptimum = new WordNet(text);
         WordNet wordNetAll = new WordNet(text);
-        char[] charArray = text.toCharArray();
+//        char[] charArray = text.toCharArray();
         // 粗分
         List<List<Vertex>> coarseResult = BiSegment(text, 2, wordNetOptimum, wordNetAll);
 //        logger.trace("粗分词网：\n{}", wordNetOptimum);

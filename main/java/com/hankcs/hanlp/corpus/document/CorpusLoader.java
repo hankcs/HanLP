@@ -15,7 +15,7 @@ import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
-import com.hankcs.hanlp.corpus.io.Util;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,22 +92,22 @@ public class CorpusLoader
 
     public static List<Document> loadCorpus(String path)
     {
-        return (List<Document>) Util.readObjectFrom(path);
+        return (List<Document>) IOUtil.readObjectFrom(path);
     }
 
     public static boolean saveCorpus(List<Document> documentList, String path)
     {
-        return Util.saveObjectTo(documentList, path);
+        return IOUtil.saveObjectTo(documentList, path);
     }
 
     public static List<List<IWord>> loadSentenceList(String path)
     {
-        return (List<List<IWord>>) Util.readObjectFrom(path);
+        return (List<List<IWord>>) IOUtil.readObjectFrom(path);
     }
 
     public static boolean saveSentenceList(List<List<IWord>> sentenceList, String path)
     {
-        return Util.saveObjectTo(sentenceList, path);
+        return IOUtil.saveObjectTo(sentenceList, path);
     }
 
     public static List<List<IWord>> convert2SentenceList(String path)

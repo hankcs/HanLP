@@ -26,7 +26,7 @@ public class SentencesUtil
 
         List<String> sentences = new LinkedList<>();
 
-        for (int i = 0; i < chars.length; i++)
+        for (int i = 0; i < chars.length; ++i)
         {
             if (sb.length() == 0 && (Character.isWhitespace(chars[i]) || chars[i] == ' '))
             {
@@ -43,6 +43,16 @@ public class SentencesUtil
                         sb = new StringBuilder();
                     }
                     break;
+                case '…':
+                {
+                    if (i < chars.length - 1 && chars[i + 1] == '…')
+                    {
+                        sb.append('…');
+                        ++i;
+                        insertIntoList(sb, sentences);
+                        sb = new StringBuilder();
+                    }
+                }break;
                 case ' ':
                 case '	':
                 case ' ':

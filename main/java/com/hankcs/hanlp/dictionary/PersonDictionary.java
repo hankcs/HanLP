@@ -62,7 +62,8 @@ public class PersonDictionary
         trie.addKeyword("BCD");
         trie.addKeyword("BEE");
         trie.addKeyword("BE");
-        trie.addKeyword("BC");
+        // BC经常导致命中
+//        trie.addKeyword("BC");
         trie.addKeyword("BEC");
         trie.addKeyword("BG");
         trie.addKeyword("DG");
@@ -92,6 +93,7 @@ public class PersonDictionary
         for (NR nr : nrList)
         {
             Vertex current = listIterator.next();
+//            logger.trace("{}/{}", current.realWord, nr);
             switch (nr)
             {
                 case U:
@@ -115,13 +117,13 @@ public class PersonDictionary
                         sbPattern.append(NR.D.toString());  //CD
                     }
                     sbPattern.append(NR.L.toString());
-                    preNR = L;
                     // 对串也做一些修改
                     listIterator.previous();
                     String nowED = current.realWord.substring(current.realWord.length() - 1);
                     String nowL = current.realWord.substring(0, current.realWord.length() - 1);
                     listIterator.set(new Vertex(nowED));
                     listIterator.add(new Vertex(nowL));
+                    listIterator.next();
                     continue;
                 default:
                     sbPattern.append(nr.toString());
@@ -132,6 +134,11 @@ public class PersonDictionary
         String pattern = sbPattern.toString();
 //        logger.trace("模式串：{}", pattern);
 //        logger.trace("对应串：{}", pWordSegResult);
+//        if (pattern.length() != pWordSegResult.size())
+//        {
+//            logger.warn("人民识别模式串有bug", pattern, pWordSegResult);
+//            return;
+//        }
         Collection<Emit> emitCollection = trie.parseText(pattern);
         Vertex[] wordArray = pWordSegResult.toArray(new Vertex[0]);
         int startMax = -1;

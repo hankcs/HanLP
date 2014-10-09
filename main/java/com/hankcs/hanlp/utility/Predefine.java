@@ -85,7 +85,7 @@ public class Predefine
      */
     public static final double dSmoothingPara = 0.1;
 
-    public static int MAX_SENTENCE_LEN = 2000;
+    public static int MAX_SENTENCE_LEN = 100;
 
     //if MIN_PROBLEM==1 then INFINITE_VALUE 10000.00  //The shortest path
     //else INFINITE_VALUE 0.00  //infinite value

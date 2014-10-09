@@ -19,5 +19,11 @@ import java.util.List;
  */
 public interface IPhraseExtractor
 {
-    List<String> exactPhrase(String text, int size);
+    /**
+     * 提取短语
+     * @param text 文本
+     * @param size 希望提取前几个短语
+     * @return 短语列表
+     */
+    List<String> extractPhrase(String text, int size);
 }

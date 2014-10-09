@@ -194,6 +194,7 @@ public class WordNet
             List<Vertex> vertexListFrom = vertexes[row];
             for (Vertex from : vertexListFrom)
             {
+                assert from.realWord.length() > 0 : "空节点会导致死循环！";
                 int toIndex = row + from.realWord.length();
                 for (Vertex to : vertexes[toIndex])
                 {

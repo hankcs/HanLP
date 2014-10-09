@@ -15,7 +15,12 @@
  */
 package com.hankcs.hanlp.collection.trie;
 
+import com.hankcs.hanlp.corpus.util.Util;
+import com.hankcs.hanlp.utility.Utility;
+
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.*;
 
 /**
@@ -421,6 +426,7 @@ public class DoubleArrayTrie<V> implements Serializable
 
     /**
      * 从磁盘加载，需要额外提供值
+     *
      * @param path
      * @param value
      * @return
@@ -434,19 +440,21 @@ public class DoubleArrayTrie<V> implements Serializable
 
     /**
      * 从磁盘加载，需要额外提供值
+     *
      * @param path
      * @param value
      * @return
      */
     public boolean load(String path, V[] value)
     {
-        if (!loadBaseAndCheck(path)) return false;
+        if (!loadBaseAndCheckByFileChannel(path)) return false;
         v = value;
         return true;
     }
 
     /**
      * 从磁盘加载双数组
+     *
      * @param path
      * @return
      */
@@ -466,6 +474,52 @@ public class DoubleArrayTrie<V> implements Serializable
         }
         catch (Exception e)
         {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean loadBaseAndCheckByFileChannel(String path)
+    {
+        try
+        {
+            FileInputStream fis = new FileInputStream(path);
+            // 1.从FileInputStream对象获取文件通道FileChannel
+            FileChannel channel = fis.getChannel();
+            int fileSize = (int) channel.size();
+
+            // 2.从通道读取文件内容
+            ByteBuffer byteBuffer = ByteBuffer.allocate(fileSize);
+
+            // channel.read(ByteBuffer) 方法就类似于 inputstream.read(byte)
+            // 每次read都将读取 allocate 个字节到ByteBuffer
+            channel.read(byteBuffer);
+            // 注意先调用flip方法反转Buffer,再从Buffer读取数据
+            byteBuffer.flip();
+            // 有几种方式可以操作ByteBuffer
+            // 可以将当前Buffer包含的字节数组全部读取出来
+            byte[] bytes = byteBuffer.array();
+            byteBuffer.clear();
+            // 关闭通道和文件流
+            channel.close();
+            fis.close();
+
+            int index = 0;
+            size = Utility.bytesHighFirstToInt(bytes, index);
+            index += 4;
+            base = new int[size + 65535];   // 多留一些，防止越界
+            check = new int[size + 65535];
+            for (int i = 0; i < size; i++)
+            {
+                base[i] = Utility.bytesHighFirstToInt(bytes, index);
+                index += 4;
+                check[i] = Utility.bytesHighFirstToInt(bytes, index);
+                index += 4;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -653,6 +707,7 @@ public class DoubleArrayTrie<V> implements Serializable
 
     /**
      * 优化的前缀查询，可以复用字符数组
+     *
      * @param keyChars
      * @param begin
      * @return

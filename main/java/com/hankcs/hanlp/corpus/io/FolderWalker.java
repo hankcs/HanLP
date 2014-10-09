@@ -25,6 +25,12 @@ import java.util.List;
 public class FolderWalker
 {
     static Logger logger = LoggerFactory.getLogger(FolderWalker.class);
+
+    /**
+     * 打开一个目录，获取全部的文件名
+     * @param path
+     * @return
+     */
     public static List<File> open(String path)
     {
         List<File> fileList = new LinkedList<File>();
@@ -52,13 +58,13 @@ public class FolderWalker
         }
     }
 
-    public static void main(String[] args)
-    {
-        List<File> fileList = FolderWalker.open("D:\\Doc\\语料库\\2014");
-        for (File file : fileList)
-        {
-            System.out.println(file);
-        }
-    }
+//    public static void main(String[] args)
+//    {
+//        List<File> fileList = FolderWalker.open("D:\\Doc\\语料库\\2014");
+//        for (File file : fileList)
+//        {
+//            System.out.println(file);
+//        }
+//    }
 
 }

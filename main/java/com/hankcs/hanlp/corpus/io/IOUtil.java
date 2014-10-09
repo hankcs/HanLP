@@ -20,9 +20,9 @@ import java.io.*;
  * 一些常用的IO操作
  * @author hankcs
  */
-public class Util
+public class IOUtil
 {
-    static Logger logger = LoggerFactory.getLogger(Util.class);
+    static Logger logger = LoggerFactory.getLogger(IOUtil.class);
 
     /**
      * 序列化对象
@@ -69,5 +69,35 @@ public class Util
         }
 
         return null;
+    }
+
+    /**
+     * 一次性读入纯文本
+     * @param path
+     * @return
+     */
+    public static String readTxt(String path)
+    {
+        if (path == null) return null;
+        File file = new File(path);
+        Long fileLength = file.length();
+        byte[] fileContent = new byte[fileLength.intValue()];
+        try
+        {
+            FileInputStream in = new FileInputStream(file);
+            in.read(fileContent);
+            in.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            logger.warn("找不到{}", path, e);
+            return null;
+        }
+        catch (IOException e)
+        {
+            logger.warn("读取{}发生IO异常", path, e);
+            return null;
+        }
+        return new String(fileContent);
     }
 }

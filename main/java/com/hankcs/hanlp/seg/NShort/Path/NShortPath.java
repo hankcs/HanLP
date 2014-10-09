@@ -260,20 +260,16 @@ public class NShortPath
     public List<int[]> getNPaths(int n)
     {
         List<int[]> result = new ArrayList<>();
-        List<int[]> tmp;
-        int nCopy;
 
-        for (int i = 0; i < N && result.size() < Predefine.MAX_SEGMENT_NUM; i++)
+        n = Math.min(Predefine.MAX_SEGMENT_NUM, n);
+        for (int i = 0; i < N && result.size() < n; ++i)
         {
-            tmp = getPaths(i);
-
-            if (n - result.size() < tmp.size())
-                nCopy = n - result.size();
-            else
-                nCopy = tmp.size();
-
-            for (int j = 0; j < nCopy; j++)
-                result.add(tmp.get(j));
+            List<int[]> pathList = getPaths(i);
+            for (int[] path : pathList)
+            {
+                if (result.size() == n) break;
+                result.add(path);
+            }
         }
 
         return result;

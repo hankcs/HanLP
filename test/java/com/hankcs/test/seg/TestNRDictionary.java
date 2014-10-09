@@ -26,7 +26,8 @@ public class TestNRDictionary extends TestCase
     {
         NRDictionary dictionary = new NRDictionary();
         dictionary.load("data/dictionary/person/nr.txt");
-        BaseSearcher searcher = dictionary.getSearcher("龚学平等领导");
+        System.out.println(dictionary.get("为"));
+        BaseSearcher searcher = dictionary.getSearcher("为");
         Map.Entry<String, String> entry;
         while ((entry = searcher.next()) != null)
         {

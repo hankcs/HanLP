@@ -1334,6 +1334,7 @@ public class Utility
 
     /**
      * 转换long类型为string
+     *
      * @param x
      * @return
      */
@@ -1346,5 +1347,35 @@ public class Utility
             sbResult.append(c);
         }
         return sbResult.toString();
+    }
+
+    /**
+     * 字节数组和整型的转换
+     *
+     * @param bytes 字节数组
+     * @return 整型
+     */
+    public static int bytesToInt(byte[] bytes, int start)
+    {
+        int num = bytes[start] & 0xFF;
+        num |= ((bytes[start + 1] << 8) & 0xFF00);
+        num |= ((bytes[start + 2] << 16) & 0xFF0000);
+        num |= ((bytes[start + 3] << 24) & 0xFF000000);
+        return num;
+    }
+
+    /**
+     * 字节数组和整型的转换，高位在前，适用于读取writeInt的数据
+     *
+     * @param bytes 字节数组
+     * @return 整型
+     */
+    public static int bytesHighFirstToInt(byte[] bytes, int start)
+    {
+        int num = bytes[start + 3] & 0xFF;
+        num |= ((bytes[start + 2] << 8) & 0xFF00);
+        num |= ((bytes[start + 1] << 16) & 0xFF0000);
+        num |= ((bytes[start] << 24) & 0xFF000000);
+        return num;
     }
 }
