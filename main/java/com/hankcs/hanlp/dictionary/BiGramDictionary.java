@@ -13,9 +13,13 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.utility.Utility;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.*;
 
 /**
@@ -123,16 +127,26 @@ public class BiGramDictionary
         try
         {
             long start = System.currentTimeMillis();
-            DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(path + ".value.dat")));
-            int size = in.readInt();
+            FileInputStream fis = new FileInputStream(path + ".value.dat");
+            FileChannel channel = fis.getChannel();
+            int fileSize = (int) channel.size();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(fileSize);
+            channel.read(byteBuffer);
+            byteBuffer.flip();
+            byte[] bytes = byteBuffer.array();
+            byteBuffer.clear();
+            channel.close();
+            fis.close();
+
+            int index = 0;
+            int size = Utility.bytesHighFirstToInt(bytes, index);
+            index += 4;
             Integer[] value = new Integer[size];
-            for (int i = 0; i < size; ++i)
+            for (int i = 0; i < size; i++)
             {
-                value[i] = in.readInt();
-//                totalFrequency += value[i];
+                value[i] = Utility.bytesHighFirstToInt(bytes, index);
+                index += 4;
             }
-//            System.out.println(totalFrequency);
-            in.close();
             logger.trace("值{}加载完毕，耗时{}ms", path + ".value.dat", System.currentTimeMillis() - start);
             start = System.currentTimeMillis();
             if (!trie.load(path + ".trie.dat", value)) return false;

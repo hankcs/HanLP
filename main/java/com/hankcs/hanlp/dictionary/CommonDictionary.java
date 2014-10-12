@@ -15,13 +15,8 @@ import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.*;
+import java.util.*;
 
 /**
  * 通用的词典，对应固定格式的词典，但是标签可以泛型化
@@ -36,15 +31,17 @@ public abstract class CommonDictionary<V>
     public boolean load(String path)
     {
         trie = new DoubleArrayTrie<V>();
-        TreeMap<String, V> map = new TreeMap<String, V>();
+        V[] valueArray = onLoadValue(path);
+        if (loadDat(path + ".trie.dat", valueArray)) return true;
+        List<String> keyList = new ArrayList<>(valueArray.length);
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
             String line;
             while ((line = br.readLine()) != null)
             {
-                Map.Entry<String, V> entry = onGenerateEntry(line);
-                map.put(entry.getKey(), entry.getValue());
+                String[] paramArray = line.split("\\s");
+                keyList.add(paramArray[0]);
             }
             br.close();
         }
@@ -52,14 +49,25 @@ public abstract class CommonDictionary<V>
         {
             logger.warn("读取{}失败", path, e);
         }
-        int resultCode = trie.build(map);
+        int resultCode = trie.build(keyList, valueArray);
         if (resultCode != 0)
         {
-            logger.warn("trie建立失败{}", resultCode);
-            return false;
+            logger.warn("trie建立失败{},正在尝试排序后重载", resultCode);
+            if (!sort(path))
+            {
+                return false;
+            }
+            load(path);
         }
+        trie.save(path + ".trie.dat");
         logger.trace("{}加载成功", path);
         return true;
+    }
+
+    private boolean loadDat(String path, V[] valueArray)
+    {
+        if (trie.load(path, valueArray)) return true;
+        return false;
     }
 
     /**
@@ -94,12 +102,46 @@ public abstract class CommonDictionary<V>
     }
 
     /**
-     * 由参数构造一个词条
-     *
-     * @param param
+     * 排序这个词典
+     * @param path
      * @return
      */
-    protected abstract Map.Entry<String, V> onGenerateEntry(String param);
+    public static boolean sort(String path)
+    {
+        TreeMap<String, String> map = new TreeMap<String, String>();
+        try
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                String[] argArray = line.split("\\s");
+                map.put(argArray[0], line);
+            }
+            br.close();
+            // 输出它们
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+            for (Map.Entry<String, String> entry : map.entrySet())
+            {
+                bw.write(entry.getValue());
+                bw.newLine();
+            }
+            bw.close();
+        }
+        catch (Exception e)
+        {
+            logger.warn("读取{}失败", path, e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 实现此方法来加载值
+     * @param path
+     * @return
+     */
+    protected abstract V[] onLoadValue(String path);
 
     public BaseSearcher getSearcher(String text)
     {

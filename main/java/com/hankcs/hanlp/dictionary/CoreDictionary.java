@@ -13,7 +13,9 @@ package com.hankcs.hanlp.dictionary;
 
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.utility.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +32,7 @@ public class CoreDictionary
     static Logger logger = LoggerFactory.getLogger(CoreDictionary.class);
     static DoubleArrayTrie<Attribute> trie = new DoubleArrayTrie<Attribute>();
     public final static String path = "data/dictionary/CoreNatureDictionary.txt";
-    public static int totalFrequency = 0;
+    public static final int totalFrequency = 221894;
 //    public final static String path = "data/dictionary/CoreDictionary.txt";
     // 自动加载词典
     static
@@ -82,21 +84,20 @@ public class CoreDictionary
             logger.info("核心词典加载成功:{}个词条", trie.size());
             // 缓存成dat文件，下次加载会快很多
             if (!trie.save(path + ".trie.dat")) return false;
+            // 缓存值文件
             try
             {
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + ".value.txt")));
-                out.write(String.valueOf(attributeList.size()));
-                out.newLine();
+                DataOutputStream out = new DataOutputStream(new FileOutputStream(path + ".value.dat"));
+                out.writeInt(attributeList.size());
                 for (Attribute attribute : attributeList)
                 {
-                    out.write(attribute.totalFrequency + " ");
-                    out.write(attribute.nature.length + " ");
+                    out.writeInt(attribute.totalFrequency);
+                    out.writeInt(attribute.nature.length);
                     for (int i = 0; i < attribute.nature.length; ++i)
                     {
-                        out.write(attribute.nature[i].ordinal() + " ");
-                        out.write(attribute.frequency[i] + " ");
+                        out.writeInt(attribute.nature[i].ordinal());
+                        out.writeInt(attribute.frequency[i]);
                     }
-                    out.newLine();
                 }
                 out.close();
             }
@@ -125,37 +126,39 @@ public class CoreDictionary
      */
     static boolean loadDat(String path)
     {
-        String line = null;
         try
         {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path + ".value.txt")));
-            line = in.readLine();
-            int size = Integer.parseInt(line);
+            byte[] bytes = IOUtil.readBytes(path + ".value.dat");
+            if (bytes == null) return false;
+            int index = 0;
+            int size = Utility.bytesHighFirstToInt(bytes, index);
+            index += 4;
             Attribute[] attributes = new Attribute[size];
             final Nature[] natureIndexArray = Nature.values();
             for (int i = 0; i < size; ++i)
             {
-                line = in.readLine();
-                String[] args = line.split(" ");
                 // 第一个是全部频次，第二个是词性个数
-                int length = Integer.parseInt(args[1]);
+                int currentTotalFrequency = Utility.bytesHighFirstToInt(bytes, index);
+                index += 4;
+                int length = Utility.bytesHighFirstToInt(bytes, index);
+                index += 4;
                 attributes[i] = new Attribute(length);
-                attributes[i].totalFrequency = Integer.parseInt(args[0]);
-                totalFrequency += attributes[i].totalFrequency;
+                attributes[i].totalFrequency = currentTotalFrequency;
                 for (int j = 0; j < length; ++j)
                 {
-                    attributes[i].nature[j] = natureIndexArray[Integer.parseInt(args[2 + j * 2])];
-                    attributes[i].frequency[j] = Integer.parseInt(args[2 + j * 2 + 1]);
+                    attributes[i].nature[j] = natureIndexArray[Utility.bytesHighFirstToInt(bytes, index)];
+                    index += 4;
+                    attributes[i].frequency[j] = Utility.bytesHighFirstToInt(bytes, index);
+                    index += 4;
                 }
             }
-            in.close();
-            logger.trace("值{}加载完毕", path + ".value.txt");
+            logger.trace("值{}加载完毕", path + ".value.dat");
             if (!trie.load(path + ".trie.dat", attributes)) return false;
             logger.trace("双数组{}加载完毕", path + ".trie.dat");
         }
         catch (Exception e)
         {
-            logger.warn("读取失败，问题发生在{}", line, e);
+            logger.warn("读取失败，问题发生在{}", e);
             return false;
         }
         return true;

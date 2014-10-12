@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * 一些常用的IO操作
@@ -99,5 +101,34 @@ public class IOUtil
             return null;
         }
         return new String(fileContent);
+    }
+
+    /**
+     * 将整个文件读取为字节数组
+     * @param path
+     * @return
+     */
+    public static byte[] readBytes(String path)
+    {
+        try
+        {
+            FileInputStream fis = new FileInputStream(path);
+            FileChannel channel = fis.getChannel();
+            int fileSize = (int) channel.size();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(fileSize);
+            channel.read(byteBuffer);
+            byteBuffer.flip();
+            byte[] bytes = byteBuffer.array();
+            byteBuffer.clear();
+            channel.close();
+            fis.close();
+            return bytes;
+        }
+        catch (Exception e)
+        {
+            logger.warn("读取{}时发生异常", path, e);
+        }
+
+        return null;
     }
 }

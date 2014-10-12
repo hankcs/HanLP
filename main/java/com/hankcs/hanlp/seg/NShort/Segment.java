@@ -433,7 +433,7 @@ public class Segment
      * @param sSentence 句子
      * @return 词网
      */
-    private static WordNet GenerateWordNet(String sSentence, WordNet wordNetStorage)
+    private WordNet GenerateWordNet(String sSentence, WordNet wordNetStorage)
     {
         BaseSearcher searcher = CoreDictionary.getSearcher(sSentence);
         Map.Entry<String, CoreDictionary.Attribute> entry;
@@ -456,11 +456,14 @@ public class Segment
             wordNetStorage.add(p + 1, AtomSegment(sSentence, p, sSentence.length()));
         }
         // 用户词典查询
-        searcher = CustomDictionary.getSearcher(sSentence);
-        while ((entry = searcher.next()) != null)
+        if (config.useCustomDictionary)
         {
-            offset = searcher.getOffset();
-            wordNetStorage.add(offset + 1, new Vertex(entry.getKey(), entry.getValue()));
+            searcher = CustomDictionary.getSearcher(sSentence);
+            while ((entry = searcher.next()) != null)
+            {
+                offset = searcher.getOffset();
+                wordNetStorage.add(offset + 1, new Vertex(entry.getKey(), entry.getValue()));
+            }
         }
         return wordNetStorage;
     }
@@ -613,5 +616,9 @@ public class Segment
          * 是否识别人名
          */
         boolean nameRecognize = true;
+        /**
+         * 是否加载用户词典
+         */
+        boolean useCustomDictionary = false;
     }
 }

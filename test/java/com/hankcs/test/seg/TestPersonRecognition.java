@@ -20,6 +20,6 @@ public class TestPersonRecognition
 {
     public static void main(String[] args)
     {
-        System.out.println(Segment.parse("张朝阳是谁"));
+        System.out.println(Segment.parse("何晗喜欢陈膺奥"));
     }
 }

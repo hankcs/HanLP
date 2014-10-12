@@ -11,6 +11,9 @@
  */
 package com.hankcs.hanlp.dictionary;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.AbstractMap;
 import java.util.Map;
 
@@ -20,8 +23,29 @@ import java.util.Map;
 public class StopWordDictionary extends CommonDictionary<Boolean>
 {
     @Override
-    protected Map.Entry<String, Boolean> onGenerateEntry(String param)
+    protected Boolean[] onLoadValue(String path)
     {
-        return new AbstractMap.SimpleEntry<String, Boolean>(param, true);
+        int size = 0;
+        try
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                ++size;
+            }
+            br.close();
+        }
+        catch (Exception e)
+        {
+            logger.warn("读取{}失败", path, e);
+        }
+        Boolean[] valueArray = new Boolean[size];
+        for (int i = 0; i < valueArray.length; ++i)
+        {
+            valueArray[i] = true;
+        }
+
+        return valueArray;
     }
 }
