@@ -16,6 +16,7 @@ import com.hankcs.hanlp.suggest.Suggester;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
@@ -30,19 +31,9 @@ public class PlaySuggester
     }
     public static void testSuggest() throws Exception
     {
-        ISuggester ISuggester = new Suggester();
-        String line;
-        {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("data/title.txt")));
-            while ((line = br.readLine()) != null)
-            {
-                line = line.trim();
-                if (line.length() <= 3 || line.length() > 20) continue;
-                System.out.println("正在读入并处理 " + line);
-                ISuggester.addSentence(line);
-            }
-            br.close();
-        }
+        ISuggester suggester = new Suggester();
+        load("data/title.txt", suggester);
+        load("data/phrase.txt", suggester);
         String[] testCaseArray = new String[]
                 {
                         "护照丢了",
@@ -52,16 +43,34 @@ public class PlaySuggester
                         "就医",
                         "孩子上学",
                         "教室资格", // 就算用户输了错别字，也可以矫正一部分
+                        "厕所太脏",
                 };
         for (String key : testCaseArray)
         {
-            runCase(ISuggester, key);
+            runCase(suggester, key);
         }
         Scanner scanner = new Scanner(System.in);
+        String line;
         while ((line = scanner.nextLine()).length() > 0
                 )
         {
-            runCase(ISuggester, line);
+            runCase(suggester, line);
+        }
+    }
+
+    public static void load(String path, ISuggester iSuggester) throws IOException
+    {
+        String line;
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            while ((line = br.readLine()) != null)
+            {
+                line = line.trim();
+                if (line.length() <= 3 || line.length() > 20) continue;
+                System.out.println("正在读入并处理 " + line);
+                iSuggester.addSentence(line);
+            }
+            br.close();
         }
     }
 
