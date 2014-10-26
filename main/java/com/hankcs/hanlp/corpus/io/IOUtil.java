@@ -100,6 +100,7 @@ public class IOUtil
             logger.warn("读取{}发生IO异常", path, e);
             return null;
         }
+
         return new String(fileContent);
     }
 
