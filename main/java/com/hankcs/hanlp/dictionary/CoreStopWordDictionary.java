@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 
 /**
@@ -23,7 +24,7 @@ public class CoreStopWordDictionary
     static
     {
         dictionary = new StopWordDictionary();
-        dictionary.load("data/dictionary/stopwords.txt");
+        dictionary.load(HanLP.Config.CoreStopWordDictionaryPath);
     }
 
     public static boolean contains(String key)

@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.dictionary;
 
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -31,7 +32,7 @@ public class CoreDictionary
 {
     static Logger logger = LoggerFactory.getLogger(CoreDictionary.class);
     static DoubleArrayTrie<Attribute> trie = new DoubleArrayTrie<Attribute>();
-    public final static String path = "data/dictionary/CoreNatureDictionary.txt";
+    public final static String path = HanLP.Config.CoreDictionaryPath;
     public static final int totalFrequency = 221894;
 //    public final static String path = "data/dictionary/CoreDictionary.txt";
     // 自动加载词典
@@ -40,7 +41,7 @@ public class CoreDictionary
         long start = System.currentTimeMillis();
         if (!load(path))
         {
-            logger.error("核心词典加载失败");
+            System.err.printf("核心词典%s加载失败\n", path);
             System.exit(-1);
         }
         else

@@ -56,7 +56,7 @@ public class CommonSynonymDictionaryEx
         String line = null;
         try
         {
-            BufferedReader bw = new BufferedReader(new InputStreamReader(inputStream));
+            BufferedReader bw = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             while ((line = bw.readLine()) != null)
             {
                 String[] args = line.split(" ");

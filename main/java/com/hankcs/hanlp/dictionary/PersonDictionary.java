@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.seg.NShort.Path.Vertex;
@@ -53,10 +54,10 @@ public class PersonDictionary
     {
         long start = System.currentTimeMillis();
         dictionary = new NRDictionary();
-        dictionary.load("data/dictionary/person/combined.txt");
-        logger.info("{}加载成功，耗时{}ms", "data/dictionary/person/combined.txt", System.currentTimeMillis() - start);
+        dictionary.load(HanLP.Config.PersonDictionaryPath);
+        logger.info("{}加载成功，耗时{}ms", HanLP.Config.PersonDictionaryPath, System.currentTimeMillis() - start);
         transformMatrixDictionary = new TransformMatrixDictionary<>(NR.class);
-        transformMatrixDictionary.load("data/dictionary/person/nr.tr.txt");
+        transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);
         trie = new Trie().removeOverlaps();
         trie.addKeyword("BBCD");
         trie.addKeyword("BBE");

@@ -23,7 +23,7 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         Segment segment = new Segment().enableNameRecognize(true);
-        System.out.println(segment.seg("上下文等与人名识别相关的成分称为中国人名的构成角色"));
+        System.out.println(segment.seg("关于俞辰方等同志任职的通知"));
     }
 
     public void testIndexSeg() throws Exception

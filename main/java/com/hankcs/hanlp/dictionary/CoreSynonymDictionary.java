@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.EditDistance;
 import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public class CoreSynonymDictionary
     {
         try
         {
-            dictionary = CommonSynonymDictionary.create(new FileInputStream("data/dictionary/synonym/CoreSynonym.txt"));
+            dictionary = CommonSynonymDictionary.create(new FileInputStream(HanLP.Config.CoreSynonymDictionaryDictionaryPath));
         }
         catch (Exception e)
         {

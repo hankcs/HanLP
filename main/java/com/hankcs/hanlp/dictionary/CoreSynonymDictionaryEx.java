@@ -11,8 +11,8 @@
  */
 package com.hankcs.hanlp.dictionary;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.EditDistance;
-import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 import com.hankcs.hanlp.utility.Utility;
 import org.slf4j.Logger;
@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,7 +36,7 @@ public class CoreSynonymDictionaryEx
     {
         try
         {
-            dictionary = CommonSynonymDictionaryEx.create(new FileInputStream("data/dictionary/synonym/CoreSynonym.txt"));
+            dictionary = CommonSynonymDictionaryEx.create(new FileInputStream(HanLP.Config.CoreSynonymDictionaryDictionaryPath));
         }
         catch (Exception e)
         {
@@ -90,7 +89,7 @@ public class CoreSynonymDictionaryEx
             // 停用词
             if (CoreStopWordDictionary.contains(wordResult.sWord)) continue;
             Long[] item = get(wordResult.sWord);
-            logger.trace("{} {}", wordResult.sWord, Arrays.toString(item));
+//            logger.trace("{} {}", wordResult.sWord, Arrays.toString(item));
             if (item == null)
             {
                 if (withUndefinedItem)

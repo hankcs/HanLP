@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -31,7 +32,7 @@ public class BiGramDictionary
     static org.slf4j.Logger logger = LoggerFactory.getLogger(BiGramDictionary.class);
     static DoubleArrayTrie<Integer> trie;
 
-    public final static String path = "data/dictionary/CoreNatureDictionary.ngram.txt";
+    public final static String path = HanLP.Config.BiGramDictionaryPath;
     public static final int totalFrequency = 37545990;
 //    public final static String path = "data/dictionary/BiGramDictionary.txt";
     // 自动加载词典

@@ -31,8 +31,15 @@ public abstract class CommonDictionary<V>
     public boolean load(String path)
     {
         trie = new DoubleArrayTrie<V>();
+        long start = System.currentTimeMillis();
         V[] valueArray = onLoadValue(path);
-        if (loadDat(path + ".trie.dat", valueArray)) return true;
+        logger.trace("加载值{}.value.dat成功，耗时{}ms", path, System.currentTimeMillis() - start);
+        start = System.currentTimeMillis();
+        if (loadDat(path + ".trie.dat", valueArray))
+        {
+            logger.trace("加载键{}.trie.dat成功，耗时{}ms", path, System.currentTimeMillis() - start);
+            return true;
+        }
         List<String> keyList = new ArrayList<>(valueArray.length);
         try
         {
