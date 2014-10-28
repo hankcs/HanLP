@@ -17,11 +17,11 @@ import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.Utility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 核心词典
@@ -30,11 +30,11 @@ import java.util.*;
  */
 public class CoreDictionary
 {
-    static Logger logger = LoggerFactory.getLogger(CoreDictionary.class);
     static DoubleArrayTrie<Attribute> trie = new DoubleArrayTrie<Attribute>();
     public final static String path = HanLP.Config.CoreDictionaryPath;
     public static final int totalFrequency = 221894;
-//    public final static String path = "data/dictionary/CoreDictionary.txt";
+
+    //    public final static String path = "data/dictionary/CoreDictionary.txt";
     // 自动加载词典
     static
     {
@@ -46,14 +46,14 @@ public class CoreDictionary
         }
         else
         {
-            logger.info("{}加载成功，耗时{}ms", path, System.currentTimeMillis() - start);
+            logger.info(path + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
     }
 
 
     public static boolean load(String path)
     {
-        logger.info("核心词典开始加载:{}", path);
+        logger.info("核心词典开始加载:" + path);
         if (loadDat(path)) return true;
         List<String> wordList = new ArrayList<String>();
         List<Attribute> attributeList = new ArrayList<Attribute>();
@@ -79,10 +79,10 @@ public class CoreDictionary
                 attributeList.add(attribute);
                 MAX_FREQUENCY += attribute.totalFrequency;
             }
-            logger.trace("核心词典读入词条{} 全部频次{}，耗时" + (System.currentTimeMillis() - start) +"ms", wordList.size(), MAX_FREQUENCY);
+            logger.info("核心词典读入词条" + wordList.size() + " 全部频次" + MAX_FREQUENCY + "，耗时" + (System.currentTimeMillis() - start) + "ms");
             br.close();
-            logger.trace("核心词典DAT构建结果:{}", trie.build(wordList, attributeList));
-            logger.info("核心词典加载成功:{}个词条", trie.size());
+            logger.info("核心词典DAT构建结果:" + trie.build(wordList, attributeList));
+            logger.info("核心词典加载成功:" + trie.size() + "个词条");
             // 缓存成dat文件，下次加载会快很多
             if (!trie.save(path + ".trie.dat")) return false;
             // 缓存值文件
@@ -104,16 +104,18 @@ public class CoreDictionary
             }
             catch (Exception e)
             {
-                logger.warn("保存失败", e);
+                logger.warning("保存失败" + e);
                 return false;
             }
-        } catch (FileNotFoundException e)
+        }
+        catch (FileNotFoundException e)
         {
-            logger.error("核心词典" + path + "不存在！" + e);
+            logger.warning("核心词典" + path + "不存在！" + e);
             return false;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
-            logger.error("核心词典" + path + "读取错误！" + e);
+            logger.warning("核心词典" + path + "读取错误！" + e);
             return false;
         }
 
@@ -122,6 +124,7 @@ public class CoreDictionary
 
     /**
      * 从磁盘加载双数组
+     *
      * @param path
      * @return
      */
@@ -153,13 +156,13 @@ public class CoreDictionary
                     index += 4;
                 }
             }
-            logger.trace("值{}加载完毕", path + ".value.dat");
+            logger.info("值" + path + ".value.dat" + "加载完毕");
             if (!trie.load(path + ".trie.dat", attributes)) return false;
-            logger.trace("双数组{}加载完毕", path + ".trie.dat");
+            logger.info("双数组" + path + ".trie.dat" + "加载完毕");
         }
         catch (Exception e)
         {
-            logger.warn("读取失败，问题发生在{}", e);
+            logger.warning("读取失败，问题发生在" + e);
             return false;
         }
         return true;
@@ -172,6 +175,7 @@ public class CoreDictionary
 
     /**
      * 获取词频
+     *
      * @param term
      * @return
      */
@@ -184,6 +188,7 @@ public class CoreDictionary
 
     /**
      * 词典是否包含这个词语
+     *
      * @param key
      * @return
      */
@@ -292,6 +297,7 @@ public class CoreDictionary
 
         /**
          * 使用单个词性，默认词频1000构造
+         *
          * @param nature
          */
         public Attribute(Nature nature)
@@ -301,9 +307,10 @@ public class CoreDictionary
 
         /**
          * 获取词性的词频
-         * @deprecated 推荐使用Nature参数！
+         *
          * @param nature 字符串词性
          * @return 词频
+         * @deprecated 推荐使用Nature参数！
          */
         public int getNatureFrequency(String nature)
         {
@@ -320,6 +327,7 @@ public class CoreDictionary
 
         /**
          * 获取词性的词频
+         *
          * @param nature 词性
          * @return 词频
          */

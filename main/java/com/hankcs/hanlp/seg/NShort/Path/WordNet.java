@@ -15,20 +15,17 @@ import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.regex.Pattern;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
 public class WordNet
 {
-    static Logger logger = LoggerFactory.getLogger(WordNet.class);
     /**
      * 节点，每一行都是前缀词，跟图的表示方式不同
      */
@@ -243,7 +240,7 @@ public class WordNet
                         {
                             // 我们不能直接改，因为很多条线路在公用指针
 //                            from.realWord += to.realWord;
-                            logger.trace("合并【" + from.realWord + "】和【" + to.realWord + "】");
+                            logger.info("合并【" + from.realWord + "】和【" + to.realWord + "】");
                             listIteratorFrom.set(Vertex.newAddressInstance(from.realWord + to.realWord));
 //                            listIteratorTo.remove();
                             break;

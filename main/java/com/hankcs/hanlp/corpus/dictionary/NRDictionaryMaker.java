@@ -17,12 +17,12 @@ import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.Predefine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * @author hankcs
@@ -38,7 +38,7 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
     @Override
     protected void addToDictionary(List<List<Word>> sentenceList)
     {
-        logger.trace("开始制作词典");
+        logger.warning("开始制作词典");
         // 将非A的词语保存下来
         for (List<Word> wordList : sentenceList)
         {
@@ -68,11 +68,11 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
     @Override
     protected void roleTag(List<List<Word>> sentenceList)
     {
-        logger.trace("开始标注角色");
+        logger.info("开始标注角色");
         int i = 0;
         for (List<Word> wordList : sentenceList)
         {
-            logger.trace("{} / {}", ++i, sentenceList.size());
+            logger.info(++i + " / " + sentenceList.size());
             if (verbose) System.out.println("原始语料 " + wordList);
             // 先标注A和K
             Word pre = new Word("##始##", "begin");

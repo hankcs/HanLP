@@ -19,13 +19,11 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.PersonDictionary;
 import com.hankcs.hanlp.seg.NShort.Path.Vertex;
 import com.hankcs.hanlp.seg.NShort.Path.WordNet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeSet;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 人名识别

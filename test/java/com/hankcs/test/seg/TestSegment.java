@@ -23,7 +23,7 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         Segment segment = new Segment().enableNameRecognize(true);
-        System.out.println(segment.seg("关于俞辰方等同志任职的通知"));
+        System.out.println(segment.seg("何晗喜欢陈膺奥"));
     }
 
     public void testIndexSeg() throws Exception

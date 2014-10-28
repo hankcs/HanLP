@@ -17,9 +17,7 @@ import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.NShort.Path.Vertex;
 import com.hankcs.hanlp.seg.NShort.Path.WordNet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 import java.util.*;
 
 /**
@@ -27,7 +25,6 @@ import java.util.*;
  */
 public class AddressRecognition
 {
-    static Logger logger = LoggerFactory.getLogger(AddressRecognition.class);
     public static boolean Recognition(List<Vertex> vertexList, WordNet graphOptimum)
     {
         AddressType[] tagArray = tagByDictionary(vertexList);   // 逆向最长匹配得出标签
@@ -146,7 +143,7 @@ public class AddressRecognition
             sbTrace.append(vertex.realWord).append('/').append(addressTypeArray[i]).append(',');
             ++i;
         }
-        logger.trace(sbTrace.toString());
+        logger.info(sbTrace.toString());
         return addressTypeArray;
     }
 

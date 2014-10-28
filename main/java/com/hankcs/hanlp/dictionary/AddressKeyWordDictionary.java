@@ -12,18 +12,16 @@
 package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.TreeMap;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * @author hankcs
  */
 public class AddressKeyWordDictionary
 {
-    static Logger logger = LoggerFactory.getLogger(AddressKeyWordDictionary.class);
     static DoubleArrayTrie<Integer> trie = new DoubleArrayTrie<Integer>();
     public final static String path = "data/dictionary/address/keyword.txt";
     // 自动加载词典
@@ -31,7 +29,7 @@ public class AddressKeyWordDictionary
     {
         if (!load(path))
         {
-            logger.error("地址词典加载失败");
+            logger.severe("地址词典加载失败");
             System.exit(-1);
         }
     }
@@ -39,7 +37,7 @@ public class AddressKeyWordDictionary
 
     public static boolean load(String path)
     {
-        logger.info("地址词典开始加载:{}", path);
+        logger.info("地址词典开始加载:" + path);
         TreeMap<String, Integer> stringIntegerMap = new TreeMap<String, Integer>();
         BufferedReader br = null;
         try
@@ -51,23 +49,20 @@ public class AddressKeyWordDictionary
                 String param[] = line.split(" ");
                 stringIntegerMap.put(param[0], Integer.valueOf(param[1]));
             }
-            logger.trace("地址词典读入词条{}", stringIntegerMap.size());
+            logger.info("地址词典读入词条{}" + stringIntegerMap.size());
             br.close();
         } catch (FileNotFoundException e)
         {
-            logger.error("地址词典" + path + "不存在！");
-            e.printStackTrace();
+            logger.severe("地址词典" + path + "不存在！");
             return false;
         } catch (IOException e)
         {
-            logger.error("地址词典" + path + "读取错误！");
-            e.printStackTrace();
+            logger.severe("地址词典" + path + "读取错误！");
             return false;
         }
 
-        logger.trace("地址词典DAT构建结果:{}", trie.build(stringIntegerMap));
-        logger.info("地址词典加载成功:{}个词条", trie.size());
-        logger.trace("“市”对应的属性:{}", trie.getValueAt(trie.exactMatchSearch("市")).toString());
+        logger.info("地址词典DAT构建结果:" + trie.build(stringIntegerMap));
+        logger.info("地址词典加载成功:" + trie.size() + "个词条");
         return true;
     }
 

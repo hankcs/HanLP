@@ -14,10 +14,9 @@ package com.hankcs.hanlp.seg.NShort.Path;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.Predefine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 顶点
@@ -25,7 +24,6 @@ import java.util.Map;
  */
 public class Vertex
 {
-    static Logger logger = LoggerFactory.getLogger(Vertex.class);
     /**
      * 节点对应的词或等效词（如未##数）
      */
@@ -232,7 +230,7 @@ public class Vertex
                 word = Predefine.TAG_TIME;
                 break;
             default:
-                logger.warn("没有与" + nature + "对应的case");
+                logger.warning("没有与" + nature + "对应的case");
                 break;
         }
 

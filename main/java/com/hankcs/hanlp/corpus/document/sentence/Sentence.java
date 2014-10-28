@@ -13,22 +13,19 @@ package com.hankcs.hanlp.corpus.document.sentence;
 
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.WordFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 句子，指的是以。，：！结尾的句子
  * @author hankcs
  */
 public class Sentence implements Serializable
 {
-    static Logger logger = LoggerFactory.getLogger(Sentence.class);
     public List<IWord> wordList;
 
     public Sentence(List<IWord> wordList)
@@ -61,7 +58,7 @@ public class Sentence implements Serializable
             IWord word = WordFactory.create(single);
             if (word == null)
             {
-                logger.warn("在用{}构造单词时失败", single);
+                logger.warning("在用" + single + "构造单词时失败");
                 return null;
             }
             wordList.add(word);

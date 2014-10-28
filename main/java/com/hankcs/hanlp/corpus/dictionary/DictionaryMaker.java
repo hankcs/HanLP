@@ -13,20 +13,18 @@ package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
-import com.hankcs.hanlp.corpus.dictionary.item.SimpleItem;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * @author hankcs
  */
 public class DictionaryMaker implements ISaveAble
 {
-    static Logger logger = LoggerFactory.getLogger(DictionaryMaker.class);
     BinTrie<Item> trie;
 
     public DictionaryMaker()
@@ -36,6 +34,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 向词典中加入一个词语
+     *
      * @param word 词语
      */
     public void add(IWord word)
@@ -54,6 +53,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 读取所有条目
+     *
      * @param path
      * @return
      */
@@ -69,7 +69,7 @@ public class DictionaryMaker implements ISaveAble
                 Item item = Item.create(line);
                 if (item == null)
                 {
-                    logger.warn("使用【{}】创建Item失败", line);
+                    logger.warning("使用【" + line + "】创建Item失败");
                     return null;
                 }
                 itemList.add(item);
@@ -77,7 +77,7 @@ public class DictionaryMaker implements ISaveAble
         }
         catch (Exception e)
         {
-            logger.warn("读取词典{}发生异常", path, e);
+            logger.warning("读取词典" + path + "发生异常" + e);
             return null;
         }
 
@@ -86,6 +86,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 插入全部条目
+     *
      * @param itemList
      */
     public void addAll(List<Item> itemList)
@@ -98,6 +99,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 插入新条目，不执行合并
+     *
      * @param itemList
      */
     public void addAllNotCombine(List<Item> itemList)
@@ -110,6 +112,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 插入条目
+     *
      * @param item
      */
     public void add(Item item)
@@ -128,6 +131,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 插入条目，但是不合并，如果已有则忽略
+     *
      * @param item
      */
     public void addNotCombine(Item item)
@@ -142,6 +146,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 合并两部词典
+     *
      * @param pathA
      * @param pathB
      * @return
@@ -157,6 +162,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 合并多部词典
+     *
      * @param pathArray
      * @return
      */
@@ -165,7 +171,7 @@ public class DictionaryMaker implements ISaveAble
         DictionaryMaker dictionaryMaker = new DictionaryMaker();
         for (String path : pathArray)
         {
-            logger.trace("正在处理{}", path);
+            logger.warning("正在处理" + path);
             dictionaryMaker.addAll(DictionaryMaker.loadAsItemList(path));
         }
         return dictionaryMaker;
@@ -173,17 +179,18 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 对除第一个之外的词典执行标准化，并且合并
+     *
      * @param pathArray
      * @return
      */
     public static DictionaryMaker combineWithNormalization(String[] pathArray)
     {
         DictionaryMaker dictionaryMaker = new DictionaryMaker();
-        logger.trace("正在处理主词典{}", pathArray[0]);
+        logger.info("正在处理主词典" + pathArray[0]);
         dictionaryMaker.addAll(DictionaryMaker.loadAsItemList(pathArray[0]));
         for (int i = 1; i < pathArray.length; ++i)
         {
-            logger.trace("正在处理副词典{}，将执行新词合并模式", pathArray[i]);
+            logger.info("正在处理副词典" + pathArray[i] + "，将执行新词合并模式");
             dictionaryMaker.addAllNotCombine(DictionaryMaker.loadAsItemList(pathArray[i]));
         }
         return dictionaryMaker;
@@ -191,17 +198,18 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 合并，只补充除第一个词典外其他词典的新词
+     *
      * @param pathArray
      * @return
      */
     public static DictionaryMaker combineWhenNotInclude(String[] pathArray)
     {
         DictionaryMaker dictionaryMaker = new DictionaryMaker();
-        logger.trace("正在处理主词典{}", pathArray[0]);
+        logger.info("正在处理主词典" + pathArray[0]);
         dictionaryMaker.addAll(DictionaryMaker.loadAsItemList(pathArray[0]));
         for (int i = 1; i < pathArray.length; ++i)
         {
-            logger.trace("正在处理副词典{}，并且过滤已有词典", pathArray[i]);
+            logger.info("正在处理副词典" + pathArray[i] + "，并且过滤已有词典");
             dictionaryMaker.addAllNotCombine(DictionaryMaker.normalizeFrequency(DictionaryMaker.loadAsItemList(pathArray[i])));
         }
         return dictionaryMaker;
@@ -232,7 +240,7 @@ public class DictionaryMaker implements ISaveAble
         }
         catch (Exception e)
         {
-            logger.warn("保存到{}失败", path, e);
+            logger.warning("保存到" + path + "失败" + e);
             return false;
         }
 
@@ -246,6 +254,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 允许保存之前对其做一些调整
+     *
      * @param path
      * @param filter
      * @return
@@ -268,7 +277,7 @@ public class DictionaryMaker implements ISaveAble
         }
         catch (Exception e)
         {
-            logger.warn("保存到{}失败", path, e);
+            logger.warning("保存到" + path + "失败" + e);
             return false;
         }
 
@@ -277,6 +286,7 @@ public class DictionaryMaker implements ISaveAble
 
     /**
      * 调整频次，按排序后的次序给定频次
+     *
      * @param itemList
      * @return 处理后的列表
      */

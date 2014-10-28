@@ -13,18 +13,15 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
 public class UnknownWordDictionary
 {
-    static Logger logger = LoggerFactory.getLogger(UnknownWordDictionary.class);
     DoubleArrayTrie<Attribute> trie;
     protected String name;
 
@@ -36,7 +33,7 @@ public class UnknownWordDictionary
 
     public boolean load(String path)
     {
-        logger.info("{}词典开始加载:{}", name, path);
+        logger.info(name + "词典开始加载:" + path);
         List<String> wordList = new ArrayList<String>();
         List<Attribute> attributeList = new ArrayList<Attribute>();
         BufferedReader br = null;
@@ -76,25 +73,25 @@ public class UnknownWordDictionary
             br.close();
         } catch (FileNotFoundException e)
         {
-            logger.error(name + "词典" + path + "不存在！");
+            logger.severe(name + "词典" + path + "不存在！");
             e.printStackTrace();
             return false;
         } catch (IOException e)
         {
-            logger.error(name + "词典" + path + "读取错误！");
+            logger.severe(name + "词典" + path + "读取错误！");
             e.printStackTrace();
             return false;
         }
 
         int resultCode = trie.build(wordList, attributeList);
-        logger.trace(name + "词典DAT构建结果:{}", resultCode);
+        logger.info(name + "词典DAT构建结果:" + resultCode);
         if (resultCode < 0)
         {
             sortListForBuildTrie(wordList, attributeList, path);
             trie = new DoubleArrayTrie<Attribute>();
             load(path);
         }
-        logger.info(name + "词典加载成功:{}个词条", trie.size());
+        logger.info(name + "词典加载成功:" + trie.size() + "个词条");
         return true;
     }
 

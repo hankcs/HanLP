@@ -12,22 +12,13 @@
 package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
-import com.hankcs.hanlp.corpus.tag.NR;
-import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.utility.Predefine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
 public abstract class CommonDictionaryMaker implements ISaveAble
 {
-    static Logger logger = LoggerFactory.getLogger(CommonDictionaryMaker.class);
     static boolean verbose = false;
     /**
      * 语料库中的单词

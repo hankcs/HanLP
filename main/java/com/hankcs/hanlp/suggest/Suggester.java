@@ -11,17 +11,14 @@
  */
 package com.hankcs.hanlp.suggest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
 public class Suggester implements ISuggester
 {
-    static Logger logger = LoggerFactory.getLogger(Suggester.class);
     Map<IdVector, Set<String>> storage;
 
     public Suggester()

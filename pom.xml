@@ -131,25 +131,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- 日志开始-->
-        <!-- 日志框架API -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
-        </dependency>
-        <!-- 日志实现提供者 -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback-classic.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <!-- 拦截 apache commons logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

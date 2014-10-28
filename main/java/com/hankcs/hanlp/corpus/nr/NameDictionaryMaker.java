@@ -14,19 +14,17 @@ package com.hankcs.hanlp.corpus.nr;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.NR;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * @author hankcs
  */
 public class NameDictionaryMaker
 {
-    static Logger L = LoggerFactory.getLogger(NRCorpusLoader.class);
     public static DictionaryMaker create(String path)
     {
         DictionaryMaker dictionaryMaker = new DictionaryMaker();
@@ -69,11 +67,11 @@ public class NameDictionaryMaker
                 }
             }
             br.close();
-            L.info(dictionaryMaker.toString());
+            logger.info(dictionaryMaker.toString());
         }
         catch (Exception e)
         {
-            L.warn("读取{}发生错误", path);
+            logger.warning("读取" + path + "发生错误");
             return null;
         }
 

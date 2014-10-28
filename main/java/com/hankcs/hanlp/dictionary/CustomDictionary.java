@@ -14,12 +14,10 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 用户自定义词典
  *
@@ -27,7 +25,6 @@ import java.util.*;
  */
 public class CustomDictionary
 {
-    static Logger logger = LoggerFactory.getLogger(CustomDictionary.class);
     static BinTrie<CoreDictionary.Attribute> trie = new BinTrie<CoreDictionary.Attribute>();
     public final static String path = "data/dictionary/CustomDictionary.txt";
 
@@ -36,14 +33,14 @@ public class CustomDictionary
     {
         if (!load(path))
         {
-            logger.error("自定义词典加载失败");
+            logger.severe("自定义词典加载失败");
             System.exit(-1);
         }
     }
 
     public static boolean load(String path)
     {
-        logger.trace("自定义词典开始加载:{}", path);
+        logger.info("自定义词典开始加载:" + path);
         List<String> wordList = new ArrayList<String>();
         try
         {
@@ -67,17 +64,15 @@ public class CustomDictionary
         }
         catch (FileNotFoundException e)
         {
-            logger.error("自定义词典" + path + "不存在！");
-            e.printStackTrace();
+            logger.severe("自定义词典" + path + "不存在！" + e);
             return false;
         }
         catch (IOException e)
         {
-            logger.error("自定义词典" + path + "读取错误！");
-            e.printStackTrace();
+            logger.severe("自定义词典" + path + "读取错误！" + e);
             return false;
         }
-        logger.trace("自定义词典加载成功:{}个词条", wordList.size());
+        logger.info("自定义词典加载成功:" + wordList.size() + "个词条");
         return true;
     }
 

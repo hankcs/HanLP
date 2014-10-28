@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.util.AbstractMap;
 import java.util.Map;
 
+import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * @author hankcs
  */
@@ -38,7 +40,7 @@ public class StopWordDictionary extends CommonDictionary<Boolean>
         }
         catch (Exception e)
         {
-            logger.warn("读取{}失败", path, e);
+            logger.warning("读取" + path + "失败" + e);
         }
         Boolean[] valueArray = new Boolean[size];
         for (int i = 0; i < valueArray.length; ++i)

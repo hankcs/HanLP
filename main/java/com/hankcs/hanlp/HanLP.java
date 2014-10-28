@@ -11,7 +11,10 @@
  */
 package com.hankcs.hanlp;
 
+import com.hankcs.hanlp.utility.Predefine;
+
 import java.util.Properties;
+import java.util.logging.Level;
 
 /**
  * 常用接口静态化
@@ -75,6 +78,10 @@ public class HanLP
                 {
                     System.out.println("没有找到HanLP.properties，将采用默认配置");
                 }
+            }
+            if (!DEBUG)
+            {
+                Predefine.logger.setLevel(Level.OFF);
             }
         }
     }

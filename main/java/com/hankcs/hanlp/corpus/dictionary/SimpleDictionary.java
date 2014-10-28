@@ -12,13 +12,13 @@
 package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 可以调整大小的词典
@@ -27,7 +27,6 @@ import java.util.Map;
  */
 public abstract class SimpleDictionary<V>
 {
-    static Logger logger = LoggerFactory.getLogger(SimpleDictionary.class);
     BinTrie<V> trie;
 
     public boolean load(String path)
@@ -46,7 +45,7 @@ public abstract class SimpleDictionary<V>
         }
         catch (Exception e)
         {
-            logger.warn("读取{}失败", path, e);
+            logger.warning("读取" + path + "失败" + e);
             return false;
         }
         return true;
@@ -54,6 +53,7 @@ public abstract class SimpleDictionary<V>
 
     /**
      * 查询一个单词
+     *
      * @param key
      * @return 单词对应的条目
      */
@@ -64,6 +64,7 @@ public abstract class SimpleDictionary<V>
 
     /**
      * 由参数构造一个词条
+     *
      * @param line
      * @return
      */

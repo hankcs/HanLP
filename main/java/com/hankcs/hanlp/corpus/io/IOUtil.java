@@ -11,23 +11,23 @@
  */
 package com.hankcs.hanlp.corpus.io;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * 一些常用的IO操作
+ *
  * @author hankcs
  */
 public class IOUtil
 {
-    static Logger logger = LoggerFactory.getLogger(IOUtil.class);
-
     /**
      * 序列化对象
+     *
      * @param o
      * @param path
      * @return
@@ -42,8 +42,7 @@ public class IOUtil
         }
         catch (IOException e)
         {
-            logger.warn("在保存对象{}到{}时发生异常", o, path);
-            logger.warn(e.toString());
+            logger.warning("在保存对象" + o + "到" + path + "时发生异常" + e);
             return false;
         }
 
@@ -52,6 +51,7 @@ public class IOUtil
 
     /**
      * 反序列化对象
+     *
      * @param path
      * @return
      */
@@ -67,7 +67,7 @@ public class IOUtil
         }
         catch (IOException | ClassNotFoundException e)
         {
-            logger.warn("在从{}读取对象时发生异常", path, e);
+            logger.warning("在从" + path + "读取对象时发生异常" + e);
         }
 
         return null;
@@ -75,6 +75,7 @@ public class IOUtil
 
     /**
      * 一次性读入纯文本
+     *
      * @param path
      * @return
      */
@@ -92,12 +93,12 @@ public class IOUtil
         }
         catch (FileNotFoundException e)
         {
-            logger.warn("找不到{}", path, e);
+            logger.warning("找不到" + path + e);
             return null;
         }
         catch (IOException e)
         {
-            logger.warn("读取{}发生IO异常", path, e);
+            logger.warning("读取" + path + "发生IO异常" + e);
             return null;
         }
 
@@ -106,6 +107,7 @@ public class IOUtil
 
     /**
      * 将整个文件读取为字节数组
+     *
      * @param path
      * @return
      */
@@ -127,7 +129,7 @@ public class IOUtil
         }
         catch (Exception e)
         {
-            logger.warn("读取{}时发生异常", path, e);
+            logger.warning("读取" + path + "时发生异常" + e);
         }
 
         return null;

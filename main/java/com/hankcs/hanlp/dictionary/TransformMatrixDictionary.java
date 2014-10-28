@@ -11,14 +11,12 @@
  */
 package com.hankcs.hanlp.dictionary;
 
-import com.hankcs.hanlp.corpus.tag.NR;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 转移矩阵词典
@@ -28,7 +26,6 @@ import java.util.Arrays;
  */
 public class TransformMatrixDictionary<E extends Enum<E>>
 {
-    static Logger logger = LoggerFactory.getLogger(TransformMatrixDictionary.class);
     Class<E> enumType;
     /**
      * 内部标签下标最大值不超过这个值，用于矩阵创建
@@ -147,7 +144,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
         }
         catch (Exception e)
         {
-            logger.warn("读取{}失败", path, e);
+            logger.warning("读取" + path + "失败" + e);
         }
 
         return true;
@@ -179,6 +176,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
 
     /**
      * 获取e的总频次
+     *
      * @param e
      * @return
      */
@@ -189,6 +187,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
 
     /**
      * 获取所有标签的总频次
+     *
      * @return
      */
     public int getTotalFrequency()

@@ -13,9 +13,6 @@ package com.hankcs.hanlp.utility;
 
 import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import com.hankcs.hanlp.seg.NShort.Path.Vertex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static com.hankcs.hanlp.utility.Predefine.*;
 
 /**

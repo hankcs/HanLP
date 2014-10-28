@@ -15,13 +15,11 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.EditDistance;
 import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 import com.hankcs.hanlp.utility.Utility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 核心同义词词典
  *
@@ -29,7 +27,6 @@ import java.util.List;
  */
 public class CoreSynonymDictionaryEx
 {
-    static Logger logger = LoggerFactory.getLogger(CoreSynonymDictionaryEx.class);
     static CommonSynonymDictionaryEx dictionary;
 
     static
@@ -40,7 +37,7 @@ public class CoreSynonymDictionaryEx
         }
         catch (Exception e)
         {
-            logger.warn("载入核心同义词词典失败", e);
+            logger.warning("载入核心同义词词典失败" + e);
         }
     }
 

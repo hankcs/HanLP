@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.utility;
 
+import java.util.logging.Logger;
+
 /**
  * @author He Han
  */
@@ -138,4 +140,8 @@ public class Predefine
      */
     public final static String TAG_PEOPLE = "未##人";
 
+    /**
+     * 日志组件
+     */
+    public static Logger logger = Logger.getLogger("HanLP");
 }

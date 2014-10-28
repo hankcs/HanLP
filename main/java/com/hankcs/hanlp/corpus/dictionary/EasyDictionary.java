@@ -14,21 +14,21 @@ package com.hankcs.hanlp.corpus.dictionary;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
 
+import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * 一个通用的、满足特定格式的双数组词典
+ *
  * @author hankcs
  */
 public class EasyDictionary
 {
-    static Logger logger = LoggerFactory.getLogger(EasyDictionary.class);
     DoubleArrayTrie<Attribute> trie = new DoubleArrayTrie<Attribute>();
-    
+
     public static EasyDictionary create(String path)
     {
         EasyDictionary dictionary = new EasyDictionary();
@@ -36,17 +36,17 @@ public class EasyDictionary
         {
             return dictionary;
         }
-        else 
+        else
         {
-            logger.warn("从{}读取失败", path);
+            logger.warning("从" + path + "读取失败");
         }
-        
+
         return null;
     }
 
     private boolean load(String path)
     {
-        logger.info("通用词典开始加载:{}", path);
+        logger.info("通用词典开始加载:" + path);
         List<String> wordList = new ArrayList<String>();
         List<Attribute> attributeList = new ArrayList<Attribute>();
         BufferedReader br = null;
@@ -68,23 +68,22 @@ public class EasyDictionary
                 }
                 attributeList.add(attribute);
             }
-            logger.info("通用词典读入词条{} 属性{}", wordList.size(), attributeList.size());
+            logger.info("通用词典读入词条" + wordList.size() + " 属性" + attributeList.size());
             br.close();
         }
         catch (FileNotFoundException e)
         {
-            logger.error("通用词典" + path + "不存在！", e);
+            logger.severe("通用词典" + path + "不存在！" + e);
             return false;
         }
         catch (IOException e)
         {
-            logger.error("通用词典" + path + "读取错误！", e);
+            logger.severe("通用词典" + path + "读取错误！" + e);
             return false;
         }
 
-        logger.trace("通用词典DAT构建结果:{}", trie.build(wordList, attributeList));
-        logger.info("通用词典加载成功:{}个词条", trie.size());
-        logger.trace("“一”对应的属性:{}", trie.getValueAt(trie.exactMatchSearch("一")).toString());
+        logger.info("通用词典DAT构建结果:" + trie.build(wordList, attributeList));
+        logger.info("通用词典加载成功:" + trie.size() +"个词条" );
         return true;
     }
 

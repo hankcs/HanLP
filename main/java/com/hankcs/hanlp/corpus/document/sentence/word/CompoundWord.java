@@ -11,19 +11,16 @@
  */
 package com.hankcs.hanlp.corpus.document.sentence.word;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 复合词，由两个或以上的word构成
  * @author hankcs
  */
 public class CompoundWord implements IWord
 {
-    static Logger logger = LoggerFactory.getLogger(CompoundWord.class);
     /**
      * 由这些词复合而来
      */
@@ -96,7 +93,7 @@ public class CompoundWord implements IWord
             Word word = Word.create(single);
             if (word == null)
             {
-                logger.warn("使用参数{}构造单词时发生错误", single);
+                logger.warning("使用参数" + single + "构造单词时发生错误");
                 return null;
             }
             wordList.add(word);

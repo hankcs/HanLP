@@ -11,21 +11,17 @@
  */
 package com.hankcs.hanlp.corpus.io;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 遍历目录工具类
  * @author hankcs
  */
 public class FolderWalker
 {
-    static Logger logger = LoggerFactory.getLogger(FolderWalker.class);
-
     /**
      * 打开一个目录，获取全部的文件名
      * @param path

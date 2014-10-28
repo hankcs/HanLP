@@ -11,16 +11,13 @@
  */
 package com.hankcs.hanlp.corpus.document.sentence.word;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 一个单词
  * @author hankcs
  */
 public class Word implements IWord
 {
-    static Logger logger = LoggerFactory.getLogger(Word.class);
     /**
      * 单词的真实值，比如“程序”
      */
@@ -53,7 +50,7 @@ public class Word implements IWord
         int cutIndex = param.lastIndexOf('/');
         if (cutIndex <= 0 || cutIndex == param.length() - 1)
         {
-            logger.warn("使用{}创建单个单词失败", param);
+            logger.warning("使用 " + param + "创建单个单词失败");
             return null;
         }
 

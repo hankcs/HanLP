@@ -12,23 +12,18 @@
 package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.seg.NShort.Path.Vertex;
 import com.hankcs.hanlp.seg.NShort.Path.WordNet;
 import org.ahocorasick.trie.Emit;
 import org.ahocorasick.trie.Trie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
 import static com.hankcs.hanlp.corpus.tag.NR.B;
-import static com.hankcs.hanlp.corpus.tag.NR.E;
-import static com.hankcs.hanlp.corpus.tag.NR.L;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 人名识别用的词典，实际上是对两个词典的包装
@@ -36,7 +31,6 @@ import static com.hankcs.hanlp.corpus.tag.NR.L;
  */
 public class PersonDictionary
 {
-    static Logger logger = LoggerFactory.getLogger(PersonDictionary.class);
     /**
      * 人名词典
      */
@@ -55,7 +49,7 @@ public class PersonDictionary
         long start = System.currentTimeMillis();
         dictionary = new NRDictionary();
         dictionary.load(HanLP.Config.PersonDictionaryPath);
-        logger.info("{}加载成功，耗时{}ms", HanLP.Config.PersonDictionaryPath, System.currentTimeMillis() - start);
+        logger.info(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<>(NR.class);
         transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);
         trie = new Trie().removeOverlaps();

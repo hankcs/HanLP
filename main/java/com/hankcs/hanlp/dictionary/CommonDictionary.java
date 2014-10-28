@@ -12,11 +12,11 @@
 package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 通用的词典，对应固定格式的词典，但是标签可以泛型化
@@ -25,7 +25,6 @@ import java.util.*;
  */
 public abstract class CommonDictionary<V>
 {
-    static Logger logger = LoggerFactory.getLogger(CommonDictionary.class);
     DoubleArrayTrie<V> trie;
 
     public boolean load(String path)
@@ -33,11 +32,11 @@ public abstract class CommonDictionary<V>
         trie = new DoubleArrayTrie<V>();
         long start = System.currentTimeMillis();
         V[] valueArray = onLoadValue(path);
-        logger.trace("加载值{}.value.dat成功，耗时{}ms", path, System.currentTimeMillis() - start);
+        logger.info("加载值" + path + ".value.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         start = System.currentTimeMillis();
         if (loadDat(path + ".trie.dat", valueArray))
         {
-            logger.trace("加载键{}.trie.dat成功，耗时{}ms", path, System.currentTimeMillis() - start);
+            logger.info("加载键" + path + ".trie.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
             return true;
         }
         List<String> keyList = new ArrayList<>(valueArray.length);
@@ -54,12 +53,12 @@ public abstract class CommonDictionary<V>
         }
         catch (Exception e)
         {
-            logger.warn("读取{}失败", path, e);
+            logger.warning("读取" + path + "失败" + e);
         }
         int resultCode = trie.build(keyList, valueArray);
         if (resultCode != 0)
         {
-            logger.warn("trie建立失败{},正在尝试排序后重载", resultCode);
+            logger.warning("trie建立失败" + resultCode + ",正在尝试排序后重载");
             if (!sort(path))
             {
                 return false;
@@ -67,7 +66,7 @@ public abstract class CommonDictionary<V>
             load(path);
         }
         trie.save(path + ".trie.dat");
-        logger.trace("{}加载成功", path);
+        logger.warning(path + "加载成功");
         return true;
     }
 
@@ -101,6 +100,7 @@ public abstract class CommonDictionary<V>
 
     /**
      * 词典大小
+     *
      * @return
      */
     public int size()
@@ -110,6 +110,7 @@ public abstract class CommonDictionary<V>
 
     /**
      * 排序这个词典
+     *
      * @param path
      * @return
      */
@@ -137,7 +138,7 @@ public abstract class CommonDictionary<V>
         }
         catch (Exception e)
         {
-            logger.warn("读取{}失败", path, e);
+            logger.warning("读取" + path + "失败" + e);
             return false;
         }
         return true;
@@ -145,6 +146,7 @@ public abstract class CommonDictionary<V>
 
     /**
      * 实现此方法来加载值
+     *
      * @param path
      * @return
      */

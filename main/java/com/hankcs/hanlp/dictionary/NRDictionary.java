@@ -23,10 +23,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
-* 一个好用的人名词典
-* @author hankcs
-*/
+ * 一个好用的人名词典
+ *
+ * @author hankcs
+ */
 public class NRDictionary extends CommonDictionary<EnumItem<NR>>
 {
     @Override
@@ -56,7 +59,7 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
         }
         catch (Exception e)
         {
-            logger.warn("读取{}失败", path, e);
+            logger.warning("读取" + path + "失败" + e);
         }
         valueArray = valueList.toArray(new EnumItem[0]);
         saveDat(path + ".value.dat", valueArray);
@@ -109,7 +112,7 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
         }
         catch (Exception e)
         {
-            logger.warn("保存失败", e);
+            logger.warning("保存失败" + e);
             return false;
         }
         return true;

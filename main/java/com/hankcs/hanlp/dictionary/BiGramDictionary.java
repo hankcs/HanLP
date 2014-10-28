@@ -14,14 +14,13 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
-import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Utility;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.*;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 2元语法词典
@@ -29,7 +28,6 @@ import java.util.*;
  */
 public class BiGramDictionary
 {
-    static org.slf4j.Logger logger = LoggerFactory.getLogger(BiGramDictionary.class);
     static DoubleArrayTrie<Integer> trie;
 
     public final static String path = HanLP.Config.BiGramDictionaryPath;
@@ -41,17 +39,17 @@ public class BiGramDictionary
         long start = System.currentTimeMillis();
         if (!load(path))
         {
-            logger.error("二元词典加载失败");
+            logger.severe("二元词典加载失败");
             System.exit(-1);
         }
         else
         {
-            logger.info("{}加载成功，耗时{}ms", path, System.currentTimeMillis() - start);
+            logger.info(path + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
     }
     public static boolean load(String path)
     {
-        logger.info("二元词典开始加载:{}", path);
+        logger.info("二元词典开始加载:"+ path);
         trie = new DoubleArrayTrie<>();
         boolean create = !loadDat(path);
         if (!create) return true;
@@ -71,28 +69,28 @@ public class BiGramDictionary
                 freqList.add(freq);
             }
             br.close();
-            logger.info("二元词典读取完毕:{}，开始构建DAT……", path);
+            logger.info("二元词典读取完毕:" + path + "，开始构建DAT……");
         } catch (FileNotFoundException e)
         {
-            logger.error("二元词典" + path + "不存在！", e);
+            logger.severe("二元词典" + path + "不存在！"+ e);
             return false;
         } catch (IOException e)
         {
-            logger.error("二元词典" + path + "读取错误！", e);
+            logger.severe("二元词典" + path + "读取错误！"+ e);
             return false;
         }
 
         int resultCode = trie.build(wordList, freqList);
-        logger.trace("二元词典DAT构建结果:{}", resultCode);
+        logger.info("二元词典DAT构建结果:{}"+ resultCode);
         if (resultCode < 0)
         {
             trie = new DoubleArrayTrie<Integer>();
-            logger.trace("二元词典排序中……");
+            logger.info("二元词典排序中……");
             sortListForBuildTrie(wordList, freqList, path);
-            logger.trace("二元词典排序完毕，正在重试加载……");
+            logger.info("二元词典排序完毕，正在重试加载……");
             return load(path);
         }
-        logger.info("二元词典加载成功:{}个词条", trie.size());
+        logger.info("二元词典加载成功:" + trie.size() + "个词条");
         // 试一试保存
         if (create)
         {
@@ -148,10 +146,10 @@ public class BiGramDictionary
                 value[i] = Utility.bytesHighFirstToInt(bytes, index);
                 index += 4;
             }
-            logger.trace("值{}加载完毕，耗时{}ms", path + ".value.dat", System.currentTimeMillis() - start);
+            logger.info("加载值" + path + ".value.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
             start = System.currentTimeMillis();
             if (!trie.load(path + ".trie.dat", value)) return false;
-            logger.trace("双数组{}加载完毕，耗时{}ms", path + ".trie.dat", System.currentTimeMillis() - start);
+            logger.info("加载键" + path + ".trie.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
         catch (Exception e)
         {

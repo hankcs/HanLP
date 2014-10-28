@@ -18,19 +18,17 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.corpus.util.Precompiler;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.Utility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * @author hankcs
  */
 public class NatureDictionaryMaker extends CommonDictionaryMaker
 {
-    static Logger logger = LoggerFactory.getLogger(NatureDictionaryMaker.class);
 
     public NatureDictionaryMaker(EasyDictionary dictionary)
     {
@@ -40,7 +38,7 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
     @Override
     protected void addToDictionary(List<List<Word>> sentenceList)
     {
-        logger.trace("开始制作词典");
+        logger.info("开始制作词典");
         // 制作NGram词典
         for (List<Word> wordList : sentenceList)
         {
@@ -59,11 +57,11 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
     @Override
     protected void roleTag(List<List<Word>> sentenceList)
     {
-        logger.trace("开始标注");
+        logger.info("开始标注");
         int i = 0;
         for (List<Word> wordList : sentenceList)
         {
-            logger.trace("{} / {}", ++i, sentenceList.size());
+            logger.info(++i + " / " + sentenceList.size());
             for (Word word : wordList)
             {
                 Precompiler.compile(word);  // 编译为等效字符串

@@ -11,8 +11,6 @@
  */
 package com.hankcs.hanlp.corpus.dictionary;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -21,14 +19,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 转移矩阵词典制作工具
  * @author hankcs
  */
 public class TMDictionaryMaker implements ISaveAble
 {
-    static Logger logger = LoggerFactory.getLogger(TMDictionaryMaker.class);
     Map<String, Map<String, Integer>> transferMatrix;
 
     public TMDictionaryMaker()
@@ -99,7 +96,7 @@ public class TMDictionaryMaker implements ISaveAble
         }
         catch (Exception e)
         {
-            logger.warn("在保存转移矩阵词典到{}时发生异常", path, e);
+            logger.warning("在保存转移矩阵词典到" + path + "时发生异常" + e);
             return false;
         }
         return true;

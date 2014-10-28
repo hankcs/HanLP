@@ -13,14 +13,14 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.synonym.Synonym;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.TreeMap;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 一个没有指定资源位置的通用同义词词典
@@ -29,7 +29,6 @@ import java.util.TreeMap;
  */
 public class CommonSynonymDictionary
 {
-    static Logger logger = LoggerFactory.getLogger(CommonSynonymDictionary.class);
     DoubleArrayTrie<SynonymItem> trie;
 
     private CommonSynonymDictionary()
@@ -71,14 +70,13 @@ public class CommonSynonymDictionary
             int resultCode = trie.build(treeMap);
             if (resultCode != 0)
             {
-                logger.warn("构建{}失败，错误码{}", inputStream, resultCode);
+                logger.warning("构建" + inputStream + "失败，错误码" + resultCode);
                 return false;
             }
         }
         catch (Exception e)
         {
-            logger.warn("读取{}失败，可能由行{}造成", inputStream, line);
-            logger.warn("具体信息", e);
+            logger.warning("读取" + inputStream + "失败，可能由行" + line + "造成");
             return false;
         }
         return true;
@@ -91,6 +89,7 @@ public class CommonSynonymDictionary
 
     /**
      * 语义距离
+     *
      * @param a
      * @param b
      * @return
@@ -184,6 +183,7 @@ public class CommonSynonymDictionary
 
         /**
          * 语义距离
+         *
          * @param other
          * @return
          */
@@ -194,6 +194,7 @@ public class CommonSynonymDictionary
 
         /**
          * 创建一个@类型的词典之外的条目
+         *
          * @param word
          * @return
          */

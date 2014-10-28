@@ -16,8 +16,6 @@ import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,12 +24,13 @@ import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * @author hankcs
  */
 public class CorpusLoader
 {
-    static Logger logger = LoggerFactory.getLogger(CorpusLoader.class);
     public static void walk(String folderPath, Handler handler)
     {
         long start = System.currentTimeMillis();
@@ -66,7 +65,7 @@ public class CorpusLoader
             }
             catch (InterruptedException e)
             {
-                logger.warn("多线程异常", e);
+                logger.warning("多线程异常" + e);
             }
         }
         System.out.printf("花费时间%d ms\n", System.currentTimeMillis() - start);

@@ -13,22 +13,21 @@ package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 
+import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * 2-gram词典制作工具
+ *
  * @author hankcs
  */
 public class NGramDictionaryMaker
 {
-    static Logger logger = LoggerFactory.getLogger(NGramDictionaryMaker.class);
-
     BinTrie<Integer> trie;
     /**
      * 转移矩阵
@@ -53,6 +52,7 @@ public class NGramDictionaryMaker
 
     /**
      * 保存NGram词典和转移矩阵
+     *
      * @param path
      * @return
      */
@@ -65,6 +65,7 @@ public class NGramDictionaryMaker
 
     /**
      * 保存NGram词典
+     *
      * @param path
      * @return
      */
@@ -82,7 +83,7 @@ public class NGramDictionaryMaker
         }
         catch (Exception e)
         {
-            logger.warn("在保存NGram词典到{}时发生异常", path, e);
+            logger.warning("在保存NGram词典到" + path + "时发生异常" + e);
             return false;
         }
 
@@ -91,6 +92,7 @@ public class NGramDictionaryMaker
 
     /**
      * 保存转移矩阵
+     *
      * @param path
      * @return
      */

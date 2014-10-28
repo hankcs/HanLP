@@ -13,22 +13,19 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.recognition.ns.AddressType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 地址词典
  * @author hankcs
  */
 public class AddressDictionary
 {
-    static Logger logger = LoggerFactory.getLogger(AddressDictionary.class);
     static DoubleArrayTrie<AddressType> trie = new DoubleArrayTrie<AddressType>();
     static
     {
@@ -48,14 +45,14 @@ public class AddressDictionary
         load("data/dictionary/address/SuffixNumber.txt", AddressType.SuffixNumber, storeMap);
         load("data/dictionary/address/symbol.txt", AddressType.Symbol, storeMap);
 //        load("data/dictionary/address/village.txt", AddressType.Village, storeMap);
-        logger.trace("trie构建结果：" + trie.build(storeMap));
+        logger.info("trie构建结果：" + trie.build(storeMap));
 
     }
     static boolean load(String path, AddressType addressType, TreeMap<String, AddressType> storeMap)
     {
         try
         {
-            logger.trace("地址词典开始加载" + path);
+            logger.info("地址词典开始加载" + path);
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
             String line;
             while ((line = br.readLine()) != null)
@@ -68,7 +65,7 @@ public class AddressDictionary
         }
         catch (IOException e)
         {
-            logger.trace("地址词典加载" + path + "失败");
+            logger.info("地址词典加载" + path + "失败");
             e.printStackTrace();
         }
 

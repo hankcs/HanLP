@@ -14,14 +14,12 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.algoritm.BinarySearch;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.synonym.Synonym;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 一个没有指定资源位置的通用同义词词典
  *
@@ -29,7 +27,6 @@ import java.util.*;
  */
 public class CommonSynonymDictionaryEx
 {
-    static Logger logger = LoggerFactory.getLogger(CommonSynonymDictionaryEx.class);
     DoubleArrayTrie<Long[]> trie;
 
     private CommonSynonymDictionaryEx()
@@ -86,14 +83,13 @@ public class CommonSynonymDictionaryEx
             int resultCode = trie.build(keyList, valueList);
             if (resultCode != 0)
             {
-                logger.warn("构建{}失败，错误码{}", inputStream, resultCode);
+                logger.warning("构建" + inputStream + "失败，错误码" + resultCode);
                 return false;
             }
         }
         catch (Exception e)
         {
-            logger.warn("读取{}失败，可能由行{}造成", inputStream, line);
-            logger.warn("具体信息", e);
+            logger.warning("读取" + inputStream + "失败，可能由行" + line + "造成" + e);
             return false;
         }
         return true;

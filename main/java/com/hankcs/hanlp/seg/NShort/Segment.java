@@ -20,11 +20,9 @@ import com.hankcs.hanlp.seg.NShort.Path.*;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.SentencesUtil;
 import com.hankcs.hanlp.utility.Utility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * N最短分词法的分词器
  *
@@ -32,8 +30,6 @@ import java.util.*;
  */
 public class Segment
 {
-    static Logger logger = LoggerFactory.getLogger(Segment.class);
-
     Config config;
 
     public Segment()

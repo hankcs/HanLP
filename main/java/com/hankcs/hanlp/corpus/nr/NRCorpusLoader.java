@@ -15,20 +15,17 @@ import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.NR;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 对人名语料的解析，并且生成词典
  * @author hankcs
  */
 public class NRCorpusLoader
 {
-    static Logger L = LoggerFactory.getLogger(NRCorpusLoader.class);
     public static boolean load(String path)
     {
         try
@@ -67,7 +64,7 @@ public class NRCorpusLoader
                 }
             }
             br.close();
-            L.info(dictionaryMaker.toString());
+            logger.info(dictionaryMaker.toString());
             dictionaryMaker.saveTxtTo("data/dictionary/person/name.txt", new DictionaryMaker.Filter()
             {
                 @Override
@@ -79,7 +76,7 @@ public class NRCorpusLoader
         }
         catch (Exception e)
         {
-            L.warn("读取{}发生错误", path);
+            logger.warning("读取" + path + "发生错误");
             return false;
         }
 
