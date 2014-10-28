@@ -11,19 +11,19 @@
  */
 package com.hankcs.hanlp.recognition.nr;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.algoritm.ViterbiEx;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.dictionary.PersonDictionary;
+import com.hankcs.hanlp.dictionary.nr.PersonDictionary;
 import com.hankcs.hanlp.seg.NShort.Path.Vertex;
 import com.hankcs.hanlp.seg.NShort.Path.WordNet;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 人名识别
@@ -35,35 +35,37 @@ public class PersonRecognition
     public static boolean Recognition(List<Vertex> pWordSegResult, WordNet graphOptimum)
     {
         List<EnumItem<NR>> roleTagList = roleTag(pWordSegResult);
-//        {
-//            StringBuilder sbLog = new StringBuilder();
-//            Iterator<Vertex> iterator = pWordSegResult.iterator();
-//            for (EnumItem<NR> nrEnumItem : roleTagList)
-//            {
-//                sbLog.append('[');
-//                sbLog.append(iterator.next().realWord);
-//                sbLog.append(' ');
-//                sbLog.append(nrEnumItem);
-//                sbLog.append(']');
-//            }
-//            logger.trace("人名角色观察：{}", sbLog.toString());
-//        }
+        if (HanLP.Config.DEBUG)
+        {
+            StringBuilder sbLog = new StringBuilder();
+            Iterator<Vertex> iterator = pWordSegResult.iterator();
+            for (EnumItem<NR> nrEnumItem : roleTagList)
+            {
+                sbLog.append('[');
+                sbLog.append(iterator.next().realWord);
+                sbLog.append(' ');
+                sbLog.append(nrEnumItem);
+                sbLog.append(']');
+            }
+            System.out.printf("人名角色观察：%s\n", sbLog.toString());
+        }
         List<NR> nrList = viterbiExCompute(roleTagList);
-//        {
-//            StringBuilder sbLog = new StringBuilder();
-//            Iterator<Vertex> iterator = pWordSegResult.iterator();
-//            sbLog.append('[');
-//            for (NR nr : nrList)
-//            {
-//                sbLog.append(iterator.next().realWord);
-//                sbLog.append('/');
-//                sbLog.append(nr);
-//                sbLog.append(" ,");
-//            }
-//            if (sbLog.length() > 1) sbLog.delete(sbLog.length() - 2, sbLog.length());
-//            sbLog.append(']');
-//            logger.trace("人名角色标注：{}", sbLog.toString());
-//        }
+        if (HanLP.Config.DEBUG)
+        {
+            StringBuilder sbLog = new StringBuilder();
+            Iterator<Vertex> iterator = pWordSegResult.iterator();
+            sbLog.append('[');
+            for (NR nr : nrList)
+            {
+                sbLog.append(iterator.next().realWord);
+                sbLog.append('/');
+                sbLog.append(nr);
+                sbLog.append(" ,");
+            }
+            if (sbLog.length() > 1) sbLog.delete(sbLog.length() - 2, sbLog.length());
+            sbLog.append(']');
+            System.out.printf("人名角色标注：%s\n", sbLog.toString());
+        }
 
         PersonDictionary.parsePattern(nrList, pWordSegResult, graphOptimum);
         return true;

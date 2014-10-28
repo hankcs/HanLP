@@ -347,13 +347,25 @@ public class Occurrence
     public void compute()
     {
         entrySetPair = triePair.entrySet();
+        double total_mi = 0;
+        double total_le = 0;
+        double total_re = 0;
         for (Map.Entry<String, PairFrequency> entry : entrySetPair)
         {
             PairFrequency value = entry.getValue();
             value.mi = computeMutualInformation(value);
             value.le = computeLeftEntropy(value);
             value.re = computeRightEntropy(value);
-            value.score = value.mi + value.le + value.re;   // 简单地将三项得分取和
+            total_mi += value.mi;
+            total_le += value.le;
+            total_re += value.re;
+        }
+
+        for (Map.Entry<String, PairFrequency> entry : entrySetPair)
+        {
+            PairFrequency value = entry.getValue();
+            value.score = value.mi / total_mi + value.le / total_le+ value.re / total_re;   // 归一化
+            value.score *= entrySetPair.size();
         }
     }
 
@@ -382,6 +394,6 @@ public class Occurrence
                                   "算法工程师逐渐往人工智能方向发展。");
         occurrence.compute();
         System.out.println(occurrence);
-        System.out.println(occurrence.getPhraseByMi());
+        System.out.println(occurrence.getPhraseByScore());
     }
 }

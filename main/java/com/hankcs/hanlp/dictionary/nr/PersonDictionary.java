@@ -9,10 +9,11 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.dictionary;
+package com.hankcs.hanlp.dictionary.nr;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.NR;
+import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.NShort.Path.Vertex;
 import com.hankcs.hanlp.seg.NShort.Path.WordNet;
 import org.ahocorasick.trie.Emit;
@@ -60,7 +61,7 @@ public class PersonDictionary
         trie.addKeyword("BEE");
         trie.addKeyword("BE");
         // BC经常导致命中
-//        trie.addKeyword("BC");
+        trie.addKeyword("BC");
         trie.addKeyword("BEC");
         trie.addKeyword("BG");
         trie.addKeyword("DG");

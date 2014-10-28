@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.seg.NShort;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -22,7 +23,9 @@ import com.hankcs.hanlp.utility.SentencesUtil;
 import com.hankcs.hanlp.utility.Utility;
 
 import java.util.*;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * N最短分词法的分词器
  *
@@ -39,6 +42,7 @@ public class Segment
 
     /**
      * 设为索引模式
+     *
      * @return
      */
     public Segment enableIndexMode(boolean enable)
@@ -70,7 +74,10 @@ public class Segment
         ///////////////生成词图////////////////////
         Graph graph = GenerateBiGraph(wordNetAll);
 //        logger.trace(graph.toString());
-//        logger.trace("打印词图：\n" + graph.printByTo());
+        if (HanLP.Config.DEBUG)
+        {
+            System.out.printf("打印词图：%s\n", graph.printByTo());
+        }
         ///////////////N-最短路径////////////////////
         NShortPath nShortPath = new NShortPath(graph, nKind);
         List<int[]> spResult = nShortPath.getNPaths(nKind * 2);
@@ -97,7 +104,10 @@ public class Segment
     {
 //        logger.trace("细分词网：\n{}", wordNetOptimum);
         Graph graph = GenerateBiGraph(wordNetOptimum);
-//        logger.trace("细分词图：\n{}", graph.printByTo());
+        if (HanLP.Config.DEBUG)
+        {
+            System.out.printf("细分词图：%s\n", graph.printByTo());
+        }
         NShortPath nShortPath = new NShortPath(graph, 1);
         List<int[]> spResult = nShortPath.getNPaths(1);
         assert spResult.size() > 0 : "最短路径求解失败，请检查下图是否有悬孤节点或负圈\n" + graph.printByTo();
@@ -106,7 +116,8 @@ public class Segment
 
     /**
      * 对粗分结果执行一些规则上的合并拆分等等，同时合成新词网
-     * @param linkedArray 粗分结果
+     *
+     * @param linkedArray    粗分结果
      * @param wordNetOptimum 合并了所有粗分结果的词网
      */
     private static void GenerateWord(List<Vertex> linkedArray, WordNet wordNetOptimum)
@@ -296,6 +307,7 @@ public class Segment
 
     /**
      * 分词 保留句子形式
+     *
      * @param text
      * @return
      */
@@ -326,7 +338,7 @@ public class Segment
         // 粗分
         List<List<Vertex>> coarseResult = BiSegment(text, 2, wordNetOptimum, wordNetAll);
 //        logger.trace("粗分词网：\n{}", wordNetOptimum);
-        for (List<Vertex> vertexList: coarseResult)
+        for (List<Vertex> vertexList : coarseResult)
         {
             // 姓名识别
             if (config.nameRecognize)
@@ -372,6 +384,7 @@ public class Segment
 
     /**
      * 最快的分词方式
+     *
      * @param sSentence
      * @return
      */
@@ -383,8 +396,11 @@ public class Segment
 //        logger.trace("打印词网：\n" + wordNet);
         ///////////////生成词图////////////////////
         Graph graph = GenerateBiGraph(wordNet);
-//        logger.trace(graph.toString());
-//        logger.trace("打印词图：\n" + graph.printByTo());
+        if (HanLP.Config.DEBUG)
+        {
+//            logger.trace(graph.toString());
+            System.out.printf("打印词图：%s\n", graph.printByTo());
+        }
         ///////////////N-最短路径////////////////////
         NShortPath nShortPath = new NShortPath(graph, 1);
         List<int[]> spResult = nShortPath.getNPaths(1);
@@ -393,6 +409,7 @@ public class Segment
 
     /**
      * 将一条路径转为最终结果
+     *
      * @param vertexList
      * @return
      */
@@ -590,7 +607,8 @@ public class Segment
 //                System.out.println("before:" + linkedArray);
                 listIterator.remove();
 //                System.out.println("after:" + linkedArray);
-            } else
+            }
+            else
             {
                 current = next;
             }

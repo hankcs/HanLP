@@ -9,12 +9,13 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.dictionary;
+package com.hankcs.hanlp.dictionary.nr;
 
 
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.NR;
+import com.hankcs.hanlp.dictionary.CommonDictionary;
 import com.hankcs.hanlp.utility.Utility;
 
 import java.io.*;

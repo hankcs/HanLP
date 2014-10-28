@@ -11,11 +11,11 @@
  */
 package com.hankcs.hanlp.tokenizer;
 
-import com.hankcs.hanlp.dictionary.CoreStopWordDictionary;
+import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
+import com.hankcs.hanlp.dictionary.stopword.Filter;
 import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 import com.hankcs.hanlp.seg.NShort.Segment;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -57,6 +57,38 @@ public class NotionalTokenizer
                 if (!CoreStopWordDictionary.shouldInclude(listIterator.next()))
                 {
                     listIterator.remove();
+                }
+            }
+        }
+
+        return sentenceList;
+    }
+
+    /**
+     * 切分为句子形式
+     * @param text
+     * @param filterArrayChain 自定义过滤器链
+     * @return
+     */
+    public static List<List<WordResult>> seg2sentence(String text, Filter filterArrayChain[])
+    {
+        List<List<WordResult>> sentenceList = SEGMENT.seg2sentence(text);
+        for (List<WordResult> sentence : sentenceList)
+        {
+            ListIterator<WordResult> listIterator = sentence.listIterator();
+            while (listIterator.hasNext())
+            {
+                if (filterArrayChain != null)
+                {
+                    WordResult term = listIterator.next();
+                    for (Filter filter : filterArrayChain)
+                    {
+                        if (!filter.shouldInclude(term))
+                        {
+                            listIterator.remove();
+                            break;
+                        }
+                    }
                 }
             }
         }

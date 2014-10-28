@@ -12,7 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.dictionary.BaseSearcher;
-import com.hankcs.hanlp.dictionary.NRDictionary;
+import com.hankcs.hanlp.dictionary.nr.NRDictionary;
 import junit.framework.TestCase;
 
 import java.util.Map;

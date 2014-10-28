@@ -111,11 +111,11 @@ public class Vertex
                 }
                 break;
                 case xx:
-                case w:
-                {
-                    word= Predefine.TAG_OTHER;
-                }
-                break;
+//                case w:
+//                {
+//                    word= Predefine.TAG_OTHER;
+//                }
+//                break;
                 case t:
                 {
                         word= Predefine.TAG_TIME;

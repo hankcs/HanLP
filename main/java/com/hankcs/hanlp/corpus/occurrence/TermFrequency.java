@@ -40,6 +40,16 @@ public class TermFrequency extends AbstractMap.SimpleEntry<String, Integer>
         return getValue();
     }
 
+    public String getTerm()
+    {
+        return getKey();
+    }
+
+    public Integer getFrequency()
+    {
+        return getValue();
+    }
+
     /**
      * 频次加一
      * @return

@@ -9,7 +9,11 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.dictionary;
+package com.hankcs.hanlp.dictionary.stopword;
+
+import com.hankcs.hanlp.dictionary.CommonDictionary;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -22,7 +26,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public class StopWordDictionary extends CommonDictionary<Boolean>
+public class StopWordDictionary extends CommonDictionary<Boolean> implements Filter
 {
     @Override
     protected Boolean[] onLoadValue(String path)
@@ -49,5 +53,11 @@ public class StopWordDictionary extends CommonDictionary<Boolean>
         }
 
         return valueArray;
+    }
+
+    @Override
+    public boolean shouldInclude(WordResult term)
+    {
+        return CoreStopWordDictionary.shouldInclude(term);
     }
 }

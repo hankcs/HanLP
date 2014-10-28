@@ -11,8 +11,11 @@
  */
 package com.hankcs.hanlp.phrase;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.occurrence.Occurrence;
 import com.hankcs.hanlp.corpus.occurrence.PairFrequency;
+import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
+import com.hankcs.hanlp.dictionary.stopword.Filter;
 import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 
@@ -25,37 +28,63 @@ import java.util.List;
  */
 public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
 {
+    public static boolean DEBUG = false;
     @Override
     public List<String> extractPhrase(String text, int size)
     {
         List<String> phraseList = new LinkedList<>();
         Occurrence occurrence = new Occurrence();
-        for (List<WordResult> sentence : NotionalTokenizer.seg2sentence(text))
+        Filter[] filterChain = new Filter[]
+                {
+                        CoreStopWordDictionary.FILTER,
+                        new Filter()
+                        {
+                            @Override
+                            public boolean shouldInclude(WordResult term)
+                            {
+                                switch (term.nPOS)
+                                {
+                                    case t:
+                                    case nx:
+                                        return false;
+                                }
+                                return true;
+                            }
+                        }
+                };
+        for (List<WordResult> sentence : NotionalTokenizer.seg2sentence(text, filterChain))
         {
+            if (DEBUG)
+            {
+                System.out.println(sentence);
+            }
             occurrence.addAll(sentence);
         }
         occurrence.compute();
-//        System.out.println(occurrence);
-//        for (PairFrequency phrase : occurrence.getPhraseByMi())
-//        {
-//            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tmi=" + phrase.mi + " , ") ;
-//        }
-//        System.out.println();
-//        for (PairFrequency phrase : occurrence.getPhraseByLe())
-//        {
-//            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tle=" + phrase.le + " , ");
-//        }
-//        System.out.println();
-//        for (PairFrequency phrase : occurrence.getPhraseByRe())
-//        {
-//            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tre=" + phrase.re + " , ");
-//        }
-//        System.out.println();
-//        for (PairFrequency phrase : occurrence.getPhraseByScore())
-//        {
-//            System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tscore=" + phrase.score + " , ");
-//        }
-//        System.out.println();
+        if (DEBUG)
+        {
+            System.out.println(occurrence);
+            for (PairFrequency phrase : occurrence.getPhraseByMi())
+            {
+                System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tmi=" + phrase.mi + " , ") ;
+            }
+            System.out.println();
+            for (PairFrequency phrase : occurrence.getPhraseByLe())
+            {
+                System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tle=" + phrase.le + " , ");
+            }
+            System.out.println();
+            for (PairFrequency phrase : occurrence.getPhraseByRe())
+            {
+                System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tre=" + phrase.re + " , ");
+            }
+            System.out.println();
+            for (PairFrequency phrase : occurrence.getPhraseByScore())
+            {
+                System.out.print(phrase.getKey().replace(Occurrence.RIGHT, '→') + "\tscore=" + phrase.score + " , ");
+            }
+            System.out.println();
+        }
 
         for (PairFrequency phrase : occurrence.getPhraseByScore())
         {

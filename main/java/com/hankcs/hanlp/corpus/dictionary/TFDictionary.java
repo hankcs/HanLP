@@ -85,4 +85,16 @@ public class TFDictionary extends SimpleDictionary<TermFrequency>
 
         return dictionaryMain.trie.size() - preSize;
     }
+
+    /**
+     * 获取频次
+     * @param key
+     * @return
+     */
+    public int getFrequency(String key)
+    {
+        TermFrequency termFrequency = get(key);
+        if (termFrequency == null) return 0;
+        return termFrequency.getFrequency();
+    }
 }

@@ -32,7 +32,6 @@ public class BiGramDictionary
 
     public final static String path = HanLP.Config.BiGramDictionaryPath;
     public static final int totalFrequency = 37545990;
-//    public final static String path = "data/dictionary/BiGramDictionary.txt";
     // 自动加载词典
     static
     {

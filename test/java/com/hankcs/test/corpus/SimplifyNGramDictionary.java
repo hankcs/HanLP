@@ -11,6 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.corpus.dictionary.TFDictionary;
 import junit.framework.TestCase;
 
 import java.io.*;
@@ -35,19 +36,19 @@ public class SimplifyNGramDictionary extends TestCase
         }
         br.close();
         Set<Map.Entry<String, Integer>> entrySet = map.descendingMap().entrySet();
-        // 第一步去包含
         Iterator<Map.Entry<String, Integer>> iterator = entrySet.iterator();
-        Map.Entry<String, Integer> pre = new AbstractMap.SimpleEntry<>(" @ ", 1);
-        while (iterator.hasNext())
-        {
-            Map.Entry<String, Integer> current = iterator.next();
-            if (current.getKey().length() - current.getKey().indexOf('@') == 2 && pre.getKey().indexOf(current.getKey()) == 0 && current.getValue() <= 2)
-            {
-                System.out.println("应当删除 " + current + " 保留 " + pre);
-                iterator.remove();
-            }
-            pre = current;
-        }
+        // 第一步去包含
+//        Map.Entry<String, Integer> pre = new AbstractMap.SimpleEntry<>(" @ ", 1);
+//        while (iterator.hasNext())
+//        {
+//            Map.Entry<String, Integer> current = iterator.next();
+//            if (current.getKey().length() - current.getKey().indexOf('@') == 2 && pre.getKey().indexOf(current.getKey()) == 0 && current.getValue() <= 2)
+//            {
+//                System.out.println("应当删除 " + current + " 保留 " + pre);
+//                iterator.remove();
+//            }
+//            pre = current;
+//        }
         // 第二步，尝试移除“学@家”这样的短共现
 //        iterator = entrySet.iterator();
 //        while (iterator.hasNext())
@@ -58,6 +59,43 @@ public class SimplifyNGramDictionary extends TestCase
 //                System.out.println("应当删除 " + current);
 //            }
 //        }
+        // 第三步，对某些@后面的词语太短了，也移除
+//        iterator = entrySet.iterator();
+//        while (iterator.hasNext())
+//        {
+//            Map.Entry<String, Integer> current = iterator.next();
+//            String[] termArray = current.getKey().split("@", 2);
+//            if (termArray[0].equals("未##人") && termArray[1].length() < 2)
+//            {
+//                System.out.println("删除 " + current.getKey());
+//                iterator.remove();
+//            }
+//        }
+        // 第四步，人名接续对识别产生太多误命中影响，也删除
+//        iterator = entrySet.iterator();
+//        while (iterator.hasNext())
+//        {
+//            Map.Entry<String, Integer> current = iterator.next();
+//            if (current.getKey().contains("未##人") && current.getValue() < 10)
+//            {
+//                System.out.println("删除 " + current.getKey());
+//                iterator.remove();
+//            }
+//        }
+        // 对人名的终极调优
+        TFDictionary dictionary = new TFDictionary();
+        dictionary.load("D:\\JavaProjects\\HanLP\\data\\dictionary\\BiGramDictionary.txt");
+        iterator = entrySet.iterator();
+        while (iterator.hasNext())
+        {
+            Map.Entry<String, Integer> current = iterator.next();
+            if (current.getKey().contains("未##人") && dictionary.getFrequency(current.getKey()) < 10)
+            {
+                System.out.println("删除 " + current.getKey());
+                iterator.remove();
+            }
+        }
+        // 输出
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
         for (Map.Entry<String, Integer> entry : map.entrySet())
         {

@@ -11,13 +11,13 @@
  */
 package com.hankcs.hanlp;
 
-import com.hankcs.hanlp.utility.Predefine;
-
 import java.util.Properties;
 import java.util.logging.Level;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 常用接口静态化
+ *
  * @author hankcs
  */
 public class HanLP
@@ -30,7 +30,7 @@ public class HanLP
         /**
          * 开发模式
          */
-        public final static boolean DEBUG = false;
+        public static boolean DEBUG = false;
         /**
          * 核心词典路径
          */
@@ -39,6 +39,7 @@ public class HanLP
          * 2元语法词典路径
          */
         public static String BiGramDictionaryPath = "data/dictionary/CoreNatureDictionary.ngram.txt";
+
         /**
          * 停用词词典路径
          */
@@ -73,15 +74,12 @@ public class HanLP
             }
             catch (Exception e)
             {
-//                e.printStackTrace();
-                if (DEBUG)
-                {
-                    System.out.println("没有找到HanLP.properties，将采用默认配置");
-                }
+//                if (!DEBUG)
+//                    logger.warning("没有找到HanLP.properties，将采用默认配置");
             }
             if (!DEBUG)
             {
-                Predefine.logger.setLevel(Level.OFF);
+                logger.setLevel(Level.OFF);
             }
         }
     }

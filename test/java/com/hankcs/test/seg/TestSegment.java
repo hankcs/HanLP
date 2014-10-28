@@ -11,6 +11,7 @@
  */
 package com.hankcs.test.seg;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.NShort.Segment;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 import junit.framework.TestCase;
@@ -23,7 +24,8 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         Segment segment = new Segment().enableNameRecognize(true);
-        System.out.println(segment.seg("何晗喜欢陈膺奥"));
+        HanLP.Config.DEBUG = true;
+        System.out.println(segment.seg("读情诗。"));
     }
 
     public void testIndexSeg() throws Exception

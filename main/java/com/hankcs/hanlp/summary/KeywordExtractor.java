@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.summary;
 
-import com.hankcs.hanlp.dictionary.CoreStopWordDictionary;
+import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 
 /**

@@ -106,6 +106,28 @@ public class IOUtil
     }
 
     /**
+     * 快速保存
+     * @param path
+     * @param content
+     * @return
+     */
+    public static boolean saveTxt(String path, String content)
+    {
+        try
+        {
+            FileChannel fc = new FileOutputStream(path).getChannel();
+            fc.write(ByteBuffer.wrap(content.getBytes()));
+            fc.close();
+        }
+        catch (Exception e)
+        {
+            logger.throwing("IOUtil", "saveTxt", e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 将整个文件读取为字节数组
      *
      * @param path

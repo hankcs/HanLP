@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.dictionary;
+package com.hankcs.hanlp.dictionary.stopword;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.NShort.Path.WordResult;
@@ -31,6 +31,18 @@ public class CoreStopWordDictionary
     {
         return dictionary.get(key) != null;
     }
+
+    /**
+     * 核心停用词典的核心过滤器
+     */
+    public static Filter FILTER = new Filter()
+    {
+        @Override
+        public boolean shouldInclude(WordResult term)
+        {
+            return CoreStopWordDictionary.shouldInclude(term);
+        }
+    };
 
     /**
      * 是否应当将这个term纳入计算，词性属于名词、动词、副词、形容词
