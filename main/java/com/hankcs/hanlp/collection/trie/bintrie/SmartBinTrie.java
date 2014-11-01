@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.collection.trie.bintrie;
 
 /**
+ * 可以动态拓展为hash定位的trie树，适用于词典特别大且插入删除操作特别多的场景
  * @author hankcs
  */
 public class SmartBinTrie<V> extends BinTrie<V>

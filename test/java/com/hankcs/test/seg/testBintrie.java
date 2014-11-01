@@ -92,14 +92,28 @@ public class testBintrie extends TestCase
         {
             trieNormal.put(word, word);
         }
-        System.out.printf("trieNormal插入耗时:%dms%n", System.currentTimeMillis() - start);
+        System.out.printf("trieNormal首次插入耗时:%dms%n", System.currentTimeMillis() - start);
 
         start = System.currentTimeMillis();
         for (String word : wordList)
         {
             trieSmart.put(word, word);
         }
-        System.out.printf("trieSmart插入耗时:%dms%n", System.currentTimeMillis() - start);
+        System.out.printf("trieSmart首次插入耗时:%dms%n", System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        for (String word : wordList)
+        {
+            trieNormal.put(word, word);
+        }
+        System.out.printf("trieNormal再次插入耗时:%dms%n", System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        for (String word : wordList)
+        {
+            trieSmart.put(word, word);
+        }
+        System.out.printf("trieSmart再次插入耗时:%dms%n", System.currentTimeMillis() - start);
 
         start = System.currentTimeMillis();
         for (String word : wordList)
