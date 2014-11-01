@@ -99,10 +99,4 @@ public class Node<V> extends BaseNode
 
         return child[index];
     }
-
-    @Override
-    protected BaseNode newInstance()
-    {
-        return new Node<>();
-    }
 }

@@ -67,10 +67,6 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         return getChild(c) != null;
     }
 
-    /**
-     * 获取节点代表的字符
-     * @return
-     */
     protected char getChar()
     {
         return c;
@@ -178,16 +174,10 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         child = new BaseNode[childSize];
         for (int i = 0; i < childSize; ++i)
         {
-            child[i] = newInstance();
+            child[i] = new Node<>();
             child[i].walkToLoad(byteArray, valueArray);
         }
     }
-
-    /**
-     * 各个子类请在此返回一个子类的新实例
-     * @return
-     */
-    protected abstract BaseNode<V> newInstance();
 
     public static enum Status
     {
