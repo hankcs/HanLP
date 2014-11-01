@@ -3,7 +3,7 @@ package com.hankcs.hanlp.summary;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.NShort.Segment;
 
 import java.util.*;
@@ -38,13 +38,13 @@ public class TextRankKeyword extends KeywordExtractor
 
     public String[] getKeyword(String title, String content)
     {
-        List<WordResult> termList = Segment.parse(title + content);
+        List<Term> termList = Segment.parse(title + content);
         List<String> wordList = new ArrayList<String>();
-        for (WordResult t : termList)
+        for (Term t : termList)
         {
             if (shouldInclude(t))
             {
-                wordList.add(t.sWord);
+                wordList.add(t.word);
             }
         }
 //        System.out.println(wordList);

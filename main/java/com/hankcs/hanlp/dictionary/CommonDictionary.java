@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 
 import java.io.*;
 import java.util.*;
@@ -66,6 +67,7 @@ public abstract class CommonDictionary<V>
             load(path);
         }
         trie.save(path + ".trie.dat");
+        onSaveValue(valueArray, path);
         logger.warning(path + "加载成功");
         return true;
     }
@@ -151,6 +153,8 @@ public abstract class CommonDictionary<V>
      * @return
      */
     protected abstract V[] onLoadValue(String path);
+
+    protected abstract boolean onSaveValue(V[] valueArray, String path);
 
     public BaseSearcher getSearcher(String text)
     {

@@ -11,7 +11,14 @@
  */
 package com.hankcs.hanlp.collection.trie.bintrie;
 
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.utility.Utility;
+
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.util.*;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 首字直接分配内存，之后二分动态数组的Trie树，能够平衡时间和空间
@@ -24,6 +31,7 @@ public class BinTrie<V> extends BaseNode<V>
     {
         child = new BaseNode[65535];    // (int)Character.MAX_VALUE
         size = 0;
+        status = Status.NOT_WORD_1;
     }
 
     /**
@@ -235,4 +243,57 @@ public class BinTrie<V> extends BaseNode<V>
         return child[c];
     }
 
+    public boolean save(String path)
+    {
+        try
+        {
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
+            for (BaseNode node : child)
+            {
+                if (node == null)
+                {
+                    out.writeInt(0);
+                }
+                else
+                {
+                    out.writeInt(1);
+                    node.walkToSave(out);
+                }
+            }
+            out.close();
+        }
+        catch (Exception e)
+        {
+            logger.warning("保存到" + path + "失败" + Utility.exceptionToString(e));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 从磁盘加载二分数组树
+     * @param path 路径
+     * @param value 额外提供的值数组，按照值的字典序。（之所以要求提供它，是因为泛型的保存不归树管理）
+     * @return 是否成功
+     */
+    public boolean load(String path, V[] value)
+    {
+        byte[] bytes = IOUtil.readBytes(path);
+        if (bytes == null) return false;
+        ValueArray valueArray = new ValueArray(value);
+        ByteArray byteArray = new ByteArray(bytes);
+        for (int i = 0; i < child.length; ++i)
+        {
+            int flag = byteArray.nextInt();
+            if (flag == 1)
+            {
+                child[i] = new Node<>();
+                child[i].walkToLoad(byteArray, valueArray);
+            }
+        }
+        size = value.length;
+
+        return true;
+    }
 }

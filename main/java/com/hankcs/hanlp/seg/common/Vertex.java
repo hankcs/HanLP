@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg.NShort.Path;
+package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -41,7 +41,7 @@ public class Vertex
     /**
      * 在一维顶点数组中的下标，可以视作这个顶点的id
      */
-    int index;
+    public int index;
 
     /**
      * 始##始

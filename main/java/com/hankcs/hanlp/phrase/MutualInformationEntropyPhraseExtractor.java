@@ -11,12 +11,11 @@
  */
 package com.hankcs.hanlp.phrase;
 
-import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.occurrence.Occurrence;
 import com.hankcs.hanlp.corpus.occurrence.PairFrequency;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.dictionary.stopword.Filter;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 
 import java.util.LinkedList;
@@ -40,9 +39,9 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
                         new Filter()
                         {
                             @Override
-                            public boolean shouldInclude(WordResult term)
+                            public boolean shouldInclude(Term term)
                             {
-                                switch (term.nPOS)
+                                switch (term.nature)
                                 {
                                     case t:
                                     case nx:
@@ -52,7 +51,7 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
                             }
                         }
                 };
-        for (List<WordResult> sentence : NotionalTokenizer.seg2sentence(text, filterChain))
+        for (List<Term> sentence : NotionalTokenizer.seg2sentence(text, filterChain))
         {
             if (DEBUG)
             {

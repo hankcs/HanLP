@@ -24,7 +24,7 @@ import java.util.Map;
  * 最长分词器
  * @author He Han
  */
-public class LongestSegmenter<V>
+public class LongestSegment<V>
 {
     private BinTrie<V> trie;
     /**
@@ -36,7 +36,7 @@ public class LongestSegmenter<V>
      */
     private int offset;
 
-    public LongestSegmenter(BinTrie<V> trie)
+    public LongestSegment(BinTrie<V> trie)
     {
         this.trie = trie;
     }

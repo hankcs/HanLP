@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg.NShort.Path;
+package com.hankcs.hanlp.seg.common;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -23,12 +23,12 @@ public class Graph
     /**
      * 顶点
      */
-    Vertex[] vertexes;
+    public Vertex[] vertexes;
 
     /**
      * 边，到达下标i
      */
-    List<EdgeFrom>[] edgesTo;
+    public List<EdgeFrom>[] edgesTo;
 
     /**
      * 将一个词网转为词图
@@ -128,5 +128,15 @@ public class Graph
         }
 
         return sb.toString();
+    }
+
+    public Vertex[] getVertexes()
+    {
+        return vertexes;
+    }
+
+    public List<EdgeFrom>[] getEdgesTo()
+    {
+        return edgesTo;
     }
 }

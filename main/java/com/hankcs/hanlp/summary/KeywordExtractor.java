@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.summary;
 
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 
 /**
  * 提取关键词的基类
@@ -26,11 +26,11 @@ public class KeywordExtractor
      * @param term
      * @return 是否应当
      */
-    public boolean shouldInclude(WordResult term)
+    public boolean shouldInclude(Term term)
     {
         // 除掉停用词
-        if (term.nPOS == null) return false;
-        String nature = term.nPOS.toString();
+        if (term.nature == null) return false;
+        String nature = term.nature.toString();
         char firstChar = nature.charAt(0);
         switch (firstChar)
         {
@@ -51,7 +51,7 @@ public class KeywordExtractor
             }
             default:
             {
-                if (term.sWord.length() > 1 && !CoreStopWordDictionary.contains(term.sWord))
+                if (term.word.length() > 1 && !CoreStopWordDictionary.contains(term.word))
                 {
                     return true;
                 }

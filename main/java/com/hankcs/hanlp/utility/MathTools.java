@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.utility;
 
 import com.hankcs.hanlp.dictionary.BiGramDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.Vertex;
+import com.hankcs.hanlp.seg.common.Vertex;
 import static com.hankcs.hanlp.utility.Predefine.*;
 
 /**

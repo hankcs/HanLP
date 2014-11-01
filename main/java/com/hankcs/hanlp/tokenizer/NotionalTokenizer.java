@@ -13,8 +13,8 @@ package com.hankcs.hanlp.tokenizer;
 
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.dictionary.stopword.Filter;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -26,10 +26,10 @@ import java.util.ListIterator;
 public class NotionalTokenizer
 {
     static final Segment SEGMENT = new Segment();
-    public static List<WordResult> parse(String text)
+    public static List<Term> parse(String text)
     {
-        List<WordResult> resultList = SEGMENT.seg(text);
-        ListIterator<WordResult> listIterator = resultList.listIterator();
+        List<Term> resultList = SEGMENT.seg(text);
+        ListIterator<Term> listIterator = resultList.listIterator();
         while (listIterator.hasNext())
         {
             if (!CoreStopWordDictionary.shouldInclude(listIterator.next()))
@@ -46,12 +46,12 @@ public class NotionalTokenizer
      * @param text
      * @return
      */
-    public static List<List<WordResult>> seg2sentence(String text)
+    public static List<List<Term>> seg2sentence(String text)
     {
-        List<List<WordResult>> sentenceList = SEGMENT.seg2sentence(text);
-        for (List<WordResult> sentence : sentenceList)
+        List<List<Term>> sentenceList = SEGMENT.seg2sentence(text);
+        for (List<Term> sentence : sentenceList)
         {
-            ListIterator<WordResult> listIterator = sentence.listIterator();
+            ListIterator<Term> listIterator = sentence.listIterator();
             while (listIterator.hasNext())
             {
                 if (!CoreStopWordDictionary.shouldInclude(listIterator.next()))
@@ -70,17 +70,17 @@ public class NotionalTokenizer
      * @param filterArrayChain 自定义过滤器链
      * @return
      */
-    public static List<List<WordResult>> seg2sentence(String text, Filter filterArrayChain[])
+    public static List<List<Term>> seg2sentence(String text, Filter filterArrayChain[])
     {
-        List<List<WordResult>> sentenceList = SEGMENT.seg2sentence(text);
-        for (List<WordResult> sentence : sentenceList)
+        List<List<Term>> sentenceList = SEGMENT.seg2sentence(text);
+        for (List<Term> sentence : sentenceList)
         {
-            ListIterator<WordResult> listIterator = sentence.listIterator();
+            ListIterator<Term> listIterator = sentence.listIterator();
             while (listIterator.hasNext())
             {
                 if (filterArrayChain != null)
                 {
-                    WordResult term = listIterator.next();
+                    Term term = listIterator.next();
                     for (Filter filter : filterArrayChain)
                     {
                         if (!filter.shouldInclude(term))

@@ -63,8 +63,13 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
             logger.warning("读取" + path + "失败" + e);
         }
         valueArray = valueList.toArray(new EnumItem[0]);
-        saveDat(path + ".value.dat", valueArray);
         return valueArray;
+    }
+
+    @Override
+    protected boolean onSaveValue(EnumItem<NR>[] valueArray, String path)
+    {
+        return saveDat(path + ".value.dat", valueArray);
     }
 
     private EnumItem<NR>[] loadDat(String path)

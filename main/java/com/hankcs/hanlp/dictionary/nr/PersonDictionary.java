@@ -12,12 +12,13 @@
 package com.hankcs.hanlp.dictionary.nr;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.Vertex;
-import com.hankcs.hanlp.seg.NShort.Path.WordNet;
-import org.ahocorasick.trie.Emit;
-import org.ahocorasick.trie.Trie;
+import com.hankcs.hanlp.seg.common.Vertex;
+import com.hankcs.hanlp.seg.common.WordNet;
+import com.hankcs.hanlp.algoritm.ahocorasick.trie.Emit;
+import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
 
 import java.util.Collection;
 import java.util.List;
@@ -80,12 +81,13 @@ public class PersonDictionary
     /**
      * 模式匹配
      * @param nrList 确定的标注序列
-     * @param pWordSegResult 原始的未加角色标注的序列
-     * @param graphOptimum 待优化的图
+     * @param vertexList 原始的未加角色标注的序列
+     * @param wordNetOptimum 待优化的图
+     * @param wordNetAll
      */
-    public static void parsePattern(List<NR> nrList, List<Vertex> pWordSegResult, WordNet graphOptimum)
+    public static void parsePattern(List<NR> nrList, List<Vertex> vertexList, WordNet wordNetOptimum, WordNet wordNetAll)
     {
-        ListIterator<Vertex> listIterator = pWordSegResult.listIterator();
+        ListIterator<Vertex> listIterator = vertexList.listIterator();
         StringBuilder sbPattern = new StringBuilder(nrList.size());
         NR preNR = NR.A;
         for (NR nr : nrList)
@@ -131,14 +133,14 @@ public class PersonDictionary
         }
         String pattern = sbPattern.toString();
 //        logger.trace("模式串：{}", pattern);
-//        logger.trace("对应串：{}", pWordSegResult);
-//        if (pattern.length() != pWordSegResult.size())
+//        logger.trace("对应串：{}", vertexList);
+//        if (pattern.length() != vertexList.size())
 //        {
-//            logger.warn("人民识别模式串有bug", pattern, pWordSegResult);
+//            logger.warn("人民识别模式串有bug", pattern, vertexList);
 //            return;
 //        }
         Collection<Emit> emitCollection = trie.parseText(pattern);
-        Vertex[] wordArray = pWordSegResult.toArray(new Vertex[0]);
+        Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
         int startMax = -1;
         for (Emit emit : emitCollection)
         {
@@ -160,17 +162,33 @@ public class PersonDictionary
                     if (name.charAt(0) == name.charAt(2)) continue; // 姓和最后一个名不可能相等的
                     break;
             }
+            if (isBadCase(name)) continue;
+
+            // 正式算它是一个名字
+            if (HanLP.Config.DEBUG)
+            {
+                System.out.printf("识别出人名：%s %s\n", name, keyword);
+            }
             int offset = 0;
             for (int i = 0; i < start; ++i)
             {
                 offset += wordArray[i].realWord.length();
             }
-            graphOptimum.add(offset, Vertex.newPersonInstance(name, 1000));
-            startMax = Math.max(startMax, start);
+            wordNetOptimum.insert(offset, Vertex.newPersonInstance(name, 1), wordNetAll);
         }
-        if (startMax > 0)
-        {
-            graphOptimum.addAll(pWordSegResult.subList(0, startMax));
-        }
+    }
+
+    /**
+     * 因为任何算法都无法解决100%的问题，总是有一些bad case，这些bad case会以“盖公章 A 1”的形式加入词典中<BR>
+     * 这个方法返回人名是否是bad case
+     * @param name
+     * @return
+     */
+    static boolean isBadCase(String name)
+    {
+        EnumItem<NR> nrEnumItem = dictionary.get(name);
+        if (nrEnumItem == null) return false;
+        return nrEnumItem.containsLabel(NR.A);
+
     }
 }

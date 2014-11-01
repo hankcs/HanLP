@@ -15,7 +15,6 @@
  */
 package com.hankcs.hanlp.collection.trie;
 
-import com.hankcs.hanlp.corpus.util.Util;
 import com.hankcs.hanlp.utility.Utility;
 
 import java.io.*;

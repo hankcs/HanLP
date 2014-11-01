@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.algoritm;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 
@@ -72,6 +73,10 @@ public class ViterbiEx<E extends Enum<E>>
             pre = entryArray[perfect_j].getKey();
             tagList.add(pre);
         }
+//        if (HanLP.Config.DEBUG)
+//        {
+//            System.out.printf("viterbi_weight:%f\n", total);
+//        }
         return tagList;
     }
 }

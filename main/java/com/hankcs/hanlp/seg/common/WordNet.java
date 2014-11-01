@@ -9,13 +9,15 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg.NShort.Path;
+package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -38,8 +40,14 @@ public class WordNet
 
     /**
      * 原始句子
+     * @deprecated 应当使用数组，这样比较快
      */
     public String sentence;
+
+    /**
+     * 原始句子对应的数组
+     */
+    public char[] charArray;
 
     /**
      * 为一个句子生成空白词网
@@ -47,7 +55,7 @@ public class WordNet
      */
     public WordNet(String sentence)
     {
-        this.sentence = sentence;
+        charArray = sentence.toCharArray();
         vertexes = new List[sentence.length() + 2];
         for (int i = 0; i < vertexes.length; ++i)
         {
@@ -76,6 +84,62 @@ public class WordNet
     }
 
     /**
+     * 添加顶点，同时检查此顶点是否悬孤，如果悬孤则自动补全
+     * @param line
+     * @param vertex
+     * @param wordNetAll 这是一个完全的词图
+     */
+    public void insert(int line, Vertex vertex, WordNet wordNetAll)
+    {
+        for (Vertex oldVertex : vertexes[line])
+        {
+            // 保证唯一性
+            if (oldVertex.realWord.length() == vertex.realWord.length()) return;
+        }
+        vertexes[line].add(vertex);
+        ++size;
+        // 保证连接
+        for (int l = line - 1; l > 1; --l)
+        {
+            if (get(l, 1) == null)
+            {
+                Vertex first = wordNetAll.getFirst(l);
+                if (first == null) break;
+                vertexes[l].add(first);
+                ++size;
+            }
+            else
+            {
+                break;
+            }
+        }
+        // 首先保证这个词语可直达
+        int l = line + vertex.realWord.length();
+        if (get(l, vertex.realWord.length()) == null)
+        {
+            Vertex first = wordNetAll.getFirst(l);
+            if (first == null) return;
+            vertexes[l].add(first);
+            ++size;
+        }
+        // 直达之后一直往后
+        for (++l; l < vertexes.length; ++l)
+        {
+            if (get(l, 1) == null)
+            {
+                Vertex first = wordNetAll.getFirst(l);
+                if (first == null) break;
+                vertexes[l].add(first);
+                ++size;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    /**
      * 全自动添加顶点
      * @param vertexList
      */
@@ -97,6 +161,38 @@ public class WordNet
     public List<Vertex> get(int line)
     {
         return vertexes[line];
+    }
+
+    /**
+     * 获取某一行的第一个节点
+     * @param line
+     * @return
+     */
+    public Vertex getFirst(int line)
+    {
+        Iterator<Vertex> iterator = vertexes[line].iterator();
+        if (iterator.hasNext()) return iterator.next();
+
+        return null;
+    }
+
+    /**
+     * 获取某一行长度为length的节点
+     * @param line
+     * @param length
+     * @return
+     */
+    public Vertex get(int line, int length)
+    {
+        for (Vertex vertex : vertexes[line])
+        {
+            if (vertex.realWord.length() == length)
+            {
+                return vertex;
+            }
+        }
+
+        return null;
     }
 
     /**

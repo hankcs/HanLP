@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.dictionary.stopword;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 
 /**
  * 核心停用词词典
@@ -38,7 +38,7 @@ public class CoreStopWordDictionary
     public static Filter FILTER = new Filter()
     {
         @Override
-        public boolean shouldInclude(WordResult term)
+        public boolean shouldInclude(Term term)
         {
             return CoreStopWordDictionary.shouldInclude(term);
         }
@@ -50,11 +50,11 @@ public class CoreStopWordDictionary
      * @param term
      * @return 是否应当
      */
-    public static boolean shouldInclude(WordResult term)
+    public static boolean shouldInclude(Term term)
     {
         // 除掉停用词
-        if (term.nPOS == null) return false;
-        String nature = term.nPOS.toString();
+        if (term.nature == null) return false;
+        String nature = term.nature.toString();
         char firstChar = nature.charAt(0);
         switch (firstChar)
         {
@@ -75,7 +75,7 @@ public class CoreStopWordDictionary
             }
             default:
             {
-                if (term.sWord.length() > 1 && !CoreStopWordDictionary.contains(term.sWord))
+                if (term.word.length() > 1 && !CoreStopWordDictionary.contains(term.word))
                 {
                     return true;
                 }

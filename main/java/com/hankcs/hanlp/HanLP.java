@@ -36,6 +36,10 @@ public class HanLP
          */
         public static String CoreDictionaryPath = "data/dictionary/CoreNatureDictionary.txt";
         /**
+         * 用户自定义词典路径
+         */
+        public static String CustomDictionaryPath = "data/dictionary/CustomDictionary.txt";
+        /**
          * 2元语法词典路径
          */
         public static String BiGramDictionaryPath = "data/dictionary/CoreNatureDictionary.ngram.txt";
@@ -71,6 +75,7 @@ public class HanLP
                 CoreSynonymDictionaryDictionaryPath = root + p.getProperty("CoreSynonymDictionaryDictionaryPath");
                 PersonDictionaryPath = root + p.getProperty("PersonDictionaryPath");
                 PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath");
+                CustomDictionaryPath = root + p.getProperty("CustomDictionaryPath");
             }
             catch (Exception e)
             {
@@ -78,6 +83,19 @@ public class HanLP
 //                    logger.warning("没有找到HanLP.properties，将采用默认配置");
             }
             if (!DEBUG)
+            {
+                logger.setLevel(Level.OFF);
+            }
+        }
+
+        public static void enableDebug(boolean enable)
+        {
+            DEBUG = enable;
+            if (DEBUG)
+            {
+                logger.setLevel(Level.ALL);
+            }
+            else
             {
                 logger.setLevel(Level.OFF);
             }

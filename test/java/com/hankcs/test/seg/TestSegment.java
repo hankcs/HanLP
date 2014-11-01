@@ -25,7 +25,7 @@ public class TestSegment extends TestCase
     {
         Segment segment = new Segment().enableNameRecognize(true);
         HanLP.Config.DEBUG = true;
-        System.out.println(segment.seg("读情诗。"));
+        System.out.println(segment.seg("配合成人为其穿衣"));
     }
 
     public void testIndexSeg() throws Exception

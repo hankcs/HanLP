@@ -13,7 +13,6 @@ package com.hankcs.hanlp.suggest;
 
 import com.hankcs.hanlp.dictionary.CommonSynonymDictionary;
 import com.hankcs.hanlp.dictionary.CoreSynonymDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
 import com.hankcs.hanlp.seg.NShort.Segment;
 import com.hankcs.hanlp.utility.Utility;
 

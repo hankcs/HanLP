@@ -32,7 +32,7 @@ public class PlaySuggester
     public static void testSuggest() throws Exception
     {
         ISuggester suggester = new Suggester();
-        load("data/title.txt", suggester);
+//        load("data/title.txt", suggester);
         load("data/phrase.txt", suggester);
         String[] testCaseArray = new String[]
                 {
@@ -66,6 +66,7 @@ public class PlaySuggester
             while ((line = br.readLine()) != null)
             {
                 line = line.trim();
+                line = line.split("\\s")[0];
                 if (line.length() <= 3 || line.length() > 20) continue;
                 System.out.println("正在读入并处理 " + line);
                 iSuggester.addSentence(line);

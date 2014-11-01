@@ -15,8 +15,8 @@ import com.hankcs.hanlp.dictionary.AddressDictionary;
 import com.hankcs.hanlp.dictionary.AddressKeyWordDictionary;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.seg.NShort.Path.Vertex;
-import com.hankcs.hanlp.seg.NShort.Path.WordNet;
+import com.hankcs.hanlp.seg.common.Vertex;
+import com.hankcs.hanlp.seg.common.WordNet;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 import java.util.*;
 

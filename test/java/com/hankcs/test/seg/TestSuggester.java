@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.NShort.Segment;
 import com.hankcs.hanlp.suggest.ISuggester;
 import com.hankcs.hanlp.suggest.Suggester;
@@ -84,7 +84,7 @@ public class TestSuggester extends TestCase
                         "石门二路",
                         "二孩",
                 };
-        List<WordResult> keyList = Segment.parse(key);
+        List<Term> keyList = Segment.parse(key);
 //        CoreSynonymDictionaryEx.convert()
     }
 }

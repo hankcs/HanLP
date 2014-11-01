@@ -14,7 +14,7 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.EditDistance;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Utility;
 
 import java.io.FileInputStream;
@@ -64,20 +64,20 @@ public class CoreSynonymDictionaryEx
      * @param withUndefinedItem 是否保留词典中没有的词语
      * @return
      */
-    public static List<Long[]> convert(List<WordResult> sentence, boolean withUndefinedItem)
+    public static List<Long[]> convert(List<Term> sentence, boolean withUndefinedItem)
     {
         List<Long[]> synonymItemList = new ArrayList<>(sentence.size());
-        for (WordResult wordResult : sentence)
+        for (Term term : sentence)
         {
             // 除掉停用词
-            if (wordResult.nPOS == null) continue;
-            String nature = wordResult.nPOS.toString();
+            if (term.nature == null) continue;
+            String nature = term.nature.toString();
             char firstChar = nature.charAt(0);
             switch (firstChar)
             {
                 case 'm':
                 {
-                    if (!Utility.isAllChinese(wordResult.sWord)) continue;
+                    if (!Utility.isAllChinese(term.word)) continue;
                 }break;
                 case 'w':
                 {
@@ -85,9 +85,9 @@ public class CoreSynonymDictionaryEx
                 }
             }
             // 停用词
-            if (CoreStopWordDictionary.contains(wordResult.sWord)) continue;
-            Long[] item = get(wordResult.sWord);
-//            logger.trace("{} {}", wordResult.sWord, Arrays.toString(item));
+            if (CoreStopWordDictionary.contains(term.word)) continue;
+            Long[] item = get(term.word);
+//            logger.trace("{} {}", wordResult.word, Arrays.toString(item));
             if (item == null)
             {
                 if (withUndefinedItem)

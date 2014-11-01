@@ -2,7 +2,7 @@ package com.hankcs.test.seg;
 
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
-import com.hankcs.hanlp.seg.LongestSegmenter;
+import com.hankcs.hanlp.seg.LongestSegment;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -49,7 +49,7 @@ public class testBintrie
 //        }
 
 //        System.out.println(binTrie.hasKey("好孩子"));
-        LongestSegmenter<String> segmenter = new LongestSegmenter<String>(binTrie);
+        LongestSegment<String> segmenter = new LongestSegment<String>(binTrie);
         System.out.println(segmenter.seg("我们都是好孩子"));
 
 //        Map.Entry<String, String> entry;

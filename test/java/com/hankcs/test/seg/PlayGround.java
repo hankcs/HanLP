@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.NShort.Segment;
 
 import java.util.List;
@@ -35,10 +35,10 @@ public class PlayGround
 
     private static void seg(String sentence)
     {
-        List<WordResult> wordResults = Segment.parse(sentence);
-        for (WordResult wr : wordResults)
+        List<Term> terms = Segment.parse(sentence);
+        for (Term wr : terms)
         {
-            System.out.print(wr.sWord + wr.nPOS);
+            System.out.print(wr.word + wr.nature);
         }
         System.out.println();
     }

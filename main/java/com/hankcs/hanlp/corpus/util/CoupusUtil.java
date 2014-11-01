@@ -18,7 +18,7 @@ import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 /**
  * @author hankcs
  */
-public class Util
+public class CoupusUtil
 {
     public final static String TAG_PLACE = "未##地";
     public final static String TAG_BIGIN = "始##始";

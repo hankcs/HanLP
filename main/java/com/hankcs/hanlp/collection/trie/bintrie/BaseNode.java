@@ -11,6 +11,10 @@
  */
 package com.hankcs.hanlp.collection.trie.bintrie;
 
+import com.hankcs.hanlp.corpus.io.ByteArray;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Map;
@@ -24,6 +28,10 @@ import java.util.Set;
  */
 public abstract class BaseNode<V> implements Comparable<BaseNode>
 {
+    /**
+     * 状态数组，方便读取的时候用
+     */
+    static final Status[] ARRAY_STATUS = Status.values();
     /**
      * 子节点
      */
@@ -140,6 +148,37 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         }
     }
 
+    protected void walkToSave(DataOutputStream out) throws IOException
+    {
+        out.writeChar(c);
+        out.writeInt(status.ordinal());
+        int childSize = 0;
+        if (child != null) childSize = child.length;
+        out.writeInt(childSize);
+        if (child == null) return;
+        for (BaseNode node : child)
+        {
+            node.walkToSave(out);
+        }
+    }
+
+    protected void walkToLoad(ByteArray byteArray, ValueArray valueArray)
+    {
+        c = byteArray.nextChar();
+        status = ARRAY_STATUS[byteArray.nextInt()];
+        if (status == Status.WORD_END_3 || status == Status.WORD_MIDDLE_2)
+        {
+            value = valueArray.nextValue();
+        }
+        int childSize = byteArray.nextInt();
+        child = new BaseNode[childSize];
+        for (int i = 0; i < childSize; ++i)
+        {
+            child[i] = new Node<>();
+            child[i].walkToLoad(byteArray, valueArray);
+        }
+    }
+
     public static enum Status
     {
         /**
@@ -170,6 +209,25 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         public int compareTo(TrieEntry o)
         {
             return getKey().compareTo(o.getKey());
+        }
+    }
+
+    /**
+     * 对值数组的包装，可以方便地取下一个
+     */
+    public class ValueArray
+    {
+        V[] value;
+        int offset;
+
+        public ValueArray(V[] value)
+        {
+            this.value = value;
+        }
+
+        public V nextValue()
+        {
+            return value[offset++];
         }
     }
 

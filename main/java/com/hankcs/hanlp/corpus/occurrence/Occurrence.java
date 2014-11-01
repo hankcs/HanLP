@@ -13,7 +13,7 @@ package com.hankcs.hanlp.corpus.occurrence;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
 
@@ -257,14 +257,14 @@ public class Occurrence
         return pairFrequencyList;
     }
 
-    public void addAll(List<WordResult> resultList)
+    public void addAll(List<Term> resultList)
     {
 //        System.out.println(resultList);
         String[] termList = new String[resultList.size()];
         int i = 0;
-        for (WordResult word : resultList)
+        for (Term word : resultList)
         {
-            termList[i] = word.sWord;
+            termList[i] = word.word;
             ++i;
         }
         addAll(termList);

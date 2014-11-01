@@ -36,8 +36,8 @@ public class AtomNode
     public String toString()
     {
         return "AtomNode{" +
-                "sWord='" + sWord + '\'' +
-                ", nPOS=" + nPOS +
+                "word='" + sWord + '\'' +
+                ", nature=" + nPOS +
                 '}';
     }
 }

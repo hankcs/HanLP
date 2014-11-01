@@ -11,15 +11,42 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.corpus.io.FolderWalker;
+import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.utility.SentencesUtil;
+import junit.framework.TestCase;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @author hankcs
  */
-public class TestPersonRecognition
+public class TestPersonRecognition extends TestCase
 {
-    public static void main(String[] args)
+    static final String FOLDER = "D:\\Doc\\语料库\\上海静安\\";
+
+    public void testBatch() throws Exception
     {
-        System.out.println(Segment.parse("何晗喜欢陈膺奥"));
+        List<File> fileList = FolderWalker.open(FOLDER);
+        int i = 0;
+        for (File file : fileList)
+        {
+            System.out.println(++i + " / " + fileList.size() + " " + file.getName() + " ");
+            String path = file.getAbsolutePath();
+            String content = IOUtil.readTxt(path);
+            Segment segment = new Segment();
+            List<List<Term>> sentenceList = segment.seg2sentence(content);
+            for (List<Term> sentence : sentenceList)
+            {
+                if (SentencesUtil.hasNature(sentence, Nature.nr))
+                {
+                    System.out.println(sentence);
+                }
+            }
+        }
     }
 }

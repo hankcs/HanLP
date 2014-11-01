@@ -86,6 +86,10 @@ public class Node<V> extends BaseNode
         this.value = value;
     }
 
+    public Node()
+    {
+    }
+
     @Override
     public BaseNode getChild(char c)
     {

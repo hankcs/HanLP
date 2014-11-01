@@ -18,8 +18,8 @@ import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.nr.PersonDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.Vertex;
-import com.hankcs.hanlp.seg.NShort.Path.WordNet;
+import com.hankcs.hanlp.seg.common.Vertex;
+import com.hankcs.hanlp.seg.common.WordNet;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,7 +32,7 @@ import java.util.List;
 public class PersonRecognition
 {
 //    static Logger logger = LoggerFactory.getLogger(PersonRecognition.class);
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet graphOptimum)
+    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NR>> roleTagList = roleTag(pWordSegResult);
         if (HanLP.Config.DEBUG)
@@ -67,7 +67,7 @@ public class PersonRecognition
             System.out.printf("人名角色标注：%s\n", sbLog.toString());
         }
 
-        PersonDictionary.parsePattern(nrList, pWordSegResult, graphOptimum);
+        PersonDictionary.parsePattern(nrList, pWordSegResult, wordNetOptimum, wordNetAll);
         return true;
     }
 

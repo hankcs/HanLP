@@ -11,18 +11,19 @@
  */
 package com.hankcs.hanlp.tokenizer;
 
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
 
 /**
+ * 索引分词器
  * @author hankcs
  */
 public class IndexTokenizer
 {
     static final Segment SEGMENT = new Segment().enableIndexMode(true);
-    public static List<WordResult> parse(String text)
+    public static List<Term> parse(String text)
     {
         return SEGMENT.seg(text);
     }

@@ -13,7 +13,7 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.EditDistance;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -62,17 +62,17 @@ public class CoreSynonymDictionary
      * @param withUndefinedItem 是否保留词典中没有的词语
      * @return
      */
-    public static List<CommonSynonymDictionary.SynonymItem> convert(List<WordResult> sentence, boolean withUndefinedItem)
+    public static List<CommonSynonymDictionary.SynonymItem> convert(List<Term> sentence, boolean withUndefinedItem)
     {
         List<CommonSynonymDictionary.SynonymItem> synonymItemList = new ArrayList<>(sentence.size());
-        for (WordResult wordResult : sentence)
+        for (Term term : sentence)
         {
-            CommonSynonymDictionary.SynonymItem item = get(wordResult.sWord);
+            CommonSynonymDictionary.SynonymItem item = get(term.word);
             if (item == null)
             {
                 if (withUndefinedItem)
                 {
-                    item = CommonSynonymDictionary.SynonymItem.createUndefined(wordResult.sWord);
+                    item = CommonSynonymDictionary.SynonymItem.createUndefined(term.word);
                     synonymItemList.add(item);
                 }
 

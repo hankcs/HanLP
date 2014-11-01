@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg.NShort.Path;
+package com.hankcs.hanlp.seg.common;
 
 /**
  * 基础边，不允许构造
@@ -20,7 +20,7 @@ public class Edge
     /**
      * 花费
      */
-    double weight;
+    public double weight;
     /**
      * 节点名字，调试用
      */

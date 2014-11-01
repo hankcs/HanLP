@@ -14,6 +14,7 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Utility;
 
 import java.io.*;
@@ -52,8 +53,7 @@ public class BiGramDictionary
         trie = new DoubleArrayTrie<>();
         boolean create = !loadDat(path);
         if (!create) return true;
-        List<String> wordList = new ArrayList<String>();
-        List<Integer> freqList = new ArrayList<Integer>();
+        TreeMap<String, Integer> map = new TreeMap<>();
         BufferedReader br;
         try
         {
@@ -64,8 +64,7 @@ public class BiGramDictionary
                 String[] params = line.split("\\s");
                 String twoWord = params[0];
                 int freq = Integer.parseInt(params[1]);
-                wordList.add(twoWord);
-                freqList.add(freq);
+                map.put(twoWord, freq);
             }
             br.close();
             logger.info("二元词典读取完毕:" + path + "，开始构建DAT……");
@@ -79,16 +78,9 @@ public class BiGramDictionary
             return false;
         }
 
-        int resultCode = trie.build(wordList, freqList);
+        int resultCode = trie.build(map);
         logger.info("二元词典DAT构建结果:{}"+ resultCode);
-        if (resultCode < 0)
-        {
-            trie = new DoubleArrayTrie<Integer>();
-            logger.info("二元词典排序中……");
-            sortListForBuildTrie(wordList, freqList, path);
-            logger.info("二元词典排序完毕，正在重试加载……");
-            return load(path);
-        }
+        reSaveDictionary(map, path);
         logger.info("二元词典加载成功:" + trie.size() + "个词条");
         // 试一试保存
         if (create)
@@ -99,6 +91,7 @@ public class BiGramDictionary
             try
             {
                 DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path + ".value.dat")));
+                Collection<Integer> freqList = map.values();
                 out.writeInt(freqList.size());
                 for (int freq : freqList)
                 {
@@ -111,7 +104,6 @@ public class BiGramDictionary
                 return false;
             }
         }
-//        LogManager.getLogger().printf(Level.TRACE, "“·@自强”的频次:%d", trie.getValueAt(trie.exactMatchSearch("·@自强")));
         return true;
     }
 
@@ -216,6 +208,26 @@ public class BiGramDictionary
     {
         Integer result = trie.get(twoWord);
         return (result == null ? 0 : result);
+    }
+
+    /**
+     * 将NGram词典重新写回去
+     * @param map
+     * @param path
+     * @return
+     */
+    private static boolean reSaveDictionary(TreeMap<String, Integer> map, String path)
+    {
+        StringBuilder sbOut = new StringBuilder();
+        for (Map.Entry<String, Integer> entry : map.entrySet())
+        {
+            sbOut.append(entry.getKey());
+            sbOut.append(' ');
+            sbOut.append(entry.getValue());
+            sbOut.append('\n');
+        }
+
+        return IOUtil.saveTxt(path, sbOut.toString());
     }
 
     /**

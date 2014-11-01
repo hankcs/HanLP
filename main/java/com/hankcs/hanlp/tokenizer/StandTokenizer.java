@@ -11,8 +11,8 @@
  */
 package com.hankcs.hanlp.tokenizer;
 
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class StandTokenizer
 {
     static final Segment SEGMENT = new Segment();
-    public static List<WordResult> parse(String text)
+    public static List<Term> parse(String text)
     {
         return SEGMENT.seg(text);
     }

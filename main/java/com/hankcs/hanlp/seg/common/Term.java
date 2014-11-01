@@ -9,36 +9,36 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg.NShort.Path;
+package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
 
 /**
- * 分词结果，给用户看
+ * 分词结果，用户可以直接访问此结果的全部属性
  * @author hankcs
  */
-public class WordResult
+public class Term
 {
     /**
-     * The word
+     * 词语
      */
-    public String sWord;
+    public String word;
 
     /**
-     * the POS of the word
+     * 词性
      */
-    public Nature nPOS;
+    public Nature nature;
 
 
-    public WordResult(String sWord, Nature nPOS)
+    public Term(String word, Nature nature)
     {
-        this.sWord = sWord;
-        this.nPOS = nPOS;
+        this.word = word;
+        this.nature = nature;
     }
 
     @Override
     public String toString()
     {
-        return sWord + "/" + nPOS;
+        return word + "/" + nature;
     }
 }

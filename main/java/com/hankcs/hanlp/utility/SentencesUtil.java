@@ -1,5 +1,8 @@
 package com.hankcs.hanlp.utility;
 
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.seg.common.Term;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -100,5 +103,24 @@ public class SentencesUtil
         {
             sentences.add(content);
         }
+    }
+
+    /**
+     * 句子中是否含有词性
+     * @param sentence
+     * @param nature
+     * @return
+     */
+    public static boolean hasNature(List<Term> sentence, Nature nature)
+    {
+        for (Term term : sentence)
+        {
+            if (term.nature == nature)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.stopword;
 
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 
 /**
  * 停用词词典过滤器
@@ -25,5 +25,5 @@ public interface Filter
      * @param term
      * @return 是否应当
      */
-    boolean shouldInclude(WordResult term);
+    boolean shouldInclude(Term term);
 }

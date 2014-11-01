@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.NShort.Segment;
 
 import java.util.LinkedList;
@@ -24,7 +24,7 @@ public class testCheckDateElements
 {
     public static void main(String[] args)
     {
-        List<List<WordResult>> wordResults = new LinkedList<>();
+        List<List<Term>> wordResults = new LinkedList<>();
         wordResults.add(Segment.parse("3-4月"));
         wordResults.add(Segment.parse("3-4月份"));
         wordResults.add(Segment.parse("3-4季"));
@@ -35,7 +35,7 @@ public class testCheckDateElements
         wordResults.add(Segment.parse("12点半"));
         wordResults.add(Segment.parse("1.abc"));
 
-        for (List<WordResult> result : wordResults)
+        for (List<Term> result : wordResults)
         {
             System.out.println(result);
         }

@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg.NShort.Path;
+package com.hankcs.hanlp.seg.common;
 
 /**
  * 记录了起点的边
@@ -17,7 +17,7 @@ package com.hankcs.hanlp.seg.NShort.Path;
  */
 public class EdgeFrom extends Edge
 {
-    int from;
+    public int from;
 
     public EdgeFrom(int from, double weight, String name)
     {

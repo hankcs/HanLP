@@ -12,14 +12,11 @@
 package com.hankcs.hanlp.dictionary.stopword;
 
 import com.hankcs.hanlp.dictionary.CommonDictionary;
-import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.seg.NShort.Path.WordResult;
+import com.hankcs.hanlp.seg.common.Term;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.AbstractMap;
-import java.util.Map;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
@@ -56,7 +53,13 @@ public class StopWordDictionary extends CommonDictionary<Boolean> implements Fil
     }
 
     @Override
-    public boolean shouldInclude(WordResult term)
+    protected boolean onSaveValue(Boolean[] valueArray, String path)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean shouldInclude(Term term)
     {
         return CoreStopWordDictionary.shouldInclude(term);
     }

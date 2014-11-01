@@ -613,7 +613,7 @@ public class Utility
      * <p/>
      * Description: Lookup the index of nVal in the table nTable which length is nTableLen
      * <p/>
-     * Parameters : nPOS: the POS value
+     * Parameters : nature: the POS value
      * <p/>
      * Returns : the index value Author : Kevin Zhang History : 1.create 2002-1-25
      * ************************************************************************
@@ -652,7 +652,7 @@ public class Utility
      * <p/>
      * Description: Decide whether the word is not a Non-fereign word
      * <p/>
-     * Parameters : sWord: the word
+     * Parameters : word: the word
      * <p/>
      * Returns : the index value Author : Kevin Zhang History : 1.create 2002-1-26
      * ************************************************************************
@@ -676,7 +676,7 @@ public class Utility
      * <p/>
      * Description: Decide whether the word is not a Non-fereign word
      * <p/>
-     * Parameters : sWord: the word
+     * Parameters : word: the word
      * <p/>
      * Returns : the index value Author : Kevin Zhang History : 1.create 2002-3-25
      * ************************************************************************
@@ -696,7 +696,7 @@ public class Utility
      * <p/>
      * Description: Decide whether the word is Chinese Num word
      * <p/>
-     * Parameters : sWord: the word
+     * Parameters : word: the word
      * <p/>
      * Returns : the index value Author : Kevin Zhang History : 1.create 2002-1-26
      * ************************************************************************
@@ -736,7 +736,7 @@ public class Utility
      * <p/>
      * Description:
      * <p/>
-     * Parameters : sWord: the word
+     * Parameters : word: the word
      * <p/>
      * Returns : the index value Author : Kevin Zhang History : 1.create 2002-4-4 2.Modify 2002-5-21
      * ************************************************************************
@@ -789,7 +789,7 @@ public class Utility
      * <p/>
      * Description: Return the foreign type
      * <p/>
-     * Parameters : sWord: the word
+     * Parameters : word: the word
      * <p/>
      * Returns : the index value Author : Kevin Zhang History : 1.create 2002-4-4 2.Modify 2002-5-21
      * ************************************************************************
@@ -1377,5 +1377,30 @@ public class Utility
         num |= ((bytes[start + 1] << 16) & 0xFF0000);
         num |= ((bytes[start] << 24) & 0xFF000000);
         return num;
+    }
+
+    /**
+     * 字节数组转char，高位在前，适用于读取writeChar的数据
+     * @param b
+     * @param offset
+     * @return
+     */
+    public static char bytesHighFirstToChar(byte[] b, int offset)
+    {
+        char c = (char) (((b[offset] & 0xFF) << 8) | (b[offset + 1] & 0xFF));
+        return c;
+    }
+
+    /**
+     * 将异常转为字符串
+     * @param e
+     * @return
+     */
+    public static String exceptionToString(Exception e)
+    {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return sw.toString();
     }
 }
