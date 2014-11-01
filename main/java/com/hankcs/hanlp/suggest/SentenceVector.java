@@ -14,7 +14,8 @@ package com.hankcs.hanlp.suggest;
 import com.hankcs.hanlp.dictionary.CommonSynonymDictionary;
 import com.hankcs.hanlp.dictionary.CoreSynonymDictionary;
 import com.hankcs.hanlp.seg.NShort.Segment;
-import com.hankcs.hanlp.utility.Utility;
+import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.CharUtility;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class SentenceVector implements Comparable<SentenceVector>
         StringBuilder sbKey = new StringBuilder(lexemeArray.length * 4);
         for (long x : lexemeArray)
         {
-            sbKey.append(Utility.long2String(x));
+            sbKey.append(CharUtility.long2String(x));
         }
         this.key = sbKey.toString();
         this.synonymItemList = synonymItemList;

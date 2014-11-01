@@ -35,7 +35,7 @@ public class TestDijkstra extends TestCase
     {
         Segment segment = new Segment();
         HanLP.Config.enableDebug(true);
-        System.out.println(segment.seg("这里有关天培的有关事迹"));
+        System.out.println(segment.seg("妈蛋，你认识波多野结衣老师吗？"));
     }
 
     public void testFixResult() throws Exception

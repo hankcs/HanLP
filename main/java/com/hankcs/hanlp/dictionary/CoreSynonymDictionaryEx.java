@@ -15,7 +15,8 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.EditDistance;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.utility.Utility;
+import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.CharUtility;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class CoreSynonymDictionaryEx
             {
                 case 'm':
                 {
-                    if (!Utility.isAllChinese(term.word)) continue;
+                    if (!CharUtility.isAllChinese(term.word)) continue;
                 }break;
                 case 'w':
                 {

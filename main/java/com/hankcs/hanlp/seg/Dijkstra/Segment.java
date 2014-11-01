@@ -56,6 +56,7 @@ public class Segment extends HiddenMarkovModelSegment
                 vertexList = dijkstra(graph);
                 if (HanLP.Config.DEBUG)
                 {
+                    System.out.printf("细分词网：\n%s\n", wordNetOptimum);
                     System.out.printf("细分词图：%s\n", graph.printByTo());
                 }
             }

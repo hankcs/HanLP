@@ -2,16 +2,23 @@ package com.hankcs.test.seg;
 
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.collection.trie.bintrie.SmartBinTrie;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.LongestSegment;
+import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-public class testBintrie
+public class testBintrie extends TestCase
 {
     public static void main(String[] args) throws IOException
     {
@@ -57,5 +64,55 @@ public class testBintrie
 //        {
 //            System.out.println(entry.getKey() + " - " + (segmenter.getOffset() - entry.getKey().length()));
 //        }
+    }
+
+    public void testSmartVsNormal() throws Exception
+    {
+        BinTrie<String> trieNormal = new BinTrie<>();
+        SmartBinTrie<String> trieSmart = new SmartBinTrie<>();
+        BinTrie<CoreDictionary.Attribute> dictionary = CustomDictionary.getTrie();
+        List<String> wordList = new LinkedList<>();
+        for (Map.Entry<String, CoreDictionary.Attribute> entry : dictionary.entrySet())
+        {
+            wordList.add(entry.getKey());
+        }
+        // 似乎内存会影响速度
+        {
+            BinTrie<String> trie = new BinTrie<>();
+            for (String word : wordList)
+            {
+                trie.put(word, word);
+            }
+        }
+
+        long start;
+
+        start = System.currentTimeMillis();
+        for (String word : wordList)
+        {
+            trieNormal.put(word, word);
+        }
+        System.out.printf("trieNormal插入耗时:%dms%n", System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        for (String word : wordList)
+        {
+            trieSmart.put(word, word);
+        }
+        System.out.printf("trieSmart插入耗时:%dms%n", System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        for (String word : wordList)
+        {
+            assertEquals(word, trieNormal.get(word));
+        }
+        System.out.printf("trieNormal查询耗时:%dms%n", System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        for (String word : wordList)
+        {
+            assertEquals(word, trieSmart.get(word));
+        }
+        System.out.printf("trieSmart查询耗时:%dms%n", System.currentTimeMillis() - start);
     }
 }

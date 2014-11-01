@@ -3,10 +3,7 @@ package com.hankcs.hanlp.algoritm.ahocorasick.trie;
 import com.hankcs.hanlp.algoritm.ahocorasick.interval.IntervalTree;
 import com.hankcs.hanlp.algoritm.ahocorasick.interval.Intervalable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
@@ -28,7 +25,6 @@ public class Trie
 
     /**
      * 构造一棵trie树
-     * @param trieConfig
      */
     public Trie(TrieConfig trieConfig)
     {
@@ -36,28 +32,12 @@ public class Trie
         this.rootState = new State();
     }
 
-    /**
-     * 以默认配置构造一棵trie树
-     */
     public Trie()
     {
         this(new TrieConfig());
     }
 
-    /**
-     * 大小写敏感
-     * @return
-     */
-    public Trie caseInsensitive()
-    {
-        this.trieConfig.setCaseInsensitive(true);
-        return this;
-    }
 
-    /**
-     * 不允许模式串在位置上前后重叠
-     * @return
-     */
     public Trie removeOverlaps()
     {
         this.trieConfig.setAllowOverlaps(false);
@@ -65,19 +45,15 @@ public class Trie
     }
 
     /**
-     * 只匹配完整单词
+     * 只保留最长匹配
      * @return
      */
-    public Trie onlyWholeWords()
+    public Trie remainLongest()
     {
-        this.trieConfig.setOnlyWholeWords(true);
+        this.trieConfig.remainLongest = true;
         return this;
     }
 
-    /**
-     * 添加一个模式串
-     * @param keyword
-     */
     public void addKeyword(String keyword)
     {
         if (keyword == null || keyword.length() == 0)
@@ -94,6 +70,7 @@ public class Trie
 
     /**
      * 一个分词器
+     *
      * @param text 待分词文本
      * @return
      */
@@ -133,6 +110,7 @@ public class Trie
 
     /**
      * 模式匹配
+     *
      * @param text 待匹配的文本
      * @return 匹配到的模式串
      */
@@ -144,20 +122,11 @@ public class Trie
         int position = 0;
         State currentState = this.rootState;
         List<Emit> collectedEmits = new ArrayList<Emit>();
-        for (Character character : text.toCharArray())
+        for (int i = 0; i < text.length(); ++i)
         {
-            if (trieConfig.isCaseInsensitive())
-            {
-                character = Character.toLowerCase(character);
-            }
-            currentState = getState(currentState, character);
+            currentState = getState(currentState, text.charAt(i));
             storeEmits(position, currentState, collectedEmits);
             ++position;
-        }
-
-        if (trieConfig.isOnlyWholeWords())
-        {
-            removePartialMatches(text, collectedEmits);
         }
 
         if (!trieConfig.isAllowOverlaps())
@@ -166,40 +135,56 @@ public class Trie
             intervalTree.removeOverlaps((List<Intervalable>) (List<?>) collectedEmits);
         }
 
+        if (trieConfig.remainLongest)
+        {
+            remainLongest(collectedEmits);
+        }
+
         return collectedEmits;
     }
 
     /**
-     * 移除半截单词
-     * @param searchText
+     * 只保留最长词
      * @param collectedEmits
      */
-    private void removePartialMatches(String searchText, List<Emit> collectedEmits)
+    private static void remainLongest(List<Emit> collectedEmits)
     {
-        long size = searchText.length();
-        List<Emit> removeEmits = new ArrayList<Emit>();
+        if (collectedEmits.size() < 2) return;
+        Map<Integer, Emit> emitMapStart = new TreeMap<>();
         for (Emit emit : collectedEmits)
         {
-            if ((emit.getStart() == 0 ||
-                    !Character.isAlphabetic(searchText.charAt(emit.getStart() - 1))) &&
-                    (emit.getEnd() + 1 == size ||
-                            !Character.isAlphabetic(searchText.charAt(emit.getEnd() + 1))))
+            Emit pre = emitMapStart.get(emit.getStart());
+            if (pre == null || pre.size() < emit.size())
             {
-                continue;
+                emitMapStart.put(emit.getStart(), emit);
             }
-            removeEmits.add(emit);
+        }
+        if (emitMapStart.size() < 2)
+        {
+            collectedEmits.clear();
+            collectedEmits.addAll(emitMapStart.values());
+            return;
+        }
+        Map<Integer, Emit> emitMapEnd = new TreeMap<>();
+        for (Emit emit : emitMapStart.values())
+        {
+            Emit pre = emitMapEnd.get(emit.getEnd());
+            if (pre == null || pre.size() < emit.size())
+            {
+                emitMapEnd.put(emit.getEnd(), emit);
+            }
         }
 
-        for (Emit removeEmit : removeEmits)
-        {
-            collectedEmits.remove(removeEmit);
-        }
+        collectedEmits.clear();
+        collectedEmits.addAll(emitMapEnd.values());
     }
+
 
     /**
      * 跳转到下一个状态
+     *
      * @param currentState 当前状态
-     * @param character 接受字符
+     * @param character    接受字符
      * @return 跳转结果
      */
     private static State getState(State currentState, Character character)
@@ -263,8 +248,9 @@ public class Trie
 
     /**
      * 保存匹配结果
-     * @param position 当前位置，也就是匹配到的模式串的结束位置+1
-     * @param currentState 当前状态
+     *
+     * @param position       当前位置，也就是匹配到的模式串的结束位置+1
+     * @param currentState   当前状态
      * @param collectedEmits 保存位置
      */
     private static void storeEmits(int position, State currentState, List<Emit> collectedEmits)

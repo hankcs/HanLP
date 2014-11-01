@@ -54,7 +54,7 @@ public class PersonDictionary
         logger.info(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<>(NR.class);
         transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);
-        trie = new Trie().removeOverlaps();
+        trie = new Trie();
         trie.addKeyword("BBCD");
         trie.addKeyword("BBE");
         trie.addKeyword("BBZ");
@@ -141,7 +141,7 @@ public class PersonDictionary
 //        }
         Collection<Emit> emitCollection = trie.parseText(pattern);
         Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
-        int startMax = -1;
+//        int startMax = -1;
         for (Emit emit : emitCollection)
         {
             String keyword = emit.getKeyword();

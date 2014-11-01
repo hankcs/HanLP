@@ -107,6 +107,7 @@ public class WordNet
                 if (first == null) break;
                 vertexes[l].add(first);
                 ++size;
+                if (vertexes[l].size() > 1) break;
             }
             else
             {
@@ -115,7 +116,7 @@ public class WordNet
         }
         // 首先保证这个词语可直达
         int l = line + vertex.realWord.length();
-        if (get(l, vertex.realWord.length()) == null)
+        if (get(l).size() == 0)
         {
             Vertex first = wordNetAll.getFirst(l);
             if (first == null) return;
@@ -125,12 +126,13 @@ public class WordNet
         // 直达之后一直往后
         for (++l; l < vertexes.length; ++l)
         {
-            if (get(l, 1) == null)
+            if (get(l).size() == 0)
             {
                 Vertex first = wordNetAll.getFirst(l);
                 if (first == null) break;
                 vertexes[l].add(first);
                 ++size;
+                if (vertexes[l].size() > 1) break;
             }
             else
             {

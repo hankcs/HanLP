@@ -13,7 +13,7 @@ package com.hankcs.hanlp.collection.trie.bintrie;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.utility.Utility;
+import com.hankcs.hanlp.utility.CharUtility;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
@@ -47,14 +47,26 @@ public class BinTrie<V> extends BaseNode<V>
         for (int i = 0; i < chars.length - 1; ++i)
         {
             // 除了最后一个字外，都是继续
-            branch.addChild(new Node(chars[i], Status.NOT_WORD_1, null));
+            branch.addChild(newNode(chars[i], Status.NOT_WORD_1, null));
             branch = branch.getChild(chars[i]);
         }
         // 最后一个字加入时属性为end
-        if (branch.addChild(new Node<V>(chars[chars.length - 1], Status.WORD_END_3, value)))
+        if (branch.addChild(newNode(chars[chars.length - 1], Status.WORD_END_3, value)))
         {
             ++size; // 维护size
         }
+    }
+
+    /**
+     * 动态决定初始化哪种节点
+     * @param c
+     * @param status
+     * @param value
+     * @return
+     */
+    protected BaseNode<V> newNode(char c, Status status, V value)
+    {
+        return new Node<V>(c, status, value);
     }
 
     /**
@@ -71,7 +83,7 @@ public class BinTrie<V> extends BaseNode<V>
             branch = branch.getChild(chars[i]);
         }
         // 最后一个字设为undefined
-        if (branch.addChild(new Node(chars[chars.length - 1], Status.UNDEFINED_0, value)))
+        if (branch.addChild(newNode(chars[chars.length - 1], Status.UNDEFINED_0, value)))
         {
             --size;
         }
@@ -243,6 +255,16 @@ public class BinTrie<V> extends BaseNode<V>
         return child[c];
     }
 
+    /**
+     * 返回一个空白的子节点，根据自己是否智能返回的节点类型不同
+     * @return
+     */
+    @Override
+    protected BaseNode<V> newInstance()
+    {
+        return new Node<V>();
+    }
+
     public boolean save(String path)
     {
         try
@@ -264,7 +286,7 @@ public class BinTrie<V> extends BaseNode<V>
         }
         catch (Exception e)
         {
-            logger.warning("保存到" + path + "失败" + Utility.exceptionToString(e));
+            logger.warning("保存到" + path + "失败" + CharUtility.exceptionToString(e));
             return false;
         }
 
@@ -288,7 +310,7 @@ public class BinTrie<V> extends BaseNode<V>
             int flag = byteArray.nextInt();
             if (flag == 1)
             {
-                child[i] = new Node<>();
+                child[i] = newInstance();
                 child[i].walkToLoad(byteArray, valueArray);
             }
         }

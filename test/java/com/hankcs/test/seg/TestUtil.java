@@ -11,7 +11,8 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.utility.Utility;
+import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.CharUtility;
 import junit.framework.TestCase;
 
 /**
@@ -21,6 +22,6 @@ public class TestUtil extends TestCase
 {
     public void testNonZero() throws Exception
     {
-        System.out.println(Utility.nonZero(0));
+        System.out.println(CharUtility.nonZero(0));
     }
 }

@@ -11,11 +11,9 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
-import com.hankcs.hanlp.seg.common.Vertex;
 import junit.framework.TestCase;
 
 import java.io.*;

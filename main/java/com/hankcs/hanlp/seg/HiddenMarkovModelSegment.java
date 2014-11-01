@@ -21,8 +21,9 @@ import com.hankcs.hanlp.seg.common.Graph;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
+import com.hankcs.hanlp.utility.CharUtility;
 import com.hankcs.hanlp.utility.Predefine;
-import com.hankcs.hanlp.utility.Utility;
+import com.hankcs.hanlp.utility.CharUtility;
 
 import java.util.*;
 
@@ -119,7 +120,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
                 String[] param = current.realWord.split("-", 1);
                 if (param.length == 2)
                 {
-                    if (Utility.isAllNum(param[0]) && Utility.isAllNum(param[1]))
+                    if (CharUtility.isAllNum(param[0]) && CharUtility.isAllNum(param[1]))
                     {
                         current = current.copy();
                         current.realWord = param[0];
@@ -156,7 +157,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         while (listIterator.hasNext())
         {
             next = listIterator.next();
-            if (Utility.isAllNum(current.realWord) || Utility.isAllChineseNum(current.realWord))
+            if (CharUtility.isAllNum(current.realWord) || CharUtility.isAllChineseNum(current.realWord))
             {
                 //===== 1、如果当前词是数字，下一个词是“月、日、时、分、秒、月份”中的一个，则合并且当前词词性是时间
                 String nextWord = next.realWord;
@@ -173,7 +174,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
                 //===== 2、如果当前词是可以作为年份的数字，下一个词是“年”，则合并，词性为时间，否则为数字。
                 else if (nextWord.equals("年"))
                 {
-                    if (Utility.isYearTime(current.realWord))
+                    if (CharUtility.isYearTime(current.realWord))
                     {
                         current = Vertex.newTimeInstance(current.realWord + next.realWord);
                         listIterator.previous();
@@ -288,9 +289,9 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         for (int i = 0; i < charTypeArray.length; ++i)
         {
             c = charArray[i + start];
-            charTypeArray[i] = Utility.charType(c);
+            charTypeArray[i] = CharUtility.charType(c);
 
-            if (c == '.' && i  + start < (charArray.length - 1) && Utility.charType(charArray[i + start + 1]) == Predefine.CT_NUM)
+            if (c == '.' && i  + start < (charArray.length - 1) && CharUtility.charType(charArray[i + start + 1]) == Predefine.CT_NUM)
                 charTypeArray[i] = Predefine.CT_NUM;
             else if (c == '.' && i  + start < (charArray.length - 1) && charArray[i  + start + 1] >= '0' && charArray[i  + start + 1] <= '9')
                 charTypeArray[i] = Predefine.CT_SINGLE;
@@ -379,9 +380,9 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         for (int i = 0; i < charArray.length; ++i)
         {
             c = charArray[i];
-            charTypeArray[i] = Utility.charType(c);
+            charTypeArray[i] = CharUtility.charType(c);
 
-            if (c == '.' && i < (charArray.length - 1) && Utility.charType(charArray[i + 1]) == Predefine.CT_NUM)
+            if (c == '.' && i < (charArray.length - 1) && CharUtility.charType(charArray[i + 1]) == Predefine.CT_NUM)
                 charTypeArray[i] = Predefine.CT_NUM;
             else if (c == '.' && i < (charArray.length - 1) && charArray[i + 1] >= '0' && charArray[i + 1] <= '9')
                 charTypeArray[i] = Predefine.CT_SINGLE;
@@ -454,7 +455,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         {
             next = listIterator.next();
 //            System.out.println("current:" + current + " next:" + next);
-            if ((Utility.isAllNum(current.realWord) || Utility.isAllChineseNum(current.realWord)) && (Utility.isAllNum(next.realWord) || Utility.isAllChineseNum(next.realWord)))
+            if ((CharUtility.isAllNum(current.realWord) || CharUtility.isAllChineseNum(current.realWord)) && (CharUtility.isAllNum(next.realWord) || CharUtility.isAllChineseNum(next.realWord)))
             {
                 /////////// 这部分从逻辑上等同于current.realWord = current.realWord + next.realWord;
                 // 但是current指针被几个路径共享，需要备份，不然修改了一处就修改了全局

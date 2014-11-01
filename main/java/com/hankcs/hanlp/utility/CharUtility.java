@@ -3,7 +3,7 @@ package com.hankcs.hanlp.utility;
 
 import java.io.*;
 
-public class Utility
+public class CharUtility
 {
     public static final int CC_NUM = 6768;
 
@@ -20,6 +20,9 @@ public class Utility
 
     public static final int CT_SENTENCE_END = 4;// Sentence ending
 
+    /**
+     * 单字节
+     */
     public static final int CT_SINGLE = 5;// SINGLE byte
 
     /**
@@ -250,6 +253,7 @@ public class Utility
         return true;
     }
 
+    //TODO:这个效率太慢！要优化
     public static int charType(char c)
     {
         return charType(String.valueOf(c));

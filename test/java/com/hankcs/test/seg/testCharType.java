@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.utility.Utility;
+import com.hankcs.hanlp.utility.CharUtility;
 
 /**
  * @author hankcs
@@ -20,6 +20,6 @@ public class testCharType
 {
     public static void main(String[] args)
     {
-        System.out.println(Utility.charType('-'));
+        System.out.println(CharUtility.charType('-'));
     }
 }

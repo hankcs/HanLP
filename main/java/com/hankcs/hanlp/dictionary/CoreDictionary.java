@@ -16,7 +16,8 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.utility.Utility;
+import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.CharUtility;
 
 import java.io.*;
 import java.util.*;
@@ -135,24 +136,24 @@ public class CoreDictionary
             byte[] bytes = IOUtil.readBytes(path + ".value.dat");
             if (bytes == null) return false;
             int index = 0;
-            int size = Utility.bytesHighFirstToInt(bytes, index);
+            int size = CharUtility.bytesHighFirstToInt(bytes, index);
             index += 4;
             Attribute[] attributes = new Attribute[size];
             final Nature[] natureIndexArray = Nature.values();
             for (int i = 0; i < size; ++i)
             {
                 // 第一个是全部频次，第二个是词性个数
-                int currentTotalFrequency = Utility.bytesHighFirstToInt(bytes, index);
+                int currentTotalFrequency = CharUtility.bytesHighFirstToInt(bytes, index);
                 index += 4;
-                int length = Utility.bytesHighFirstToInt(bytes, index);
+                int length = CharUtility.bytesHighFirstToInt(bytes, index);
                 index += 4;
                 attributes[i] = new Attribute(length);
                 attributes[i].totalFrequency = currentTotalFrequency;
                 for (int j = 0; j < length; ++j)
                 {
-                    attributes[i].nature[j] = natureIndexArray[Utility.bytesHighFirstToInt(bytes, index)];
+                    attributes[i].nature[j] = natureIndexArray[CharUtility.bytesHighFirstToInt(bytes, index)];
                     index += 4;
-                    attributes[i].frequency[j] = Utility.bytesHighFirstToInt(bytes, index);
+                    attributes[i].frequency[j] = CharUtility.bytesHighFirstToInt(bytes, index);
                     index += 4;
                 }
             }

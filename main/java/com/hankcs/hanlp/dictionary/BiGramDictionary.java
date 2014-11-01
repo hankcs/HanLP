@@ -15,7 +15,8 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.utility.Utility;
+import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.CharUtility;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -129,12 +130,12 @@ public class BiGramDictionary
             fis.close();
 
             int index = 0;
-            int size = Utility.bytesHighFirstToInt(bytes, index);
+            int size = CharUtility.bytesHighFirstToInt(bytes, index);
             index += 4;
             Integer[] value = new Integer[size];
             for (int i = 0; i < size; i++)
             {
-                value[i] = Utility.bytesHighFirstToInt(bytes, index);
+                value[i] = CharUtility.bytesHighFirstToInt(bytes, index);
                 index += 4;
             }
             logger.info("加载值" + path + ".value.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
