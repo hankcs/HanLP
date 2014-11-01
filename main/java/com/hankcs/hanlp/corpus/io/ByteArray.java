@@ -66,4 +66,19 @@ public class ByteArray
     {
         return offset < bytes.length;
     }
+
+    /**
+     * 读取一个String，注意这个String是双字节版的，在字符之前有一个整型表示长度
+     * @return
+     */
+    public String nextString()
+    {
+        StringBuilder sb = new StringBuilder();
+        int length = nextInt();
+        for (int i = 0; i < length; ++i)
+        {
+            sb.append(nextChar());
+        }
+        return sb.toString();
+    }
 }

@@ -144,4 +144,18 @@ public class Predefine
      * 日志组件
      */
     public static Logger logger = Logger.getLogger("HanLP");
+
+    /**
+     * trie树文件后缀名
+     */
+    public final static String TRIE_EXT = ".trie.dat";
+    /**
+     * 值文件后缀名
+     */
+    public final static String VALUE_EXT = ".value.dat";
+
+    /**
+     * 逆转后缀名
+     */
+    public final static String REVERSE_EXT = ".reverse";
 }

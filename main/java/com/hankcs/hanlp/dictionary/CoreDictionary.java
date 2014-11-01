@@ -210,7 +210,7 @@ public class CoreDictionary
          */
         int begin;
 
-        private List<Map.Entry<String, Attribute>> entryList;
+        private LinkedList<Map.Entry<String, Attribute>> entryList;
 
         protected Searcher(char[] c)
         {
@@ -242,8 +242,8 @@ public class CoreDictionary
             {
                 return null;
             }
-            Map.Entry<String, Attribute> result = entryList.get(0);
-            entryList.remove(0);
+            Map.Entry<String, Attribute> result = entryList.getLast();
+            entryList.removeLast();
             offset = begin - 1;
             return result;
         }

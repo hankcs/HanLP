@@ -11,6 +11,9 @@
  */
 package com.hankcs.hanlp;
 
+import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
+import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
+
 import java.util.Properties;
 import java.util.logging.Level;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -60,6 +63,10 @@ public class HanLP
          * 人名词典转移矩阵路径
          */
         public static String PersonDictionaryTrPath = "data/dictionary/person/nr.tr.txt";
+        /**
+         * 繁简词典路径
+         */
+        public static String TraditionalChineseDictionaryPath = "data/dictionary/TraditionalChinese.txt";
 
         static
         {
@@ -76,6 +83,7 @@ public class HanLP
                 PersonDictionaryPath = root + p.getProperty("PersonDictionaryPath");
                 PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath");
                 CustomDictionaryPath = root + p.getProperty("CustomDictionaryPath");
+                TraditionalChineseDictionaryPath = root + p.getProperty("TraditionalChineseDictionaryPath");
             }
             catch (Exception e)
             {
@@ -86,6 +94,14 @@ public class HanLP
             {
                 logger.setLevel(Level.OFF);
             }
+        }
+
+        /**
+         * 开启调试模式(会降低性能)
+         */
+        public static void enableDebug()
+        {
+            enableDebug(true);
         }
 
         public static void enableDebug(boolean enable)
@@ -100,5 +116,25 @@ public class HanLP
                 logger.setLevel(Level.OFF);
             }
         }
+    }
+
+    /**
+     * 简转繁
+     * @param traditionalChineseString 繁体中文
+     * @return 简体中文
+     */
+    public static String convertToSimplifiedChinese(String traditionalChineseString)
+    {
+        return TraditionalChineseDictionary.convertToSimplifiedChinese(traditionalChineseString);
+    }
+
+    /**
+     * 繁转简
+     * @param simplifiedChineseString 简体中文
+     * @return 繁体中文
+     */
+    public static String convertToTraditionalChinese(String simplifiedChineseString)
+    {
+        return SimplifiedChineseDictionary.convertToTraditionalChinese(simplifiedChineseString);
     }
 }

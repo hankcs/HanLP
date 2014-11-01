@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.Set;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
@@ -27,11 +28,10 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public abstract class SimpleDictionary<V>
 {
-    BinTrie<V> trie;
+    BinTrie<V> trie = new BinTrie<>();
 
     public boolean load(String path)
     {
-        trie = new BinTrie<>();
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -39,6 +39,7 @@ public abstract class SimpleDictionary<V>
             while ((line = br.readLine()) != null)
             {
                 Map.Entry<String, V> entry = onGenerateEntry(line);
+                if (entry == null) continue;
                 trie.put(entry.getKey(), entry.getValue());
             }
             br.close();
@@ -69,5 +70,31 @@ public abstract class SimpleDictionary<V>
      * @return
      */
     protected abstract Map.Entry<String, V> onGenerateEntry(String line);
+
+    /**
+     * 以我为主词典，合并一个副词典
+     * @param other
+     */
+    public void combine(SimpleDictionary<V> other)
+    {
+        if (other.trie == null)
+        {
+            logger.warning("有个词典还没加载");
+            return;
+        }
+        for (Map.Entry<String, V> entry : other.trie.entrySet())
+        {
+            if (trie.containsKey(entry.getKey())) continue;
+            trie.put(entry.getKey(), entry.getValue());
+        }
+    }
+    /**
+     * 获取键值对集合
+     * @return
+     */
+    public Set<Map.Entry<String, V>> entrySet()
+    {
+        return trie.entrySet();
+    }
 
 }

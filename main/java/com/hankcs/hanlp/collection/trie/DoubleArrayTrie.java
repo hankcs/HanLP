@@ -328,6 +328,24 @@ public class DoubleArrayTrie<V> implements Serializable
     }
 
     /**
+     * 构建DAT
+     * @param entrySet 注意此entrySet一定要是字典序的！否则会失败
+     * @return
+     */
+    public int build(Set<Map.Entry<String, V>> entrySet)
+    {
+        List<String> keyList = new ArrayList<String>(entrySet.size());
+        List<V> valueList = new ArrayList<V>(entrySet.size());
+        for (Map.Entry<String, V> entry : entrySet)
+        {
+            keyList.add(entry.getKey());
+            valueList.add(entry.getValue());
+        }
+
+        return build(keyList, valueList);
+    }
+
+    /**
      * 方便地构造一个双数组trie树
      *
      * @param keyValueMap 升序键值对map
@@ -337,15 +355,7 @@ public class DoubleArrayTrie<V> implements Serializable
     {
         assert keyValueMap != null;
         Set<Map.Entry<String, V>> entrySet = keyValueMap.entrySet();
-        List<String> keyList = new ArrayList<String>(keyValueMap.size());
-        List<V> valueList = new ArrayList<V>(keyValueMap.size());
-        for (Map.Entry<String, V> entry : entrySet)
-        {
-            keyList.add(entry.getKey());
-            valueList.add(entry.getValue());
-        }
-
-        return build(keyList, valueList);
+        return build(entrySet);
     }
 
     public int build(List<String> _key, int _length[], int _value[],
