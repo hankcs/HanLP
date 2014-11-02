@@ -67,15 +67,31 @@ public class HanLP
          * 繁简词典路径
          */
         public static String TraditionalChineseDictionaryPath = "data/dictionary/TraditionalChinese.txt";
+        /**
+         * 声母韵母语调词典
+         */
+        public static String SYTDictionaryPath = "data/dictionary/pinyin/SYTDictionary.txt";
+
+        /**
+         * 拼音词典路径
+         */
+        public static String PinyinDictionaryPath = "data/dictionary/pinyin/pinyin.txt";
 
         static
         {
             // 自动读取配置
-            Properties p = new Properties();
+            Properties p = new Properties()
+            {
+                @Override
+                public String getProperty(String key)
+                {
+                    return super.getProperty(key, key);
+                }
+            };
             try
             {
                 p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("HanLP.properties"));
-                String root = p.getProperty("root");
+                String root = p.getProperty("root", "");
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath");
                 BiGramDictionaryPath = root + p.getProperty("BiGramDictionaryPath");
                 CoreStopWordDictionaryPath = root + p.getProperty("CoreStopWordDictionaryPath");
@@ -84,6 +100,8 @@ public class HanLP
                 PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath");
                 CustomDictionaryPath = root + p.getProperty("CustomDictionaryPath");
                 TraditionalChineseDictionaryPath = root + p.getProperty("TraditionalChineseDictionaryPath");
+                SYTDictionaryPath = root + p.getProperty("SYTDictionaryPath");
+                PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath");
             }
             catch (Exception e)
             {
@@ -95,7 +113,6 @@ public class HanLP
                 logger.setLevel(Level.OFF);
             }
         }
-
         /**
          * 开启调试模式(会降低性能)
          */
@@ -137,4 +154,12 @@ public class HanLP
     {
         return SimplifiedChineseDictionary.convertToTraditionalChinese(simplifiedChineseString);
     }
+
+//    /**
+//     * 开启调试模式
+//     */
+//    public static void enableDebug()
+//    {
+//        HanLP.Config.enableDebug();
+//    }
 }

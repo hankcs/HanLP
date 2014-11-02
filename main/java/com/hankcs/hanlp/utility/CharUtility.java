@@ -1407,4 +1407,15 @@ public class CharUtility
         e.printStackTrace(pw);
         return sw.toString();
     }
+
+    /**
+     * 判断某个字符是否为汉字
+     * @param c 需要判断的字符
+     * @return 是汉字返回true，否则返回false
+     */
+    public static boolean isChinese(char c)
+    {
+        String regex = "[\\u4e00-\\u9fa5]";
+        return String.valueOf(c).matches(regex);
+    }
 }

@@ -92,4 +92,14 @@ public class StringDictionary extends SimpleDictionary<String>
 
         return dictionary;
     }
+
+    /**
+     * 向中加入单词
+     * @param key
+     * @param value
+     */
+    public void add(String key, String value)
+    {
+        trie.put(key, value);
+    }
 }

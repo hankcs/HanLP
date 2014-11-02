@@ -97,4 +97,28 @@ public abstract class SimpleDictionary<V>
         return trie.entrySet();
     }
 
+    /**
+     * 过滤部分词条
+     * @param filter 过滤器
+     * @return 删除了多少条
+     */
+    public int remove(Filter filter)
+    {
+        int size = trie.size();
+        for (Map.Entry<String, V> entry : entrySet())
+        {
+            if (filter.remove(entry))
+            {
+                trie.remove(entry.getKey());
+            }
+        }
+
+        return size - trie.size();
+    }
+
+    public interface Filter<V>
+    {
+        boolean remove(Map.Entry<String, V> entry);
+    }
+
 }

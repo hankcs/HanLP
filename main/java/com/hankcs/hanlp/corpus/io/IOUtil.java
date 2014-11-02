@@ -15,6 +15,7 @@ package com.hankcs.hanlp.corpus.io;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
@@ -105,6 +106,17 @@ public class IOUtil
         return new String(fileContent);
     }
 
+    public static LinkedList<String[]> readCsv(String path)
+    {
+        LinkedList<String[]> resultList = new LinkedList<>();
+        LinkedList<String> lineList = readLineList(path);
+        for (String line : lineList)
+        {
+            resultList.add(line.split(","));
+        }
+        return resultList;
+    }
+
     /**
      * 快速保存
      * @param path
@@ -122,6 +134,7 @@ public class IOUtil
         catch (Exception e)
         {
             logger.throwing("IOUtil", "saveTxt", e);
+            logger.warning("IOUtil saveTxt 到" + path + "失败" + e.toString());
             return false;
         }
         return true;
@@ -155,5 +168,43 @@ public class IOUtil
         }
 
         return null;
+    }
+
+    public static LinkedList<String> readLineList(String path)
+    {
+        LinkedList<String> result = new LinkedList<String>();
+        String txt = readTxt(path);
+        if (txt == null) return result;
+        StringTokenizer tokenizer = new StringTokenizer(txt, "\n");
+        while (tokenizer.hasMoreTokens())
+        {
+            result.add(tokenizer.nextToken());
+        }
+
+        return result;
+    }
+
+    public static boolean saveMapToTxt(Map<Object, Object> map, String path)
+    {
+        return saveMapToTxt(map, path, "=");
+    }
+
+    public static boolean saveMapToTxt(Map<Object, Object> map, String path, String separator)
+    {
+        map = new TreeMap<Object, Object>(map);
+        return saveEntrySetToTxt(map.entrySet(), path, separator);
+    }
+
+    public static boolean saveEntrySetToTxt(Set<Map.Entry<Object, Object>> entrySet, String path, String separator)
+    {
+        StringBuilder sbOut = new StringBuilder();
+        for (Map.Entry<Object, Object> entry : entrySet)
+        {
+            sbOut.append(entry.getKey());
+            sbOut.append(separator);
+            sbOut.append(entry.getValue());
+            sbOut.append('\n');
+        }
+        return saveTxt(path, sbOut.toString());
     }
 }
