@@ -18,9 +18,9 @@ public class NumUtil
     {
         if (word != null)
         {
-            if (word.length() == 2 && CharUtility.isInAggregate("第上成±—＋∶·．／", word))
+            if (word.length() == 2 && TextUtility.isInAggregate("第上成±—＋∶·．／", word))
                 return true;
-            if (word.length() == 1 && CharUtility.isInAggregate("+-./", word))
+            if (word.length() == 1 && TextUtility.isInAggregate("+-./", word))
                 return true;
         }
         return false;

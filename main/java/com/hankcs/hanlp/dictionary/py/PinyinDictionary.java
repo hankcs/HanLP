@@ -30,7 +30,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class PinyinDictionary
 {
     static DoubleArrayTrie<Pinyin[]> trie = new DoubleArrayTrie<>();
-    static final Pinyin[] pinyins = Pinyin.values();
+    public static final Pinyin[] pinyins = Pinyin.values();
 
     static
     {
@@ -137,9 +137,24 @@ public class PinyinDictionary
         return trie.get(key);
     }
 
+    /**
+     * 转为拼音
+     * @param text
+     * @return List形式的拼音，对应每一个字（所谓字，指的是任意字符）
+     */
     public static List<Pinyin> convertToPinyin(String text)
     {
         return segLongest(text.toCharArray(), trie);
+    }
+
+    /**
+     * 转为拼音
+     * @param text
+     * @return 数组形式的拼音
+     */
+    public static Pinyin[] convertToPinyinArray(String text)
+    {
+        return convertToPinyin(text).toArray(new Pinyin[0]);
     }
 
     public static BaseSearcher getSearcher(char[] charArray, DoubleArrayTrie<Pinyin[]> trie)

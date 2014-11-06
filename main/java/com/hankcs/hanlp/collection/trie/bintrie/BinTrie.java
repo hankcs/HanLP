@@ -13,8 +13,7 @@ package com.hankcs.hanlp.collection.trie.bintrie;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.utility.CharUtility;
-import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
@@ -265,7 +264,7 @@ public class BinTrie<V> extends BaseNode<V>
         }
         catch (Exception e)
         {
-            logger.warning("保存到" + path + "失败" + CharUtility.exceptionToString(e));
+            logger.warning("保存到" + path + "失败" + TextUtility.exceptionToString(e));
             return false;
         }
 

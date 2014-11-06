@@ -15,8 +15,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.NShort.Segment;
 import com.hankcs.hanlp.suggest.ISuggester;
 import com.hankcs.hanlp.suggest.Suggester;
-import com.hankcs.hanlp.utility.CharUtility;
-import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
 import java.util.List;
@@ -61,7 +60,7 @@ public class TestSuggester extends TestCase
     {
         long l = Long.MAX_VALUE - 1234567890L;
         System.out.println(Long.toBinaryString(l));
-        char[] charArray = CharUtility.long2char(l);
+        char[] charArray = TextUtility.long2char(l);
         for (char c : charArray)
         {
             System.out.print(Long.toBinaryString((long)(c)));

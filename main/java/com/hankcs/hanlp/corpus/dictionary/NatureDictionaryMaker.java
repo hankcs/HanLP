@@ -16,9 +16,8 @@ import com.hankcs.hanlp.corpus.document.Document;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.corpus.util.Precompiler;
-import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.TextUtility;
 import com.hankcs.hanlp.utility.Predefine;
-import com.hankcs.hanlp.utility.CharUtility;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -118,7 +117,7 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
                     case "mq":
                     case "w":
                     case "t":
-                        if (!CharUtility.isAllChinese(word.value)) return false;
+                        if (!TextUtility.isAllChinese(word.value)) return false;
                     case "nr":
                         return false;
                 }

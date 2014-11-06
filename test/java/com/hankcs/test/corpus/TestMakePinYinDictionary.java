@@ -12,14 +12,11 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.corpus.dictionary.SimpleDictionary;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionaryMaker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.dictionary.py.Pinyin;
-import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
-import com.hankcs.hanlp.dictionary.py.SYTDictionary;
-import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.dictionary.py.*;
+import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
 import java.util.*;
@@ -84,7 +81,7 @@ public class TestMakePinYinDictionary extends TestCase
             String yd = args[5];
             String pyyd = py + yd;
             // 过滤
-            if (!CharUtility.isAllChinese(word)) continue;
+            if (!TextUtility.isAllChinese(word)) continue;
             dictionarySingle.add(word, pyyd);
         }
         dictionarySingle.save("data/dictionary/pinyin/single.txt");
@@ -105,7 +102,7 @@ public class TestMakePinYinDictionary extends TestCase
             String yd = args[5];
             String pyyd = py + yd;
             // 过滤
-            if (!CharUtility.isAllChinese(word)) continue;
+            if (!TextUtility.isAllChinese(word)) continue;
             dictionarySingle.add(pyyd, sm + "," + ym + "," + yd);
         }
         dictionarySingle.save("data/dictionary/pinyin/sm-ym-table.txt");
@@ -167,7 +164,7 @@ public class TestMakePinYinDictionary extends TestCase
         System.out.print("输入法头,");
         for (Pinyin pinyin : pinyinList)
         {
-            System.out.printf("%s,", pinyin.getHead());
+            System.out.printf("%s,", pinyin.getHeadString());
         }
         System.out.println();
     }
@@ -264,4 +261,14 @@ public class TestMakePinYinDictionary extends TestCase
         System.out.println(Arrays.toString(pinyins));
     }
 
+    public void testMakePinyinJavaCode() throws Exception
+    {
+        StringBuilder sb = new StringBuilder();
+        for (Pinyin pinyin : PinyinDictionary.pinyins)
+        {
+            // 0声母 1韵母 2音调 3带音标
+            sb.append(pinyin + "(" + Shengmu.class.getSimpleName() + "." + pinyin.getShengmu() + ", " + Yunmu.class.getSimpleName() + "." + pinyin.getYunmu() + ", " + pinyin.getTone() + ", \"" + pinyin.getPinyinWithToneMark() + "\", \"" + pinyin.getPinyinWithoutTone() + "\"" + ", " + Head.class.getSimpleName() + "." + pinyin.getHeadString() + ", '" + pinyin.getFirstChar() + "'" + "),\n");
+        }
+        IOUtil.saveTxt("data/dictionary/pinyin/py.txt", sb.toString());
+    }
 }

@@ -24,4 +24,9 @@ public abstract class Token
 
     public abstract Emit getEmit();
 
+    @Override
+    public String toString()
+    {
+        return fragment + "/" + isMatch();
+    }
 }

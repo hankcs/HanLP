@@ -12,65 +12,102 @@
 package com.hankcs.hanlp.suggest;
 
 
+import com.hankcs.hanlp.suggest.scorer.BaseScorer;
+import com.hankcs.hanlp.suggest.scorer.IScorer;
+import com.hankcs.hanlp.suggest.scorer.editdistance.EditDistanceScorer;
+import com.hankcs.hanlp.suggest.scorer.lexeme.IdVector;
+import com.hankcs.hanlp.suggest.scorer.lexeme.IdVectorScorer;
+import com.hankcs.hanlp.suggest.scorer.pinyin.PinyinScorer;
+
 import java.util.*;
-import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * @author hankcs
  */
 public class Suggester implements ISuggester
 {
-    Map<IdVector, Set<String>> storage;
+    List<BaseScorer> scorerList;
 
     public Suggester()
     {
-        storage = new TreeMap<>();
+        scorerList = new ArrayList<>();
+//        scorerList.add(new IdVectorScorer());
+//        scorerList.add(new EditDistanceScorer());
+        scorerList.add(new PinyinScorer());
     }
 
     @Override
     public void addSentence(String sentence)
     {
-        IdVector idVector = new IdVector(sentence);
-        if (idVector.idArrayList.size() == 0) return;
-        Set<String> set = storage.get(idVector);
-        if (set == null)
+        for (IScorer scorer : scorerList)
         {
-            set = new TreeSet<>();
-            storage.put(idVector, set);
+            scorer.addSentence(sentence);
         }
-        set.add(sentence);
     }
 
     @Override
     public List<String> suggest(String key, int size)
     {
         List<String> resultList = new ArrayList<>(size);
-        TreeMap<Double, Set<String>> result = new TreeMap<>(Collections.reverseOrder());
-        IdVector idVector1 = new IdVector(key);
-        if (idVector1.idArrayList.size() == 0) return resultList;
-        for (Map.Entry<IdVector, Set<String>> entry : storage.entrySet())
+        TreeMap<String, Double> scoreMap = new TreeMap<>();
+        for (BaseScorer scorer : scorerList)
         {
-            IdVector idVector2 = entry.getKey();
-            Double score = idVector1.similarity(idVector2);
-            Set<String> value = result.get(score);
-            if (value == null)
+            Map<String, Double> map = scorer.computeScore(key);
+            Double max = max(map);  // 用于正规化一个map
+            for (Map.Entry<String, Double> entry : map.entrySet())
             {
-                value = new TreeSet<>();
-                result.put(score, value);
+                Double score = scoreMap.get(entry.getKey());
+                if (score == null) score = 0.0;
+                scoreMap.put(entry.getKey(), score / max + entry.getValue() * scorer.boost);
             }
-//            value.addAll(entry.getValue());
-            value.add(entry.getValue().iterator().next());
         }
-        for (Map.Entry<Double, Set<String>> entry : result.entrySet())
+        for (Map.Entry<Double, Set<String>> entry : sortScoreMap(scoreMap).entrySet())
         {
-//            System.out.print(entry.getKey() + " ");
             for (String sentence : entry.getValue())
             {
                 if (resultList.size() >= size) return resultList;
                 resultList.add(sentence);
-//                System.out.println(sentence);
             }
         }
 
         return resultList;
+    }
+
+    /**
+     * 将分数map排序折叠
+     * @param scoreMap
+     * @return
+     */
+    private static TreeMap<Double ,Set<String>> sortScoreMap(TreeMap<String, Double> scoreMap)
+    {
+        TreeMap<Double, Set<String>> result = new TreeMap<>(Collections.reverseOrder());
+        for (Map.Entry<String, Double> entry : scoreMap.entrySet())
+        {
+            Set<String> sentenceSet = result.get(entry.getValue());
+            if (sentenceSet == null)
+            {
+                sentenceSet = new HashSet<>();
+                result.put(entry.getValue(), sentenceSet);
+            }
+            sentenceSet.add(entry.getKey());
+        }
+
+        return result;
+    }
+
+    /**
+     * 从map的值中找出最大值，这个值是从0开始的
+     * @param map
+     * @return
+     */
+    private static Double max(Map<String, Double> map)
+    {
+        Double theMax = 0.0;
+        for (Double v : map.values())
+        {
+            theMax = Math.max(theMax, v);
+        }
+
+        return theMax;
     }
 }

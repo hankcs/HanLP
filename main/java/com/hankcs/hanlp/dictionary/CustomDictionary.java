@@ -16,8 +16,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.utility.CharUtility;
-import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
 import java.util.*;
@@ -121,24 +120,24 @@ public class CustomDictionary
             byte[] bytes = IOUtil.readBytes(path + ".value.dat");
             if (bytes == null) return false;
             int index = 0;
-            int size = CharUtility.bytesHighFirstToInt(bytes, index);
+            int size = TextUtility.bytesHighFirstToInt(bytes, index);
             index += 4;
             CoreDictionary.Attribute[] attributes = new CoreDictionary.Attribute[size];
             final Nature[] natureIndexArray = Nature.values();
             for (int i = 0; i < size; ++i)
             {
                 // 第一个是全部频次，第二个是词性个数
-                int currentTotalFrequency = CharUtility.bytesHighFirstToInt(bytes, index);
+                int currentTotalFrequency = TextUtility.bytesHighFirstToInt(bytes, index);
                 index += 4;
-                int length = CharUtility.bytesHighFirstToInt(bytes, index);
+                int length = TextUtility.bytesHighFirstToInt(bytes, index);
                 index += 4;
                 attributes[i] = new CoreDictionary.Attribute(length);
                 attributes[i].totalFrequency = currentTotalFrequency;
                 for (int j = 0; j < length; ++j)
                 {
-                    attributes[i].nature[j] = natureIndexArray[CharUtility.bytesHighFirstToInt(bytes, index)];
+                    attributes[i].nature[j] = natureIndexArray[TextUtility.bytesHighFirstToInt(bytes, index)];
                     index += 4;
-                    attributes[i].frequency[j] = CharUtility.bytesHighFirstToInt(bytes, index);
+                    attributes[i].frequency[j] = TextUtility.bytesHighFirstToInt(bytes, index);
                     index += 4;
                 }
             }

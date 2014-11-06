@@ -68,7 +68,7 @@ public class PlaySuggester
                 line = line.trim();
                 line = line.split("\\s")[0];
                 if (line.length() <= 3 || line.length() > 20) continue;
-                System.out.println("正在读入并处理 " + line);
+//                System.out.println("正在读入并处理 " + line);
                 iSuggester.addSentence(line);
             }
             br.close();

@@ -16,11 +16,9 @@ import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.dictionary.CommonDictionary;
-import com.hankcs.hanlp.utility.CharUtility;
-import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
-import java.util.AbstractMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -79,19 +77,19 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
         if (bytes == null) return null;
         NR[] nrArray = NR.values();
         int index = 0;
-        int size = CharUtility.bytesHighFirstToInt(bytes, index);
+        int size = TextUtility.bytesHighFirstToInt(bytes, index);
         index += 4;
         EnumItem<NR>[] valueArray = new EnumItem[size];
         for (int i = 0; i < size; ++i)
         {
-            int currentSize = CharUtility.bytesHighFirstToInt(bytes, index);
+            int currentSize = TextUtility.bytesHighFirstToInt(bytes, index);
             index += 4;
             EnumItem<NR> item = new EnumItem<>();
             for (int j = 0; j < currentSize; ++j)
             {
-                NR nr = nrArray[CharUtility.bytesHighFirstToInt(bytes, index)];
+                NR nr = nrArray[TextUtility.bytesHighFirstToInt(bytes, index)];
                 index += 4;
-                int frequency = CharUtility.bytesHighFirstToInt(bytes, index);
+                int frequency = TextUtility.bytesHighFirstToInt(bytes, index);
                 index += 4;
                 item.labelMap.put(nr, frequency);
             }

@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.io;
 
-import com.hankcs.hanlp.utility.CharUtility;
+import com.hankcs.hanlp.utility.TextUtility;
 
 /**
  * 对字节数组进行封装，提供方便的读取操作
@@ -46,7 +46,7 @@ public class ByteArray
      */
     public int nextInt()
     {
-        int result = CharUtility.bytesHighFirstToInt(bytes, offset);
+        int result = TextUtility.bytesHighFirstToInt(bytes, offset);
         offset += 4;
         return result;
     }
@@ -57,7 +57,7 @@ public class ByteArray
      */
     public char nextChar()
     {
-        char result = CharUtility.bytesHighFirstToChar(bytes, offset);
+        char result = TextUtility.bytesHighFirstToChar(bytes, offset);
         offset += 2;
         return result;
     }

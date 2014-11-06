@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
+import java.util.List;
+
 /**
  * @author hankcs
  */
@@ -135,5 +137,20 @@ public class PinyinUtil
         {
             return lowerCasePinyinStr;
         }
+    }
+
+    /**
+     * 将列表转为数组
+     * @param pinyinList
+     * @return
+     */
+    public static Pinyin[] convertList2Array(List<Pinyin> pinyinList)
+    {
+        return pinyinList.toArray(new Pinyin[0]);
+    }
+
+    public static Pinyin removeTone(Pinyin p)
+    {
+        return Pinyin.none5;
     }
 }

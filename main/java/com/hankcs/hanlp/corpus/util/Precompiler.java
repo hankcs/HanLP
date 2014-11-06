@@ -13,7 +13,6 @@ package com.hankcs.hanlp.corpus.util;
 
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.utility.Predefine;
-import com.hankcs.hanlp.utility.CharUtility;
 
 /**
  * 预编译与反编译一些词语

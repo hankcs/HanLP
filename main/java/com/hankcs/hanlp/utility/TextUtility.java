@@ -3,7 +3,7 @@ package com.hankcs.hanlp.utility;
 
 import java.io.*;
 
-public class CharUtility
+public class TextUtility
 {
     public static final int CC_NUM = 6768;
 
@@ -540,47 +540,41 @@ public class CharUtility
     }
 
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsAllLetter
-     * <p/>
-     * Description: Judge the string is all made up of Letter Char
-     * <p/>
-     * <p/>
-     * Parameters : sSentence: the original sentence which includes Chinese or Non-Chinese char
-     * <p/>
-     * Returns : the end of the sub-sentence Author : Kevin Zhang History : 1.create 2002-1-24
-     * ************************************************************************
+     * 是否全为英文
+     * @param text
+     * @return
      */
-    public static boolean isAllLetter(String str)
+    public static boolean isAllLetter(String text)
     {
-        int i = 0;
-
-        if (str != null)
+        for (int i = 0; i < text.length(); ++i)
         {
-            int nLen = str.length();
-            byte[] b;
-            try
+            char c = text.charAt(i);
+            if ((((c < 'a' || c > 'z')) && ((c < 'A' || c > 'Z'))))
             {
-                b = str.getBytes("GBK");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-                b = str.getBytes();
-            }
-
-            while (i < nLen - 1
-                    && getUnsigned(b[i]) == 163
-                    && ((getUnsigned(b[i + 1]) >= 193 && getUnsigned(b[i + 1]) <= 218) || (getUnsigned(b[i + 1]) >= 225 && getUnsigned(b[i + 1]) <= 250)))
-            {
-                i += 2;
-            }
-            if (i < nLen)
                 return false;
-            return true;
+            }
         }
-        return false;
+
+        return true;
+    }
+
+    /**
+     * 是否全为英文或字母
+     * @param text
+     * @return
+     */
+    public static boolean isAllLetterOrNum(String text)
+    {
+        for (int i = 0; i < text.length(); ++i)
+        {
+            char c = text.charAt(i);
+            if ((((c < 'a' || c > 'z')) && ((c < 'A' || c > 'Z'))  && ((c < '0' || c > '9'))))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -1385,6 +1379,7 @@ public class CharUtility
 
     /**
      * 字节数组转char，高位在前，适用于读取writeChar的数据
+     *
      * @param b
      * @param offset
      * @return
@@ -1397,6 +1392,7 @@ public class CharUtility
 
     /**
      * 将异常转为字符串
+     *
      * @param e
      * @return
      */
@@ -1410,6 +1406,7 @@ public class CharUtility
 
     /**
      * 判断某个字符是否为汉字
+     *
      * @param c 需要判断的字符
      * @return 是汉字返回true，否则返回false
      */

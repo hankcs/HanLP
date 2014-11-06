@@ -9,12 +9,12 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.suggest;
+package com.hankcs.hanlp.suggest.scorer.lexeme;
 
 import com.hankcs.hanlp.algoritm.ArrayCompare;
 import com.hankcs.hanlp.algoritm.BinarySearch;
 import com.hankcs.hanlp.dictionary.CoreSynonymDictionaryEx;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class IdVector implements Comparable<IdVector>
+public class IdVector implements Comparable<IdVector>, ISentenceKey<IdVector>
 {
     public List<Long[]> idArrayList;
 
@@ -62,18 +62,19 @@ public class IdVector implements Comparable<IdVector>
         return len1 - len2;
     }
 
-    public Double similarity(IdVector o)
+    @Override
+    public Double similarity(IdVector other)
     {
         Double score = 0.0;
         for (Long[] a : idArrayList)
         {
-            for (Long[] b : o.idArrayList)
+            for (Long[] b : other.idArrayList)
             {
                 Long distance = BinarySearch.computeAverageDistance(a, b);
                 score += 1.0 / (0.1 + distance);
             }
         }
 
-        return score / o.idArrayList.size();
+        return score / other.idArrayList.size();
     }
 }
