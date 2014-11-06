@@ -120,5 +120,18 @@ public abstract class SimpleDictionary<V>
     {
         boolean remove(Map.Entry<String, V> entry);
     }
+    /**
+     * 向中加入单词
+     * @param key
+     * @param value
+     */
+    public void add(String key, V value)
+    {
+        trie.put(key, value);
+    }
 
+    public int size()
+    {
+        return trie.size();
+    }
 }

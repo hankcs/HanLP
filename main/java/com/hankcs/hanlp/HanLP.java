@@ -66,7 +66,7 @@ public class HanLP
         /**
          * 繁简词典路径
          */
-        public static String TraditionalChineseDictionaryPath = "data/dictionary/TraditionalChinese.txt";
+        public static String TraditionalChineseDictionaryPath = "data/dictionary/tc/TraditionalChinese.txt";
         /**
          * 声母韵母语调词典
          */

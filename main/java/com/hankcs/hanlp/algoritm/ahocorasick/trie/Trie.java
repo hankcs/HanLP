@@ -68,8 +68,16 @@ public class Trie
         currentState.addEmit(keyword);
     }
 
+    public void addAllKeyword(Collection<String> keywordSet)
+    {
+        for (String keyword : keywordSet)
+        {
+            addKeyword(keyword);
+        }
+    }
+
     /**
-     * 一个分词器
+     * 一个最长分词器
      *
      * @param text 待分词文本
      * @return
@@ -80,6 +88,11 @@ public class Trie
         Collection<Token> tokens = new ArrayList<Token>();
 
         Collection<Emit> collectedEmits = parseText(text);
+        // 下面是最长分词的关键
+        IntervalTree intervalTree = new IntervalTree((List<Intervalable>) (List<?>) collectedEmits);
+        intervalTree.removeOverlaps((List<Intervalable>) (List<?>) collectedEmits);
+        // 移除结束
+
         int lastCollectedPosition = -1;
         for (Emit emit : collectedEmits)
         {
@@ -147,7 +160,7 @@ public class Trie
      * 只保留最长词
      * @param collectedEmits
      */
-    private static void remainLongest(List<Emit> collectedEmits)
+    private static void remainLongest(Collection<Emit> collectedEmits)
     {
         if (collectedEmits.size() < 2) return;
         Map<Integer, Emit> emitMapStart = new TreeMap<>();

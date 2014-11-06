@@ -80,7 +80,8 @@ public class SYTDictionary
         {
             // 0声母 1韵母 2音调 3带音标
             String[] value = entry.getValue();
-            sb.append(entry.getKey() + "(" + Shengmu.class.getSimpleName() + "." + value[0] + ", " + Yunmu.class.getSimpleName() + "." + value[1] + ", " + value[2] + ", \"" + value[3] + "\", \"" + entry.getKey().substring(0, entry.getKey().length() - 1) + "\"),\n");
+            Pinyin pinyin = Pinyin.valueOf(entry.getKey());
+            sb.append(entry.getKey() + "(" + Shengmu.class.getSimpleName() + "." + value[0] + ", " + Yunmu.class.getSimpleName() + "." + value[1] + ", " + value[2] + ", \"" + value[3] + "\", \"" + entry.getKey().substring(0, entry.getKey().length() - 1)  + "\"" + ", " + Head.class.getSimpleName() + "." + pinyin.getHeadString() + ", '" + pinyin.getFirstChar() + "'" + "),\n");
         }
         IOUtil.saveTxt(path + "py.txt", sb.toString());
     }

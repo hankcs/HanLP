@@ -12,6 +12,7 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.dictionary.SimpleDictionary;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionaryMaker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -259,6 +260,30 @@ public class TestMakePinYinDictionary extends TestCase
         HanLP.Config.enableDebug();
         Pinyin[] pinyins = PinyinDictionary.get("中");
         System.out.println(Arrays.toString(pinyins));
+    }
+
+    public void testCombineAnsjWithPinyinTxt() throws Exception
+    {
+        StringDictionary dictionaryAnsj = new StringDictionary();
+        dictionaryAnsj.load("D:\\JavaProjects\\jpinyin\\data\\ansj.txt");
+        System.out.println(dictionaryAnsj.remove(new SimpleDictionary.Filter<String>()
+        {
+            @Override
+            public boolean remove(Map.Entry<String, String> entry)
+            {
+                String word = entry.getKey();
+                String pinyin = entry.getValue();
+                String[] pinyinStringArray = entry.getValue().split("[,\\s　]");
+                if (word.length() != pinyinStringArray.length || !TonePinyinString2PinyinConverter.valid(pinyinStringArray))
+                {
+                    System.out.println(entry);
+                    return false;
+                }
+
+                return true;
+            }
+        }));
+
     }
 
     public void testMakePinyinJavaCode() throws Exception
