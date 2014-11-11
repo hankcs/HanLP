@@ -541,6 +541,7 @@ public class TextUtility
 
     /**
      * 是否全为英文
+     *
      * @param text
      * @return
      */
@@ -560,6 +561,7 @@ public class TextUtility
 
     /**
      * 是否全为英文或字母
+     *
      * @param text
      * @return
      */
@@ -568,7 +570,7 @@ public class TextUtility
         for (int i = 0; i < text.length(); ++i)
         {
             char c = text.charAt(i);
-            if ((((c < 'a' || c > 'z')) && ((c < 'A' || c > 'Z'))  && ((c < '0' || c > '9'))))
+            if ((((c < 'a' || c > 'z')) && ((c < 'A' || c > 'Z')) && ((c < '0' || c > '9'))))
             {
                 return false;
             }
@@ -1414,5 +1416,38 @@ public class TextUtility
     {
         String regex = "[\\u4e00-\\u9fa5]";
         return String.valueOf(c).matches(regex);
+    }
+
+    /**
+     * 统计 keyword 在 srcText 中的出现次数
+     *
+     * @param keyword
+     * @param srcText
+     * @return
+     */
+    public static int count(String keyword, String srcText)
+    {
+        int count = 0;
+        int leng = srcText.length();
+        int j = 0;
+        for (int i = 0; i < leng; i++)
+        {
+            if (srcText.charAt(i) == keyword.charAt(j))
+            {
+                j++;
+                if (j == keyword.length())
+                {
+                    count++;
+                    j = 0;
+                }
+            }
+            else
+            {
+                i = i - j;// should rollback when not match
+                j = 0;
+            }
+        }
+
+        return count;
     }
 }

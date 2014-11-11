@@ -14,6 +14,9 @@ package com.hankcs.hanlp;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
 import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
 
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -41,7 +44,7 @@ public class HanLP
         /**
          * 用户自定义词典路径
          */
-        public static String CustomDictionaryPath = "data/dictionary/CustomDictionary.txt";
+        public static String CustomDictionaryPath[] = new String[]{"data/dictionary/custom/CustomDictionary.txt"};
         /**
          * 2元语法词典路径
          */
@@ -80,28 +83,40 @@ public class HanLP
         static
         {
             // 自动读取配置
-            Properties p = new Properties()
-            {
-                @Override
-                public String getProperty(String key)
-                {
-                    return super.getProperty(key, key);
-                }
-            };
+            Properties p = new Properties();
             try
             {
-                p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("HanLP.properties"));
+                p.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("HanLP.properties"), "UTF-8"));
                 String root = p.getProperty("root", "");
-                CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath");
-                BiGramDictionaryPath = root + p.getProperty("BiGramDictionaryPath");
-                CoreStopWordDictionaryPath = root + p.getProperty("CoreStopWordDictionaryPath");
-                CoreSynonymDictionaryDictionaryPath = root + p.getProperty("CoreSynonymDictionaryDictionaryPath");
-                PersonDictionaryPath = root + p.getProperty("PersonDictionaryPath");
-                PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath");
-                CustomDictionaryPath = root + p.getProperty("CustomDictionaryPath");
-                TraditionalChineseDictionaryPath = root + p.getProperty("TraditionalChineseDictionaryPath");
-                SYTDictionaryPath = root + p.getProperty("SYTDictionaryPath");
-                PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath");
+                CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
+                BiGramDictionaryPath = root + p.getProperty("BiGramDictionaryPath", BiGramDictionaryPath);
+                CoreStopWordDictionaryPath = root + p.getProperty("CoreStopWordDictionaryPath", CoreStopWordDictionaryPath);
+                CoreSynonymDictionaryDictionaryPath = root + p.getProperty("CoreSynonymDictionaryDictionaryPath", CoreSynonymDictionaryDictionaryPath);
+                PersonDictionaryPath = root + p.getProperty("PersonDictionaryPath", PersonDictionaryPath);
+                PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath", PersonDictionaryTrPath);
+//                CustomDictionaryPath = root + p.getProperty("CustomDictionaryPath");
+                String[] pathArray = p.getProperty("CustomDictionaryPath", "CustomDictionaryPath=dictionary/custom/CustomDictionary.txt").split(";");
+                String prePath = root;
+                for (int i = 0; i < pathArray.length; ++i)
+                {
+                    if (pathArray[i].startsWith(" "))
+                    {
+                        pathArray[i] = prePath + pathArray[i].trim();
+                    }
+                    else
+                    {
+                        pathArray[i] = root + pathArray[i];
+                        int lastSplash = pathArray[i].lastIndexOf('/');
+                        if (lastSplash != -1)
+                        {
+                            prePath = pathArray[i].substring(0, lastSplash + 1);
+                        }
+                    }
+                }
+                CustomDictionaryPath = pathArray;
+                TraditionalChineseDictionaryPath = root + p.getProperty("TraditionalChineseDictionaryPath", TraditionalChineseDictionaryPath);
+                SYTDictionaryPath = root + p.getProperty("SYTDictionaryPath", SYTDictionaryPath);
+                PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath", PinyinDictionaryPath);
             }
             catch (Exception e)
             {

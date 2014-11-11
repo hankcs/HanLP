@@ -140,6 +140,17 @@ public class IOUtil
         return true;
     }
 
+    public static <T> boolean saveCollectionToTxt(Collection<T> collection, String path)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (Object o : collection)
+        {
+            sb.append(o);
+            sb.append('\n');
+        }
+        return saveTxt(path, sb.toString());
+    }
+
     /**
      * 将整个文件读取为字节数组
      *

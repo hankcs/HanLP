@@ -31,8 +31,8 @@ public class Suggester implements ISuggester
     public Suggester()
     {
         scorerList = new ArrayList<>();
-//        scorerList.add(new IdVectorScorer());
-//        scorerList.add(new EditDistanceScorer());
+        scorerList.add(new IdVectorScorer());
+        scorerList.add(new EditDistanceScorer());
         scorerList.add(new PinyinScorer());
     }
 

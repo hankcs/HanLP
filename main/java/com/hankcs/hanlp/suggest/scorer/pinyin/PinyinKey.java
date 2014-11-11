@@ -12,9 +12,16 @@
 package com.hankcs.hanlp.suggest.scorer.pinyin;
 
 import com.hankcs.hanlp.algoritm.EditDistance;
+import com.hankcs.hanlp.algoritm.LongestCommonSubstring;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
+import com.hankcs.hanlp.dictionary.py.PinyinUtil;
 import com.hankcs.hanlp.dictionary.py.String2PinyinConverter;
 import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
+import javafx.util.Pair;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author hankcs
@@ -30,25 +37,47 @@ public class PinyinKey implements Comparable<PinyinKey>, ISentenceKey<PinyinKey>
      */
     int[] pyOrdinalArray;
     /**
-     * 输入法头数组
-     */
-    int[] headOrdinalArray;
-    /**
      * 首字母数组
      */
     char[] firstCharArray;
 
     public PinyinKey(String sentence)
     {
-        pinyinArray = String2PinyinConverter.convert2Array(sentence, true);
-        pyOrdinalArray = new int[pinyinArray.length];
-        headOrdinalArray = new int[pinyinArray.length];
-        firstCharArray = new char[pinyinArray.length];
-        for (int i = 0; i < pyOrdinalArray.length; ++i)
+        Pair<List<Pinyin>, List<Boolean>> pair = String2PinyinConverter.convert2Pair(sentence, true);
+        pinyinArray = PinyinUtil.convertList2Array(pair.getKey());
+        List<Boolean> booleanList = pair.getValue();
+        int pinyinSize = 0;
+        for (Boolean yes : booleanList)
         {
-            pyOrdinalArray[i] = pinyinArray[i].ordinal();
-            headOrdinalArray[i] = pinyinArray[i].getHead().ordinal();
-            firstCharArray[i] = pinyinArray[i].getFirstChar();
+            if (yes)
+            {
+                ++pinyinSize;
+            }
+        }
+        int firstCharSize = 0;
+        for (Pinyin pinyin : pinyinArray)
+        {
+            if (pinyin != Pinyin.none5)
+            {
+                ++firstCharSize;
+            }
+        }
+
+        pyOrdinalArray = new int[pinyinSize];
+        firstCharArray = new char[firstCharSize];
+        pinyinSize = 0;
+        firstCharSize = 0;
+        Iterator<Boolean> iterator = booleanList.iterator();
+        for (int i = 0; i < pinyinArray.length; ++i)
+        {
+            if (iterator.next())
+            {
+                pyOrdinalArray[pinyinSize++] = pinyinArray[i].ordinal();
+            }
+            if (pinyinArray[i] != Pinyin.none5)
+            {
+                firstCharArray[firstCharSize++] = pinyinArray[i].getFirstChar();
+            }
         }
     }
 
@@ -78,7 +107,10 @@ public class PinyinKey implements Comparable<PinyinKey>, ISentenceKey<PinyinKey>
     @Override
     public Double similarity(PinyinKey other)
     {
-        return 3.0 / (EditDistance.compute(pyOrdinalArray, other.pyOrdinalArray) + EditDistance.compute(headOrdinalArray, other.headOrdinalArray) + EditDistance.compute(firstCharArray, other.firstCharArray) + 1);
+        int firstCharArrayLength = firstCharArray.length + 1;
+        return
+                1.0 / (EditDistance.compute(pyOrdinalArray, other.pyOrdinalArray) + 1) +
+                (double)LongestCommonSubstring.compute(firstCharArray, other.firstCharArray) / firstCharArrayLength;
     }
 
     /**
@@ -94,5 +126,21 @@ public class PinyinKey implements Comparable<PinyinKey>, ISentenceKey<PinyinKey>
         }
 
         return length;
+    }
+
+    @Override
+    public String toString()
+    {
+        final StringBuilder sb = new StringBuilder("PinyinKey{");
+        sb.append("pinyinArray=").append(Arrays.toString(pinyinArray));
+        sb.append(", pyOrdinalArray=").append(Arrays.toString(pyOrdinalArray));
+        sb.append(", firstCharArray=").append(Arrays.toString(firstCharArray));
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public char[] getFirstCharArray()
+    {
+        return firstCharArray;
     }
 }

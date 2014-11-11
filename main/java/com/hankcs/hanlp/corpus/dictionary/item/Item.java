@@ -14,7 +14,7 @@ package com.hankcs.hanlp.corpus.dictionary.item;
 import java.util.*;
 
 /**
- * 词典中的一个条目
+ * 词典中的一个条目，比如“希望 v 7685 vn 616”
  * @author hankcs
  */
 public class Item extends SimpleItem
@@ -59,6 +59,11 @@ public class Item extends SimpleItem
         return sb.toString();
     }
 
+    /**
+     *
+     * @param param 类似 “希望 v 7685 vn 616” 的字串
+     * @return
+     */
     public static Item create(String param)
     {
         if (param == null) return null;

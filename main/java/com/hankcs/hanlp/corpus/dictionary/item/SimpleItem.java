@@ -128,4 +128,18 @@ public class SimpleItem
             addLabel(entry.getKey(), entry.getValue());
         }
     }
+
+    /**
+     * 获取全部频次
+     * @return
+     */
+    public int getTotalFrequency()
+    {
+        int frequency = 0;
+        for (Integer f : labelMap.values())
+        {
+            frequency += f;
+        }
+        return frequency;
+    }
 }

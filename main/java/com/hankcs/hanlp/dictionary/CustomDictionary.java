@@ -31,13 +31,16 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class CustomDictionary
 {
     static BinTrie<CoreDictionary.Attribute> trie = new BinTrie<CoreDictionary.Attribute>();
-    public final static String path = HanLP.Config.CustomDictionaryPath;
+    /**
+     * 第一个是主词典，其他是副词典
+     */
+    public final static String path[] = HanLP.Config.CustomDictionaryPath;
 
     // 自动加载词典
     static
     {
         long start = System.currentTimeMillis();
-        if (!load(path))
+        if (!loadMainDictionary(path[0]))
         {
             logger.warning("自定义词典" + path + "加载失败");
         }
@@ -47,40 +50,45 @@ public class CustomDictionary
         }
     }
 
-    public static boolean load(String path)
+    private static boolean loadMainDictionary(String mainPath)
     {
-        logger.info("自定义词典开始加载:" + path);
-        if (loadDat(path)) return true;
-        List<String> wordList = new LinkedList<>();
+        logger.info("自定义词典开始加载:" + mainPath);
+        if (loadDat(mainPath)) return true;
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-            String line;
-            while ((line = br.readLine()) != null)
+            for (String p : path)
             {
-                wordList.add(line);
-                String[] param = line.split("\\s");
-                int natureCount = (param.length - 1) / 2;
-                CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natureCount);
-                for (int i = 0; i < natureCount; ++i)
+                Nature defaultNature = Nature.n;
+                int cut = p.indexOf(' ');
+                if (cut > 0)
                 {
-                    attribute.nature[i] = Enum.valueOf(Nature.class, param[1 + 2 * i]);
-                    attribute.frequency[i] = Integer.parseInt(param[2 + 2 * i]);
-                    attribute.totalFrequency += attribute.frequency[i];
+                    // 有默认词性
+                    String nature = p.substring(cut + 1);
+                    p = p.substring(0, cut);
+                    try
+                    {
+                        defaultNature = Nature.valueOf(nature);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.severe("配置文件【" + p + "】写错了！" + e);
+                        continue;
+                    }
                 }
-                trie.put(param[0], attribute);
+                logger.info("加载自定义词典" + p + "中……");
+                boolean success = load(p, defaultNature);
+                if (!success) logger.warning("失败：" + p);
             }
-            br.close();
-
             // 缓存成dat文件，下次加载会快很多
-            if (!trie.save(path + ".trie.dat")) return false;
+            logger.info("正在缓存词典为dat文件……");
+            if (!trie.save(mainPath + ".trie.dat")) return false;
             // 缓存值文件
             List<CoreDictionary.Attribute> attributeList = new LinkedList<>();
             for (Map.Entry<String, CoreDictionary.Attribute> entry : trie.entrySet())
             {
                 attributeList.add(entry.getValue());
             }
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + ".value.dat"));
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(mainPath + ".value.dat"));
             out.writeInt(attributeList.size());
             for (CoreDictionary.Attribute attribute : attributeList)
             {
@@ -96,15 +104,73 @@ public class CustomDictionary
         }
         catch (FileNotFoundException e)
         {
-            logger.severe("自定义词典" + path + "不存在！" + e);
+            logger.severe("自定义词典" + mainPath + "不存在！" + e);
             return false;
         }
         catch (IOException e)
         {
-            logger.severe("自定义词典" + path + "读取错误！" + e);
+            logger.severe("自定义词典" + mainPath + "读取错误！" + e);
             return false;
         }
         return true;
+    }
+
+    /**
+     * 加载用户词典（追加）
+     * @param path 词典路径
+     * @param defaultNature 默认词性
+     * @return
+     */
+    public static boolean load(String path, Nature defaultNature)
+    {
+        try
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                String[] param = line.split("\\s");
+                if (CoreDictionary.contains(param[0]) || trie.containsKey(param[0]))
+                {
+                    continue;
+                }
+                int natureCount = (param.length - 1) / 2;
+                CoreDictionary.Attribute attribute;
+                if (natureCount == 0)
+                {
+                    attribute = new CoreDictionary.Attribute(defaultNature);
+                }
+                else
+                {
+                    attribute = new CoreDictionary.Attribute(natureCount);
+                    for (int i = 0; i < natureCount; ++i)
+                    {
+                        attribute.nature[i] = Enum.valueOf(Nature.class, param[1 + 2 * i]);
+                        attribute.frequency[i] = Integer.parseInt(param[2 + 2 * i]);
+                        attribute.totalFrequency += attribute.frequency[i];
+                    }
+                }
+                trie.put(param[0], attribute);
+            }
+            br.close();
+        }
+        catch (Exception e)
+        {
+            logger.severe("自定义词典" + path + "读取错误！" + e);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 追加外部词典
+     * @param path 词典路径
+     * @return 是否加载成功
+     */
+    public static boolean load(String path)
+    {
+        return load(path, Nature.nz);
     }
 
     /**
@@ -198,6 +264,11 @@ public class CustomDictionary
         return "CustomDictionary{" +
                 "trie=" + trie +
                 '}';
+    }
+
+    public static boolean contains(String key)
+    {
+        return trie.containsKey(key);
     }
 
     static class Searcher extends BaseSearcher<CoreDictionary.Attribute>

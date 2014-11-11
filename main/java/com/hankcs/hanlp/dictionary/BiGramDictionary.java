@@ -80,7 +80,7 @@ public class BiGramDictionary
 
         int resultCode = trie.build(map);
         logger.info("二元词典DAT构建结果:{}"+ resultCode);
-        reSaveDictionary(map, path);
+//        reSaveDictionary(map, path);
         logger.info("二元词典加载成功:" + trie.size() + "个词条");
         // 试一试保存
         if (create)

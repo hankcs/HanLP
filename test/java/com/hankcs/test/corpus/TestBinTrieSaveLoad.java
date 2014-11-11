@@ -57,6 +57,6 @@ public class TestBinTrieSaveLoad extends TestCase
 
     public void testSortCustomDictionary() throws Exception
     {
-        DictionaryUtil.sortDictionary(HanLP.Config.CustomDictionaryPath);
+        DictionaryUtil.sortDictionary(HanLP.Config.CustomDictionaryPath[0]);
     }
 }

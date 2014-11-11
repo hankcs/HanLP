@@ -349,10 +349,12 @@ public class CoreDictionary
         @Override
         public String toString()
         {
-            return "Attribute{" +
-                    "nature=" + Arrays.toString(nature) +
-                    ", frequency=" + Arrays.toString(frequency) +
-                    '}';
+            final StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < nature.length; ++i)
+            {
+                sb.append(nature[i]).append(' ').append(frequency[i]);
+            }
+            return sb.toString();
         }
     }
 }

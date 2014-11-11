@@ -13,14 +13,15 @@ package com.hankcs.hanlp.utility;
 
 import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
+
 import static com.hankcs.hanlp.utility.Predefine.*;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * @author hankcs
  */
 public class MathTools
 {
-//    static Logger logger = LoggerFactory.getLogger(MathTools.class);
     /**
      * 从一个词到另一个词的词的花费
      *
@@ -41,7 +42,7 @@ public class MathTools
         {
             value = -value;
         }
-//        logger.trace(String.format("%5s frequency:%6d, %s nTwoWordsFreq:%3d, weight:%.2f", from.word, frequency, from.word + "@" + to.word, nTwoWordsFreq, value));
+//        logger.info(String.format("%5s frequency:%6d, %s nTwoWordsFreq:%3d, weight:%.2f", from.word, frequency, from.word + "@" + to.word, nTwoWordsFreq, value));
         return value;
     }
 }

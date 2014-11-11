@@ -247,6 +247,12 @@ public class DictionaryMaker implements ISaveAble
         return true;
     }
 
+    public void add(String param)
+    {
+        Item item = Item.create(param);
+        if (item != null) add(item);
+    }
+
     public static interface Filter
     {
         boolean onSave(Item item);

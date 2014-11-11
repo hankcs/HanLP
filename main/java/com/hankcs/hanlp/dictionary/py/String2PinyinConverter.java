@@ -39,13 +39,13 @@ public class String2PinyinConverter
         int end = Pinyin.none5.ordinal();
         for (int i = 0; i < end; ++i)
         {
-            Pinyin pinyin = PinyinDictionary.pinyins[i];
+            Pinyin pinyin = Integer2PinyinConverter.pinyins[i];
             String pinyinWithoutTone = pinyin.getPinyinWithoutTone();
-            String head = pinyin.getHeadString();
+            String firstChar = String.valueOf(pinyin.getFirstChar());
             trie.addKeyword(pinyinWithoutTone);
-            trie.addKeyword(head);
+            trie.addKeyword(firstChar);
             map.put(pinyinWithoutTone, pinyin);
-            map.put(head, pinyin);
+            map.put(firstChar, pinyin);
             map.put(pinyin.toString(), pinyin);
         }
     }

@@ -36,14 +36,20 @@ public class PlaySuggester
         load("data/phrase.txt", suggester);
         String[] testCaseArray = new String[]
                 {
-                        "护照丢了",
+//                        "护照丢了",
+                        "中国人民",
+                        "zhongguorenmin",
+                        "zgrm",
+                        "zgrenmin",
+                        "中国renmin",
                         "租房",
                         "假日安排",
                         "身份证丢了",
                         "就医",
                         "孩子上学",
                         "教室资格", // 就算用户输了错别字，也可以矫正一部分
-                        "厕所太脏",
+                        "教育",
+                        "生育",
                 };
         for (String key : testCaseArray)
         {

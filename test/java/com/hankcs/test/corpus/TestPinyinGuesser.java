@@ -13,6 +13,7 @@ package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
+import com.hankcs.hanlp.dictionary.py.PinyinUtil;
 import com.hankcs.hanlp.dictionary.py.String2PinyinConverter;
 import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
@@ -24,7 +25,7 @@ public class TestPinyinGuesser extends TestCase
 {
     public void testGuess() throws Exception
     {
-        System.out.println(String2PinyinConverter.convert2Pair("飞流zh下sqianch", true));
+        System.out.println(String2PinyinConverter.convert2Pair("飞流zh下sqianch！", true));
     }
 
     public void testTextUtil() throws Exception
@@ -49,7 +50,7 @@ public class TestPinyinGuesser extends TestCase
 
     public void testPinyin() throws Exception
     {
-        System.out.println(PinyinDictionary.convertToPinyin("左支右调"));
+        System.out.println(PinyinUtil.convertPinyinList2TonePinyinList(PinyinDictionary.convertToPinyin("女王")));
     }
 
     private Pinyin convert(Pinyin p)

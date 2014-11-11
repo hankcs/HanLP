@@ -11,6 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
@@ -90,5 +91,11 @@ public class TestCustomDictionary extends TestCase
             int offset = searcher.getOffset();
             System.out.println(offset + 1 + " " + entry);
         }
+    }
+
+    public void testLoadAdd() throws Exception
+    {
+        System.out.println(CustomDictionary.load("data/dictionary/custom/数字时间.txt"));
+        System.out.println(CustomDictionary.get("二一年"));
     }
 }

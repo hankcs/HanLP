@@ -36,7 +36,7 @@ public class TonePinyinString2PinyinConverter
     {
         mapNumberKey = new TreeMap<>();
         mapKey = new TreeMap<>();
-        for (Pinyin pinyin : PinyinDictionary.pinyins)
+        for (Pinyin pinyin : Integer2PinyinConverter.pinyins)
         {
             mapNumberKey.put(pinyin.toString(), pinyin);
             String pinyinWithToneMark = pinyin.getPinyinWithToneMark();

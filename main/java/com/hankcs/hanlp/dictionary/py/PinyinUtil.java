@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -152,5 +153,21 @@ public class PinyinUtil
     public static Pinyin removeTone(Pinyin p)
     {
         return Pinyin.none5;
+    }
+
+    /**
+     * 转换List<Pinyin> pinyinList到List<String>，其中的String为带声调符号形式
+     * @param pinyinList
+     * @return
+     */
+    public static List<String> convertPinyinList2TonePinyinList(List<Pinyin> pinyinList)
+    {
+        List<String> tonePinyinList = new ArrayList<>(pinyinList.size());
+        for (Pinyin pinyin : pinyinList)
+        {
+            tonePinyinList.add(pinyin.getPinyinWithToneMark());
+        }
+
+        return tonePinyinList;
     }
 }

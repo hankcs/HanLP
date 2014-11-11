@@ -30,7 +30,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class PinyinDictionary
 {
     static DoubleArrayTrie<Pinyin[]> trie = new DoubleArrayTrie<>();
-    public static final Pinyin[] pinyins = Pinyin.values();
+    public static final Pinyin[] pinyins = Integer2PinyinConverter.pinyins;
 
     static
     {
