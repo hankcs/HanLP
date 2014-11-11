@@ -39,7 +39,7 @@ public class Document implements Serializable
     {
         Pattern pattern = Pattern.compile(".+?((。/w)|(！/w )|(？/w )|\\n|$)");
         Matcher matcher = pattern.matcher(param);
-        List<Sentence> sentenceList = new LinkedList<>();
+        List<Sentence> sentenceList = new LinkedList<Sentence>();
         while (matcher.find())
         {
             String single = matcher.group();

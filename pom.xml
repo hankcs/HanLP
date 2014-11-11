@@ -5,7 +5,10 @@
     <groupId>com.hankcs</groupId>
     <artifactId>HanLP</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>HanLPLucenePlugin</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>HanLP</name>
     <url>http://www.hankcs.com/</url>
@@ -130,23 +133,6 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
-        </dependency>
-        <!-- 拦截 apache commons logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${jcl-over-slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-        </dependency>
-        <!--模式匹配-->
-        <dependency>
-            <groupId>org.ahocorasick</groupId>
-            <artifactId>ahocorasick</artifactId>
-            <version>0.2.4</version>
         </dependency>
     </dependencies>
 </project>

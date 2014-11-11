@@ -86,7 +86,7 @@ public class CompoundWord implements IWord
         int cutIndex = param.lastIndexOf('/');
         if (cutIndex <= 2 || cutIndex == param.length() - 1) return null;
         String wordParam  = param.substring(1, cutIndex - 1);
-        List<Word> wordList = new LinkedList<>();
+        List<Word> wordList = new LinkedList<Word>();
         for (String single : wordParam.split(" "))
         {
             if (single.length() == 0) continue;

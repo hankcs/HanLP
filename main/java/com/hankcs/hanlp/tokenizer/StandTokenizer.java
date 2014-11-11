@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class StandTokenizer
 {
-    static final Segment SEGMENT = new Segment();
+    public static final Segment SEGMENT = new Segment();
     public static List<Term> parse(String text)
     {
         return SEGMENT.seg(text);

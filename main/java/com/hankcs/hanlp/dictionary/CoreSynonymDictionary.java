@@ -64,7 +64,7 @@ public class CoreSynonymDictionary
      */
     public static List<CommonSynonymDictionary.SynonymItem> convert(List<Term> sentence, boolean withUndefinedItem)
     {
-        List<CommonSynonymDictionary.SynonymItem> synonymItemList = new ArrayList<>(sentence.size());
+        List<CommonSynonymDictionary.SynonymItem> synonymItemList = new ArrayList<CommonSynonymDictionary.SynonymItem>(sentence.size());
         for (Term term : sentence)
         {
             CommonSynonymDictionary.SynonymItem item = get(term.word);

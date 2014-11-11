@@ -30,7 +30,7 @@ public class SYTDictionary
     static Set<String> smSet = new UnEmptyStringSet();
     static Set<String> ymSet = new UnEmptyStringSet();
     static Set<String> ydSet = new UnEmptyStringSet();
-    static Map<String, String[]> map = new TreeMap<>();
+    static Map<String, String[]> map = new TreeMap<String, String[]>();
 
     static
     {
@@ -69,7 +69,7 @@ public class SYTDictionary
         dumpEnum(smSet, path + "sm.txt");
         dumpEnum(ymSet, path + "ym.txt");
         dumpEnum(ydSet, path + "yd.txt");
-        Set<String> hdSet = new TreeSet<>();
+        Set<String> hdSet = new TreeSet<String>();
         for (Pinyin pinyin : PinyinDictionary.pinyins)
         {
             hdSet.add(pinyin.getHeadString());

@@ -66,7 +66,7 @@ public class IOUtil
             ois.close();
             return o;
         }
-        catch (IOException | ClassNotFoundException e)
+        catch (Exception e)
         {
             logger.warning("在从" + path + "读取对象时发生异常" + e);
         }
@@ -108,7 +108,7 @@ public class IOUtil
 
     public static LinkedList<String[]> readCsv(String path)
     {
-        LinkedList<String[]> resultList = new LinkedList<>();
+        LinkedList<String[]> resultList = new LinkedList<String[]>();
         LinkedList<String> lineList = readLineList(path);
         for (String line : lineList)
         {

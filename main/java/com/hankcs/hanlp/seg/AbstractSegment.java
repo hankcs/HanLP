@@ -30,12 +30,21 @@ public abstract class AbstractSegment
      */
     public List<Term> seg(String text)
     {
-        List<Term> resultList = new LinkedList<>();
-        for (String sentence : SentencesUtil.toSentenceList(text))
-        {
-            resultList.addAll(segSentence(sentence));
-        }
-        return resultList;
+//        List<Term> resultList = new LinkedList<Term>();
+//        int offset = 0;
+//        for (String sentence : SentencesUtil.toSentenceList(text))
+//        {
+//            List<Term> termList = segSentence(sentence);
+//            for (Term term : termList)
+//            {
+//                term.start += offset;
+//                term.end += offset;
+//            }
+//            resultList.addAll(termList);
+//            offset += sentence.length();
+//        }
+//        return resultList;
+        return segSentence(text);
     }
 
     /**
@@ -46,7 +55,7 @@ public abstract class AbstractSegment
      */
     public List<List<Term>> seg2sentence(String text)
     {
-        List<List<Term>> resultList = new LinkedList<>();
+        List<List<Term>> resultList = new LinkedList<List<Term>>();
         {
             for (String sentence : SentencesUtil.toSentenceList(text))
             {

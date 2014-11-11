@@ -50,10 +50,10 @@ public class BiGramDictionary
     public static boolean load(String path)
     {
         logger.info("二元词典开始加载:"+ path);
-        trie = new DoubleArrayTrie<>();
+        trie = new DoubleArrayTrie<Integer>();
         boolean create = !loadDat(path);
         if (!create) return true;
-        TreeMap<String, Integer> map = new TreeMap<>();
+        TreeMap<String, Integer> map = new TreeMap<String, Integer>();
         BufferedReader br;
         try
         {

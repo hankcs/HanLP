@@ -261,7 +261,7 @@ public class NShortPath
      */
     public List<int[]> getNPaths(int n)
     {
-        List<int[]> result = new ArrayList<>();
+        List<int[]> result = new ArrayList<int[]>();
 
         n = Math.min(Predefine.MAX_SEGMENT_NUM, n);
         for (int i = 0; i < N && result.size() < n; ++i)

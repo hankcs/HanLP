@@ -34,8 +34,8 @@ public class TonePinyinString2PinyinConverter
     static Trie trie;
     static
     {
-        mapNumberKey = new TreeMap<>();
-        mapKey = new TreeMap<>();
+        mapNumberKey = new TreeMap<String, Pinyin>();
+        mapKey = new TreeMap<String, Pinyin>();
         for (Pinyin pinyin : Integer2PinyinConverter.pinyins)
         {
             mapNumberKey.put(pinyin.toString(), pinyin);

@@ -82,7 +82,7 @@ public class Synonym implements ISynonym
      */
     public static List<Synonym> create(String[] args)
     {
-        List<Synonym> synonymList = new LinkedList<>();
+        List<Synonym> synonymList = new LinkedList<Synonym>();
 
         String idString = args[0];
         Type type;

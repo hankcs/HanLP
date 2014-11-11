@@ -48,9 +48,9 @@ public class Segment extends HiddenMarkovModelSegment
         if (config.nameRecognize)
         {
             wordNetOptimum.addAll(vertexList);
-            int preSize = wordNetOptimum.getSize();
+            int preSize = wordNetOptimum.size();
             PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
-            if (wordNetOptimum.getSize() != preSize)
+            if (wordNetOptimum.size() != preSize)
             {
                 graph = GenerateBiGraph(wordNetOptimum);
                 vertexList = dijkstra(graph);
@@ -65,8 +65,9 @@ public class Segment extends HiddenMarkovModelSegment
         // 如果是索引模式则全切分
         if (config.indexMode)
         {
-            decorateResultForIndexMode(vertexList, wordNetAll);
+            return decorateResultForIndexMode(vertexList, wordNetAll);
         }
+
         return convert(vertexList);
     }
 

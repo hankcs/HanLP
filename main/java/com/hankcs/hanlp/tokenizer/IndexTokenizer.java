@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class IndexTokenizer
 {
-    static final Segment SEGMENT = new Segment().enableIndexMode(true);
+    public static final Segment SEGMENT = new Segment().enableIndexMode(true);
     public static List<Term> parse(String text)
     {
         return SEGMENT.seg(text);

@@ -25,7 +25,7 @@ public class SimpleItem
 
     public SimpleItem()
     {
-        labelMap = new TreeMap<>();
+        labelMap = new TreeMap<String, Integer>();
     }
 
     public void addLabel(String label)
@@ -79,7 +79,7 @@ public class SimpleItem
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
-        ArrayList<Map.Entry<String, Integer>> entries = new ArrayList<>(labelMap.entrySet());
+        ArrayList<Map.Entry<String, Integer>> entries = new ArrayList<Map.Entry<String, Integer>>(labelMap.entrySet());
         Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>()
         {
             @Override

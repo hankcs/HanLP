@@ -66,7 +66,7 @@ public class CoreSynonymDictionaryEx
      */
     public static List<Long[]> convert(List<Term> sentence, boolean withUndefinedItem)
     {
-        List<Long[]> synonymItemList = new ArrayList<>(sentence.size());
+        List<Long[]> synonymItemList = new ArrayList<Long[]>(sentence.size());
         for (Term term : sentence)
         {
             // 除掉停用词

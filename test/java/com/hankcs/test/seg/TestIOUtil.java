@@ -12,7 +12,6 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import org.junit.Test;
 
 /**
  * 测试IO
@@ -20,7 +19,6 @@ import org.junit.Test;
  */
 public class TestIOUtil
 {
-    @Test
     public void testSaveTxt() throws Exception
     {
         String path = "data/out.txt";

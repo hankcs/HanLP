@@ -30,7 +30,7 @@ public class DictionaryUtil
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-            TreeMap<String, String> map = new TreeMap<>();
+            TreeMap<String, String> map = new TreeMap<String, String>();
             String line;
 
             while ((line = br.readLine()) != null)

@@ -79,7 +79,7 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
     static boolean makeCoreDictionary(String inPath, String outPath)
     {
         final DictionaryMaker dictionaryMaker = new DictionaryMaker();
-        final TreeSet<String> labelSet = new TreeSet<>();
+        final TreeSet<String> labelSet = new TreeSet<String>();
 
         CorpusLoader.walk(inPath, new CorpusLoader.Handler()
         {

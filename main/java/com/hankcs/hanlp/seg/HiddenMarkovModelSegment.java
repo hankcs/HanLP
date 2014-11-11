@@ -234,13 +234,18 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         assert vertexList != null;
         assert vertexList.size() >= 2 : "这条路径不应当短于2" + vertexList.toString();
         int length = vertexList.size() - 2;
-        List<Term> resultList = new ArrayList<>(length);
+        List<Term> resultList = new ArrayList<Term>(length);
         Iterator<Vertex> iterator = vertexList.iterator();
         iterator.next();
+        int offset = 0;
         for (int i = 0; i < length; ++i)
         {
             Vertex vertex = iterator.next();
-            resultList.add(new Term(vertex.realWord, vertex.guessNature()));
+            Term term = convert(vertex);
+            term.offset = offset;
+            offset += term.length();
+            term.end = offset;
+            resultList.add(term);
         }
         return resultList;
     }
@@ -524,13 +529,19 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
      * @param vertexList
      * @param wordNetAll
      */
-    protected static void decorateResultForIndexMode(List<Vertex> vertexList, WordNet wordNetAll)
+    protected static List<Term> decorateResultForIndexMode(List<Vertex> vertexList, WordNet wordNetAll)
     {
-        int line = 0;
+        List<Term> termList = new LinkedList<>();
+        int line = 1;
         ListIterator<Vertex> listIterator = vertexList.listIterator();
-        while (listIterator.hasNext())
+        listIterator.next();
+        int length = vertexList.size() - 2;
+        for (int i = 0; i < length; ++i)
         {
             Vertex vertex = listIterator.next();
+            Term termMain = convert(vertex);
+            termList.add(termMain);
+            termMain.offset = line - 1;
             if (vertex.realWord.length() > 2)
             {
                 // 过长词所在的行
@@ -543,12 +554,24 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
                         if (smallVertex.realWord.length() > 1 && smallVertex != vertex)
                         {
                             listIterator.add(smallVertex);
+                            Term termSub = convert(smallVertex);
+                            termSub.offset = currentLine - 1;
+                            termSub.end = termSub.offset + smallVertex.word.length();
+                            termList.add(termSub);
                         }
                     }
                     ++currentLine;
                 }
             }
             line += vertex.realWord.length();
+            termMain.end = line - 1;
         }
+
+        return termList;
+    }
+
+    private static Term convert(Vertex vertex)
+    {
+        return new Term(vertex.realWord, vertex.guessNature());
     }
 }

@@ -13,16 +13,12 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import junit.framework.TestCase;
-import org.junit.Test;
-
-import java.io.*;
 
 /**
  * @author hankcs
  */
 public class testBiGramDictionary extends TestCase
 {
-    @Test
     public void testBiGramDictionary()
     {
 //        assertEquals(15, BiGramDictionary.getBiFrequency("团结", "奋斗"));

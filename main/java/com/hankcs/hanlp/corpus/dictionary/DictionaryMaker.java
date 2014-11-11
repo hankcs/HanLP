@@ -29,7 +29,7 @@ public class DictionaryMaker implements ISaveAble
 
     public DictionaryMaker()
     {
-        trie = new BinTrie<>();
+        trie = new BinTrie<Item>();
     }
 
     /**

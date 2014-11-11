@@ -116,10 +116,10 @@ public class Segment extends HiddenMarkovModelSegment
      */
     public List<List<Vertex>> BiSegment(String sSentence, int nKind, WordNet wordNetOptimum, WordNet wordNetAll)
     {
-        List<List<Vertex>> coarseResult = new LinkedList<>();
+        List<List<Vertex>> coarseResult = new LinkedList<List<Vertex>>();
         ////////////////生成词网////////////////////
         GenerateWordNet(sSentence, wordNetAll);
-//        logger.trace("词网大小：" + wordNetAll.getSize());
+//        logger.trace("词网大小：" + wordNetAll.size());
 //        logger.trace("打印词网：\n" + wordNetAll);
         ///////////////生成词图////////////////////
         Graph graph = GenerateBiGraph(wordNetAll);
@@ -160,7 +160,7 @@ public class Segment extends HiddenMarkovModelSegment
     {
         ////////////////生成词网////////////////////
         WordNet wordNet = GenerateWordNet(sSentence, new WordNet(sSentence));
-//        logger.trace("词网大小：" + wordNet.getSize());
+//        logger.trace("词网大小：" + wordNet.size());
 //        logger.trace("打印词网：\n" + wordNet);
         ///////////////生成词图////////////////////
         Graph graph = GenerateBiGraph(wordNet);

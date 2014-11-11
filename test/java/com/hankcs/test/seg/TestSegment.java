@@ -13,8 +13,15 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.seg.common.wrapper.FullTerm;
+import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
+import com.hankcs.hanlp.tokenizer.StandTokenizer;
 import junit.framework.TestCase;
+
+import java.io.BufferedReader;
+import java.io.StringReader;
 
 /**
  * @author hankcs
@@ -31,5 +38,15 @@ public class TestSegment extends TestCase
     public void testIndexSeg() throws Exception
     {
         System.out.println(IndexTokenizer.parse("中科院预测科学研究中心学术委员会"));
+    }
+
+    public void testWrapper() throws Exception
+    {
+        SegmentWrapper wrapper = new SegmentWrapper(new BufferedReader(new StringReader("中科院预测科学研究中心学术委员会\nhaha")), StandTokenizer.SEGMENT);
+        Term fullTerm;
+        while ((fullTerm = wrapper.next()) != null)
+        {
+            System.out.println(fullTerm);
+        }
     }
 }

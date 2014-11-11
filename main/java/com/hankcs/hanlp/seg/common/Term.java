@@ -29,6 +29,10 @@ public class Term
      */
     public Nature nature;
 
+    /**
+     * 在文本中的起始位置
+     */
+    public int offset;
 
     public Term(String word, Nature nature)
     {
@@ -40,5 +44,14 @@ public class Term
     public String toString()
     {
         return word + "/" + nature;
+    }
+
+    /**
+     * 长度
+     * @return
+     */
+    public int length()
+    {
+        return word.length();
     }
 }

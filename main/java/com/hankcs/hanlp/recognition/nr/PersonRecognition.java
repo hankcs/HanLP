@@ -73,7 +73,7 @@ public class PersonRecognition
 
     public static List<EnumItem<NR>> roleTag(List<Vertex> pWordSegResult)
     {
-        List<EnumItem<NR>> tagList = new LinkedList<>();
+        List<EnumItem<NR>> tagList = new LinkedList<EnumItem<NR>>();
         for (Vertex vertex : pWordSegResult)
         {
             // 有些双名实际上可以构成更长的三名
