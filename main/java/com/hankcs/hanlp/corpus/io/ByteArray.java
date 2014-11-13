@@ -52,7 +52,7 @@ public class ByteArray
     }
 
     /**
-     * 读取一个char
+     * 读取一个char，对应于writeChar
      * @return
      */
     public char nextChar()

@@ -11,14 +11,16 @@
  */
 package com.hankcs.hanlp;
 
+import com.hankcs.hanlp.dictionary.py.Pinyin;
+import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
 import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
 
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -80,6 +82,16 @@ public class HanLP
          */
         public static String PinyinDictionaryPath = "data/dictionary/pinyin/pinyin.txt";
 
+        /**
+         * 音译人名词典
+         */
+        public static String TranslatedPersonDictionaryPath = "data/dictionary/person/音译人名.txt";
+
+        /**
+         * 日本人名词典路径
+         */
+        public static String JapanesePersonDictionaryPath = "data/dictionary/person/日本人名词典.txt";
+
         static
         {
             // 自动读取配置
@@ -117,6 +129,8 @@ public class HanLP
                 TraditionalChineseDictionaryPath = root + p.getProperty("TraditionalChineseDictionaryPath", TraditionalChineseDictionaryPath);
                 SYTDictionaryPath = root + p.getProperty("SYTDictionaryPath", SYTDictionaryPath);
                 PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath", PinyinDictionaryPath);
+                TranslatedPersonDictionaryPath = root + p.getProperty("TranslatedPersonDictionary", TranslatedPersonDictionaryPath);
+                JapanesePersonDictionaryPath = root + p.getProperty("JapanesePersonDictionaryPath", JapanesePersonDictionaryPath);
             }
             catch (Exception e)
             {
@@ -128,6 +142,7 @@ public class HanLP
                 logger.setLevel(Level.OFF);
             }
         }
+
         /**
          * 开启调试模式(会降低性能)
          */
@@ -152,6 +167,7 @@ public class HanLP
 
     /**
      * 简转繁
+     *
      * @param traditionalChineseString 繁体中文
      * @return 简体中文
      */
@@ -162,6 +178,7 @@ public class HanLP
 
     /**
      * 繁转简
+     *
      * @param simplifiedChineseString 简体中文
      * @return 繁体中文
      */
@@ -170,11 +187,53 @@ public class HanLP
         return SimplifiedChineseDictionary.convertToTraditionalChinese(simplifiedChineseString);
     }
 
-//    /**
-//     * 开启调试模式
-//     */
-//    public static void enableDebug()
-//    {
-//        HanLP.Config.enableDebug();
-//    }
+    /**
+     * 转化为拼音
+     * @param text
+     * @param separator
+     * @param remainNone
+     * @return
+     */
+    public static String convertToPinyinString(String text, String separator, boolean remainNone)
+    {
+        List<Pinyin> pinyinList = PinyinDictionary.convertToPinyin(text, remainNone);
+        int length = pinyinList.size();
+        StringBuilder sb = new StringBuilder(length * (5 + separator.length()));
+        int i = 1;
+        for (Pinyin pinyin : pinyinList)
+        {
+            sb.append(pinyin.getPinyinWithoutTone());
+            if (i < length)
+            {
+                sb.append(separator);
+            }
+            ++i;
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 转化为拼音（首字母）
+     * @param text
+     * @param separator
+     * @param remainNone
+     * @return
+     */
+    public static String convertToPinyinFirstCharString(String text, String separator, boolean remainNone)
+    {
+        List<Pinyin> pinyinList = PinyinDictionary.convertToPinyin(text, remainNone);
+        int length = pinyinList.size();
+        StringBuilder sb = new StringBuilder(length * (1 + separator.length()));
+        int i = 1;
+        for (Pinyin pinyin : pinyinList)
+        {
+            sb.append(pinyin.getFirstChar());
+            if (i < length)
+            {
+                sb.append(separator);
+            }
+            ++i;
+        }
+        return sb.toString();
+    }
 }

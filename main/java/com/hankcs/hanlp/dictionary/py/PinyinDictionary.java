@@ -50,8 +50,7 @@ public class PinyinDictionary
      */
     static boolean load(String path)
     {
-        String datPath = path;
-        if (loadDat(datPath)) return true;
+        if (loadDat(path)) return true;
         // 从文本中载入并且尝试生成dat
         StringDictionary dictionary = new StringDictionary("=");
         if (!dictionary.load(path)) return false;
@@ -81,8 +80,8 @@ public class PinyinDictionary
             logger.warning(path + "构建DAT失败，错误码：" + resultCode);
             return false;
         }
-        logger.info("正在缓存双数组" + datPath);
-        saveDat(datPath, trie, map.entrySet());
+        logger.info("正在缓存双数组" + path);
+        saveDat(path, trie, map.entrySet());
         return true;
     }
 
@@ -147,6 +146,11 @@ public class PinyinDictionary
         return segLongest(text.toCharArray(), trie);
     }
 
+    public static List<Pinyin> convertToPinyin(String text, boolean remainNone)
+    {
+        return segLongest(text.toCharArray(), trie, remainNone);
+    }
+
     /**
      * 转为拼音
      * @param text
@@ -164,6 +168,11 @@ public class PinyinDictionary
 
     protected static List<Pinyin> segLongest(char[] charArray, DoubleArrayTrie<Pinyin[]> trie)
     {
+        return segLongest(charArray, trie, true);
+    }
+
+    protected static List<Pinyin> segLongest(char[] charArray, DoubleArrayTrie<Pinyin[]> trie, boolean remainNone)
+    {
         List<Pinyin> pinyinList = new ArrayList<>(charArray.length);
         BaseSearcher searcher = getSearcher(charArray, trie);
         Map.Entry<String, Pinyin[]> entry;
@@ -173,10 +182,13 @@ public class PinyinDictionary
         {
             offset = searcher.getOffset();
             // 补足没查到的词
-            while (p < offset)
+            if (remainNone)
             {
-                pinyinList.add(Pinyin.none5);
-                ++p;
+                while (p < offset)
+                {
+                    pinyinList.add(Pinyin.none5);
+                    ++p;
+                }
             }
             int length = entry.getKey().length();
             Pinyin[] value = entry.getValue();

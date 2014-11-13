@@ -470,6 +470,16 @@ public class DoubleArrayTrie<V> implements Serializable
     }
 
     /**
+     * 载入双数组，但是不提供值，此时本trie相当于一个set
+     * @param path
+     * @return
+     */
+    public boolean load(String path)
+    {
+        return loadBaseAndCheckByFileChannel(path);
+    }
+
+    /**
      * 从磁盘加载双数组
      *
      * @param path
@@ -858,5 +868,10 @@ public class DoubleArrayTrie<V> implements Serializable
         }
 
         return null;
+    }
+
+    public boolean containsKey(String key)
+    {
+        return exactMatchSearch(key) >= 0;
     }
 }

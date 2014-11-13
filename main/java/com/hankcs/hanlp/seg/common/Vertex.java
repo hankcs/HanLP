@@ -327,6 +327,26 @@ public class Vertex
     }
 
     /**
+     * 创建一个音译人名实例
+     * @param realWord
+     * @return
+     */
+    public static Vertex newTranslatedPersonInstance(String realWord, int frequency)
+    {
+        return new Vertex(Predefine.TAG_PEOPLE, realWord, new CoreDictionary.Attribute(Nature.nrf, frequency));
+    }
+
+    /**
+     * 创建一个日本人名实例
+     * @param realWord
+     * @return
+     */
+    public static Vertex newJapanesePersonInstance(String realWord, int frequency)
+    {
+        return new Vertex(Predefine.TAG_PEOPLE, realWord, new CoreDictionary.Attribute(Nature.nrj, frequency));
+    }
+
+    /**
      * 创建一个人名实例
      * @param realWord
      * @param frequency

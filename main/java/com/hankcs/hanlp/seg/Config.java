@@ -21,9 +21,17 @@ public class Config
      */
     public boolean indexMode = false;
     /**
-     * 是否识别人名
+     * 是否识别中国人名
      */
     public boolean nameRecognize = true;
+    /**
+     * 是否识别音译人名
+     */
+    public boolean translatedNameRecognize = true;
+    /**
+     * 是否识别日本人名
+     */
+    public boolean japaneseNameRecognize = false;
     /**
      * 是否加载用户词典
      */

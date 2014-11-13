@@ -202,6 +202,11 @@ public class CoreDictionary
         return new Searcher(text);
     }
 
+    public static BaseSearcher getSearcher(char[] text)
+    {
+        return new Searcher(text);
+    }
+
     public static class Searcher extends BaseSearcher<Attribute>
     {
         /**
@@ -214,6 +219,7 @@ public class CoreDictionary
         protected Searcher(char[] c)
         {
             super(c);
+            entryList = new LinkedList<Map.Entry<String, Attribute>>();
         }
 
         protected Searcher(String text)
@@ -241,8 +247,8 @@ public class CoreDictionary
             {
                 return null;
             }
-            Map.Entry<String, Attribute> result = entryList.getLast();
-            entryList.removeLast();
+            Map.Entry<String, Attribute> result = entryList.getFirst();
+            entryList.removeFirst();
             offset = begin - 1;
             return result;
         }

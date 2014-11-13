@@ -12,6 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 import com.hankcs.hanlp.tokenizer.StandTokenizer;
 import junit.framework.TestCase;
 
@@ -24,16 +25,16 @@ public class TestOffset extends TestCase
 {
     public void testOffset() throws Exception
     {
-        String text = "中华人民共和国\n在哪里";
+        String text = "中华人民共和国在哪里";
         for (int i = 0; i < text.length(); ++i)
         {
             System.out.print(text.charAt(i) + "" + i + " ");
         }
         System.out.println();
-        List<Term> termList = StandTokenizer.parse(text);
+        List<Term> termList = IndexTokenizer.parse(text);
         for (Term term : termList)
         {
-            System.out.println(term.word + " " + term.offset + " " + term.end);
+            System.out.println(term.word + " " + term.offset + " " + (term.offset + term.length()));
         }
     }
 }

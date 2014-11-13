@@ -146,6 +146,9 @@ public class BaseChineseDictionary
         return sb.toString();
     }
 
+    /**
+     * 最长分词
+     */
     public static class Searcher extends BaseSearcher<String>
     {
         /**

@@ -12,7 +12,11 @@
 package com.hankcs.hanlp.seg.Dijkstra;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.dictionary.nr.JapanesePersonDictionary;
+import com.hankcs.hanlp.dictionary.nr.TranslatedPersonDictionary;
+import com.hankcs.hanlp.recognition.nr.JapanesePersonRecogniton;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
+import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.seg.Dijkstra.Path.State;
 import com.hankcs.hanlp.seg.HiddenMarkovModelSegment;
 import com.hankcs.hanlp.seg.common.*;
@@ -45,11 +49,23 @@ public class Segment extends HiddenMarkovModelSegment
             System.out.println(convert(vertexList));
         }
         // 姓名识别
-        if (config.nameRecognize)
+        boolean recognition = config.nameRecognize || config.translatedNameRecognize;
+        if (recognition)
         {
             wordNetOptimum.addAll(vertexList);
             int preSize = wordNetOptimum.size();
-            PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+            if (config.nameRecognize)
+            {
+                PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+            }
+            if (config.translatedNameRecognize)
+            {
+                TranslatedPersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+            }
+            if (config.japaneseNameRecognize)
+            {
+                JapanesePersonRecogniton.Recognition(vertexList, wordNetOptimum, wordNetAll);
+            }
             if (wordNetOptimum.size() != preSize)
             {
                 graph = GenerateBiGraph(wordNetOptimum);
@@ -134,6 +150,28 @@ public class Segment extends HiddenMarkovModelSegment
     public Segment enableCustomDictionary(boolean enable)
     {
         config.useCustomDictionary = enable;
+        return this;
+    }
+
+    /**
+     * 是否启用音译人名识别
+     *
+     * @param enable
+     */
+    public Segment enableTranslatedNameRecognize(boolean enable)
+    {
+        config.translatedNameRecognize = enable;
+        return this;
+    }
+
+    /**
+     * 是否启用日本人名识别
+     *
+     * @param enable
+     */
+    public Segment enableJapaneseNameRecognize(boolean enable)
+    {
+        config.japaneseNameRecognize = enable;
         return this;
     }
 }

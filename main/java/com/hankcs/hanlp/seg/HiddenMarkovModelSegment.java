@@ -244,7 +244,6 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
             Term term = convert(vertex);
             term.offset = offset;
             offset += term.length();
-            term.end = offset;
             resultList.add(term);
         }
         return resultList;
@@ -491,7 +490,8 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
      */
     protected WordNet GenerateWordNet(String sSentence, WordNet wordNetStorage)
     {
-        BaseSearcher searcher = CoreDictionary.getSearcher(sSentence);
+        char[] charArray = wordNetStorage.charArray;
+        BaseSearcher searcher = CoreDictionary.getSearcher(charArray);
         Map.Entry<String, CoreDictionary.Attribute> entry;
         int p = 0;  // 当前处理到什么位置
         int offset;
@@ -514,7 +514,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         // 用户词典查询
         if (config.useCustomDictionary)
         {
-            searcher = CustomDictionary.getSearcher(sSentence);
+            searcher = CustomDictionary.getSearcher(charArray);
             while ((entry = searcher.next()) != null)
             {
                 offset = searcher.getOffset();
@@ -556,7 +556,6 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
                             listIterator.add(smallVertex);
                             Term termSub = convert(smallVertex);
                             termSub.offset = currentLine - 1;
-                            termSub.end = termSub.offset + smallVertex.word.length();
                             termList.add(termSub);
                         }
                     }
@@ -564,7 +563,6 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
                 }
             }
             line += vertex.realWord.length();
-            termMain.end = line - 1;
         }
 
         return termList;

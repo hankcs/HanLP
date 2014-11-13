@@ -14,7 +14,6 @@ package com.hankcs.test.seg;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.NShort.Segment;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.seg.common.wrapper.FullTerm;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 import com.hankcs.hanlp.tokenizer.StandTokenizer;
@@ -32,7 +31,7 @@ public class TestSegment extends TestCase
     {
         Segment segment = new Segment().enableNameRecognize(true);
         HanLP.Config.enableDebug(true);
-        System.out.println(segment.seg("一个萝卜一个坑儿"));
+        System.out.println(segment.seg("亚德里恩"));
     }
 
     public void testIndexSeg() throws Exception

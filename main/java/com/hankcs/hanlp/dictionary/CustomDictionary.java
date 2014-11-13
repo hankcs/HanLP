@@ -271,6 +271,11 @@ public class CustomDictionary
         return trie.containsKey(key);
     }
 
+    public static BaseSearcher getSearcher(char[] charArray)
+    {
+        return new Searcher(charArray);
+    }
+
     static class Searcher extends BaseSearcher<CoreDictionary.Attribute>
     {
         /**
@@ -278,11 +283,12 @@ public class CustomDictionary
          */
         int begin;
 
-        private List<Map.Entry<String, CoreDictionary.Attribute>> entryList;
+        private LinkedList<Map.Entry<String, CoreDictionary.Attribute>> entryList;
 
         protected Searcher(char[] c)
         {
             super(c);
+            entryList = new LinkedList<>();
         }
 
         protected Searcher(String text)
@@ -310,8 +316,8 @@ public class CustomDictionary
             {
                 return null;
             }
-            Map.Entry<String, CoreDictionary.Attribute> result = entryList.get(0);
-            entryList.remove(0);
+            Map.Entry<String, CoreDictionary.Attribute> result = entryList.getFirst();
+            entryList.removeFirst();
             offset = begin - 1;
             return result;
         }
