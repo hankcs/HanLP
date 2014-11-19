@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.stopword;
 
-import com.hankcs.hanlp.dictionary.CommonDictionary;
+import com.hankcs.hanlp.dictionary.common.CommonDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.io.BufferedReader;

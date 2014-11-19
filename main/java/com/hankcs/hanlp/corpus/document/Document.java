@@ -119,6 +119,21 @@ public class Document implements Serializable
     }
 
     /**
+     * 获取复杂句子列表，句子中的每个单词有可能是复合词，有可能是简单词
+     * @return
+     */
+    public List<List<IWord>> getComplexSentenceList()
+    {
+        List<List<IWord>> complexList = new LinkedList<>();
+        for (Sentence sentence : sentenceList)
+        {
+            complexList.add(sentence.wordList);
+        }
+
+        return complexList;
+    }
+
+    /**
      * 获取简单的句子列表
      * @param spilt 如果为真，其中复合词会被拆分为简单词
      * @return

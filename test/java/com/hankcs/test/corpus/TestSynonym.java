@@ -12,13 +12,12 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.corpus.synonym.Synonym;
-import com.hankcs.hanlp.dictionary.CommonSynonymDictionary;
-import com.hankcs.hanlp.dictionary.CommonSynonymDictionaryEx;
+import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary;
+import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionaryEx;
 import com.hankcs.hanlp.dictionary.CoreSynonymDictionary;
 import junit.framework.TestCase;
 
 import java.io.FileInputStream;
-import java.util.Arrays;
 import java.util.List;
 
 /**

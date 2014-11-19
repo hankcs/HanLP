@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.dictionary;
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.occurrence.TermFrequency;
 
 import java.io.BufferedWriter;
@@ -18,13 +19,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.AbstractMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
  * 词频词典
  * @author hankcs
  */
-public class TFDictionary extends SimpleDictionary<TermFrequency>
+public class TFDictionary extends SimpleDictionary<TermFrequency> implements ISaveAble
 {
     @Override
     protected Map.Entry<String, TermFrequency> onGenerateEntry(String line)
@@ -96,5 +98,45 @@ public class TFDictionary extends SimpleDictionary<TermFrequency>
         TermFrequency termFrequency = get(key);
         if (termFrequency == null) return 0;
         return termFrequency.getFrequency();
+    }
+
+    public void add(String key)
+    {
+        TermFrequency termFrequency = trie.get(key);
+        if (termFrequency == null)
+        {
+            termFrequency = new TermFrequency(key);
+            trie.put(key, termFrequency);
+        }
+        else
+        {
+            termFrequency.increase();
+        }
+    }
+
+    @Override
+    public boolean saveTxtTo(String path)
+    {
+        LinkedList<TermFrequency> termFrequencyLinkedList = new LinkedList<>();
+        for (Map.Entry<String, TermFrequency> entry : trie.entrySet())
+        {
+            termFrequencyLinkedList.add(entry.getValue());
+        }
+        return IOUtil.saveCollectionToTxt(termFrequencyLinkedList, path);
+    }
+
+    /**
+     * 将值保存到文件
+     * @param path
+     * @return
+     */
+    public boolean saveKeyTo(String path)
+    {
+        LinkedList<String> keyList = new LinkedList<>();
+        for (Map.Entry<String, TermFrequency> entry : trie.entrySet())
+        {
+            keyList.add(entry.getKey());
+        }
+        return IOUtil.saveCollectionToTxt(keyList, path);
     }
 }

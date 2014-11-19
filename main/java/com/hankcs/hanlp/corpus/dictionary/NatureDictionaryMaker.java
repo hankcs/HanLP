@@ -13,8 +13,10 @@ package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.corpus.util.CorpusUtil;
 import com.hankcs.hanlp.corpus.util.Precompiler;
 import com.hankcs.hanlp.utility.TextUtility;
 import com.hankcs.hanlp.utility.Predefine;
@@ -36,14 +38,14 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
     }
 
     @Override
-    protected void addToDictionary(List<List<Word>> sentenceList)
+    protected void addToDictionary(List<List<IWord>> sentenceList)
     {
         logger.info("开始制作词典");
         // 制作NGram词典
-        for (List<Word> wordList : sentenceList)
+        for (List<IWord> wordList : sentenceList)
         {
-            Word pre = null;
-            for (Word word : wordList)
+            IWord pre = null;
+            for (IWord word : wordList)
             {
                 if (pre != null)
                 {
@@ -55,18 +57,18 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
     }
 
     @Override
-    protected void roleTag(List<List<Word>> sentenceList)
+    protected void roleTag(List<List<IWord>> sentenceList)
     {
         logger.info("开始标注");
         int i = 0;
-        for (List<Word> wordList : sentenceList)
+        for (List<IWord> wordList : sentenceList)
         {
             logger.info(++i + " / " + sentenceList.size());
-            for (Word word : wordList)
+            for (IWord word : wordList)
             {
                 Precompiler.compile(word);  // 编译为等效字符串
             }
-            LinkedList<Word> wordLinkedList = (LinkedList<Word>) wordList;
+            LinkedList<IWord> wordLinkedList = (LinkedList<IWord>) wordList;
             wordLinkedList.addFirst(new Word(Predefine.TAG_BIGIN, Nature.begin.toString()));
             wordLinkedList.addLast(new Word(Predefine.TAG_END, Nature.end.toString()));
         }
@@ -140,8 +142,8 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
             @Override
             public void handle(Document document)
             {
-                dictionaryMaker.compute(document.getSimpleSentenceList(false)); // 再打一遍不拆分的
-                dictionaryMaker.compute(document.getSimpleSentenceList(true));  // 先打一遍拆分的
+                dictionaryMaker.compute(CorpusUtil.convert2CompatibleList(document.getSimpleSentenceList(false))); // 再打一遍不拆分的
+                dictionaryMaker.compute(CorpusUtil.convert2CompatibleList(document.getSimpleSentenceList(true)));  // 先打一遍拆分的
             }
         });
         dictionaryMaker.saveTxtTo("D:\\JavaProjects\\HanLP\\data\\dictionary\\CoreNatureDictionary");

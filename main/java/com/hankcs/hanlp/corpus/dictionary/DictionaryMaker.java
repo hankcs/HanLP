@@ -14,6 +14,7 @@ package com.hankcs.hanlp.corpus.dictionary;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 
 import java.io.*;
 import java.util.*;
@@ -21,6 +22,7 @@ import java.util.*;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
+ * 一个通用的词典制作工具，词条格式：词 标签 频次
  * @author hankcs
  */
 public class DictionaryMaker implements ISaveAble
@@ -49,6 +51,11 @@ public class DictionaryMaker implements ISaveAble
         {
             item.addLabel(word.getLabel());
         }
+    }
+
+    public void add(String value, String label)
+    {
+        add(new Word(value, label));
     }
 
     /**

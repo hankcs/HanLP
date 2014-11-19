@@ -195,6 +195,32 @@ public class IOUtil
         return result;
     }
 
+    /**
+     * 用省内存的方式读取大文件
+     * @param path
+     * @return
+     */
+    public static LinkedList<String> readLineListWithLessMemory(String path)
+    {
+        LinkedList<String> result = new LinkedList<String>();
+        String line = null;
+        try
+        {
+            BufferedReader bw = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            while ((line = bw.readLine()) != null)
+            {
+                result.add(line);
+            }
+            bw.close();
+        }
+        catch (Exception e)
+        {
+            logger.warning("加载" + path + "失败，" + e);
+        }
+
+        return result;
+    }
+
     public static boolean saveMapToTxt(Map<Object, Object> map, String path)
     {
         return saveMapToTxt(map, path, "=");

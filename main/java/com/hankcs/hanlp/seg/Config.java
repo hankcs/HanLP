@@ -33,6 +33,14 @@ public class Config
      */
     public boolean japaneseNameRecognize = false;
     /**
+     * 是否识别地名
+     */
+    public boolean placeRecognize = false;
+    /**
+     * 是否识别机构
+     */
+    public boolean organizationRecognize = false;
+    /**
      * 是否加载用户词典
      */
     public boolean useCustomDictionary = true;

@@ -11,15 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
-import com.hankcs.hanlp.corpus.dictionary.item.SimpleItem;
-import com.hankcs.hanlp.corpus.tag.NR;
-import com.hankcs.hanlp.dictionary.BaseSearcher;
-import com.hankcs.hanlp.dictionary.CommonDictionary;
 import junit.framework.TestCase;
-
-import java.util.AbstractMap;
-import java.util.Map;
 
 /**
  * @author hankcs

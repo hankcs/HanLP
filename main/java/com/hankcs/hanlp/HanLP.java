@@ -69,6 +69,22 @@ public class HanLP
          */
         public static String PersonDictionaryTrPath = "data/dictionary/person/nr.tr.txt";
         /**
+         * 地名词典路径
+         */
+        public static String PlaceDictionaryPath = "data/dictionary/place/ns.txt";
+        /**
+         * 地名词典转移矩阵路径
+         */
+        public static String PlaceDictionaryTrPath = "data/dictionary/place/ns.tr.txt";
+        /**
+         * 地名词典路径
+         */
+        public static String OrganizationDictionaryPath = "data/dictionary/organization/nt.txt";
+        /**
+         * 地名词典转移矩阵路径
+         */
+        public static String OrganizationDictionaryTrPath = "data/dictionary/organization/nt.tr.txt";
+        /**
          * 繁简词典路径
          */
         public static String TraditionalChineseDictionaryPath = "data/dictionary/tc/TraditionalChinese.txt";

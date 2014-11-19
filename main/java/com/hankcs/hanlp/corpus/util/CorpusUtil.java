@@ -12,13 +12,18 @@
 package com.hankcs.hanlp.corpus.util;
 
 
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * @author hankcs
  */
-public class CoupusUtil
+public class CorpusUtil
 {
     public final static String TAG_PLACE = "未##地";
     public final static String TAG_BIGIN = "始##始";
@@ -33,6 +38,7 @@ public class CoupusUtil
 
     /**
      * 编译单词
+     *
      * @param word
      * @return
      */
@@ -52,5 +58,39 @@ public class CoupusUtil
         }
 
         return word;
+    }
+
+    /**
+     * 将word列表转为兼容的IWord列表
+     *
+     * @param simpleSentenceList
+     * @return
+     */
+    public static List<List<IWord>> convert2CompatibleList(List<List<Word>> simpleSentenceList)
+    {
+        List<List<IWord>> compatibleList = new LinkedList<List<IWord>>();
+        for (List<Word> wordList : simpleSentenceList)
+        {
+            compatibleList.add(new LinkedList<IWord>(wordList));
+        }
+        return compatibleList;
+    }
+
+    public static List<IWord> spilt(List<IWord> wordList)
+    {
+        ListIterator<IWord> listIterator = wordList.listIterator();
+        while (listIterator.hasNext())
+        {
+            IWord word = listIterator.next();
+            if (word instanceof CompoundWord)
+            {
+                listIterator.remove();
+                for (Word inner : ((CompoundWord) word).innerList)
+                {
+                    listIterator.add(inner);
+                }
+            }
+        }
+        return wordList;
     }
 }

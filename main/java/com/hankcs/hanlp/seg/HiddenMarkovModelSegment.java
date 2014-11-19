@@ -499,17 +499,19 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         {
             offset = searcher.getOffset();
             // 补足没查到的词
-            if (p < offset)
+            while (p < offset)
             {
                 wordNetStorage.add(p + 1, AtomSegment(wordNetStorage.charArray, p, offset));
+                ++p;
             }
             wordNetStorage.add(offset + 1, new Vertex(entry.getKey(), entry.getValue()));
             p = offset + 1;
         }
         // 补足没查到的词
-        if (p < sSentence.length())
+        while (p < sSentence.length())
         {
             wordNetStorage.add(p + 1, AtomSegment(wordNetStorage.charArray, p, sSentence.length()));
+            ++p;
         }
         // 用户词典查询
         if (config.useCustomDictionary)

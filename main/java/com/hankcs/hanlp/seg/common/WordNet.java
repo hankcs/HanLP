@@ -349,4 +349,15 @@ public class WordNet
         }
     }
 
+    /**
+     * 清空词图
+     */
+    public void clear()
+    {
+        for (List<Vertex> vertexList : vertexes)
+        {
+            vertexList.clear();
+        }
+        size = 0;
+    }
 }

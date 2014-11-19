@@ -358,6 +358,28 @@ public class Vertex
     }
 
     /**
+     * 创建一个地名实例
+     * @param realWord
+     * @param frequency
+     * @return
+     */
+    public static Vertex newPlaceInstance(String realWord, int frequency)
+    {
+        return new Vertex(Predefine.TAG_PLACE, realWord, new CoreDictionary.Attribute(Nature.ns, frequency));
+    }
+
+    /**
+     * 创建一个机构名实例
+     * @param realWord
+     * @param frequency
+     * @return
+     */
+    public static Vertex newOrganizationInstance(String realWord, int frequency)
+    {
+        return new Vertex(Predefine.TAG_GROUP, realWord, new CoreDictionary.Attribute(Nature.nt, frequency));
+    }
+
+    /**
      * 创建一个时间实例
      * @param realWord 时间对应的真实字串
      * @return 时间顶点

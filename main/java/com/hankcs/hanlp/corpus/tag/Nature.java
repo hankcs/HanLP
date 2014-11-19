@@ -759,4 +759,6 @@ public enum Nature
      * 仅用于终##终
      */
     begin,
+
+    ;
 }

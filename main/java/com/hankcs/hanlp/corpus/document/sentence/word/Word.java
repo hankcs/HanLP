@@ -68,4 +68,16 @@ public class Word implements IWord
     {
         return label;
     }
+
+    @Override
+    public void setLabel(String label)
+    {
+        this.label = label;
+    }
+
+    @Override
+    public void setValue(String value)
+    {
+        this.value = value;
+    }
 }

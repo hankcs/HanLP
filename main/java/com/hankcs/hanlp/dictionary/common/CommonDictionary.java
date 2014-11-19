@@ -9,10 +9,11 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.dictionary;
+package com.hankcs.hanlp.dictionary.common;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.dictionary.BaseSearcher;
 
 import java.io.*;
 import java.util.*;

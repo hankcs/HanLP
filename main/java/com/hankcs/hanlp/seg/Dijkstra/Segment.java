@@ -14,9 +14,12 @@ package com.hankcs.hanlp.seg.Dijkstra;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.nr.JapanesePersonDictionary;
 import com.hankcs.hanlp.dictionary.nr.TranslatedPersonDictionary;
+import com.hankcs.hanlp.dictionary.ns.PlaceDictionary;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecogniton;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
+import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
+import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
 import com.hankcs.hanlp.seg.Dijkstra.Path.State;
 import com.hankcs.hanlp.seg.HiddenMarkovModelSegment;
 import com.hankcs.hanlp.seg.common.*;
@@ -46,10 +49,10 @@ public class Segment extends HiddenMarkovModelSegment
 //        fixResultByRule(vertexList);
         if (HanLP.Config.DEBUG)
         {
-            System.out.println(convert(vertexList));
+            System.out.println("粗分结果" + convert(vertexList));
         }
         // 姓名识别
-        boolean recognition = config.nameRecognize || config.translatedNameRecognize;
+        boolean recognition = config.nameRecognize || config.translatedNameRecognize || config.placeRecognize;
         if (recognition)
         {
             wordNetOptimum.addAll(vertexList);
@@ -65,6 +68,20 @@ public class Segment extends HiddenMarkovModelSegment
             if (config.japaneseNameRecognize)
             {
                 JapanesePersonRecogniton.Recognition(vertexList, wordNetOptimum, wordNetAll);
+            }
+            if (config.placeRecognize)
+            {
+                PlaceRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+            }
+            if (config.organizationRecognize)
+            {
+                // 层叠隐马模型——生成输出作为下一级隐马输入
+                graph = GenerateBiGraph(wordNetOptimum);
+                vertexList = dijkstra(graph);
+                wordNetOptimum.clear();
+                wordNetOptimum.addAll(vertexList);
+                preSize = wordNetOptimum.size();
+                OrganizationRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (wordNetOptimum.size() != preSize)
             {
@@ -139,6 +156,28 @@ public class Segment extends HiddenMarkovModelSegment
     public Segment enableNameRecognize(boolean enable)
     {
         config.nameRecognize = enable;
+        return this;
+    }
+
+    /**
+     * 开启地名识别
+     * @param enable
+     * @return
+     */
+    public Segment enablePlaceRecognize(boolean enable)
+    {
+        config.placeRecognize = enable;
+        return this;
+    }
+
+    /**
+     * 开启地名识别
+     * @param enable
+     * @return
+     */
+    public Segment enableOrganizationRecognize(boolean enable)
+    {
+        config.organizationRecognize = enable;
         return this;
     }
 

@@ -13,9 +13,11 @@ package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.corpus.util.Precompiler;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.LinkedList;
@@ -25,6 +27,7 @@ import java.util.ListIterator;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
+ * nr词典（词典+ngram转移+词性转移矩阵）制作工具
  * @author hankcs
  */
 public class NRDictionaryMaker extends CommonDictionaryMaker
@@ -36,25 +39,25 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
     }
 
     @Override
-    protected void addToDictionary(List<List<Word>> sentenceList)
+    protected void addToDictionary(List<List<IWord>> sentenceList)
     {
         logger.warning("开始制作词典");
         // 将非A的词语保存下来
-        for (List<Word> wordList : sentenceList)
+        for (List<IWord> wordList : sentenceList)
         {
-            for (Word word : wordList)
+            for (IWord word : wordList)
             {
-                if (!word.label.equals(NR.A.toString()))
+                if (!word.getLabel().equals(NR.A.toString()))
                 {
                     dictionaryMaker.add(word);
                 }
             }
         }
         // 制作NGram词典
-        for (List<Word> wordList : sentenceList)
+        for (List<IWord> wordList : sentenceList)
         {
-            Word pre = null;
-            for (Word word : wordList)
+            IWord pre = null;
+            for (IWord word : wordList)
             {
                 if (pre != null)
                 {
@@ -66,48 +69,48 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
     }
 
     @Override
-    protected void roleTag(List<List<Word>> sentenceList)
+    protected void roleTag(List<List<IWord>> sentenceList)
     {
         logger.info("开始标注角色");
         int i = 0;
-        for (List<Word> wordList : sentenceList)
+        for (List<IWord> wordList : sentenceList)
         {
             logger.info(++i + " / " + sentenceList.size());
             if (verbose) System.out.println("原始语料 " + wordList);
             // 先标注A和K
-            Word pre = new Word("##始##", "begin");
-            ListIterator<Word> listIterator = wordList.listIterator();
+            IWord pre = new Word("##始##", "begin");
+            ListIterator<IWord> listIterator = wordList.listIterator();
             while (listIterator.hasNext())
             {
-                Word word = listIterator.next();
-                if (!word.label.equals(Nature.nr.toString()))
+                IWord word = listIterator.next();
+                if (!word.getLabel().equals(Nature.nr.toString()))
                 {
-                    word.label = NR.A.toString();
+                    word.setLabel(NR.A.toString());
                 }
                 else
                 {
-                    if (!pre.label.equals(Nature.nr.toString()))
+                    if (!pre.getLabel().equals(Nature.nr.toString()))
                     {
-                        pre.label = NR.K.toString();
+                        pre.setLabel(NR.K.toString());
                     }
                 }
                 pre = word;
             }
             if (verbose) System.out.println("标注非前 " + wordList);
             // 然后标注LM
-            Word next = new Word("##末##", "end");
+            IWord next = new Word("##末##", "end");
             while (listIterator.hasPrevious())
             {
-                Word word = listIterator.previous();
-                if (word.label.equals(Nature.nr.toString()))
+                IWord word = listIterator.previous();
+                if (word.getLabel().equals(Nature.nr.toString()))
                 {
-                    switch (next.label)
+                    switch (next.getLabel())
                     {
                         case "A":
-                            next.label = "L";
+                            next.setLabel("L");
                             break;
                         case "K":
-                            next.label = "M";
+                            next.setLabel("M");
                             break;
                     }
                 }
@@ -118,48 +121,48 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
             listIterator = wordList.listIterator();
             while (listIterator.hasNext())
             {
-                Word word = listIterator.next();
-                if (word.label.equals(Nature.nr.toString()))
+                IWord word = listIterator.next();
+                if (word.getLabel().equals(Nature.nr.toString()))
                 {
-                    switch (word.value.length())
+                    switch (word.getValue().length())
                     {
                         case 2:
-                            if (word.value.startsWith("大")
-                                    || word.value.startsWith("老")
-                                    || word.value.startsWith("小")
+                            if (word.getValue().startsWith("大")
+                                    || word.getValue().startsWith("老")
+                                    || word.getValue().startsWith("小")
                                     )
                             {
-                                listIterator.add(new Word(word.value.substring(1, 2), NR.B.toString()));
-                                word.value = word.value.substring(0, 1);
-                                word.label = NR.F.toString();
+                                listIterator.add(new Word(word.getValue().substring(1, 2), NR.B.toString()));
+                                word.setValue(word.getValue().substring(0, 1));
+                                word.setLabel(NR.F.toString());
                             }
-                            else if (word.value.endsWith("哥")
-                                    || word.value.endsWith("公")
-                                    || word.value.endsWith("姐")
-                                    || word.value.endsWith("老")
-                                    || word.value.endsWith("某")
-                                    || word.value.endsWith("嫂")
-                                    || word.value.endsWith("氏")
-                                    || word.value.endsWith("总")
+                            else if (word.getValue().endsWith("哥")
+                                    || word.getValue().endsWith("公")
+                                    || word.getValue().endsWith("姐")
+                                    || word.getValue().endsWith("老")
+                                    || word.getValue().endsWith("某")
+                                    || word.getValue().endsWith("嫂")
+                                    || word.getValue().endsWith("氏")
+                                    || word.getValue().endsWith("总")
                                     )
 
                             {
-                                listIterator.add(new Word(word.value.substring(1, 2), NR.G.toString()));
-                                word.value = word.value.substring(0, 1);
-                                word.label = NR.B.toString();
+                                listIterator.add(new Word(word.getValue().substring(1, 2), NR.G.toString()));
+                                word.setValue(word.getValue().substring(0, 1));
+                                word.setLabel(NR.B.toString());
                             }
                             else
                             {
-                                listIterator.add(new Word(word.value.substring(1, 2), NR.E.toString()));
-                                word.value = word.value.substring(0, 1);
-                                word.label = NR.B.toString();
+                                listIterator.add(new Word(word.getValue().substring(1, 2), NR.E.toString()));
+                                word.setValue(word.getValue().substring(0, 1));
+                                word.setLabel(NR.B.toString());
                             }
                             break;
                         case 3:
-                            listIterator.add(new Word(word.value.substring(1, 2), NR.C.toString()));
-                            listIterator.add(new Word(word.value.substring(2, 3), NR.D.toString()));
-                            word.value = word.value.substring(0, 1);
-                            word.label = NR.B.toString();
+                            listIterator.add(new Word(word.getValue().substring(1, 2), NR.C.toString()));
+                            listIterator.add(new Word(word.getValue().substring(2, 3), NR.D.toString()));
+                            word.setValue(word.getValue().substring(0, 1));
+                            word.setLabel(NR.B.toString());
                             break;
                     }
                 }
@@ -170,14 +173,14 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
             pre = new Word("##始##", "begin");
             while (listIterator.hasNext())
             {
-                Word word = listIterator.next();
-                if (word.label.equals(NR.B.toString()))
+                IWord word = listIterator.next();
+                if (word.getLabel().equals(NR.B.toString()))
                 {
-                    String combine = pre.value + word.value;
+                    String combine = pre.getValue() + word.getValue();
                     if (dictionary.contains(combine))
                     {
-                        pre.value = combine;
-                        pre.label = "U";
+                        pre.setValue(combine);
+                        pre.setLabel("U");
                         listIterator.remove();
                     }
                 }
@@ -188,14 +191,14 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
             next = new Word("##末##", "end");
             while (listIterator.hasPrevious())
             {
-                Word word = listIterator.previous();
-                if (word.label.equals(NR.B.toString()))
+                IWord word = listIterator.previous();
+                if (word.getLabel().equals(NR.B.toString()))
                 {
-                    String combine = word.value + next.value;
+                    String combine = word.getValue() + next.getValue();
                     if (dictionary.contains(combine))
                     {
-                        next.value = combine;
-                        next.label = next.label.equals(NR.C.toString()) ? NR.X.toString() : NR.Y.toString();
+                        next.setValue(combine);
+                        next.setLabel(next.getLabel().equals(NR.C.toString()) ? NR.X.toString() : NR.Y.toString());
                         listIterator.remove();
                     }
                 }
@@ -206,14 +209,14 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
             pre = new Word("##始##", "begin");
             while (listIterator.hasNext())
             {
-                Word word = listIterator.next();
-                if (word.label.equals(NR.D.toString()))
+                IWord word = listIterator.next();
+                if (word.getLabel().equals(NR.D.toString()))
                 {
-                    String combine = pre.value + word.value;
+                    String combine = pre.getValue() + word.getValue();
                     if (dictionary.contains(combine))
                     {
-                        pre.value = combine;
-                        pre.label = NR.Z.toString();
+                        pre.setValue(combine);
+                        pre.setLabel(NR.Z.toString());
                         listIterator.remove();
                     }
                 }
@@ -224,21 +227,21 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
             next = new Word("##末##", "end");
             while (listIterator.hasPrevious())
             {
-                Word word = listIterator.previous();
-                if (word.label.equals(NR.D.toString()))
+                IWord word = listIterator.previous();
+                if (word.getLabel().equals(NR.D.toString()))
                 {
-                    String combine = word.value + next.value;
+                    String combine = word.getValue() + next.getValue();
                     if (dictionary.contains(combine))
                     {
-                        next.value = combine;
-                        next.label = NR.V.toString();
+                        next.setValue(combine);
+                        next.setLabel(NR.V.toString());
                         listIterator.remove();
                     }
                 }
                 next = word;
             }
             if (verbose) System.out.println("头部成词 " + wordList);
-            LinkedList<Word> wordLinkedList = (LinkedList<Word>) wordList;
+            LinkedList<IWord> wordLinkedList = (LinkedList<IWord>) wordList;
             wordLinkedList.addFirst(new Word(Predefine.TAG_BIGIN, "S"));
             wordLinkedList.addLast(new Word(Predefine.TAG_END, "A"));
             if (verbose) System.out.println("添加首尾 " + wordList);
@@ -254,10 +257,15 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
             @Override
             public void handle(Document document)
             {
-                nrDictionaryMaker.compute(document.getSimpleSentenceList());
+                List<List<Word>> simpleSentenceList = document.getSimpleSentenceList();
+                List<List<IWord>> compatibleList = new LinkedList<List<IWord>>();
+                for (List<Word> wordList : simpleSentenceList)
+                {
+                    compatibleList.add(new LinkedList<IWord>(wordList));
+                }
+                nrDictionaryMaker.compute(compatibleList);
             }
         });
         nrDictionaryMaker.saveTxtTo("D:\\JavaProjects\\HanLP\\data\\dictionary\\person\\nr1");
     }
-
 }

@@ -4,17 +4,17 @@
  * <email>hankcs.cn@gmail.com</email>
  * <create-date>2014/9/10 15:39</create-date>
  *
- * <copyright file="NRDictionary.java" company="上海林原信息科技有限公司">
- * Copyright (c) 2003-2014, 上海林原信息科技有限公司. All Right Reserved, http://www.linrunsoft.com/
- * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
+ * <copyright file="NSDictionary.java" company="上海林原信息科技有限公司">
+ * Copyright (c) 2003-2014, 上海林原信息科技有限公司. All Right Reserved, http://www.liNSunsoft.com/
+ * This source is subject to the LiNSunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.dictionary.nr;
+package com.hankcs.hanlp.dictionary.nt;
 
 
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.corpus.tag.NR;
+import com.hankcs.hanlp.corpus.tag.NT;
 import com.hankcs.hanlp.dictionary.common.CommonDictionary;
 import com.hankcs.hanlp.utility.TextUtility;
 
@@ -26,21 +26,21 @@ import java.util.Map;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 一个好用的人名词典
+ * 一个好用的地名词典
  *
  * @author hankcs
  */
-public class NRDictionary extends CommonDictionary<EnumItem<NR>>
+public class NTDictionary extends CommonDictionary<EnumItem<NT>>
 {
     @Override
-    protected EnumItem<NR>[] onLoadValue(String path)
+    protected EnumItem<NT>[] onLoadValue(String path)
     {
-        EnumItem<NR>[] valueArray = loadDat(path + ".value.dat");
+        EnumItem<NT>[] valueArray = loadDat(path + ".value.dat");
         if (valueArray != null)
         {
             return valueArray;
         }
-        List<EnumItem<NR>> valueList = new LinkedList<>();
+        List<EnumItem<NT>> valueList = new LinkedList<>();
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -48,12 +48,12 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
             while ((line = br.readLine()) != null)
             {
                 Map.Entry<String, Map.Entry<String, Integer>[]> args = EnumItem.create(line);
-                EnumItem<NR> nrEnumItem = new EnumItem<>();
+                EnumItem<NT> NSEnumItem = new EnumItem<>();
                 for (Map.Entry<String, Integer> e : args.getValue())
                 {
-                    nrEnumItem.labelMap.put(NR.valueOf(e.getKey()), e.getValue());
+                    NSEnumItem.labelMap.put(NT.valueOf(e.getKey()), e.getValue());
                 }
-                valueList.add(nrEnumItem);
+                valueList.add(NSEnumItem);
             }
             br.close();
         }
@@ -66,48 +66,48 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
     }
 
     @Override
-    protected boolean onSaveValue(EnumItem<NR>[] valueArray, String path)
+    protected boolean onSaveValue(EnumItem<NT>[] valueArray, String path)
     {
         return saveDat(path + ".value.dat", valueArray);
     }
 
-    private EnumItem<NR>[] loadDat(String path)
+    private EnumItem<NT>[] loadDat(String path)
     {
         byte[] bytes = IOUtil.readBytes(path);
         if (bytes == null) return null;
-        NR[] nrArray = NR.values();
+        NT[] values = NT.values();
         int index = 0;
         int size = TextUtility.bytesHighFirstToInt(bytes, index);
         index += 4;
-        EnumItem<NR>[] valueArray = new EnumItem[size];
+        EnumItem<NT>[] valueArray = new EnumItem[size];
         for (int i = 0; i < size; ++i)
         {
             int currentSize = TextUtility.bytesHighFirstToInt(bytes, index);
             index += 4;
-            EnumItem<NR> item = new EnumItem<>();
+            EnumItem<NT> item = new EnumItem<>();
             for (int j = 0; j < currentSize; ++j)
             {
-                NR nr = nrArray[TextUtility.bytesHighFirstToInt(bytes, index)];
+                NT tag = values[TextUtility.bytesHighFirstToInt(bytes, index)];
                 index += 4;
                 int frequency = TextUtility.bytesHighFirstToInt(bytes, index);
                 index += 4;
-                item.labelMap.put(nr, frequency);
+                item.labelMap.put(tag, frequency);
             }
             valueArray[i] = item;
         }
         return valueArray;
     }
 
-    private boolean saveDat(String path, EnumItem<NR>[] valueArray)
+    private boolean saveDat(String path, EnumItem<NT>[] valueArray)
     {
         try
         {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
             out.writeInt(valueArray.length);
-            for (EnumItem<NR> item : valueArray)
+            for (EnumItem<NT> item : valueArray)
             {
                 out.writeInt(item.labelMap.size());
-                for (Map.Entry<NR, Integer> entry : item.labelMap.entrySet())
+                for (Map.Entry<NT, Integer> entry : item.labelMap.entrySet())
                 {
                     out.writeInt(entry.getKey().ordinal());
                     out.writeInt(entry.getValue());

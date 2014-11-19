@@ -46,6 +46,19 @@ public class CompoundWord implements IWord
     }
 
     @Override
+    public void setLabel(String label)
+    {
+        this.label = label;
+    }
+
+    @Override
+    public void setValue(String value)
+    {
+        innerList.clear();
+        innerList.add(new Word(value, label));
+    }
+
+    @Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder();

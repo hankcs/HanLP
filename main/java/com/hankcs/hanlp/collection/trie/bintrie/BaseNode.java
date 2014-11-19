@@ -229,6 +229,26 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         {
             return value[offset++];
         }
+
+        /**
+         * 仅仅给子类用，不要用
+         */
+        protected ValueArray()
+        {
+        }
+    }
+
+    public class EmptyValueArray extends ValueArray
+    {
+        public EmptyValueArray()
+        {
+        }
+
+        @Override
+        public V nextValue()
+        {
+            return null;
+        }
     }
 
     @Override

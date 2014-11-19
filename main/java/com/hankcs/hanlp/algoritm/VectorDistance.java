@@ -11,8 +11,7 @@
  */
 package com.hankcs.hanlp.algoritm;
 
-import com.hankcs.hanlp.corpus.synonym.SynonymHelper;
-import com.hankcs.hanlp.dictionary.CommonSynonymDictionary;
+import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary;
 
 import java.util.List;
 

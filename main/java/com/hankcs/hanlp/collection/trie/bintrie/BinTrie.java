@@ -296,4 +296,29 @@ public class BinTrie<V> extends BaseNode<V>
 
         return true;
     }
+
+    /**
+     * 只加载值，此时相当于一个set
+     * @param path
+     * @return
+     */
+    public boolean load(String path)
+    {
+        byte[] bytes = IOUtil.readBytes(path);
+        if (bytes == null) return false;
+        ValueArray valueArray = new EmptyValueArray();
+        ByteArray byteArray = new ByteArray(bytes);
+        for (int i = 0; i < child.length; ++i)
+        {
+            int flag = byteArray.nextInt();
+            if (flag == 1)
+            {
+                child[i] = new Node<>();
+                child[i].walkToLoad(byteArray, valueArray);
+            }
+        }
+        size = -1;  // 不知道有多少
+
+        return true;
+    }
 }

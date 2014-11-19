@@ -39,7 +39,7 @@ public class ViterbiEx<E extends Enum<E>>
         double[][] cost = new double[length][];
         Iterator<EnumItem<E>> iterator = roleTagList.iterator();
         EnumItem<E> start = iterator.next();
-        E pre = ((Map.Entry<E, Integer>)start.labelMap.entrySet().toArray()[0]).getKey();
+        E pre = start.labelMap.entrySet().iterator().next().getKey();
         // 第一个是确定的
         tagList.add(pre);
         double total = 0.0;
