@@ -15,6 +15,10 @@ import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
 import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
+import com.hankcs.hanlp.seg.AbstractSegment;
+import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.StandTokenizer;
 
 import java.io.InputStreamReader;
 import java.util.List;
@@ -124,7 +128,7 @@ public class HanLP
         /**
          * 字符类型对应表
          */
-        public static String CharTypePath = "data/dictionary/other/CharType.dat";
+        public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
 
         static
         {
@@ -252,6 +256,16 @@ public class HanLP
     }
 
     /**
+     * 转化为拼音
+     * @param text 代解析的文本
+     * @return 一个拼音列表
+     */
+    public static List<Pinyin> convertToPinyinList(String text)
+    {
+        return PinyinDictionary.convertToPinyin(text);
+    }
+
+    /**
      * 转化为拼音（首字母）
      * @param text
      * @param separator
@@ -274,5 +288,24 @@ public class HanLP
             ++i;
         }
         return sb.toString();
+    }
+
+    /**
+     * 分词
+     * @param text 文本
+     * @return 切分后的单词
+     */
+    public static List<Term> segment(String text)
+    {
+        return StandTokenizer.segment(text);
+    }
+
+    /**
+     * 创建一个分词器
+     * @return
+     */
+    public static AbstractSegment createSegment()
+    {
+        return new Segment();
     }
 }

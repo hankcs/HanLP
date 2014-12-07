@@ -12,6 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.seg.AbstractSegment;
 import com.hankcs.hanlp.seg.Dijkstra.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
@@ -29,14 +30,14 @@ public class TestSegment extends TestCase
 {
     public void testSeg() throws Exception
     {
-        Segment segment = new Segment().enableNameRecognize(true);
+        Segment segment = new Segment().enableOrganizationRecognize(true);
         HanLP.Config.enableDebug(true);
-        System.out.println(segment.seg("商品和服务"));
+        System.out.println(segment.seg("党的生活和国家机关"));
     }
 
     public void testIndexSeg() throws Exception
     {
-        System.out.println(IndexTokenizer.parse("中科院预测科学研究中心学术委员会"));
+        System.out.println(IndexTokenizer.segment("中科院预测科学研究中心学术委员会"));
     }
 
     public void testWrapper() throws Exception
@@ -58,5 +59,10 @@ public class TestSegment extends TestCase
         System.out.println("未标注：" + segment.seg(text));
         segment.enableSpeechTag(true);
         System.out.println("标注后：" + segment.seg(text));
+    }
+
+    public void testFactory() throws Exception
+    {
+        AbstractSegment segment = HanLP.createSegment();
     }
 }

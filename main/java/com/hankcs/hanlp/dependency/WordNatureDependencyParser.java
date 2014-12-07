@@ -12,18 +12,12 @@
 package com.hankcs.hanlp.dependency;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
-import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
-import com.hankcs.hanlp.dependency.common.State;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * 一个简单的句法分析器
@@ -41,7 +35,7 @@ public class WordNatureDependencyParser extends MinimumSpanningTreeParser
 
     public static CoNLLSentence compute(String text)
     {
-        return compute(NLPTokenizer.parse(text));
+        return compute(NLPTokenizer.segment(text));
     }
 
     @Override

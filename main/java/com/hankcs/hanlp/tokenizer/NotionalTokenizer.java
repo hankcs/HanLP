@@ -26,7 +26,7 @@ import java.util.ListIterator;
 public class NotionalTokenizer
 {
     static final Segment SEGMENT = new Segment();
-    public static List<Term> parse(String text)
+    public static List<Term> segment(String text)
     {
         List<Term> resultList = SEGMENT.seg(text);
         ListIterator<Term> listIterator = resultList.listIterator();

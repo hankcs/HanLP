@@ -11,24 +11,29 @@
  */
 package com.hankcs.hanlp.tokenizer;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Dijkstra.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
 
 /**
- * 可供自然语言处理用的分词器
+ * 繁体中文分词器
  *
  * @author hankcs
  */
-public class NLPTokenizer
+public class TraditionalChineseTokenizer
 {
-    public static final Segment SEGMENT = new Segment().enableNameRecognize(true).enableTranslatedNameRecognize(true)
-            .enableJapaneseNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true)
-            .enableSpeechTag(true);
+    public static Segment SEGMENT = new Segment();
 
     public static List<Term> segment(String text)
     {
-        return SEGMENT.seg(text);
+        text = HanLP.convertToSimplifiedChinese(text);
+        List<Term> termList = SEGMENT.seg(text);
+        for (Term term : termList)
+        {
+            term.word = HanLP.convertToTraditionalChinese(term.word);
+        }
+        return termList;
     }
 }

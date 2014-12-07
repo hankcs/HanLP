@@ -13,7 +13,6 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
 import junit.framework.TestCase;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class TestOffset extends TestCase
             System.out.print(text.charAt(i) + "" + i + " ");
         }
         System.out.println();
-        List<Term> termList = IndexTokenizer.parse(text);
+        List<Term> termList = IndexTokenizer.segment(text);
         for (Term term : termList)
         {
             System.out.println(term.word + " " + term.offset + " " + (term.offset + term.length()));

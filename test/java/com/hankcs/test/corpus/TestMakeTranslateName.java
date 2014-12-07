@@ -86,7 +86,7 @@ public class TestMakeTranslateName extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        System.out.println(StandTokenizer.parse("齐格林斯基"));
+        System.out.println(StandTokenizer.segment("齐格林斯基"));
     }
 
     public void testNonRec() throws Exception

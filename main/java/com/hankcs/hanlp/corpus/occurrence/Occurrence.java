@@ -272,7 +272,7 @@ public class Occurrence
 
     public void addAll(String text)
     {
-        addAll(NotionalTokenizer.parse(text));
+        addAll(NotionalTokenizer.segment(text));
     }
 
     @Override

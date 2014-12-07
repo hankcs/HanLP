@@ -4,7 +4,7 @@ package com.hankcs.hanlp.summary;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.tokenizer.StandTokenizer;
 
 import java.util.*;
 
@@ -28,17 +28,29 @@ public class TextRankKeyword extends KeywordExtractor
     final int max_iter = 200;
     final float min_diff = 0.001f;
 
-    CoreStopWordDictionary stopWordDictionary;
-
     public TextRankKeyword()
     {
         // jdk bug : Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
         System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
     }
 
-    public String[] getKeyword(String title, String content)
+    /**
+     * 提取关键词
+     * @param document 文档内容
+     * @param size 希望提取几个关键词
+     * @return 一个列表
+     */
+    public static List<String> getKeywordList(String document, int size)
     {
-        List<Term> termList = Segment.parse(title + content);
+        TextRankKeyword textRankKeyword = new TextRankKeyword();
+        textRankKeyword.nKeyword = size;
+
+        return textRankKeyword.getKeyword(document);
+    }
+
+    public List<String> getKeyword(String content)
+    {
+        List<Term> termList = StandTokenizer.segment(content);
         List<String> wordList = new ArrayList<String>();
         for (Term t : termList)
         {
@@ -111,10 +123,10 @@ public class TextRankKeyword extends KeywordExtractor
         });
 //        System.out.println(entryList);
         int limit = Math.min(nKeyword, entryList.size());
-        String[] result = new String[limit];
+        List<String> result = new ArrayList<>(limit);
         for (int i = 0; i < limit; ++i)
         {
-            result[i] = entryList.get(i).getKey();
+            result.add(entryList.get(i).getKey()) ;
         }
         return result;
     }

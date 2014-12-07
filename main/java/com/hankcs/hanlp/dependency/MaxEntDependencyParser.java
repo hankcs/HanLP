@@ -13,7 +13,6 @@ package com.hankcs.hanlp.dependency;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
@@ -23,7 +22,6 @@ import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
 import javafx.util.Pair;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -60,7 +58,7 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
 
     public static CoNLLSentence compute(String text)
     {
-        return compute(NLPTokenizer.parse(text));
+        return compute(NLPTokenizer.segment(text));
     }
 
     @Override

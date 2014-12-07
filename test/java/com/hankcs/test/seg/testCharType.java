@@ -59,7 +59,7 @@ public class testCharType extends TestCase
             typeList.add(array);
         }
         System.out.print("int[" + typeList.size() + "][3] array = \n");
-        DataOutputStream out = new DataOutputStream(new FileOutputStream("data/dictionary/other/CharType.dat"));
+        DataOutputStream out = new DataOutputStream(new FileOutputStream("data/dictionary/other/CharType.dat.yes"));
         for (int[] array : typeList)
         {
             System.out.printf("%d %d %d\n", array[0], array[1], array[2]);

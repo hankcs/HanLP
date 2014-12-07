@@ -166,6 +166,12 @@ public class PinyinDictionary
         return new Searcher(charArray, trie);
     }
 
+    /**
+     * 用最长分词算法匹配拼音
+     * @param charArray
+     * @param trie
+     * @return
+     */
     protected static List<Pinyin> segLongest(char[] charArray, DoubleArrayTrie<Pinyin[]> trie)
     {
         return segLongest(charArray, trie, true);

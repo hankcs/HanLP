@@ -535,7 +535,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         // 补足没查到的词
         while (p < charArray.length)
         {
-            wordNetStorage.add(p + 1, AtomSegment(wordNetStorage.charArray, p, sSentence.length()));
+            wordNetStorage.add(p + 1, AtomSegment(wordNetStorage.charArray, p, wordNetStorage.charArray.length));
             ++p;
         }
         // 用户词典查询
