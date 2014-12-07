@@ -17,6 +17,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import java.util.List;
 
 /**
+ * 中国人名识别
  * @author hankcs
  */
 public class DemoChineseNameRecognition
