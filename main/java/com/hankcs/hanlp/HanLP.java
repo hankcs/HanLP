@@ -44,6 +44,10 @@ public class HanLP
          */
         public static String CoreDictionaryPath = "data/dictionary/CoreNatureDictionary.txt";
         /**
+         * 核心词典词性转移矩阵路径
+         */
+        public static String CoreDictionaryTransformMatrixDictionaryPath = "data/dictionary/CoreNatureDictionary.tr.txt";
+        /**
          * 用户自定义词典路径
          */
         public static String CustomDictionaryPath[] = new String[]{"data/dictionary/custom/CustomDictionary.txt"};
@@ -108,6 +112,20 @@ public class HanLP
          */
         public static String JapanesePersonDictionaryPath = "data/dictionary/person/日本人名词典.txt";
 
+        /**
+         * 词-词性-依存关系模型
+         */
+        public static String WordNatureModelPath = "data/model/dependency/WordNature.txt";
+
+        /**
+         * 最大熵-依存关系模型
+         */
+        public static String MaxEntModelPath = "data/model/dependency/MaxEntModel.txt";
+        /**
+         * 字符类型对应表
+         */
+        public static String CharTypePath = "data/dictionary/other/CharType.dat";
+
         static
         {
             // 自动读取配置
@@ -147,6 +165,11 @@ public class HanLP
                 PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath", PinyinDictionaryPath);
                 TranslatedPersonDictionaryPath = root + p.getProperty("TranslatedPersonDictionary", TranslatedPersonDictionaryPath);
                 JapanesePersonDictionaryPath = root + p.getProperty("JapanesePersonDictionaryPath", JapanesePersonDictionaryPath);
+                PlaceDictionaryPath = root + p.getProperty("PlaceDictionaryPath", PlaceDictionaryPath);
+                PlaceDictionaryTrPath = root + p.getProperty("PlaceDictionaryTrPath", PlaceDictionaryTrPath);
+                OrganizationDictionaryPath = root + p.getProperty("OrganizationDictionaryPath", OrganizationDictionaryPath);
+                OrganizationDictionaryTrPath = root + p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
+                CharTypePath = root + p.getProperty("CharTypePath", CharTypePath);
             }
             catch (Exception e)
             {

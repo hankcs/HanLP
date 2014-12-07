@@ -236,6 +236,11 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         protected ValueArray()
         {
         }
+
+        public void setValue(V[] value)
+        {
+            this.value = value;
+        }
     }
 
     public class EmptyValueArray extends ValueArray

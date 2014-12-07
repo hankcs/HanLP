@@ -31,7 +31,7 @@ public class TestNTRecognition extends TestCase
         segment.enableCustomDictionary(false);
 
         segment.enableOrganizationRecognize(true);
-        System.out.println(segment.seg("济南杨铭宇餐饮管理有限公司是由杨先生创办的餐饮企业"));
+        System.out.println(segment.seg("欧共体企业在欧洲摄像机市场上所占的份额已由百分之四十八"));
     }
 
     public void testGeneratePatternJavaCode() throws Exception

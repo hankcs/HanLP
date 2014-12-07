@@ -55,8 +55,13 @@ public class WordNet
      */
     public WordNet(String sentence)
     {
-        charArray = sentence.toCharArray();
-        vertexes = new List[sentence.length() + 2];
+        this(sentence.toCharArray());
+    }
+
+    public WordNet(char[] charArray)
+    {
+        this.charArray = charArray;
+        vertexes = new List[charArray.length + 2];
         for (int i = 0; i < vertexes.length; ++i)
         {
             vertexes[i] = new LinkedList<Vertex>();
@@ -78,6 +83,27 @@ public class WordNet
         {
             // 保证唯一性
             if (oldVertex.realWord.length() == vertex.realWord.length()) return;
+        }
+        vertexes[line].add(vertex);
+        ++size;
+    }
+
+    /**
+     * 强行添加，替换已有的顶点
+     * @param line
+     * @param vertex
+     */
+    public void push(int line, Vertex vertex)
+    {
+        Iterator<Vertex> iterator = vertexes[line].iterator();
+        while (iterator.hasNext())
+        {
+            if (iterator.next().realWord.length() == vertex.realWord.length())
+            {
+                iterator.remove();
+                --size;
+                break;
+            }
         }
         vertexes[line].add(vertex);
         ++size;

@@ -44,4 +44,21 @@ public class Config
      * 是否加载用户词典
      */
     public boolean useCustomDictionary = true;
+    /**
+     * 词性标注
+     */
+    public boolean speechTagging = false;
+    /**
+     * 命名实体识别是否至少有一项被激活
+     */
+    public boolean ner = true;
+    /**
+     * 是否计算偏移量
+     */
+    public boolean offset = false;
+
+    public void updateNerConfig()
+    {
+        ner = nameRecognize || translatedNameRecognize || japaneseNameRecognize || placeRecognize || organizationRecognize;
+    }
 }

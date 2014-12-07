@@ -11,6 +11,14 @@
  */
 package com.hankcs.hanlp.algoritm;
 
+import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
+import com.hankcs.hanlp.seg.common.Vertex;
+
+import java.util.*;
+
 /**
  * 维特比算法
  * @author hankcs
@@ -82,5 +90,44 @@ public class Viterbi
         }
 
         return path[state];
+    }
+
+    /**
+     * 特化版的求解HMM模型
+     * @param vertexList
+     * @param transformMatrixDictionary
+     */
+    public static void compute(List<Vertex> vertexList, TransformMatrixDictionary<Nature>transformMatrixDictionary)
+    {
+        int length = vertexList.size() - 1;
+        double[][] cost = new double[length][];
+        Iterator<Vertex> iterator = vertexList.iterator();
+        Vertex start = iterator.next();
+        Nature pre = start.guessNature();
+        // 第一个是确定的
+        double total = 0.0;
+        for (int i = 0; i < cost.length; ++i)
+        {
+            Vertex item = iterator.next();
+            cost[i] = new double[item.attribute.nature.length];
+            for (int j = 0; j < cost[i].length; ++j)
+            {
+                Nature cur = item.attribute.nature[j];
+                cost[i][j] = total + transformMatrixDictionary.transititon_probability[pre.ordinal()][cur.ordinal()] - Math.log((item.attribute.frequency[j] + 1e-8) / transformMatrixDictionary.getTotalFrequency(cur));
+            }
+            double perfect_cost_line = Double.MAX_VALUE;
+            int perfect_j = 0;
+            for (int j = 0; j < cost[i].length; ++j)
+            {
+                if (perfect_cost_line > cost[i][j])
+                {
+                    perfect_cost_line = cost[i][j];
+                    perfect_j = j;
+                }
+            }
+            total = perfect_cost_line;
+            pre = item.attribute.nature[perfect_j];
+            item.confirmNature(pre);
+        }
     }
 }

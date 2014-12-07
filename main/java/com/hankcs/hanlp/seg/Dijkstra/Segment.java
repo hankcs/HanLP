@@ -12,9 +12,6 @@
 package com.hankcs.hanlp.seg.Dijkstra;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.dictionary.nr.JapanesePersonDictionary;
-import com.hankcs.hanlp.dictionary.nr.TranslatedPersonDictionary;
-import com.hankcs.hanlp.dictionary.ns.PlaceDictionary;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecogniton;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
@@ -35,10 +32,10 @@ public class Segment extends HiddenMarkovModelSegment
     @Override
     public List<Term> segSentence(String sentence)
     {
-        WordNet wordNetOptimum = new WordNet(sentence);
-        WordNet wordNetAll = new WordNet(sentence);
+        WordNet wordNetOptimum = new WordNet(sentence.toCharArray());
+        WordNet wordNetAll = new WordNet(wordNetOptimum.charArray);
         ////////////////生成词网////////////////////
-        GenerateWordNet(sentence, wordNetAll);
+        GenerateWordNet(null, wordNetAll);
         ///////////////生成词图////////////////////
         Graph graph = GenerateBiGraph(wordNetAll);
         if (HanLP.Config.DEBUG)
@@ -49,11 +46,10 @@ public class Segment extends HiddenMarkovModelSegment
 //        fixResultByRule(vertexList);
         if (HanLP.Config.DEBUG)
         {
-            System.out.println("粗分结果" + convert(vertexList));
+            System.out.println("粗分结果" + convert(vertexList, false));
         }
-        // 姓名识别
-        boolean recognition = config.nameRecognize || config.translatedNameRecognize || config.placeRecognize;
-        if (recognition)
+        // 实体命名识别
+        if (config.ner)
         {
             wordNetOptimum.addAll(vertexList);
             int preSize = wordNetOptimum.size();
@@ -101,7 +97,13 @@ public class Segment extends HiddenMarkovModelSegment
             return decorateResultForIndexMode(vertexList, wordNetAll);
         }
 
-        return convert(vertexList);
+        // 是否标注词性
+        if (config.speechTagging)
+        {
+            speechTagging(vertexList);
+        }
+
+        return convert(vertexList, config.offset);
     }
 
     private static List<Vertex> dijkstra(Graph graph)
@@ -149,6 +151,17 @@ public class Segment extends HiddenMarkovModelSegment
     }
 
     /**
+     * 开启词性标注
+     * @param enable
+     * @return
+     */
+    public Segment enableSpeechTag(boolean enable)
+    {
+        config.speechTagging = enable;
+        return this;
+    }
+
+    /**
      * 开启人名识别
      * @param enable
      * @return
@@ -156,6 +169,7 @@ public class Segment extends HiddenMarkovModelSegment
     public Segment enableNameRecognize(boolean enable)
     {
         config.nameRecognize = enable;
+        config.updateNerConfig();
         return this;
     }
 
@@ -167,17 +181,19 @@ public class Segment extends HiddenMarkovModelSegment
     public Segment enablePlaceRecognize(boolean enable)
     {
         config.placeRecognize = enable;
+        config.updateNerConfig();
         return this;
     }
 
     /**
-     * 开启地名识别
+     * 开启机构名识别
      * @param enable
      * @return
      */
     public Segment enableOrganizationRecognize(boolean enable)
     {
         config.organizationRecognize = enable;
+        config.updateNerConfig();
         return this;
     }
 
@@ -200,6 +216,7 @@ public class Segment extends HiddenMarkovModelSegment
     public Segment enableTranslatedNameRecognize(boolean enable)
     {
         config.translatedNameRecognize = enable;
+        config.updateNerConfig();
         return this;
     }
 
@@ -211,6 +228,29 @@ public class Segment extends HiddenMarkovModelSegment
     public Segment enableJapaneseNameRecognize(boolean enable)
     {
         config.japaneseNameRecognize = enable;
+        config.updateNerConfig();
+        return this;
+    }
+
+    /**
+     * 是否启用偏移量计算（开启后Term.offset才会被计算）
+     * @param enable
+     * @return
+     */
+    public Segment enableOffset(boolean enable)
+    {
+        config.offset = enable;
+        return this;
+    }
+
+    public Segment enableAllNamedEntityRecognize(boolean enable)
+    {
+        config.nameRecognize = enable;
+        config.japaneseNameRecognize = enable;
+        config.translatedNameRecognize = enable;
+        config.placeRecognize = enable;
+        config.organizationRecognize = enable;
+        config.updateNerConfig();
         return this;
     }
 }

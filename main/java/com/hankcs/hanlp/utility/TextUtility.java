@@ -253,7 +253,6 @@ public class TextUtility
         return true;
     }
 
-    //TODO:这个效率太慢！要优化
     public static int charType(char c)
     {
         return charType(String.valueOf(c));
@@ -274,7 +273,6 @@ public class TextUtility
      */
     public static int charType(String str)
     {
-
         if (str != null && str.length() > 0)
         {
             byte[] b;
@@ -312,9 +310,7 @@ public class TextUtility
 
         }
         return CT_OTHER;
-
     }
-
 
     /**
      * ************************************************************************
@@ -430,6 +426,28 @@ public class TextUtility
     }
 
     /**
+     * 把表示数字含义的字符串转你成整形
+     *
+     * @param str 要转换的字符串
+     * @return 如果是有意义的整数，则返回此整数值。否则，返回-1。
+     */
+    public static int cint(String str)
+    {
+        if (str != null)
+            try
+            {
+                int i = new Integer(str).intValue();
+                return i;
+            } catch (NumberFormatException e)
+            {
+
+            }
+
+        return -1;
+    }
+
+
+    /**
      * ************************************************************************
      * <p/>
      * Func Name : IsAllNum
@@ -472,8 +490,8 @@ public class TextUtility
             if (i >= str.length())
                 return true;
 
-            while (i < str.length() && GFString.cint(str.substring(i, i + 1)) >= 0
-                    && GFString.cint(str.substring(i, i + 1)) <= 9)
+            while (i < str.length() && cint(str.substring(i, i + 1)) >= 0
+                    && cint(str.substring(i, i + 1)) <= 9)
                 i++;
             // Get middle delimiter such as .
             if (i < str.length())
@@ -840,67 +858,6 @@ public class TextUtility
         return null;
     }
 
-    public static boolean PostfixSplit(byte[] sWord, byte[] sWordRet, byte[] sPostfix)
-    {
-        byte[] sSinglePostfix;
-        try
-        {
-            sSinglePostfix = POSTFIX_SINGLE.getBytes("GBK");
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-            sSinglePostfix = POSTFIX_SINGLE.getBytes();
-        }
-        byte[][] sMultiPostfix = new byte[POSTFIX_MUTIPLE.length][9];
-        for (int i = 0; i < sMultiPostfix.length; i++)
-        {
-            try
-            {
-                sMultiPostfix[i] = POSTFIX_MUTIPLE[i].getBytes("GBK");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-                sMultiPostfix[i] = POSTFIX_MUTIPLE[i].getBytes();
-            }
-
-        }
-        int nPostfixLen = 0, nWordLen = sWord.length;
-        int i = 0;
-
-        while (sMultiPostfix[i][0] != 0
-                && strncmp(
-                GFCommon.bytesCopy(sWord, nWordLen - sMultiPostfix[i].length, sWord.length - nWordLen
-                        + sMultiPostfix[i].length), 0, sMultiPostfix[i], sMultiPostfix[i].length
-        ) == false)
-        {// Try
-            // to
-            // get
-            // the
-            // postfix of an
-            // address
-            i++;
-        }
-        GFCommon.bytesCopy(sPostfix, sMultiPostfix[i], 0, sMultiPostfix.length);
-        nPostfixLen = sMultiPostfix[i].length;// Get the length of place
-        // postfix
-
-        if (nPostfixLen == 0)
-        {
-            sPostfix[2] = 0;
-            strncpy(sPostfix, GFCommon.bytesCopy(sWord, nWordLen - 2, 2), 2);
-            if (CC_Find(sSinglePostfix, sPostfix))
-                nPostfixLen = 2;
-        }
-
-        strncpy(sWordRet, sWord, nWordLen - nPostfixLen);
-        sWordRet[nWordLen - nPostfixLen] = 0;// Get the place name which have
-        // erasing the postfix
-        sPostfix[nPostfixLen] = 0;
-        return true;
-    }
-
     /**
      * 比较第二个字节数组是否在第一个中出现
      *
@@ -1173,7 +1130,7 @@ public class TextUtility
 
             // 1992年, 98年,06年
             if (isAllSingleByte(snum)
-                    && (len == 4 || len == 2 && (GFString.cint(first) > 4 || GFString.cint(first) == 0)))
+                    && (len == 4 || len == 2 && (cint(first) > 4 || cint(first) == 0)))
                 return true;
             if (isAllNum(snum) && (len >= 6 || len == 4 && "０５６７８９".indexOf(first) != -1))
                 return true;
@@ -1382,14 +1339,26 @@ public class TextUtility
     /**
      * 字节数组转char，高位在前，适用于读取writeChar的数据
      *
-     * @param b
-     * @param offset
+     * @param bytes
+     * @param start
      * @return
      */
-    public static char bytesHighFirstToChar(byte[] b, int offset)
+    public static char bytesHighFirstToChar(byte[] bytes, int start)
     {
-        char c = (char) (((b[offset] & 0xFF) << 8) | (b[offset + 1] & 0xFF));
+        char c = (char) (((bytes[start] & 0xFF) << 8) | (bytes[start + 1] & 0xFF));
         return c;
+    }
+
+    /**
+     * 读取float，高位在前
+     * @param bytes
+     * @param start
+     * @return
+     */
+    public static float bytesHighFirstToFloat(byte[] bytes, int start)
+    {
+        int l = bytesHighFirstToInt(bytes, start);
+        return Float.intBitsToFloat(l);
     }
 
     /**
@@ -1449,5 +1418,20 @@ public class TextUtility
         }
 
         return count;
+    }
+
+    /**
+     * 简单好用的写String方式
+     * @param s
+     * @param out
+     * @throws IOException
+     */
+    public static void writeString(String s, DataOutputStream out) throws IOException
+    {
+        out.writeInt(s.length());
+        for (char c : s.toCharArray())
+        {
+            out.writeChar(c);
+        }
     }
 }

@@ -15,6 +15,7 @@
  */
 package com.hankcs.hanlp.collection.trie;
 
+import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
@@ -441,6 +442,25 @@ public class DoubleArrayTrie<V> implements Serializable
         return true;
     }
 
+    public boolean save(DataOutputStream out)
+    {
+        try
+        {
+            out.writeInt(size);
+            for (int i = 0; i < size; i++)
+            {
+                out.writeInt(base[i]);
+                out.writeInt(check[i]);
+            }
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * 从磁盘加载，需要额外提供值
      *
@@ -465,6 +485,21 @@ public class DoubleArrayTrie<V> implements Serializable
     public boolean load(String path, V[] value)
     {
         if (!loadBaseAndCheckByFileChannel(path)) return false;
+        v = value;
+        return true;
+    }
+
+    public boolean load(ByteArray byteArray, V[] value)
+    {
+        if (byteArray == null) return false;
+        size = byteArray.nextInt();
+        base = new int[size + 65535];   // 多留一些，防止越界
+        check = new int[size + 65535];
+        for (int i = 0; i < size; i++)
+        {
+            base[i] = byteArray.nextInt();
+            check[i] = byteArray.nextInt();
+        }
         v = value;
         return true;
     }

@@ -12,6 +12,7 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import junit.framework.TestCase;
 
 /**
@@ -23,5 +24,14 @@ public class TestLoadByChannel extends TestCase
     {
         DoubleArrayTrie<Integer> trie = new DoubleArrayTrie<>();
         trie.load("data/dictionary/CoreNatureDictionary.txt.trie.dat", new Integer[0]);
+    }
+
+    public void testIO() throws Exception
+    {
+        IOUtil.LineIterator iterator = IOUtil.readLine("data/model/dependency/test.txt");
+        while (iterator.hasNext())
+        {
+            System.out.println(iterator.next());
+        }
     }
 }

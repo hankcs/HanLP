@@ -58,6 +58,16 @@ public class DictionaryMaker implements ISaveAble
         add(new Word(value, label));
     }
 
+    public Item get(String key)
+    {
+        return trie.get(key);
+    }
+
+    public Item get(IWord word)
+    {
+        return get(word.getValue());
+    }
+
     /**
      * 读取所有条目
      *

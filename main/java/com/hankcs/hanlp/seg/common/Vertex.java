@@ -110,7 +110,7 @@ public class Vertex
                     word= Predefine.TAG_CLUSTER;
                 }
                 break;
-                case xx:
+//                case xx:
 //                case w:
 //                {
 //                    word= Predefine.TAG_OTHER;

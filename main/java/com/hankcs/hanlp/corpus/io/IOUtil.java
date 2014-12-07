@@ -12,6 +12,8 @@
 package com.hankcs.hanlp.corpus.io;
 
 
+import com.hankcs.hanlp.utility.TextUtility;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -140,6 +142,11 @@ public class IOUtil
         return true;
     }
 
+    public static boolean saveTxt(String path, StringBuilder content)
+    {
+        return saveTxt(path, content.toString());
+    }
+
     public static <T> boolean saveCollectionToTxt(Collection<T> collection, String path)
     {
         StringBuilder sb = new StringBuilder();
@@ -243,5 +250,71 @@ public class IOUtil
             sbOut.append('\n');
         }
         return saveTxt(path, sbOut.toString());
+    }
+
+    public static LineIterator readLine(String path)
+    {
+        return new LineIterator(path);
+    }
+
+    /**
+     * 方便读取按行读取大文件
+     */
+    public static class LineIterator implements Iterator<String>
+    {
+        BufferedReader bw;
+        String line;
+        public LineIterator(String path)
+        {
+            try
+            {
+                bw = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            }
+            catch (FileNotFoundException e)
+            {
+                logger.warning("文件" + path + "不存在，接下来的调用会返回null" + TextUtility.exceptionToString(e));
+            }
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            if (bw == null) return false;
+            try
+            {
+                line = bw.readLine();
+            }
+            catch (IOException e)
+            {
+                logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
+                return false;
+            }
+            if (line == null)
+            {
+                try
+                {
+                    bw.close();
+                }
+                catch (IOException e)
+                {
+                    logger.warning("关闭文件失败" + TextUtility.exceptionToString(e));
+                }
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public String next()
+        {
+            return line;
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException("只读，不可写！");
+        }
     }
 }

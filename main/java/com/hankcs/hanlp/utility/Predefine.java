@@ -120,6 +120,10 @@ public class Predefine
      */
     public final static String TAG_NUMBER = "未##数";
     /**
+     * 数量词 mq
+     */
+    public final static String TAG_QUANTIFIER = "未##量";
+    /**
      * 专有名词 nx
      */
     public final static String TAG_PROPER = "未##专";
@@ -158,4 +162,9 @@ public class Predefine
      * 逆转后缀名
      */
     public final static String REVERSE_EXT = ".reverse";
+
+    /**
+     * 二进制文件后缀
+     */
+    public final static String BIN_EXT = ".bin";
 }

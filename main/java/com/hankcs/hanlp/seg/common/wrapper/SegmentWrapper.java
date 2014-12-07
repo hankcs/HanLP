@@ -36,7 +36,7 @@ public class SegmentWrapper
      */
     int index;
     /**
-     * 整个br级别的其实位置
+     * 整个br级别的起始位置
      */
     int globalStart;
 

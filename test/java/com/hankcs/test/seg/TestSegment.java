@@ -12,7 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
@@ -31,7 +31,7 @@ public class TestSegment extends TestCase
     {
         Segment segment = new Segment().enableNameRecognize(true);
         HanLP.Config.enableDebug(true);
-        System.out.println(segment.seg("亚德里恩"));
+        System.out.println(segment.seg("商品和服务"));
     }
 
     public void testIndexSeg() throws Exception
@@ -47,5 +47,16 @@ public class TestSegment extends TestCase
         {
             System.out.println(fullTerm);
         }
+    }
+
+    public void testSpeechTagging() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        String text = "教授正在教授自然语言处理课程";
+        Segment segment = new Segment();
+
+        System.out.println("未标注：" + segment.seg(text));
+        segment.enableSpeechTag(true);
+        System.out.println("标注后：" + segment.seg(text));
     }
 }

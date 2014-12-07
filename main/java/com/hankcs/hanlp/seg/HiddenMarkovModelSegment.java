@@ -11,10 +11,13 @@
  */
 package com.hankcs.hanlp.seg;
 
+import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.Path.*;
 import com.hankcs.hanlp.seg.common.Graph;
 import com.hankcs.hanlp.seg.common.Term;
@@ -229,7 +232,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
      * @param vertexList
      * @return
      */
-    protected static List<Term> convert(List<Vertex> vertexList)
+    protected static List<Term> convert(List<Vertex> vertexList, boolean offsetEnabled)
     {
         assert vertexList != null;
         assert vertexList.size() >= 2 : "这条路径不应当短于2" + vertexList.toString();
@@ -237,18 +240,40 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         List<Term> resultList = new ArrayList<Term>(length);
         Iterator<Vertex> iterator = vertexList.iterator();
         iterator.next();
-        int offset = 0;
-        for (int i = 0; i < length; ++i)
+        if (offsetEnabled)
         {
-            Vertex vertex = iterator.next();
-            Term term = convert(vertex);
-            term.offset = offset;
-            offset += term.length();
-            resultList.add(term);
+            int offset = 0;
+            for (int i = 0; i < length; ++i)
+            {
+                Vertex vertex = iterator.next();
+                Term term = convert(vertex);
+                term.offset = offset;
+                offset += term.length();
+                resultList.add(term);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < length; ++i)
+            {
+                Vertex vertex = iterator.next();
+                Term term = convert(vertex);
+                resultList.add(term);
+            }
         }
         return resultList;
     }
 
+    /**
+     * 将一条路径转为最终结果
+     *
+     * @param vertexList
+     * @return
+     */
+    protected static List<Term> convert(List<Vertex> vertexList)
+    {
+        return convert(vertexList, false);
+    }
     /**
      * 生成二元词图
      *
@@ -291,14 +316,14 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         for (int i = 0; i < charTypeArray.length; ++i)
         {
             c = charArray[i + start];
-            charTypeArray[i] = TextUtility.charType(c);
+            charTypeArray[i] = CharType.get(c);
 
-            if (c == '.' && i  + start < (charArray.length - 1) && TextUtility.charType(charArray[i + start + 1]) == Predefine.CT_NUM)
-                charTypeArray[i] = Predefine.CT_NUM;
+            if (c == '.' && i  + start < (charArray.length - 1) && CharType.get(charArray[i + start + 1]) == CharType.CT_NUM)
+                charTypeArray[i] = CharType.CT_NUM;
             else if (c == '.' && i  + start < (charArray.length - 1) && charArray[i  + start + 1] >= '0' && charArray[i  + start + 1] <= '9')
-                charTypeArray[i] = Predefine.CT_SINGLE;
-            else if (charTypeArray[i] == Predefine.CT_LETTER)
-                charTypeArray[i] = Predefine.CT_SINGLE;
+                charTypeArray[i] = CharType.CT_SINGLE;
+            else if (charTypeArray[i] == CharType.CT_LETTER)
+                charTypeArray[i] = CharType.CT_SINGLE;
         }
 
         // 根据字符类型数组中的内容完成原子切割
@@ -306,8 +331,8 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         {
             nCurType = charTypeArray[pCur - start];
 
-            if (nCurType == Predefine.CT_CHINESE || nCurType == Predefine.CT_INDEX ||
-                    nCurType == Predefine.CT_DELIMITER || nCurType == Predefine.CT_OTHER)
+            if (nCurType == CharType.CT_CHINESE || nCurType == CharType.CT_INDEX ||
+                    nCurType == CharType.CT_DELIMITER || nCurType == CharType.CT_OTHER)
             {
                 String single = String.valueOf(charArray[pCur]);
                 if (single.length() != 0)
@@ -315,7 +340,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
                 pCur++;
             }
             //如果是字符、数字或者后面跟随了数字的小数点“.”则一直取下去。
-            else if (pCur < end - 1 && ((nCurType == Predefine.CT_SINGLE) || nCurType == Predefine.CT_NUM))
+            else if (pCur < end - 1 && ((nCurType == CharType.CT_SINGLE) || nCurType == CharType.CT_NUM))
             {
                 sb.delete(0, sb.length());
                 sb.append(charArray[pCur]);
@@ -382,9 +407,9 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         for (int i = 0; i < charArray.length; ++i)
         {
             c = charArray[i];
-            charTypeArray[i] = TextUtility.charType(c);
+            charTypeArray[i] = CharType.get(c);
 
-            if (c == '.' && i < (charArray.length - 1) && TextUtility.charType(charArray[i + 1]) == Predefine.CT_NUM)
+            if (c == '.' && i < (charArray.length - 1) && CharType.get(charArray[i + 1]) == Predefine.CT_NUM)
                 charTypeArray[i] = Predefine.CT_NUM;
             else if (c == '.' && i < (charArray.length - 1) && charArray[i + 1] >= '0' && charArray[i + 1] <= '9')
                 charTypeArray[i] = Predefine.CT_SINGLE;
@@ -508,7 +533,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
             p = offset + 1;
         }
         // 补足没查到的词
-        while (p < sSentence.length())
+        while (p < charArray.length)
         {
             wordNetStorage.add(p + 1, AtomSegment(wordNetStorage.charArray, p, sSentence.length()));
             ++p;
@@ -520,7 +545,7 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
             while ((entry = searcher.next()) != null)
             {
                 offset = searcher.getOffset();
-                wordNetStorage.add(offset + 1, new Vertex(entry.getKey(), entry.getValue()));
+                wordNetStorage.push(offset + 1, new Vertex(entry.getKey(), entry.getValue()));
             }
         }
         return wordNetStorage;
@@ -570,8 +595,22 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
         return termList;
     }
 
+    /**
+     * 将节点列表转为term列表
+     * @param vertex
+     * @return
+     */
     private static Term convert(Vertex vertex)
     {
         return new Term(vertex.realWord, vertex.guessNature());
+    }
+
+    /**
+     * 词性标注
+     * @param vertexList
+     */
+    protected static void speechTagging(List<Vertex> vertexList)
+    {
+        Viterbi.compute(vertexList, CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary);
     }
 }

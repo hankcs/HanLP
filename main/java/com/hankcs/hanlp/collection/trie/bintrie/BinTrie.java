@@ -272,6 +272,37 @@ public class BinTrie<V> extends BaseNode<V>
     }
 
     /**
+     * 保存到二进制输出流
+     * @param out
+     * @return
+     */
+    public boolean save(DataOutputStream out)
+    {
+        try
+        {
+            for (BaseNode node : child)
+            {
+                if (node == null)
+                {
+                    out.writeInt(0);
+                }
+                else
+                {
+                    out.writeInt(1);
+                    node.walkToSave(out);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            logger.warning("保存到" + out + "失败" + TextUtility.exceptionToString(e));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 从磁盘加载二分数组树
      * @param path 路径
      * @param value 额外提供的值数组，按照值的字典序。（之所以要求提供它，是因为泛型的保存不归树管理）
@@ -320,5 +351,26 @@ public class BinTrie<V> extends BaseNode<V>
         size = -1;  // 不知道有多少
 
         return true;
+    }
+
+    public boolean load(ByteArray byteArray, ValueArray valueArray)
+    {
+        for (int i = 0; i < child.length; ++i)
+        {
+            int flag = byteArray.nextInt();
+            if (flag == 1)
+            {
+                child[i] = new Node<>();
+                child[i].walkToLoad(byteArray, valueArray);
+            }
+        }
+        size = -1;  // 不知道有多少
+
+        return true;
+    }
+
+    public ValueArray newValueArray()
+    {
+        return new ValueArray();
     }
 }

@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.io;
 
+import com.hankcs.hanlp.utility.ByteUtil;
 import com.hankcs.hanlp.utility.TextUtility;
 
 /**
@@ -51,6 +52,13 @@ public class ByteArray
         return result;
     }
 
+    public double nextDouble()
+    {
+        double result = ByteUtil.bytesHighFirstToDouble(bytes, offset);
+        offset += 8;
+        return result;
+    }
+
     /**
      * 读取一个char，对应于writeChar
      * @return
@@ -60,6 +68,15 @@ public class ByteArray
         char result = TextUtility.bytesHighFirstToChar(bytes, offset);
         offset += 2;
         return result;
+    }
+
+    /**
+     * 读取一个字节
+     * @return
+     */
+    public byte nextByte()
+    {
+        return bytes[offset++];
     }
 
     public boolean hasMore()
@@ -80,5 +97,12 @@ public class ByteArray
             sb.append(nextChar());
         }
         return sb.toString();
+    }
+
+    public float nextFloat()
+    {
+        float result = TextUtility.bytesHighFirstToFloat(bytes, offset);
+        offset += 4;
+        return result;
     }
 }

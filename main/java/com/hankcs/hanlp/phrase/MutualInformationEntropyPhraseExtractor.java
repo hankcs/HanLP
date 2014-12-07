@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 利用互信息和左右殇的短语提取器
+ * 利用互信息和左右熵的短语提取器
  * @author hankcs
  */
 public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
