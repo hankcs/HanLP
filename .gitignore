@@ -11,5 +11,9 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /target
+# IDE相关，不再同步
 /.idea
 /*.iml
+# 以下两项是词典和模型的二进制文件，请不要提交到版本库
+*.dat
+*.bin
