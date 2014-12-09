@@ -175,6 +175,11 @@ public class CustomDictionary
         return insert(word, natureWithFrequency);
     }
 
+    /**
+     * 增加新词
+     * @param word
+     * @return
+     */
     public static boolean add(String word)
     {
         if (contains(word)) return false;
@@ -194,6 +199,16 @@ public class CustomDictionary
         if (att == null) return false;
         trie.put(word, att);
         return true;
+    }
+
+    /**
+     * 以覆盖模式增加新词
+     * @param word
+     * @return
+     */
+    public static boolean insert(String word)
+    {
+        return insert(word, null);
     }
 
     /**

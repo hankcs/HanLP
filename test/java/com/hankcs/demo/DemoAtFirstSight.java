@@ -23,6 +23,6 @@ public class DemoAtFirstSight
     {
         System.out.println("首次运行，HanLP会自动编译词典，请稍候……");
         HanLP.Config.enableDebug();         // 为了避免你等得无聊，开启调试模式说点什么:-)
-        System.out.println(HanLP.segment("你好，欢迎使用HanLP汉语处理包！接下来请从其他Demo中体验HanLP强大的功能~"));
+        System.out.println(HanLP.segment("你好，欢迎使用HanLP汉语处理包！接下来请从其他Demo中体验HanLP丰富的功能~"));
     }
 }
