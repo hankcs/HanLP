@@ -164,6 +164,39 @@ public class CustomDictionary
     }
 
     /**
+     * 往自定义词典中插入一个新词（非覆盖模式）
+     * @param word 新词 如“裸婚”
+     * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”
+     * @return 是否插入成功（失败的原因可能是不覆盖、natureWithFrequency有问题等，后者可以通过调试模式了解原因）
+     */
+    public static boolean add(String word, String natureWithFrequency)
+    {
+        if (contains(word)) return false;
+        return insert(word, natureWithFrequency);
+    }
+
+    public static boolean add(String word)
+    {
+        if (contains(word)) return false;
+        return insert(word, null);
+    }
+
+    /**
+     * 往自定义词典中插入一个新词（覆盖模式）
+     * @param word 新词 如“裸婚”
+     * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”
+     * @return 是否插入成功（失败的原因可能是natureWithFrequency问题，可以通过调试模式了解原因）
+     */
+    public static boolean insert(String word, String natureWithFrequency)
+    {
+        if (word == null) return false;
+        CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
+        if (att == null) return false;
+        trie.put(word, att);
+        return true;
+    }
+
+    /**
      * 追加外部词典
      * @param path 词典路径
      * @return 是否加载成功
@@ -228,6 +261,15 @@ public class CustomDictionary
     public static CoreDictionary.Attribute get(String key)
     {
         return trie.get(key);
+    }
+
+    /**
+     * 删除单词
+     * @param key
+     */
+    public static void remove(String key)
+    {
+        trie.remove(key);
     }
 
     /**

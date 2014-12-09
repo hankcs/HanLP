@@ -2,10 +2,11 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import junit.framework.TestCase;
 
 import java.util.Map;
 
-public class testCustomDictionary
+public class testCustomDictionary extends TestCase
 {
     public static void main(String[] args)
     {
@@ -15,5 +16,12 @@ public class testCustomDictionary
         {
             System.out.println(entry);
         }
+    }
+
+    public void testAdd() throws Exception
+    {
+        String word = "裸婚";
+        System.out.println(CustomDictionary.add(word, "nz 1 v 1"));
+        System.out.println(CustomDictionary.get(word));
     }
 }

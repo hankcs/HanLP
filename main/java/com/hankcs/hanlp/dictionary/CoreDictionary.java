@@ -311,6 +311,28 @@ public class CoreDictionary
             this(nature, 1000);
         }
 
+        public static Attribute create(String natureWithFrequency)
+        {
+            try
+            {
+                String param[] = natureWithFrequency.split(" ");
+                int natureCount = param.length / 2;
+                Attribute attribute = new Attribute(natureCount);
+                for (int i = 0; i < natureCount; ++i)
+                {
+                    attribute.nature[i] = Enum.valueOf(Nature.class, param[2 * i]);
+                    attribute.frequency[i] = Integer.parseInt(param[1 + 2 * i]);
+                    attribute.totalFrequency += attribute.frequency[i];
+                }
+                return attribute;
+            }
+            catch (Exception e)
+            {
+                logger.warning("使用字符串" + natureWithFrequency + "创建词条属性失败！" + TextUtility.exceptionToString(e));
+                return null;
+            }
+        }
+
         /**
          * 获取词性的词频
          *
@@ -358,7 +380,7 @@ public class CoreDictionary
             final StringBuilder sb = new StringBuilder();
             for (int i = 0; i < nature.length; ++i)
             {
-                sb.append(nature[i]).append(' ').append(frequency[i]);
+                sb.append(nature[i]).append(' ').append(frequency[i]).append(' ');
             }
             return sb.toString();
         }

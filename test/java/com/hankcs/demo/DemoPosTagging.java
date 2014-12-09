@@ -12,9 +12,6 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.seg.Dijkstra.Segment;
-import com.hankcs.hanlp.seg.common.Term;
-
-import java.util.List;
 
 /**
  * 词性标注
@@ -24,8 +21,11 @@ public class DemoPosTagging
 {
     public static void main(String[] args)
     {
-        Segment segment = new Segment().enableSpeechTag(true);
-        List<Term> termList = segment.seg("我的爱明明还在，爱我别走");
-        System.out.println(termList);
+        String text = "教授正在教授自然语言处理课程";
+        Segment segment = new Segment();
+
+        System.out.println("未标注：" + segment.seg(text));
+        segment.enableSpeechTag(true);
+        System.out.println("标注后：" + segment.seg(text));
     }
 }
