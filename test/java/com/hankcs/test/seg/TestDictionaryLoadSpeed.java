@@ -22,7 +22,7 @@ public class TestDictionaryLoadSpeed extends TestCase
 {
     public void testCoreDictionary() throws Exception
     {
-        System.out.println(CoreDictionary.GetWordInfo("速度"));
+        System.out.println(CoreDictionary.get("速度"));
     }
 
     public void testBiGramDictionary() throws Exception

@@ -168,7 +168,7 @@ public class CoreDictionary
         return true;
     }
 
-    public static Attribute GetWordInfo(String key)
+    public static Attribute get(String key)
     {
         return trie.get(key);
     }
@@ -181,7 +181,7 @@ public class CoreDictionary
      */
     public static int getTermFrequency(String term)
     {
-        Attribute attribute = GetWordInfo(term);
+        Attribute attribute = get(term);
         if (attribute == null) return 0;
         return attribute.totalFrequency;
     }

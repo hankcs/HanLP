@@ -909,4 +909,24 @@ public class DoubleArrayTrie<V> implements Serializable
     {
         return exactMatchSearch(key) >= 0;
     }
+
+    /**
+     * 打印统计信息
+     */
+//    public void report()
+//    {
+//        System.out.println("size: " + size);
+//        int nonZeroIndex = 0;
+//        for (int i = 0; i < base.length; i++)
+//        {
+//            if (base[i] != 0) nonZeroIndex = i;
+//        }
+//        System.out.println("BaseUsed: " + nonZeroIndex);
+//        nonZeroIndex = 0;
+//        for (int i = 0; i < check.length; i++)
+//        {
+//            if (check[i] != 0) nonZeroIndex = i;
+//        }
+//        System.out.println("CheckUsed: " + nonZeroIndex);
+//    }
 }

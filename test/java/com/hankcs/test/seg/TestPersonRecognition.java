@@ -49,4 +49,10 @@ public class TestPersonRecognition extends TestCase
             }
         }
     }
+
+    public void testNameRecognition() throws Exception
+    {
+        com.hankcs.hanlp.seg.NShort.Segment segment = new com.hankcs.hanlp.seg.NShort.Segment();
+        System.out.println(segment.seg("华健康"));
+    }
 }

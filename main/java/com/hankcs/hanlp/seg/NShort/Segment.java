@@ -12,7 +12,12 @@
 package com.hankcs.hanlp.seg.NShort;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.algoritm.Dijkstra;
+import com.hankcs.hanlp.recognition.nr.JapanesePersonRecogniton;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
+import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
+import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
+import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
 import com.hankcs.hanlp.seg.HiddenMarkovModelSegment;
 import com.hankcs.hanlp.seg.NShort.Path.*;
 import com.hankcs.hanlp.seg.common.Graph;
@@ -84,26 +89,70 @@ public class Segment extends HiddenMarkovModelSegment
 //        char[] charArray = text.toCharArray();
         // 粗分
         List<List<Vertex>> coarseResult = BiSegment(sentence, 2, wordNetOptimum, wordNetAll);
-//        logger.trace("粗分词网：\n{}", wordNetOptimum);
+        int preSize = wordNetOptimum.size();
         for (List<Vertex> vertexList : coarseResult)
         {
-            // 姓名识别
-            if (config.nameRecognize)
+            if (HanLP.Config.DEBUG)
             {
-                PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                System.out.println("粗分结果" + convert(vertexList, false));
             }
-//            AddressRecognition.Recognition(vertexList, wordNetOptimum);
+            // 实体命名识别
+            if (config.ner)
+            {
+                wordNetOptimum.addAll(vertexList);
+                if (config.nameRecognize)
+                {
+                    PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                }
+                if (config.translatedNameRecognize)
+                {
+                    TranslatedPersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                }
+                if (config.japaneseNameRecognize)
+                {
+                    JapanesePersonRecogniton.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                }
+                if (config.placeRecognize)
+                {
+                    PlaceRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                }
+                if (config.organizationRecognize)
+                {
+                    // 层叠隐马模型——生成输出作为下一级隐马输入
+                    vertexList = Dijkstra.compute(GenerateBiGraph(wordNetOptimum));
+                    wordNetOptimum.clear();
+                    wordNetOptimum.addAll(vertexList);
+                    preSize = wordNetOptimum.size();
+                    OrganizationRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                }
+            }
         }
-        // 细分
-        List<Vertex> vertexListFinal = BiOptimumSegment(wordNetOptimum);
-        // 词性标注
+
+        List<Vertex> vertexList = coarseResult.get(0);
+        if (wordNetOptimum.size() != preSize)
+        {
+            Graph graph = GenerateBiGraph(wordNetOptimum);
+            vertexList = Dijkstra.compute(graph);
+            if (HanLP.Config.DEBUG)
+            {
+                System.out.printf("细分词网：\n%s\n", wordNetOptimum);
+                System.out.printf("细分词图：%s\n", graph.printByTo());
+            }
+        }
 
         // 如果是索引模式则全切分
         if (config.indexMode)
         {
-            decorateResultForIndexMode(vertexListFinal, wordNetAll);
+            return decorateResultForIndexMode(vertexList, wordNetAll);
         }
-        return convert(vertexListFinal);
+
+        // 是否标注词性
+        if (config.speechTagging)
+        {
+            speechTagging(vertexList);
+        }
+
+        return convert(vertexList, config.offset);
     }
 
     /**
@@ -186,5 +235,85 @@ public class Segment extends HiddenMarkovModelSegment
         return new Segment().seg(text);
     }
 
+    /**
+     * 开启词性标注
+     * @param enable
+     * @return
+     */
+    public Segment enableSpeechTag(boolean enable)
+    {
+        config.speechTagging = enable;
+        return this;
+    }
+
+    /**
+     * 开启地名识别
+     * @param enable
+     * @return
+     */
+    public Segment enablePlaceRecognize(boolean enable)
+    {
+        config.placeRecognize = enable;
+        config.updateNerConfig();
+        return this;
+    }
+
+    /**
+     * 开启机构名识别
+     * @param enable
+     * @return
+     */
+    public Segment enableOrganizationRecognize(boolean enable)
+    {
+        config.organizationRecognize = enable;
+        config.updateNerConfig();
+        return this;
+    }
+
+    /**
+     * 是否启用音译人名识别
+     *
+     * @param enable
+     */
+    public Segment enableTranslatedNameRecognize(boolean enable)
+    {
+        config.translatedNameRecognize = enable;
+        config.updateNerConfig();
+        return this;
+    }
+
+    /**
+     * 是否启用日本人名识别
+     *
+     * @param enable
+     */
+    public Segment enableJapaneseNameRecognize(boolean enable)
+    {
+        config.japaneseNameRecognize = enable;
+        config.updateNerConfig();
+        return this;
+    }
+
+    /**
+     * 是否启用偏移量计算（开启后Term.offset才会被计算）
+     * @param enable
+     * @return
+     */
+    public Segment enableOffset(boolean enable)
+    {
+        config.offset = enable;
+        return this;
+    }
+
+    public Segment enableAllNamedEntityRecognize(boolean enable)
+    {
+        config.nameRecognize = enable;
+        config.japaneseNameRecognize = enable;
+        config.translatedNameRecognize = enable;
+        config.placeRecognize = enable;
+        config.organizationRecognize = enable;
+        config.updateNerConfig();
+        return this;
+    }
 
 }

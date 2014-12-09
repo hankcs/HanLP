@@ -153,7 +153,7 @@ public class Vertex
      */
     public Vertex(String word)
     {
-        this(word, word, CoreDictionary.GetWordInfo(word));
+        this(word, word, CoreDictionary.get(word));
     }
 
     public Vertex(char word, CoreDictionary.Attribute attribute)

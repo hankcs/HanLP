@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.algorithm;
 
-import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import junit.framework.TestCase;
 
 /**
@@ -22,6 +22,6 @@ public class TestDAT extends TestCase
     public void testSaveWithLessDisk() throws Exception
     {
         // 希望在保存的时候尽量少用点硬盘
-//        DoubleArrayTrie<Integer>
+        System.out.println(BiGramDictionary.getBiFrequency("经济@建设"));
     }
 }
