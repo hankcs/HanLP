@@ -438,7 +438,8 @@ public class TextUtility
             {
                 int i = new Integer(str).intValue();
                 return i;
-            } catch (NumberFormatException e)
+            }
+            catch (NumberFormatException e)
             {
 
             }
@@ -1351,6 +1352,7 @@ public class TextUtility
 
     /**
      * 读取float，高位在前
+     *
      * @param bytes
      * @param start
      * @return
@@ -1422,6 +1424,7 @@ public class TextUtility
 
     /**
      * 简单好用的写String方式
+     *
      * @param s
      * @param out
      * @throws IOException
@@ -1433,5 +1436,28 @@ public class TextUtility
         {
             out.writeChar(c);
         }
+    }
+
+    /**
+     * 判断字符串是否为空（null和空格）
+     *
+     * @param cs
+     * @return
+     */
+    public static boolean isBlank(CharSequence cs)
+    {
+        int strLen;
+        if (cs == null || (strLen = cs.length()) == 0)
+        {
+            return true;
+        }
+        for (int i = 0; i < strLen; i++)
+        {
+            if (!Character.isWhitespace(cs.charAt(i)))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -18,15 +18,18 @@ import com.hankcs.hanlp.utility.TextUtility;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.util.*;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 首字直接分配内存，之后二分动态数组的Trie树，能够平衡时间和空间
+ *
  * @author hankcs
  */
 public class BinTrie<V> extends BaseNode<V>
 {
     private int size;
+
     public BinTrie()
     {
         child = new BaseNode[65535];    // (int)Character.MAX_VALUE
@@ -57,8 +60,25 @@ public class BinTrie<V> extends BaseNode<V>
         }
     }
 
+    public void put(char[] key, V value)
+    {
+        BaseNode branch = this;
+        for (int i = 0; i < key.length - 1; ++i)
+        {
+            // 除了最后一个字外，都是继续
+            branch.addChild(new Node(key[i], Status.NOT_WORD_1, null));
+            branch = branch.getChild(key[i]);
+        }
+        // 最后一个字加入时属性为end
+        if (branch.addChild(new Node<V>(key[key.length - 1], Status.WORD_END_3, value)))
+        {
+            ++size; // 维护size
+        }
+    }
+
     /**
      * 删除一个词
+     *
      * @param key
      */
     public void remove(String key)
@@ -106,8 +126,24 @@ public class BinTrie<V> extends BaseNode<V>
         return (V) branch.getValue();
     }
 
+    public V get(char[] key)
+    {
+        BaseNode branch = this;
+        for (char aChar : key)
+        {
+            if (branch == null) return null;
+            branch = branch.getChild(aChar);
+        }
+
+        if (branch == null) return null;
+        // 下面这句可以保证只有成词的节点被返回
+        if (!(branch.status == Status.WORD_END_3 || branch.status == Status.WORD_MIDDLE_2)) return null;
+        return (V) branch.getValue();
+    }
+
     /**
      * 获取键值对集合
+     *
      * @return
      */
     public Set<Map.Entry<String, V>> entrySet()
@@ -124,6 +160,7 @@ public class BinTrie<V> extends BaseNode<V>
 
     /**
      * 前缀查询
+     *
      * @param key 查询串
      * @return 键值对
      */
@@ -158,6 +195,7 @@ public class BinTrie<V> extends BaseNode<V>
 
     /**
      * 前缀查询，通过字符数组来表示字符串可以优化运行速度
+     *
      * @param chars 字符串的字符数组
      * @param begin 开始的下标
      * @return
@@ -273,6 +311,7 @@ public class BinTrie<V> extends BaseNode<V>
 
     /**
      * 保存到二进制输出流
+     *
      * @param out
      * @return
      */
@@ -304,7 +343,8 @@ public class BinTrie<V> extends BaseNode<V>
 
     /**
      * 从磁盘加载二分数组树
-     * @param path 路径
+     *
+     * @param path  路径
      * @param value 额外提供的值数组，按照值的字典序。（之所以要求提供它，是因为泛型的保存不归树管理）
      * @return 是否成功
      */
@@ -330,6 +370,7 @@ public class BinTrie<V> extends BaseNode<V>
 
     /**
      * 只加载值，此时相当于一个set
+     *
      * @param path
      * @return
      */

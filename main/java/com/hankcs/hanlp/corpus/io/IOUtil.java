@@ -121,6 +121,7 @@ public class IOUtil
 
     /**
      * 快速保存
+     *
      * @param path
      * @param content
      * @return
@@ -204,6 +205,7 @@ public class IOUtil
 
     /**
      * 用省内存的方式读取大文件
+     *
      * @param path
      * @return
      */
@@ -264,36 +266,49 @@ public class IOUtil
     {
         BufferedReader bw;
         String line;
+
         public LineIterator(String path)
         {
             try
             {
                 bw = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+                line = bw.readLine();
             }
             catch (FileNotFoundException e)
             {
                 logger.warning("文件" + path + "不存在，接下来的调用会返回null" + TextUtility.exceptionToString(e));
             }
+            catch (IOException e)
+            {
+                logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
+            }
+        }
+
+        public void close()
+        {
+            if (bw == null) return;
+            try
+            {
+                bw.close();
+                bw = null;
+            }
+            catch (IOException e)
+            {
+                logger.warning("关闭文件失败" + TextUtility.exceptionToString(e));
+            }
+            return;
         }
 
         @Override
         public boolean hasNext()
         {
             if (bw == null) return false;
-            try
-            {
-                line = bw.readLine();
-            }
-            catch (IOException e)
-            {
-                logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
-                return false;
-            }
             if (line == null)
             {
                 try
                 {
                     bw.close();
+                    bw = null;
                 }
                 catch (IOException e)
                 {
@@ -308,7 +323,35 @@ public class IOUtil
         @Override
         public String next()
         {
-            return line;
+            String preLine = line;
+            try
+            {
+                if (bw != null)
+                {
+                    line = bw.readLine();
+                    if (line == null && bw != null)
+                    {
+                        try
+                        {
+                            bw.close();
+                            bw = null;
+                        }
+                        catch (IOException e)
+                        {
+                            logger.warning("关闭文件失败" + TextUtility.exceptionToString(e));
+                        }
+                    }
+                }
+                else
+                {
+                    line = null;
+                }
+            }
+            catch (IOException e)
+            {
+                logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
+            }
+            return preLine;
         }
 
         @Override

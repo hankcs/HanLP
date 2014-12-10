@@ -64,7 +64,7 @@ public class SegmentWrapper
         if (termArray != null && index < termArray.length) return termArray[index++];
         String line = br.readLine();
         if (line == null) return null;
-        List<Term> termList = segment.segSentence(line);
+        List<Term> termList = segment.seg(line);
         termArray = termList.toArray(new Term[0]);
         index = 0;
 

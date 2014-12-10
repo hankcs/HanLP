@@ -26,12 +26,27 @@ public class TestLoadByChannel extends TestCase
         trie.load("data/dictionary/CoreNatureDictionary.txt.trie.dat", new Integer[0]);
     }
 
-    public void testIO() throws Exception
+    public void testHasNext() throws Exception
     {
-        IOUtil.LineIterator iterator = IOUtil.readLine("data/model/dependency/test.txt");
+        IOUtil.LineIterator iterator = IOUtil.readLine("data/test/other/f.txt");
         while (iterator.hasNext())
         {
             System.out.println(iterator.next());
         }
+    }
+
+    public void testNext() throws Exception
+    {
+        String line;
+        IOUtil.LineIterator iterator = IOUtil.readLine("data/test/other/f.txt");
+        while ((line = iterator.next()) != null)
+        {
+            System.out.println(line);
+        }
+    }
+
+    public void testUTFString() throws Exception
+    {
+
     }
 }

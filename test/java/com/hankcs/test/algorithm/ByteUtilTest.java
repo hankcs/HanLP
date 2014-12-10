@@ -20,4 +20,22 @@ public class ByteUtilTest extends TestCase
         System.out.println(byteArray.nextDouble());
         System.out.println(byteArray.nextInt());
     }
+
+    public void testReadUTF() throws Exception
+    {
+        DataOutputStream out = new DataOutputStream(new FileOutputStream(DATA_TEST_OUT_BIN));
+        out.writeUTF("hankcs你好123");
+        ByteArray byteArray = ByteArray.createByteArray(DATA_TEST_OUT_BIN);
+        System.out.println(byteArray.nextUTF());
+    }
+
+    public void testReadUnsignedShort() throws Exception
+    {
+        DataOutputStream out = new DataOutputStream(new FileOutputStream(DATA_TEST_OUT_BIN));
+        int utflen = 123;
+        out.writeByte((byte) ((utflen >>> 8) & 0xFF));
+        out.writeByte((byte) ((utflen >>> 0) & 0xFF));
+        ByteArray byteArray = ByteArray.createByteArray(DATA_TEST_OUT_BIN);
+        System.out.println(byteArray.nextUnsignedShort());
+    }
 }

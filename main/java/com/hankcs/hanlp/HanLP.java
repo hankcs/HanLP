@@ -28,14 +28,14 @@ import java.util.logging.Level;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 常用接口静态化
+ * 常用接口合集
  *
  * @author hankcs
  */
 public class HanLP
 {
     /**
-     * 库的配置
+     * 库的全局配置
      */
     public static class Config
     {
@@ -125,6 +125,10 @@ public class HanLP
          * 最大熵-依存关系模型
          */
         public static String MaxEntModelPath = "data/model/dependency/MaxEntModel.txt";
+        /**
+         * CRF分词模型
+         */
+        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
         /**
          * 字符类型对应表
          */
@@ -304,7 +308,7 @@ public class HanLP
      * 创建一个分词器
      * @return
      */
-    public static AbstractSegment createSegment()
+    public static AbstractSegment newSegment()
     {
         return new Segment();
     }

@@ -25,25 +25,11 @@ public abstract class AbstractSegment
     /**
      * 分词
      *
-     * @param text
-     * @return
+     * @param text 待分词文本
+     * @return 单词列表
      */
     public List<Term> seg(String text)
     {
-//        List<Term> resultList = new LinkedList<Term>();
-//        int offset = 0;
-//        for (String sentence : SentencesUtil.toSentenceList(text))
-//        {
-//            List<Term> termList = segSentence(sentence);
-//            for (Term term : termList)
-//            {
-//                term.start += offset;
-//                term.end += offset;
-//            }
-//            resultList.addAll(termList);
-//            offset += sentence.length();
-//        }
-//        return resultList;
         return segSentence(text);
     }
 
@@ -72,5 +58,5 @@ public abstract class AbstractSegment
      * @param sentence
      * @return
      */
-    public abstract List<Term> segSentence(String sentence);
+    protected abstract List<Term> segSentence(String sentence);
 }

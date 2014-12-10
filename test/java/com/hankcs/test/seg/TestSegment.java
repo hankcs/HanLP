@@ -31,7 +31,7 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         Segment segment = new Segment().enableOrganizationRecognize(true);
-        HanLP.Config.enableDebug(true);
+//        HanLP.Config.enableDebug(true);
         System.out.println(segment.seg("党的生活和国家机关"));
     }
 
@@ -63,6 +63,6 @@ public class TestSegment extends TestCase
 
     public void testFactory() throws Exception
     {
-        AbstractSegment segment = HanLP.createSegment();
+        AbstractSegment segment = HanLP.newSegment();
     }
 }

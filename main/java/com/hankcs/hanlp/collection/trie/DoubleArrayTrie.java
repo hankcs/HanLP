@@ -667,6 +667,31 @@ public class DoubleArrayTrie<V> implements Serializable
         return result;
     }
 
+    public int exactMatchSearch(char[] keyChars, int pos, int len, int nodePos)
+    {
+        int result = -1;
+
+        int b = base[nodePos];
+        int p;
+
+        for (int i = pos; i < len; i++)
+        {
+            p = b + (int) (keyChars[i]) + 1;
+            if (b == check[p])
+                b = base[p];
+            else
+                return result;
+        }
+
+        p = b;
+        int n = base[p];
+        if (b == check[p] && n < 0)
+        {
+            result = -n - 1;
+        }
+        return result;
+    }
+
     public List<Integer> commonPrefixSearch(String key)
     {
         return commonPrefixSearch(key, 0, 0, 0);
@@ -903,6 +928,28 @@ public class DoubleArrayTrie<V> implements Serializable
         }
 
         return null;
+    }
+
+    public V get(char[] key)
+    {
+        int index = exactMatchSearch(key, 0, key.length, 0);
+        if (index >= 0)
+        {
+            return getValueAt(index);
+        }
+
+        return null;
+    }
+
+    public V[] getValueArray(V[] a)
+    {
+        // I hate this but just have to
+        int size = v.length;
+        if (a.length < size)
+            a = (V[])java.lang.reflect.Array.newInstance(
+                    a.getClass().getComponentType(), size);
+        System.arraycopy(v, 0, a, 0, size);
+        return a;
     }
 
     public boolean containsKey(String key)
