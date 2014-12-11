@@ -130,6 +130,10 @@ public class HanLP
          */
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
         /**
+         * CRF依存模型
+         */
+        public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModel.txt";
+        /**
          * 字符类型对应表
          */
         public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";

@@ -25,9 +25,10 @@ public class DemoOrganizationRecognition
     public static void main(String[] args)
     {
         String[] testCase = new String[]{
-                "济南杨铭宇餐饮管理有限公司是由杨先生创办的餐饮企业。",
                 "我在上海林原科技有限公司兼职工作，",
-                "同时在上海外国语大学学习外语。",
+                "同时在上海外国语大学日本文化经济学院学习经济与外语。",
+                "我经常在荣祥餐厅吃饭，",
+                "济南杨铭宇餐饮管理有限公司是由杨先生创办的餐饮企业。",
         };
         Segment segment = new Segment().enableOrganizationRecognize(true);
         for (String sentence : testCase)

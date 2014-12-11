@@ -11,11 +11,13 @@
  */
 package com.hankcs.test.dependency;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLLoader;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.corpus.dependency.CoNll.Evaluator;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dependency.CRFDependencyParser;
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
 import com.hankcs.hanlp.dependency.WordNatureDependencyParser;
 import com.hankcs.hanlp.seg.common.Term;
@@ -54,6 +56,20 @@ public class TestParse extends TestCase
         System.out.println(MaxEntDependencyParser.compute("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
     }
 
+    public void testCrfParser() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        List<Term> termList = new LinkedList<>();
+        termList.add(new Term("坚决", Nature.ad));
+        termList.add(new Term("惩治", Nature.v));
+        termList.add(new Term("贪污", Nature.v));
+        termList.add(new Term("贿赂", Nature.n));
+        termList.add(new Term("等", Nature.udeng));
+        termList.add(new Term("经济", Nature.n));
+        termList.add(new Term("犯罪", Nature.vn));
+        System.out.println(CRFDependencyParser.compute(termList));
+    }
+
     public void testEvaluate() throws Exception
     {
         testParse();
@@ -69,7 +85,7 @@ public class TestParse extends TestCase
             {
                 termList.add(new Term(word.LEMMA, Nature.valueOf(word.POSTAG)));
             }
-            CoNLLSentence out = MaxEntDependencyParser.compute(termList);
+            CoNLLSentence out = CRFDependencyParser.compute(termList);
             evaluator.e(sentence, out);
             System.out.println("done in " + (System.currentTimeMillis() - start) + " ms.");
         }

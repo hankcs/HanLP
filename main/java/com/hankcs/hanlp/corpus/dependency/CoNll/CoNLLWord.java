@@ -70,6 +70,13 @@ public class CoNLLWord
         compile();
     }
 
+    /**
+     *
+     * @param ID 当前词在句子中的序号，１开始.
+     * @param LEMMA 当前词语（或标点）的原型或词干，在中文中，此列与FORM相同
+     * @param CPOSTAG 当前词语的词性（粗粒度）
+     * @param POSTAG 当前词语的词性（细粒度）
+     */
     public CoNLLWord(int ID, String LEMMA, String CPOSTAG, String POSTAG)
     {
         this.ID = ID;

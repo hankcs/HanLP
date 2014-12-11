@@ -37,7 +37,7 @@ public class Evaluator
             if (test.word[i].HEAD.ID == right.word[i].HEAD.ID)
             {
                 ++U;
-                if (test.word[i].DEPREL.equals(right.word[i].DEPREL))
+                if (right.word[i].DEPREL.equals(test.word[i].DEPREL))
                 {
                     ++L;
                     if (test.word[i].HEAD.ID != 0)

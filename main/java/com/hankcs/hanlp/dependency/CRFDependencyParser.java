@@ -11,22 +11,276 @@
  */
 package com.hankcs.hanlp.dependency;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
+import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.dependency.common.POSUtil;
+import com.hankcs.hanlp.model.bigram.BigramDependencyModel;
+import com.hankcs.hanlp.model.crf.CRFModel;
+import com.hankcs.hanlp.model.crf.Table;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.NLPTokenizer;
+import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.utility.TextUtility;
 
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 基于随机条件场的依存句法分析器
+ *
  * @author hankcs
  */
 public class CRFDependencyParser extends AbstractDependencyParser
 {
+    /**
+     * 必须对维特比算法做一些特化修改
+     */
+    static class CRFModelForDependency extends CRFModel
+    {
+        /**
+         * 每个tag的分解。内部类的内部类你到底累不累
+         */
+        static class DTag
+        {
+            int offset;
+            String pos;
 
+            public DTag(String tag)
+            {
+                String[] args = tag.split("_", 2);
+                offset = Integer.parseInt(args[0]);
+                pos = args[1];
+            }
+
+            @Override
+            public String toString()
+            {
+                return (offset > 0 ? "+" : "") + offset + "_" + pos;
+            }
+        }
+
+        DTag[] id2dtag;
+
+        @Override
+        public boolean load(ByteArray byteArray)
+        {
+            if (!super.load(byteArray)) return false;
+            id2dtag = new DTag[id2tag.length];
+            for (int i = 0; i < id2tag.length; i++)
+            {
+                id2dtag[i] = new DTag(id2tag[i]);
+            }
+            return true;
+        }
+
+        boolean isLegal(int tagId, int current, Table table)
+        {
+            DTag tag = id2dtag[tagId];
+            if ("ROOT".equals(tag.pos))
+            {
+                for (int i = 0; i < current; ++i)
+                {
+                    if (table.v[i][3].endsWith("ROOT")) return false;
+                }
+                return true;
+            }
+            else
+            {
+                int posCount = 0;
+                if (tag.offset > 0)
+                {
+                    for (int i = current + 1; i < table.size(); ++i)
+                    {
+                        if (table.v[i][1].equals(tag.pos)) ++posCount;
+                        if (posCount == tag.offset) return true;
+                    }
+                    return false;
+                }
+                else
+                {
+                    for (int i = current - 1; i >= 0; --i)
+                    {
+                        if (table.v[i][1].equals(tag.pos)) ++posCount;
+                        if (posCount == -tag.offset) return true;
+                    }
+                    return false;
+                }
+            }
+        }
+
+        @Override
+        public void tag(Table table)
+        {
+            int size = table.size();
+            double bestScore = 0;
+            int bestTag = 0;
+            int tagSize = id2tag.length;
+            LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数
+            for (int i = 0; i < tagSize; ++i)   // -1位置的标签遍历
+            {
+                for (int j = 0; j < tagSize; ++j)   // 0位置的标签遍历
+                {
+                    if (!isLegal(j, 0, table)) continue;
+                    double curScore = matrix[i][j] + computeScore(scoreList, j);
+                    if (curScore > bestScore)
+                    {
+                        bestScore = curScore;
+                        bestTag = j;
+                    }
+                }
+            }
+            table.setLast(0, id2tag[bestTag]);
+            int preTag = bestTag;
+            // 0位置打分完毕，接下来打剩下的
+            for (int i = 1; i < size; ++i)
+            {
+                scoreList = computeScoreList(table, i);    // i位置命中的特征函数
+                bestScore = Double.MIN_VALUE;
+                for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
+                {
+                    if (!isLegal(j, i, table)) continue;
+                    double curScore = matrix[preTag][j] + computeScore(scoreList, j);
+                    if (curScore > bestScore)
+                    {
+                        bestScore = curScore;
+                        bestTag = j;
+                    }
+                }
+                table.setLast(i, id2tag[bestTag]);
+                preTag = bestTag;
+            }
+        }
+    }
+    static CRFModel crfModel;
+    static
+    {
+        long start = System.currentTimeMillis();
+        if (load(HanLP.Config.CRFDependencyModelPath))
+        {
+            logger.info("加载随机条件场依存句法分析器模型" + HanLP.Config.CRFDependencyModelPath + "成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
+        }
+        else
+        {
+            logger.info("加载随机条件场依存句法分析器模型" + HanLP.Config.CRFDependencyModelPath + "失败，耗时 " + (System.currentTimeMillis() - start) + " ms");
+        }
+    }
+    static final CRFDependencyParser INSTANCE = new CRFDependencyParser();
+
+    public static CoNLLSentence compute(List<Term> termList)
+    {
+        return INSTANCE.parse(termList);
+    }
+
+    public static CoNLLSentence compute(String text)
+    {
+        return compute(NLPTokenizer.segment(text));
+    }
+
+    static boolean load(String path)
+    {
+        if (loadDat(path + Predefine.BIN_EXT)) return true;
+        crfModel = CRFModel.loadTxt(path);
+        saveDat(path + Predefine.BIN_EXT);
+        return loadDat(path + Predefine.BIN_EXT);   // 使用特化版的CRF
+    }
+    static boolean loadDat(String path)
+    {
+        ByteArray byteArray = ByteArray.createByteArray(path);
+        if (byteArray == null) return false;
+        crfModel = new CRFModelForDependency();
+        return crfModel.load(byteArray);
+    }
+    static boolean saveDat(String path)
+    {
+        try
+        {
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
+            crfModel.save(out);
+            out.close();
+        }
+        catch (Exception e)
+        {
+            logger.warning("在缓存" + path + "时发生错误" + TextUtility.exceptionToString(e));
+            return false;
+        }
+
+        return true;
+    }
     @Override
     public CoNLLSentence parse(List<Term> termList)
     {
+        Table table = new Table();
+        table.v = new String[termList.size()][4];
+        Iterator<Term> iterator = termList.iterator();
+        for (String[] line : table.v)
+        {
+            Term term = iterator.next();
+            line[0] = term.word;
+            line[2] = POSUtil.compilePOS(term.nature);
+            line[1] = line[2].substring(0, 1);
+        }
+        crfModel.tag(table);
+        if (HanLP.Config.DEBUG)
+        {
+            System.out.println(table);
+        }
+        CoNLLWord[] coNLLWordArray = new CoNLLWord[table.size()];
+        for (int i = 0; i < coNLLWordArray.length; i++)
+        {
+            coNLLWordArray[i] = new CoNLLWord(i + 1, table.v[i][0], table.v[i][2], table.v[i][1]);
+        }
+        int i = 0;
+        for (String[] line : table.v)
+        {
+            CRFModelForDependency.DTag dTag = new CRFModelForDependency.DTag(line[3]);
+            if (dTag.pos.endsWith("ROOT"))
+            {
+                coNLLWordArray[i].HEAD = CoNLLWord.ROOT;
+            }
+            else
+            {
+                int index = convertOffset2Index(dTag, table, i);
+                if (index == -1)
+                    coNLLWordArray[i].HEAD = CoNLLWord.NULL;
+                else coNLLWordArray[i].HEAD = coNLLWordArray[index];
+            }
+            ++i;
+        }
 
-        return null;
+        for (i = 0; i < coNLLWordArray.length; i++)
+        {
+            coNLLWordArray[i].DEPREL = BigramDependencyModel.get(coNLLWordArray[i].NAME, coNLLWordArray[i].POSTAG, coNLLWordArray[i].HEAD.NAME, coNLLWordArray[i].HEAD.POSTAG);
+        }
+
+        return new CoNLLSentence(coNLLWordArray);
+    }
+
+    static int convertOffset2Index(CRFModelForDependency.DTag dTag, Table table, int current)
+    {
+        int posCount = 0;
+        if (dTag.offset > 0)
+        {
+            for (int i = current + 1; i < table.size(); ++i)
+            {
+                if (table.v[i][1].equals(dTag.pos)) ++posCount;
+                if (posCount == dTag.offset) return i;
+            }
+        }
+        else
+        {
+            for (int i = current - 1; i >= 0; --i)
+            {
+                if (table.v[i][1].equals(dTag.pos)) ++posCount;
+                if (posCount == -dTag.offset) return i;
+            }
+        }
+
+        return -1;
     }
 }

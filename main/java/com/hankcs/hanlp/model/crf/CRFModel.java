@@ -34,15 +34,15 @@ public class CRFModel implements ICacheAble
      * 标签和id的相互转换
      */
     Map<String, Integer> tag2id;
-    String[] id2tag;
+    protected String[] id2tag;
     DoubleArrayTrie<FeatureFunction> featureFunctionTrie;
     List<FeatureTemplate> featureTemplateList;
     /**
      * tag的转移矩阵
      */
-    double[][] matrix;
+    protected double[][] matrix;
 
-    protected CRFModel()
+    public CRFModel()
     {
     }
 
@@ -196,7 +196,7 @@ public class CRFModel implements ICacheAble
      * @param tag
      * @return
      */
-    static double computeScore(LinkedList<double[]> scoreList, int tag)
+    protected static double computeScore(LinkedList<double[]> scoreList, int tag)
     {
         double score = 0;
         for (double[] w : scoreList)
