@@ -34,7 +34,7 @@ public class CoreDictionary
     public final static String path = HanLP.Config.CoreDictionaryPath;
     public static final int totalFrequency = 221894;
 
-    //    public final static String path = "data/dictionary/CoreDictionary.txt";
+    //    public final static String path = "data/dictionary/CoreNatureDictionary.mini.txt";
     // 自动加载词典
     static
     {

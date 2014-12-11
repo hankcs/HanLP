@@ -58,6 +58,21 @@ public class CoreSynonymDictionary
     }
 
     /**
+     * 判断两个单词之间的语义距离
+     * @param A
+     * @param B
+     * @return
+     */
+    public static long distance(String A, String B)
+    {
+        CommonSynonymDictionary.SynonymItem itemA = get(A);
+        CommonSynonymDictionary.SynonymItem itemB = get(B);
+        if (itemA == null || itemB == null) return Long.MAX_VALUE;
+
+        return distance(itemA, itemB);
+    }
+
+    /**
      * 将分词结果转换为同义词列表
      * @param sentence 句子
      * @param withUndefinedItem 是否保留词典中没有的词语

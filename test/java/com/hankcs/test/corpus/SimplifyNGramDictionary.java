@@ -84,7 +84,7 @@ public class SimplifyNGramDictionary extends TestCase
 //        }
         // 对人名的终极调优
         TFDictionary dictionary = new TFDictionary();
-        dictionary.load("D:\\JavaProjects\\HanLP\\data\\dictionary\\BiGramDictionary.txt");
+        dictionary.load("D:\\JavaProjects\\HanLP\\data\\dictionary\\CoreNatureDictionary.ngram.mini.txt");
         iterator = entrySet.iterator();
         while (iterator.hasNext())
         {

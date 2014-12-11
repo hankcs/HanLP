@@ -13,7 +13,7 @@ public class testCoreDictionary
 //            System.out.print(searcher.getOffset());
 //            System.out.println(entry);
 //        }
-        DictionaryMaker dictionaryMaker = DictionaryMaker.combineWhenNotInclude(new String[]{"data/dictionary/CoreNatureDictionary.txt", "data/dictionary/CoreDictionary.txt"});
+        DictionaryMaker dictionaryMaker = DictionaryMaker.combineWhenNotInclude(new String[]{"data/dictionary/CoreNatureDictionary.txt", "data/dictionary/CoreNatureDictionary.mini.txt"});
         dictionaryMaker.saveTxtTo("data/dictionary/CoreNatureDictionary.txt");
     }
 }

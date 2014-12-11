@@ -30,7 +30,7 @@ public class CoreDictionaryFormatter
         BufferedWriter bw = null;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream("data/dictionary/CoreDictionary.txt")));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("data/dictionary/CoreNatureDictionary.mini.txt")));
             bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data/dictionary/CoreDictionary_new.txt")));
             String line;
             while ((line = br.readLine()) != null)

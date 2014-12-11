@@ -68,27 +68,28 @@ public class TestSynonym extends TestCase
         CommonSynonymDictionaryEx dictionaryEx = CommonSynonymDictionaryEx.create(new FileInputStream("data/dictionary/synonym/CoreSynonym.txt"));
         String[] array = new String[]
                 {
-//                        "香蕉",
-//                        "苹果",
-//                        "白菜",
-//                        "水果",
-//                        "蔬菜",
-//                        "自行车",
-//                        "公交车",
-//                        "买",
-//                        "卖",
-//                        "购入",
-//                        "新年",
-//                        "春节",
-//                        "丢失",
-//                        "补办",
-//                        "办理",
-//                        "太阳",
-//                        "送给",
-//                        "寻找",
-//                        "放飞"
-//                        "孩",
-//                        "孩子"
+                        "香蕉",
+                        "苹果",
+                        "白菜",
+                        "水果",
+                        "蔬菜",
+                        "自行车",
+                        "公交车",
+                        "飞机",
+                        "买",
+                        "卖",
+                        "购入",
+                        "新年",
+                        "春节",
+                        "丢失",
+                        "补办",
+                        "办理",
+                        "太阳",
+                        "送给",
+                        "寻找",
+                        "放飞",
+                        "孩",
+                        "孩子",
                         "教室",
                         "教师",
                         "会计",
@@ -102,7 +103,7 @@ public class TestSynonym extends TestCase
         {
             for (String b : stringArray)
             {
-                System.out.println(a + " " + b + " 之间的距离是" + dictionaryEx.distance(a, b));
+                System.out.println(a + "\t" + b + "\t之间的距离是\t" + dictionaryEx.distance(a, b));
             }
         }
     }
