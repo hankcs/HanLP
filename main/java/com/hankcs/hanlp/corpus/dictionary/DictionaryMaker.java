@@ -147,6 +147,15 @@ public class DictionaryMaker implements ISaveAble
     }
 
     /**
+     * 浏览所有词条
+     * @return
+     */
+    public Set<Map.Entry<String, Item>> entrySet()
+    {
+        return trie.entrySet();
+    }
+
+    /**
      * 插入条目，但是不合并，如果已有则忽略
      *
      * @param item

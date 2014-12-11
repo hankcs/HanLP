@@ -27,7 +27,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class Model
+public class MaxEntModel
 {
     /**
      * 常数C，训练的时候用到
@@ -173,9 +173,9 @@ public class Model
      * @param path
      * @return
      */
-    public static Model create(String path)
+    public static MaxEntModel create(String path)
     {
-        Model m = new Model();
+        MaxEntModel m = new MaxEntModel();
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -269,9 +269,9 @@ public class Model
      * @param byteArray
      * @return
      */
-    public static Model create(ByteArray byteArray)
+    public static MaxEntModel create(ByteArray byteArray)
     {
-        Model m = new Model();
+        MaxEntModel m = new MaxEntModel();
         m.correctionConstant = byteArray.nextInt();  // correctionConstant
         m.correctionParam = byteArray.nextDouble();  // getCorrectionParameter
         // label

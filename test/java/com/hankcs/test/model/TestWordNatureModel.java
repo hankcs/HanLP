@@ -9,19 +9,19 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.test.dependency;
+package com.hankcs.test.model;
 
 import com.hankcs.hanlp.corpus.dependency.model.WordNatureWeightModelMaker;
 import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.dependency.WordNatureDependencyModel;
-import com.hankcs.hanlp.model.maxent.Model;
+import com.hankcs.hanlp.model.bigram.WordNatureDependencyModel;
+import com.hankcs.hanlp.model.maxent.MaxEntModel;
 import com.hankcs.hanlp.utility.Predefine;
 import junit.framework.TestCase;
 
 /**
  * @author hankcs
  */
-public class TestModel extends TestCase
+public class TestWordNatureModel extends TestCase
 {
     String PATH = "data/model/dependency/test.txt";
     public void testLoad() throws Exception
@@ -35,8 +35,8 @@ public class TestModel extends TestCase
 
     public void testMaxEntModel() throws Exception
     {
-        Model model = Model.create(PATH);
-        model = Model.create(ByteArray.createByteArray(PATH + Predefine.BIN_EXT));
+        MaxEntModel model = MaxEntModel.create(PATH);
+        model = MaxEntModel.create(ByteArray.createByteArray(PATH + Predefine.BIN_EXT));
         String[] contexts = new String[]{"Rainy", "Sad"};
         System.out.println(model.predict(contexts));
     }

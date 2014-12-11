@@ -65,4 +65,10 @@ public class TestSegment extends TestCase
     {
         AbstractSegment segment = HanLP.newSegment();
     }
+
+    public void testCustomDictionary() throws Exception
+    {
+        Segment segment = new Segment();
+        System.out.println(segment.seg("你在一汽马自达汽车销售有限公司上班吧"));
+    }
 }

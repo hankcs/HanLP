@@ -442,6 +442,11 @@ public class DoubleArrayTrie<V> implements Serializable
         return true;
     }
 
+    /**
+     * 将base和check保存下来
+     * @param out
+     * @return
+     */
     public boolean save(DataOutputStream out)
     {
         try

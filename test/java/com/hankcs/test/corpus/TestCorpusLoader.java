@@ -11,11 +11,18 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import junit.framework.TestCase;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 
@@ -57,5 +64,53 @@ public class TestCorpusLoader extends TestCase
     {
         List<List<Word>> simpleSentenceList = CorpusLoader.convert2SimpleSentenceList("data/2014");
         System.out.println(simpleSentenceList.get(0));
+    }
+
+    public void testMakePersonCustomDictionary() throws Exception
+    {
+        final DictionaryMaker dictionaryMaker = new DictionaryMaker();
+        CorpusLoader.walk("D:\\JavaProjects\\CorpusToolBox\\data\\2014", new CorpusLoader.Handler()
+        {
+            @Override
+            public void handle(Document document)
+            {
+                List<List<IWord>> complexSentenceList = document.getComplexSentenceList();
+                for (List<IWord> wordList : complexSentenceList)
+                {
+                    for (IWord word : wordList)
+                    {
+                        if (word.getLabel().startsWith("nr"))
+                        {
+                            dictionaryMaker.add(word);
+                        }
+                    }
+                }
+            }
+        });
+        dictionaryMaker.saveTxtTo("data/dictionary/custom/人名词典.txt");
+    }
+
+    public void testMakeOrganizationCustomDictionary() throws Exception
+    {
+        final DictionaryMaker dictionaryMaker = new DictionaryMaker();
+        CorpusLoader.walk("D:\\JavaProjects\\CorpusToolBox\\data\\2014", new CorpusLoader.Handler()
+        {
+            @Override
+            public void handle(Document document)
+            {
+                List<List<IWord>> complexSentenceList = document.getComplexSentenceList();
+                for (List<IWord> wordList : complexSentenceList)
+                {
+                    for (IWord word : wordList)
+                    {
+                        if (word.getLabel().startsWith("nt"))
+                        {
+                            dictionaryMaker.add(word);
+                        }
+                    }
+                }
+            }
+        });
+        dictionaryMaker.saveTxtTo("data/dictionary/custom/机构名词典.txt");
     }
 }

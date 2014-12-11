@@ -16,7 +16,7 @@ import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
-import com.hankcs.hanlp.model.maxent.Model;
+import com.hankcs.hanlp.model.maxent.MaxEntModel;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
@@ -34,18 +34,18 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class MaxEntDependencyParser extends MinimumSpanningTreeParser
 {
     static final MaxEntDependencyParser INSTANCE = new MaxEntDependencyParser();
-    static Model model;
+    static MaxEntModel model;
     static
     {
         long start = System.currentTimeMillis();
         ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
         if (byteArray != null)
         {
-            model = Model.create(byteArray);
+            model = MaxEntModel.create(byteArray);
         }
         else
         {
-            model = Model.create(HanLP.Config.MaxEntModelPath);
+            model = MaxEntModel.create(HanLP.Config.MaxEntModelPath);
         }
         String result = model == null ? "失败" : "成功";
         logger.info("最大熵依存句法模型载入" + result + "，耗时" + (System.currentTimeMillis() - start) + " ms");

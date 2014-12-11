@@ -14,6 +14,7 @@ package com.hankcs.hanlp.dependency;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
+import com.hankcs.hanlp.model.bigram.WordNatureDependencyModel;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 

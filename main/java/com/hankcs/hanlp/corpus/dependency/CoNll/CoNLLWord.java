@@ -25,6 +25,10 @@ public class CoNLLWord
      */
     public String LEMMA;
     /**
+     * 当前词语的词性（粗粒度）
+     */
+    public String CPOSTAG;
+    /**
      * 当前词语的词性（细粒度）
      */
     public String POSTAG;
@@ -45,11 +49,11 @@ public class CoNLLWord
     /**
      * 根节点
      */
-    public static final CoNLLWord ROOT = new CoNLLWord(0, "##核心##", "root");
+    public static final CoNLLWord ROOT = new CoNLLWord(0, "##核心##", "ROOT", "root");
     /**
      * 空白节点，用于描述下标超出word数组的词语
      */
-    public static final CoNLLWord NULL = new CoNLLWord(-1, "##空白##", "null");
+    public static final CoNLLWord NULL = new CoNLLWord(-1, "##空白##", "NULL", "null");
 
     /**
      *
@@ -61,6 +65,16 @@ public class CoNLLWord
     {
         this.ID = ID;
         this.LEMMA = LEMMA;
+        this.CPOSTAG = POSTAG.substring(0, 1);   // 取首字母作为粗粒度词性
+        this.POSTAG = POSTAG;
+        compile();
+    }
+
+    public CoNLLWord(int ID, String LEMMA, String CPOSTAG, String POSTAG)
+    {
+        this.ID = ID;
+        this.LEMMA = LEMMA;
+        this.CPOSTAG = CPOSTAG;
         this.POSTAG = POSTAG;
         compile();
     }
@@ -73,6 +87,7 @@ public class CoNLLWord
     public CoNLLWord(CoNllLine line)
     {
         LEMMA = line.value[2];
+        CPOSTAG = line.value[3];
         POSTAG = line.value[4];
         DEPREL = line.value[7];
         ID = line.id;
@@ -88,7 +103,7 @@ public class CoNLLWord
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
-        sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(POSTAG).append('\t')
+        sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(CPOSTAG).append('\t')
                 .append(POSTAG).append('\t').append('_').append('\t').append(HEAD.ID).append('\t').append(DEPREL).append('\t')
                 .append('_').append('\t').append('_');
         return sb.toString();
