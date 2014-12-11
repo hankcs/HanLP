@@ -97,6 +97,6 @@ public class NRCorpusLoader
                 "data/dictionary/person/authornames.txt",
 //                "data/dictionary/person/ansj_person_out.txt",
         });
-        dictionaryMaker.saveTxtTo("data/dictionary/person/combined.txt");
+        dictionaryMaker.saveTxtTo("data/dictionary/person/nr.txt");
     }
 }

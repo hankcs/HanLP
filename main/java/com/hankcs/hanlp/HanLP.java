@@ -71,7 +71,7 @@ public class HanLP
         /**
          * 人名词典路径
          */
-        public static String PersonDictionaryPath = "data/dictionary/person/combined.txt";
+        public static String PersonDictionaryPath = "data/dictionary/person/nr.txt";
         /**
          * 人名词典转移矩阵路径
          */
