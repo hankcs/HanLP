@@ -73,7 +73,7 @@ public class TestParse extends TestCase
     public void testEvaluate() throws Exception
     {
         testParse();
-        LinkedList<CoNLLSentence> sentenceList = CoNLLLoader.loadSentenceList("D:\\Doc\\语料库\\依存分析训练数据\\THU\\dev.conll");
+        LinkedList<CoNLLSentence> sentenceList = CoNLLLoader.loadSentenceList("D:\\Doc\\语料库\\依存分析训练数据\\THU\\train.conll");
         Evaluator evaluator = new Evaluator();
         int id = 1;
         for (CoNLLSentence sentence : sentenceList)

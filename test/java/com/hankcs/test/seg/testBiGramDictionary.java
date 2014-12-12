@@ -11,6 +11,7 @@
  */
 package com.hankcs.test.seg;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import junit.framework.TestCase;
 
@@ -48,6 +49,7 @@ public class testBiGramDictionary extends TestCase
 //
 //        // 测试不存在的键
 //        assertEquals(0, BiGramDictionary.getBiFrequency("不存在"));
-        System.out.println(BiGramDictionary.getBiFrequency("亲@未##专"));
+        HanLP.Config.enableDebug();
+        BiGramDictionary.getBiFrequency("团结@奋斗");
     }
 }

@@ -63,6 +63,12 @@ public class TestCRF extends TestCase
         System.out.println(table);
     }
 
+    public void testLoadModelWhichHasNoB() throws Exception
+    {
+        CRFModel model = CRFModel.loadTxt("D:\\Tools\\CRF++-0.58\\example\\dependency\\model.txt");
+        System.out.println(model);
+    }
+
     public void testSegment() throws Exception
     {
 //        HanLP.Config.enableDebug();

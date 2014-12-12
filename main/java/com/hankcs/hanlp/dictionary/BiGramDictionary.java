@@ -14,7 +14,9 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
@@ -67,7 +69,7 @@ public class BiGramDictionary
                 map.put(twoWord, freq);
             }
             br.close();
-            logger.info("二元词典读取完毕:" + path + "，开始构建DAT……");
+            logger.info("二元词典读取完毕:" + path + "，开始构建双数组Trie树(DoubleArrayTrie)……");
         } catch (FileNotFoundException e)
         {
             logger.severe("二元词典" + path + "不存在！"+ e);
@@ -82,25 +84,23 @@ public class BiGramDictionary
         logger.info("二元词典DAT构建结果:{}"+ resultCode);
 //        reSaveDictionary(map, path);
         logger.info("二元词典加载成功:" + trie.size() + "个词条");
-        // 试一试保存
         if (create)
         {
-            // 先存双数组
-            trie.save(path + ".trie.dat");
-            // 后存值
             try
             {
-                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path + ".value.dat")));
+                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path + Predefine.BIN_EXT)));
                 Collection<Integer> freqList = map.values();
                 out.writeInt(freqList.size());
                 for (int freq : freqList)
                 {
                     out.writeInt(freq);
                 }
+                trie.save(out);
                 out.close();
             }
             catch (Exception e)
             {
+                logger.warning("在缓存" + path + Predefine.BIN_EXT + "时发生异常" + TextUtility.exceptionToString(e));
                 return false;
             }
         }
@@ -116,31 +116,16 @@ public class BiGramDictionary
     {
         try
         {
-            long start = System.currentTimeMillis();
-            FileInputStream fis = new FileInputStream(path + ".value.dat");
-            FileChannel channel = fis.getChannel();
-            int fileSize = (int) channel.size();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(fileSize);
-            channel.read(byteBuffer);
-            byteBuffer.flip();
-            byte[] bytes = byteBuffer.array();
-            byteBuffer.clear();
-            channel.close();
-            fis.close();
+            ByteArray byteArray = ByteArray.createByteArray(path + Predefine.BIN_EXT);
+            if (byteArray == null) return false;
 
-            int index = 0;
-            int size = TextUtility.bytesHighFirstToInt(bytes, index);
-            index += 4;
+            int size = byteArray.nextInt();
             Integer[] value = new Integer[size];
             for (int i = 0; i < size; i++)
             {
-                value[i] = TextUtility.bytesHighFirstToInt(bytes, index);
-                index += 4;
+                value[i] = byteArray.nextInt();
             }
-            logger.info("加载值" + path + ".value.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
-            start = System.currentTimeMillis();
-            if (!trie.load(path + ".trie.dat", value)) return false;
-            logger.info("加载键" + path + ".trie.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+            if (!trie.load(byteArray, value)) return false;
         }
         catch (Exception e)
         {

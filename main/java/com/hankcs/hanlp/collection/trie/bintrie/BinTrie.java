@@ -405,9 +405,14 @@ public class BinTrie<V> extends BaseNode<V>
                 child[i].walkToLoad(byteArray, valueArray);
             }
         }
-        size = -1;  // 不知道有多少
+        size = valueArray.value.length;
 
         return true;
+    }
+
+    public boolean load(ByteArray byteArray, V[] value)
+    {
+        return load(byteArray, newValueArray().setValue(value));
     }
 
     public ValueArray newValueArray()

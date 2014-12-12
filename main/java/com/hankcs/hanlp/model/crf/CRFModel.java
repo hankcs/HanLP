@@ -19,7 +19,6 @@ import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.*;
 
@@ -46,9 +45,14 @@ public class CRFModel implements ICacheAble
     {
     }
 
-    public static CRFModel loadTxt(String path)
+    protected void onLoadTxtFinished()
     {
-        CRFModel CRFModel = new CRFModel();
+        // do no thing
+    }
+
+    public static CRFModel loadTxt(String path, CRFModel instance)
+    {
+        CRFModel CRFModel = instance;
         // 先尝试从bin加载
         if (CRFModel.load(ByteArray.createByteArray(path + Predefine.BIN_EXT))) return CRFModel;
         IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(path);
@@ -67,6 +71,7 @@ public class CRFModel implements ICacheAble
             ++id;
         }
         CRFModel.id2tag = new String[CRFModel.tag2id.size()];
+        final int size = CRFModel.id2tag.length;
         for (Map.Entry<String, Integer> entry : CRFModel.tag2id.entrySet())
         {
             CRFModel.id2tag[entry.getValue()] = entry.getKey();
@@ -81,10 +86,17 @@ public class CRFModel implements ICacheAble
                 FeatureTemplate featureTemplate = FeatureTemplate.create(line);
                 CRFModel.featureTemplateList.add(featureTemplate);
             }
+            else
+            {
+                CRFModel.matrix = new double[size][size];
+            }
         }
 
-        lineIterator.next();    // 0 B
-        final int size = CRFModel.id2tag.length;
+        if (CRFModel.matrix != null)
+        {
+            lineIterator.next();    // 0 B
+        }
+
         while ((line = lineIterator.next()).length() != 0)
         {
             String[] args = line.split(" ", 2);
@@ -94,14 +106,17 @@ public class CRFModel implements ICacheAble
             featureFunctionList.add(featureFunction);
         }
 
-        CRFModel.matrix = new double[size][size];
-        for (int i = 0; i < size; i++)
+        if (CRFModel.matrix != null)
         {
-            for (int j = 0; j < size; j++)
+            for (int i = 0; i < size; i++)
             {
-                CRFModel.matrix[i][j] = Double.parseDouble(lineIterator.next());
+                for (int j = 0; j < size; j++)
+                {
+                    CRFModel.matrix[i][j] = Double.parseDouble(lineIterator.next());
+                }
             }
         }
+
         for (FeatureFunction featureFunction : featureFunctionList)
         {
             for (int i = 0; i < size; i++)
@@ -129,6 +144,7 @@ public class CRFModel implements ICacheAble
         {
             logger.warning("在缓存" + path + Predefine.BIN_EXT + "时发生错误" + TextUtility.exceptionToString(e));
         }
+        CRFModel.onLoadTxtFinished();
         return CRFModel;
     }
 
@@ -147,7 +163,11 @@ public class CRFModel implements ICacheAble
         {
             for (int j = 0; j < tagSize; ++j)   // 0位置的标签遍历
             {
-                double curScore = matrix[i][j] + computeScore(scoreList, j);
+                double curScore = computeScore(scoreList, j);
+                if (matrix != null)
+                {
+                    curScore += matrix[i][j];
+                }
                 if (curScore > bestScore)
                 {
                     bestScore = curScore;
@@ -164,7 +184,11 @@ public class CRFModel implements ICacheAble
             bestScore = Double.MIN_VALUE;
             for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
             {
-                double curScore = matrix[preTag][j] + computeScore(scoreList, j);
+                double curScore =  computeScore(scoreList, j);
+                if (matrix != null)
+                {
+                    curScore += matrix[preTag][j];
+                }
                 if (curScore > bestScore)
                 {
                     bestScore = curScore;
@@ -226,13 +250,20 @@ public class CRFModel implements ICacheAble
         {
             featureTemplate.save(out);
         }
-        out.writeInt(matrix.length);
-        for (double[] line : matrix)
+        if (matrix != null)
         {
-            for (double v : line)
+            out.writeInt(matrix.length);
+            for (double[] line : matrix)
             {
-                out.writeDouble(v);
+                for (double v : line)
+                {
+                    out.writeDouble(v);
+                }
             }
+        }
+        else
+        {
+            out.writeInt(0);
         }
     }
 
@@ -265,6 +296,7 @@ public class CRFModel implements ICacheAble
             featureTemplateList.add(featureTemplate);
         }
         size = byteArray.nextInt();
+        if (size == 0) return true;
         matrix = new double[size][size];
         for (int i = 0; i < size; i++)
         {
@@ -275,5 +307,10 @@ public class CRFModel implements ICacheAble
         }
 
         return true;
+    }
+
+    public static CRFModel loadTxt(String path)
+    {
+        return loadTxt(path, new CRFModel());
     }
 }

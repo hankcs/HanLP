@@ -44,6 +44,14 @@ public class ByteArray
         return new ByteArray(bytes);
     }
 
+    /**
+     * 获取全部字节
+     * @return
+     */
+    public byte[] getBytes()
+    {
+        return bytes;
+    }
 
     /**
      * 读取一个int

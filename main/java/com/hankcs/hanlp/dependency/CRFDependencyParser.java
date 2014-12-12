@@ -38,130 +38,11 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CRFDependencyParser extends AbstractDependencyParser
 {
-    /**
-     * 必须对维特比算法做一些特化修改
-     */
-    static class CRFModelForDependency extends CRFModel
-    {
-        /**
-         * 每个tag的分解。内部类的内部类你到底累不累
-         */
-        static class DTag
-        {
-            int offset;
-            String pos;
-
-            public DTag(String tag)
-            {
-                String[] args = tag.split("_", 2);
-                offset = Integer.parseInt(args[0]);
-                pos = args[1];
-            }
-
-            @Override
-            public String toString()
-            {
-                return (offset > 0 ? "+" : "") + offset + "_" + pos;
-            }
-        }
-
-        DTag[] id2dtag;
-
-        @Override
-        public boolean load(ByteArray byteArray)
-        {
-            if (!super.load(byteArray)) return false;
-            id2dtag = new DTag[id2tag.length];
-            for (int i = 0; i < id2tag.length; i++)
-            {
-                id2dtag[i] = new DTag(id2tag[i]);
-            }
-            return true;
-        }
-
-        boolean isLegal(int tagId, int current, Table table)
-        {
-            DTag tag = id2dtag[tagId];
-            if ("ROOT".equals(tag.pos))
-            {
-                for (int i = 0; i < current; ++i)
-                {
-                    if (table.v[i][3].endsWith("ROOT")) return false;
-                }
-                return true;
-            }
-            else
-            {
-                int posCount = 0;
-                if (tag.offset > 0)
-                {
-                    for (int i = current + 1; i < table.size(); ++i)
-                    {
-                        if (table.v[i][1].equals(tag.pos)) ++posCount;
-                        if (posCount == tag.offset) return true;
-                    }
-                    return false;
-                }
-                else
-                {
-                    for (int i = current - 1; i >= 0; --i)
-                    {
-                        if (table.v[i][1].equals(tag.pos)) ++posCount;
-                        if (posCount == -tag.offset) return true;
-                    }
-                    return false;
-                }
-            }
-        }
-
-        @Override
-        public void tag(Table table)
-        {
-            int size = table.size();
-            double bestScore = 0;
-            int bestTag = 0;
-            int tagSize = id2tag.length;
-            LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数
-            for (int i = 0; i < tagSize; ++i)   // -1位置的标签遍历
-            {
-                for (int j = 0; j < tagSize; ++j)   // 0位置的标签遍历
-                {
-                    if (!isLegal(j, 0, table)) continue;
-                    double curScore = matrix[i][j] + computeScore(scoreList, j);
-                    if (curScore > bestScore)
-                    {
-                        bestScore = curScore;
-                        bestTag = j;
-                    }
-                }
-            }
-            table.setLast(0, id2tag[bestTag]);
-            int preTag = bestTag;
-            // 0位置打分完毕，接下来打剩下的
-            for (int i = 1; i < size; ++i)
-            {
-                scoreList = computeScoreList(table, i);    // i位置命中的特征函数
-                bestScore = Double.MIN_VALUE;
-                for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
-                {
-                    if (!isLegal(j, i, table)) continue;
-                    double curScore = matrix[preTag][j] + computeScore(scoreList, j);
-                    if (curScore > bestScore)
-                    {
-                        bestScore = curScore;
-                        bestTag = j;
-                    }
-                }
-                table.setLast(i, id2tag[bestTag]);
-                preTag = bestTag;
-            }
-        }
-    }
     static CRFModel crfModel;
     static
     {
         long start = System.currentTimeMillis();
-        if (load(HanLP.Config.CRFDependencyModelPath))
+        if (load("D:\\Tools\\CRF++-0.58\\example\\dependency\\model.txt"))
         {
             logger.info("加载随机条件场依存句法分析器模型" + HanLP.Config.CRFDependencyModelPath + "成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
         }
@@ -185,9 +66,8 @@ public class CRFDependencyParser extends AbstractDependencyParser
     static boolean load(String path)
     {
         if (loadDat(path + Predefine.BIN_EXT)) return true;
-        crfModel = CRFModel.loadTxt(path);
-        saveDat(path + Predefine.BIN_EXT);
-        return loadDat(path + Predefine.BIN_EXT);   // 使用特化版的CRF
+        crfModel = CRFModel.loadTxt(path, new CRFModelForDependency()); // 使用特化版的CRF
+        return crfModel != null;
     }
     static boolean loadDat(String path)
     {
@@ -282,5 +162,145 @@ public class CRFDependencyParser extends AbstractDependencyParser
         }
 
         return -1;
+    }
+
+    /**
+     * 必须对维特比算法做一些特化修改
+     */
+    static class CRFModelForDependency extends CRFModel
+    {
+        /**
+         * 每个tag的分解。内部类的内部类你到底累不累
+         */
+        static class DTag
+        {
+            int offset;
+            String pos;
+
+            public DTag(String tag)
+            {
+                String[] args = tag.split("_", 2);
+                offset = Integer.parseInt(args[0]);
+                pos = args[1];
+            }
+
+            @Override
+            public String toString()
+            {
+                return (offset > 0 ? "+" : "") + offset + "_" + pos;
+            }
+        }
+
+        DTag[] id2dtag;
+
+        @Override
+        public boolean load(ByteArray byteArray)
+        {
+            if (!super.load(byteArray)) return false;
+            initId2dtagArray();
+            return true;
+        }
+
+        private void initId2dtagArray()
+        {
+            id2dtag = new DTag[id2tag.length];
+            for (int i = 0; i < id2tag.length; i++)
+            {
+                id2dtag[i] = new DTag(id2tag[i]);
+            }
+        }
+
+        @Override
+        protected void onLoadTxtFinished()
+        {
+            super.onLoadTxtFinished();
+            initId2dtagArray();
+        }
+
+        boolean isLegal(int tagId, int current, Table table)
+        {
+            DTag tag = id2dtag[tagId];
+            if ("ROOT".equals(tag.pos))
+            {
+                for (int i = 0; i < current; ++i)
+                {
+                    if (table.v[i][3].endsWith("ROOT")) return false;
+                }
+                return true;
+            }
+            else
+            {
+                int posCount = 0;
+                if (tag.offset > 0)
+                {
+                    for (int i = current + 1; i < table.size(); ++i)
+                    {
+                        if (table.v[i][1].equals(tag.pos)) ++posCount;
+                        if (posCount == tag.offset) return true;
+                    }
+                    return false;
+                }
+                else
+                {
+                    for (int i = current - 1; i >= 0; --i)
+                    {
+                        if (table.v[i][1].equals(tag.pos)) ++posCount;
+                        if (posCount == -tag.offset) return true;
+                    }
+                    return false;
+                }
+            }
+        }
+
+        @Override
+        public void tag(Table table)
+        {
+            int size = table.size();
+            double bestScore = 0;
+            int bestTag = 0;
+            int tagSize = id2tag.length;
+            LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数
+            for (int i = 0; i < tagSize; ++i)   // -1位置的标签遍历
+            {
+                for (int j = 0; j < tagSize; ++j)   // 0位置的标签遍历
+                {
+                    if (!isLegal(j, 0, table)) continue;
+                    double curScore = computeScore(scoreList, j);
+                    if (matrix != null)
+                    {
+                        curScore += matrix[i][j];
+                    }
+                    if (curScore > bestScore)
+                    {
+                        bestScore = curScore;
+                        bestTag = j;
+                    }
+                }
+            }
+            table.setLast(0, id2tag[bestTag]);
+            int preTag = bestTag;
+            // 0位置打分完毕，接下来打剩下的
+            for (int i = 1; i < size; ++i)
+            {
+                scoreList = computeScoreList(table, i);    // i位置命中的特征函数
+                bestScore = Double.MIN_VALUE;
+                for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
+                {
+                    if (!isLegal(j, i, table)) continue;
+                    double curScore =  computeScore(scoreList, j);
+                    if (matrix != null)
+                    {
+                        curScore += matrix[preTag][j];
+                    }
+                    if (curScore > bestScore)
+                    {
+                        bestScore = curScore;
+                        bestTag = j;
+                    }
+                }
+                table.setLast(i, id2tag[bestTag]);
+                preTag = bestTag;
+            }
+        }
     }
 }

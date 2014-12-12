@@ -237,9 +237,10 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         {
         }
 
-        public void setValue(V[] value)
+        public ValueArray setValue(V[] value)
         {
             this.value = value;
+            return this;
         }
     }
 

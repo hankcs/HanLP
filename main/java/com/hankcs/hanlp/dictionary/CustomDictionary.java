@@ -13,9 +13,12 @@ package com.hankcs.hanlp.dictionary;
 
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
@@ -81,14 +84,13 @@ public class CustomDictionary
             }
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
-            if (!trie.save(mainPath + ".trie.dat")) return false;
             // 缓存值文件
             List<CoreDictionary.Attribute> attributeList = new LinkedList<>();
             for (Map.Entry<String, CoreDictionary.Attribute> entry : trie.entrySet())
             {
                 attributeList.add(entry.getValue());
             }
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(mainPath + ".value.dat"));
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(mainPath + Predefine.BIN_EXT));
             out.writeInt(attributeList.size());
             for (CoreDictionary.Attribute attribute : attributeList)
             {
@@ -100,6 +102,7 @@ public class CustomDictionary
                     out.writeInt(attribute.frequency[i]);
                 }
             }
+            if (!trie.save(out)) return false;
             out.close();
         }
         catch (FileNotFoundException e)
@@ -231,33 +234,24 @@ public class CustomDictionary
     {
         try
         {
-            byte[] bytes = IOUtil.readBytes(path + ".value.dat");
-            if (bytes == null) return false;
-            int index = 0;
-            int size = TextUtility.bytesHighFirstToInt(bytes, index);
-            index += 4;
+            ByteArray byteArray = ByteArray.createByteArray(path + Predefine.BIN_EXT);
+            int size = byteArray.nextInt();
             CoreDictionary.Attribute[] attributes = new CoreDictionary.Attribute[size];
             final Nature[] natureIndexArray = Nature.values();
             for (int i = 0; i < size; ++i)
             {
                 // 第一个是全部频次，第二个是词性个数
-                int currentTotalFrequency = TextUtility.bytesHighFirstToInt(bytes, index);
-                index += 4;
-                int length = TextUtility.bytesHighFirstToInt(bytes, index);
-                index += 4;
+                int currentTotalFrequency = byteArray.nextInt();
+                int length = byteArray.nextInt();
                 attributes[i] = new CoreDictionary.Attribute(length);
                 attributes[i].totalFrequency = currentTotalFrequency;
                 for (int j = 0; j < length; ++j)
                 {
-                    attributes[i].nature[j] = natureIndexArray[TextUtility.bytesHighFirstToInt(bytes, index)];
-                    index += 4;
-                    attributes[i].frequency[j] = TextUtility.bytesHighFirstToInt(bytes, index);
-                    index += 4;
+                    attributes[i].nature[j] = natureIndexArray[byteArray.nextInt()];
+                    attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            logger.info("值" + path + ".value.dat" + "加载完毕");
-            if (!trie.load(path + ".trie.dat", attributes)) return false;
-            logger.info("二分数组" + path + ".trie.dat" + "加载完毕");
+            if (!trie.load(byteArray, attributes)) return false;
         }
         catch (Exception e)
         {

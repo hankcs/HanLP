@@ -37,7 +37,7 @@ public class HanLP
     /**
      * 库的全局配置
      */
-    public static class Config
+    public static final class Config
     {
         /**
          * 开发模式
@@ -117,6 +117,11 @@ public class HanLP
         public static String JapanesePersonDictionaryPath = "data/dictionary/person/日本人名词典.txt";
 
         /**
+         * 字符类型对应表
+         */
+        public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
+
+        /**
          * 词-词性-依存关系模型
          */
         public static String WordNatureModelPath = "data/model/dependency/WordNature.txt";
@@ -133,10 +138,6 @@ public class HanLP
          * CRF依存模型
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModel.txt";
-        /**
-         * 字符类型对应表
-         */
-        public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
 
         static
         {
@@ -182,6 +183,10 @@ public class HanLP
                 OrganizationDictionaryPath = root + p.getProperty("OrganizationDictionaryPath", OrganizationDictionaryPath);
                 OrganizationDictionaryTrPath = root + p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
                 CharTypePath = root + p.getProperty("CharTypePath", CharTypePath);
+                WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
+                MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
+                CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
+                CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
             }
             catch (Exception e)
             {
