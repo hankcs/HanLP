@@ -16,7 +16,7 @@
 package com.hankcs.hanlp.collection.trie;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.utility.TextUtility;
+import com.hankcs.hanlp.utility.ByteUtil;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -572,15 +572,15 @@ public class DoubleArrayTrie<V> implements Serializable
             fis.close();
 
             int index = 0;
-            size = TextUtility.bytesHighFirstToInt(bytes, index);
+            size = ByteUtil.bytesHighFirstToInt(bytes, index);
             index += 4;
             base = new int[size + 65535];   // 多留一些，防止越界
             check = new int[size + 65535];
             for (int i = 0; i < size; i++)
             {
-                base[i] = TextUtility.bytesHighFirstToInt(bytes, index);
+                base[i] = ByteUtil.bytesHighFirstToInt(bytes, index);
                 index += 4;
-                check[i] = TextUtility.bytesHighFirstToInt(bytes, index);
+                check[i] = ByteUtil.bytesHighFirstToInt(bytes, index);
                 index += 4;
             }
         }

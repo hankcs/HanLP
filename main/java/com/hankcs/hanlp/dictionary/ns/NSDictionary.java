@@ -16,7 +16,7 @@ import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.NS;
 import com.hankcs.hanlp.dictionary.common.CommonDictionary;
-import com.hankcs.hanlp.utility.TextUtility;
+import com.hankcs.hanlp.utility.ByteUtil;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -77,19 +77,19 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
         if (bytes == null) return null;
         NS[] NSArray = NS.values();
         int index = 0;
-        int size = TextUtility.bytesHighFirstToInt(bytes, index);
+        int size = ByteUtil.bytesHighFirstToInt(bytes, index);
         index += 4;
         EnumItem<NS>[] valueArray = new EnumItem[size];
         for (int i = 0; i < size; ++i)
         {
-            int currentSize = TextUtility.bytesHighFirstToInt(bytes, index);
+            int currentSize = ByteUtil.bytesHighFirstToInt(bytes, index);
             index += 4;
             EnumItem<NS> item = new EnumItem<>();
             for (int j = 0; j < currentSize; ++j)
             {
-                NS NS = NSArray[TextUtility.bytesHighFirstToInt(bytes, index)];
+                NS NS = NSArray[ByteUtil.bytesHighFirstToInt(bytes, index)];
                 index += 4;
-                int frequency = TextUtility.bytesHighFirstToInt(bytes, index);
+                int frequency = ByteUtil.bytesHighFirstToInt(bytes, index);
                 index += 4;
                 item.labelMap.put(NS, frequency);
             }

@@ -12,7 +12,6 @@
 package com.hankcs.hanlp.corpus.io;
 
 import com.hankcs.hanlp.utility.ByteUtil;
-import com.hankcs.hanlp.utility.TextUtility;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
@@ -60,7 +59,7 @@ public class ByteArray
      */
     public int nextInt()
     {
-        int result = TextUtility.bytesHighFirstToInt(bytes, offset);
+        int result = ByteUtil.bytesHighFirstToInt(bytes, offset);
         offset += 4;
         return result;
     }
@@ -79,7 +78,7 @@ public class ByteArray
      */
     public char nextChar()
     {
-        char result = TextUtility.bytesHighFirstToChar(bytes, offset);
+        char result = ByteUtil.bytesHighFirstToChar(bytes, offset);
         offset += 2;
         return result;
     }
@@ -117,7 +116,7 @@ public class ByteArray
 
     public float nextFloat()
     {
-        float result = TextUtility.bytesHighFirstToFloat(bytes, offset);
+        float result = ByteUtil.bytesHighFirstToFloat(bytes, offset);
         offset += 4;
         return result;
     }

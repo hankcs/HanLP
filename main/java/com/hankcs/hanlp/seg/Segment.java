@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 分词服务<br>
+ * 分词器（分词服务）<br>
  * 是所有分词器的基类（Abstract）
  * @author hankcs
  */

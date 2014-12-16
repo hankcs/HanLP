@@ -2,7 +2,6 @@ package com.hankcs.hanlp.utility;
 
 /**
  * 字符集识别辅助工具类
- *
  */
 public class CharacterHelper
 {
@@ -44,7 +43,8 @@ public class CharacterHelper
                 )
         {
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -66,11 +66,13 @@ public class CharacterHelper
         {
             input = (char) 32;
 
-        } else if (input > 65280 && input < 65375)
+        }
+        else if (input > 65280 && input < 65375)
         {
             input = (char) (input - 65248);
 
-        } else if (input >= 'A' && input <= 'Z')
+        }
+        else if (input >= 'A' && input <= 'Z')
         {
             input += 32;
         }

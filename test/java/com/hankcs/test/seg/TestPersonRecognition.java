@@ -11,6 +11,7 @@
  */
 package com.hankcs.test.seg;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -53,7 +54,8 @@ public class TestPersonRecognition extends TestCase
 
     public void testNameRecognition() throws Exception
     {
+        HanLP.Config.enableDebug();
         NShortSegment segment = new NShortSegment();
-        System.out.println(segment.seg("华健康"));
+        System.out.println(segment.seg("世界上最长的姓名是简森·乔伊·亚历山大·比基·卡利斯勒·达夫·埃利奥特·福克斯·伊维鲁莫·马尔尼·梅尔斯·帕特森·汤普森·华莱士·普雷斯顿。"));
     }
 }

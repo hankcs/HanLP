@@ -209,4 +209,60 @@ public class ByteUtil
         b[7] = (byte) (l);
         return b;
     }
+
+    /**
+     * 字节数组和整型的转换
+     *
+     * @param bytes 字节数组
+     * @return 整型
+     */
+    public static int bytesToInt(byte[] bytes, int start)
+    {
+        int num = bytes[start] & 0xFF;
+        num |= ((bytes[start + 1] << 8) & 0xFF00);
+        num |= ((bytes[start + 2] << 16) & 0xFF0000);
+        num |= ((bytes[start + 3] << 24) & 0xFF000000);
+        return num;
+    }
+
+    /**
+     * 字节数组和整型的转换，高位在前，适用于读取writeInt的数据
+     *
+     * @param bytes 字节数组
+     * @return 整型
+     */
+    public static int bytesHighFirstToInt(byte[] bytes, int start)
+    {
+        int num = bytes[start + 3] & 0xFF;
+        num |= ((bytes[start + 2] << 8) & 0xFF00);
+        num |= ((bytes[start + 1] << 16) & 0xFF0000);
+        num |= ((bytes[start] << 24) & 0xFF000000);
+        return num;
+    }
+
+    /**
+     * 字节数组转char，高位在前，适用于读取writeChar的数据
+     *
+     * @param bytes
+     * @param start
+     * @return
+     */
+    public static char bytesHighFirstToChar(byte[] bytes, int start)
+    {
+        char c = (char) (((bytes[start] & 0xFF) << 8) | (bytes[start + 1] & 0xFF));
+        return c;
+    }
+
+    /**
+     * 读取float，高位在前
+     *
+     * @param bytes
+     * @param start
+     * @return
+     */
+    public static float bytesHighFirstToFloat(byte[] bytes, int start)
+    {
+        int l = bytesHighFirstToInt(bytes, start);
+        return Float.intBitsToFloat(l);
+    }
 }

@@ -16,7 +16,7 @@ import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.NT;
 import com.hankcs.hanlp.dictionary.common.CommonDictionary;
-import com.hankcs.hanlp.utility.TextUtility;
+import com.hankcs.hanlp.utility.ByteUtil;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -77,19 +77,19 @@ public class NTDictionary extends CommonDictionary<EnumItem<NT>>
         if (bytes == null) return null;
         NT[] values = NT.values();
         int index = 0;
-        int size = TextUtility.bytesHighFirstToInt(bytes, index);
+        int size = ByteUtil.bytesHighFirstToInt(bytes, index);
         index += 4;
         EnumItem<NT>[] valueArray = new EnumItem[size];
         for (int i = 0; i < size; ++i)
         {
-            int currentSize = TextUtility.bytesHighFirstToInt(bytes, index);
+            int currentSize = ByteUtil.bytesHighFirstToInt(bytes, index);
             index += 4;
             EnumItem<NT> item = new EnumItem<>();
             for (int j = 0; j < currentSize; ++j)
             {
-                NT tag = values[TextUtility.bytesHighFirstToInt(bytes, index)];
+                NT tag = values[ByteUtil.bytesHighFirstToInt(bytes, index)];
                 index += 4;
-                int frequency = TextUtility.bytesHighFirstToInt(bytes, index);
+                int frequency = ByteUtil.bytesHighFirstToInt(bytes, index);
                 index += 4;
                 item.labelMap.put(tag, frequency);
             }

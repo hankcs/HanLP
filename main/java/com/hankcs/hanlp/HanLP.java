@@ -11,13 +11,19 @@
  */
 package com.hankcs.hanlp;
 
+import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
+import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
 import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
+import com.hankcs.hanlp.phrase.IPhraseExtractor;
+import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.summary.TextRankKeyword;
+import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandTokenizer;
 
 import java.io.File;
@@ -342,11 +348,56 @@ public class HanLP
 
     /**
      * 创建一个分词器<br>
-     * 使用本方法的好处是，以后HanLP升级了，总能用上最合适的分词器
-     * @return
+     * 这是一个工厂方法<br>
+     * 与直接new一个分词器相比，使用本方法的好处是，以后HanLP升级了，总能用上最合适的分词器
+     * @return 一个分词器
      */
     public static Segment newSegment()
     {
-        return new DijkstraSegment();
+        return new DijkstraSegment();   // 最短路分词器是目前效率和效果的最佳平衡
+    }
+
+    /**
+     * 依存文法分析
+     * @param sentence 待分析的句子
+     * @return CoNLL格式的依存关系树
+     */
+    public static CoNLLSentence parseDependency(String sentence)
+    {
+        return MaxEntDependencyParser.compute(sentence);
+    }
+
+    /**
+     * 提取短语
+     * @param text 文本
+     * @param size 需要多少个短语
+     * @return 一个短语列表，长度 <= size
+     */
+    public static List<String> extractPhrase(String text, int size)
+    {
+        IPhraseExtractor extractor = new MutualInformationEntropyPhraseExtractor();
+        return extractor.extractPhrase(text, size);
+    }
+
+    /**
+     * 提取关键词
+     * @param document 文档内容
+     * @param size 希望提取几个关键词
+     * @return 一个列表
+     */
+    public static List<String> extractKeyword(String document, int size)
+    {
+        return TextRankKeyword.getKeywordList(document, size);
+    }
+
+    /**
+     * 自动摘要
+     * @param document 目标文档
+     * @param size 需要的关键句的个数
+     * @return 关键句列表
+     */
+    public static List<String> extractSummary(String document, int size)
+    {
+        return TextRankSentence.getTopSentenceList(document, size);
     }
 }

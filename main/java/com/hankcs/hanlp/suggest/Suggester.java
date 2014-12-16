@@ -22,6 +22,7 @@ import com.hankcs.hanlp.suggest.scorer.pinyin.PinyinScorer;
 import java.util.*;
 
 /**
+ * 文本推荐器
  * @author hankcs
  */
 public class Suggester implements ISuggester
@@ -34,6 +35,24 @@ public class Suggester implements ISuggester
         scorerList.add(new IdVectorScorer());
         scorerList.add(new EditDistanceScorer());
         scorerList.add(new PinyinScorer());
+    }
+
+    public Suggester(List<BaseScorer> scorerList)
+    {
+        this.scorerList = scorerList;
+    }
+
+    /**
+     * 构造一个推荐器
+     * @param scorers 打分器
+     */
+    public Suggester(BaseScorer... scorers)
+    {
+        scorerList = new ArrayList<>(scorers.length);
+        for (BaseScorer scorer : scorers)
+        {
+            scorerList.add(scorer);
+        }
     }
 
     @Override
