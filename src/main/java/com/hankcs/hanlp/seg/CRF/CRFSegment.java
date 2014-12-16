@@ -42,7 +42,7 @@ public class CRFSegment extends Segment
      * @param enable
      * @return
      */
-    public CRFSegment enableSpeechTag(boolean enable)
+    public CRFSegment enablePartOfSpeechTagging(boolean enable)
     {
         speechTagging = enable;
         return this;

@@ -5,10 +5,6 @@
     <groupId>com.hankcs</groupId>
     <artifactId>HanLP</artifactId>
     <version>1.0</version>
-    <modules>
-        <module>HanLPLucenePlugin</module>
-    </modules>
-    <packaging>pom</packaging>
 
     <name>HanLP</name>
     <url>http://www.hankcs.com/</url>
@@ -55,6 +51,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.properties</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <!-- 单元测试插件 -->
             <plugin>

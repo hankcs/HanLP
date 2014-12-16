@@ -91,7 +91,7 @@ public abstract class Segment
      * @param enable
      * @return
      */
-    public Segment enableSpeechTag(boolean enable)
+    public Segment enablePartOfSpeechTagging(boolean enable)
     {
         config.speechTagging = enable;
         return this;

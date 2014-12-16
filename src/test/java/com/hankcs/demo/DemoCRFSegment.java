@@ -26,7 +26,7 @@ public class DemoCRFSegment
     public static void main(String[] args)
     {
         Segment segment = new CRFSegment();
-        segment.enableSpeechTag(true);
+        segment.enablePartOfSpeechTagging(true);
         List<Term> termList = segment.seg("你看过穆赫兰道吗");
         System.out.println(termList);
         for (Term term : termList)

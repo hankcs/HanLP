@@ -29,7 +29,7 @@ public class NLPTokenizer
      */
     public static final Segment SEGMENT = new DijkstraSegment().enableNameRecognize(true).enableTranslatedNameRecognize(true)
             .enableJapaneseNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true)
-            .enableSpeechTag(true);
+            .enablePartOfSpeechTagging(true);
 
     public static List<Term> segment(String text)
     {

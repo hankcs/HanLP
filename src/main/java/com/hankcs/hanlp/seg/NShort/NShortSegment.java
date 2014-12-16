@@ -210,7 +210,7 @@ public class NShortSegment extends HiddenMarkovModelSegment
      * @param enable
      * @return
      */
-    public NShortSegment enableSpeechTag(boolean enable)
+    public NShortSegment enablePartOfSpeechTagging(boolean enable)
     {
         config.speechTagging = enable;
         return this;

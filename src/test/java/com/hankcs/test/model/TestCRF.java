@@ -73,7 +73,7 @@ public class TestCRF extends TestCase
     {
 //        HanLP.Config.enableDebug();
         CRFSegment segment = new CRFSegment();
-//        segment.enableSpeechTag(true);
+//        segment.enablePartOfSpeechTagging(true);
         System.out.println(segment.seg("你看过穆赫兰道吗"));
     }
 }

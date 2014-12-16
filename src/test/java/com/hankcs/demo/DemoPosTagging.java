@@ -26,7 +26,7 @@ public class DemoPosTagging
         Segment segment = HanLP.newSegment();
 
         System.out.println("未标注：" + segment.seg(text));
-        segment.enableSpeechTag(true);
+        segment.enablePartOfSpeechTagging(true);
         System.out.println("标注后：" + segment.seg(text));
     }
 }
