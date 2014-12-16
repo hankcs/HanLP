@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.seg.common.wrapper;
 
-import com.hankcs.hanlp.seg.AbstractSegment;
+import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.io.BufferedReader;
@@ -26,7 +26,7 @@ import java.util.List;
 public class SegmentWrapper
 {
     BufferedReader br;
-    AbstractSegment segment;
+    Segment segment;
     /**
      * 因为next是单个term出去的，所以在这里做一个记录
      */
@@ -40,7 +40,7 @@ public class SegmentWrapper
      */
     int globalStart;
 
-    public SegmentWrapper(BufferedReader br, AbstractSegment segment)
+    public SegmentWrapper(BufferedReader br, Segment segment)
     {
         this.br = br;
         this.segment = segment;

@@ -13,7 +13,7 @@ package com.hankcs.hanlp.tokenizer;
 
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.dictionary.stopword.Filter;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.ListIterator;
  */
 public class NotionalTokenizer
 {
-    static final Segment SEGMENT = new Segment();
+    static final DijkstraSegment SEGMENT = new DijkstraSegment();
     public static List<Term> segment(String text)
     {
         List<Term> resultList = SEGMENT.seg(text);

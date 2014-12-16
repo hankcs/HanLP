@@ -42,7 +42,7 @@ public class TestParse extends TestCase
         termList.add(new Term("经济", Nature.n));
         termList.add(new Term("犯罪", Nature.vn));
 
-        System.out.println(MaxEntDependencyParser.compute(termList));
+        System.out.println(CRFDependencyParser.compute(termList));
     }
 
     public void testSegAndParse() throws Exception
@@ -53,7 +53,8 @@ public class TestParse extends TestCase
 
     public void testMaxEntParser() throws Exception
     {
-        System.out.println(MaxEntDependencyParser.compute("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
+        HanLP.Config.enableDebug();
+        System.out.println(CRFDependencyParser.compute("我每天骑车上学"));
     }
 
     public void testCrfParser() throws Exception
@@ -73,7 +74,7 @@ public class TestParse extends TestCase
     public void testEvaluate() throws Exception
     {
         testParse();
-        LinkedList<CoNLLSentence> sentenceList = CoNLLLoader.loadSentenceList("D:\\Doc\\语料库\\依存分析训练数据\\THU\\train.conll");
+        LinkedList<CoNLLSentence> sentenceList = CoNLLLoader.loadSentenceList("D:\\Doc\\语料库\\依存分析训练数据\\THU\\dev.conll");
         Evaluator evaluator = new Evaluator();
         int id = 1;
         for (CoNLLSentence sentence : sentenceList)

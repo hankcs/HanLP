@@ -12,10 +12,6 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
-import com.hankcs.hanlp.seg.common.Term;
-
-import java.util.List;
 
 /**
  * 依存句法解析

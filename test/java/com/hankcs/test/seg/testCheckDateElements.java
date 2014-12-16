@@ -12,7 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,15 +25,15 @@ public class testCheckDateElements
     public static void main(String[] args)
     {
         List<List<Term>> wordResults = new LinkedList<>();
-        wordResults.add(Segment.parse("3-4月"));
-        wordResults.add(Segment.parse("3-4月份"));
-        wordResults.add(Segment.parse("3-4季"));
-        wordResults.add(Segment.parse("3-4年"));
-        wordResults.add(Segment.parse("3-4人"));
-        wordResults.add(Segment.parse("2014年"));
-        wordResults.add(Segment.parse("04年"));
-        wordResults.add(Segment.parse("12点半"));
-        wordResults.add(Segment.parse("1.abc"));
+        wordResults.add(NShortSegment.parse("3-4月"));
+        wordResults.add(NShortSegment.parse("3-4月份"));
+        wordResults.add(NShortSegment.parse("3-4季"));
+        wordResults.add(NShortSegment.parse("3-4年"));
+        wordResults.add(NShortSegment.parse("3-4人"));
+        wordResults.add(NShortSegment.parse("2014年"));
+        wordResults.add(NShortSegment.parse("04年"));
+        wordResults.add(NShortSegment.parse("12点半"));
+        wordResults.add(NShortSegment.parse("1.abc"));
 
         for (List<Term> result : wordResults)
         {

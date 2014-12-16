@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.seg.Dijkstra;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.recognition.nr.JapanesePersonRecogniton;
+import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
@@ -27,7 +27,7 @@ import java.util.*;
  * 最短路径分词
  * @author hankcs
  */
-public class Segment extends HiddenMarkovModelSegment
+public class DijkstraSegment extends HiddenMarkovModelSegment
 {
     @Override
     public List<Term> segSentence(String sentence)
@@ -63,7 +63,7 @@ public class Segment extends HiddenMarkovModelSegment
             }
             if (config.japaneseNameRecognize)
             {
-                JapanesePersonRecogniton.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                JapanesePersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (config.placeRecognize)
             {
@@ -106,6 +106,11 @@ public class Segment extends HiddenMarkovModelSegment
         return convert(vertexList, config.offset);
     }
 
+    /**
+     * dijkstra最短路径
+     * @param graph
+     * @return
+     */
     private static List<Vertex> dijkstra(Graph graph)
     {
         List<Vertex> resultList = new LinkedList<>();
@@ -139,118 +144,4 @@ public class Segment extends HiddenMarkovModelSegment
         return resultList;
     }
 
-    /**
-     * 设为索引模式
-     *
-     * @return
-     */
-    public Segment enableIndexMode(boolean enable)
-    {
-        config.indexMode = enable;
-        return this;
-    }
-
-    /**
-     * 开启词性标注
-     * @param enable
-     * @return
-     */
-    public Segment enableSpeechTag(boolean enable)
-    {
-        config.speechTagging = enable;
-        return this;
-    }
-
-    /**
-     * 开启人名识别
-     * @param enable
-     * @return
-     */
-    public Segment enableNameRecognize(boolean enable)
-    {
-        config.nameRecognize = enable;
-        config.updateNerConfig();
-        return this;
-    }
-
-    /**
-     * 开启地名识别
-     * @param enable
-     * @return
-     */
-    public Segment enablePlaceRecognize(boolean enable)
-    {
-        config.placeRecognize = enable;
-        config.updateNerConfig();
-        return this;
-    }
-
-    /**
-     * 开启机构名识别
-     * @param enable
-     * @return
-     */
-    public Segment enableOrganizationRecognize(boolean enable)
-    {
-        config.organizationRecognize = enable;
-        config.updateNerConfig();
-        return this;
-    }
-
-    /**
-     * 是否启用用户词典
-     *
-     * @param enable
-     */
-    public Segment enableCustomDictionary(boolean enable)
-    {
-        config.useCustomDictionary = enable;
-        return this;
-    }
-
-    /**
-     * 是否启用音译人名识别
-     *
-     * @param enable
-     */
-    public Segment enableTranslatedNameRecognize(boolean enable)
-    {
-        config.translatedNameRecognize = enable;
-        config.updateNerConfig();
-        return this;
-    }
-
-    /**
-     * 是否启用日本人名识别
-     *
-     * @param enable
-     */
-    public Segment enableJapaneseNameRecognize(boolean enable)
-    {
-        config.japaneseNameRecognize = enable;
-        config.updateNerConfig();
-        return this;
-    }
-
-    /**
-     * 是否启用偏移量计算（开启后Term.offset才会被计算）
-     * @param enable
-     * @return
-     */
-    public Segment enableOffset(boolean enable)
-    {
-        config.offset = enable;
-        return this;
-    }
-
-    public Segment enableAllNamedEntityRecognize(boolean enable)
-    {
-        config.nameRecognize = enable;
-        config.japaneseNameRecognize = enable;
-        config.translatedNameRecognize = enable;
-        config.placeRecognize = enable;
-        config.organizationRecognize = enable;
-        config.updateNerConfig();
-        return this;
-    }
 }

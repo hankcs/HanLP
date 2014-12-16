@@ -11,7 +11,8 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class DemoOrganizationRecognition
                 "我经常在荣祥餐厅吃饭，",
                 "济南杨铭宇餐饮管理有限公司是由杨先生创办的餐饮企业。",
         };
-        Segment segment = new Segment().enableOrganizationRecognize(true);
+        Segment segment = HanLP.newSegment().enableOrganizationRecognize(true);
         for (String sentence : testCase)
         {
             List<Term> termList = segment.seg(sentence);

@@ -11,7 +11,8 @@
  */
 package com.hankcs.hanlp.tokenizer;
 
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class IndexTokenizer
 {
-    public static final Segment SEGMENT = new Segment().enableIndexMode(true);
+    public static final Segment SEGMENT = new DijkstraSegment().enableIndexMode(true);
     public static List<Term> segment(String text)
     {
         return SEGMENT.seg(text);

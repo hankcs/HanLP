@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * 最长分词器
- * @author He Han
+ * @author hankcs
  */
 public class LongestSegment<V>
 {

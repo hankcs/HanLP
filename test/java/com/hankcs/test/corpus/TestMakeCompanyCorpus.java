@@ -17,15 +17,12 @@ import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
 import com.hankcs.hanlp.corpus.dictionary.NTDictionaryMaker;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
-import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
 import junit.framework.TestCase;
 
 import java.io.*;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -36,7 +33,7 @@ public class TestMakeCompanyCorpus extends TestCase
 {
     public void testMake() throws Exception
     {
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         String line = null;
         BufferedReader bw = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Doc\\语料库\\company.dic")));
         BufferedWriter br = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data/test/nt/company.txt")));
@@ -109,7 +106,7 @@ public class TestMakeCompanyCorpus extends TestCase
     public void testCase() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         segment.enableOrganizationRecognize(true);
         System.out.println(segment.seg("黑龙江建筑职业技术学院近百学生发生冲突"));
     }

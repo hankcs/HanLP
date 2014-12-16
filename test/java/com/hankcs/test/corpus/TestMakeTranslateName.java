@@ -17,7 +17,7 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.nr.TranslatedPersonDictionary;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandTokenizer;
 import junit.framework.TestCase;
@@ -92,14 +92,14 @@ public class TestMakeTranslateName extends TestCase
     public void testNonRec() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         segment.enableTranslatedNameRecognize(true);
         System.out.println(segment.seg("汤姆和杰克逊"));
     }
 
     public void testHeadNRF() throws Exception
     {
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         segment.enableTranslatedNameRecognize(false);
         for (String name : IOUtil.readLineList("data/dictionary/person/音译人名.txt"))
         {

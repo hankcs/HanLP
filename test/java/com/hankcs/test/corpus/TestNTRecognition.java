@@ -14,7 +14,7 @@ package com.hankcs.test.corpus;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.common.CommonStringDictionary;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import junit.framework.TestCase;
 
 import java.util.Set;
@@ -27,7 +27,7 @@ public class TestNTRecognition extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         segment.enableCustomDictionary(false);
 
         segment.enableOrganizationRecognize(true);

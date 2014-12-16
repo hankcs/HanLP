@@ -12,8 +12,8 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.AbstractSegment;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
@@ -30,7 +30,7 @@ public class TestSegment extends TestCase
 {
     public void testSeg() throws Exception
     {
-        Segment segment = new Segment().enableOrganizationRecognize(true);
+        DijkstraSegment segment = new DijkstraSegment();
         HanLP.Config.enableDebug(true);
         System.out.println(segment.seg("我喜欢陈膺奥"));
     }
@@ -54,7 +54,7 @@ public class TestSegment extends TestCase
     {
         HanLP.Config.enableDebug();
         String text = "教授正在教授自然语言处理课程";
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
 
         System.out.println("未标注：" + segment.seg(text));
         segment.enableSpeechTag(true);
@@ -63,12 +63,12 @@ public class TestSegment extends TestCase
 
     public void testFactory() throws Exception
     {
-        AbstractSegment segment = HanLP.newSegment();
+        Segment segment = HanLP.newSegment();
     }
 
     public void testCustomDictionary() throws Exception
     {
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         System.out.println(segment.seg("你在一汽马自达汽车销售有限公司上班吧"));
     }
 }

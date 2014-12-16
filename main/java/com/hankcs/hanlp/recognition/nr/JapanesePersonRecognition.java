@@ -23,7 +23,7 @@ import java.util.Map;
  * 日本人名识别
  * @author hankcs
  */
-public class JapanesePersonRecogniton
+public class JapanesePersonRecognition
 {
     static StringBuilder sbName = new StringBuilder();
     static int appendTimes = 0;

@@ -13,7 +13,7 @@ package com.hankcs.hanlp.seg.NShort;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.Dijkstra;
-import com.hankcs.hanlp.recognition.nr.JapanesePersonRecogniton;
+import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
@@ -32,41 +32,8 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class Segment extends HiddenMarkovModelSegment
+public class NShortSegment extends HiddenMarkovModelSegment
 {
-    /**
-     * 设为索引模式
-     *
-     * @return
-     */
-    public Segment enableIndexMode(boolean enable)
-    {
-        config.indexMode = enable;
-        return this;
-    }
-
-    /**
-     * 开启人名识别
-     * @param enable
-     * @return
-     */
-    public Segment enableNameRecognize(boolean enable)
-    {
-        config.nameRecognize = enable;
-        return this;
-    }
-
-    /**
-     * 是否启用用户词典
-     *
-     * @param enable
-     */
-    public Segment enableCustomDictionary(boolean enable)
-    {
-        config.useCustomDictionary = enable;
-        return this;
-    }
-
     List<Vertex> BiOptimumSegment(WordNet wordNetOptimum)
     {
 //        logger.trace("细分词网：\n{}", wordNetOptimum);
@@ -89,7 +56,7 @@ public class Segment extends HiddenMarkovModelSegment
 //        char[] charArray = text.toCharArray();
         // 粗分
         List<List<Vertex>> coarseResult = BiSegment(sentence, 2, wordNetOptimum, wordNetAll);
-        int preSize = wordNetOptimum.size();
+        boolean NERexists = false;
         for (List<Vertex> vertexList : coarseResult)
         {
             if (HanLP.Config.DEBUG)
@@ -100,6 +67,7 @@ public class Segment extends HiddenMarkovModelSegment
             if (config.ner)
             {
                 wordNetOptimum.addAll(vertexList);
+                int preSize = wordNetOptimum.size();
                 if (config.nameRecognize)
                 {
                     PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
@@ -110,7 +78,7 @@ public class Segment extends HiddenMarkovModelSegment
                 }
                 if (config.japaneseNameRecognize)
                 {
-                    JapanesePersonRecogniton.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    JapanesePersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (config.placeRecognize)
                 {
@@ -120,16 +88,18 @@ public class Segment extends HiddenMarkovModelSegment
                 {
                     // 层叠隐马模型——生成输出作为下一级隐马输入
                     vertexList = Dijkstra.compute(GenerateBiGraph(wordNetOptimum));
-                    wordNetOptimum.clear();
                     wordNetOptimum.addAll(vertexList);
-                    preSize = wordNetOptimum.size();
                     OrganizationRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                }
+                if (!NERexists && preSize != wordNetOptimum.size())
+                {
+                    NERexists = true;
                 }
             }
         }
 
         List<Vertex> vertexList = coarseResult.get(0);
-        if (wordNetOptimum.size() != preSize)
+        if (NERexists)
         {
             Graph graph = GenerateBiGraph(wordNetOptimum);
             vertexList = Dijkstra.compute(graph);
@@ -232,7 +202,7 @@ public class Segment extends HiddenMarkovModelSegment
      */
     public static List<Term> parse(String text)
     {
-        return new Segment().seg(text);
+        return new NShortSegment().seg(text);
     }
 
     /**
@@ -240,7 +210,7 @@ public class Segment extends HiddenMarkovModelSegment
      * @param enable
      * @return
      */
-    public Segment enableSpeechTag(boolean enable)
+    public NShortSegment enableSpeechTag(boolean enable)
     {
         config.speechTagging = enable;
         return this;
@@ -251,7 +221,7 @@ public class Segment extends HiddenMarkovModelSegment
      * @param enable
      * @return
      */
-    public Segment enablePlaceRecognize(boolean enable)
+    public NShortSegment enablePlaceRecognize(boolean enable)
     {
         config.placeRecognize = enable;
         config.updateNerConfig();
@@ -263,7 +233,7 @@ public class Segment extends HiddenMarkovModelSegment
      * @param enable
      * @return
      */
-    public Segment enableOrganizationRecognize(boolean enable)
+    public NShortSegment enableOrganizationRecognize(boolean enable)
     {
         config.organizationRecognize = enable;
         config.updateNerConfig();
@@ -275,7 +245,7 @@ public class Segment extends HiddenMarkovModelSegment
      *
      * @param enable
      */
-    public Segment enableTranslatedNameRecognize(boolean enable)
+    public NShortSegment enableTranslatedNameRecognize(boolean enable)
     {
         config.translatedNameRecognize = enable;
         config.updateNerConfig();
@@ -287,7 +257,7 @@ public class Segment extends HiddenMarkovModelSegment
      *
      * @param enable
      */
-    public Segment enableJapaneseNameRecognize(boolean enable)
+    public NShortSegment enableJapaneseNameRecognize(boolean enable)
     {
         config.japaneseNameRecognize = enable;
         config.updateNerConfig();
@@ -299,13 +269,13 @@ public class Segment extends HiddenMarkovModelSegment
      * @param enable
      * @return
      */
-    public Segment enableOffset(boolean enable)
+    public NShortSegment enableOffset(boolean enable)
     {
         config.offset = enable;
         return this;
     }
 
-    public Segment enableAllNamedEntityRecognize(boolean enable)
+    public NShortSegment enableAllNamedEntityRecognize(boolean enable)
     {
         config.nameRecognize = enable;
         config.japaneseNameRecognize = enable;

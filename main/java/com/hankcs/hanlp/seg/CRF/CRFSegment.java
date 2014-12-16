@@ -18,7 +18,7 @@ import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
 import com.hankcs.hanlp.model.CRFSegmentModel;
 import com.hankcs.hanlp.model.crf.Table;
-import com.hankcs.hanlp.seg.AbstractSegment;
+import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 
@@ -32,7 +32,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * 基于CRF的分词器
  * @author hankcs
  */
-public class CRFSegment extends AbstractSegment
+public class CRFSegment extends Segment
 {
 
     private boolean speechTagging;

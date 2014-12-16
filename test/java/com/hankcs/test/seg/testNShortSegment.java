@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
 
 /**
  * 测试N-最短路径分词
@@ -21,6 +21,6 @@ public class testNShortSegment
 {
     public static void main(String[] args)
     {
-        System.out.println(Segment.parse("商品和服务"));
+        System.out.println(NShortSegment.parse("商品和服务"));
     }
 }

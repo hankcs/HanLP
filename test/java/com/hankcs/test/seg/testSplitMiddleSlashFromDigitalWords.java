@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
 
 /**
  * @author hankcs
@@ -21,6 +21,6 @@ public class testSplitMiddleSlashFromDigitalWords
     public static void main(String[] args)
     {
 //        System.out.println(Arrays.toString("sd-j".split("-")));
-        System.out.println(Segment.parse("3-4月份"));
+        System.out.println(NShortSegment.parse("3-4月份"));
     }
 }

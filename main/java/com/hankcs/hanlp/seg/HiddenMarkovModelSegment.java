@@ -32,13 +32,12 @@ import java.util.*;
  * 隐马模型分词器基类
  * @author hankcs
  */
-public abstract class HiddenMarkovModelSegment extends AbstractSegment
+public abstract class HiddenMarkovModelSegment extends Segment
 {
-    protected Config config;
 
     public HiddenMarkovModelSegment()
     {
-        config = new Config();
+        super();
     }
 
     /**
@@ -613,4 +612,8 @@ public abstract class HiddenMarkovModelSegment extends AbstractSegment
     {
         Viterbi.compute(vertexList, CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary);
     }
+
+//    protected static void performNamedEntityRecognize(List<Vertex> vertexList, WordNet wordNetOptimum, WordNet wordNetAll)
+//    {
+//    }
 }

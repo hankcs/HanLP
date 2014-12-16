@@ -11,7 +11,8 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class DemoJapaneseNameRecognition
                 "北川景子参演了林诣彬导演的《速度与激情3》",
                 "林志玲亮相网友:确定不是波多野结衣？",
         };
-        Segment segment = new Segment().enableJapaneseNameRecognize(true);
+        Segment segment = HanLP.newSegment().enableJapaneseNameRecognize(true);
         for (String sentence : testCase)
         {
             List<Term> termList = segment.seg(sentence);

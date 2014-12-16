@@ -15,7 +15,6 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.SimpleDictionary;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
-import com.hankcs.hanlp.corpus.dictionary.StringDictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -26,7 +25,8 @@ import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.py.TonePinyinString2PinyinConverter;
 import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
+import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
@@ -318,7 +318,7 @@ public class TestXianDaiHanYu extends TestCase
 
     public void testSeg() throws Exception
     {
-        Segment segment = new Segment().enableNameRecognize(true);
+        Segment segment = new NShortSegment().enableNameRecognize(true);
         HanLP.Config.enableDebug(true);
         System.out.println(segment.seg("我在区人保工作"));
     }

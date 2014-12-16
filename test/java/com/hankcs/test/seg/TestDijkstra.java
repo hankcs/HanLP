@@ -12,7 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
 
@@ -26,21 +26,21 @@ public class TestDijkstra extends TestCase
     public void testSeg() throws Exception
     {
         String text = "商品与服务";
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         List<Term> resultList = segment.segSentence(text);
         System.out.println(resultList);
     }
 
     public void testNameRecognize() throws Exception
     {
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         HanLP.Config.enableDebug(true);
         System.out.println(segment.seg("妈蛋，你认识波多野结衣老师吗？"));
     }
 
     public void testFixResult() throws Exception
     {
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         HanLP.Config.enableDebug(true);
         System.out.println(segment.seg("2014年"));
     }

@@ -14,7 +14,8 @@ package com.hankcs.test.seg;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.SentencesUtil;
 import junit.framework.TestCase;
@@ -38,7 +39,7 @@ public class TestPersonRecognition extends TestCase
             System.out.println(++i + " / " + fileList.size() + " " + file.getName() + " ");
             String path = file.getAbsolutePath();
             String content = IOUtil.readTxt(path);
-            Segment segment = new Segment();
+            DijkstraSegment segment = new DijkstraSegment();
             List<List<Term>> sentenceList = segment.seg2sentence(content);
             for (List<Term> sentence : sentenceList)
             {
@@ -52,7 +53,7 @@ public class TestPersonRecognition extends TestCase
 
     public void testNameRecognition() throws Exception
     {
-        com.hankcs.hanlp.seg.NShort.Segment segment = new com.hankcs.hanlp.seg.NShort.Segment();
+        NShortSegment segment = new NShortSegment();
         System.out.println(segment.seg("华健康"));
     }
 }

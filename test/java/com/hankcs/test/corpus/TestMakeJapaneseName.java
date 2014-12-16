@@ -17,7 +17,7 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.nr.JapanesePersonDictionary;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
@@ -91,7 +91,7 @@ public class TestMakeJapaneseName extends TestCase
     public void testRecognize() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         System.out.println(segment.seg("我叫大杉亚依里"));
     }
 
@@ -133,7 +133,7 @@ public class TestMakeJapaneseName extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
         segment.enableJapaneseNameRecognize(true);
         System.out.println(segment.seg("林志玲亮相网友:确定不是波多野结衣？"));
     }

@@ -42,7 +42,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
     static
     {
         long start = System.currentTimeMillis();
-        if (load("D:\\Tools\\CRF++-0.58\\example\\dependency\\model.txt"))
+        if (load(HanLP.Config.CRFDependencyModelPath))
         {
             logger.info("加载随机条件场依存句法分析器模型" + HanLP.Config.CRFDependencyModelPath + "成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
         }
@@ -137,7 +137,6 @@ public class CRFDependencyParser extends AbstractDependencyParser
         {
             coNLLWordArray[i].DEPREL = BigramDependencyModel.get(coNLLWordArray[i].NAME, coNLLWordArray[i].POSTAG, coNLLWordArray[i].HEAD.NAME, coNLLWordArray[i].HEAD.POSTAG);
         }
-
         return new CoNLLSentence(coNLLWordArray);
     }
 
@@ -256,7 +255,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
         public void tag(Table table)
         {
             int size = table.size();
-            double bestScore = 0;
+            double bestScore = Double.MIN_VALUE;
             int bestTag = 0;
             int tagSize = id2tag.length;
             LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数

@@ -15,11 +15,12 @@ import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
 import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
-import com.hankcs.hanlp.seg.AbstractSegment;
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandTokenizer;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Properties;
@@ -137,7 +138,7 @@ public class HanLP
         /**
          * CRF依存模型
          */
-        public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModel.txt";
+        public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
 
         static
         {
@@ -190,8 +191,26 @@ public class HanLP
             }
             catch (Exception e)
             {
-//                if (!DEBUG)
-//                    logger.warning("没有找到HanLP.properties，将采用默认配置");
+                StringBuilder sbInfo = new StringBuilder("========Tips========\n请将HanLP.properties放在下列目录：\n"); // 打印一些友好的tips
+                String classPath = (String) System.getProperties().get("java.class.path");
+                if (classPath != null)
+                {
+                    for (String path : classPath.split(";"))
+                    {
+                        if (new File(path).isDirectory())
+                        {
+                            sbInfo.append(path).append('\n');
+                        }
+                    }
+                }
+                sbInfo.append("Web项目则请放到下列目录：\n" +
+                                      "Webapp/WEB-INF/lib\n" +
+                                      "Webapp/WEB-INF/classes\n" +
+                                      "Appserver/lib\n" +
+                                      "JRE/lib\n");
+                sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
+                sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
+                logger.warning("没有找到HanLP.properties，可能会导致找不到data\n" + sbInfo);
             }
             if (!DEBUG)
             {
@@ -207,6 +226,10 @@ public class HanLP
             enableDebug(true);
         }
 
+        /**
+         * 开启调试模式(会降低性能)
+         * @param enable
+         */
         public static void enableDebug(boolean enable)
         {
             DEBUG = enable;
@@ -245,10 +268,11 @@ public class HanLP
 
     /**
      * 转化为拼音
-     * @param text
-     * @param separator
-     * @param remainNone
-     * @return
+     *
+     * @param text 文本
+     * @param separator 分隔符
+     * @param remainNone 有些字没有拼音（如标点），是否保留它们（用none表示）
+     * @return 一个字符串，由[拼音][分隔符][拼音]构成
      */
     public static String convertToPinyinString(String text, String separator, boolean remainNone)
     {
@@ -270,6 +294,7 @@ public class HanLP
 
     /**
      * 转化为拼音
+     *
      * @param text 代解析的文本
      * @return 一个拼音列表
      */
@@ -280,10 +305,11 @@ public class HanLP
 
     /**
      * 转化为拼音（首字母）
-     * @param text
-     * @param separator
-     * @param remainNone
-     * @return
+     *
+     * @param text 文本
+     * @param separator 分隔符
+     * @param remainNone 有些字没有拼音（如标点），是否保留它们（用none表示）
+     * @return 一个字符串，由[首字母][分隔符][首字母]构成
      */
     public static String convertToPinyinFirstCharString(String text, String separator, boolean remainNone)
     {
@@ -305,6 +331,7 @@ public class HanLP
 
     /**
      * 分词
+     *
      * @param text 文本
      * @return 切分后的单词
      */
@@ -314,11 +341,12 @@ public class HanLP
     }
 
     /**
-     * 创建一个分词器
+     * 创建一个分词器<br>
+     * 使用本方法的好处是，以后HanLP升级了，总能用上最合适的分词器
      * @return
      */
-    public static AbstractSegment newSegment()
+    public static Segment newSegment()
     {
-        return new Segment();
+        return new DijkstraSegment();
     }
 }

@@ -12,7 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
 
 import java.util.List;
 import java.util.Scanner;
@@ -35,7 +35,7 @@ public class PlayGround
 
     private static void seg(String sentence)
     {
-        List<Term> terms = Segment.parse(sentence);
+        List<Term> terms = NShortSegment.parse(sentence);
         for (Term wr : terms)
         {
             System.out.print(wr.word + wr.nature);

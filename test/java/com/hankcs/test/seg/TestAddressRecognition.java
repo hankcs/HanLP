@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.seg.NShort.Segment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
 
 /**
  * @author hankcs
@@ -20,6 +20,6 @@ public class TestAddressRecognition
 {
     public static void main(String[] args)
     {
-        System.out.println(Segment.parse("地址：乌鲁木齐南路218、228"));
+        System.out.println(NShortSegment.parse("地址：乌鲁木齐南路218、228"));
     }
 }

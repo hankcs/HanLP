@@ -11,7 +11,7 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.seg.Dijkstra.Segment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 
 /**
  * 词性标注
@@ -22,7 +22,7 @@ public class DemoPosTagging
     public static void main(String[] args)
     {
         String text = "教授正在教授自然语言处理课程";
-        Segment segment = new Segment();
+        DijkstraSegment segment = new DijkstraSegment();
 
         System.out.println("未标注：" + segment.seg(text));
         segment.enableSpeechTag(true);
