@@ -24,6 +24,9 @@ import java.util.List;
  */
 public class NLPTokenizer
 {
+    /**
+     * 预置分词器
+     */
     public static final Segment SEGMENT = new DijkstraSegment().enableNameRecognize(true).enableTranslatedNameRecognize(true)
             .enableJapaneseNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true)
             .enableSpeechTag(true);

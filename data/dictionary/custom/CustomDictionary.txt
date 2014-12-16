@@ -1,4 +1,5 @@
 hankcs nrf 1024
+上外 nit 1000
 b超	n	3
 t恤	n	4
 一一道来	l	4

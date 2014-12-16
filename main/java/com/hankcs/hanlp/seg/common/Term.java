@@ -14,7 +14,7 @@ package com.hankcs.hanlp.seg.common;
 import com.hankcs.hanlp.corpus.tag.Nature;
 
 /**
- * 分词结果，用户可以直接访问此结果的全部属性
+ * 一个单词，用户可以直接访问此单词的全部属性
  * @author hankcs
  */
 public class Term
@@ -30,7 +30,7 @@ public class Term
     public Nature nature;
 
     /**
-     * 在文本中的起始位置
+     * 在文本中的起始位置（需开启分词器的offset选项）
      */
     public int offset;
 

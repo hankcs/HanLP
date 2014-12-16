@@ -65,7 +65,7 @@ public class JapanesePersonRecognition
             }
             else
             {
-                if (label == JapanesePersonDictionary.M )
+                if (label == JapanesePersonDictionary.M)
                 {
                     sbName.append(key);
                     ++appendTimes;

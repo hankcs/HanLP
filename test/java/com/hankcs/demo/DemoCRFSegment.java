@@ -12,6 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
+import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class DemoCRFSegment
 {
     public static void main(String[] args)
     {
-        CRFSegment segment = new CRFSegment();
+        Segment segment = new CRFSegment();
         segment.enableSpeechTag(true);
         List<Term> termList = segment.seg("你看过穆赫兰道吗");
         System.out.println(termList);

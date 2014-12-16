@@ -23,6 +23,9 @@ import java.util.List;
  */
 public class IndexTokenizer
 {
+    /**
+     * 预置分词器
+     */
     public static final Segment SEGMENT = new DijkstraSegment().enableIndexMode(true);
     public static List<Term> segment(String text)
     {

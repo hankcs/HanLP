@@ -11,6 +11,7 @@
  */
 package com.hankcs.demo;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 
@@ -25,7 +26,7 @@ public class DemoPinyin
     public static void main(String[] args)
     {
         String text = "重载不是重任";
-        List<Pinyin> pinyinList = PinyinDictionary.convertToPinyin(text);
+        List<Pinyin> pinyinList = HanLP.convertToPinyinList(text);
         System.out.print("原文,");
         for (char c : text.toCharArray())
         {

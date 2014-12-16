@@ -27,6 +27,7 @@ import java.util.ListIterator;
 
 /**
  * 地址识别
+ *
  * @author hankcs
  */
 public class OrganizationRecognition
@@ -79,11 +80,33 @@ public class OrganizationRecognition
         {
             Vertex vertex = listIterator.next();
             // 构成更长的
-            if (Nature.nz == vertex.getNature() && vertex.getAttribute().totalFrequency <= 1000)
+            Nature nature = vertex.getNature();
+            if (nature != null)
             {
-                tagList.add(new EnumItem<>(NT.F, 1000));
-                continue;
+                switch (nature)
+                {
+                    case nz:
+                    {
+                        if (vertex.getAttribute().totalFrequency <= 1000)
+                        {
+                            tagList.add(new EnumItem<>(NT.F, 1000));
+                            continue;
+                        }
+                    }
+                    break;
+                    case ni:
+                    case nic:
+                    case nis:
+                    case nit:
+                    {
+                        EnumItem<NT> ntEnumItem = new EnumItem<>(NT.K, 1000);
+                        ntEnumItem.addLabel(NT.D, 1000);
+                        tagList.add(ntEnumItem);
+                        continue;
+                    }
+                }
             }
+
             EnumItem<NT> NTEnumItem = OrganizationDictionary.dictionary.get(vertex.word);  // 此处用等效词，更加精准
             if (NTEnumItem == null)
             {
@@ -97,6 +120,7 @@ public class OrganizationRecognition
 
     /**
      * 维特比算法求解最优标签
+     *
      * @param roleTagList
      * @return
      */
