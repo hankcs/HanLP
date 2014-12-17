@@ -11,6 +11,7 @@
  */
 package com.hankcs.demo;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
 
 /**
@@ -21,6 +22,6 @@ public class DemoDependencyParser
 {
     public static void main(String[] args)
     {
-        System.out.println(MaxEntDependencyParser.compute("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
+        System.out.println(HanLP.parseDependency("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
     }
 }
