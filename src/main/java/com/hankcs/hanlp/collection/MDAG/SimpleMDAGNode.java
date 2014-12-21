@@ -138,7 +138,7 @@ public class SimpleMDAGNode implements ICacheAble
         int offset = binarySearch(mdagDataArray, letter);
         if (offset >= 0)
         {
-            targetNode = mdagDataArray[transitionSetBeginIndex + offset];
+            targetNode = mdagDataArray[offset];
         }
         /////
 
@@ -153,16 +153,16 @@ public class SimpleMDAGNode implements ICacheAble
      */
     private int binarySearch(SimpleMDAGNode[] mdagDataArray, char node)
     {
-        int high = transitionSetSize - 1;
         if (transitionSetSize < 1)
         {
-            return high;
+            return -1;
         }
-        int low = 0;
+        int high = transitionSetBeginIndex + transitionSetSize - 1;
+        int low = transitionSetBeginIndex;
         while (low <= high)
         {
             int mid = ((low + high) >>> 1);
-            int cmp = mdagDataArray[mid + transitionSetBeginIndex].getLetter() - node;
+            int cmp = mdagDataArray[mid].getLetter() - node;
 
             if (cmp < 0)
                 low = mid + 1;
@@ -171,7 +171,7 @@ public class SimpleMDAGNode implements ICacheAble
             else
                 return mid;
         }
-        return -(low + 1);
+        return -1;
     }
 
 
@@ -243,19 +243,20 @@ public class SimpleMDAGNode implements ICacheAble
      */
     public static SimpleMDAGNode traverseMDAG(SimpleMDAGNode[] mdagDataArray, SimpleMDAGNode sourceNode, String str)
     {
-        char firstLetter = str.charAt(0);
+//        char firstLetter = str.charAt(0);
 
         //Loop through the SimpleMDAGNodes in the processing MDAG's source node's transition set,
         //searching for the the one with a letter (char) equal to the first char of str.
         //We can use that target node to transition through the MDAG with the rest of the string
-        for(int i = 0; i < sourceNode.transitionSetSize; i++)
-        {
-            if(mdagDataArray[i].getLetter() == firstLetter)
-                return mdagDataArray[i].transition(mdagDataArray, str.substring(1));
-        }
-        /////
-
-        return null;
+        return sourceNode.transition(mdagDataArray, str.toCharArray());
+//        for(int i = 0; i < sourceNode.transitionSetSize; i++)
+//        {
+//            if(mdagDataArray[i].getLetter() == firstLetter)
+//                return mdagDataArray[i].transition(mdagDataArray, str.substring(1));
+//        }
+//        /////
+//
+//        return null;
     }
 
     @Override

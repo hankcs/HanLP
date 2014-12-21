@@ -143,11 +143,23 @@ public class MDAGSetTest extends TestCase
             assertEquals(true, (boolean)binTrie.get(key));
         }
         System.out.printf("binTrie用时 %d ms\n", System.currentTimeMillis() - start);
+
+        mdagSet.simplify();
         start = System.currentTimeMillis();
         for (String key : validKeySet)
         {
             assertEquals(true, (boolean)mdagSet.contains(key));
         }
         System.out.printf("mdagSet用时 %d ms\n", System.currentTimeMillis() - start);
+    }
+
+    public void testCommPrefix() throws Exception
+    {
+        MDAGSet setTwo = new MDAGSet(validKeySet);
+        setTwo.simplify();
+        for (String key : validKeySet)
+        {
+            assertEquals(mdagSet.getStringsStartingWith(key), setTwo.getStringsStartingWith(key));
+        }
     }
 }
