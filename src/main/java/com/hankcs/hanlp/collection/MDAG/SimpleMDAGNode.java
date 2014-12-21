@@ -145,6 +145,26 @@ public class SimpleMDAGNode implements ICacheAble
         return targetNode;
     }
 
+    private SimpleMDAGNode transitionBruteForce(SimpleMDAGNode[] mdagDataArray, char letter)
+    {
+        int onePastTransitionSetEndIndex = transitionSetBeginIndex + transitionSetSize;
+        SimpleMDAGNode targetNode = null;
+
+        //Loop through the SimpleMDAGNodes in this node's transition set, searching for
+        //the one with a letter equal to that which labels the desired transition
+        for(int i = transitionSetBeginIndex; i < onePastTransitionSetEndIndex; i++)
+        {
+            if(mdagDataArray[i].getLetter() == letter)
+            {
+                targetNode = mdagDataArray[i];
+                break;
+            }
+        }
+        /////
+
+        return targetNode;
+    }
+
     /**
      * 二分搜索
      * @param mdagDataArray

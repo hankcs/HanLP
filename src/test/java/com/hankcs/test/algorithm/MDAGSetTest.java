@@ -27,7 +27,7 @@ public class MDAGSetTest extends TestCase
         validKeySet = new TreeSet<>();
         while (iterator.hasNext())
         {
-            validKeySet.add(iterator.next().split(" ")[0]);
+            validKeySet.add(iterator.next().split("\\s")[0]);
         }
         mdagSet = new MDAGSet(validKeySet);
     }

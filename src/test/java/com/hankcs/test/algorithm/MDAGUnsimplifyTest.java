@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * 希望在此测试解压缩
+ *
  * @author hankcs
  */
 public class MDAGUnsimplifyTest extends TestCase
@@ -70,9 +71,6 @@ public class MDAGUnsimplifyTest extends TestCase
         }
         mdagMap.simplify();
 
-        for (String key : validKeySet)
-        {
-            System.out.println(mdagMap.get(key));
-        }
+        System.out.println(mdagMap.get("he"));
     }
 }

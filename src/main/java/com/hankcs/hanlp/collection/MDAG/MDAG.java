@@ -895,7 +895,7 @@ public class MDAG implements ICacheAble
      */
     public HashSet<String> getAllStrings()
     {
-        HashSet<String> strHashSet = new HashSet<String>();
+        HashSet<String> strHashSet = new LinkedHashSet<>();
 
         if (sourceNode != null)
             getStrings(strHashSet, SearchCondition.NO_SEARCH_CONDITION, null, "", sourceNode.getOutgoingTransitions());

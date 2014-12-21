@@ -60,7 +60,22 @@ public class MDAGMap<V> extends AbstractMap<String, V>
     @Override
     public Set<Entry<String, V>> entrySet()
     {
+        HashSet<String> keySet = mdag.getAllStrings();
         return null;
+    }
+
+    @Override
+    public Set<String> keySet()
+    {
+        HashSet<String> stringSet = mdag.getAllStrings();
+        LinkedHashSet<String> keySet = new LinkedHashSet<>();
+        Iterator<String> iterator = stringSet.iterator();
+        while (iterator.hasNext())
+        {
+            String key = iterator.next();
+            keySet.add(key.substring(0, key.length() - 3));
+        }
+        return keySet;
     }
 
     /**
@@ -94,6 +109,11 @@ public class MDAGMap<V> extends AbstractMap<String, V>
     public void simplify()
     {
         mdag.simplify();
+    }
+
+    public void unSimplify()
+    {
+        mdag.unSimplify();
     }
 
     static class MDAGForMap extends MDAG

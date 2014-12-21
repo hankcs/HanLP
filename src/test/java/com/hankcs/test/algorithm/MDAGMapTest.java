@@ -15,11 +15,11 @@ public class MDAGMapTest extends TestCase
 
     public void setUp() throws Exception
     {
-        IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/CoreNatureDictionary.mini.txt");
+        IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/custom/CustomDictionary.txt");
         validKeySet = new TreeSet<>();
         while (iterator.hasNext())
         {
-            validKeySet.add(iterator.next().split(" ")[0]);
+            validKeySet.add(iterator.next().split("\\s")[0]);
         }
     }
 
@@ -35,6 +35,7 @@ public class MDAGMapTest extends TestCase
     {
         testPut();
         mdagMap.simplify();
+//        mdagMap.unSimplify();
         for (String word : validKeySet)
         {
             assertEquals(word.length(), (int) mdagMap.get(word));
@@ -45,7 +46,7 @@ public class MDAGMapTest extends TestCase
     {
         testPut();
         mdagMap.simplify();
-        mdagMap.get("±");
+        System.out.println(mdagMap.get("齿轮厂"));
     }
 
     public void testCommonPrefixSearch() throws Exception
@@ -67,6 +68,7 @@ public class MDAGMapTest extends TestCase
         {
             assertEquals(binTrie.commonPrefixSearchWithValue(key).size(), mdagMap.commonPrefixSearchWithValue(key).size());
         }
+
         long start;
         start = System.currentTimeMillis();
         for (String key : validKeySet)
