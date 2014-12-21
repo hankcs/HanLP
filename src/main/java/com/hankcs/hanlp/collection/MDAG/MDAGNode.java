@@ -544,8 +544,8 @@ public class MDAGNode
         sb.append("isAcceptNode=").append(isAcceptNode);
         sb.append(", outgoingTransitionTreeMap=").append(outgoingTransitionTreeMap.keySet());
         sb.append(", incomingTransitionCount=").append(incomingTransitionCount);
-        sb.append(", transitionSetBeginIndex=").append(transitionSetBeginIndex);
-        sb.append(", storedHashCode=").append(storedHashCode);
+//        sb.append(", transitionSetBeginIndex=").append(transitionSetBeginIndex);
+//        sb.append(", storedHashCode=").append(storedHashCode);
         sb.append('}');
         return sb.toString();
     }

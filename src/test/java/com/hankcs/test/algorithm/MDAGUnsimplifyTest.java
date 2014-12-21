@@ -12,11 +12,14 @@
 package com.hankcs.test.algorithm;
 
 import com.hankcs.hanlp.collection.MDAG.MDAG;
+import com.hankcs.hanlp.collection.MDAG.MDAGMap;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import junit.framework.TestCase;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 希望在此测试解压缩
@@ -39,5 +42,37 @@ public class MDAGUnsimplifyTest extends TestCase
         mdag = new MDAG();
         mdag.load(ByteArray.createByteArray(DATA_TEST_OUT_BIN));
         System.out.println(mdag.contains("his"));
+    }
+
+    public void testSimplifyWithoutSave() throws Exception
+    {
+        MDAG mdag = new MDAG();
+        mdag.addString("hers");
+        mdag.addString("his");
+        mdag.addString("she");
+        mdag.addString("he");
+
+        mdag.simplify();
+        System.out.println(mdag.contains("hers"));
+    }
+
+    public void testSimplifyMap() throws Exception
+    {
+        MDAGMap<String> mdagMap = new MDAGMap<>();
+        List<String> validKeySet = new ArrayList<>();
+        validKeySet.add("hers");
+        validKeySet.add("his");
+        validKeySet.add("she");
+        validKeySet.add("he");
+        for (String key : validKeySet)
+        {
+            mdagMap.put(key, key);
+        }
+        mdagMap.simplify();
+
+        for (String key : validKeySet)
+        {
+            System.out.println(mdagMap.get(key));
+        }
     }
 }

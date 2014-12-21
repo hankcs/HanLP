@@ -1043,19 +1043,19 @@ public class MDAG implements ICacheAble
         throw new IllegalArgumentException("Argument is not an MDAGNode or SimpleMDAGNode");
     }
 
-    @Override
-    public String toString()
-    {
-        final StringBuilder sb = new StringBuilder("MDAG{");
-        sb.append("sourceNode=").append(sourceNode);
-        sb.append(", simplifiedSourceNode=").append(simplifiedSourceNode);
-        sb.append(", equivalenceClassMDAGNodeHashMap=").append(equivalenceClassMDAGNodeHashMap);
-        sb.append(", mdagDataArray=").append(Arrays.toString(mdagDataArray));
-        sb.append(", charTreeSet=").append(charTreeSet);
-        sb.append(", transitionCount=").append(transitionCount);
-        sb.append('}');
-        return sb.toString();
-    }
+//    @Override
+//    public String toString()
+//    {
+//        final StringBuilder sb = new StringBuilder("MDAG{");
+//        sb.append("sourceNode=").append(sourceNode);
+//        sb.append(", simplifiedSourceNode=").append(simplifiedSourceNode);
+//        sb.append(", equivalenceClassMDAGNodeHashMap=").append(equivalenceClassMDAGNodeHashMap);
+//        sb.append(", mdagDataArray=").append(Arrays.toString(mdagDataArray));
+//        sb.append(", charTreeSet=").append(charTreeSet);
+//        sb.append(", transitionCount=").append(transitionCount);
+//        sb.append('}');
+//        return sb.toString();
+//    }
 
     /**
      * 调试用
