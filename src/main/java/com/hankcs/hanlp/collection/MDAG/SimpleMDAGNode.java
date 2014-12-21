@@ -22,10 +22,8 @@
 package com.hankcs.hanlp.collection.MDAG;
 
 
-import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
-import com.hankcs.hanlp.utility.ByteUtil;
 
 import java.io.DataOutputStream;
 
@@ -141,13 +139,18 @@ public class SimpleMDAGNode implements ICacheAble
 
         //Loop through the SimpleMDAGNodes in this node's transition set, searching for
         //the one with a letter equal to that which labels the desired transition
-        for(int i = transitionSetBeginIndex; i < onePastTransitionSetEndIndex; i++)
+        for (int i = transitionSetBeginIndex; i < onePastTransitionSetEndIndex; i++)
         {
-            if(mdagDataArray[i].getLetter() == letter)
+            if (mdagDataArray[i].getLetter() == letter)
             {
                 targetNode = mdagDataArray[i];
                 break;
             }
+        }
+        int offset = binarySearch(mdagDataArray, letter);
+        if (offset >= 0)
+        {
+            targetNode = mdagDataArray[transitionSetBeginIndex + offset];
         }
         /////
 
@@ -170,8 +173,8 @@ public class SimpleMDAGNode implements ICacheAble
         int low = 0;
         while (low <= high)
         {
-            int mid = ((low + high) >>> 1) + transitionSetBeginIndex;
-            int cmp = mdagDataArray[mid].getLetter() - node;
+            int mid = ((low + high) >>> 1);
+            int cmp = mdagDataArray[mid + transitionSetBeginIndex].getLetter() - node;
 
             if (cmp < 0)
                 low = mid + 1;

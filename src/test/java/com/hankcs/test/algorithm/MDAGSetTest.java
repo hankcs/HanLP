@@ -105,6 +105,13 @@ public class MDAGSetTest extends TestCase
         assertEquals(equivalenceClassMDAGNodeHashMapBefore, equivalenceClassMDAGNodeHashMapAfter);
     }
 
+    public void testSimplifyAndContains() throws Exception
+    {
+        mdagSet.simplify();
+        testContains();
+        testNotContains();
+    }
+
     public void testSaveAndLoad() throws Exception
     {
         DataOutputStream out = new DataOutputStream(new FileOutputStream(DATA_TEST_OUT_BIN));
