@@ -14,7 +14,7 @@ package com.hankcs.test.seg;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import junit.framework.TestCase;
 
 import java.io.BufferedWriter;
@@ -64,6 +64,6 @@ public class TestPhrase extends TestCase
 
     public void testSeg() throws Exception
     {
-        System.out.println(StandTokenizer.segment(IOUtil.readTxt(FOLDER + "南西社区暑期学生活动简讯  2010年第1期.txt")));
+        System.out.println(StandardTokenizer.segment(IOUtil.readTxt(FOLDER + "南西社区暑期学生活动简讯  2010年第1期.txt")));
     }
 }

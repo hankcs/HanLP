@@ -17,7 +17,7 @@ import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
@@ -42,7 +42,7 @@ public class TestSegment extends TestCase
 
     public void testWrapper() throws Exception
     {
-        SegmentWrapper wrapper = new SegmentWrapper(new BufferedReader(new StringReader("中科院预测科学研究中心学术委员会\nhaha")), StandTokenizer.SEGMENT);
+        SegmentWrapper wrapper = new SegmentWrapper(new BufferedReader(new StringReader("中科院预测科学研究中心学术委员会\nhaha")), StandardTokenizer.SEGMENT);
         Term fullTerm;
         while ((fullTerm = wrapper.next()) != null)
         {

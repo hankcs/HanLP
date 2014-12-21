@@ -11,7 +11,7 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 /**
  * 演示动态设置预置分词器，这里的设置是全局的
@@ -22,8 +22,8 @@ public class DemoTokenizerConfig
     public static void main(String[] args)
     {
         String text = "泽田依子是上外日本文化经济学院的外教";
-        System.out.println(StandTokenizer.segment(text));
-        StandTokenizer.SEGMENT.enableAllNamedEntityRecognize(true);
-        System.out.println(StandTokenizer.segment(text));
+        System.out.println(StandardTokenizer.segment(text));
+        StandardTokenizer.SEGMENT.enableAllNamedEntityRecognize(true);
+        System.out.println(StandardTokenizer.segment(text));
     }
 }

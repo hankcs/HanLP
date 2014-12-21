@@ -11,6 +11,9 @@
  */
 package com.hankcs.hanlp.utility;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /**
  * 对数字和字节进行转换。<br>
  * 基础知识：<br>
@@ -264,5 +267,32 @@ public class ByteUtil
     {
         int l = bytesHighFirstToInt(bytes, start);
         return Float.intBitsToFloat(l);
+    }
+
+    /**
+     * 无符号整型输出
+     * @param out
+     * @param uint
+     * @throws IOException
+     */
+    public static void writeUnsignedInt(DataOutputStream out, int uint) throws IOException
+    {
+        out.writeByte((byte) ((uint >>> 8) & 0xFF));
+        out.writeByte((byte) ((uint >>> 0) & 0xFF));
+    }
+
+    public static int convertTwoCharToInt(char high, char low)
+    {
+        int result = high << 16;
+        result |= low;
+        return result;
+    }
+
+    public static char[] convertIntToTwoChar(int n)
+    {
+        char[] result = new char[2];
+        result[0] = (char) (n >>> 16);
+        result[1] = (char) (0x0000FFFF & n);
+        return result;
     }
 }

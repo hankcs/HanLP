@@ -96,7 +96,8 @@ public class CRFSegment extends Segment
         }
         if (speechTagging)
         {
-            ArrayList<Vertex> vertexList = new ArrayList<>(termList.size());
+            ArrayList<Vertex> vertexList = new ArrayList<>(termList.size() + 1);
+            vertexList.add(Vertex.B);
             for (Term term : termList)
             {
                 CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
@@ -109,7 +110,7 @@ public class CRFSegment extends Segment
             int i = 0;
             for (Term term : termList)
             {
-                if (term.nature != null) term.nature = vertexList.get(i).getNature();
+                if (term.nature != null) term.nature = vertexList.get(i + 1).getNature();
                 ++i;
             }
         }

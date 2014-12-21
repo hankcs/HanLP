@@ -21,7 +21,7 @@ import java.util.List;
  * 标准分词器
  * @author hankcs
  */
-public class StandTokenizer
+public class StandardTokenizer
 {
     /**
      * 预置分词器

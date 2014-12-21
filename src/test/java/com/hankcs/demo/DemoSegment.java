@@ -12,7 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class DemoSegment
 {
     public static void main(String[] args)
     {
-        List<Term> termList = StandTokenizer.segment("商品和服务");
+        List<Term> termList = StandardTokenizer.segment("商品和服务");
         System.out.println(termList);
     }
 }

@@ -11,51 +11,32 @@
  */
 package com.hankcs.hanlp.dictionary.stopword;
 
+import com.hankcs.hanlp.collection.MDAG.MDAGSet;
 import com.hankcs.hanlp.dictionary.common.CommonDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.Collection;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * @author hankcs
  */
-public class StopWordDictionary extends CommonDictionary<Boolean> implements Filter
+public class StopWordDictionary extends MDAGSet implements Filter
 {
-    @Override
-    protected Boolean[] onLoadValue(String path)
+    public StopWordDictionary(File file) throws IOException
     {
-        int size = 0;
-        try
-        {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-            String line;
-            while ((line = br.readLine()) != null)
-            {
-                ++size;
-            }
-            br.close();
-        }
-        catch (Exception e)
-        {
-            logger.warning("读取" + path + "失败" + e);
-        }
-        Boolean[] valueArray = new Boolean[size];
-        for (int i = 0; i < valueArray.length; ++i)
-        {
-            valueArray[i] = true;
-        }
-
-        return valueArray;
+        super(file);
     }
 
-    @Override
-    protected boolean onSaveValue(Boolean[] valueArray, String path)
+    public StopWordDictionary(Collection<String> strCollection)
     {
-        return true;
+        super(strCollection);
+    }
+
+    public StopWordDictionary()
+    {
     }
 
     @Override

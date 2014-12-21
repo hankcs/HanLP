@@ -24,7 +24,7 @@ import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.TextRankKeyword;
 import com.hankcs.hanlp.summary.TextRankSentence;
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -140,7 +140,7 @@ public class HanLP
         /**
          * CRF分词模型
          */
-        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
+        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.mini.txt";
         /**
          * CRF依存模型
          */
@@ -343,7 +343,7 @@ public class HanLP
      */
     public static List<Term> segment(String text)
     {
-        return StandTokenizer.segment(text);
+        return StandardTokenizer.segment(text);
     }
 
     /**

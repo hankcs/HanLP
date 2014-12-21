@@ -1,6 +1,7 @@
 package com.hankcs.test.algorithm;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.utility.ByteUtil;
 import junit.framework.TestCase;
 
 import java.io.DataOutputStream;
@@ -37,5 +38,15 @@ public class ByteUtilTest extends TestCase
         out.writeByte((byte) ((utflen >>> 0) & 0xFF));
         ByteArray byteArray = ByteArray.createByteArray(DATA_TEST_OUT_BIN);
         System.out.println(byteArray.nextUnsignedShort());
+    }
+
+    public void testConvertCharToInt() throws Exception
+    {
+        for (int i = 0; i < Integer.MAX_VALUE; ++i)
+        {
+            int n = i;
+            char[] twoChar = ByteUtil.convertIntToTwoChar(n);
+            assertEquals(n, ByteUtil.convertTwoCharToInt(twoChar[0], twoChar[1]));
+        }
     }
 }

@@ -116,7 +116,7 @@ Web项目的话可以放在如下位置：
 System.out.println(HanLP.segment("你好，欢迎使用HanLP汉语处理包！"));
 ```
 - 关于java.lang.OutOfMemoryError
-建议使用JVM option `-Xms1g -Xmx1g -Xmn512m`，如果内存有限，请使用小词典。**HanLP**默认使用大词典，同时提供小词典，只需修改配置文件：
+建议使用JVM option `-Xms512m -Xmx512m -Xmn256m`，如果内存有限，请使用小词典。**HanLP**默认使用大词典，同时提供小词典，只需修改配置文件：
 CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
 BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
 - 写给正在编译**HanLP**的开发者

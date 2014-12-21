@@ -12,7 +12,17 @@
 package com.hankcs.hanlp.dictionary.stopword;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.utility.Predefine;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 核心停用词词典
@@ -24,12 +34,26 @@ public class CoreStopWordDictionary
     static
     {
         dictionary = new StopWordDictionary();
-        dictionary.load(HanLP.Config.CoreStopWordDictionaryPath);
+        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT);
+        if (byteArray == null)
+        {
+            try
+            {
+                dictionary = new StopWordDictionary(new File(HanLP.Config.CoreStopWordDictionaryPath));
+                DataOutputStream out = new DataOutputStream(new FileOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT));
+                dictionary.save(out);
+                out.close();
+            }
+            catch (Exception e)
+            {
+                logger.log(Level.SEVERE, "载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败", e);
+            }
+        }
     }
 
     public static boolean contains(String key)
     {
-        return dictionary.get(key) != null;
+        return dictionary.contains(key);
     }
 
     /**

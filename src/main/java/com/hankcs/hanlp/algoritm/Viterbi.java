@@ -94,7 +94,7 @@ public class Viterbi
 
     /**
      * 特化版的求解HMM模型
-     * @param vertexList
+     * @param vertexList 包含Vertex.B节点的路径
      * @param transformMatrixDictionary
      */
     public static void compute(List<Vertex> vertexList, TransformMatrixDictionary<Nature>transformMatrixDictionary)

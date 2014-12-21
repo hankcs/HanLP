@@ -2,9 +2,8 @@ package com.hankcs.hanlp.summary;
 
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
-import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.*;
 
@@ -50,7 +49,7 @@ public class TextRankKeyword extends KeywordExtractor
 
     public List<String> getKeyword(String content)
     {
-        List<Term> termList = StandTokenizer.segment(content);
+        List<Term> termList = StandardTokenizer.segment(content);
         List<String> wordList = new ArrayList<String>();
         for (Term t : termList)
         {

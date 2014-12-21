@@ -19,7 +19,7 @@ import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.nr.TranslatedPersonDictionary;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.StandTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import junit.framework.TestCase;
 
 import java.util.LinkedList;
@@ -86,7 +86,7 @@ public class TestMakeTranslateName extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        System.out.println(StandTokenizer.segment("齐格林斯基"));
+        System.out.println(StandardTokenizer.segment("齐格林斯基"));
     }
 
     public void testNonRec() throws Exception
