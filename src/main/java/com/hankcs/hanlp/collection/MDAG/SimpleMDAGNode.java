@@ -134,19 +134,7 @@ public class SimpleMDAGNode implements ICacheAble
      */
     public SimpleMDAGNode transition(SimpleMDAGNode[] mdagDataArray, char letter)
     {
-        int onePastTransitionSetEndIndex = transitionSetBeginIndex + transitionSetSize;
         SimpleMDAGNode targetNode = null;
-
-        //Loop through the SimpleMDAGNodes in this node's transition set, searching for
-        //the one with a letter equal to that which labels the desired transition
-        for (int i = transitionSetBeginIndex; i < onePastTransitionSetEndIndex; i++)
-        {
-            if (mdagDataArray[i].getLetter() == letter)
-            {
-                targetNode = mdagDataArray[i];
-                break;
-            }
-        }
         int offset = binarySearch(mdagDataArray, letter);
         if (offset >= 0)
         {

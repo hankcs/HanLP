@@ -62,6 +62,7 @@ public class MDAGMapTest extends TestCase
         {
             binTrie.put(key, key.length());
         }
+        mdagMap.simplify();
         for (String key : validKeySet)
         {
             assertEquals(binTrie.commonPrefixSearchWithValue(key).size(), mdagMap.commonPrefixSearchWithValue(key).size());
