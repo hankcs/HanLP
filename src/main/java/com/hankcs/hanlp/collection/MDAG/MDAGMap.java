@@ -148,7 +148,8 @@ public class MDAGMap<V> extends AbstractMap<String, V>
             char high = mdagDataArray[transitionSetBeginIndex].getLetter();
             targetNode = targetNode.transition(mdagDataArray, high);
             assert targetNode.getOutgoingTransitionSetSize() == 1 : "不是单链！";
-            char low = targetNode.getLetter();
+            transitionSetBeginIndex = targetNode.getTransitionSetBeginIndex();
+            char low = mdagDataArray[transitionSetBeginIndex].getLetter();
             return ByteUtil.convertTwoCharToInt(high, low);
         }
 
