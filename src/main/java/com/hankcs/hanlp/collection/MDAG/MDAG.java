@@ -256,6 +256,7 @@ public class MDAG implements ICacheAble
         else
         {
             unSimplify();
+            addStrings(strCollection);
         }
     }
 
@@ -275,6 +276,7 @@ public class MDAG implements ICacheAble
         else
         {
             unSimplify();
+            addString(str);
         }
     }
 

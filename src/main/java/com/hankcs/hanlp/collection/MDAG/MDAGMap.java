@@ -106,6 +106,10 @@ public class MDAGMap<V> extends AbstractMap<String, V>
         return commonPrefixSearchWithValue(key.toCharArray(), 0);
     }
 
+    /**
+     * 进一步降低内存，提高查询速度<br>
+     *     副作用是下次插入速度会变慢
+     */
     public void simplify()
     {
         mdag.simplify();
