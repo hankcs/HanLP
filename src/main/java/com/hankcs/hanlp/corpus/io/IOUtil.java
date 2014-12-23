@@ -271,7 +271,7 @@ public class IOUtil
         {
             try
             {
-                bw = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+                bw = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
                 line = bw.readLine();
             }
             catch (FileNotFoundException e)

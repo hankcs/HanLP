@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg;
+package com.hankcs.hanlp.seg.Other;
 
 
 import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 最长分词器
+ * 最长分词玩具
  * @author hankcs
  */
-public class LongestSegment<V>
+public class LongestBinSegmentToy<V>
 {
     private BinTrie<V> trie;
     /**
@@ -36,7 +36,7 @@ public class LongestSegment<V>
      */
     private int offset;
 
-    public LongestSegment(BinTrie<V> trie)
+    public LongestBinSegmentToy(BinTrie<V> trie)
     {
         this.trie = trie;
     }

@@ -12,11 +12,9 @@
 package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.algoritm.Viterbi;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.dictionary.BaseSearcher;
-import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
-import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.*;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.Path.*;
 import com.hankcs.hanlp.seg.common.Graph;
@@ -286,95 +284,6 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 原子分词
-     * @param charArray
-     * @param start 从start开始（包含）
-     * @param end 到end结束（不包含end）
-     * @return
-     */
-    private static List<AtomNode> AtomSegment(char[] charArray, int start, int end)
-    {
-        if (end < start)
-        {
-            throw new RuntimeException("start=" + start + " < end=" + end);
-        }
-        List<AtomNode> atomSegment = new ArrayList<AtomNode>();
-        int pCur = start, nCurType, nNextType;
-        StringBuilder sb = new StringBuilder();
-        char c;
-
-
-        //==============================================================================================
-        // by zhenyulu:
-        //
-        // TODO: 使用一系列正则表达式将句子中的完整成分（百分比、日期、电子邮件、URL等）预先提取出来
-        //==============================================================================================
-
-        int[] charTypeArray = new int[end - start];
-
-        // 生成对应单个汉字的字符类型数组
-        for (int i = 0; i < charTypeArray.length; ++i)
-        {
-            c = charArray[i + start];
-            charTypeArray[i] = CharType.get(c);
-
-            if (c == '.' && i  + start < (charArray.length - 1) && CharType.get(charArray[i + start + 1]) == CharType.CT_NUM)
-                charTypeArray[i] = CharType.CT_NUM;
-            else if (c == '.' && i  + start < (charArray.length - 1) && charArray[i  + start + 1] >= '0' && charArray[i  + start + 1] <= '9')
-                charTypeArray[i] = CharType.CT_SINGLE;
-            else if (charTypeArray[i] == CharType.CT_LETTER)
-                charTypeArray[i] = CharType.CT_SINGLE;
-        }
-
-        // 根据字符类型数组中的内容完成原子切割
-        while (pCur < end)
-        {
-            nCurType = charTypeArray[pCur - start];
-
-            if (nCurType == CharType.CT_CHINESE || nCurType == CharType.CT_INDEX ||
-                    nCurType == CharType.CT_DELIMITER || nCurType == CharType.CT_OTHER)
-            {
-                String single = String.valueOf(charArray[pCur]);
-                if (single.length() != 0)
-                    atomSegment.add(new AtomNode(single, nCurType));
-                pCur++;
-            }
-            //如果是字符、数字或者后面跟随了数字的小数点“.”则一直取下去。
-            else if (pCur < end - 1 && ((nCurType == CharType.CT_SINGLE) || nCurType == CharType.CT_NUM))
-            {
-                sb.delete(0, sb.length());
-                sb.append(charArray[pCur]);
-
-                boolean reachEnd = true;
-                while (pCur < end - 1)
-                {
-                    nNextType = charTypeArray[++pCur - start];
-
-                    if (nNextType == nCurType)
-                        sb.append(charArray[pCur]);
-                    else
-                    {
-                        reachEnd = false;
-                        break;
-                    }
-                }
-                atomSegment.add(new AtomNode(sb.toString(), nCurType));
-                if (reachEnd)
-                    pCur++;
-            }
-            // 对于所有其它情况
-            else
-            {
-                atomSegment.add(new AtomNode(charArray[pCur], nCurType));
-                pCur++;
-            }
-        }
-
-//        logger.trace("原子分词:" + atomSegment);
-        return atomSegment;
-    }
-
-    /**
-     * 原子分词
      * @deprecated 应该使用字符数组的版本
      * @param sSentence
      * @param start
@@ -512,31 +421,21 @@ public abstract class HiddenMarkovModelSegment extends Segment
      * @param sSentence 句子
      * @return 词网
      */
-    protected WordNet GenerateWordNet(String sSentence, WordNet wordNetStorage)
+    protected WordNet GenerateWordNet(final String sSentence, final WordNet wordNetStorage)
     {
-        char[] charArray = wordNetStorage.charArray;
-        BaseSearcher searcher = CoreDictionary.getSearcher(charArray);
+        final char[] charArray = wordNetStorage.charArray;
+        BaseSearcher searcher;
         Map.Entry<String, CoreDictionary.Attribute> entry;
         int p = 0;  // 当前处理到什么位置
         int offset;
-        while ((entry = searcher.next()) != null)
+        CoreDictionaryACDAT.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
         {
-            offset = searcher.getOffset();
-            // 补足没查到的词
-            while (p < offset)
+            @Override
+            public void hit(int begin, int end, CoreDictionary.Attribute value)
             {
-                wordNetStorage.add(p + 1, AtomSegment(wordNetStorage.charArray, p, offset));
-                ++p;
+                wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
             }
-            wordNetStorage.add(offset + 1, new Vertex(entry.getKey(), entry.getValue()));
-            p = offset + 1;
-        }
-        // 补足没查到的词
-        while (p < charArray.length)
-        {
-            wordNetStorage.add(p + 1, AtomSegment(wordNetStorage.charArray, p, wordNetStorage.charArray.length));
-            ++p;
-        }
+        });
         // 用户词典查询
         if (config.useCustomDictionary)
         {
@@ -546,6 +445,21 @@ public abstract class HiddenMarkovModelSegment extends Segment
                 offset = searcher.getOffset();
                 wordNetStorage.push(offset + 1, new Vertex(entry.getKey(), entry.getValue()));
             }
+        }
+        List<Vertex>[] vertexes = wordNetStorage.getVertexes();
+        for (int i = 1; i < vertexes.length;)
+        {
+            if (vertexes[i].isEmpty())
+            {
+                int j = i + 1;
+                for (; j < vertexes.length - 1; ++j)
+                {
+                    if (!vertexes[j].isEmpty()) break;
+                }
+                wordNetStorage.add(i, AtomSegment(charArray, i - 1, j - 1));
+                i = j;
+            }
+            else ++i;
         }
         return wordNetStorage;
     }

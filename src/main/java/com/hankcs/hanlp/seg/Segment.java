@@ -11,9 +11,12 @@
  */
 package com.hankcs.hanlp.seg;
 
+import com.hankcs.hanlp.dictionary.other.CharType;
+import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.SentencesUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,6 +38,91 @@ public abstract class Segment
     public Segment()
     {
         config = new Config();
+    }
+
+    /**
+     * 原子分词
+     * @param charArray
+     * @param start 从start开始（包含）
+     * @param end 到end结束（不包含end）
+     * @return
+     */
+    protected static List<AtomNode> AtomSegment(char[] charArray, int start, int end)
+    {
+        List<AtomNode> atomSegment = new ArrayList<AtomNode>();
+        int pCur = start, nCurType, nNextType;
+        StringBuilder sb = new StringBuilder();
+        char c;
+
+
+        //==============================================================================================
+        // by zhenyulu:
+        //
+        // TODO: 使用一系列正则表达式将句子中的完整成分（百分比、日期、电子邮件、URL等）预先提取出来
+        //==============================================================================================
+
+        int[] charTypeArray = new int[end - start];
+
+        // 生成对应单个汉字的字符类型数组
+        for (int i = 0; i < charTypeArray.length; ++i)
+        {
+            c = charArray[i + start];
+            charTypeArray[i] = CharType.get(c);
+
+            if (c == '.' && i  + start < (charArray.length - 1) && CharType.get(charArray[i + start + 1]) == CharType.CT_NUM)
+                charTypeArray[i] = CharType.CT_NUM;
+            else if (c == '.' && i  + start < (charArray.length - 1) && charArray[i  + start + 1] >= '0' && charArray[i  + start + 1] <= '9')
+                charTypeArray[i] = CharType.CT_SINGLE;
+            else if (charTypeArray[i] == CharType.CT_LETTER)
+                charTypeArray[i] = CharType.CT_SINGLE;
+        }
+
+        // 根据字符类型数组中的内容完成原子切割
+        while (pCur < end)
+        {
+            nCurType = charTypeArray[pCur - start];
+
+            if (nCurType == CharType.CT_CHINESE || nCurType == CharType.CT_INDEX ||
+                    nCurType == CharType.CT_DELIMITER || nCurType == CharType.CT_OTHER)
+            {
+                String single = String.valueOf(charArray[pCur]);
+                if (single.length() != 0)
+                    atomSegment.add(new AtomNode(single, nCurType));
+                pCur++;
+            }
+            //如果是字符、数字或者后面跟随了数字的小数点“.”则一直取下去。
+            else if (pCur < end - 1 && ((nCurType == CharType.CT_SINGLE) || nCurType == CharType.CT_NUM))
+            {
+                sb.delete(0, sb.length());
+                sb.append(charArray[pCur]);
+
+                boolean reachEnd = true;
+                while (pCur < end - 1)
+                {
+                    nNextType = charTypeArray[++pCur - start];
+
+                    if (nNextType == nCurType)
+                        sb.append(charArray[pCur]);
+                    else
+                    {
+                        reachEnd = false;
+                        break;
+                    }
+                }
+                atomSegment.add(new AtomNode(sb.toString(), nCurType));
+                if (reachEnd)
+                    pCur++;
+            }
+            // 对于所有其它情况
+            else
+            {
+                atomSegment.add(new AtomNode(charArray[pCur], nCurType));
+                pCur++;
+            }
+        }
+
+//        logger.trace("原子分词:" + atomSegment);
+        return atomSegment;
     }
 
     /**

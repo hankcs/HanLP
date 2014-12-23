@@ -1,4 +1,4 @@
-package com.hankcs.hanlp.algoritm.ahocorasick.trie;
+package com.hankcs.hanlp.collection.AhoCorasick;
 
 import java.util.*;
 
@@ -35,11 +35,16 @@ public class State
     /**
      * 只要这个状态可达，则记录模式串
      */
-    private Set<String> emits = null;
+    private Set<Integer> emits = null;
     /**
      * goto 表，也称转移函数。根据字符串的下一个字符转移到下一个状态
      */
     private Map<Character, State> success = new TreeMap<Character, State>();
+
+    /**
+     * 在双数组中的对应下标
+     */
+    private int index;
 
     /**
      * 构造深度为0的节点
@@ -71,22 +76,33 @@ public class State
      * 添加一个匹配到的模式串（这个状态对应着这个模式串)
      * @param keyword
      */
-    public void addEmit(String keyword)
+    public void addEmit(int keyword)
     {
         if (this.emits == null)
         {
-            this.emits = new TreeSet<String>();
+            this.emits = new TreeSet<Integer>(Collections.reverseOrder());
         }
         this.emits.add(keyword);
+    }
+
+    /**
+     * 获取最大的值
+     * @return
+     */
+    public Integer getLargestValueId()
+    {
+        if (emits == null || emits.size() == 0) return null;
+
+        return emits.iterator().next();
     }
 
     /**
      * 添加一些匹配到的模式串
      * @param emits
      */
-    public void addEmit(Collection<String> emits)
+    public void addEmit(Collection<Integer> emits)
     {
-        for (String emit : emits)
+        for (int emit : emits)
         {
             addEmit(emit);
         }
@@ -96,9 +112,18 @@ public class State
      * 获取这个节点代表的模式串（们）
      * @return
      */
-    public Collection<String> emit()
+    public Collection<Integer> emit()
     {
-        return this.emits == null ? Collections.<String>emptyList() : this.emits;
+        return this.emits == null ? Collections.<Integer>emptyList() : this.emits;
+    }
+
+    /**
+     * 是否是终止状态
+     * @return
+     */
+    public boolean isAcceptable()
+    {
+        return this.depth > 0 && this.emits != null;
     }
 
     /**
@@ -114,9 +139,10 @@ public class State
      * 设置failure状态
      * @param failState
      */
-    public void setFailure(State failState)
+    public void setFailure(State failState, int fail[])
     {
         this.failure = failState;
+        fail[index] = failState.index;
     }
 
     /**
@@ -181,10 +207,31 @@ public class State
     {
         final StringBuilder sb = new StringBuilder("State{");
         sb.append("depth=").append(depth);
+        sb.append(", ID=").append(index);
         sb.append(", emits=").append(emits);
         sb.append(", success=").append(success.keySet());
+        sb.append(", failureID=").append(failure == null ? "-1" : failure.index);
         sb.append(", failure=").append(failure);
         sb.append('}');
         return sb.toString();
+    }
+
+    /**
+     * 获取goto表
+     * @return
+     */
+    public Map<Character, State> getSuccess()
+    {
+        return success;
+    }
+
+    public int getIndex()
+    {
+        return index;
+    }
+
+    public void setIndex(int index)
+    {
+        this.index = index;
     }
 }

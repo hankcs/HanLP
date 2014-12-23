@@ -259,6 +259,33 @@ public class Trie
         }
     }
 
+    public void dfs(IWalker walker)
+    {
+        checkForConstructedFailureStates();
+        dfs(rootState, "", walker);
+    }
+
+    private void dfs(State currentState, String path, IWalker walker)
+    {
+        walker.meet(path, currentState);
+        for (Character transition : currentState.getTransitions())
+        {
+            State targetState = currentState.nextState(transition);
+            dfs(targetState, path + transition, walker);
+        }
+    }
+
+
+    public static interface IWalker
+    {
+        /**
+         * 遇到了一个节点
+         * @param path
+         * @param state
+         */
+        void meet(String path, State state);
+    }
+
     /**
      * 保存匹配结果
      *

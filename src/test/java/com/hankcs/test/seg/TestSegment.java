@@ -12,6 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.seg.Other.AhoCorasickSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -31,7 +32,6 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         DijkstraSegment segment = new DijkstraSegment();
-        HanLP.Config.enableDebug(true);
         System.out.println(segment.seg("我喜欢陈膺奥"));
     }
 
@@ -70,5 +70,20 @@ public class TestSegment extends TestCase
     {
         DijkstraSegment segment = new DijkstraSegment();
         System.out.println(segment.seg("你在一汽马自达汽车销售有限公司上班吧"));
+    }
+
+    public void testNT() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        DijkstraSegment segment = new DijkstraSegment();
+        segment.enableOrganizationRecognize(true);
+        System.out.println(segment.seg("我在上海林原科技有限公司兼职工作"));
+    }
+
+    public void testACSegment() throws Exception
+    {
+        Segment segment = new AhoCorasickSegment();
+        segment.enablePartOfSpeechTagging(true);
+        System.out.println(segment.seg("江西鄱阳湖干枯，中国最大淡水湖变成大草原"));
     }
 }

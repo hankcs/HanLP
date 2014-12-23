@@ -52,17 +52,20 @@ public class DoubleArrayTrie<V> implements Serializable
 
     ;
 
-    private int check[];
-    private int base[];
+    protected int check[];
+    protected int base[];
 
     private boolean used[];
-    private int size;
+    /**
+     * base 和 check 的大小
+     */
+    protected int size;
     private int allocSize;
     private List<String> key;
     private int keySize;
     private int length[];
     private int value[];
-    private V v[];
+    protected V[] v;
     private int progress;
     private int nextCheckPos;
     // boolean no_delete_;
@@ -87,7 +90,7 @@ public class DoubleArrayTrie<V> implements Serializable
         {
             System.arraycopy(base, 0, base2, 0, allocSize);
             System.arraycopy(check, 0, check2, 0, allocSize);
-            System.arraycopy(used2, 0, used2, 0, allocSize);
+            System.arraycopy(used, 0, used2, 0, allocSize);
         }
 
         base = base2;
@@ -329,6 +332,7 @@ public class DoubleArrayTrie<V> implements Serializable
 
     /**
      * 构建DAT
+     *
      * @param entrySet 注意此entrySet一定要是字典序的！否则会失败
      * @return
      */
@@ -358,6 +362,15 @@ public class DoubleArrayTrie<V> implements Serializable
         return build(entrySet);
     }
 
+    /**
+     * 唯一的构建方法
+     *
+     * @param _key     值set，必须字典序
+     * @param _length  对应每个key的长度，留空动态获取
+     * @param _value   每个key对应的值，留空使用key的下标作为值
+     * @param _keySize key的长度，应该设为_key.size
+     * @return 是否出错
+     */
     public int build(List<String> _key, int _length[], int _value[],
                      int _keySize)
     {
@@ -444,6 +457,7 @@ public class DoubleArrayTrie<V> implements Serializable
 
     /**
      * 将base和check保存下来
+     *
      * @param out
      * @return
      */
@@ -511,6 +525,7 @@ public class DoubleArrayTrie<V> implements Serializable
 
     /**
      * 载入双数组，但是不提供值，此时本trie相当于一个set
+     *
      * @param path
      * @return
      */
@@ -632,8 +647,8 @@ public class DoubleArrayTrie<V> implements Serializable
     /**
      * 精确匹配
      *
-     * @param key
-     * @return
+     * @param key 键
+     * @return 值
      */
     public int exactMatchSearch(String key)
     {
@@ -672,6 +687,15 @@ public class DoubleArrayTrie<V> implements Serializable
         return result;
     }
 
+    /**
+     * 精确查询
+     *
+     * @param keyChars 键的char数组
+     * @param pos      char数组的起始位置
+     * @param len      键的长度
+     * @param nodePos  开始查找的位置（本参数允许从非根节点查询）
+     * @return 查到的节点代表的value ID，负数表示不存在
+     */
     public int exactMatchSearch(char[] keyChars, int pos, int len, int nodePos)
     {
         int result = -1;
@@ -951,7 +975,7 @@ public class DoubleArrayTrie<V> implements Serializable
         // I hate this but just have to
         int size = v.length;
         if (a.length < size)
-            a = (V[])java.lang.reflect.Array.newInstance(
+            a = (V[]) java.lang.reflect.Array.newInstance(
                     a.getClass().getComponentType(), size);
         System.arraycopy(v, 0, a, 0, size);
         return a;
@@ -961,6 +985,63 @@ public class DoubleArrayTrie<V> implements Serializable
     {
         return exactMatchSearch(key) >= 0;
     }
+
+    /**
+     * 沿着路径转移状态
+     *
+     * @param path
+     * @return
+     */
+    protected int transition(String path)
+    {
+        return transition(path.toCharArray());
+    }
+
+    /**
+     * 沿着节点转移状态
+     *
+     * @param path
+     * @return
+     */
+    protected int transition(char[] path)
+    {
+        int b = base[0];
+        int p;
+
+        for (int i = 0; i < path.length; ++i)
+        {
+            p = b + (int) (path[i]) + 1;
+            if (b == check[p])
+                b = base[p];
+            else
+                return -1;
+        }
+
+        p = b;
+        return p;
+    }
+
+    /**
+     * 转移状态
+     * @param current
+     * @param c
+     * @return
+     */
+    protected int transition(int current, char c)
+    {
+        int b = base[current];
+        int p;
+
+        p = b + c + 1;
+        if (b == check[p])
+            b = base[p];
+        else
+            return -1;
+
+        p = b;
+        return p;
+    }
+
 
     /**
      * 打印统计信息

@@ -11,6 +11,11 @@
  */
 package com.hankcs.hanlp.seg.NShort.Path;
 
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.utility.Predefine;
+
+import java.util.regex.Pattern;
+
 /**
  * 原子分词节点
  * @author hankcs
@@ -30,6 +35,46 @@ public class AtomNode
     {
         this.sWord = String.valueOf(c);
         this.nPOS = nPOS;
+    }
+
+    /**
+     * 原子的词性
+     * @return
+     */
+    public Nature getNature()
+    {
+        Nature nature = Nature.nz;
+        switch (nPOS)
+        {
+            case Predefine.CT_CHINESE:
+                break;
+            case Predefine.CT_INDEX:
+            case Predefine.CT_NUM:
+                nature = Nature.m;
+                sWord = "未##数";
+                break;
+            case Predefine.CT_DELIMITER:
+                nature = Nature.w;
+                break;
+            case Predefine.CT_LETTER:
+                nature = Nature.nx;
+                sWord = "未##串";
+                break;
+            case Predefine.CT_SINGLE://12021-2129-3121
+                if (Pattern.compile("^(-?\\d+)(\\.\\d+)?$").matcher(sWord).matches())//匹配浮点数
+                {
+                    nature = Nature.m;
+                    sWord = "未##数";
+                } else
+                {
+                    nature = Nature.nx;
+                    sWord = "未##串";
+                }
+                break;
+            default:
+                break;
+        }
+        return nature;
     }
 
     @Override

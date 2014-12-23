@@ -286,7 +286,7 @@ public class WordNet
      *
      * @return Vertex[] 按行优先列次之的顺序构造的顶点数组
      */
-    private Vertex[] getVertexes()
+    private Vertex[] getVertexesLineFirst()
     {
         Vertex[] vertexes = new Vertex[size];
         int i = 0;
@@ -308,7 +308,7 @@ public class WordNet
      */
     public Graph toGraph()
     {
-        Graph graph = new Graph(getVertexes());
+        Graph graph = new Graph(getVertexesLineFirst());
 
         for (int row = 0; row < vertexes.length - 1; ++row)
         {
@@ -385,5 +385,14 @@ public class WordNet
             vertexList.clear();
         }
         size = 0;
+    }
+
+    /**
+     * 获取内部顶点表格，谨慎操作！
+     * @return
+     */
+    public List<Vertex>[] getVertexes()
+    {
+        return vertexes;
     }
 }
