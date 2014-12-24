@@ -48,13 +48,13 @@ public class CRFSegment extends Segment
         return this;
     }
     @Override
-    protected List<Term> segSentence(String sentence)
+    protected List<Term> segSentence(char[] sentence)
     {
-        String v[][] = new String[sentence.length()][2];
-        int length = sentence.length();
+        String v[][] = new String[sentence.length][2];
+        int length = sentence.length;
         for (int i = 0; i < length; ++i)
         {
-            v[i][0] = String.valueOf(sentence.charAt(i));
+            v[i][0] = String.valueOf(sentence[i]);
         }
         Table table = new Table();
         table.v = v;

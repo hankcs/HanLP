@@ -69,7 +69,6 @@ public class Vertex
 
     public Vertex(String word, String realWord, CoreDictionary.Attribute attribute, int wordID)
     {
-        assert word.length() > 0 : "构造空白节点会导致死循环！";
         if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.n, 1);   // 安全起见
         if (attribute.nature.length == 1)
         {
@@ -132,6 +131,8 @@ public class Vertex
                 break;
             }
         }
+        if (word == null) word = realWord;
+        assert word.length() > 0 : "构造空白节点会导致死循环！";
         this.word = word;
         this.realWord = realWord;
         this.attribute = attribute;
@@ -140,17 +141,17 @@ public class Vertex
 
     /**
      * 真实词与编译词相同时候的构造函数
-     * @param word
+     * @param realWord
      * @param attribute
      */
-    public Vertex(String word, CoreDictionary.Attribute attribute)
+    public Vertex(String realWord, CoreDictionary.Attribute attribute)
     {
-        this(word, word, attribute);
+        this(null, realWord, attribute);
     }
 
-    public Vertex(String word, CoreDictionary.Attribute attribute, int wordID)
+    public Vertex(String realWord, CoreDictionary.Attribute attribute, int wordID)
     {
-        this(word, word, attribute, wordID);
+        this(null, realWord, attribute, wordID);
     }
 
     /**
@@ -164,16 +165,16 @@ public class Vertex
 
     /**
      * 自动构造一个合理的顶点
-     * @param word
+     * @param realWord
      */
-    public Vertex(String word)
+    public Vertex(String realWord)
     {
-        this(word, word, CoreDictionary.get(word));
+        this(null, realWord, CoreDictionary.get(realWord));
     }
 
-    public Vertex(char word, CoreDictionary.Attribute attribute)
+    public Vertex(char realWord, CoreDictionary.Attribute attribute)
     {
-        this(String.valueOf(word), attribute);
+        this(String.valueOf(realWord), attribute);
     }
 
     /**

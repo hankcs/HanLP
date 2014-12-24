@@ -49,7 +49,7 @@ public class NShortSegment extends HiddenMarkovModelSegment
     }
 
     @Override
-    public List<Term> segSentence(String sentence)
+    public List<Term> segSentence(char[] sentence)
     {
         WordNet wordNetOptimum = new WordNet(sentence);
         WordNet wordNetAll = new WordNet(sentence);
@@ -133,7 +133,7 @@ public class NShortSegment extends HiddenMarkovModelSegment
      * @param wordNetAll
      * @return 一系列粗分结果
      */
-    public List<List<Vertex>> BiSegment(String sSentence, int nKind, WordNet wordNetOptimum, WordNet wordNetAll)
+    public List<List<Vertex>> BiSegment(char[] sSentence, int nKind, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<List<Vertex>> coarseResult = new LinkedList<List<Vertex>>();
         ////////////////生成词网////////////////////
@@ -175,7 +175,7 @@ public class NShortSegment extends HiddenMarkovModelSegment
      * @param sSentence
      * @return
      */
-    public List<Term> spiltSimply(String sSentence)
+    public List<Term> spiltSimply(char[] sSentence)
     {
         ////////////////生成词网////////////////////
         WordNet wordNet = GenerateWordNet(sSentence, new WordNet(sSentence));

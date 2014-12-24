@@ -30,9 +30,9 @@ import java.util.*;
 public class DijkstraSegment extends HiddenMarkovModelSegment
 {
     @Override
-    public List<Term> segSentence(String sentence)
+    public List<Term> segSentence(char[] sentence)
     {
-        WordNet wordNetOptimum = new WordNet(sentence.toCharArray());
+        WordNet wordNetOptimum = new WordNet(sentence);
         WordNet wordNetAll = new WordNet(wordNetOptimum.charArray);
         ////////////////生成词网////////////////////
         GenerateWordNet(null, wordNetAll);

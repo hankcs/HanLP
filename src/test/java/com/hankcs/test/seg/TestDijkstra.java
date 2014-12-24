@@ -27,7 +27,7 @@ public class TestDijkstra extends TestCase
     {
         String text = "商品与服务";
         DijkstraSegment segment = new DijkstraSegment();
-        List<Term> resultList = segment.segSentence(text);
+        List<Term> resultList = segment.seg(text);
         System.out.println(resultList);
     }
 

@@ -14,6 +14,7 @@ package com.hankcs.hanlp.seg;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.SentencesUtil;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public abstract class Segment
      * @param charArray
      * @param start 从start开始（包含）
      * @param end 到end结束（不包含end）
-     * @return
+     * @return 一个列表，代表从start到from的所有字构成的原子节点
      */
     protected static List<AtomNode> AtomSegment(char[] charArray, int start, int end)
     {
@@ -121,8 +122,21 @@ public abstract class Segment
             }
         }
 
-//        logger.trace("原子分词:" + atomSegment);
         return atomSegment;
+    }
+
+    /**
+     * 简易原子分词，将所有字放到一起作为一个词
+     * @param charArray
+     * @param start
+     * @param end
+     * @return
+     */
+    protected static List<AtomNode> simpleAtomSegment(char[] charArray, int start, int end)
+    {
+        List<AtomNode> atomNodeList = new LinkedList<>();
+        atomNodeList.add(new AtomNode(new String(charArray, start, end - start), Predefine.CT_LETTER));
+        return atomNodeList;
     }
 
     /**
@@ -133,7 +147,7 @@ public abstract class Segment
      */
     public List<Term> seg(String text)
     {
-        return segSentence(text);
+        return segSentence(text.toCharArray());
     }
 
     /**
@@ -148,7 +162,7 @@ public abstract class Segment
         {
             for (String sentence : SentencesUtil.toSentenceList(text))
             {
-                resultList.add(segSentence(sentence));
+                resultList.add(segSentence(sentence.toCharArray()));
             }
         }
 
@@ -161,7 +175,7 @@ public abstract class Segment
      * @param sentence 待分词句子
      * @return 单词列表
      */
-    protected abstract List<Term> segSentence(String sentence);
+    protected abstract List<Term> segSentence(char[] sentence);
 
     /**
      * 设为索引模式

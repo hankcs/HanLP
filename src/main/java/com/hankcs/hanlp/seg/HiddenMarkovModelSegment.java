@@ -421,7 +421,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
      * @param sSentence 句子
      * @return 词网
      */
-    protected WordNet GenerateWordNet(final String sSentence, final WordNet wordNetStorage)
+    protected WordNet GenerateWordNet(final char[] sSentence, final WordNet wordNetStorage)
     {
         final char[] charArray = wordNetStorage.charArray;
         BaseSearcher searcher;

@@ -30,9 +30,9 @@ import java.util.List;
 public class AhoCorasickSegment extends Segment
 {
     @Override
-    protected List<Term> segSentence(String sentence)
+    protected List<Term> segSentence(char[] sentence)
     {
-        char[] charArray = sentence.toCharArray();
+        char[] charArray = sentence;
         final int[] wordNet = new int[charArray.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
