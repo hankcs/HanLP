@@ -202,26 +202,48 @@ for (Term term : termList)
 ### 7. 用户自定义词典
 
 ```java
-// 动态增加
-CustomDictionary.add("孔雀女");
-// 强行插入
-CustomDictionary.insert("码农", "nz 1024");
-// 删除词语（注释掉试试）
-CustomDictionary.remove("码农");
-System.out.println(CustomDictionary.add("裸婚", "v 2 nz 1"));
-System.out.println(CustomDictionary.get("裸婚"));
-
-String text = "码农和孔雀女裸婚了";
-// trie树分词
-BaseSearcher searcher = CustomDictionary.getSearcher(text);
-Map.Entry entry;
-while ((entry = searcher.next()) != null)
+/**
+ * 演示用户词典的动态增删
+ *
+ * @author hankcs
+ */
+public class DemoCustomDictionary
 {
-    System.out.println(entry);
-}
+    public static void main(String[] args)
+    {
+        // 动态增加
+        CustomDictionary.add("孔雀女");
+        // 强行插入
+        CustomDictionary.insert("码农", "nz 1024");
+        // 删除词语（注释掉试试）
+//        CustomDictionary.remove("码农");
+        System.out.println(CustomDictionary.add("裸婚", "v 2 nz 1"));
+        System.out.println(CustomDictionary.get("裸婚"));
 
-// 标准分词
-System.out.println(HanLP.segment(text));
+        String text = "码农和孔雀女裸婚了";  // 怎么可能噗哈哈！
+
+        // AhoCorasickDoubleArrayTrie自动机分词
+        final char[] charArray = text.toCharArray();
+        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        {
+            @Override
+            public void hit(int begin, int end, CoreDictionary.Attribute value)
+            {
+                System.out.printf("[%d:%d]=%s %s\n", begin, end, new String(charArray, begin, end - begin), value);
+            }
+        });
+        // trie树分词
+        BaseSearcher searcher = CustomDictionary.getSearcher(text);
+        Map.Entry entry;
+        while ((entry = searcher.next()) != null)
+        {
+            System.out.println(entry);
+        }
+
+        // 标准分词
+        System.out.println(HanLP.segment(text));
+    }
+}
 ```
 - 说明
   * `CustomDictionary`是一份全局的用户自定义词典，可以随时增删，影响全部分词器。
@@ -232,8 +254,10 @@ System.out.println(HanLP.segment(text));
 - 词典格式
   * 每一行代表一个单词，格式遵从`[单词] [词性A] [A的频次] [词性B] [B的频次] ...` 如果不填词性则表示采用词典的默认词性。
   * 词典的默认词性默认是名词n，可以通过配置文件修改：`全国地名大全.txt ns;`如果词典路径后面空格紧接着词性，则该词典默认是该词性。
+  * 关于用户词典的更多信息请参考**词典说明**一章。
 - 算法详解
   * [《Trie树分词》](http://www.hankcs.com/program/java/tire-tree-participle.html)
+  * [《Aho Corasick自动机结合DoubleArrayTrie极速多模式匹配》](http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html)
 
 ### 8. 中国人名识别
 
