@@ -27,7 +27,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CoreBiGramTableDictionary
 {
-    static int[][][] table;
+    static int[][] table;
     public final static String path = HanLP.Config.BiGramDictionaryPath;
     final static String datPath = HanLP.Config.BiGramDictionaryPath + ".table" + Predefine.BIN_EXT;
 
@@ -49,7 +49,7 @@ public class CoreBiGramTableDictionary
     static boolean load(String path)
     {
         if (loadDat(datPath)) return true;
-        table = new int[CoreDictionary.trie.size()][][];
+        table = new int[CoreDictionary.trie.size()][];
         BufferedReader br;
         try
         {
@@ -78,19 +78,20 @@ public class CoreBiGramTableDictionary
                 int freq = Integer.parseInt(params[1]);
                 if (table[idA] == null)
                 {
-                    table[idA] = new int[1][2];
-                    table[idA][0][0] = idB;
-                    table[idA][0][1] = freq;
+                    table[idA] = new int[2];
+                    table[idA][0] = idB;
+                    table[idA][1] = freq;
                 }
                 else
                 {
-                    int[][] newLine = new int[table[idA].length + 1][2];
+                    int[] newLine = new int[table[idA].length + 2];
                     int index = binarySearch(table[idA], idB);
                     int insert = -(index + 1);
+                    insert = insert << 1;
                     System.arraycopy(table[idA], 0, newLine, 0, insert);
                     System.arraycopy(table[idA], insert, newLine, insert + 1, table[idA].length - insert);
-                    newLine[insert][0] = idB;
-                    newLine[insert][1] = freq;
+                    newLine[insert] = idB;
+                    newLine[insert+ 1] = freq;
                     table[idA] = newLine;
                 }
             }
@@ -121,7 +122,7 @@ public class CoreBiGramTableDictionary
         {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
             out.writeInt(table.length);
-            for (int[][] line : table)
+            for (int[] line : table)
             {
                 if (line == null)
                 {
@@ -129,11 +130,9 @@ public class CoreBiGramTableDictionary
                     continue;
                 }
                 out.writeInt(line.length);
-                for (int[] row : line)
+                for (int val : line)
                 {
-//                    out.writeInt(row.length);// 固定为2
-                    out.writeInt(row[0]);
-                    out.writeInt(row[1]);
+                    out.writeInt(val);
                 }
             }
             out.close();
@@ -153,16 +152,15 @@ public class CoreBiGramTableDictionary
         if (byteArray == null) return false;
 
         int length = byteArray.nextInt();
-        table = new int[length][][];
+        table = new int[length][];
         for (int i = 0; i < table.length; ++i)
         {
             length = byteArray.nextInt();
             if (length == 0) continue;
-            table[i] = new int[length][2];
+            table[i] = new int[length];
             for (int j = 0; j < length; ++j)
             {
-                table[i][j][0] = byteArray.nextInt();
-                table[i][j][1] = byteArray.nextInt();
+                table[i][j] = byteArray.nextInt();
             }
         }
 
@@ -176,15 +174,15 @@ public class CoreBiGramTableDictionary
      * @param key
      * @return
      */
-    static int binarySearch(int[][] a, int key)
+    static int binarySearch(int[] a, int key)
     {
         int low = 0;
-        int high = a.length - 1;
+        int high = a.length / 2 - 1;
 
         while (low <= high)
         {
             int mid = (low + high) >>> 1;
-            int midVal = a[mid][0];
+            int midVal = a[mid * 2];
 
             if (midVal < key)
                 low = mid + 1;
@@ -217,7 +215,8 @@ public class CoreBiGramTableDictionary
         }
         int index = binarySearch(table[idA], idB);
         if (index < 0) return 0;
-        return table[idA][index][1];
+        index <<= 1;
+        return table[idA][index + 1];
     }
 
     public static int getBiFrequency(int idA, int idB)
@@ -227,12 +226,9 @@ public class CoreBiGramTableDictionary
         if (idB == -1) return 0;
         int index = binarySearch(table[idA], idB);
         if (index < 0) return 0;
-        return table[idA][index][1];
+        index <<= 1;
+        return table[idA][index + 1];
     }
-
-//    public static int getBiFrequency(Vertex from, Vertex to)
-//    {
-//    }
 
     /**
      * 获取词语的ID
