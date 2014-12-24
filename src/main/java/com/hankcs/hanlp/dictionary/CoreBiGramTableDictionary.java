@@ -16,6 +16,10 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -27,7 +31,9 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CoreBiGramTableDictionary
 {
-    static int[][] table;
+    static int start[];
+    static int pair[];
+
     public final static String path = HanLP.Config.BiGramDictionaryPath;
     final static String datPath = HanLP.Config.BiGramDictionaryPath + ".table" + Predefine.BIN_EXT;
 
@@ -49,12 +55,14 @@ public class CoreBiGramTableDictionary
     static boolean load(String path)
     {
         if (loadDat(datPath)) return true;
-        table = new int[CoreDictionary.trie.size()][];
         BufferedReader br;
+        TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<>();
         try
         {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
             String line;
+            int total = 0;
+            int maxWordId = CoreDictionary.trie.size();
             while ((line = br.readLine()) != null)
             {
                 String[] params = line.split("\\s");
@@ -76,26 +84,36 @@ public class CoreBiGramTableDictionary
                     continue;
                 }
                 int freq = Integer.parseInt(params[1]);
-                if (table[idA] == null)
+                TreeMap<Integer, Integer> biMap = map.get(idA);
+                if (biMap == null)
                 {
-                    table[idA] = new int[2];
-                    table[idA][0] = idB;
-                    table[idA][1] = freq;
+                    biMap = new TreeMap<>();
+                    map.put(idA, biMap);
                 }
-                else
-                {
-                    int[] newLine = new int[table[idA].length + 2];
-                    int index = binarySearch(table[idA], idB);
-                    int insert = -(index + 1);
-                    insert = insert << 1;
-                    System.arraycopy(table[idA], 0, newLine, 0, insert);
-                    System.arraycopy(table[idA], insert, newLine, insert + 1, table[idA].length - insert);
-                    newLine[insert] = idB;
-                    newLine[insert+ 1] = freq;
-                    table[idA] = newLine;
-                }
+                biMap.put(idB, freq);
+                total += 2;
             }
             br.close();
+            start = new int[maxWordId + 1];
+            pair = new int[total];
+            int offset = 0;
+
+            for (int i = 0; i < maxWordId; ++i)
+            {
+                TreeMap<Integer, Integer> bMap = map.get(i);
+                if (bMap != null)
+                {
+                    for (Map.Entry<Integer, Integer> entry : bMap.entrySet())
+                    {
+                        int index = offset << 1;
+                        pair[index] = entry.getKey();
+                        pair[index + 1] = entry.getValue();
+                        ++offset;
+                    }
+                }
+                start[i + 1] = offset;
+            }
+
             logger.info("二元词典读取完毕:" + path + "，开始构建双数组Trie树(DoubleArrayTrie)……");
         }
         catch (FileNotFoundException e)
@@ -121,19 +139,15 @@ public class CoreBiGramTableDictionary
         try
         {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
-            out.writeInt(table.length);
-            for (int[] line : table)
+            out.writeInt(start.length);
+            for (int i : start)
             {
-                if (line == null)
-                {
-                    out.writeInt(0);
-                    continue;
-                }
-                out.writeInt(line.length);
-                for (int val : line)
-                {
-                    out.writeInt(val);
-                }
+                out.writeInt(i);
+            }
+            out.writeInt(pair.length);
+            for (int i : pair)
+            {
+                out.writeInt(i);
             }
             out.close();
         }
@@ -151,38 +165,32 @@ public class CoreBiGramTableDictionary
         ByteArray byteArray = ByteArray.createByteArray(path);
         if (byteArray == null) return false;
 
-        int length = byteArray.nextInt();
-        table = new int[length][];
-        for (int i = 0; i < table.length; ++i)
+        int size = byteArray.nextInt();
+        start = new int[size];
+        for (int i = 0; i < size; ++i)
         {
-            length = byteArray.nextInt();
-            if (length == 0) continue;
-            table[i] = new int[length];
-            for (int j = 0; j < length; ++j)
-            {
-                table[i][j] = byteArray.nextInt();
-            }
+            start[i] = byteArray.nextInt();
+        }
+
+        size = byteArray.nextInt();
+        pair = new int[size];
+        for (int i = 0; i < size; ++i)
+        {
+            pair[i] = byteArray.nextInt();
         }
 
         return true;
     }
 
-    /**
-     * 二分搜索
-     *
-     * @param a
-     * @param key
-     * @return
-     */
-    static int binarySearch(int[] a, int key)
+    private static int binarySearch(int[] a, int fromIndex, int toIndex, int key)
     {
-        int low = 0;
-        int high = a.length / 2 - 1;
+        int low = fromIndex;
+        int high = toIndex - 1;
 
         while (low <= high)
         {
             int mid = (low + high) >>> 1;
-            int midVal = a[mid * 2];
+            int midVal = a[mid << 1];
 
             if (midVal < key)
                 low = mid + 1;
@@ -213,21 +221,26 @@ public class CoreBiGramTableDictionary
         {
             return 0;
         }
-        int index = binarySearch(table[idA], idB);
+        int index = binarySearch(pair, start[idA], start[idA + 1], idB);
         if (index < 0) return 0;
         index <<= 1;
-        return table[idA][index + 1];
+        return pair[index + 1];
     }
 
     public static int getBiFrequency(int idA, int idB)
     {
-        if (idA == -1) return 0;
-        if (table[idA] == null) return 0;
-        if (idB == -1) return 0;
-        int index = binarySearch(table[idA], idB);
+        if (idA == -1)
+        {
+            return 0;
+        }
+        if (idB == -1)
+        {
+            return 0;
+        }
+        int index = binarySearch(pair, start[idA], start[idA + 1] - start[idA], idB);
         if (index < 0) return 0;
         index <<= 1;
-        return table[idA][index + 1];
+        return pair[index + 1];
     }
 
     /**
