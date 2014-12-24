@@ -117,11 +117,13 @@ Web项目的话可以放在如下位置：
 System.out.println(HanLP.segment("你好，欢迎使用HanLP汉语处理包！"));
 ```
 - 关于java.lang.OutOfMemoryError
-建议使用JVM option `-Xms512m -Xmx512m -Xmn256m`，如果内存有限，请使用小词典。**HanLP**默认使用大词典，同时提供小词典，只需修改配置文件：
+  * 建议使用JVM option `-Xms512m -Xmx512m -Xmn256m`，如果内存有限，请使用小词典。
+  * **HanLP**默认使用大词典，同时提供小词典，只需修改配置文件：
 CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
 BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
 - 写给正在编译**HanLP**的开发者
-如果你正在编译运行从Github检出的**HanLP**代码，并且没有下载data，那么首次加载词典/模型会发生一个*自动缓存*的过程。*自动缓存*的目的是为了加速词典载入速度，在下次载入时，缓存的词典文件会带来毫秒级的加载速度。由于词典体积很大，*自动缓存*会耗费一些时间，请耐心等待。
+  * 如果你正在编译运行从Github检出的**HanLP**代码，并且没有下载data，那么首次加载词典/模型会发生一个*自动缓存*的过程。
+  * *自动缓存*的目的是为了加速词典载入速度，在下次载入时，缓存的词典文件会带来毫秒级的加载速度。由于词典体积很大，*自动缓存*会耗费一些时间，请耐心等待。
 
 ### 2. 标准分词
 
@@ -130,9 +132,10 @@ List<Term> termList = StandTokenizer.segment("商品和服务");
 System.out.println(termList);
 ```
 - 说明
-**HanLP**中有一系列“开箱即用”的静态分词器，以`Tokenizer`结尾，在接下来的例子中会继续介绍。`HanLP.segment`其实是对`StandTokenizer.segment`的包装。
+  * **HanLP**中有一系列“开箱即用”的静态分词器，以`Tokenizer`结尾，在接下来的例子中会继续介绍。
+  * `HanLP.segment`其实是对`StandTokenizer.segment`的包装。
 - 算法详解
-[《词图的生成》](http://www.hankcs.com/nlp/segment/the-word-graph-is-generated.html)
+  * [《词图的生成》](http://www.hankcs.com/nlp/segment/the-word-graph-is-generated.html)
 
 ### 3. NLP分词
 
@@ -141,7 +144,7 @@ List<Term> termList = NLPTokenizer.segment("中国科学院计算技术研究所
 System.out.println(termList);
 ```
 - 说明
-NLP分词`NLPTokenizer`会执行全部命名实体识别和词性标注。
+  * NLP分词`NLPTokenizer`会执行全部命名实体识别和词性标注。
 
 ### 4. 索引分词
 
@@ -153,7 +156,7 @@ for (Term term : termList)
 }
 ```
 - 说明
-索引分词`IndexTokenizer`是面向搜索引擎的分词器，能够对长词全切分，另外通过`term.offset`可以获取单词在文本中的偏移量。
+  * 索引分词`IndexTokenizer`是面向搜索引擎的分词器，能够对长词全切分，另外通过`term.offset`可以获取单词在文本中的偏移量。
 
 ### 5. N-最短路径分词
 
@@ -170,9 +173,10 @@ for (String sentence : testCase)
 }
 ```
 - 说明
-N最短路分词器`NShortSegment`比最短路分词器慢，但是效果稍微好一些，对命名实体识别能力更强。
+  * N最短路分词器`NShortSegment`比最短路分词器慢，但是效果稍微好一些，对命名实体识别能力更强。
+  * 一般场景下最短路分词的精度已经足够，而且速度比N最短路分词器快几倍，请酌情选择。
 - 算法详解
-[《N最短路径的Java实现与分词应用》](http://www.hankcs.com/nlp/segment/n-shortest-path-to-the-java-implementation-and-application-segmentation.html)
+  * [《N最短路径的Java实现与分词应用》](http://www.hankcs.com/nlp/segment/n-shortest-path-to-the-java-implementation-and-application-segmentation.html)
 
 ### 6. CRF分词
 
@@ -190,10 +194,10 @@ for (Term term : termList)
 }
 ```
 - 说明
-CRF对新词有很好的识别能力，但是无法利用自定义词典。
+  * CRF对新词有很好的识别能力，但是无法利用自定义词典。
 - 算法详解
-[《CRF分词的纯Java实现》](http://www.hankcs.com/nlp/segment/crf-segmentation-of-the-pure-java-implementation.html)
-[《CRF++模型格式说明》](http://www.hankcs.com/nlp/the-crf-model-format-description.html)
+  * [《CRF分词的纯Java实现》](http://www.hankcs.com/nlp/segment/crf-segmentation-of-the-pure-java-implementation.html)
+  * [《CRF++模型格式说明》](http://www.hankcs.com/nlp/the-crf-model-format-description.html)
 
 ### 7. 用户自定义词典
 
@@ -220,13 +224,16 @@ while ((entry = searcher.next()) != null)
 System.out.println(HanLP.segment(text));
 ```
 - 说明
-`CustomDictionary`是一份全局的用户自定义词典，可以随时增删，影响全部分词器。另外可以在任何分词器中关闭它。通过代码动态增删不会保存到词典文件。
+  * `CustomDictionary`是一份全局的用户自定义词典，可以随时增删，影响全部分词器。
+  * 另外可以在任何分词器中关闭它。通过代码动态增删不会保存到词典文件。
 - 追加词典
-`CustomDictionary`主词典文本路径是`data/dictionary/custom/CustomDictionary.txt`，用户可以在此增加自己的词语（不推荐）；也可以单独新建一个文本文件，通过配置文件`CustomDictionaryPath=data/dictionary/custom/CustomDictionary.txt; 我的词典.txt;`来追加词典（推荐）。始终建议将相同词性的词语放到同一个词典文件里，便于维护和分享。
+  * `CustomDictionary`主词典文本路径是`data/dictionary/custom/CustomDictionary.txt`，用户可以在此增加自己的词语（不推荐）；也可以单独新建一个文本文件，通过配置文件`CustomDictionaryPath=data/dictionary/custom/CustomDictionary.txt; 我的词典.txt;`来追加词典（推荐）。
+  * 始终建议将相同词性的词语放到同一个词典文件里，便于维护和分享。
 - 词典格式
-每一行代表一个单词，格式遵从`[单词] [词性A] [A的频次] [词性B] [B的频次] ...` 如果不填词性则表示采用词典的默认词性。词典的默认词性默认是名词n，可以通过配置文件修改：`全国地名大全.txt ns;`如果词典路径后面空格紧接着词性，则该词典默认是该词性。
+  * 每一行代表一个单词，格式遵从`[单词] [词性A] [A的频次] [词性B] [B的频次] ...` 如果不填词性则表示采用词典的默认词性。
+  * 词典的默认词性默认是名词n，可以通过配置文件修改：`全国地名大全.txt ns;`如果词典路径后面空格紧接着词性，则该词典默认是该词性。
 - 算法详解
-[《Trie树分词》](http://www.hankcs.com/program/java/tire-tree-participle.html)
+  * [《Trie树分词》](http://www.hankcs.com/program/java/tire-tree-participle.html)
 
 ### 8. 中国人名识别
 
@@ -248,9 +255,11 @@ for (String sentence : testCase)
 }
 ```
 - 说明
-目前分词器基本上都默认开启了中国人名识别，比如`HanLP.segment()`接口中使用的分词器等等，用户不必手动开启；上面的代码只是为了强调。
+  * 目前分词器基本上都默认开启了中国人名识别，比如`HanLP.segment()`接口中使用的分词器等等，用户不必手动开启；上面的代码只是为了强调。
+  * 有一定的误命中率，比如误命中`关键年`，则可以通过在`data/dictionary/person/nr.txt`加入一条`关键年 A 1`来排除`关键年`作为人名的可能性，也可以将`关键年`作为新词登记到自定义词典中。
+  * 如果你通过上述办法解决了问题，欢迎向我提交pull request，词典也是宝贵的财富。
 - 算法详解
-[《实战HMM-Viterbi角色标注中国人名识别》](http://www.hankcs.com/nlp/chinese-name-recognition-in-actual-hmm-viterbi-role-labeling.html)
+  * [《实战HMM-Viterbi角色标注中国人名识别》](http://www.hankcs.com/nlp/chinese-name-recognition-in-actual-hmm-viterbi-role-labeling.html)
 
 ### 9. 音译人名识别
 
@@ -267,9 +276,9 @@ for (String sentence : testCase)
 }
 ```
 - 说明
-目前分词器基本上都默认开启了音译人名识别，用户不必手动开启；上面的代码只是为了强调。
+  * 目前分词器基本上都默认开启了音译人名识别，用户不必手动开启；上面的代码只是为了强调。
 - 算法详解
-[《层叠隐马模型下的音译人名和日本人名识别》](http://www.hankcs.com/nlp/name-transliteration-cascaded-hidden-markov-model-and-japanese-personal-names-recognition.html)
+  * [《层叠隐马模型下的音译人名和日本人名识别》](http://www.hankcs.com/nlp/name-transliteration-cascaded-hidden-markov-model-and-japanese-personal-names-recognition.html)
 
 ### 10. 日本人名识别
 
@@ -286,9 +295,9 @@ for (String sentence : testCase)
 }
 ```
 - 说明
-目前标准分词器默认关闭了日本人名识别，用户需要手动开启；这是因为日本人名的出现频率较低，但是又消耗性能。
+  * 目前标准分词器默认关闭了日本人名识别，用户需要手动开启；这是因为日本人名的出现频率较低，但是又消耗性能。
 - 算法详解
-[《层叠隐马模型下的音译人名和日本人名识别》](http://www.hankcs.com/nlp/name-transliteration-cascaded-hidden-markov-model-and-japanese-personal-names-recognition.html)
+  * [《层叠隐马模型下的音译人名和日本人名识别》](http://www.hankcs.com/nlp/name-transliteration-cascaded-hidden-markov-model-and-japanese-personal-names-recognition.html)
 
 ### 11. 地名识别
 
@@ -305,9 +314,10 @@ for (String sentence : testCase)
 }
 ```
 - 说明
-目前标准分词器都默认关闭了地名识别，用户需要手动开启；这是因为消耗性能，其实多数地名都收录在核心词典和用户自定义词典中。这不是在写论文，在生产环境中，能靠词典解决的问题就靠词典解决，这是最高效稳定的方法。
+  * 目前标准分词器都默认关闭了地名识别，用户需要手动开启；这是因为消耗性能，其实多数地名都收录在核心词典和用户自定义词典中。
+  * 在生产环境中，能靠词典解决的问题就靠词典解决，这是最高效稳定的方法。
 - 算法详解
-[《实战HMM-Viterbi角色标注地名识别》](http://www.hankcs.com/nlp/ner/place-names-to-identify-actual-hmm-viterbi-role-labeling.html)
+  * [《实战HMM-Viterbi角色标注地名识别》](http://www.hankcs.com/nlp/ner/place-names-to-identify-actual-hmm-viterbi-role-labeling.html)
 
 ### 12. 机构名识别
 
@@ -326,9 +336,10 @@ for (String sentence : testCase)
 }
 ```
 - 说明
-目前分词器默认关闭了机构名识别，用户需要手动开启；这是因为消耗性能，其实常用机构名都收录在核心词典和用户自定义词典中。HanLP的目的不是写论文，在生产环境中，能靠词典解决的问题就靠词典解决，这是最高效稳定的方法。
+  * 目前分词器默认关闭了机构名识别，用户需要手动开启；这是因为消耗性能，其实常用机构名都收录在核心词典和用户自定义词典中。
+  * HanLP的目的不是演示动态识别，在生产环境中，能靠词典解决的问题就靠词典解决，这是最高效稳定的方法。
 - 算法详解
-[《层叠HMM-Viterbi角色标注模型下的机构名识别》](http://www.hankcs.com/nlp/ner/place-name-recognition-model-of-the-stacked-hmm-viterbi-role-labeling.html)
+  * [《层叠HMM-Viterbi角色标注模型下的机构名识别》](http://www.hankcs.com/nlp/ner/place-name-recognition-model-of-the-stacked-hmm-viterbi-role-labeling.html)
 
 ### 13. 关键词提取
 
@@ -338,9 +349,9 @@ List<String> keywordList = HanLP.extractKeyword(content, 5);
 System.out.println(keywordList);
 ```
 - 说明
-内部采用`TextRankKeyword`实现，用户可以直接调用`TextRankKeyword.getKeywordList(document, size)`
+  * 内部采用`TextRankKeyword`实现，用户可以直接调用`TextRankKeyword.getKeywordList(document, size)`
 - 算法详解
-[《TextRank算法提取关键词的Java实现》](http://www.hankcs.com/nlp/textrank-algorithm-to-extract-the-keywords-java-implementation.html)
+  * [《TextRank算法提取关键词的Java实现》](http://www.hankcs.com/nlp/textrank-algorithm-to-extract-the-keywords-java-implementation.html)
 
 ### 14. 自动摘要
 
@@ -354,9 +365,9 @@ List<String> sentenceList = HanLP.extractSummary(document, 3);
 System.out.println(sentenceList);
 ```
 - 说明
-内部采用`TextRankSentence`实现，用户可以直接调用`TextRankSentence.getTopSentenceList(document, size)`。
+  * 内部采用`TextRankSentence`实现，用户可以直接调用`TextRankSentence.getTopSentenceList(document, size)`。
 - 算法详解
-[《TextRank算法自动摘要的Java实现》](http://www.hankcs.com/nlp/textrank-algorithm-java-implementation-of-automatic-abstract.html)
+  * [《TextRank算法自动摘要的Java实现》](http://www.hankcs.com/nlp/textrank-algorithm-java-implementation-of-automatic-abstract.html)
 
 ### 15. 短语提取
 
@@ -384,9 +395,9 @@ List<String> phraseList = HanLP.extractPhrase(text, 10);
 System.out.println(phraseList);
 ```
 - 说明
-内部采用`MutualInformationEntropyPhraseExtractor`实现，用户可以直接调用`MutualInformationEntropyPhraseExtractor..extractPhrase(text, size)`。
+  * 内部采用`MutualInformationEntropyPhraseExtractor`实现，用户可以直接调用`MutualInformationEntropyPhraseExtractor..extractPhrase(text, size)`。
 - 算法详解
-[《基于互信息和左右信息熵的短语提取识别》](http://www.hankcs.com/nlp/extraction-and-identification-of-mutual-information-about-the-phrase-based-on-information-entropy.html)
+  * [《基于互信息和左右信息熵的短语提取识别》](http://www.hankcs.com/nlp/extraction-and-identification-of-mutual-information-about-the-phrase-based-on-information-entropy.html)
 
 ### 16. 拼音转换
 
@@ -460,9 +471,11 @@ public class DemoPinyin
 }
 ```
 - 说明
-**HanLP**不仅支持基础的汉字转拼音，还支持声母、韵母、音调、音标和输入法首字母首声母功能。**HanLP**能够识别多音字，也能给繁体中文注拼音。最重要的是，**HanLP**采用了双数组trie树和压缩的词典格式，能够提供毫秒级的响应速度！
+  * **HanLP**不仅支持基础的汉字转拼音，还支持声母、韵母、音调、音标和输入法首字母首声母功能。
+  * **HanLP**能够识别多音字，也能给繁体中文注拼音。
+  * 最重要的是，**HanLP**采用了双数组trie树和压缩的词典格式，能够提供毫秒级的响应速度！
 - 算法详解
-[《汉字转拼音与简繁转换的Java实现》](http://www.hankcs.com/nlp/java-chinese-characters-to-pinyin-and-simplified-conversion-realization.html#h2-17)
+  * [《汉字转拼音与简繁转换的Java实现》](http://www.hankcs.com/nlp/java-chinese-characters-to-pinyin-and-simplified-conversion-realization.html#h2-17)
 
 ### 17. 简繁转换
 
@@ -481,9 +494,9 @@ public class DemoTraditionalChinese2SimplifiedChinese
 }
 ```
 - 说明
-**HanLP**能够识别简繁分歧词，比如`打印机=印表機`。许多简繁转换工具不能区分“以后”“皇后”中的两个“后”字，**HanLP**可以。
+  * **HanLP**能够识别简繁分歧词，比如`打印机=印表機`。许多简繁转换工具不能区分“以后”“皇后”中的两个“后”字，**HanLP**可以。
 - 算法详解
-[《汉字转拼音与简繁转换的Java实现》](http://www.hankcs.com/nlp/java-chinese-characters-to-pinyin-and-simplified-conversion-realization.html#h2-17)
+  * [《汉字转拼音与简繁转换的Java实现》](http://www.hankcs.com/nlp/java-chinese-characters-to-pinyin-and-simplified-conversion-realization.html#h2-17)
 
 ### 18. 文本推荐
 
@@ -517,7 +530,8 @@ public class DemoSuggester
 }
 ```
 - 说明
-在搜索引擎的输入框中，用户输入一个词，搜索引擎会联想出最合适的搜索词，**HanLP**实现了类似的功能。
+  * 在搜索引擎的输入框中，用户输入一个词，搜索引擎会联想出最合适的搜索词，**HanLP**实现了类似的功能。
+  * 可以动态调节每种识别器的权重
 
 ### 19. 语义距离
 
@@ -566,9 +580,9 @@ public class DemoWordDistance
 }
 ```
 - 说明
-设想的应用场景是搜索引擎对词义的理解，词与词并不只存在“同义词”与“非同义词”的关系，就算是同义词，它们之间的意义也是有微妙的差别的。
+  * 设想的应用场景是搜索引擎对词义的理解，词与词并不只存在“同义词”与“非同义词”的关系，就算是同义词，它们之间的意义也是有微妙的差别的。
 - 算法
-为每个词分配一个语义ID，词与词的距离通过语义ID的差得到。语义ID通过《同义词词林扩展版》计算而来。
+  * 为每个词分配一个语义ID，词与词的距离通过语义ID的差得到。语义ID通过《同义词词林扩展版》计算而来。
 
 ### 20. 依存句法解析
 
@@ -586,19 +600,23 @@ public class DemoDependencyParser
 }
 ```
 - 说明
-内部采用`MaxEntDependencyParser`实现，用户可以直接调用`MaxEntDependencyParser.compute(sentence)`，也可以调用基于随机条件场的依存句法分析器`CRFDependencyParser.compute(sentence)`
+  * 内部采用`MaxEntDependencyParser`实现，用户可以直接调用`MaxEntDependencyParser.compute(sentence)`
+  * 也可以调用基于随机条件场的依存句法分析器`CRFDependencyParser.compute(sentence)`
+  * 在封闭测试集上准确率有90%以上，但在开放测试集上则不理想。
 - 算法详解
-[《最大熵依存句法分析器的实现》](http://www.hankcs.com/nlp/parsing/to-achieve-the-maximum-entropy-of-the-dependency-parser.html)
-[《基于CRF序列标注的中文依存句法分析器的Java实现》](http://www.hankcs.com/nlp/parsing/crf-sequence-annotation-chinese-dependency-parser-implementation-based-on-java.html)
+  * [《最大熵依存句法分析器的实现》](http://www.hankcs.com/nlp/parsing/to-achieve-the-maximum-entropy-of-the-dependency-parser.html)
+  * [《基于CRF序列标注的中文依存句法分析器的Java实现》](http://www.hankcs.com/nlp/parsing/crf-sequence-annotation-chinese-dependency-parser-implementation-based-on-java.html)
 
 ## 词典说明
 本章详细介绍**HanLP**中的词典格式，满足用户自定义的需要。**HanLP**中有许多词典，它们的格式都是相似的，形式都是文本文档，随时可以修改。
 ### 基本格式
 词典分为词频词性词典和词频词典。
 
-- 词频词性词典每一行代表一个单词，格式遵从`[单词] [词性A] [A的频次] [词性B] [B的频次] ...`。
-- 词频词典每一行代表一个单词，格式遵从`[单词] [单词的频次]`。
-每一行的分隔符为空格符，制表符可能不被支持。
+- 词频词性词典
+   * 每一行代表一个单词，格式遵从`[单词] [词性A] [A的频次] [词性B] [B的频次] ...`。
+- 词频词典
+  * 每一行代表一个单词，格式遵从`[单词] [单词的频次]`。
+  * 每一行的分隔符为空格符或制表符
 
 少数词典有自己的专用格式，比如同义词词典兼容《同义词词林扩展版》的文本格式，而转移矩阵词典则是一个csv表格。
 
@@ -608,16 +626,17 @@ public class DemoDependencyParser
 
 Trie树（字典树）是**HanLP**中使用最多的数据结构，为此，我实现了通用的Trie树，支持泛型、遍历、储存、载入。
 
-用户自定义词典采用二分Trie树储存，其他词典采用双数组[Trie树(DoubleArrayTrie)](http://www.hankcs.com/program/java/%E5%8F%8C%E6%95%B0%E7%BB%84trie%E6%A0%91doublearraytriejava%E5%AE%9E%E7%8E%B0.html)实现。
+用户自定义词典采用AhoCorasickDoubleArrayTrie和二分Trie树储存，其他词典采用基于[双数组Trie树(DoubleArrayTrie)](http://www.hankcs.com/program/java/%E5%8F%8C%E6%95%B0%E7%BB%84trie%E6%A0%91doublearraytriejava%E5%AE%9E%E7%8E%B0.html)实现的[AC自动机AhoCorasickDoubleArrayTrie](http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html)。
 
 ### 储存形式
 
 词典有两个形态：文本文件(filename.txt)和缓存文件(filename.txt.bin或filename.txt.trie.dat和filename.txt.trie.value)。
 
 - 文本文件 
-采用明文储存，UTF-8编码，CRLF换行符。
+  * 采用明文储存，UTF-8编码，CRLF换行符。
 - 缓存文件
-就是一些二进制文件，通常在文本文件的文件名后面加上.bin表示。有时候是.trie.dat和.trie.value。后者是历史遗留产物，分别代表trie树的数组和值。有时候历史遗留产物还挺有用的，特别是把trie树当作set用的时候，不需要储存值。
+  * 就是一些二进制文件，通常在文本文件的文件名后面加上.bin表示。有时候是.trie.dat和.trie.value。后者是历史遗留产物，分别代表trie树的数组和值。
+  * 如果你修改了任何词典，只有删除缓存才能生效。
 
 ### 修改方法
 
@@ -626,11 +645,13 @@ HanLP的核心词典训练自人民日报2014语料，语料不是完美的，�
 HanLP.Config.enableDebug();
 ```
 - 核心词性词频词典
-比如你在`data/dictionary/CoreNatureDictionary.txt`中发现了一个不是词的词，或者词性标注得明显不对，那么你可以修改它，然后删除缓存文件使其生效。
+  * 比如你在`data/dictionary/CoreNatureDictionary.txt`中发现了一个不是词的词，或者词性标注得明显不对，那么你可以修改它，然后删除缓存文件使其生效。
 - 核心二元文法词典
-二元文法词典`data/dictionary/CoreNatureDictionary.ngram.txt`储存的是两个词的接续，如果你发现不可能存在这种接续时，删掉即可。
+  * 二元文法词典`data/dictionary/CoreNatureDictionary.ngram.txt`储存的是两个词的接续，如果你发现不可能存在这种接续时，删掉即可。
+  * 你也可以添加你认为合理的接续，但是这两个词必须同时在核心词典中才会生效。
 - 命名实体识别词典
-基于角色标注的命名实体识别比较依赖词典，请阅读相应的文章或代码修改它。
+  * 基于角色标注的命名实体识别比较依赖词典，所以词典的质量大幅影响识别质量。
+  * 这些词典的格式与原理都是类似的，请阅读[相应的文章](http://www.hankcs.com/category/nlp/ner/)或代码修改它。
 
 如果问题解决了，欢迎向我提交一个pull request，这是我在代码库中保留明文词典的原因，众人拾柴火焰高！
 
