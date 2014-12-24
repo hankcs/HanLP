@@ -44,7 +44,7 @@ public class CoreDictionary
         }
         else
         {
-            logger.info(path + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+            logger.info(path + "加载成功，" + trie.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
     }
 

@@ -424,10 +424,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
     protected WordNet GenerateWordNet(final char[] sSentence, final WordNet wordNetStorage)
     {
         final char[] charArray = wordNetStorage.charArray;
-        BaseSearcher searcher;
-        Map.Entry<String, CoreDictionary.Attribute> entry;
-        int p = 0;  // 当前处理到什么位置
-        int offset;
+
         CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHitFull<CoreDictionary.Attribute>()
         {
             @Override
@@ -439,12 +436,14 @@ public abstract class HiddenMarkovModelSegment extends Segment
         // 用户词典查询
         if (config.useCustomDictionary)
         {
-            searcher = CustomDictionary.getSearcher(charArray);
-            while ((entry = searcher.next()) != null)
+            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
             {
-                offset = searcher.getOffset();
-                wordNetStorage.push(offset + 1, new Vertex(entry.getKey(), entry.getValue()));
-            }
+                @Override
+                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                {
+                    wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
+                }
+            });
         }
         List<Vertex>[] vertexes = wordNetStorage.getVertexes();
         for (int i = 1; i < vertexes.length;)

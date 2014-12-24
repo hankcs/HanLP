@@ -216,4 +216,14 @@ public class ByteArray
         // The number of chars produced may be less than utflen
         return new String(chararr, 0, chararr_count);
     }
+
+    public int getOffset()
+    {
+        return offset;
+    }
+
+    public int getLength()
+    {
+        return bytes.length;
+    }
 }

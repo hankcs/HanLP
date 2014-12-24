@@ -42,6 +42,6 @@ public class StopWordDictionary extends MDAGSet implements Filter
     @Override
     public boolean shouldInclude(Term term)
     {
-        return CoreStopWordDictionary.shouldInclude(term);
+        return contains(term.word);
     }
 }

@@ -11,6 +11,8 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
+import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
@@ -93,9 +95,20 @@ public class TestCustomDictionary extends TestCase
         }
     }
 
-    public void testLoadAdd() throws Exception
+    public void testRemoveJunkWord() throws Exception
     {
-        System.out.println(CustomDictionary.load("data/dictionary/custom/数字时间.txt"));
-        System.out.println(CustomDictionary.get("二一年"));
+        DictionaryMaker dictionaryMaker = DictionaryMaker.load("data/dictionary/custom/CustomDictionary.txt");
+        dictionaryMaker.saveTxtTo("data/dictionary/custom/CustomDictionary.txt", new DictionaryMaker.Filter()
+        {
+            @Override
+            public boolean onSave(Item item)
+            {
+                if (item.containsLabel("mq") || item.containsLabel("m") || item.containsLabel("t"))
+                {
+                    return false;
+                }
+                return true;
+            }
+        });
     }
 }

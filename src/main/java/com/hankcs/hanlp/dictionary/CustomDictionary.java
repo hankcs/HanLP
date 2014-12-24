@@ -13,11 +13,13 @@ package com.hankcs.hanlp.dictionary;
 
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
@@ -33,7 +35,8 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CustomDictionary
 {
-    static BinTrie<CoreDictionary.Attribute> trie = new BinTrie<CoreDictionary.Attribute>();
+    static BinTrie<CoreDictionary.Attribute> trie;
+    static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> act = new AhoCorasickDoubleArrayTrie<>();
     /**
      * 第一个是主词典，其他是副词典
      */
@@ -49,7 +52,7 @@ public class CustomDictionary
         }
         else
         {
-            logger.info("自定义词典加载成功:" + trie.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
+            logger.info("自定义词典加载成功:" + act.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
     }
 
@@ -57,6 +60,7 @@ public class CustomDictionary
     {
         logger.info("自定义词典开始加载:" + mainPath);
         if (loadDat(mainPath)) return true;
+        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<>();
         try
         {
             for (String p : path)
@@ -79,14 +83,16 @@ public class CustomDictionary
                     }
                 }
                 logger.info("加载自定义词典" + p + "中……");
-                boolean success = load(p, defaultNature);
+                boolean success = load(p, defaultNature, map);
                 if (!success) logger.warning("失败：" + p);
             }
+            logger.info("正在构建AhoCorasickDoubleArrayTrie……");
+            act.build(map);
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
             // 缓存值文件
             List<CoreDictionary.Attribute> attributeList = new LinkedList<>();
-            for (Map.Entry<String, CoreDictionary.Attribute> entry : trie.entrySet())
+            for (Map.Entry<String, CoreDictionary.Attribute> entry : map.entrySet())
             {
                 attributeList.add(entry.getValue());
             }
@@ -102,7 +108,7 @@ public class CustomDictionary
                     out.writeInt(attribute.frequency[i]);
                 }
             }
-            if (!trie.save(out)) return false;
+            act.save(out);
             out.close();
         }
         catch (FileNotFoundException e)
@@ -115,8 +121,13 @@ public class CustomDictionary
             logger.severe("自定义词典" + mainPath + "读取错误！" + e);
             return false;
         }
+        catch (Exception e)
+        {
+            logger.warning("自定义词典" + mainPath + "缓存失败！" + e);
+        }
         return true;
     }
+
 
     /**
      * 加载用户词典（追加）
@@ -124,7 +135,7 @@ public class CustomDictionary
      * @param defaultNature 默认词性
      * @return
      */
-    public static boolean load(String path, Nature defaultNature)
+    public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map)
     {
         try
         {
@@ -133,7 +144,7 @@ public class CustomDictionary
             while ((line = br.readLine()) != null)
             {
                 String[] param = line.split("\\s");
-                if (CoreDictionary.contains(param[0]) || trie.containsKey(param[0]))
+                if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
                 {
                     continue;
                 }
@@ -153,7 +164,7 @@ public class CustomDictionary
                         attribute.totalFrequency += attribute.frequency[i];
                     }
                 }
-                trie.put(param[0], attribute);
+                map.put(param[0], attribute);
             }
             br.close();
         }
@@ -200,6 +211,7 @@ public class CustomDictionary
         if (word == null) return false;
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
+        if (trie == null) trie = new BinTrie<>();
         trie.put(word, att);
         return true;
     }
@@ -212,16 +224,6 @@ public class CustomDictionary
     public static boolean insert(String word)
     {
         return insert(word, null);
-    }
-
-    /**
-     * 追加外部词典
-     * @param path 词典路径
-     * @return 是否加载成功
-     */
-    public static boolean load(String path)
-    {
-        return load(path, Nature.nz);
     }
 
     /**
@@ -251,7 +253,7 @@ public class CustomDictionary
                     attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            if (!trie.load(byteArray, attributes)) return false;
+            if (!act.load(byteArray, attributes)) return false;
         }
         catch (Exception e)
         {
@@ -319,7 +321,8 @@ public class CustomDictionary
 
     public static boolean contains(String key)
     {
-        return trie.containsKey(key);
+        if (act.exactMatchSearch(key) >= 0) return true;
+        return trie != null && trie.containsKey(key);
     }
 
     public static BaseSearcher getSearcher(char[] charArray)
@@ -382,5 +385,21 @@ public class CustomDictionary
     public static BinTrie<CoreDictionary.Attribute> getTrie()
     {
         return trie;
+    }
+
+    public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
+    {
+        act.parseText(text, processor);
+        if (trie != null)
+        {
+            BaseSearcher searcher = CustomDictionary.getSearcher(text);
+            int offset;
+            Map.Entry<String, CoreDictionary.Attribute> entry;
+            while ((entry = searcher.next()) != null)
+            {
+                offset = searcher.getOffset();
+                processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
+            }
+        }
     }
 }

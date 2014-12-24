@@ -49,6 +49,10 @@ public class CoreStopWordDictionary
                 logger.log(Level.SEVERE, "载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败", e);
             }
         }
+        else
+        {
+            dictionary.load(byteArray);
+        }
     }
 
     public static boolean contains(String key)

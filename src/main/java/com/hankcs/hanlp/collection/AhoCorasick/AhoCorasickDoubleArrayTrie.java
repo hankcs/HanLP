@@ -296,11 +296,33 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     public void save(ObjectOutputStream out) throws IOException
     {
+        loseWeight();
         out.writeObject(base);
         out.writeObject(check);
         out.writeObject(fail);
         out.writeObject(output);
         out.writeObject(l);
+    }
+
+    private void loseWeight()
+    {
+        int nbase[] = new int[size + 65535];
+        System.arraycopy(base, 0, nbase, 0, size);
+        base = nbase;
+
+        int ncheck[] = new int[size + 65535];
+        System.arraycopy(check, 0, ncheck, 0, size);
+        check = ncheck;
+
+//        int nfail[] = new int[size + 65535];
+//        System.arraycopy(fail, 0, nfail, 0, size);
+//        fail = nfail;
+//
+//        int noutput[][] = new int[size][];
+//        for (int i = 0; i < size; i++)
+//        {
+//            noutput[i] = output[i];
+//        }
     }
 
     public void load(ObjectInputStream in, V[] value) throws IOException, ClassNotFoundException
@@ -525,6 +547,7 @@ public class AhoCorasickDoubleArrayTrie<V>
         used = null;
         // 构建failure表并且合并output表
         constructFailureStates();
+        rootState = null;
     }
 
     private void buildDoubleArrayTrie(Set<String> keySet)
@@ -825,40 +848,40 @@ public class AhoCorasickDoubleArrayTrie<V>
         System.out.println(this);
     }
 
-    @Override
-    public String toString()
-    {
-        String infoIndex = "i    = ";
-        String infoChar = "char = ";
-        String infoBase = "base = ";
-        String infoCheck = "check= ";
-        for (int i = 0; i < Math.min(base.length, 200); ++i)
-        {
-            if (base[i] != 0 || check[i] != 0)
-            {
-                infoChar += "    " + (i == check[i] ? " ×" : (char) (i - check[i] - 1));
-                infoIndex += " " + String.format("%5d", i);
-                infoBase += " " + String.format("%5d", base[i]);
-                infoCheck += " " + String.format("%5d", check[i]);
-            }
-        }
-        return "DoubleArrayTrie：" +
-                "\n" + infoChar +
-                "\n" + infoIndex +
-                "\n" + infoBase +
-                "\n" + infoCheck + "\n" +
-//                "check=" + Arrays.toString(check) +
-//                ", base=" + Arrays.toString(base) +
-//                ", used=" + Arrays.toString(used) +
-                "size=" + size +
-                ", allocSize=" + allocSize +
-                ", keySize=" + keySize +
-//                ", length=" + Arrays.toString(length) +
-//                ", value=" + Arrays.toString(value) +
-                ", progress=" + progress +
-                ", nextCheckPos=" + nextCheckPos
-                ;
-    }
+//    @Override
+//    public String toString()
+//    {
+//        String infoIndex = "i    = ";
+//        String infoChar = "char = ";
+//        String infoBase = "base = ";
+//        String infoCheck = "check= ";
+//        for (int i = 0; i < Math.min(base.length, 200); ++i)
+//        {
+//            if (base[i] != 0 || check[i] != 0)
+//            {
+//                infoChar += "    " + (i == check[i] ? " ×" : (char) (i - check[i] - 1));
+//                infoIndex += " " + String.format("%5d", i);
+//                infoBase += " " + String.format("%5d", base[i]);
+//                infoCheck += " " + String.format("%5d", check[i]);
+//            }
+//        }
+//        return "DoubleArrayTrie：" +
+//                "\n" + infoChar +
+//                "\n" + infoIndex +
+//                "\n" + infoBase +
+//                "\n" + infoCheck + "\n" +
+////                "check=" + Arrays.toString(check) +
+////                ", base=" + Arrays.toString(base) +
+////                ", used=" + Arrays.toString(used) +
+//                "size=" + size +
+//                ", allocSize=" + allocSize +
+//                ", keySize=" + keySize +
+////                ", length=" + Arrays.toString(length) +
+////                ", value=" + Arrays.toString(value) +
+//                ", progress=" + progress +
+//                ", nextCheckPos=" + nextCheckPos
+//                ;
+//    }
 
     /**
      * 一个顺序输出变量名与变量值的调试类

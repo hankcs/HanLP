@@ -294,6 +294,11 @@ public class DictionaryMaker implements ISaveAble
 
     public static interface Filter
     {
+        /**
+         * 是否保存这个条目
+         * @param item
+         * @return true表示保存
+         */
         boolean onSave(Item item);
     }
 
