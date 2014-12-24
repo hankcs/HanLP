@@ -12,13 +12,16 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 
 import java.util.Map;
 
 /**
  * 演示用户词典的动态增删
+ *
  * @author hankcs
  */
 public class DemoCustomDictionary
@@ -35,6 +38,17 @@ public class DemoCustomDictionary
         System.out.println(CustomDictionary.get("裸婚"));
 
         String text = "码农和孔雀女裸婚了";  // 怎么可能噗哈哈！
+
+        // AhoCorasickDoubleArrayTrie自动机分词
+        final char[] charArray = text.toCharArray();
+        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        {
+            @Override
+            public void hit(int begin, int end, CoreDictionary.Attribute value)
+            {
+                System.out.printf("[%d:%d]=%s %s\n", begin, end, new String(charArray, begin, end - begin), value);
+            }
+        });
         // trie树分词
         BaseSearcher searcher = CustomDictionary.getSearcher(text);
         Map.Entry entry;

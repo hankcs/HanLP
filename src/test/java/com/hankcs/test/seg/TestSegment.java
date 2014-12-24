@@ -31,9 +31,9 @@ public class TestSegment extends TestCase
 {
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableOrganizationRecognize(true);
-        System.out.println(segment.seg("我喜欢陈膺奥"));
+//        HanLP.Config.enableDebug();
+        Segment segment = new DijkstraSegment().enableCustomDictionary(false);
+        System.out.println(segment.seg("陈膺奥是我的女神"));
     }
 
     public void testIndexSeg() throws Exception
