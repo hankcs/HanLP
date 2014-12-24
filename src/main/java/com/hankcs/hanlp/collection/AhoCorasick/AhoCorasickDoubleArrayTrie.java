@@ -239,6 +239,30 @@ public class AhoCorasickDoubleArrayTrie<V>
         }
     }
 
+    /**
+     * 处理文本
+     * @param text
+     * @param processor
+     */
+    public void parseText(char[] text, IHitFull<V> processor)
+    {
+        int position = 1;
+        int currentState = 0;
+        for (char c : text)
+        {
+            currentState = getState(currentState, c);
+            int[] hitArray = output[currentState];
+            if (hitArray != null)
+            {
+                for (int hit : hitArray)
+                {
+                    processor.hit(position - l[hit], position, v, hit);
+                }
+            }
+            ++position;
+        }
+    }
+
     public void save(DataOutputStream out) throws Exception
     {
         out.writeInt(size);
@@ -301,6 +325,22 @@ public class AhoCorasickDoubleArrayTrie<V>
     }
 
     /**
+     * 获取值
+     * @param key 键
+     * @return
+     */
+    public V get(String key)
+    {
+        int index = exactMatchSearch(key);
+        if (index >= 0)
+        {
+            return v[index];
+        }
+
+        return null;
+    }
+
+    /**
      * 命中一个模式串的处理方法
      */
     public interface IHit<V>
@@ -313,6 +353,19 @@ public class AhoCorasickDoubleArrayTrie<V>
          * @param value 模式串对应的值
          */
         void hit(int begin, int end, V value);
+    }
+
+    public interface IHitFull<V>
+    {
+        /**
+         *
+         * 命中一个模式串
+         * @param begin 模式串在母文本中的起始位置
+         * @param end   模式串在母文本中的终止位置
+         * @param value 模式串对应的值的数组
+         * @param index 模式串对应的值的下标
+         */
+        void hit(int begin, int end, V[] value, int index);
     }
 
     /**
@@ -610,9 +663,9 @@ public class AhoCorasickDoubleArrayTrie<V>
      * 精确匹配
      *
      * @param key 键
-     * @return 值
+     * @return 值的下标
      */
-    private int exactMatchSearch(String key)
+    public int exactMatchSearch(String key)
     {
         return exactMatchSearch(key, 0, 0, 0);
     }

@@ -12,10 +12,10 @@
 package com.hankcs.hanlp.utility;
 
 import com.hankcs.hanlp.dictionary.BiGramDictionary;
+import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 
 import static com.hankcs.hanlp.utility.Predefine.*;
-import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * @author hankcs
@@ -36,7 +36,9 @@ public class MathTools
         {
             frequency = 1;  // 防止发生除零错误
         }
-        int nTwoWordsFreq = BiGramDictionary.getBiFrequency(from.word, to.word);
+//        int nTwoWordsFreq = CoreBiGramDictionaryEx.getBiFrequency(from, to);
+//        int nTwoWordsFreq = BiGramDictionary.getBiFrequency(from.word, to.word);
+        int nTwoWordsFreq = CoreBiGramTableDictionary.getBiFrequency(from.wordID, to.wordID);
         double value = -Math.log(dSmoothingPara * frequency / (MAX_FREQUENCY) + (1 - dSmoothingPara) * ((1 - dTemp) * nTwoWordsFreq / frequency + dTemp));
         if (value < 0.0)
         {

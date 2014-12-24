@@ -428,12 +428,12 @@ public abstract class HiddenMarkovModelSegment extends Segment
         Map.Entry<String, CoreDictionary.Attribute> entry;
         int p = 0;  // 当前处理到什么位置
         int offset;
-        CoreDictionaryACDAT.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHitFull<CoreDictionary.Attribute>()
         {
             @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute value)
+            public void hit(int begin, int end, CoreDictionary.Attribute[] value, int index)
             {
-                wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
+                wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value[index], index));
             }
         });
         // 用户词典查询

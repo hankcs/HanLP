@@ -11,9 +11,11 @@
  */
 package com.hankcs.hanlp.utility;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * 一些预定义的静态全局变量
  * @author He Han
  */
 public class Predefine
@@ -120,7 +122,7 @@ public class Predefine
      */
     public final static String TAG_NUMBER = "未##数";
     /**
-     * 数量词 mq
+     * 数量词 mq （现在觉得应该和数词同等处理，比如一个人和一人都是合理的）
      */
     public final static String TAG_QUANTIFIER = "未##量";
     /**
@@ -140,7 +142,7 @@ public class Predefine
      */
     public final static String TAG_END = "末##末";
     /**
-     * 人名
+     * 人名 nr
      */
     public final static String TAG_PEOPLE = "未##人";
 
@@ -148,6 +150,10 @@ public class Predefine
      * 日志组件
      */
     public static Logger logger = Logger.getLogger("HanLP");
+    static
+    {
+        logger.setLevel(Level.SEVERE);
+    }
 
     /**
      * trie树文件后缀名

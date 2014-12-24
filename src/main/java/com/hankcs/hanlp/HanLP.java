@@ -218,10 +218,6 @@ public class HanLP
                 sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
                 logger.warning("没有找到HanLP.properties，可能会导致找不到data\n" + sbInfo);
             }
-            if (!DEBUG)
-            {
-                logger.setLevel(Level.OFF);
-            }
         }
 
         /**

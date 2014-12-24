@@ -30,9 +30,8 @@ public class PosTagCompiler
         switch (tag)
         {
             case "m":
-                return Predefine.TAG_NUMBER;
             case "mq":
-                return Predefine.TAG_QUANTIFIER;
+                return Predefine.TAG_NUMBER;
             case "nr":
             case "nr1":
             case "nr2":

@@ -80,7 +80,7 @@ public class CharType
                     type[i] = t;
                 }
             }
-            logger.severe("字符类型对应表加载成功，耗时" + (System.currentTimeMillis() - start) + " ms");
+            logger.info("字符类型对应表加载成功，耗时" + (System.currentTimeMillis() - start) + " ms");
         }
     }
 

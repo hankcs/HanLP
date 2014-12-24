@@ -31,10 +31,9 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class NatureDictionaryMaker extends CommonDictionaryMaker
 {
-
-    public NatureDictionaryMaker(EasyDictionary dictionary)
+    public NatureDictionaryMaker()
     {
-        super(dictionary);
+        super(null);
     }
 
     @Override
@@ -47,6 +46,8 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
             IWord pre = null;
             for (IWord word : wordList)
             {
+                // 制作词性词频词典
+                dictionaryMaker.add(word);
                 if (pre != null)
                 {
                     nGramDictionaryMaker.addPair(pre, word);
@@ -135,9 +136,9 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
     public static void main(String[] args)
     {
 //        makeCoreDictionary("D:\\JavaProjects\\CorpusToolBox\\data\\2014", "data/dictionary/CoreNatureDictionary.txt");
-        EasyDictionary dictionary = EasyDictionary.create("data/dictionary/CoreNatureDictionary.txt");
-        final NatureDictionaryMaker dictionaryMaker = new NatureDictionaryMaker(dictionary);
-        CorpusLoader.walk("D:\\JavaProjects\\CorpusToolBox\\data\\2014\\", new CorpusLoader.Handler()
+//        EasyDictionary dictionary = EasyDictionary.create("data/dictionary/CoreNatureDictionary.txt");
+        final NatureDictionaryMaker dictionaryMaker = new NatureDictionaryMaker();
+        CorpusLoader.walk("D:\\JavaProjects\\CorpusToolBox\\data\\2014", new CorpusLoader.Handler()
         {
             @Override
             public void handle(Document document)
@@ -146,6 +147,6 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
                 dictionaryMaker.compute(CorpusUtil.convert2CompatibleList(document.getSimpleSentenceList(true)));  // 先打一遍拆分的
             }
         });
-        dictionaryMaker.saveTxtTo("D:\\JavaProjects\\HanLP\\data\\dictionary\\CoreNatureDictionary");
+        dictionaryMaker.saveTxtTo("data/test/CoreNatureDictionary");
     }
 }

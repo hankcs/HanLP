@@ -1,14 +1,11 @@
 package com.hankcs.test.algorithm;
 
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Emit;
-import com.hankcs.hanlp.algoritm.ahocorasick.trie.State;
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.hankcs.hanlp.collection.dartsclone.DoubleArray;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.dictionary.CoreDictionaryACDAT;
 import junit.framework.TestCase;
 
 import java.util.*;
@@ -184,7 +181,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
     public void testCoreDictionaryACDAT() throws Exception
     {
         final String text = "商品和服务";
-        CoreDictionaryACDAT.trie.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        CoreDictionary.trie.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
         {
             @Override
             public void hit(int begin, int end, CoreDictionary.Attribute value)

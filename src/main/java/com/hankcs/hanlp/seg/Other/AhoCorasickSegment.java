@@ -14,7 +14,6 @@ package com.hankcs.hanlp.seg.Other;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.dictionary.CoreDictionaryACDAT;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -37,7 +36,7 @@ public class AhoCorasickSegment extends Segment
         final int[] wordNet = new int[charArray.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
-        CoreDictionaryACDAT.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
         {
             @Override
             public void hit(int begin, int end, CoreDictionary.Attribute value)

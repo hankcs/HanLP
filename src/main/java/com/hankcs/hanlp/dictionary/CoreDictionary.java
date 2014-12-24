@@ -2,18 +2,17 @@
  * <summary></summary>
  * <author>He Han</author>
  * <email>hankcs.cn@gmail.com</email>
- * <create-date>2014/5/10 12:42</create-date>
+ * <create-date>2014/12/23 20:07</create-date>
  *
- * <copyright file="WordDictionary.java" company="上海林原信息科技有限公司">
+ * <copyright file="CoreDictionaryACDAT.java" company="上海林原信息科技有限公司">
  * Copyright (c) 2003-2014, 上海林原信息科技有限公司. All Right Reserved, http://www.linrunsoft.com/
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
 package com.hankcs.hanlp.dictionary;
 
-
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.Predefine;
@@ -25,17 +24,15 @@ import java.util.*;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 核心词典
- *
- * @author He Han
+ * 使用AhoCorasickDoubleArrayTrie实现的核心词典
+ * @author hankcs
  */
 public class CoreDictionary
 {
-    static DoubleArrayTrie<Attribute> trie = new DoubleArrayTrie<Attribute>();
+    public static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie = new AhoCorasickDoubleArrayTrie<>();
     public final static String path = HanLP.Config.CoreDictionaryPath;
     public static final int totalFrequency = 221894;
 
-    //    public final static String path = "data/dictionary/CoreNatureDictionary.mini.txt";
     // 自动加载词典
     static
     {
@@ -51,13 +48,11 @@ public class CoreDictionary
         }
     }
 
-
     public static boolean load(String path)
     {
         logger.info("核心词典开始加载:" + path);
         if (loadDat(path)) return true;
-        List<String> wordList = new ArrayList<String>();
-        List<Attribute> attributeList = new ArrayList<Attribute>();
+        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<>();
         BufferedReader br = null;
         try
         {
@@ -67,28 +62,28 @@ public class CoreDictionary
             long start = System.currentTimeMillis();
             while ((line = br.readLine()) != null)
             {
-                String param[] = line.split(" ");
-                wordList.add(param[0]);
+                String param[] = line.split("\\s");
                 int natureCount = (param.length - 1) / 2;
-                Attribute attribute = new Attribute(natureCount);
+                CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natureCount);
                 for (int i = 0; i < natureCount; ++i)
                 {
                     attribute.nature[i] = Enum.valueOf(Nature.class, param[1 + 2 * i]);
                     attribute.frequency[i] = Integer.parseInt(param[2 + 2 * i]);
                     attribute.totalFrequency += attribute.frequency[i];
                 }
-                attributeList.add(attribute);
+                map.put(param[0], attribute);
                 MAX_FREQUENCY += attribute.totalFrequency;
             }
-            logger.info("核心词典读入词条" + wordList.size() + " 全部频次" + MAX_FREQUENCY + "，耗时" + (System.currentTimeMillis() - start) + "ms");
+            logger.info("核心词典读入词条" + map.size() + " 全部频次" + MAX_FREQUENCY + "，耗时" + (System.currentTimeMillis() - start) + "ms");
             br.close();
-            logger.info("核心词典DAT构建结果:" + trie.build(wordList, attributeList));
+            trie.build(map);
             logger.info("核心词典加载成功:" + trie.size() + "个词条");
             try
             {
                 DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
+                Collection<CoreDictionary.Attribute> attributeList = map.values();
                 out.writeInt(attributeList.size());
-                for (Attribute attribute : attributeList)
+                for (CoreDictionary.Attribute attribute : attributeList)
                 {
                     out.writeInt(attribute.totalFrequency);
                     out.writeInt(attribute.nature.length);
@@ -98,7 +93,7 @@ public class CoreDictionary
                         out.writeInt(attribute.frequency[i]);
                     }
                 }
-                if (!trie.save(out)) return false;
+                trie.save(out);
                 out.close();
             }
             catch (Exception e)
@@ -134,14 +129,14 @@ public class CoreDictionary
             ByteArray byteArray = ByteArray.createByteArray(path + Predefine.BIN_EXT);
             if (byteArray == null) return false;
             int size = byteArray.nextInt();
-            Attribute[] attributes = new Attribute[size];
+            CoreDictionary.Attribute[] attributes = new CoreDictionary.Attribute[size];
             final Nature[] natureIndexArray = Nature.values();
             for (int i = 0; i < size; ++i)
             {
                 // 第一个是全部频次，第二个是词性个数
                 int currentTotalFrequency = byteArray.nextInt();
                 int length = byteArray.nextInt();
-                attributes[i] = new Attribute(length);
+                attributes[i] = new CoreDictionary.Attribute(length);
                 attributes[i].totalFrequency = currentTotalFrequency;
                 for (int j = 0; j < length; ++j)
                 {
@@ -177,72 +172,9 @@ public class CoreDictionary
         return attribute.totalFrequency;
     }
 
-    /**
-     * 词典是否包含这个词语
-     *
-     * @param key
-     * @return
-     */
     public static boolean contains(String key)
     {
         return trie.get(key) != null;
-    }
-
-    public static BaseSearcher getSearcher(String text)
-    {
-        return new Searcher(text);
-    }
-
-    public static BaseSearcher getSearcher(char[] text)
-    {
-        return new Searcher(text);
-    }
-
-    public static class Searcher extends BaseSearcher<Attribute>
-    {
-        /**
-         * 分词从何处开始，这是一个状态
-         */
-        int begin;
-
-        private LinkedList<Map.Entry<String, Attribute>> entryList;
-
-        protected Searcher(char[] c)
-        {
-            super(c);
-            entryList = new LinkedList<Map.Entry<String, Attribute>>();
-        }
-
-        protected Searcher(String text)
-        {
-            super(text);
-            entryList = new LinkedList<Map.Entry<String, Attribute>>();
-        }
-
-        @Override
-        public Map.Entry<String, Attribute> next()
-        {
-            // 保证首次调用找到一个词语
-            while (entryList.size() == 0 && begin < c.length)
-            {
-                entryList = trie.commonPrefixSearchWithValue(c, begin);
-                ++begin;
-            }
-            // 之后调用仅在缓存用完的时候调用一次
-            if (entryList.size() == 0 && begin < c.length)
-            {
-                entryList = trie.commonPrefixSearchWithValue(c, begin);
-                ++begin;
-            }
-            if (entryList.size() == 0)
-            {
-                return null;
-            }
-            Map.Entry<String, Attribute> result = entryList.getFirst();
-            entryList.removeFirst();
-            offset = begin - 1;
-            return result;
-        }
     }
 
     /**
@@ -375,5 +307,15 @@ public class CoreDictionary
             }
             return sb.toString();
         }
+    }
+
+    /**
+     * 获取词语的ID
+     * @param a
+     * @return
+     */
+    public static int getWordID(String a)
+    {
+        return CoreDictionary.trie.exactMatchSearch(a);
     }
 }

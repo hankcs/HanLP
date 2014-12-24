@@ -37,6 +37,10 @@ public class Vertex
      * 如果要修改，应当new一个Attribute
      */
     public CoreDictionary.Attribute attribute;
+    /**
+     * 等效词ID,也是Attribute的下标
+     */
+    public int wordID;
 
     /**
      * 在一维顶点数组中的下标，可以视作这个顶点的id
@@ -46,11 +50,11 @@ public class Vertex
     /**
      * 始##始
      */
-    public static Vertex B = new Vertex("始##始", " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10));
+    public static Vertex B = new Vertex(Predefine.TAG_BIGIN, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
     /**
      * 末##末
      */
-    public static Vertex E = new Vertex("末##末", " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10));
+    public static Vertex E = new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
 
     /**
      * 最复杂的构造函数
@@ -59,6 +63,11 @@ public class Vertex
      * @param attribute 属性
      */
     public Vertex(String word, String realWord, CoreDictionary.Attribute attribute)
+    {
+        this(word, realWord, attribute, -1);
+    }
+
+    public Vertex(String word, String realWord, CoreDictionary.Attribute attribute, int wordID)
     {
         assert word.length() > 0 : "构造空白节点会导致死循环！";
         if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.n, 1);   // 安全起见
@@ -83,7 +92,7 @@ public class Vertex
 //                case nz:
                 case nx:
                 {
-                        word= Predefine.TAG_PROPER;
+                    word= Predefine.TAG_PROPER;
                 }
                 break;
                 case nt:
@@ -102,7 +111,7 @@ public class Vertex
                 case m:
                 case mq:
                 {
-                        word= Predefine.TAG_NUMBER;
+                    word= Predefine.TAG_NUMBER;
                 }
                 break;
                 case x:
@@ -118,7 +127,7 @@ public class Vertex
 //                break;
                 case t:
                 {
-                        word= Predefine.TAG_TIME;
+                    word= Predefine.TAG_TIME;
                 }
                 break;
             }
@@ -126,6 +135,7 @@ public class Vertex
         this.word = word;
         this.realWord = realWord;
         this.attribute = attribute;
+        this.wordID = wordID;
     }
 
     /**
@@ -136,6 +146,11 @@ public class Vertex
     public Vertex(String word, CoreDictionary.Attribute attribute)
     {
         this(word, word, attribute);
+    }
+
+    public Vertex(String word, CoreDictionary.Attribute attribute, int wordID)
+    {
+        this(word, word, attribute, wordID);
     }
 
     /**

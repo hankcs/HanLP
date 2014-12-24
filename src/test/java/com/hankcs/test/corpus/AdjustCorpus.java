@@ -13,6 +13,7 @@ package com.hankcs.test.corpus;
 
 
 import com.hankcs.hanlp.corpus.io.FolderWalker;
+import junit.framework.TestCase;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,11 +27,10 @@ import java.util.List;
  * 部分标注有问题，比如逗号缺少标注等等，尝试修复它
  * @author hankcs
  */
-public class AdjustCorpus
+public class AdjustCorpus extends TestCase
 {
-    public static void main(String[] args)
+    public void testAdjust() throws Exception
     {
-//        handle(new File("D:\\JavaProjects\\CorpusToolBox\\data\\2014\\0106\\c231190-20308402.txt"));
         List<File> fileList = FolderWalker.open("D:\\JavaProjects\\CorpusToolBox\\data\\2014\\");
         for (File file : fileList)
         {

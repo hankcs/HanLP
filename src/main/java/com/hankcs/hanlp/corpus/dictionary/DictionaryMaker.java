@@ -102,6 +102,19 @@ public class DictionaryMaker implements ISaveAble
     }
 
     /**
+     * 从磁盘加载
+     * @param path
+     * @return
+     */
+    public static DictionaryMaker load(String path)
+    {
+        DictionaryMaker dictionaryMaker = new DictionaryMaker();
+        dictionaryMaker.addAll(DictionaryMaker.loadAsItemList(path));
+
+        return dictionaryMaker;
+    }
+
+    /**
      * 插入全部条目
      *
      * @param itemList
