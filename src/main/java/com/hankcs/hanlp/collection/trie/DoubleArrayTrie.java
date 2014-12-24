@@ -480,6 +480,12 @@ public class DoubleArrayTrie<V> implements Serializable
         return true;
     }
 
+    public void save(ObjectOutputStream out) throws IOException
+    {
+        out.writeObject(base);
+        out.writeObject(check);
+    }
+
     /**
      * 从磁盘加载，需要额外提供值
      *

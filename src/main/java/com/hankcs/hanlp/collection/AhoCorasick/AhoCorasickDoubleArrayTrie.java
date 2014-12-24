@@ -13,9 +13,11 @@ package com.hankcs.hanlp.collection.AhoCorasick;
 
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -256,7 +258,7 @@ public class AhoCorasickDoubleArrayTrie<V>
             {
                 for (int hit : hitArray)
                 {
-                    processor.hit(position - l[hit], position, v, hit);
+                    processor.hit(position - l[hit], position, v[hit], hit);
                 }
             }
             ++position;
@@ -290,6 +292,25 @@ public class AhoCorasickDoubleArrayTrie<V>
         {
             out.writeInt(length);
         }
+    }
+
+    public void save(ObjectOutputStream out) throws IOException
+    {
+        out.writeObject(base);
+        out.writeObject(check);
+        out.writeObject(fail);
+        out.writeObject(output);
+        out.writeObject(l);
+    }
+
+    public void load(ObjectInputStream in, V[] value) throws IOException, ClassNotFoundException
+    {
+        base = (int[]) in.readObject();
+        check = (int[]) in.readObject();
+        fail = (int[]) in.readObject();
+        output = (int[][]) in.readObject();
+        l = (int[]) in.readObject();
+        v = value;
     }
 
     public boolean load(ByteArray byteArray, V[] value)
@@ -362,10 +383,10 @@ public class AhoCorasickDoubleArrayTrie<V>
          * 命中一个模式串
          * @param begin 模式串在母文本中的起始位置
          * @param end   模式串在母文本中的终止位置
-         * @param value 模式串对应的值的数组
+         * @param value 模式串对应的值
          * @param index 模式串对应的值的下标
          */
-        void hit(int begin, int end, V[] value, int index);
+        void hit(int begin, int end, V value, int index);
     }
 
     /**

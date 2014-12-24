@@ -17,9 +17,10 @@ import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import junit.framework.TestCase;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author hankcs
@@ -104,6 +105,47 @@ public class testBiGramDictionary extends TestCase
 
     public void testSingle() throws Exception
     {
+        HanLP.Config.enableDebug();
         System.out.println(CoreBiGramTableDictionary.getBiFrequency("团结", "奋斗"));
+    }
+
+    public void testBenchmark() throws Exception
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(HanLP.Config.BiGramDictionaryPath)));
+        String line;
+        List<String[]> twoWordList = new LinkedList<>();
+        while ((line = br.readLine()) != null)
+        {
+            String[] params = line.split("\\s");
+            String[] twoWord = params[0].split("@", 2);
+            twoWordList.add(twoWord);
+        }
+        br.close();
+        long start = System.currentTimeMillis();
+        for (String[] twoWord : twoWordList)
+        {
+        }
+    }
+
+    public void testObjectOutPut() throws Exception
+    {
+        int size = 5563418;
+        int[] array = new int[size];
+        for (int i = 0; i < array.length; i++)
+        {
+            array[i] = i;
+        }
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data/test/out.bin"));
+        out.writeObject(array);
+        out.close();
+
+        long start = System.currentTimeMillis();
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream("data/test/out.bin"));
+        int[] inArray = (int[]) in.readObject();
+        System.out.println(System.currentTimeMillis() - start);
+        for (int i = 0; i < inArray.length; i++)
+        {
+            assertEquals(i, inArray[i]);
+        }
     }
 }

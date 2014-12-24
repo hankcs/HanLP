@@ -431,9 +431,9 @@ public abstract class HiddenMarkovModelSegment extends Segment
         CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHitFull<CoreDictionary.Attribute>()
         {
             @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute[] value, int index)
+            public void hit(int begin, int end, CoreDictionary.Attribute value, int index)
             {
-                wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value[index], index));
+                wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value, index));
             }
         });
         // 用户词典查询

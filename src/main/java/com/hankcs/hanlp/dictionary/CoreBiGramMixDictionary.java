@@ -170,33 +170,33 @@ public class CoreBiGramMixDictionary
 
 
 
-    public static int getBiFrequency(Vertex from, Vertex to)
-    {
-        StringBuilder key = new StringBuilder();
-        int idA = from.wordID;
-        if (idA == -1)
-        {
-            key.append(from.word);
-        }
-        else
-        {
-            key.append(ByteUtil.convertIntToTwoChar(idA));
-        }
-        key.append('@');
-        int idB = to.wordID;
-        if (idB == -1)
-        {
-            key.append(to.word);
-        }
-        else
-        {
-            key.append(ByteUtil.convertIntToTwoChar(idB));
-        }
-
-        Integer freq = trie.get(key.toString());
-        if (freq == null) return 0;
-        return freq;
-    }
+//    public static int getBiFrequency(Vertex from, Vertex to)
+//    {
+//        StringBuilder key = new StringBuilder();
+//        int idA = from.wordID;
+//        if (idA == -1)
+//        {
+//            key.append(from.word);
+//        }
+//        else
+//        {
+//            key.append(ByteUtil.convertIntToTwoChar(idA));
+//        }
+//        key.append('@');
+//        int idB = to.wordID;
+//        if (idB == -1)
+//        {
+//            key.append(to.word);
+//        }
+//        else
+//        {
+//            key.append(ByteUtil.convertIntToTwoChar(idB));
+//        }
+//
+//        Integer freq = trie.get(key.toString());
+//        if (freq == null) return 0;
+//        return freq;
+//    }
 
     static void buildID(String word, StringBuilder sbStorage)
     {

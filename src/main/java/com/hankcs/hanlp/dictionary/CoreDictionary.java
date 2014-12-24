@@ -77,7 +77,7 @@ public class CoreDictionary
             logger.info("核心词典读入词条" + map.size() + " 全部频次" + MAX_FREQUENCY + "，耗时" + (System.currentTimeMillis() - start) + "ms");
             br.close();
             trie.build(map);
-            logger.info("核心词典加载成功:" + trie.size() + "个词条");
+            logger.info("核心词典加载成功:" + trie.size() + "个词条，下面将写入缓存……");
             try
             {
                 DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));

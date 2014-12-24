@@ -138,17 +138,21 @@ public class CoreBiGramTableDictionary
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
-            out.writeInt(start.length);
-            for (int i : start)
-            {
-                out.writeInt(i);
-            }
-            out.writeInt(pair.length);
-            for (int i : pair)
-            {
-                out.writeInt(i);
-            }
+//            DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
+//            out.writeInt(start.length);
+//            for (int i : start)
+//            {
+//                out.writeInt(i);
+//            }
+//            out.writeInt(pair.length);
+//            for (int i : pair)
+//            {
+//                out.writeInt(i);
+//            }
+//            out.close();
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path));
+            out.writeObject(start);
+            out.writeObject(pair);
             out.close();
         }
         catch (Exception e)
@@ -162,23 +166,35 @@ public class CoreBiGramTableDictionary
 
     static boolean loadDat(String path)
     {
-        ByteArray byteArray = ByteArray.createByteArray(path);
-        if (byteArray == null) return false;
+//        ByteArray byteArray = ByteArray.createByteArray(path);
+//        if (byteArray == null) return false;
+//
+//        int size = byteArray.nextInt(); // 这两个数组从byte转为int竟然要花4秒钟
+//        start = new int[size];
+//        for (int i = 0; i < size; ++i)
+//        {
+//            start[i] = byteArray.nextInt();
+//        }
+//
+//        size = byteArray.nextInt();
+//        pair = new int[size];
+//        for (int i = 0; i < size; ++i)
+//        {
+//            pair[i] = byteArray.nextInt();
+//        }
 
-        int size = byteArray.nextInt();
-        start = new int[size];
-        for (int i = 0; i < size; ++i)
+        try
         {
-            start[i] = byteArray.nextInt();
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(path));
+            start = (int[]) in.readObject();
+            pair = (int[]) in.readObject();
+            in.close();
         }
-
-        size = byteArray.nextInt();
-        pair = new int[size];
-        for (int i = 0; i < size; ++i)
+        catch (Exception e)
         {
-            pair[i] = byteArray.nextInt();
+            logger.log(Level.WARNING, "尝试载入缓存文件" + path + "发生异常", e);
+            return false;
         }
-
         return true;
     }
 
