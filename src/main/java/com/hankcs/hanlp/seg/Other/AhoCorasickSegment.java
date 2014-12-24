@@ -14,6 +14,7 @@ package com.hankcs.hanlp.seg.Other;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -52,6 +53,25 @@ public class AhoCorasickSegment extends Segment
                 }
             }
         });
+        if (config.useCustomDictionary)
+        {
+            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            {
+                @Override
+                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                {
+                    int length = end - begin;
+                    if (length > wordNet[begin])
+                    {
+                        wordNet[begin] = length;
+                        if (config.speechTagging)
+                        {
+                            natureArray[begin] = value.nature[0];
+                        }
+                    }
+                }
+            });
+        }
         LinkedList<Term> termList = new LinkedList<>();
         if (config.speechTagging)
         {
@@ -89,5 +109,11 @@ public class AhoCorasickSegment extends Segment
             i += wordNet[i];
         }
         return termList;
+    }
+
+    public AhoCorasickSegment()
+    {
+        super();
+        config.useCustomDictionary = false;
     }
 }
