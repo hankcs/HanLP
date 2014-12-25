@@ -313,16 +313,6 @@ public class AhoCorasickDoubleArrayTrie<V>
         int ncheck[] = new int[size + 65535];
         System.arraycopy(check, 0, ncheck, 0, size);
         check = ncheck;
-
-//        int nfail[] = new int[size + 65535];
-//        System.arraycopy(fail, 0, nfail, 0, size);
-//        fail = nfail;
-//
-//        int noutput[][] = new int[size][];
-//        for (int i = 0; i < size; i++)
-//        {
-//            noutput[i] = output[i];
-//        }
     }
 
     public void load(ObjectInputStream in, V[] value) throws IOException, ClassNotFoundException

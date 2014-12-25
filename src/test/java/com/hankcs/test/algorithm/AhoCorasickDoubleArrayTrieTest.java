@@ -136,7 +136,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
             Set<String> mySet = new HashSet<>();
             for (AhoCorasickDoubleArrayTrie<String>.Hit<String> entry : entries)
             {
-                mySet.add(entry.value + entry.end);
+                mySet.add(entry.value + (entry.end - 1));
             }
 
             assertEquals(otherSet, mySet);
