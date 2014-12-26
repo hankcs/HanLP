@@ -81,7 +81,7 @@ public class PersonRecognition
             {
                 if (vertex.realWord.length() == 2)
                 {
-                    tagList.add(new EnumItem<NR>(NR.X, 1000));
+                    tagList.add(new EnumItem<NR>(NR.X, NR.G));
                     continue;
                 }
             }

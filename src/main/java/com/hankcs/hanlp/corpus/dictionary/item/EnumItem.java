@@ -38,6 +38,19 @@ public class EnumItem<E extends Enum<E>>
         labelMap.put(label, frequency);
     }
 
+    /**
+     * 创建一个条目，其标签频次都是1，各标签由参数指定
+     * @param labels
+     */
+    public EnumItem(E... labels)
+    {
+        this();
+        for (E label : labels)
+        {
+            labelMap.put(label, 1);
+        }
+    }
+
     public void addLabel(E label)
     {
         Integer frequency = labelMap.get(label);
