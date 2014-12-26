@@ -95,7 +95,7 @@ public class PlaceDictionary
             }
             String name = sbName.toString();
             // 对一些bad case做出调整
-//            if (isBadCase(name)) continue;
+            if (isBadCase(name)) continue;
 
             // 正式算它是一个名字
             if (HanLP.Config.DEBUG)
@@ -122,6 +122,6 @@ public class PlaceDictionary
     {
         EnumItem<NS> nrEnumItem = dictionary.get(name);
         if (nrEnumItem == null) return false;
-        return nrEnumItem.containsLabel(NS.A);
+        return nrEnumItem.containsLabel(NS.Z);
     }
 }
