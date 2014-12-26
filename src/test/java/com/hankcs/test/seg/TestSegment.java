@@ -31,8 +31,8 @@ public class TestSegment extends TestCase
 {
     public void testSeg() throws Exception
     {
-//        HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(false);
+        HanLP.Config.enableDebug();
+        Segment segment = new DijkstraSegment().enableCustomDictionary(true);
         System.out.println(segment.seg("陈膺奥是我的女神"));
     }
 

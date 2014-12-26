@@ -66,7 +66,7 @@ public class testBintrie extends TestCase
 //    {
 //        BinTrie<String> trieNormal = new BinTrie<>();
 //        SmartBinTrie<String> trieSmart = new SmartBinTrie<>();
-//        BinTrie<CoreDictionary.Attribute> dictionary = CustomDictionary.getTrie();
+//        BinTrie<CoreDictionary.Attribute> dictionary = CustomDictionary.getBinTrie();
 //        List<String> wordList = new LinkedList<>();
 //        for (Map.Entry<String, CoreDictionary.Attribute> entry : dictionary.entrySet())
 //        {

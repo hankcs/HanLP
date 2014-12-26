@@ -170,12 +170,12 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
             {
                 int end = entry.end;
                 int start = entry.begin;
-//                System.out.printf("[%d:%d]=%s\n", start, end, entry.getValue());
+//                System.out.printf("[%d:%d]=%s\n", start, end, entry.value);
 
                 assertEquals(sentence.substring(start, end), entry.value);
             }
         }
-//        System.out.printf("%d ms\n", System.currentTimeMillis() - timeMillis);
+        System.out.printf("%d ms\n", System.currentTimeMillis() - timeMillis);
     }
 
     public void testCoreDictionaryACDAT() throws Exception
