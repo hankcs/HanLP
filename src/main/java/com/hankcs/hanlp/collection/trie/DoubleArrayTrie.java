@@ -607,7 +607,6 @@ public class DoubleArrayTrie<V> implements Serializable
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             return false;
         }
         return true;

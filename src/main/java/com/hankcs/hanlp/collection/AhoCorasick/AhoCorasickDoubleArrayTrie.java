@@ -374,6 +374,17 @@ public class AhoCorasickDoubleArrayTrie<V>
     }
 
     /**
+     * 从值数组中提取下标为index的值<br>
+     *     注意为了效率，此处不进行参数校验
+     * @param index 下标
+     * @return 值
+     */
+    public V get(int index)
+    {
+        return v[index];
+    }
+
+    /**
      * 命中一个模式串的处理方法
      */
     public interface IHit<V>

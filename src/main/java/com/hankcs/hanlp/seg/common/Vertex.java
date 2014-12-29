@@ -16,10 +16,12 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.Map;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 顶点
+ *
  * @author hankcs
  */
 public class Vertex
@@ -58,8 +60,9 @@ public class Vertex
 
     /**
      * 最复杂的构造函数
-     * @param word 编译后的词
-     * @param realWord 真实词
+     *
+     * @param word      编译后的词
+     * @param realWord  真实词
      * @param attribute 属性
      */
     public Vertex(String word, String realWord, CoreDictionary.Attribute attribute)
@@ -70,6 +73,22 @@ public class Vertex
     public Vertex(String word, String realWord, CoreDictionary.Attribute attribute, int wordID)
     {
         if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.n, 1);   // 安全起见
+        if (word == null) word = compileRealWord(realWord, attribute);
+        assert word.length() > 0 : "构造空白节点会导致死循环！";
+        this.word = word;
+        this.realWord = realWord;
+        this.attribute = attribute;
+        this.wordID = wordID;
+    }
+
+    /**
+     * 将原词转为等效词串
+     * @param realWord 原来的词
+     * @param attribute 等效词串
+     * @return
+     */
+    private static String compileRealWord(String realWord, CoreDictionary.Attribute attribute)
+    {
         if (attribute.nature.length == 1)
         {
             switch (attribute.nature[0])
@@ -80,20 +99,18 @@ public class Vertex
                 case nrf:
                 case nrj:
                 {
-                    word = Predefine.TAG_PEOPLE;
-                }break;
+                    return Predefine.TAG_PEOPLE;
+                }
                 case ns:
                 case nsf:
                 {
-                    word= Predefine.TAG_PLACE;
+                    return Predefine.TAG_PLACE;
                 }
-                break;
 //                case nz:
                 case nx:
                 {
-                    word= Predefine.TAG_PROPER;
+                    return Predefine.TAG_PROPER;
                 }
-                break;
                 case nt:
                 case ntc:
                 case ntcf:
@@ -104,20 +121,17 @@ public class Vertex
                 case nts:
                 case nth:
                 {
-                    word= Predefine.TAG_GROUP;
+                    return Predefine.TAG_GROUP;
                 }
-                break;
                 case m:
                 case mq:
                 {
-                    word= Predefine.TAG_NUMBER;
+                    return Predefine.TAG_NUMBER;
                 }
-                break;
                 case x:
                 {
-                    word= Predefine.TAG_CLUSTER;
+                    return Predefine.TAG_CLUSTER;
                 }
-                break;
 //                case xx:
 //                case w:
 //                {
@@ -126,21 +140,17 @@ public class Vertex
 //                break;
                 case t:
                 {
-                    word= Predefine.TAG_TIME;
+                    return Predefine.TAG_TIME;
                 }
-                break;
             }
         }
-        if (word == null) word = realWord;
-        assert word.length() > 0 : "构造空白节点会导致死循环！";
-        this.word = word;
-        this.realWord = realWord;
-        this.attribute = attribute;
-        this.wordID = wordID;
+
+        return realWord;
     }
 
     /**
      * 真实词与编译词相同时候的构造函数
+     *
      * @param realWord
      * @param attribute
      */
@@ -156,6 +166,7 @@ public class Vertex
 
     /**
      * 通过一个键值对方便地构造节点
+     *
      * @param entry
      */
     public Vertex(Map.Entry<String, CoreDictionary.Attribute> entry)
@@ -165,6 +176,7 @@ public class Vertex
 
     /**
      * 自动构造一个合理的顶点
+     *
      * @param realWord
      */
     public Vertex(String realWord)
@@ -179,6 +191,7 @@ public class Vertex
 
     /**
      * 获取真实词
+     *
      * @return
      */
     public String getRealWord()
@@ -188,6 +201,7 @@ public class Vertex
 
     /**
      * 获取词的属性
+     *
      * @return
      */
     public CoreDictionary.Attribute getAttribute()
@@ -197,6 +211,7 @@ public class Vertex
 
     /**
      * 与另一个顶点合并
+     *
      * @param other 另一个顶点
      * @return 合并后的自己
      */
@@ -208,6 +223,7 @@ public class Vertex
 
     /**
      * 将属性的词性锁定为nature
+     *
      * @param nature 词性
      * @return 如果锁定词性在词性列表中，返回真，否则返回假
      */
@@ -230,7 +246,8 @@ public class Vertex
 
     /**
      * 将属性的词性锁定为nature，此重载会降低性能
-     * @param nature 词性
+     *
+     * @param nature     词性
      * @param updateWord 是否更新预编译字串
      * @return 如果锁定词性在词性列表中，返回真，否则返回假
      */
@@ -255,6 +272,7 @@ public class Vertex
 
     /**
      * 获取该节点的词性，如果词性还未确定，则返回null
+     *
      * @return
      */
     public Nature getNature()
@@ -269,6 +287,7 @@ public class Vertex
 
     /**
      * 猜测最可能的词性，也就是这个节点的词性中出现频率最大的那一个词性
+     *
      * @return
      */
     public Nature guessNature()
@@ -283,6 +302,7 @@ public class Vertex
 
     /**
      * 复制自己
+     *
      * @return 自己的备份
      */
     public Vertex copy()
@@ -304,6 +324,7 @@ public class Vertex
 
     /**
      * 创建一个数词实例
+     *
      * @param realWord 数字对应的真实字串
      * @return 数词顶点
      */
@@ -314,6 +335,7 @@ public class Vertex
 
     /**
      * 创建一个地名实例
+     *
      * @param realWord 数字对应的真实字串
      * @return 地名顶点
      */
@@ -324,6 +346,7 @@ public class Vertex
 
     /**
      * 创建一个标点符号实例
+     *
      * @param realWord 标点符号对应的真实字串
      * @return 标点符号顶点
      */
@@ -334,6 +357,7 @@ public class Vertex
 
     /**
      * 创建一个人名实例
+     *
      * @param realWord
      * @return
      */
@@ -344,6 +368,7 @@ public class Vertex
 
     /**
      * 创建一个音译人名实例
+     *
      * @param realWord
      * @return
      */
@@ -354,6 +379,7 @@ public class Vertex
 
     /**
      * 创建一个日本人名实例
+     *
      * @param realWord
      * @return
      */
@@ -364,6 +390,7 @@ public class Vertex
 
     /**
      * 创建一个人名实例
+     *
      * @param realWord
      * @param frequency
      * @return
@@ -375,6 +402,7 @@ public class Vertex
 
     /**
      * 创建一个地名实例
+     *
      * @param realWord
      * @param frequency
      * @return
@@ -386,6 +414,7 @@ public class Vertex
 
     /**
      * 创建一个机构名实例
+     *
      * @param realWord
      * @param frequency
      * @return
@@ -397,6 +426,7 @@ public class Vertex
 
     /**
      * 创建一个时间实例
+     *
      * @param realWord 时间对应的真实字串
      * @return 时间顶点
      */

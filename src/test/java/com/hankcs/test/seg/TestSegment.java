@@ -33,7 +33,7 @@ public class TestSegment extends TestCase
     {
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment().enableCustomDictionary(true).enableOrganizationRecognize(false).enablePlaceRecognize(false);
-        System.out.println(segment.seg("苏主任"));
+        System.out.println(segment.seg("邓颖超生前"));
     }
 
     public void testIndexSeg() throws Exception

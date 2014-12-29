@@ -154,9 +154,24 @@ public class CoreDictionary
         return true;
     }
 
+    /**
+     * 获取条目
+     * @param key
+     * @return
+     */
     public static Attribute get(String key)
     {
         return trie.get(key);
+    }
+
+    /**
+     * 获取条目
+     * @param wordID
+     * @return
+     */
+    public static Attribute get(int wordID)
+    {
+        return trie.get(wordID);
     }
 
     /**

@@ -144,10 +144,10 @@ public class WordNet
         int l = line + vertex.realWord.length();
         if (get(l).size() == 0)
         {
-            Vertex first = wordNetAll.getFirst(l);
-            if (first == null) return;
-            vertexes[l].add(first);
-            ++size;
+            List<Vertex> targetLine = wordNetAll.get(l);
+            if (targetLine == null || targetLine.size() == 0) return;
+            vertexes[l].addAll(targetLine);
+            size += targetLine.size();
         }
         // 直达之后一直往后
         for (++l; l < vertexes.length; ++l)

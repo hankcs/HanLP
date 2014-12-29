@@ -14,11 +14,14 @@ package com.hankcs.hanlp.dictionary.nr;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Emit;
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
+import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +49,9 @@ public class PersonDictionary
      */
     public static Trie trie;
 
+    static final int WORD_ID = CoreDictionary.getWordID(Predefine.TAG_PEOPLE);
+    static final CoreDictionary.Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
+
     static
     {
         long start = System.currentTimeMillis();
@@ -54,7 +60,7 @@ public class PersonDictionary
         logger.info(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<>(NR.class);
         transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);
-        trie = new Trie();
+        trie = new Trie().remainLongest();
         trie.addKeyword("BBCD");
         trie.addKeyword("BBE");
         trie.addKeyword("BBZ");
@@ -174,7 +180,7 @@ public class PersonDictionary
             {
                 offset += wordArray[i].realWord.length();
             }
-            wordNetOptimum.insert(offset, Vertex.newPersonInstance(name, 1), wordNetAll);
+            wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_PEOPLE, name, ATTRIBUTE, WORD_ID), wordNetAll);
         }
     }
 
