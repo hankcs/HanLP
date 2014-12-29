@@ -11,7 +11,6 @@
  */
 package com.hankcs.hanlp.utility;
 
-import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 

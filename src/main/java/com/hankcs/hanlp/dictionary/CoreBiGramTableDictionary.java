@@ -31,7 +31,14 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CoreBiGramTableDictionary
 {
+    /**
+     * 描述了词在pair中的范围，具体说来<br>
+     * 给定一个词idA，从pair[start[idA]]开始的start[idA + 1] - start[idA]描述了一些接续的频次
+     */
     static int start[];
+    /**
+     * pair[偶数n]表示key，pair[n+1]表示frequency
+     */
     static int pair[];
 
     public final static String path = HanLP.Config.BiGramDictionaryPath;
@@ -95,7 +102,7 @@ public class CoreBiGramTableDictionary
             }
             br.close();
             start = new int[maxWordId + 1];
-            pair = new int[total];
+            pair = new int[total];  // total是接续的个数*2
             int offset = 0;
 
             for (int i = 0; i < maxWordId; ++i)
@@ -198,10 +205,18 @@ public class CoreBiGramTableDictionary
         return true;
     }
 
-    private static int binarySearch(int[] a, int fromIndex, int toIndex, int key)
+    /**
+     * 二分搜索，由于二元接续前一个词固定时，后一个词比较少，所以二分也能取得很高的性能
+     * @param a 目标数组
+     * @param fromIndex 开始下标
+     * @param length 长度
+     * @param key 词的id
+     * @return 共现频次
+     */
+    private static int binarySearch(int[] a, int fromIndex, int length, int key)
     {
         int low = fromIndex;
-        int high = toIndex - 1;
+        int high = fromIndex + length - 1;
 
         while (low <= high)
         {
@@ -237,7 +252,7 @@ public class CoreBiGramTableDictionary
         {
             return 0;
         }
-        int index = binarySearch(pair, start[idA], start[idA + 1], idB);
+        int index = binarySearch(pair, start[idA], start[idA + 1] - start[idA], idB);
         if (index < 0) return 0;
         index <<= 1;
         return pair[index + 1];

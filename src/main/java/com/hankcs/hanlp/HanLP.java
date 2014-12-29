@@ -216,7 +216,7 @@ public class HanLP
                                       "JRE/lib\n");
                 sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
                 sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
-                logger.warning("没有找到HanLP.properties，可能会导致找不到data\n" + sbInfo);
+                logger.severe("没有找到HanLP.properties，可能会导致找不到data\n" + sbInfo);
             }
         }
 

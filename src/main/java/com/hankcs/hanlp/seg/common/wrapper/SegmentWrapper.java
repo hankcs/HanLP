@@ -65,6 +65,7 @@ public class SegmentWrapper
         String line = br.readLine();
         if (line == null) return null;
         List<Term> termList = segment.seg(line);
+        if (termList.size() == 0) return null;
         termArray = termList.toArray(new Term[0]);
         index = 0;
 

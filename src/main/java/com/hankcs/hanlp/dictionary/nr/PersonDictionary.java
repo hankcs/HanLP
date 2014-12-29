@@ -23,6 +23,7 @@ import com.hankcs.hanlp.algoritm.ahocorasick.trie.Emit;
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
@@ -32,6 +33,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 人名识别用的词典，实际上是对两个词典的包装
+ *
  * @author hankcs
  */
 public class PersonDictionary
@@ -86,23 +88,34 @@ public class PersonDictionary
 
     /**
      * 模式匹配
-     * @param nrList 确定的标注序列
-     * @param vertexList 原始的未加角色标注的序列
+     *
+     * @param nrList         确定的标注序列
+     * @param vertexList     原始的未加角色标注的序列
      * @param wordNetOptimum 待优化的图
      * @param wordNetAll
      */
     public static void parsePattern(List<NR> nrList, List<Vertex> vertexList, WordNet wordNetOptimum, WordNet wordNetAll)
     {
+        // 拆分UV
         ListIterator<Vertex> listIterator = vertexList.listIterator();
         StringBuilder sbPattern = new StringBuilder(nrList.size());
         NR preNR = NR.A;
+        boolean backUp = false;
+        int index = 0;
         for (NR nr : nrList)
         {
+            ++index;
             Vertex current = listIterator.next();
 //            logger.trace("{}/{}", current.realWord, nr);
             switch (nr)
             {
                 case U:
+                    if (!backUp)
+                    {
+                        vertexList = new ArrayList<>(vertexList);
+                        listIterator = vertexList.listIterator(index);
+                        backUp = true;
+                    }
                     sbPattern.append(NR.K.toString());
                     sbPattern.append(NR.B.toString());
                     preNR = B;
@@ -114,6 +127,12 @@ public class PersonDictionary
                     listIterator.add(new Vertex(nowB));
                     continue;
                 case V:
+                    if (!backUp)
+                    {
+                        vertexList = new ArrayList<>(vertexList);
+                        listIterator = vertexList.listIterator(index);
+                        backUp = true;
+                    }
                     if (preNR == B)
                     {
                         sbPattern.append(NR.E.toString());  //BE
@@ -187,6 +206,7 @@ public class PersonDictionary
     /**
      * 因为任何算法都无法解决100%的问题，总是有一些bad case，这些bad case会以“盖公章 A 1”的形式加入词典中<BR>
      * 这个方法返回人名是否是bad case
+     *
      * @param name
      * @return
      */
