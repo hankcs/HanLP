@@ -12,10 +12,13 @@
 package com.hankcs.hanlp.dictionary.py;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.DataOutputStream;
@@ -29,7 +32,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class PinyinDictionary
 {
-    static DoubleArrayTrie<Pinyin[]> trie = new DoubleArrayTrie<>();
+    static AhoCorasickDoubleArrayTrie<Pinyin[]> trie = new AhoCorasickDoubleArrayTrie<>();
     public static final Pinyin[] pinyins = Integer2PinyinConverter.pinyins;
 
     static
@@ -74,12 +77,7 @@ public class PinyinDictionary
             }
             map.put(entry.getKey(), pinyinValue);
         }
-        int resultCode = trie.build(map);
-        if (resultCode < 0)
-        {
-            logger.warning(path + "构建DAT失败，错误码：" + resultCode);
-            return false;
-        }
+        trie.build(map);
         logger.info("正在缓存双数组" + path);
         saveDat(path, trie, map.entrySet());
         return true;
@@ -87,7 +85,7 @@ public class PinyinDictionary
 
     static boolean loadDat(String path)
     {
-        ByteArray byteArray = ByteArray.createByteArray(path + Predefine.VALUE_EXT);
+        ByteArray byteArray = ByteArray.createByteArray(path + Predefine.BIN_EXT);
         if (byteArray == null) return false;
         int size = byteArray.nextInt();
         Pinyin[][] valueArray = new Pinyin[size][];
@@ -100,16 +98,15 @@ public class PinyinDictionary
                 valueArray[i][j] = pinyins[byteArray.nextInt()];
             }
         }
-        if (!trie.load(path + Predefine.TRIE_EXT, valueArray)) return false;
+        if (!trie.load(byteArray, valueArray)) return false;
         return true;
     }
 
-    static boolean saveDat(String path, DoubleArrayTrie<Pinyin[]> trie, Set<Map.Entry<String, Pinyin[]>> entrySet)
+    static boolean saveDat(String path, AhoCorasickDoubleArrayTrie<Pinyin[]> trie, Set<Map.Entry<String, Pinyin[]>> entrySet)
     {
-        if (!trie.save(path + Predefine.TRIE_EXT)) return false;
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.VALUE_EXT));
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
             out.writeInt(entrySet.size());
             for (Map.Entry<String, Pinyin[]> entry : entrySet)
             {
@@ -120,6 +117,7 @@ public class PinyinDictionary
                     out.writeInt(pinyin.ordinal());
                 }
             }
+            trie.save(out);
             out.close();
         }
         catch (Exception e)
@@ -172,47 +170,43 @@ public class PinyinDictionary
      * @param trie
      * @return
      */
-    protected static List<Pinyin> segLongest(char[] charArray, DoubleArrayTrie<Pinyin[]> trie)
+    protected static List<Pinyin> segLongest(char[] charArray, AhoCorasickDoubleArrayTrie<Pinyin[]> trie)
     {
         return segLongest(charArray, trie, true);
     }
 
-    protected static List<Pinyin> segLongest(char[] charArray, DoubleArrayTrie<Pinyin[]> trie, boolean remainNone)
+    protected static List<Pinyin> segLongest(char[] charArray, AhoCorasickDoubleArrayTrie<Pinyin[]> trie, boolean remainNone)
     {
-        List<Pinyin> pinyinList = new ArrayList<>(charArray.length);
-        BaseSearcher searcher = getSearcher(charArray, trie);
-        Map.Entry<String, Pinyin[]> entry;
-        int p = 0;  // 当前处理到什么位置
-        int offset;
-        while ((entry = searcher.next()) != null)
+        final Pinyin[][] wordNet = new Pinyin[charArray.length][];
+        trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<Pinyin[]>()
         {
-            offset = searcher.getOffset();
-            // 补足没查到的词
-            if (remainNone)
+            @Override
+            public void hit(int begin, int end, Pinyin[] value)
             {
-                while (p < offset)
+                int length = end - begin;
+                if (wordNet[begin] == null || length > wordNet[begin].length)
+                {
+                    wordNet[begin] = length == 1 ? new Pinyin[]{value[0]} : value;
+                }
+            }
+        });
+        List<Pinyin> pinyinList = new ArrayList<>(charArray.length);
+        for (int offset = 0; offset < wordNet.length; )
+        {
+            if (wordNet[offset] == null)
+            {
+                if (remainNone)
                 {
                     pinyinList.add(Pinyin.none5);
-                    ++p;
                 }
+                ++offset;
+                continue;
             }
-            int length = entry.getKey().length();
-            Pinyin[] value = entry.getValue();
-            if (length == 1) pinyinList.add(value[0]);
-            else
+            for (Pinyin pinyin : wordNet[offset])
             {
-                for (int i = 0; i < length; ++i)
-                {
-                    pinyinList.add(value[i]);
-                }
+                pinyinList.add(pinyin);
             }
-            p = offset + length;
-        }
-        // 补足没查到的词
-        while (p < charArray.length)
-        {
-            pinyinList.add(Pinyin.none5);
-            ++p;
+            offset += wordNet[offset].length;
         }
         return pinyinList;
     }

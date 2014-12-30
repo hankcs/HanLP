@@ -296,4 +296,13 @@ public class TestMakePinYinDictionary extends TestCase
         }
         IOUtil.saveTxt("data/dictionary/pinyin/py.txt", sb.toString());
     }
+
+    public void testConvertUnicodeTable() throws Exception
+    {
+        for (String line : IOUtil.readLineList("D:\\Doc\\语料库\\Uni2Pinyin.txt"))
+        {
+            if (line.startsWith("#")) continue;
+            System.out.println(line);
+        }
+    }
 }

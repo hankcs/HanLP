@@ -66,8 +66,8 @@ public class CoreDictionaryFormatter
         }
     }
 
-    public static void main(String[] args)
-    {
-        format();
-    }
+//    public static void main(String[] args)
+//    {
+//        format();
+//    }
 }

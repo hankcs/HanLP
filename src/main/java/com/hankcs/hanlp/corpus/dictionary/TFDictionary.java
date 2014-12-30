@@ -31,7 +31,7 @@ public class TFDictionary extends SimpleDictionary<TermFrequency> implements ISa
     @Override
     protected Map.Entry<String, TermFrequency> onGenerateEntry(String line)
     {
-        String[] param = line.split("\\s");
+        String[] param = line.split("=");
         return new AbstractMap.SimpleEntry<String, TermFrequency>(param[0], new TermFrequency(param[0], Integer.valueOf(param[1])));
     }
 
