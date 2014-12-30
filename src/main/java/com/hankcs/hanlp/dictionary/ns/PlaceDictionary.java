@@ -118,7 +118,7 @@ public class PlaceDictionary
             {
                 offset += wordArray[i].realWord.length();
             }
-            wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_GROUP, name, ATTRIBUTE, WORD_ID), wordNetAll);
+            wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_PLACE, name, ATTRIBUTE, WORD_ID), wordNetAll);
         }
     }
 
