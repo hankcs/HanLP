@@ -12,6 +12,7 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.seg.Other.AhoCorasickSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
@@ -32,8 +33,13 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(true).enableOrganizationRecognize(false).enablePlaceRecognize(false);
-        System.out.println(segment.seg("这不平等"));
+        Segment segment = new DijkstraSegment().enableCustomDictionary(true).enableOrganizationRecognize(true);
+        System.out.println(segment.seg("我经常在荣祥餐厅吃饭"));
+    }
+
+    public void testNGram() throws Exception
+    {
+        System.out.println(CoreBiGramTableDictionary.getBiFrequency("未##团", "吃饭"));
     }
 
     public void testIndexSeg() throws Exception

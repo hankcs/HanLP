@@ -17,10 +17,12 @@ import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.corpus.tag.NS;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.dictionary.nr.NRDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
+import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,6 +50,15 @@ public class PlaceDictionary
      * AC算法用到的Trie树
      */
     public static Trie trie;
+
+    /**
+     * 本词典专注的词的ID
+     */
+    static final int WORD_ID = CoreDictionary.getWordID(Predefine.TAG_PLACE);
+    /**
+     * 本词典专注的词的属性
+     */
+    static final CoreDictionary.Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
 
     static
     {
@@ -107,7 +118,7 @@ public class PlaceDictionary
             {
                 offset += wordArray[i].realWord.length();
             }
-            wordNetOptimum.insert(offset, Vertex.newPlaceInstance(name, 1000), wordNetAll);
+            wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_GROUP, name, ATTRIBUTE, WORD_ID), wordNetAll);
         }
     }
 

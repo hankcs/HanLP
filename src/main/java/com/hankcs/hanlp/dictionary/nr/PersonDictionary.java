@@ -30,6 +30,7 @@ import java.util.ListIterator;
 
 import static com.hankcs.hanlp.corpus.tag.NR.B;
 import static com.hankcs.hanlp.utility.Predefine.logger;
+import static com.hankcs.hanlp.dictionary.nr.NRConstant.*;
 
 /**
  * 人名识别用的词典，实际上是对两个词典的包装
@@ -50,9 +51,6 @@ public class PersonDictionary
      * AC算法用到的Trie树
      */
     public static Trie trie;
-
-    static final int WORD_ID = CoreDictionary.getWordID(Predefine.TAG_PEOPLE);
-    static final CoreDictionary.Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
 
     static
     {

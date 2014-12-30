@@ -13,12 +13,16 @@ package com.hankcs.hanlp.recognition.nr;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.nr.TranslatedPersonDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
+import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.List;
 import java.util.ListIterator;
+
+import static com.hankcs.hanlp.dictionary.nr.NRConstant.WORD_ID;
 
 /**
  * 音译人名识别
@@ -60,7 +64,7 @@ public class TranslatedPersonRecognition
                         {
                             System.out.println("音译人名识别出：" + sbName.toString());
                         }
-                        wordNetOptimum.insert(activeLine, Vertex.newTranslatedPersonInstance(sbName.toString(), 1000), wordNetAll);
+                        wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new CoreDictionary.Attribute(Nature.nrf), WORD_ID), wordNetAll);
                     }
                     reset();
                 }
