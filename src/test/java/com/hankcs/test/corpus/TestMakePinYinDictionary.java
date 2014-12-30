@@ -299,10 +299,30 @@ public class TestMakePinYinDictionary extends TestCase
 
     public void testConvertUnicodeTable() throws Exception
     {
+        StringDictionary dictionary = new StringDictionary("=");
         for (String line : IOUtil.readLineList("D:\\Doc\\语料库\\Uni2Pinyin.txt"))
         {
             if (line.startsWith("#")) continue;
-            System.out.println(line);
+            String[] argArray = line.split("\\s");
+            if (argArray.length == 1) continue;
+            String py = argArray[1];
+            for (int i = 2; i < argArray.length; ++i)
+            {
+                py += ',';
+                py += argArray[i];
+            }
+            dictionary.add(String.valueOf((char)(Integer.parseInt(argArray[0], 16))), py);
         }
+        dictionary.save("D:\\Doc\\语料库\\Hanzi2Pinyin.txt");
+    }
+
+    public void testCombineUnicodeTableWithMainDictionary() throws Exception
+    {
+        StringDictionary mainDictionary = new StringDictionary("=");
+        mainDictionary.load("data/dictionary/pinyin/pinyin.txt");
+        StringDictionary subDictionary = new StringDictionary("=");
+        subDictionary.load("D:\\Doc\\语料库\\Hanzi2Pinyin.txt");
+        mainDictionary.combine(subDictionary);
+        mainDictionary.save("data/dictionary/pinyin/pinyin.txt");
     }
 }

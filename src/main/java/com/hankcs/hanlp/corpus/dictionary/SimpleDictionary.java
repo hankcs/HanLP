@@ -72,8 +72,8 @@ public abstract class SimpleDictionary<V>
     protected abstract Map.Entry<String, V> onGenerateEntry(String line);
 
     /**
-     * 以我为主词典，合并一个副词典
-     * @param other
+     * 以我为主词典，合并一个副词典，我有的词条不会被副词典覆盖
+     * @param other 副词典
      */
     public void combine(SimpleDictionary<V> other)
     {
