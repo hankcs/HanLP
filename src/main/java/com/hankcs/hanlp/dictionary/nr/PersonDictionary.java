@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.dictionary.nr;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -23,10 +24,7 @@ import com.hankcs.hanlp.algoritm.ahocorasick.trie.Emit;
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
 import com.hankcs.hanlp.utility.Predefine;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 import static com.hankcs.hanlp.corpus.tag.NR.B;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -50,38 +48,39 @@ public class PersonDictionary
     /**
      * AC算法用到的Trie树
      */
-    public static Trie trie;
+    public static AhoCorasickDoubleArrayTrie<NRPattern> trie;
 
     static
     {
         long start = System.currentTimeMillis();
         dictionary = new NRDictionary();
         dictionary.load(HanLP.Config.PersonDictionaryPath);
-        logger.info(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<>(NR.class);
         transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);
-        trie = new Trie().remainLongest();
-        trie.addKeyword("BBCD");
-        trie.addKeyword("BBE");
-        trie.addKeyword("BBZ");
-        trie.addKeyword("BCD");
-        trie.addKeyword("BEE");
-        trie.addKeyword("BE");
-        // BC经常导致命中
-        trie.addKeyword("BC");
-        trie.addKeyword("BEC");
-        trie.addKeyword("BG");
-        trie.addKeyword("DG");
-        trie.addKeyword("EG");
-        trie.addKeyword("BXD");
-        trie.addKeyword("BZ");
-        trie.addKeyword("CD");
-        trie.addKeyword("EE");
-        trie.addKeyword("FE");
-        trie.addKeyword("FC");
-        trie.addKeyword("FB");
-        trie.addKeyword("Y");
-        trie.addKeyword("XD");
+        trie = new AhoCorasickDoubleArrayTrie<>();
+        TreeMap<String, NRPattern> map = new TreeMap<>();
+        map.put("BBCD", NRPattern.BBCD);
+        map.put("BBE",NRPattern.BBE);
+        map.put("BBZ",NRPattern.BBZ);
+        map.put("BC",NRPattern.BC);
+        map.put("BCD",NRPattern.BCD);
+        map.put("BE",NRPattern.BE);
+        map.put("BEC",NRPattern.BEC);
+        map.put("BEE",NRPattern.BEE);
+        map.put("BG",NRPattern.BG);
+        map.put("BXD",NRPattern.BXD);
+        map.put("BZ",NRPattern.BZ);
+        map.put("CD",NRPattern.CD);
+        map.put("DG",NRPattern.DG);
+        map.put("EE",NRPattern.EE);
+        map.put("EG",NRPattern.EG);
+        map.put("FB",NRPattern.FB);
+        map.put("FC",NRPattern.FC);
+        map.put("FE",NRPattern.FE);
+        map.put("XD",NRPattern.XD);
+        map.put("Y",NRPattern.Y);
+        trie.build(map);
+        logger.info(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
 
     /**
@@ -92,7 +91,7 @@ public class PersonDictionary
      * @param wordNetOptimum 待优化的图
      * @param wordNetAll
      */
-    public static void parsePattern(List<NR> nrList, List<Vertex> vertexList, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static void parsePattern(List<NR> nrList, List<Vertex> vertexList, final WordNet wordNetOptimum, final WordNet wordNetAll)
     {
         // 拆分UV
         ListIterator<Vertex> listIterator = vertexList.listIterator();
@@ -162,43 +161,42 @@ public class PersonDictionary
 //            logger.warn("人民识别模式串有bug", pattern, vertexList);
 //            return;
 //        }
-        Collection<Emit> emitCollection = trie.parseText(pattern);
-        Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
-//        int startMax = -1;
-        for (Emit emit : emitCollection)
+        final Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
+        trie.parseText(pattern, new AhoCorasickDoubleArrayTrie.IHit<NRPattern>()
         {
-            String keyword = emit.getKeyword();
+            @Override
+            public void hit(int begin, int end, NRPattern value)
+            {
 //            logger.trace("匹配到：{}", keyword);
-            int start = emit.getStart();
-            int end = emit.getEnd();
-            StringBuilder sbName = new StringBuilder();
-            for (int i = start; i <= end; ++i)
-            {
-                sbName.append(wordArray[i].realWord);
-            }
-            String name = sbName.toString();
+                StringBuilder sbName = new StringBuilder();
+                for (int i = begin; i < end; ++i)
+                {
+                    sbName.append(wordArray[i].realWord);
+                }
+                String name = sbName.toString();
 //            logger.trace("识别出：{}", name);
-            // 对一些bad case做出调整
-            switch (keyword)
-            {
-                case "BCD":
-                    if (name.charAt(0) == name.charAt(2)) continue; // 姓和最后一个名不可能相等的
-                    break;
-            }
-            if (isBadCase(name)) continue;
+                // 对一些bad case做出调整
+                switch (value)
+                {
+                    case BCD:
+                        if (name.charAt(0) == name.charAt(2)) return; // 姓和最后一个名不可能相等的
+                        break;
+                }
+                if (isBadCase(name)) return;
 
-            // 正式算它是一个名字
-            if (HanLP.Config.DEBUG)
-            {
-                System.out.printf("识别出人名：%s %s\n", name, keyword);
+                // 正式算它是一个名字
+                if (HanLP.Config.DEBUG)
+                {
+                    System.out.printf("识别出人名：%s %s\n", name, value);
+                }
+                int offset = 0;
+                for (int i = 0; i < begin; ++i)
+                {
+                    offset += wordArray[i].realWord.length();
+                }
+                wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_PEOPLE, name, ATTRIBUTE, WORD_ID), wordNetAll);
             }
-            int offset = 0;
-            for (int i = 0; i < start; ++i)
-            {
-                offset += wordArray[i].realWord.length();
-            }
-            wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_PEOPLE, name, ATTRIBUTE, WORD_ID), wordNetAll);
-        }
+        });
     }
 
     /**

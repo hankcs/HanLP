@@ -296,7 +296,6 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     public void save(ObjectOutputStream out) throws IOException
     {
-        loseWeight();
         out.writeObject(base);
         out.writeObject(check);
         out.writeObject(fail);
@@ -549,6 +548,7 @@ public class AhoCorasickDoubleArrayTrie<V>
         // 构建failure表并且合并output表
         constructFailureStates();
         rootState = null;
+        loseWeight();
     }
 
     private void buildDoubleArrayTrie(Set<String> keySet)
