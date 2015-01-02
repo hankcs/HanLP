@@ -44,4 +44,9 @@ public class TraditionalChineseDictionary extends BaseChineseDictionary
         return segLongest(traditionalChineseString.toCharArray(), trie);
     }
 
+    public static String convertToSimplifiedChinese(char[] traditionalChinese)
+    {
+        return segLongest(traditionalChinese, trie);
+    }
+
 }

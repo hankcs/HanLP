@@ -254,7 +254,7 @@ public class HanLP
      */
     public static String convertToSimplifiedChinese(String traditionalChineseString)
     {
-        return TraditionalChineseDictionary.convertToSimplifiedChinese(traditionalChineseString);
+        return TraditionalChineseDictionary.convertToSimplifiedChinese(traditionalChineseString.toCharArray());
     }
 
     /**
@@ -265,7 +265,7 @@ public class HanLP
      */
     public static String convertToTraditionalChinese(String simplifiedChineseString)
     {
-        return SimplifiedChineseDictionary.convertToTraditionalChinese(simplifiedChineseString);
+        return SimplifiedChineseDictionary.convertToTraditionalChinese(simplifiedChineseString.toCharArray());
     }
 
     /**
