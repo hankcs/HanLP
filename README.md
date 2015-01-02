@@ -199,7 +199,37 @@ for (Term term : termList)
   * [《CRF分词的纯Java实现》](http://www.hankcs.com/nlp/segment/crf-segmentation-of-the-pure-java-implementation.html)
   * [《CRF++模型格式说明》](http://www.hankcs.com/nlp/the-crf-model-format-description.html)
 
-### 7. 用户自定义词典
+### 7. 极速词典分词
+
+```java
+/**
+ * 演示极速分词，基于AhoCorasickDoubleArrayTrie实现的词典分词，适用于“高吞吐量”“精度一般”的场合
+ * @author hankcs
+ */
+public class DemoHighSpeedSegment
+{
+    public static void main(String[] args)
+    {
+        String text = "江西鄱阳湖干枯，中国最大淡水湖变成大草原";
+        System.out.println(SpeedTokenizer.segment(text));
+        long start = System.currentTimeMillis();
+        int pressure = 1000000;
+        for (int i = 0; i < pressure; ++i)
+        {
+            SpeedTokenizer.segment(text);
+        }
+        double costTime = (System.currentTimeMillis() - start) / (double)1000;
+        System.out.printf("分词速度：%.2f字每秒", text.length() * pressure / costTime);
+    }
+}
+```
+- 说明
+  * 极速分词是词典最长分词，速度极其快，精度一般。
+  * 在i7上跑出了2000万字每秒的速度。
+- 算法详解
+  * [《http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html》](http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html)
+
+### 8. 用户自定义词典
 
 ```java
 /**
@@ -259,7 +289,7 @@ public class DemoCustomDictionary
   * [《Trie树分词》](http://www.hankcs.com/program/java/tire-tree-participle.html)
   * [《Aho Corasick自动机结合DoubleArrayTrie极速多模式匹配》](http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html)
 
-### 8. 中国人名识别
+### 9. 中国人名识别
 
 ```java
 String[] testCase = new String[]{
@@ -304,7 +334,7 @@ for (String sentence : testCase)
 - 算法详解
   * [《层叠隐马模型下的音译人名和日本人名识别》](http://www.hankcs.com/nlp/name-transliteration-cascaded-hidden-markov-model-and-japanese-personal-names-recognition.html)
 
-### 10. 日本人名识别
+### 11. 日本人名识别
 
 ```java
 String[] testCase = new String[]{
@@ -323,7 +353,7 @@ for (String sentence : testCase)
 - 算法详解
   * [《层叠隐马模型下的音译人名和日本人名识别》](http://www.hankcs.com/nlp/name-transliteration-cascaded-hidden-markov-model-and-japanese-personal-names-recognition.html)
 
-### 11. 地名识别
+### 12. 地名识别
 
 ```java
 String[] testCase = new String[]{
@@ -343,7 +373,7 @@ for (String sentence : testCase)
 - 算法详解
   * [《实战HMM-Viterbi角色标注地名识别》](http://www.hankcs.com/nlp/ner/place-names-to-identify-actual-hmm-viterbi-role-labeling.html)
 
-### 12. 机构名识别
+### 13. 机构名识别
 
 ```java
 String[] testCase = new String[]{
@@ -365,7 +395,7 @@ for (String sentence : testCase)
 - 算法详解
   * [《层叠HMM-Viterbi角色标注模型下的机构名识别》](http://www.hankcs.com/nlp/ner/place-name-recognition-model-of-the-stacked-hmm-viterbi-role-labeling.html)
 
-### 13. 关键词提取
+### 14. 关键词提取
 
 ```java
 String content = "程序员(英文Programmer)是从事程序开发、维护的专业人员。一般将程序员分为程序设计人员和程序编码人员，但两者的界限并不非常清楚，特别是在中国。软件从业人员分为初级程序员、高级程序员、系统分析员和项目经理四大类。";
@@ -377,7 +407,7 @@ System.out.println(keywordList);
 - 算法详解
   * [《TextRank算法提取关键词的Java实现》](http://www.hankcs.com/nlp/textrank-algorithm-to-extract-the-keywords-java-implementation.html)
 
-### 14. 自动摘要
+### 15. 自动摘要
 
 ```java
 String document = "算法可大致分为基本算法、数据结构的算法、数论算法、计算几何的算法、图的算法、动态规划以及数值分析、加密算法、排序算法、检索算法、随机化算法、并行算法、厄米变形模型、随机森林算法。\n" +
@@ -393,7 +423,7 @@ System.out.println(sentenceList);
 - 算法详解
   * [《TextRank算法自动摘要的Java实现》](http://www.hankcs.com/nlp/textrank-algorithm-java-implementation-of-automatic-abstract.html)
 
-### 15. 短语提取
+### 16. 短语提取
 
 ```java
 String text = "算法工程师\n" +
@@ -423,7 +453,7 @@ System.out.println(phraseList);
 - 算法详解
   * [《基于互信息和左右信息熵的短语提取识别》](http://www.hankcs.com/nlp/extraction-and-identification-of-mutual-information-about-the-phrase-based-on-information-entropy.html)
 
-### 16. 拼音转换
+### 17. 拼音转换
 
 ```java
 /**
@@ -497,11 +527,11 @@ public class DemoPinyin
 - 说明
   * **HanLP**不仅支持基础的汉字转拼音，还支持声母、韵母、音调、音标和输入法首字母首声母功能。
   * **HanLP**能够识别多音字，也能给繁体中文注拼音。
-  * 最重要的是，**HanLP**采用了双数组trie树和压缩的词典格式，能够提供毫秒级的响应速度！
+  * 最重要的是，**HanLP**采用的模式匹配升级到`AhoCorasickDoubleArrayTrie`，性能大幅提升，能够提供毫秒级的响应速度！
 - 算法详解
   * [《汉字转拼音与简繁转换的Java实现》](http://www.hankcs.com/nlp/java-chinese-characters-to-pinyin-and-simplified-conversion-realization.html#h2-17)
 
-### 17. 简繁转换
+### 18. 简繁转换
 
 ```java
 /**
@@ -522,7 +552,7 @@ public class DemoTraditionalChinese2SimplifiedChinese
 - 算法详解
   * [《汉字转拼音与简繁转换的Java实现》](http://www.hankcs.com/nlp/java-chinese-characters-to-pinyin-and-simplified-conversion-realization.html#h2-17)
 
-### 18. 文本推荐
+### 19. 文本推荐
 
 ```java
 /**
@@ -557,7 +587,7 @@ public class DemoSuggester
   * 在搜索引擎的输入框中，用户输入一个词，搜索引擎会联想出最合适的搜索词，**HanLP**实现了类似的功能。
   * 可以动态调节每种识别器的权重
 
-### 19. 语义距离
+### 20. 语义距离
 
 ```java
 /**
@@ -608,7 +638,7 @@ public class DemoWordDistance
 - 算法
   * 为每个词分配一个语义ID，词与词的距离通过语义ID的差得到。语义ID通过《同义词词林扩展版》计算而来。
 
-### 20. 依存句法解析
+### 21. 依存句法解析
 
 ```java
 /**
