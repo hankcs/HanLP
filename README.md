@@ -227,7 +227,7 @@ public class DemoHighSpeedSegment
   * 极速分词是词典最长分词，速度极其快，精度一般。
   * 在i7上跑出了2000万字每秒的速度。
 - 算法详解
-  * [《http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html》](http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html)
+  * [《Aho Corasick自动机结合DoubleArrayTrie极速多模式匹配》](http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html)
 
 ### 8. 用户自定义词典
 
