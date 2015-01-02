@@ -13,7 +13,7 @@ package com.hankcs.hanlp.dictionary.py;
 
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Token;
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
-import javafx.util.Pair;
+import com.hankcs.hanlp.collection.dartsclone.Pair;
 
 import java.util.*;
 

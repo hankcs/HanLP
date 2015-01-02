@@ -32,7 +32,7 @@ public class DemoChineseNameRecognition
                 "王总和小丽结婚了",
                 "编剧邵钧林和稽道青说",
                 "这里有关天培的有关事迹",
-                "龚学平等领导,邓颖超生前",
+                "龚学平等领导说,邓颖超生前杜绝超生",
         };
         Segment segment = HanLP.newSegment().enableNameRecognize(true);
         for (String sentence : testCase)

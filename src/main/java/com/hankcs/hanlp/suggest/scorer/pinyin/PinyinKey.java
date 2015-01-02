@@ -13,11 +13,11 @@ package com.hankcs.hanlp.suggest.scorer.pinyin;
 
 import com.hankcs.hanlp.algoritm.EditDistance;
 import com.hankcs.hanlp.algoritm.LongestCommonSubstring;
+import com.hankcs.hanlp.collection.dartsclone.Pair;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinUtil;
 import com.hankcs.hanlp.dictionary.py.String2PinyinConverter;
 import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
-import javafx.util.Pair;
 
 import java.util.Arrays;
 import java.util.Iterator;
