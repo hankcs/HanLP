@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.dictionary.ts;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -25,7 +26,7 @@ public class TraditionalChineseDictionary extends BaseChineseDictionary
     /**
      * 繁体=简体
      */
-    static DoubleArrayTrie<String> trie = new DoubleArrayTrie<>();
+    static AhoCorasickDoubleArrayTrie<String> trie = new AhoCorasickDoubleArrayTrie<>();
 
     static
     {

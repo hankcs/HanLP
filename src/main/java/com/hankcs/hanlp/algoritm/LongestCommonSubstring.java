@@ -27,7 +27,7 @@ public class LongestCommonSubstring
         // the start position of substring in original string
 //        int start1 = -1;
 //        int start2 = -1;
-        // the longest length of common substring
+        // the longest length of com.hankcs.common substring
         int longest = 0;
 
         // record how many comparisons the solution did;
@@ -62,7 +62,7 @@ public class LongestCommonSubstring
             }
         }
 
-        // shift string2 to find the longest common substring
+        // shift string2 to find the longest com.hankcs.common substring
         for (int j = 1; j < size2; ++j)
         {
             int m = 0;
