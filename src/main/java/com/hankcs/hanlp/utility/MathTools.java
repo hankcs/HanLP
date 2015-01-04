@@ -2,7 +2,7 @@
  * <summary></summary>
  * <author>He Han</author>
  * <email>hankcs.cn@gmail.com</email>
- * <create-date>2014/05/2014/5/23 17:09</create-date>
+ * <create-date>2014/05/23 17:09</create-date>
  *
  * <copyright file="MathTools.java" company="上海林原信息科技有限公司">
  * Copyright (c) 2003-2014, 上海林原信息科技有限公司. All Right Reserved, http://www.linrunsoft.com/
