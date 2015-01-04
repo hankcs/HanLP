@@ -48,7 +48,7 @@ public class CustomDictionary
         long start = System.currentTimeMillis();
         if (!loadMainDictionary(path[0]))
         {
-            logger.warning("自定义词典" + path + "加载失败");
+            logger.warning("自定义词典" + Arrays.toString(path) + "加载失败");
         }
         else
         {

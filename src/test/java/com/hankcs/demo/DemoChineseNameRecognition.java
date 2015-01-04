@@ -27,6 +27,7 @@ public class DemoChineseNameRecognition
     {
         String[] testCase = new String[]{
                 "签约仪式前，秦光荣、李纪恒、仇和等一同会见了参加签约的企业家。",
+                "区长庄木弟新年致辞",
                 "王国强、高峰、汪洋、张朝阳光着头、韩寒、小四",
                 "张浩和胡健康复员回家了",
                 "王总和小丽结婚了",
