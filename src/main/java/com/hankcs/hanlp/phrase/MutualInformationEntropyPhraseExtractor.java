@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.phrase;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.occurrence.Occurrence;
 import com.hankcs.hanlp.corpus.occurrence.PairFrequency;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
@@ -27,7 +28,6 @@ import java.util.List;
  */
 public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
 {
-    public static boolean DEBUG = false;
     @Override
     public List<String> extractPhrase(String text, int size)
     {
@@ -53,14 +53,14 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
                 };
         for (List<Term> sentence : NotionalTokenizer.seg2sentence(text, filterChain))
         {
-            if (DEBUG)
+            if (HanLP.Config.DEBUG)
             {
                 System.out.println(sentence);
             }
             occurrence.addAll(sentence);
         }
         occurrence.compute();
-        if (DEBUG)
+        if (HanLP.Config.DEBUG)
         {
             System.out.println(occurrence);
             for (PairFrequency phrase : occurrence.getPhraseByMi())

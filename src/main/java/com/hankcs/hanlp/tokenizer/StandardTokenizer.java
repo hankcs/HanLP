@@ -27,6 +27,12 @@ public class StandardTokenizer
      * 预置分词器
      */
     public static final Segment SEGMENT = new DijkstraSegment();
+
+    /**
+     * 分词
+     * @param text 文本
+     * @return 分词结果
+     */
     public static List<Term> segment(String text)
     {
         return SEGMENT.seg(text);
