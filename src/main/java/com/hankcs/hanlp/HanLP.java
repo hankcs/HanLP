@@ -116,12 +116,12 @@ public class HanLP
         /**
          * 音译人名词典
          */
-        public static String TranslatedPersonDictionaryPath = "data/dictionary/person/音译人名.txt";
+        public static String TranslatedPersonDictionaryPath = "data/dictionary/person/nrf.txt";
 
         /**
          * 日本人名词典路径
          */
-        public static String JapanesePersonDictionaryPath = "data/dictionary/person/日本人名词典.txt";
+        public static String JapanesePersonDictionaryPath = "data/dictionary/person/nrj.txt";
 
         /**
          * 字符类型对应表

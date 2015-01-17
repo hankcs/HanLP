@@ -85,7 +85,7 @@ public class TestMakeJapaneseName extends TestCase
         {
             dictionary.add(firstName, "x");
         }
-        dictionary.save("data/dictionary/person/日本人名词典.txt");
+        dictionary.save("data/dictionary/person/nrj.txt");
     }
 
     public void testRecognize() throws Exception
