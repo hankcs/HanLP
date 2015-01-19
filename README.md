@@ -111,6 +111,8 @@ Web项目的话可以放在如下位置：
 
 *推荐用户始终通过工具类`HanLP`调用，这么做的好处是，将来**HanLP**升级后，用户无需修改调用代码。*
 
+所有Demo都位于https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo下。
+
 ### 1. 第一个Demo
 
 ```java

@@ -22,16 +22,12 @@ import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
- * 双数组AhoCorasick自动机
+ * 基于双数组Trie树的AhoCorasick自动机
  *
  * @author hankcs
  */
 public class AhoCorasickDoubleArrayTrie<V>
 {
-    /**
-     * 根节点，仅仅用于构建过程
-     */
-    private State rootState = new State();
     /**
      * 双数组值check
      */
@@ -40,10 +36,6 @@ public class AhoCorasickDoubleArrayTrie<V>
      * 双数组之base
      */
     protected int base[];
-    /**
-     * 是否占用，仅仅用于构建
-     */
-    private boolean used[];
     /**
      * fail表
      */
@@ -66,110 +58,6 @@ public class AhoCorasickDoubleArrayTrie<V>
      * base 和 check 的大小
      */
     protected int size;
-    /**
-     * 已分配在内存中的大小
-     */
-    private int allocSize;
-    /**
-     * 键值对的大小
-     */
-    private int keySize;
-    /**
-     * 一个控制增长速度的变量
-     */
-    private int progress;
-    /**
-     * 下一个插入的位置将从此开始搜索
-     */
-    private int nextCheckPos;
-
-    /**
-     * 添加一个键
-     *
-     * @param keyword 键
-     * @param index   值的下标
-     */
-    private void addKeyword(String keyword, int index)
-    {
-        State currentState = this.rootState;
-        for (Character character : keyword.toCharArray())
-        {
-            currentState = currentState.addState(character);
-        }
-        currentState.addEmit(index);
-        l[index] = keyword.length();
-    }
-
-    /**
-     * 一系列键
-     *
-     * @param keywordSet
-     */
-    private void addAllKeyword(Collection<String> keywordSet)
-    {
-        int i = 0;
-        for (String keyword : keywordSet)
-        {
-            addKeyword(keyword, i++);
-        }
-    }
-
-    /**
-     * 建立failure表
-     */
-    private void constructFailureStates()
-    {
-        fail = new int[size + 1];
-        fail[1] = base[0];
-        output = new int[size + 1][];
-        Queue<State> queue = new LinkedBlockingDeque<State>();
-
-        // 第一步，将深度为1的节点的failure设为根节点
-        for (State depthOneState : this.rootState.getStates())
-        {
-            depthOneState.setFailure(this.rootState, fail);
-            queue.add(depthOneState);
-            constructOutput(depthOneState);
-        }
-
-        // 第二步，为深度 > 1 的节点建立failure表，这是一个bfs
-        while (!queue.isEmpty())
-        {
-            State currentState = queue.remove();
-
-            for (Character transition : currentState.getTransitions())
-            {
-                State targetState = currentState.nextState(transition);
-                queue.add(targetState);
-
-                State traceFailureState = currentState.failure();
-                while (traceFailureState.nextState(transition) == null)
-                {
-                    traceFailureState = traceFailureState.failure();
-                }
-                State newFailureState = traceFailureState.nextState(transition);
-                targetState.setFailure(newFailureState, fail);
-                targetState.addEmit(newFailureState.emit());
-                constructOutput(targetState);
-            }
-        }
-    }
-
-    /**
-     * 建立output表
-     */
-    private void constructOutput(State targetState)
-    {
-        Collection<Integer> emit = targetState.emit();
-        if (emit == null || emit.size() == 0) return;
-        int output[] = new int[emit.size()];
-        Iterator<Integer> it = emit.iterator();
-        for (int i = 0; i < output.length; ++i)
-        {
-            output[i] = it.next();
-        }
-        this.output[targetState.getIndex()] = output;
-    }
 
     /**
      * 匹配母文本
@@ -301,17 +189,6 @@ public class AhoCorasickDoubleArrayTrie<V>
         out.writeObject(fail);
         out.writeObject(output);
         out.writeObject(l);
-    }
-
-    private void loseWeight()
-    {
-        int nbase[] = new int[size + 65535];
-        System.arraycopy(base, 0, nbase, 0, size);
-        base = nbase;
-
-        int ncheck[] = new int[size + 65535];
-        System.arraycopy(check, 0, ncheck, 0, size);
-        check = ncheck;
     }
 
     public void load(ObjectInputStream in, V[] value) throws IOException, ClassNotFoundException
@@ -517,9 +394,7 @@ public class AhoCorasickDoubleArrayTrie<V>
         int p;
 
         p = b + c + 1;
-        if (b == check[p])
-            b = base[p];
-        else
+        if (b != check[p])
         {
             if (nodePos == 0) return 0;
             return -1;
@@ -532,64 +407,9 @@ public class AhoCorasickDoubleArrayTrie<V>
     /**
      * 由一个排序好的map创建
      */
-    @SuppressWarnings("unchecked")
     public void build(TreeMap<String, V> map)
     {
-        // 把值保存下来
-        v = (V[]) map.values().toArray();
-        l = new int[v.length];
-        Set<String> keySet = map.keySet();
-        // 构建二分trie树
-        addAllKeyword(keySet);
-//        v = new V[map.size()];
-        // 在二分trie树的基础上构建双数组trie树
-        buildDoubleArrayTrie(keySet);
-        used = null;
-        // 构建failure表并且合并output表
-        constructFailureStates();
-        rootState = null;
-        loseWeight();
-    }
-
-    private void buildDoubleArrayTrie(Set<String> keySet)
-    {
-        progress = 0;
-        keySize = keySet.size();
-        resize(65536 * 32); // 32个双字节
-
-        base[0] = 1;
-        nextCheckPos = 0;
-
-        State root_node = this.rootState;
-
-        List<Map.Entry<Integer, State>> siblings = new ArrayList<>(root_node.getSuccess().entrySet().size());
-        fetch(root_node, siblings);
-        insert(siblings);
-    }
-
-    /**
-     * 拓展数组
-     *
-     * @param newSize
-     * @return
-     */
-    private int resize(int newSize)
-    {
-        int[] base2 = new int[newSize];
-        int[] check2 = new int[newSize];
-        boolean used2[] = new boolean[newSize];
-        if (allocSize > 0)
-        {
-            System.arraycopy(base, 0, base2, 0, allocSize);
-            System.arraycopy(check, 0, check2, 0, allocSize);
-            System.arraycopy(used, 0, used2, 0, allocSize);
-        }
-
-        base = base2;
-        check = check2;
-        used = used2;
-
-        return allocSize = newSize;
+        new Builder().build(map);
     }
 
     /**
@@ -612,96 +432,6 @@ public class AhoCorasickDoubleArrayTrie<V>
             siblings.add(new AbstractMap.SimpleEntry<Integer, State>(entry.getKey() + 1, entry.getValue()));
         }
         return siblings.size();
-    }
-
-    /**
-     * 插入节点
-     *
-     * @param siblings 等待插入的兄弟节点
-     * @return 插入位置
-     */
-    private int insert(List<Map.Entry<Integer, State>> siblings)
-    {
-        int begin = 0;
-        int pos = Math.max(siblings.get(0).getKey() + 1, nextCheckPos) - 1;
-        int nonzero_num = 0;
-        int first = 0;
-
-        if (allocSize <= pos)
-            resize(pos + 1);
-
-        outer:
-        // 此循环体的目标是找出满足base[begin + a1...an]  == 0的n个空闲空间,a1...an是siblings中的n个节点
-        while (true)
-        {
-            pos++;
-
-            if (allocSize <= pos)
-                resize(pos + 1);
-
-            if (check[pos] != 0)
-            {
-                nonzero_num++;
-                continue;
-            }
-            else if (first == 0)
-            {
-                nextCheckPos = pos;
-                first = 1;
-            }
-
-            begin = pos - siblings.get(0).getKey(); // 当前位置离第一个兄弟节点的距离
-            if (allocSize <= (begin + siblings.get(siblings.size() - 1).getKey()))
-            {
-                // progress can be zero // 防止progress产生除零错误
-                double l = (1.05 > 1.0 * keySize / (progress + 1)) ? 1.05 : 1.0 * keySize / (progress + 1);
-                resize((int) (allocSize * l));
-            }
-
-            if (used[begin])
-                continue;
-
-            for (int i = 1; i < siblings.size(); i++)
-                if (check[begin + siblings.get(i).getKey()] != 0)
-                    continue outer;
-
-            break;
-        }
-
-        // -- Simple heuristics --
-        // if the percentage of non-empty contents in check between the
-        // index
-        // 'next_check_pos' and 'check' is greater than some constant value
-        // (e.g. 0.9),
-        // new 'next_check_pos' index is written by 'check'.
-        if (1.0 * nonzero_num / (pos - nextCheckPos + 1) >= 0.95)
-            nextCheckPos = pos; // 从位置 next_check_pos 开始到 pos 间，如果已占用的空间在95%以上，下次插入节点时，直接从 pos 位置处开始查找
-        used[begin] = true;
-
-        size = (size > begin + siblings.get(siblings.size() - 1).getKey() + 1) ? size : begin + siblings.get(siblings.size() - 1).getKey() + 1;
-
-        for (Map.Entry<Integer, State> sibling : siblings)
-        {
-            check[begin + sibling.getKey()] = begin;
-        }
-
-        for (Map.Entry<Integer, State> sibling : siblings)
-        {
-            List<Map.Entry<Integer, State>> new_siblings = new ArrayList<>(sibling.getValue().getSuccess().entrySet().size() + 1);
-
-            if (fetch(sibling.getValue(), new_siblings) == 0)  // 一个词的终止且不为其他词的前缀，其实就是叶子节点
-            {
-                base[begin + sibling.getKey()] = (-sibling.getValue().getLargestValueId() - 1);
-                progress++;
-            }
-            else
-            {
-                int h = insert(new_siblings);   // dfs
-                base[begin + sibling.getKey()] = h;
-            }
-            sibling.getValue().setIndex(begin + sibling.getKey());
-        }
-        return begin;
     }
 
     /**
@@ -817,37 +547,38 @@ public class AhoCorasickDoubleArrayTrie<V>
 //        void meet(String path, State state);
 //    }
 //
-    public void debug()
-    {
-        System.out.println("base:");
-        for (int i = 0; i < base.length; i++)
-        {
-            if (base[i] < 0)
-            {
-                System.out.println(i + " : " + -base[i]);
-            }
-        }
 
-        System.out.println("output:");
-        for (int i = 0; i < output.length; i++)
-        {
-            if (output[i] != null)
-            {
-                System.out.println(i + " : " + Arrays.toString(output[i]));
-            }
-        }
-
-        System.out.println("fail:");
-        for (int i = 0; i < fail.length; i++)
-        {
-            if (fail[i] != 0)
-            {
-                System.out.println(i + " : " + fail[i]);
-            }
-        }
-
-        System.out.println(this);
-    }
+//    public void debug()
+//    {
+//        System.out.println("base:");
+//        for (int i = 0; i < base.length; i++)
+//        {
+//            if (base[i] < 0)
+//            {
+//                System.out.println(i + " : " + -base[i]);
+//            }
+//        }
+//
+//        System.out.println("output:");
+//        for (int i = 0; i < output.length; i++)
+//        {
+//            if (output[i] != null)
+//            {
+//                System.out.println(i + " : " + Arrays.toString(output[i]));
+//            }
+//        }
+//
+//        System.out.println("fail:");
+//        for (int i = 0; i < fail.length; i++)
+//        {
+//            if (fail[i] != 0)
+//            {
+//                System.out.println(i + " : " + fail[i]);
+//            }
+//        }
+//
+//        System.out.println(this);
+//    }
 
 //    @Override
 //    public String toString()
@@ -887,7 +618,7 @@ public class AhoCorasickDoubleArrayTrie<V>
     /**
      * 一个顺序输出变量名与变量值的调试类
      */
-    static class DebugArray
+    private static class DebugArray
     {
         Map<String, String> nameValueMap = new LinkedHashMap<String, String>();
 
@@ -924,8 +655,295 @@ public class AhoCorasickDoubleArrayTrie<V>
         }
     }
 
+    /**
+     * 大小，即包含多少个模式串
+     * @return
+     */
     public int size()
     {
         return v.length;
+    }
+
+    /**
+     * 构建工具
+     */
+    private class Builder
+    {
+        /**
+         * 根节点，仅仅用于构建过程
+         */
+        private State rootState = new State();
+        /**
+         * 是否占用，仅仅用于构建
+         */
+        private boolean used[];
+        /**
+         * 已分配在内存中的大小
+         */
+        private int allocSize;
+        /**
+         * 一个控制增长速度的变量
+         */
+        private int progress;
+        /**
+         * 下一个插入的位置将从此开始搜索
+         */
+        private int nextCheckPos;
+        /**
+         * 键值对的大小
+         */
+        private int keySize;
+
+        /**
+         * 由一个排序好的map创建
+         */
+        @SuppressWarnings("unchecked")
+        public void build(TreeMap<String, V> map)
+        {
+            // 把值保存下来
+            v = (V[]) map.values().toArray();
+            l = new int[v.length];
+            Set<String> keySet = map.keySet();
+            // 构建二分trie树
+            addAllKeyword(keySet);
+//        v = new V[map.size()];
+            // 在二分trie树的基础上构建双数组trie树
+            buildDoubleArrayTrie(keySet);
+            used = null;
+            // 构建failure表并且合并output表
+            constructFailureStates();
+            rootState = null;
+            loseWeight();
+        }
+
+        /**
+         * 添加一个键
+         *
+         * @param keyword 键
+         * @param index   值的下标
+         */
+        private void addKeyword(String keyword, int index)
+        {
+            State currentState = this.rootState;
+            for (Character character : keyword.toCharArray())
+            {
+                currentState = currentState.addState(character);
+            }
+            currentState.addEmit(index);
+            l[index] = keyword.length();
+        }
+
+        /**
+         * 一系列键
+         *
+         * @param keywordSet
+         */
+        private void addAllKeyword(Collection<String> keywordSet)
+        {
+            int i = 0;
+            for (String keyword : keywordSet)
+            {
+                addKeyword(keyword, i++);
+            }
+        }
+
+        /**
+         * 建立failure表
+         */
+        private void constructFailureStates()
+        {
+            fail = new int[size + 1];
+            fail[1] = base[0];
+            output = new int[size + 1][];
+            Queue<State> queue = new LinkedBlockingDeque<State>();
+
+            // 第一步，将深度为1的节点的failure设为根节点
+            for (State depthOneState : this.rootState.getStates())
+            {
+                depthOneState.setFailure(this.rootState, fail);
+                queue.add(depthOneState);
+                constructOutput(depthOneState);
+            }
+
+            // 第二步，为深度 > 1 的节点建立failure表，这是一个bfs
+            while (!queue.isEmpty())
+            {
+                State currentState = queue.remove();
+
+                for (Character transition : currentState.getTransitions())
+                {
+                    State targetState = currentState.nextState(transition);
+                    queue.add(targetState);
+
+                    State traceFailureState = currentState.failure();
+                    while (traceFailureState.nextState(transition) == null)
+                    {
+                        traceFailureState = traceFailureState.failure();
+                    }
+                    State newFailureState = traceFailureState.nextState(transition);
+                    targetState.setFailure(newFailureState, fail);
+                    targetState.addEmit(newFailureState.emit());
+                    constructOutput(targetState);
+                }
+            }
+        }
+
+        /**
+         * 建立output表
+         */
+        private void constructOutput(State targetState)
+        {
+            Collection<Integer> emit = targetState.emit();
+            if (emit == null || emit.size() == 0) return;
+            int output[] = new int[emit.size()];
+            Iterator<Integer> it = emit.iterator();
+            for (int i = 0; i < output.length; ++i)
+            {
+                output[i] = it.next();
+            }
+            AhoCorasickDoubleArrayTrie.this.output[targetState.getIndex()] = output;
+        }
+
+        private void buildDoubleArrayTrie(Set<String> keySet)
+        {
+            progress = 0;
+            keySize = keySet.size();
+            resize(65536 * 32); // 32个双字节
+
+            base[0] = 1;
+            nextCheckPos = 0;
+
+            State root_node = this.rootState;
+
+            List<Map.Entry<Integer, State>> siblings = new ArrayList<>(root_node.getSuccess().entrySet().size());
+            fetch(root_node, siblings);
+            insert(siblings);
+        }
+
+        /**
+         * 拓展数组
+         *
+         * @param newSize
+         * @return
+         */
+        private int resize(int newSize)
+        {
+            int[] base2 = new int[newSize];
+            int[] check2 = new int[newSize];
+            boolean used2[] = new boolean[newSize];
+            if (allocSize > 0)
+            {
+                System.arraycopy(base, 0, base2, 0, allocSize);
+                System.arraycopy(check, 0, check2, 0, allocSize);
+                System.arraycopy(used, 0, used2, 0, allocSize);
+            }
+
+            base = base2;
+            check = check2;
+            used = used2;
+
+            return allocSize = newSize;
+        }
+
+        /**
+         * 插入节点
+         *
+         * @param siblings 等待插入的兄弟节点
+         * @return 插入位置
+         */
+        private int insert(List<Map.Entry<Integer, State>> siblings)
+        {
+            int begin = 0;
+            int pos = Math.max(siblings.get(0).getKey() + 1, nextCheckPos) - 1;
+            int nonzero_num = 0;
+            int first = 0;
+
+            if (allocSize <= pos)
+                resize(pos + 1);
+
+            outer:
+            // 此循环体的目标是找出满足base[begin + a1...an]  == 0的n个空闲空间,a1...an是siblings中的n个节点
+            while (true)
+            {
+                pos++;
+
+                if (allocSize <= pos)
+                    resize(pos + 1);
+
+                if (check[pos] != 0)
+                {
+                    nonzero_num++;
+                    continue;
+                }
+                else if (first == 0)
+                {
+                    nextCheckPos = pos;
+                    first = 1;
+                }
+
+                begin = pos - siblings.get(0).getKey(); // 当前位置离第一个兄弟节点的距离
+                if (allocSize <= (begin + siblings.get(siblings.size() - 1).getKey()))
+                {
+                    // progress can be zero // 防止progress产生除零错误
+                    double l = (1.05 > 1.0 * keySize / (progress + 1)) ? 1.05 : 1.0 * keySize / (progress + 1);
+                    resize((int) (allocSize * l));
+                }
+
+                if (used[begin])
+                    continue;
+
+                for (int i = 1; i < siblings.size(); i++)
+                    if (check[begin + siblings.get(i).getKey()] != 0)
+                        continue outer;
+
+                break;
+            }
+
+            // -- Simple heuristics --
+            // if the percentage of non-empty contents in check between the
+            // index
+            // 'next_check_pos' and 'check' is greater than some constant value
+            // (e.g. 0.9),
+            // new 'next_check_pos' index is written by 'check'.
+            if (1.0 * nonzero_num / (pos - nextCheckPos + 1) >= 0.95)
+                nextCheckPos = pos; // 从位置 next_check_pos 开始到 pos 间，如果已占用的空间在95%以上，下次插入节点时，直接从 pos 位置处开始查找
+            used[begin] = true;
+
+            size = (size > begin + siblings.get(siblings.size() - 1).getKey() + 1) ? size : begin + siblings.get(siblings.size() - 1).getKey() + 1;
+
+            for (Map.Entry<Integer, State> sibling : siblings)
+            {
+                check[begin + sibling.getKey()] = begin;
+            }
+
+            for (Map.Entry<Integer, State> sibling : siblings)
+            {
+                List<Map.Entry<Integer, State>> new_siblings = new ArrayList<>(sibling.getValue().getSuccess().entrySet().size() + 1);
+
+                if (fetch(sibling.getValue(), new_siblings) == 0)  // 一个词的终止且不为其他词的前缀，其实就是叶子节点
+                {
+                    base[begin + sibling.getKey()] = (-sibling.getValue().getLargestValueId() - 1);
+                    progress++;
+                }
+                else
+                {
+                    int h = insert(new_siblings);   // dfs
+                    base[begin + sibling.getKey()] = h;
+                }
+                sibling.getValue().setIndex(begin + sibling.getKey());
+            }
+            return begin;
+        }
+
+        private void loseWeight()
+        {
+            int nbase[] = new int[size + 65535];
+            System.arraycopy(base, 0, nbase, 0, size);
+            base = nbase;
+
+            int ncheck[] = new int[size + 65535];
+            System.arraycopy(check, 0, ncheck, 0, size);
+            check = ncheck;
+        }
     }
 }

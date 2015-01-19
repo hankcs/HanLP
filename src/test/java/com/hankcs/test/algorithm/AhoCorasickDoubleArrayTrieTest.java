@@ -39,7 +39,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
         }
         AhoCorasickDoubleArrayTrie<String> act = new AhoCorasickDoubleArrayTrie<>();
         act.build(map);
-        act.debug();
+//        act.debug();
         act.parseText("uhers", new AhoCorasickDoubleArrayTrie.IHit<String>()
         {
             @Override
@@ -143,6 +143,10 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
         }
     }
 
+    /**
+     * 测试构建和匹配，使用《我的团长我的团》.txt作为测试数据，并且判断匹配是否正确
+     * @throws Exception
+     */
     public void testSegment() throws Exception
     {
         TreeMap<String, String> map = new TreeMap<>();

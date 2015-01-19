@@ -14,6 +14,7 @@ package com.hankcs.hanlp.collection.dartsclone;
 import java.util.*;
 
 /**
+ * 双数组trie树map，更省内存，原本希望代替DoubleArrayTrie，后来发现效率不够
  * @author hankcs
  */
 public class DartMap<V> extends DoubleArray implements Map<String, V>

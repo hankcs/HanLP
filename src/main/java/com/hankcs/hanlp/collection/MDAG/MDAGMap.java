@@ -16,6 +16,7 @@ import com.hankcs.hanlp.utility.ByteUtil;
 import java.util.*;
 
 /**
+ * 最好不要把MDAG当map用，现在的实现在key后面放一个int，导致右语言全部不同，退化为bintrie
  * @author hankcs
  */
 public class MDAGMap<V> extends AbstractMap<String, V>

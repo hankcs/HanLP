@@ -1,6 +1,7 @@
 /**
  * MDAG is a Java library capable of constructing character-sequence-storing,
- * directed acyclic graphs of minimal size. 
+ * directed acyclic graphs of minimal size.<br>
+ * hankcs implemented the unSimplify() method.
  *
  *  Copyright (C) 2012 Kevin Lawson <Klawson88@gmail.com>
  *
