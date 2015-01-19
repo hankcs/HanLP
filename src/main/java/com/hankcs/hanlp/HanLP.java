@@ -21,6 +21,7 @@ import com.hankcs.hanlp.phrase.IPhraseExtractor;
 import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
+import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.TextRankKeyword;
 import com.hankcs.hanlp.summary.TextRankSentence;
@@ -153,14 +154,14 @@ public class HanLP
             try
             {
                 p.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("HanLP.properties"), "UTF-8"));
-                String root = p.getProperty("root", "");
+                String root = p.getProperty("root", "").replaceAll("\\\\", "/");
+                if (!root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
                 BiGramDictionaryPath = root + p.getProperty("BiGramDictionaryPath", BiGramDictionaryPath);
                 CoreStopWordDictionaryPath = root + p.getProperty("CoreStopWordDictionaryPath", CoreStopWordDictionaryPath);
                 CoreSynonymDictionaryDictionaryPath = root + p.getProperty("CoreSynonymDictionaryDictionaryPath", CoreSynonymDictionaryDictionaryPath);
                 PersonDictionaryPath = root + p.getProperty("PersonDictionaryPath", PersonDictionaryPath);
                 PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath", PersonDictionaryTrPath);
-//                CustomDictionaryPath = root + p.getProperty("CustomDictionaryPath");
                 String[] pathArray = p.getProperty("CustomDictionaryPath", "CustomDictionaryPath=dictionary/custom/CustomDictionary.txt").split(";");
                 String prePath = root;
                 for (int i = 0; i < pathArray.length; ++i)
@@ -350,7 +351,7 @@ public class HanLP
      */
     public static Segment newSegment()
     {
-        return new DijkstraSegment();   // 最短路分词器是目前效率和效果的最佳平衡
+        return new ViterbiSegment();   // Viterbi分词器是目前效率和效果的最佳平衡
     }
 
     /**

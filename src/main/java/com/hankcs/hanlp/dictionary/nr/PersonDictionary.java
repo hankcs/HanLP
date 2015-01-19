@@ -162,6 +162,12 @@ public class PersonDictionary
 //            return;
 //        }
         final Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
+        final int[] offsetArray = new int[wordArray.length];
+        offsetArray[0] = 0;
+        for (int i = 1; i < wordArray.length; ++i)
+        {
+            offsetArray[i] = offsetArray[i - 1] + wordArray[i - 1].realWord.length();
+        }
         trie.parseText(pattern, new AhoCorasickDoubleArrayTrie.IHit<NRPattern>()
         {
             @Override
@@ -189,11 +195,7 @@ public class PersonDictionary
                 {
                     System.out.printf("识别出人名：%s %s\n", name, value);
                 }
-                int offset = 0;
-                for (int i = 0; i < begin; ++i)
-                {
-                    offset += wordArray[i].realWord.length();
-                }
+                int offset = offsetArray[begin];
                 wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_PEOPLE, name, ATTRIBUTE, WORD_ID), wordNetAll);
             }
         });

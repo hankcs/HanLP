@@ -706,7 +706,6 @@ public class AhoCorasickDoubleArrayTrie<V>
             Set<String> keySet = map.keySet();
             // 构建二分trie树
             addAllKeyword(keySet);
-//        v = new V[map.size()];
             // 在二分trie树的基础上构建双数组trie树
             buildDoubleArrayTrie(keySet);
             used = null;

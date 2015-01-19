@@ -16,6 +16,7 @@ import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.seg.Other.AhoCorasickSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
+import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
@@ -33,13 +34,20 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(true).enableOrganizationRecognize(false);
+        Segment segment = new ViterbiSegment().enableCustomDictionary(true).enableOrganizationRecognize(false);
         System.out.println(segment.seg("陈膺奥我喜欢你"));
     }
 
     public void testNGram() throws Exception
     {
         System.out.println(CoreBiGramTableDictionary.getBiFrequency("未##团", "吃饭"));
+    }
+
+    public void testShortest() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(false);
+        System.out.println(segment.seg("区长庄木弟新年致辞"));
     }
 
     public void testIndexSeg() throws Exception

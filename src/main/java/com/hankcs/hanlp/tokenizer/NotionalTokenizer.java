@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.tokenizer;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.dictionary.stopword.Filter;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
@@ -29,7 +30,7 @@ public class NotionalTokenizer
     /**
      * 预置分词器
      */
-    static final Segment SEGMENT = new DijkstraSegment();
+    static final Segment SEGMENT = HanLP.newSegment();
     public static List<Term> segment(String text)
     {
         List<Term> resultList = SEGMENT.seg(text);

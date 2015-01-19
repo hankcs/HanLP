@@ -12,11 +12,12 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
+import junit.framework.TestCase;
 
 /**
  * @author hankcs
  */
-public class TestAddressRecognition
+public class TestAddressRecognition extends TestCase
 {
     public static void main(String[] args)
     {

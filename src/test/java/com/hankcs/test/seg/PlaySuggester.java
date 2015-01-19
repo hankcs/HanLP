@@ -13,6 +13,7 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.suggest.ISuggester;
 import com.hankcs.hanlp.suggest.Suggester;
+import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -23,7 +24,7 @@ import java.util.Scanner;
 /**
  * @author hankcs
  */
-public class PlaySuggester
+public class PlaySuggester extends TestCase
 {
     public static void main(String[] args) throws Exception
     {

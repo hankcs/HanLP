@@ -13,6 +13,7 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
+import junit.framework.TestCase;
 
 import java.util.List;
 import java.util.Scanner;
@@ -20,7 +21,7 @@ import java.util.Scanner;
 /**
  * @author hankcs
  */
-public class PlayGround
+public class PlayGround extends TestCase
 {
     public static void main(String[] args)
     {
@@ -41,5 +42,11 @@ public class PlayGround
             System.out.print(wr.word + wr.nature);
         }
         System.out.println();
+    }
+
+    public void testCharSequence() throws Exception
+    {
+        CharSequence s = "hello";
+
     }
 }

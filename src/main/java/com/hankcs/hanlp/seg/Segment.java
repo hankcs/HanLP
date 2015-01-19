@@ -23,7 +23,8 @@ import java.util.List;
 
 /**
  * 分词器（分词服务）<br>
- * 是所有分词器的基类（Abstract）
+ * 是所有分词器的基类（Abstract）<br>
+ *     分词器的分词方法是线程安全的，但配置方法则不保证
  * @author hankcs
  */
 public abstract class Segment
@@ -54,13 +55,6 @@ public abstract class Segment
         int pCur = start, nCurType, nNextType;
         StringBuilder sb = new StringBuilder();
         char c;
-
-
-        //==============================================================================================
-        // by zhenyulu:
-        //
-        // TODO: 使用一系列正则表达式将句子中的完整成分（百分比、日期、电子邮件、URL等）预先提取出来
-        //==============================================================================================
 
         int[] charTypeArray = new int[end - start];
 
@@ -151,7 +145,7 @@ public abstract class Segment
     }
 
     /**
-     * 分词 输出句子形式
+     * 分词断句 输出句子形式
      *
      * @param text
      * @return

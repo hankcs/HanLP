@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.tokenizer;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -27,7 +28,7 @@ public class NLPTokenizer
     /**
      * 预置分词器
      */
-    public static final Segment SEGMENT = new DijkstraSegment().enableNameRecognize(true).enableTranslatedNameRecognize(true)
+    public static final Segment SEGMENT = HanLP.newSegment().enableNameRecognize(true).enableTranslatedNameRecognize(true)
             .enableJapaneseNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true)
             .enablePartOfSpeechTagging(true);
 

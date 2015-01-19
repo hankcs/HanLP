@@ -28,7 +28,7 @@ public class TraditionalChineseTokenizer
     /**
      * 预置分词器
      */
-    public static Segment SEGMENT = new DijkstraSegment();
+    public static Segment SEGMENT = HanLP.newSegment();
 
     public static List<Term> segment(String text)
     {
