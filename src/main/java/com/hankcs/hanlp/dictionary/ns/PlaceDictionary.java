@@ -14,6 +14,7 @@ package com.hankcs.hanlp.dictionary.ns;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Emit;
 import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.corpus.tag.NS;
@@ -24,9 +25,7 @@ import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 import static com.hankcs.hanlp.corpus.tag.NR.B;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -49,7 +48,7 @@ public class PlaceDictionary
     /**
      * AC算法用到的Trie树
      */
-    public static Trie trie;
+    public static AhoCorasickDoubleArrayTrie<String> trie;
 
     /**
      * 本词典专注的词的ID
@@ -68,11 +67,13 @@ public class PlaceDictionary
         logger.info(HanLP.Config.PlaceDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<NS>(NS.class);
         transformMatrixDictionary.load(HanLP.Config.PlaceDictionaryTrPath);
-        trie = new Trie();
-        trie.addKeyword("CH");
-        trie.addKeyword("CDH");
-        trie.addKeyword("CDEH");
-        trie.addKeyword("GH");
+        trie = new AhoCorasickDoubleArrayTrie<>();
+        TreeMap<String, String> patternMap = new TreeMap<>();
+        patternMap.put("CH", "CH");
+        patternMap.put("CDH", "CDH");
+        patternMap.put("CDEH", "CDEH");
+        patternMap.put("GH", "GH");
+        trie.build(patternMap);
     }
 
     /**
@@ -83,7 +84,7 @@ public class PlaceDictionary
      * @param wordNetOptimum 待优化的图
      * @param wordNetAll
      */
-    public static void parsePattern(List<NS> nsList, List<Vertex> vertexList, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static void parsePattern(List<NS> nsList, List<Vertex> vertexList, final WordNet wordNetOptimum, final WordNet wordNetAll)
     {
 //        ListIterator<Vertex> listIterator = vertexList.listIterator();
         StringBuilder sbPattern = new StringBuilder(nsList.size());
@@ -92,34 +93,34 @@ public class PlaceDictionary
             sbPattern.append(ns.toString());
         }
         String pattern = sbPattern.toString();
-        Collection<Emit> emitCollection = trie.parseText(pattern);
-        Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
-        for (Emit emit : emitCollection)
+        final Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
+        trie.parseText(pattern, new AhoCorasickDoubleArrayTrie.IHit<String>()
         {
-            String keyword = emit.getKeyword();
-            int start = emit.getStart();
-            int end = emit.getEnd();
-            StringBuilder sbName = new StringBuilder();
-            for (int i = start; i <= end; ++i)
+            @Override
+            public void hit(int begin, int end, String value)
             {
-                sbName.append(wordArray[i].realWord);
-            }
-            String name = sbName.toString();
-            // 对一些bad case做出调整
-            if (isBadCase(name)) continue;
+                StringBuilder sbName = new StringBuilder();
+                for (int i = begin; i < end; ++i)
+                {
+                    sbName.append(wordArray[i].realWord);
+                }
+                String name = sbName.toString();
+                // 对一些bad case做出调整
+                if (isBadCase(name)) return;
 
-            // 正式算它是一个名字
-            if (HanLP.Config.DEBUG)
-            {
-                System.out.printf("识别出地名：%s %s\n", name, keyword);
+                // 正式算它是一个名字
+                if (HanLP.Config.DEBUG)
+                {
+                    System.out.printf("识别出地名：%s %s\n", name, value);
+                }
+                int offset = 0;
+                for (int i = 0; i < begin; ++i)
+                {
+                    offset += wordArray[i].realWord.length();
+                }
+                wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_PLACE, name, ATTRIBUTE, WORD_ID), wordNetAll);
             }
-            int offset = 0;
-            for (int i = 0; i < start; ++i)
-            {
-                offset += wordArray[i].realWord.length();
-            }
-            wordNetOptimum.insert(offset, new Vertex(Predefine.TAG_PLACE, name, ATTRIBUTE, WORD_ID), wordNetAll);
-        }
+        });
     }
 
     /**
