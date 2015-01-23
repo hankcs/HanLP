@@ -35,8 +35,8 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
-        System.out.println(segment.seg("今天，刘志军案的关键人物,山西女商人丁书苗在市二中院出庭受审。"));
+        Segment segment = new DijkstraSegment().enableCustomDictionary(false).enableTranslatedNameRecognize(false);
+        System.out.println(segment.seg("是骡子是马拉出来溜溜"));
     }
 
     public void testNGram() throws Exception

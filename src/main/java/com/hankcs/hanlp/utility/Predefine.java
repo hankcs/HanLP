@@ -82,7 +82,7 @@ public class Predefine
     /**
      * Smoothing 平滑因子
      */
-    public static final double dTemp = 0.1;
+    public static final double dTemp = (double) 1 / MAX_FREQUENCY;
     /**
      * 平滑参数
      */

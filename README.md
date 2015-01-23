@@ -1,11 +1,11 @@
-HanLP
+HanLP: Han Language Processing Package
 =====
 
 汉语言处理包
 
 ------
 
-**HanLP**(Han Language Processing Package)是由一系列模型与算法组成的Java工具包，目标是普及自然语言处理在生产环境中的应用。**HanLP**具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
+**HanLP**是由一系列模型与算法组成的Java工具包，目标是普及自然语言处理在生产环境中的应用。**HanLP**具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
 
 **HanLP**提供下列功能：
 
@@ -61,11 +61,11 @@ HanLP
 
 **HanLP**将数据与程序分离，给予用户自定义的自由。
 
-### 下载jar
+### 1、下载jar
 
 [HanLP-1.0.jar](http://www.hankcs.com/)
 
-### 下载data
+### 2、下载data
 **HanLP**中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
 
     data
@@ -82,14 +82,14 @@ HanLP
 | data.standard.zip        |   全部词典，不含模型   |   94   |
 | data.mini.zip        |    小体积词典，不含模型    |  20  |
 下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
-### 配置文件
+### 3、配置文件
 示例配置文件:[HanLP.properties](http://www.hankcs.com/)
 
 配置文件的作用是告诉HanLP数据包的位置，只需修改第一行
 
     root=usr/home/HanLP/
 
-为data的**父目录**即可，比如data目录是`/Users/hankcs/Documents/data`，那么`root=/Users/hankcs/Documents/` 。注意目录的后缀有一个`/`，另外Windows用户也请使用`/`作为分隔符。
+为data的**父目录**即可，比如data目录是`/Users/hankcs/Documents/data`，那么`root=/Users/hankcs/Documents/` 。
 
 - 如果选用mini数据包的话，则需要修改配置文件：
 CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
