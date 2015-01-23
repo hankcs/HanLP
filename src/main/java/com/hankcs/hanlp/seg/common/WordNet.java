@@ -237,7 +237,7 @@ public class WordNet
         {
             String sWord = atomNode.sWord;//init the word
             Nature nature = Nature.n;
-            int dValue = Predefine.MAX_FREQUENCY;
+            int dValue = 1;
             switch (atomNode.nPOS)
             {
                 case Predefine.CT_CHINESE:
@@ -246,14 +246,12 @@ public class WordNet
                 case Predefine.CT_NUM:
                     nature = Nature.m;
                     sWord = "未##数";
-                    dValue = 0;
                     break;
                 case Predefine.CT_DELIMITER:
                     nature = Nature.w;
                     break;
                 case Predefine.CT_LETTER:
                     nature = Nature.nx;
-                    dValue = 0;
                     sWord = "未##串";
                     break;
                 case Predefine.CT_SINGLE://12021-2129-3121
@@ -266,7 +264,6 @@ public class WordNet
                         nature = Nature.nx;
                         sWord = "未##串";
                     }
-                    dValue = 0;
                     break;
                 default:
                     break;
