@@ -5,20 +5,6 @@ import java.io.*;
 
 public class TextUtility
 {
-    public static final int CC_NUM = 6768;
-
-    // The number of Chinese Char,including 5 empty position between 3756-3761
-    public static final int WORD_MAXLENGTH = 100;
-
-    public static final int WT_DELIMITER = 0;
-
-    public static final int WT_CHINESE = 1;
-
-    public static final int WT_OTHER = 2;
-
-    public static final int CT_SENTENCE_BEGIN = 1;// Sentence begin
-
-    public static final int CT_SENTENCE_END = 4;// Sentence ending
 
     /**
      * 单字节
@@ -55,221 +41,15 @@ public class TextUtility
      */
     public static final int CT_OTHER = CT_SINGLE + 12;// Other
 
-    public static final int MAX_WORDS = 650;
-
-    public static final int MAX_SEGMENT_NUM = 10;
-
-    public static final String POSTFIX_SINGLE = "坝邦堡杯城池村单岛道堤店洞渡队法峰府冈港阁宫沟国海号河湖环集江奖礁角街井郡坑口矿里岭楼路门盟庙弄牌派坡铺旗桥区渠泉人山省市水寺塔台滩坛堂厅亭屯湾文屋溪峡县线乡巷型洋窑营屿语园苑院闸寨站镇州庄族陂庵町";
-
-    public static final String[] POSTFIX_MUTIPLE = {"半岛", "草原", "城市", "大堤", "大公国", "大桥", "地区", "帝国",
-            "渡槽", "港口", "高速公路", "高原", "公路", "公园", "共和国", "谷地", "广场", "国道", "海峡", "胡同", "机场", "集镇", "教区",
-            "街道", "口岸", "码头", "煤矿", "牧场", "农场", "盆地", "平原", "丘陵", "群岛", "沙漠", "沙洲", "山脉", "山丘", "水库",
-            "隧道", "特区", "铁路", "新村", "雪峰", "盐场", "盐湖", "渔场", "直辖市", "自治区", "自治县", "自治州", ""};
-
-    public static final String TRANS_ENGLISH = "·—阿埃艾爱安昂敖奥澳笆芭巴白拜班邦保堡鲍北贝本比毕彼别波玻博勃伯泊卜布才采仓查差柴彻川茨慈次达大戴代丹旦但当道德得的登迪狄蒂帝丁东杜敦多额俄厄鄂恩尔伐法范菲芬费佛夫福弗甫噶盖干冈哥戈革葛格各根古瓜哈海罕翰汗汉豪合河赫亨侯呼胡华霍基吉及加贾坚简杰金京久居君喀卡凯坎康考柯科可克肯库奎拉喇莱来兰郎朗劳勒雷累楞黎理李里莉丽历利立力连廉良列烈林隆卢虏鲁路伦仑罗洛玛马买麦迈曼茅茂梅门蒙盟米蜜密敏明摩莫墨默姆木穆那娜纳乃奈南内尼年涅宁纽努诺欧帕潘畔庞培佩彭皮平泼普其契恰强乔切钦沁泉让热荣肉儒瑞若萨塞赛桑瑟森莎沙山善绍舍圣施诗石什史士守斯司丝苏素索塔泰坦汤唐陶特提汀图土吐托陀瓦万王旺威韦维魏温文翁沃乌吾武伍西锡希喜夏相香歇谢辛新牙雅亚彦尧叶依伊衣宜义因音英雍尤于约宰泽增詹珍治中仲朱诸卓孜祖佐伽娅尕腓滕济嘉津赖莲琳律略慕妮聂裴浦奇齐琴茹珊卫欣逊札哲智兹芙汶迦珀琪梵斐胥黛";
-
-    public static final String TRANS_RUSSIAN = "·阿安奥巴比彼波布察茨大德得丁杜尔法夫伏甫盖格哈基加坚捷金卡科可克库拉莱兰勒雷里历利连列卢鲁罗洛马梅蒙米姆娜涅宁诺帕泼普奇齐乔切日萨色山申什斯索塔坦特托娃维文乌西希谢亚耶叶依伊以扎佐柴达登蒂戈果海赫华霍吉季津柯理琳玛曼穆纳尼契钦丘桑沙舍泰图瓦万雅卓兹";
-
-    public static final String TRANS_JAPANESE = "安奥八白百邦保北倍本比滨博步部彩菜仓昌长朝池赤川船淳次村大代岛稻道德地典渡尔繁饭风福冈高工宫古谷关广桂贵好浩和合河黑横恒宏后户荒绘吉纪佳加见健江介金今进井静敬靖久酒菊俊康可克口梨理里礼栗丽利立凉良林玲铃柳隆鹿麻玛美萌弥敏木纳南男内鸟宁朋片平崎齐千前浅桥琴青清庆秋丘曲泉仁忍日荣若三森纱杉山善上伸神圣石实矢世市室水顺司松泰桃藤天田土万望尾未文武五舞西细夏宪相小孝新星行雄秀雅亚岩杨洋阳遥野也叶一伊衣逸义益樱永由有佑宇羽郁渊元垣原远月悦早造则泽增扎宅章昭沼真政枝知之植智治中忠仲竹助椎子佐阪坂堀荻菅薰浜濑鸠筱";
-
-    // Translation type
-    public static final int TT_ENGLISH = 0;
-
-    public static final int TT_RUSSIAN = 1;
-
-    public static final int TT_JAPANESE = 2;
-
-    // Seperator type
-    public static final String SEPERATOR_C_SENTENCE = "。！？：；…";
-
-    public static final String SEPERATOR_C_SUB_SENTENCE = "、，（）“”‘’";
-
-    public static final String SEPERATOR_E_SENTENCE = "!?:;";
-
-    public static final String SEPERATOR_E_SUB_SENTENCE = ",()\"'";
-
-    public static final String SEPERATOR_LINK = "\n\r 　";
-
-    // Sentence begin and ending string
-    public static final String SENTENCE_BEGIN = "始##始";
-
-    public static final String SENTENCE_END = "末##末";
-
-    // Seperator between two words
-    public static final String WORD_SEGMENTER = "@";
-
-    public static final int MAX_WORDS_PER_SENTENCE = 120;
-
-    public static final int MAX_UNKNOWN_PER_SENTENCE = 200;
-
-    public static final int MAX_POS_PER_WORD = 20;
-
-    public static final int LITTLE_FREQUENCY = 6;
-
-    /**
-     * 获取词性符号对应的int值
-     *
-     * @param sPOS
-     * @return
-     */
-    public static int GetPOSValue(String sPOS)
-    {
-        char[] c = sPOS.toCharArray();
-
-        if (c.length == 1)
-            return ((int) c[0]) * 256;
-        else if (c.length == 2)
-            return ((int) c[0]) * 256 + c[1];
-        else
-        {
-            String s1 = sPOS.substring(0, sPOS.indexOf('+'));
-            String s2 = sPOS.substring(sPOS.indexOf('+') + 1);
-            return 100 * GetPOSValue(s1) + Integer.parseInt(s2);
-        }
-    }
-
-    public static String GetPOSString(int nPOS)
-    {
-        String sPOSRet;
-
-        if (nPOS > 'a' * 25600)
-        {
-            if ((nPOS / 100) % 256 != 0)
-                sPOSRet = (char) (nPOS / 25600) + "" + (char) ((nPOS / 100) % 256) + "+" + nPOS % 100;
-            else
-                sPOSRet = (char) (nPOS / 25600) + "+" + nPOS % 100;
-        }
-        else
-        {
-            if (nPOS > 256)
-                sPOSRet = (char) (nPOS / 256) + "" + (char) (nPOS % 256);
-            else
-                sPOSRet = (char) (nPOS % 256) + "";
-        }
-        return sPOSRet;
-    }
-
-    public static final int MAX_FREQUENCE = 2079997;// 7528283+329805
-
-    // //1993123+86874
-
-    public static final int MAX_SENTENCE_LEN = 2000;
-
-    public static final double INFINITE_VALUE = 10000.00;
-
-    // 平滑参数
-    public static final double SMOOTH_PARAM = 0.1;
-
-    public static final String UNKNOWN_PERSON = "未##人";
-
-    public static final String UNKNOWN_SPACE = "未##地";
-
-    public static final String UNKNOWN_NUM = "未##数";
-
-    public static final String UNKNOWN_TIME = "未##时";
-
-    public static final String UNKNOWN_LETTER = "未##串";
-
-    public static boolean gbGenerate(String fileName)
-    {
-        File file;
-        int i, j;
-        file = new File(fileName);
-        try
-        {
-            PrintWriter out = new PrintWriter(new FileOutputStream(file));
-            if (!file.canWrite())
-                return false;// fail while opening the file
-            for (i = 161; i < 255; i++)
-                for (j = 161; j < 255; j++)
-                    out.println("" + i + j + "," + i + "," + j);
-            out.close();
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : CC_Generate
-     * <p/>
-     * Description: Generate the Chinese Char List file
-     * <p/>
-     * <p/>
-     * Parameters : sFilename: the file name for the output CC List
-     * <p/>
-     * Returns : public static boolean Author : Kevin Zhang History : 1.create 2002-1-8
-     * ************************************************************************
-     */
-    public static boolean CC_Generate(String fileName)
-    {
-        File file;
-        int i, j;
-        file = new File(fileName);
-        try
-        {
-            PrintWriter out = new PrintWriter(new FileOutputStream(file));
-            for (i = 176; i < 255; i++)
-                for (j = 161; j < 255; j++)
-                    out.println("" + i + j + "," + i + "," + j);
-            out.close();
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : CC_Find
-     * <p/>
-     * Description: Find a Chinese sub-string in the Chinese String
-     * <p/>
-     * <p/>
-     * Parameters : string:Null-terminated string to search
-     * <p/>
-     * strCharSet:Null-terminated string to search for
-     * <p/>
-     * Returns : String Author : Kevin Zhang History : 1.create 2002-1-8
-     * ************************************************************************
-     */
-    public static boolean CC_Find(final byte[] string, final byte[] strCharSet)
-    {
-        if (string != null && strCharSet != null)
-        {
-            int index = strstr(string, strCharSet);
-            if (index != -1 && (index % 2 == 1))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static int charType(char c)
     {
         return charType(String.valueOf(c));
     }
 
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : charType
-     * <p/>
-     * Description: Judge the type of sChar or (sChar,sChar+1)
-     * <p/>
-     * <p/>
-     * Parameters : sFilename: the file name for the output CC List
-     * <p/>
-     * Returns : int : the type of char Author : Kevin Zhang History : 1.create 2002-1-8
-     * ************************************************************************
+     * 判断字符类型
+     * @param str
+     * @return
      */
     public static int charType(String str)
     {
@@ -313,60 +93,18 @@ public class TextUtility
     }
 
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : GetCCPrefix
-     * <p/>
-     * Description: Get the max Prefix string made up of Chinese Char
-     * <p/>
-     * <p/>
-     * Parameters : sSentence: the original sentence which includes Chinese or Non-Chinese char
-     * <p/>
-     * Returns : the end of the sub-sentence Author : Kevin Zhang History : 1.create 2002-1-8
-     * ************************************************************************
-     */
-    public static int getCCPrefix(byte[] sSentence)
-    {
-        int nLen = sSentence.length;
-        int nCurPos = 0;
-        while (nCurPos < nLen && getUnsigned(sSentence[nCurPos]) > 175
-                && getUnsigned(sSentence[nCurPos]) < 248)
-        {
-            nCurPos += 2;// Get next Chinese Char
-        }
-        return nCurPos;
-    }
-
-    /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsAllSingleByte
-     * <p/>
-     * Description: Judge the string is all made up of Single Byte Char
-     * <p/>
-     * <p/>
-     * Parameters : sSentence: the original sentence which includes Chinese or Non-Chinese char
-     * <p/>
-     * Returns : the end of the sub-sentence Author : Kevin Zhang History : 1.create 2002-1-24
-     * ************************************************************************
+     * 是否全是中文
+     * @param str
+     * @return
      */
     public static boolean isAllChinese(String str)
     {
         return str.matches("[\\u4E00-\\u9FA5]+");
     }
-
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsAllNonChinese
-     * <p/>
-     * Description: Judge the string is all made up of Single Byte Char
-     * <p/>
-     * <p/>
-     * Parameters : sSentence: the original sentence which includes Chinese or Non-Chinese char
-     * <p/>
-     * Returns : the end of the sub-sentence Author : Kevin Zhang History : 1.create 2002-1-24
-     * ************************************************************************
+     * 是否全部不是中文
+     * @param sString
+     * @return
      */
     public static boolean isAllNonChinese(byte[] sString)
     {
@@ -386,17 +124,9 @@ public class TextUtility
     }
 
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsAllSingleByte
-     * <p/>
-     * Description: Judge the string is all made up of Single Byte Char
-     * <p/>
-     * <p/>
-     * Parameters : sSentence: the original sentence which includes Chinese or Non-Chinese char
-     * <p/>
-     * Returns : the end of the sub-sentence Author : Kevin Zhang History : 1.create 2002-1-24
-     * ************************************************************************
+     * 是否全是单字节
+     * @param str
+     * @return
      */
     public static boolean isAllSingleByte(String str)
     {
@@ -446,20 +176,10 @@ public class TextUtility
 
         return -1;
     }
-
-
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsAllNum
-     * <p/>
-     * Description: Judge the string is all made up of Num Char
-     * <p/>
-     * <p/>
-     * Parameters : sSentence: the original sentence which includes Chinese or Non-Chinese char
-     * <p/>
-     * Returns : the end of the sub-sentence Author : Kevin Zhang History : 1.create 2002-1-24
-     * ************************************************************************
+     * 是否全是数字
+     * @param str
+     * @return
      */
     public static boolean isAllNum(String str)
     {
@@ -518,19 +238,10 @@ public class TextUtility
         }
         return false;
     }
-
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsAllIndex
-     * <p/>
-     * Description: Judge the string is all made up of Index Num Char
-     * <p/>
-     * <p/>
-     * Parameters : sSentence: the original sentence which includes Chinese or Non-Chinese char
-     * <p/>
-     * Returns : the end of the sub-sentence Author : Kevin Zhang History : 1.create 2002-1-24
-     * ************************************************************************
+     * 是否全是序号
+     * @param sString
+     * @return
      */
     public static boolean isAllIndex(byte[] sString)
     {
@@ -599,17 +310,9 @@ public class TextUtility
     }
 
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsAllDelimiter
-     * <p/>
-     * Description: Judge the string is all made up of Delimiter
-     * <p/>
-     * <p/>
-     * Parameters : sSentence: the original sentence which includes Chinese or Non-Chinese char
-     * <p/>
-     * Returns : the end of the sub-sentence Author : Kevin Zhang History : 1.create 2002-1-24
-     * ************************************************************************
+     * 是否全是分隔符
+     * @param sString
+     * @return
      */
     public static boolean isAllDelimiter(byte[] sString)
     {
@@ -626,99 +329,9 @@ public class TextUtility
     }
 
     /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : BinarySearch
-     * <p/>
-     * Description: Lookup the index of nVal in the table nTable which length is nTableLen
-     * <p/>
-     * Parameters : nature: the POS value
-     * <p/>
-     * Returns : the index value Author : Kevin Zhang History : 1.create 2002-1-25
-     * ************************************************************************
-     */
-    public static int binarySearch(int val, int[] table)
-    {
-        if (table != null)
-        {
-            int len = table.length;
-            int start = 0, end = len - 1, mid = (start + end) / 2;
-
-            while (start <= end)// Binary search
-            {
-                if (table[mid] == val)
-                {
-                    return mid;// find it
-                }
-                else if (table[mid] < val)
-                {
-                    start = mid + 1;
-                }
-                else
-                {
-                    end = mid - 1;
-                }
-                mid = (start + end) / 2;
-            }
-        }
-        return -1;// Can not find it;
-    }
-
-    /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsForeign
-     * <p/>
-     * Description: Decide whether the word is not a Non-fereign word
-     * <p/>
-     * Parameters : word: the word
-     * <p/>
-     * Returns : the index value Author : Kevin Zhang History : 1.create 2002-1-26
-     * ************************************************************************
-     */
-    public static boolean isForeign(String word)
-    {
-        if (word != null)
-        {
-            int foreignCount = getForeignCharCount(word);
-            int charCount = word.length();
-            if (charCount > 2 || foreignCount >= 1 * charCount / 2)
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsAllForeign
-     * <p/>
-     * Description: Decide whether the word is not a Non-fereign word
-     * <p/>
-     * Parameters : word: the word
-     * <p/>
-     * Returns : the index value Author : Kevin Zhang History : 1.create 2002-3-25
-     * ************************************************************************
-     */
-    public static boolean isAllForeign(String sWord)
-    {
-        int nForeignCount = getForeignCharCount(sWord);
-        if (2 * nForeignCount == sWord.length())
-            return true;
-        return false;
-    }
-
-    /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : IsForeign
-     * <p/>
-     * Description: Decide whether the word is Chinese Num word
-     * <p/>
-     * Parameters : word: the word
-     * <p/>
-     * Returns : the index value Author : Kevin Zhang History : 1.create 2002-1-26
-     * ************************************************************************
+     * 是否全是中国数字
+     * @param word
+     * @return
      */
     public static boolean isAllChineseNum(String word)
     {// 百分之五点六的人早上八点十八分起床
@@ -748,33 +361,6 @@ public class TextUtility
         return false;
     }
 
-    /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : GetForeignCharCount
-     * <p/>
-     * Description:
-     * <p/>
-     * Parameters : word: the word
-     * <p/>
-     * Returns : the index value Author : Kevin Zhang History : 1.create 2002-4-4 2.Modify 2002-5-21
-     * ************************************************************************
-     */
-    public static int getForeignCharCount(String sWord)
-    {
-        int nForeignCount, nCount;
-        // English char counnts
-        nForeignCount = getCharCount(TRANS_ENGLISH, sWord);
-        // Japan char counnts
-        nCount = getCharCount(TRANS_JAPANESE, sWord);
-        if (nForeignCount <= nCount)
-            nForeignCount = nCount;
-        // Russian char counnts
-        nCount = getCharCount(TRANS_RUSSIAN, sWord);
-        if (nForeignCount <= nCount)
-            nForeignCount = nCount;
-        return nForeignCount;
-    }
 
     /**
      * 得到字符集的字符在字符串中出现的次数
@@ -801,144 +387,6 @@ public class TextUtility
         return nCount;
     }
 
-    /**
-     * ************************************************************************
-     * <p/>
-     * Func Name : GetForeignCharCount
-     * <p/>
-     * Description: Return the foreign type
-     * <p/>
-     * Parameters : word: the word
-     * <p/>
-     * Returns : the index value Author : Kevin Zhang History : 1.create 2002-4-4 2.Modify 2002-5-21
-     * ************************************************************************
-     */
-    public int GetForeignType(String sWord)
-    {
-        int nForeignCount, nCount, nType = TT_ENGLISH;
-        nForeignCount = getCharCount(TRANS_ENGLISH, sWord);// English
-        // char
-        // counnts
-        nCount = getCharCount(TRANS_RUSSIAN, sWord);// Russian
-        // char
-        // counnts
-        if (nForeignCount < nCount)
-        {
-            nForeignCount = nCount;
-            nType = TT_RUSSIAN;
-        }
-        nCount = getCharCount(TRANS_JAPANESE, sWord);// Japan
-        // char
-        // counnts
-        if (nForeignCount < nCount)
-        {
-            nForeignCount = nCount;
-            nType = TT_JAPANESE;
-        }
-        return nType;
-    }
-
-    public static byte[] readBytes(DataInputStream in, int len)
-    {
-        if (in != null && len > 0)
-        {
-            byte[] b = new byte[len];
-            try
-            {
-                for (int i = 0; i < len; i++)
-                    b[i] = in.readByte();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-
-            return b;
-        }
-
-        return null;
-    }
-
-    /**
-     * 比较第二个字节数组是否在第一个中出现
-     *
-     * @param b1
-     * @param b2
-     * @return 返回第一次出现在位置。如果没有出现，则返回－1
-     */
-    public static int strstr(byte[] b1, byte[] b2)
-    {
-        boolean flag = true;
-        if (b1 != null && b2 != null)
-        {
-            for (int i = 0; i < b1.length; i++)
-            {
-                if (b1[i] != b2[0])
-                    continue;
-                else
-                {
-                    if (b1.length - i >= b2.length)
-                    {
-                        for (int j = 0; j < b2.length; j++)
-                        {
-                            if (b2[j] != b1[i + j])
-                            {
-                                flag = false;
-                                break;
-                            }
-                        }
-
-                        if (flag)
-                        {
-                            return i;
-                        }
-                    }
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    public static int strchr(byte[] bs, byte b)
-    {
-        if (bs != null)
-        {
-            for (int i = 0; i < bs.length; i++)
-            {
-                if (bs[i] == b)
-                    return i;
-            }
-
-        }
-
-        return -1;
-    }
-
-    /**
-     * 比较两个字节数组前len个字节是否相等
-     *
-     * @param b1
-     * @param b2
-     * @param len
-     * @return
-     */
-    public static boolean strncmp(byte[] b1, int startIndex, byte[] b2, int len)
-    {
-        if (b1 != null && b2 != null && len > 0)
-        {
-            if (b1.length >= len && b2.length >= len)
-            {
-                for (int i = startIndex; i < len; i++)
-                {
-                    if (b1[i] != b2[i])
-                        return true;
-                }
-            }
-        }
-
-        return false;
-    }
 
     /**
      * 获取字节对应的无符号整型数
@@ -952,168 +400,6 @@ public class TextUtility
             return (int) b;
         else
             return (b & 0x7F + 128);
-    }
-
-    public static void strncpy(byte[] dest, byte[] src, int len)
-    {
-        if (dest != null && src != null)
-        {
-            if (dest.length >= len && len <= src.length)
-            {
-                for (int i = 0; i < len; i++)
-                    dest[i] = src[i];
-            }
-        }
-    }
-
-    /**
-     * 汉字在6768区位表中对应的ID号
-     */
-    public static int CC_ID(String str)
-    {
-        int result = -1;
-        if (str != null && str.length() > 0)
-        {
-            byte[] b;
-            try
-            {
-                b = str.getBytes("GBK");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                b = str.getBytes();
-                e.printStackTrace();
-            }
-            result = (getUnsigned(b[0]) - 176) * 94 + (getUnsigned(b[1]) - 161);
-        }
-        return result;
-    }
-
-    /**
-     * The first char computed by the Chinese Char ID
-     *
-     * @param id
-     * @return
-     */
-    public static int CC_CHAR1(int id)
-    {
-        return (id) / 94 + 176;
-    }
-
-    /**
-     * The second char computed by the Chinese Char ID
-     *
-     * @param id
-     * @return
-     */
-    public static int CC_CHAR2(int id)
-    {
-        return (id) % 94 + 161;
-    }
-
-    public static int strcat(byte[] dest, byte[] src, int len)
-    {
-        if (dest != null && src != null && len > 0)
-        {
-
-            for (int i = 0; i < dest.length; i++)
-            {
-                if (dest[i] == 0)
-                {
-                    for (int j = 0; j < len; j++)
-                        dest[i] = src[j];
-                    return i;
-                }
-            }
-
-        }
-
-        return -1;
-    }
-
-    public static int strcpy(byte[] dest, byte[] src)
-    {
-        return strcpy(dest, src, src.length);
-    }
-
-    public static int strcpy(byte[] dest, byte[] src, int len)
-    {
-        if (dest != null && src != null && len > 0)
-        {
-            int i = 0;
-            for (i = 0; i < len; i++)
-            {
-                dest[i] = src[i];
-
-            }
-            return i;
-        }
-
-        return -1;
-    }
-
-    /**
-     * 根据ID号得到对应的GB汉字
-     *
-     * @param id 0--6767
-     * @return
-     */
-    public static String getGB(int id)
-    {
-        String result = null;
-
-        if (id >= 0 && id < 6768)
-        {
-            byte[] b = new byte[2];
-            b[0] = (byte) CC_CHAR1(id);
-            b[1] = (byte) CC_CHAR2(id);
-            try
-            {
-                result = new String(b, "GBK");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
-
-    public static boolean isSingle(String s)
-    {
-        try
-        {
-            return (s != null) && (s.getBytes("GBK").length == 1);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            if ((s != null) && (s.getBytes().length == 1))
-                return true;
-        }
-        return false;
-    }
-
-    public static int[] removeInvalid(int[] src)
-    {
-        int[] result = null;
-        int count = 0;
-        if (src != null && src.length > 0)
-        {
-            for (int i = 0; i < src.length; i++)
-            {
-                if (i != 0 && src[i] == 0)
-                    break;
-                else
-                    count++;
-            }
-
-            result = new int[count];
-            for (int i = 0; i < count; i++)
-                result[i] = src[i];
-        }
-
-        return result;
     }
 
     /**

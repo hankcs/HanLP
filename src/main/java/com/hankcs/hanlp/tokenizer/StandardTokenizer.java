@@ -39,6 +39,7 @@ public class StandardTokenizer
         return SEGMENT.seg(text);
     }
 
+
     public static List<Term> parse(String text)
     {
         return segment(text);

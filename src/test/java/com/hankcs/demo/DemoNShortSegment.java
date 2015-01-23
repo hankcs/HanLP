@@ -11,9 +11,9 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 
 /**
  * N最短路径分词，该分词器比最短路分词器慢，但是效果稍微好一些，对命名实体识别能力更强
@@ -25,9 +25,9 @@ public class DemoNShortSegment
     public static void main(String[] args)
     {
         Segment nShortSegment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
-        Segment shortestSegment = new DijkstraSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
+        Segment shortestSegment = new ViterbiSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
         String[] testCase = new String[]{
-                "今天，刘志军案的关键人物,山西女商人丁书苗在市二中院出庭受审。",
+                "山西女商人在市二中院出庭受审。",
                 "刘喜杰石国祥会见吴亚琴先进事迹报告团成员",
         };
         for (String sentence : testCase)

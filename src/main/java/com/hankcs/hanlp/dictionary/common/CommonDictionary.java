@@ -61,11 +61,13 @@ public abstract class CommonDictionary<V>
         if (resultCode != 0)
         {
             logger.warning("trie建立失败" + resultCode + ",正在尝试排序后重载");
-            if (!sort(path))
+            TreeMap<String, V> map = new TreeMap<>();
+            for (int i = 0; i < valueArray.length; ++i)
             {
-                return false;
+                map.put(keyList.get(i), valueArray[i]);
             }
-            load(path);
+            trie = new DoubleArrayTrie<>();
+            trie.build(map);
         }
         trie.save(path + ".trie.dat");
         onSaveValue(valueArray, path);

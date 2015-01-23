@@ -26,6 +26,8 @@ import com.hankcs.hanlp.seg.common.WordNet;
 import java.util.List;
 
 /**
+ * Viterbi分词器<br>
+ *     也是最短路分词，最短路求解采用Viterbi算法
  * @author hankcs
  */
 public class ViterbiSegment extends HiddenMarkovModelSegment
@@ -40,7 +42,7 @@ public class ViterbiSegment extends HiddenMarkovModelSegment
         ///////////////生成词图////////////////////
         if (HanLP.Config.DEBUG)
         {
-            System.out.printf("粗分词图：%s\n", wordNetAll);
+            System.out.printf("粗分词网：\n%s\n", wordNetAll);
         }
         List<Vertex> vertexList = viterbi(wordNetAll);
         if (HanLP.Config.DEBUG)

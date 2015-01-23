@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 
 /**
  * 一些预定义的静态全局变量
- * @author He Han
  */
 public class Predefine
 {
@@ -83,7 +82,7 @@ public class Predefine
     /**
      * Smoothing 平滑因子
      */
-    public static final double dTemp = Math.sqrt((double) 1 / MAX_FREQUENCY);
+    public static final double dTemp = 0.1;
     /**
      * 平滑参数
      */

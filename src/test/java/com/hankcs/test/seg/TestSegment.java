@@ -13,6 +13,7 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.Other.AhoCorasickSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
@@ -34,13 +35,13 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new ViterbiSegment().enableCustomDictionary(true).enableOrganizationRecognize(false);
-        System.out.println(segment.seg("陈膺奥我喜欢你"));
+        Segment segment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
+        System.out.println(segment.seg("今天，刘志军案的关键人物,山西女商人丁书苗在市二中院出庭受审。"));
     }
 
     public void testNGram() throws Exception
     {
-        System.out.println(CoreBiGramTableDictionary.getBiFrequency("未##团", "吃饭"));
+        System.out.println(CoreBiGramTableDictionary.getBiFrequency("牺", "牲"));
     }
 
     public void testShortest() throws Exception

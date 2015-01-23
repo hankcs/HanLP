@@ -73,7 +73,7 @@ public class CoreStopWordDictionary
     };
 
     /**
-     * 是否应当将这个term纳入计算，词性属于名词、动词、副词、形容词
+     * 是否应当将这个term纳入计算，词性属于名词、动词、副词、形容词，并且不在停用词表中
      *
      * @param term
      * @return 是否应当
