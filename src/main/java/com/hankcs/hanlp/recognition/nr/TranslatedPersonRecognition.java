@@ -30,8 +30,6 @@ import static com.hankcs.hanlp.dictionary.nr.NRConstant.WORD_ID;
  */
 public class TranslatedPersonRecognition
 {
-    static StringBuilder sbName = new StringBuilder();
-    static int appendTimes = 0;
     /**
      * 执行识别
      * @param segResult 粗分结果
@@ -40,6 +38,8 @@ public class TranslatedPersonRecognition
      */
     public static void Recognition(List<Vertex> segResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
+        StringBuilder sbName = new StringBuilder();
+        int appendTimes = 0;
         // nrf触发识别
         ListIterator<Vertex> listIterator = segResult.listIterator();
         listIterator.next();
@@ -66,7 +66,8 @@ public class TranslatedPersonRecognition
                         }
                         wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new CoreDictionary.Attribute(Nature.nrf), WORD_ID), wordNetAll);
                     }
-                    reset();
+                    sbName.setLength(0);
+                    appendTimes = 0;
                 }
             }
             else
@@ -81,12 +82,5 @@ public class TranslatedPersonRecognition
 
             line += vertex.realWord.length();
         }
-        if (appendTimes > 0) reset();
-    }
-
-    private static void reset()
-    {
-        sbName.setLength(0);
-        appendTimes = 0;
     }
 }

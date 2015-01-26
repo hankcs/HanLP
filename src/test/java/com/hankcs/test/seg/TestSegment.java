@@ -35,8 +35,8 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(false).enableAllNamedEntityRecognize(false);
-        System.out.println(segment.seg("大卫贝克汉姆是名著名球员"));
+        Segment segment = new DijkstraSegment().enableCustomDictionary(false);
+        System.out.println(segment.seg("陈膺奥我喜欢你"));
     }
 
     public void testNGram() throws Exception

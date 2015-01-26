@@ -14,16 +14,16 @@ package com.hankcs.hanlp.corpus.dependency.CoNll;
 import com.hankcs.hanlp.utility.Predefine;
 
 /**
+ * 等效词编译器
  * @author hankcs
  */
 public class PosTagCompiler
 {
-//    public final static String TF = "[频]";
     /**
-     * 将词性为数词的转为##数##
-     * @param tag
-     * @param name
-     * @return
+     * 编译，比如将词性为数词的转为##数##
+     * @param tag 标签
+     * @param name 原词
+     * @return 编译后的等效词
      */
     public static String compile(String tag, String name)
     {

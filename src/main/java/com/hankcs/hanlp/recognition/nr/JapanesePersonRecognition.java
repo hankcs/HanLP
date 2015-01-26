@@ -31,9 +31,6 @@ import static com.hankcs.hanlp.dictionary.nr.NRConstant.WORD_ID;
  */
 public class JapanesePersonRecognition
 {
-    static StringBuilder sbName = new StringBuilder();
-    static int appendTimes = 0;
-
     /**
      * 执行识别
      * @param segResult 粗分结果
@@ -42,6 +39,8 @@ public class JapanesePersonRecognition
      */
     public static void Recognition(List<Vertex> segResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
+        StringBuilder sbName = new StringBuilder();
+        int appendTimes = 0;
         char[] charArray = wordNetAll.charArray;
         BaseSearcher searcher = JapanesePersonDictionary.getSearcher(charArray);
         Map.Entry<String, Character> entry;
@@ -58,7 +57,8 @@ public class JapanesePersonRecognition
                 {
                     wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new CoreDictionary.Attribute(Nature.nrj), WORD_ID), wordNetAll);
                 }
-                reset();
+                sbName.setLength(0);
+                appendTimes = 0;
             }
             if (appendTimes == 0)
             {
@@ -82,7 +82,8 @@ public class JapanesePersonRecognition
                     {
                         wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new CoreDictionary.Attribute(Nature.nrj), WORD_ID), wordNetAll);
                     }
-                    reset();
+                    sbName.setLength(0);
+                    appendTimes = 0;
                 }
             }
             preOffset = offset + key.length();
@@ -93,13 +94,6 @@ public class JapanesePersonRecognition
             {
                 wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new CoreDictionary.Attribute(Nature.nrj), WORD_ID), wordNetAll);
             }
-            reset();
         }
-    }
-
-    private static void reset()
-    {
-        sbName.setLength(0);
-        appendTimes = 0;
     }
 }

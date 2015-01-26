@@ -47,8 +47,7 @@ public class TestParse extends TestCase
 
     public void testSegAndParse() throws Exception
     {
-//        HanLP.Config.enableDebug();
-        System.out.println(WordNatureDependencyParser.compute("欧共体企业在欧洲摄像机市场上所占的份额已由百分之四十八"));
+        System.out.println(CRFDependencyParser.compute("我喜欢你"));
     }
 
     public void testMaxEntParser() throws Exception
