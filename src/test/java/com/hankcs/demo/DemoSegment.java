@@ -11,6 +11,8 @@
  */
 package com.hankcs.demo;
 
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
@@ -18,13 +20,25 @@ import java.util.List;
 
 /**
  * 标准分词
+ *
  * @author hankcs
  */
 public class DemoSegment
 {
     public static void main(String[] args)
     {
-        List<Term> termList = StandardTokenizer.segment("商品和服务");
-        System.out.println(termList);
+        String[] testCase = new String[]{
+                "商品和服务",
+                "结婚的和尚未结婚的",
+                "买水果然后来世博园",
+                "中国的首都是北京",
+                "工信处女干事每月经过下属科室都要亲口交代24口交换机等技术性器件的安装工作",
+        };
+        Segment segment = HanLP.newSegment();
+        for (String sentence : testCase)
+        {
+            List<Term> termList = segment.seg(sentence);
+            System.out.println(termList);
+        }
     }
 }

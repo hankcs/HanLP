@@ -36,7 +36,7 @@ public class DemoSuggester
         }
 
         System.out.println(suggester.suggest("发言", 1));       // 语义
-        System.out.println(suggester.suggest("危机公共", 1));   // 字符
+        System.out.println(suggester.suggest("危机公关", 1));   // 字符
         System.out.println(suggester.suggest("mayun", 1));      // 拼音
     }
 }

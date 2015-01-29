@@ -12,6 +12,9 @@
 package com.hankcs.test.corpus;
 
 
+import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
+import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
+import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import junit.framework.TestCase;
 
@@ -22,6 +25,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 部分标注有问题，比如逗号缺少标注等等，尝试修复它
