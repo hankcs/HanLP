@@ -34,6 +34,11 @@ public abstract class CommonDictionary<V>
         trie = new DoubleArrayTrie<V>();
         long start = System.currentTimeMillis();
         V[] valueArray = onLoadValue(path);
+        if (valueArray == null)
+        {
+            logger.info("加载值" + path + ".value.dat失败，耗时" + (System.currentTimeMillis() - start) + "ms");
+            return false;
+        }
         logger.info("加载值" + path + ".value.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         start = System.currentTimeMillis();
         if (loadDat(path + ".trie.dat", valueArray))

@@ -54,7 +54,10 @@ public class PersonDictionary
     {
         long start = System.currentTimeMillis();
         dictionary = new NRDictionary();
-        dictionary.load(HanLP.Config.PersonDictionaryPath);
+        if (!dictionary.load(HanLP.Config.PersonDictionaryPath))
+        {
+            throw new IllegalArgumentException("人名词典路径配置错误:" + HanLP.Config.PersonDictionaryPath);
+        }
         transformMatrixDictionary = new TransformMatrixDictionary<>(NR.class);
         transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);
         trie = new AhoCorasickDoubleArrayTrie<>();

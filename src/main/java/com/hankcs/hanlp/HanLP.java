@@ -162,7 +162,7 @@ public class HanLP
                 CoreSynonymDictionaryDictionaryPath = root + p.getProperty("CoreSynonymDictionaryDictionaryPath", CoreSynonymDictionaryDictionaryPath);
                 PersonDictionaryPath = root + p.getProperty("PersonDictionaryPath", PersonDictionaryPath);
                 PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath", PersonDictionaryTrPath);
-                String[] pathArray = p.getProperty("CustomDictionaryPath", "CustomDictionaryPath=dictionary/custom/CustomDictionary.txt").split(";");
+                String[] pathArray = p.getProperty("CustomDictionaryPath", "dictionary/custom/CustomDictionary.txt").split(";");
                 String prePath = root;
                 for (int i = 0; i < pathArray.length; ++i)
                 {

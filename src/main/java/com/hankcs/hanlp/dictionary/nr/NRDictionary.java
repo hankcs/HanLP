@@ -60,6 +60,7 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
         catch (Exception e)
         {
             logger.warning("读取" + path + "失败" + e);
+            return null;
         }
         valueArray = valueList.toArray(new EnumItem[0]);
         return valueArray;
