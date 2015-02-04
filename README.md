@@ -130,12 +130,12 @@ System.out.println(HanLP.segment("你好，欢迎使用HanLP汉语处理包！")
 ### 2. 标准分词
 
 ```java
-List<Term> termList = StandTokenizer.segment("商品和服务");
+List<Term> termList = StandardTokenizer.segment("商品和服务");
 System.out.println(termList);
 ```
 - 说明
   * **HanLP**中有一系列“开箱即用”的静态分词器，以`Tokenizer`结尾，在接下来的例子中会继续介绍。
-  * `HanLP.segment`其实是对`StandTokenizer.segment`的包装。
+  * `HanLP.segment`其实是对`StandardTokenizer.segment`的包装。
 - 算法详解
   * [《词图的生成》](http://www.hankcs.com/nlp/segment/the-word-graph-is-generated.html)
 

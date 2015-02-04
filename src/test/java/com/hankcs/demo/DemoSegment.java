@@ -14,7 +14,6 @@ package com.hankcs.demo;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.List;
 
