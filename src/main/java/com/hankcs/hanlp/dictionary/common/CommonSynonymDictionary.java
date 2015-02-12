@@ -48,8 +48,8 @@ public class CommonSynonymDictionary
 
     public boolean load(InputStream inputStream)
     {
-        trie = new DoubleArrayTrie<>();
-        TreeMap<String, SynonymItem> treeMap = new TreeMap<>();
+        trie = new DoubleArrayTrie<SynonymItem>();
+        TreeMap<String, SynonymItem> treeMap = new TreeMap<String, SynonymItem>();
         String line = null;
         try
         {

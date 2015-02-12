@@ -40,7 +40,7 @@ public class Item extends SimpleItem
     public String toString()
     {
         final StringBuilder sb = new StringBuilder(key);
-        ArrayList<Map.Entry<String, Integer>> entries = new ArrayList<>(labelMap.entrySet());
+        ArrayList<Map.Entry<String, Integer>> entries = new ArrayList<Map.Entry<String, Integer>>(labelMap.entrySet());
         Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>()
         {
             @Override

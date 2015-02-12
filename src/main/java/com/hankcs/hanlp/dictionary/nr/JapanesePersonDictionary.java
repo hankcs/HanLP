@@ -54,13 +54,13 @@ public class JapanesePersonDictionary
 
     static boolean load()
     {
-        trie = new DoubleArrayTrie<>();
+        trie = new DoubleArrayTrie<Character>();
         if (loadDat()) return true;
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
             String line;
-            TreeMap<String, Character> map = new TreeMap<>();
+            TreeMap<String, Character> map = new TreeMap<String, Character>();
             while ((line = br.readLine()) != null)
             {
                 String[] param = line.split(" ", 2);

@@ -36,7 +36,7 @@ public class NGramDictionaryMaker
 
     public NGramDictionaryMaker()
     {
-        trie = new BinTrie<>();
+        trie = new BinTrie<Integer>();
         tmDictionaryMaker = new TMDictionaryMaker();
     }
 

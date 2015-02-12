@@ -88,7 +88,7 @@ public class PersonRecognition
             EnumItem<NR> nrEnumItem = PersonDictionary.dictionary.get(vertex.realWord);
             if (nrEnumItem == null)
             {
-                nrEnumItem = new EnumItem<>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
+                nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
             }
             tagList.add(nrEnumItem);
         }
@@ -102,7 +102,7 @@ public class PersonRecognition
      */
     public static List<NR> viterbiCompute(List<EnumItem<NR>> roleTagList)
     {
-        List<NR> resultList = new LinkedList<>();
+        List<NR> resultList = new LinkedList<NR>();
         // HMM五元组
         int[] observations = new int[roleTagList.size()];
         for (int i = 0; i < observations.length; ++i)
@@ -156,7 +156,7 @@ public class PersonRecognition
      */
     public static List<NR> viterbiExCompute(List<EnumItem<NR>> roleTagList)
     {
-        ViterbiEx<NR> viterbiEx = new ViterbiEx<>(roleTagList, PersonDictionary.transformMatrixDictionary);
+        ViterbiEx<NR> viterbiEx = new ViterbiEx<NR>(roleTagList, PersonDictionary.transformMatrixDictionary);
         return viterbiEx.computeTagList();
     }
 }

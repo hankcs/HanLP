@@ -24,7 +24,7 @@ public class testCheckDateElements
 {
     public static void main(String[] args)
     {
-        List<List<Term>> wordResults = new LinkedList<>();
+        List<List<Term>> wordResults = new LinkedList<List<Term>>();
         wordResults.add(NShortSegment.parse("3-4月"));
         wordResults.add(NShortSegment.parse("3-4月份"));
         wordResults.add(NShortSegment.parse("3-4季"));

@@ -14,6 +14,9 @@ hs_err_pid*
 # IDE相关，不再同步
 /.idea
 /*.iml
+/.classpath
+/*.eml
+/.project
 # 以下两项是词典和模型的二进制文件，请不要提交到版本库
 *.dat
 *.bin

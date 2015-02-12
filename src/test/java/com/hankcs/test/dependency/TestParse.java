@@ -33,7 +33,7 @@ public class TestParse extends TestCase
 {
     public void testParse() throws Exception
     {
-        List<Term> termList = new LinkedList<>();
+        List<Term> termList = new LinkedList<Term>();
         termList.add(new Term("坚决", Nature.ad));
         termList.add(new Term("惩治", Nature.v));
         termList.add(new Term("贪污", Nature.v));
@@ -59,7 +59,7 @@ public class TestParse extends TestCase
     public void testCrfParser() throws Exception
     {
         HanLP.Config.enableDebug();
-        List<Term> termList = new LinkedList<>();
+        List<Term> termList = new LinkedList<Term>();
         termList.add(new Term("坚决", Nature.ad));
         termList.add(new Term("惩治", Nature.v));
         termList.add(new Term("贪污", Nature.v));
@@ -80,7 +80,7 @@ public class TestParse extends TestCase
         {
             System.out.printf("%d / %d...", id++, sentenceList.size());
             long start = System.currentTimeMillis();
-            List<Term> termList = new LinkedList<>();
+            List<Term> termList = new LinkedList<Term>();
             for (CoNLLWord word : sentence.word)
             {
                 termList.add(new Term(word.LEMMA, Nature.valueOf(word.POSTAG)));

@@ -4,7 +4,7 @@
 
     <groupId>com.hankcs</groupId>
     <artifactId>HanLP</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 
     <name>HanLP</name>
     <url>http://www.hankcs.com/</url>
@@ -103,7 +103,7 @@
         </plugins>
     </build>
     <properties>
-        <java.version>1.7</java.version>
+        <java.version>1.6</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>

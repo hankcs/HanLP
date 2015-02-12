@@ -30,7 +30,7 @@ public class WordNatureWeightModelMaker
 {
     public static boolean makeModel(String corpusLoadPath, String modelSavePath)
     {
-        Set<String> posSet = new TreeSet<>();
+        Set<String> posSet = new TreeSet<String>();
         DictionaryMaker dictionaryMaker = new DictionaryMaker();
         for (CoNLLSentence sentence : CoNLLLoader.loadSentenceList(corpusLoadPath))
         {

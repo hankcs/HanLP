@@ -24,7 +24,7 @@ public class MDAGSetTest extends TestCase
     public void setUp() throws Exception
     {
         IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/custom/CustomDictionary.txt");
-        validKeySet = new TreeSet<>();
+        validKeySet = new TreeSet<String>();
         while (iterator.hasNext())
         {
             validKeySet.add(iterator.next().split("\\s")[0]);
@@ -48,7 +48,7 @@ public class MDAGSetTest extends TestCase
 
     public void testNotContains() throws Exception
     {
-        invalidKeySet = new TreeSet<>();
+        invalidKeySet = new TreeSet<String>();
         Random random = new Random(System.currentTimeMillis());
         mdagSet.simplify();
         mdagSet.unSimplify();
@@ -132,7 +132,7 @@ public class MDAGSetTest extends TestCase
 
     public void testBenchmark() throws Exception
     {
-        BinTrie<Boolean> binTrie = new BinTrie<>();
+        BinTrie<Boolean> binTrie = new BinTrie<Boolean>();
         for (String key : validKeySet)
         {
             binTrie.put(key, true);

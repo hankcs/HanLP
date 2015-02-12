@@ -18,9 +18,6 @@ import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,7 +72,7 @@ public class CorpusLoader
     {
         long start = System.currentTimeMillis();
         List<File> fileList = FolderWalker.open(folderPath);
-        List<Document> documentList = new LinkedList<>();
+        List<Document> documentList = new LinkedList<Document>();
         int i = 0;
         for (File file : fileList)
         {
@@ -112,7 +109,7 @@ public class CorpusLoader
     public static List<List<IWord>> convert2SentenceList(String path)
     {
         List<Document> documentList = CorpusLoader.convert2DocumentList(path);
-        List<List<IWord>> simpleList = new LinkedList<>();
+        List<List<IWord>> simpleList = new LinkedList<List<IWord>>();
         for (Document document : documentList)
         {
             for (Sentence sentence : document.sentenceList)
@@ -127,7 +124,7 @@ public class CorpusLoader
     public static List<List<Word>> convert2SimpleSentenceList(String path)
     {
         List<Document> documentList = CorpusLoader.convert2DocumentList(path);
-        List<List<Word>> simpleList = new LinkedList<>();
+        List<List<Word>> simpleList = new LinkedList<List<Word>>();
         for (Document document : documentList)
         {
             simpleList.addAll(document.getSimpleSentenceList());
@@ -138,9 +135,9 @@ public class CorpusLoader
 
     public static Document convert2Document(File file)
     {
-        try
-        {
-            Document document = Document.create(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
+//        try
+//        {
+            Document document = Document.create(IOUtil.readTxt(file.getPath()));
             if (document != null)
             {
                 return document;
@@ -149,11 +146,11 @@ public class CorpusLoader
             {
                 System.exit(-1);
             }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
         return null;
     }
 

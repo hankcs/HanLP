@@ -16,16 +16,14 @@ import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import junit.framework.TestCase;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 部分标注有问题，比如逗号缺少标注等等，尝试修复它
@@ -46,7 +44,7 @@ public class AdjustCorpus extends TestCase
     {
         try
         {
-            String text = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+            String text = IOUtil.readTxt(file.getPath());
             int length = text.length();
             text = addW(text, "：");
             text = addW(text, "？");

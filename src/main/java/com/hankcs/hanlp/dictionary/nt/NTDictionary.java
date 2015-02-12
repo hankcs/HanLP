@@ -40,7 +40,7 @@ public class NTDictionary extends CommonDictionary<EnumItem<NT>>
         {
             return valueArray;
         }
-        List<EnumItem<NT>> valueList = new LinkedList<>();
+        List<EnumItem<NT>> valueList = new LinkedList<EnumItem<NT>>();
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -48,7 +48,7 @@ public class NTDictionary extends CommonDictionary<EnumItem<NT>>
             while ((line = br.readLine()) != null)
             {
                 Map.Entry<String, Map.Entry<String, Integer>[]> args = EnumItem.create(line);
-                EnumItem<NT> NSEnumItem = new EnumItem<>();
+                EnumItem<NT> NSEnumItem = new EnumItem<NT>();
                 for (Map.Entry<String, Integer> e : args.getValue())
                 {
                     NSEnumItem.labelMap.put(NT.valueOf(e.getKey()), e.getValue());
@@ -84,7 +84,7 @@ public class NTDictionary extends CommonDictionary<EnumItem<NT>>
         {
             int currentSize = ByteUtil.bytesHighFirstToInt(bytes, index);
             index += 4;
-            EnumItem<NT> item = new EnumItem<>();
+            EnumItem<NT> item = new EnumItem<NT>();
             for (int j = 0; j < currentSize; ++j)
             {
                 NT tag = values[ByteUtil.bytesHighFirstToInt(bytes, index)];

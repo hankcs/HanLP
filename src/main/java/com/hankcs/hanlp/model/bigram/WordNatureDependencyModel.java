@@ -50,10 +50,10 @@ public class WordNatureDependencyModel
 
     static boolean load(String path)
     {
-        trie = new DoubleArrayTrie<>();
+        trie = new DoubleArrayTrie<Attribute>();
         if (loadDat(path)) return true;
-        TreeMap<String, Attribute> map = new TreeMap<>();
-        TreeMap<String, Integer> tagMap = new TreeMap<>();
+        TreeMap<String, Attribute> map = new TreeMap<String, Attribute>();
+        TreeMap<String, Integer> tagMap = new TreeMap<String, Integer>();
         for (String line : IOUtil.readLineListWithLessMemory(path))
         {
             String[] param = line.split(" ");

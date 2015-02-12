@@ -63,7 +63,7 @@ public class CoreBiGramTableDictionary
     {
         if (loadDat(datPath)) return true;
         BufferedReader br;
-        TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<>();
+        TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<Integer, TreeMap<Integer, Integer>>();
         try
         {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -94,7 +94,7 @@ public class CoreBiGramTableDictionary
                 TreeMap<Integer, Integer> biMap = map.get(idA);
                 if (biMap == null)
                 {
-                    biMap = new TreeMap<>();
+                    biMap = new TreeMap<Integer, Integer>();
                     map.put(idA, biMap);
                 }
                 biMap.put(idB, freq);

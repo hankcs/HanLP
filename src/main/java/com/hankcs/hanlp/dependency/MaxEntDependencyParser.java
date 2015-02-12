@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.dependency;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.dartsclone.Pair;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.dependency.common.Edge;
@@ -20,7 +21,6 @@ import com.hankcs.hanlp.model.maxent.MaxEntModel;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
-import javafx.util.Pair;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
     @Override
     protected Edge makeEdge(Node[] nodeArray, int from, int to)
     {
-        LinkedList<String> context = new LinkedList<>();
+        LinkedList<String> context = new LinkedList<String>();
         int index = from;
         for (int i = index - 2; i < index + 2 + 1; ++i)
         {
@@ -90,7 +90,7 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
         context.add(wordBeforeI.label + '@' + nodeArray[from].label + '→' + nodeArray[to].label);
         context.add(nodeArray[from].label + '→' + wordBeforeJ.label + '@' + nodeArray[to].label);
         List<Pair<String, Double>> pairList = model.predict(context.toArray(new String[0]));
-        Pair<String, Double> maxPair = new Pair<>("null", -1.0);
+        Pair<String, Double> maxPair = new Pair<String, Double>("null", -1.0);
 //        System.out.println(context);
 //        System.out.println(pairList);
         for (Pair<String, Double> pair : pairList)

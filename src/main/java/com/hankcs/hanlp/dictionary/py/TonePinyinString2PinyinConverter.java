@@ -68,7 +68,7 @@ public class TonePinyinString2PinyinConverter
 
     public static List<Pinyin> convert(String[] pinyinArray)
     {
-        List<Pinyin> pinyinList = new ArrayList<>(pinyinArray.length);
+        List<Pinyin> pinyinList = new ArrayList<Pinyin>(pinyinArray.length);
         for (int i = 0; i < pinyinArray.length; i++)
         {
             pinyinList.add(mapKey.get(pinyinArray[i]));
@@ -89,7 +89,7 @@ public class TonePinyinString2PinyinConverter
      */
     public static List<Pinyin> convert(String tonePinyinText, boolean removeNull)
     {
-        List<Pinyin> pinyinList = new LinkedList<>();
+        List<Pinyin> pinyinList = new LinkedList<Pinyin>();
         Collection<Token> tokenize = trie.tokenize(tonePinyinText);
         for (Token token : tokenize)
         {
@@ -118,7 +118,7 @@ public class TonePinyinString2PinyinConverter
 
     public static List<Pinyin> convertFromToneNumber(String[] pinyinArray)
     {
-        List<Pinyin> pinyinList = new ArrayList<>(pinyinArray.length);
+        List<Pinyin> pinyinList = new ArrayList<Pinyin>(pinyinArray.length);
         for (String py : pinyinArray)
         {
             pinyinList.add(convertFromToneNumber(py));

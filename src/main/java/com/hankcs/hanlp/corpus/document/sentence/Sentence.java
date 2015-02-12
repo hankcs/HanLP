@@ -51,7 +51,7 @@ public class Sentence implements Serializable
     {
         Pattern pattern = Pattern.compile("(\\[(([^\\s]+/[0-9a-zA-Z]+)\\s+)+?([^\\s]+/[0-9a-zA-Z]+)]/[0-9a-zA-Z]+)|([^\\s]+/[0-9a-zA-Z]+)");
         Matcher matcher = pattern.matcher(param);
-        List<IWord> wordList = new LinkedList<>();
+        List<IWord> wordList = new LinkedList<IWord>();
         while (matcher.find())
         {
             String single = matcher.group();

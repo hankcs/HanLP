@@ -25,7 +25,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
 
     public void testBuild() throws Exception
     {
-        TreeMap<String, String> map = new TreeMap<>();
+        TreeMap<String, String> map = new TreeMap<String, String>();
         String[] keyArray = new String[]
                 {
                         "hers",
@@ -37,7 +37,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
         {
             map.put(key, key);
         }
-        AhoCorasickDoubleArrayTrie<String> act = new AhoCorasickDoubleArrayTrie<>();
+        AhoCorasickDoubleArrayTrie<String> act = new AhoCorasickDoubleArrayTrie<String>();
         act.build(map);
 //        act.debug();
         act.parseText("uhers", new AhoCorasickDoubleArrayTrie.IHit<String>()
@@ -53,14 +53,14 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
 
     public void testDatFromFile() throws Exception
     {
-        TreeMap<String, String> map = new TreeMap<>();
+        TreeMap<String, String> map = new TreeMap<String, String>();
         IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/CoreNatureDictionary.mini.txt");
         while (iterator.hasNext())
         {
             String line = iterator.next();
             map.put(line, line);
         }
-        DoubleArrayTrie<String> trie = new DoubleArrayTrie<>();
+        DoubleArrayTrie<String> trie = new DoubleArrayTrie<String>();
         trie.build(map);
         for (String key : map.keySet())
         {
@@ -70,7 +70,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
 
     public void testDat() throws Exception
     {
-        TreeMap<String, String> map = new TreeMap<>();
+        TreeMap<String, String> map = new TreeMap<String, String>();
         String[] keyArray = new String[]
                 {
                         "hers",
@@ -82,7 +82,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
         {
             map.put(key, key);
         }
-        DoubleArrayTrie<String> trie = new DoubleArrayTrie<>();
+        DoubleArrayTrie<String> trie = new DoubleArrayTrie<String>();
         trie.build(map);
         System.out.println(trie.exactMatchSearch("he"));
     }
@@ -110,7 +110,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
 
     public void testTwoAC() throws Exception
     {
-        TreeMap<String, String> map = new TreeMap<>();
+        TreeMap<String, String> map = new TreeMap<String, String>();
         IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/CoreNatureDictionary.mini.txt");
         while (iterator.hasNext())
         {
@@ -120,20 +120,20 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
 
         Trie trie = new Trie();
         trie.addAllKeyword(map.keySet());
-        AhoCorasickDoubleArrayTrie<String> act = new AhoCorasickDoubleArrayTrie<>();
+        AhoCorasickDoubleArrayTrie<String> act = new AhoCorasickDoubleArrayTrie<String>();
         act.build(map);
 
         for (String key : map.keySet())
         {
             Collection<Emit> emits = trie.parseText(key);
-            Set<String> otherSet = new HashSet<>();
+            Set<String> otherSet = new HashSet<String>();
             for (Emit emit : emits)
             {
                 otherSet.add(emit.getKeyword() + emit.getEnd());
             }
 
             List<AhoCorasickDoubleArrayTrie<String>.Hit<String>> entries = act.parseText(key);
-            Set<String> mySet = new HashSet<>();
+            Set<String> mySet = new HashSet<String>();
             for (AhoCorasickDoubleArrayTrie<String>.Hit<String> entry : entries)
             {
                 mySet.add(entry.value + (entry.end - 1));
@@ -149,7 +149,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
      */
     public void testSegment() throws Exception
     {
-        TreeMap<String, String> map = new TreeMap<>();
+        TreeMap<String, String> map = new TreeMap<String, String>();
         IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/CoreNatureDictionary.txt");
         while (iterator.hasNext())
         {
@@ -159,7 +159,7 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
 
         Trie trie = new Trie();
         trie.addAllKeyword(map.keySet());
-        AhoCorasickDoubleArrayTrie<String> act = new AhoCorasickDoubleArrayTrie<>();
+        AhoCorasickDoubleArrayTrie<String> act = new AhoCorasickDoubleArrayTrie<String>();
         long timeMillis = System.currentTimeMillis();
         act.build(map);
         System.out.println("构建耗时：" + (System.currentTimeMillis() - timeMillis) + " ms");

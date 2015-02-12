@@ -59,7 +59,7 @@ public class CRFSegment extends Segment
         Table table = new Table();
         table.v = v;
         CRFSegmentModel.crfModel.tag(table);
-        List<Term> termList = new LinkedList<>();
+        List<Term> termList = new LinkedList<Term>();
         StringBuilder sbTerm = new StringBuilder();
         if (HanLP.Config.DEBUG)
         {
@@ -68,23 +68,23 @@ public class CRFSegment extends Segment
         }
         for (String[] line : table.v)
         {
-            switch (line[1])
+            switch (line[1].charAt(0))
             {
-                case "B":
+                case 'B':
                 {
                     sbTerm.append(line[0]);
                 }break;
-                case "E":
+                case 'E':
                 {
                     sbTerm.append(line[0]);
                     termList.add(new Term(sbTerm.toString(), null));
                     sbTerm.setLength(0);
                 }break;
-                case "M":
+                case 'M':
                 {
                     sbTerm.append(line[0]);
                 }break;
-                case "S":
+                case 'S':
                 {
                     termList.add(new Term(line[0], null));
                 }break;
@@ -96,7 +96,7 @@ public class CRFSegment extends Segment
         }
         if (speechTagging)
         {
-            ArrayList<Vertex> vertexList = new ArrayList<>(termList.size() + 1);
+            ArrayList<Vertex> vertexList = new ArrayList<Vertex>(termList.size() + 1);
             vertexList.add(Vertex.B);
             for (Term term : termList)
             {

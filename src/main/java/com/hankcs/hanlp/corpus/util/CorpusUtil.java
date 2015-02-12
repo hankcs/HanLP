@@ -44,18 +44,23 @@ public class CorpusUtil
      */
     public static IWord compile(IWord word)
     {
-        switch (word.getLabel())
-        {
-            case "nr":
-                return new Word(word.getValue(), TAG_PEOPLE);
-            case "m":
-            case "mq":
-                return new Word(word.getValue(), TAG_NUMBER);
-            case "t":
-                return new Word(word.getValue(), TAG_TIME);
-            case "ns":
-                return new Word(word.getValue(), TAG_TIME);
-        }
+        String label = word.getLabel();
+        if ("nr".equals(label)) return new Word(word.getValue(), TAG_PEOPLE);
+        else if ("m".equals(label) || "mq".equals(label)) return new Word(word.getValue(), TAG_NUMBER);
+        else if ("t".equals(label)) return new Word(word.getValue(), TAG_TIME);
+        else if ("ns".equals(label)) return new Word(word.getValue(), TAG_PLACE);
+//        switch (word.getLabel())
+//        {
+//            case "nr":
+//                return new Word(word.getValue(), TAG_PEOPLE);
+//            case "m":
+//            case "mq":
+//                return new Word(word.getValue(), TAG_NUMBER);
+//            case "t":
+//                return new Word(word.getValue(), TAG_TIME);
+//            case "ns":
+//                return new Word(word.getValue(), TAG_TIME);
+//        }
 
         return word;
     }

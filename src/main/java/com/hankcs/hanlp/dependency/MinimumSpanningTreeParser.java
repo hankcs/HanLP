@@ -58,7 +58,7 @@ public abstract class MinimumSpanningTreeParser extends AbstractDependencyParser
         boolean[] used = new boolean[max_v];
         Arrays.fill(used, false);
         used[0] = true;
-        PriorityQueue<State> que = new PriorityQueue<>();
+        PriorityQueue<State> que = new PriorityQueue<State>();
         // 找虚根的唯一孩子
         float minCostToRoot = Float.MAX_VALUE;
         Edge firstEdge = null;

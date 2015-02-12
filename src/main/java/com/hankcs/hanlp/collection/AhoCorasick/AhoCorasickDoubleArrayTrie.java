@@ -69,7 +69,7 @@ public class AhoCorasickDoubleArrayTrie<V>
     {
         int position = 1;
         int currentState = 0;
-        List<Hit<V>> collectedEmits = new LinkedList<>();
+        List<Hit<V>> collectedEmits = new LinkedList<Hit<V>>();
         for (int i = 0; i < text.length(); ++i)
         {
             currentState = getState(currentState, text.charAt(i));
@@ -425,7 +425,7 @@ public class AhoCorasickDoubleArrayTrie<V>
         {
             State fakeNode = new State(-(parent.getDepth() + 1));  // 此节点是parent的子节点，同时具备parent的输出
             fakeNode.addEmit(parent.getLargestValueId());
-            siblings.add(new AbstractMap.SimpleEntry<>(0, fakeNode));
+            siblings.add(new AbstractMap.SimpleEntry<Integer, State>(0, fakeNode));
         }
         for (Map.Entry<Character, State> entry : parent.getSuccess().entrySet())
         {
@@ -814,7 +814,7 @@ public class AhoCorasickDoubleArrayTrie<V>
 
             State root_node = this.rootState;
 
-            List<Map.Entry<Integer, State>> siblings = new ArrayList<>(root_node.getSuccess().entrySet().size());
+            List<Map.Entry<Integer, State>> siblings = new ArrayList<Map.Entry<Integer, State>>(root_node.getSuccess().entrySet().size());
             fetch(root_node, siblings);
             insert(siblings);
         }
@@ -917,7 +917,7 @@ public class AhoCorasickDoubleArrayTrie<V>
 
             for (Map.Entry<Integer, State> sibling : siblings)
             {
-                List<Map.Entry<Integer, State>> new_siblings = new ArrayList<>(sibling.getValue().getSuccess().entrySet().size() + 1);
+                List<Map.Entry<Integer, State>> new_siblings = new ArrayList<Map.Entry<Integer, State>>(sibling.getValue().getSuccess().entrySet().size() + 1);
 
                 if (fetch(sibling.getValue(), new_siblings) == 0)  // 一个词的终止且不为其他词的前缀，其实就是叶子节点
                 {

@@ -760,7 +760,7 @@ public class MDAG implements ICacheAble
         if (sourceNode == null)
         {
             sourceNode = new MDAGNode(false);
-            equivalenceClassMDAGNodeHashMap = new HashMap<>();
+            equivalenceClassMDAGNodeHashMap = new HashMap<MDAGNode, MDAGNode>();
             MDAGNode[] toNodeArray = new MDAGNode[mdagDataArray.length];
             createMDAGNode(simplifiedSourceNode, -1, toNodeArray, new MDAGNode[mdagDataArray.length]);
             // 构建注册表
@@ -898,7 +898,7 @@ public class MDAG implements ICacheAble
      */
     public HashSet<String> getAllStrings()
     {
-        HashSet<String> strHashSet = new LinkedHashSet<>();
+        HashSet<String> strHashSet = new LinkedHashSet<String>();
 
         if (sourceNode != null)
             getStrings(strHashSet, SearchCondition.NO_SEARCH_CONDITION, null, "", sourceNode.getOutgoingTransitions());
@@ -1066,6 +1066,6 @@ public class MDAG implements ICacheAble
      */
     public HashMap<MDAGNode, MDAGNode> _getEquivalenceClassMDAGNodeHashMap()
     {
-        return new HashMap<>(equivalenceClassMDAGNodeHashMap);
+        return new HashMap<MDAGNode, MDAGNode>(equivalenceClassMDAGNodeHashMap);
     }
 }

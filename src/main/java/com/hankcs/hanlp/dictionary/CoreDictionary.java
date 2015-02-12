@@ -29,7 +29,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CoreDictionary
 {
-    public static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie = new AhoCorasickDoubleArrayTrie<>();
+    public static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie = new AhoCorasickDoubleArrayTrie<Attribute>();
     public final static String path = HanLP.Config.CoreDictionaryPath;
     public static final int totalFrequency = 221894;
 
@@ -52,7 +52,7 @@ public class CoreDictionary
     {
         logger.info("核心词典开始加载:" + path);
         if (loadDat(path)) return true;
-        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<>();
+        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, Attribute>();
         BufferedReader br = null;
         try
         {

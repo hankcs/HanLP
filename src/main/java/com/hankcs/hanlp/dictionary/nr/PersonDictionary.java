@@ -58,30 +58,14 @@ public class PersonDictionary
         {
             throw new IllegalArgumentException("人名词典路径配置错误:" + HanLP.Config.PersonDictionaryPath);
         }
-        transformMatrixDictionary = new TransformMatrixDictionary<>(NR.class);
+        transformMatrixDictionary = new TransformMatrixDictionary<NR>(NR.class);
         transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);
-        trie = new AhoCorasickDoubleArrayTrie<>();
-        TreeMap<String, NRPattern> map = new TreeMap<>();
-        map.put("BBCD", NRPattern.BBCD);
-        map.put("BBE",NRPattern.BBE);
-        map.put("BBZ",NRPattern.BBZ);
-        map.put("BC",NRPattern.BC);
-        map.put("BCD",NRPattern.BCD);
-        map.put("BE",NRPattern.BE);
-        map.put("BEC",NRPattern.BEC);
-        map.put("BEE",NRPattern.BEE);
-        map.put("BG",NRPattern.BG);
-        map.put("BXD",NRPattern.BXD);
-        map.put("BZ",NRPattern.BZ);
-        map.put("CD",NRPattern.CD);
-        map.put("DG",NRPattern.DG);
-        map.put("EE",NRPattern.EE);
-        map.put("EG",NRPattern.EG);
-        map.put("FB",NRPattern.FB);
-        map.put("FC",NRPattern.FC);
-        map.put("FE",NRPattern.FE);
-        map.put("XD",NRPattern.XD);
-        map.put("Y",NRPattern.Y);
+        trie = new AhoCorasickDoubleArrayTrie<NRPattern>();
+        TreeMap<String, NRPattern> map = new TreeMap<String, NRPattern>();
+        for (NRPattern pattern : NRPattern.values())
+        {
+            map.put(pattern.toString(), pattern);
+        }
         trie.build(map);
         logger.info(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
@@ -112,7 +96,7 @@ public class PersonDictionary
                 case U:
                     if (!backUp)
                     {
-                        vertexList = new ArrayList<>(vertexList);
+                        vertexList = new ArrayList<Vertex>(vertexList);
                         listIterator = vertexList.listIterator(index);
                         backUp = true;
                     }
@@ -129,7 +113,7 @@ public class PersonDictionary
                 case V:
                     if (!backUp)
                     {
-                        vertexList = new ArrayList<>(vertexList);
+                        vertexList = new ArrayList<Vertex>(vertexList);
                         listIterator = vertexList.listIterator(index);
                         backUp = true;
                     }

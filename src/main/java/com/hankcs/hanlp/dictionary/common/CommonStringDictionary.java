@@ -33,7 +33,7 @@ public class CommonStringDictionary
     BinTrie<Byte> trie;
     public boolean load(String path)
     {
-        trie = new BinTrie<>();
+        trie = new BinTrie<Byte>();
         if (loadDat(path + Predefine.TRIE_EXT)) return true;
         String line = null;
         try
@@ -60,7 +60,7 @@ public class CommonStringDictionary
 
     public Set<String> keySet()
     {
-        Set<String> keySet = new LinkedHashSet<>();
+        Set<String> keySet = new LinkedHashSet<String>();
         for (Map.Entry<String, Byte> entry : trie.entrySet())
         {
             keySet.add(entry.getKey());

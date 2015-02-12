@@ -166,7 +166,7 @@ public class BinTrie<V> extends BaseNode<V>
      */
     public Set<Map.Entry<String, V>> prefixSearch(String key)
     {
-        Set<Map.Entry<String, V>> entrySet = new TreeSet<>();
+        Set<Map.Entry<String, V>> entrySet = new TreeSet<Map.Entry<String, V>>();
         StringBuilder sb = new StringBuilder(key.substring(0, key.length() - 1));
         BaseNode branch = this;
         char[] chars = key.toCharArray();
@@ -202,7 +202,7 @@ public class BinTrie<V> extends BaseNode<V>
      */
     public LinkedList<Map.Entry<String, V>> commonPrefixSearchWithValue(char[] chars, int begin)
     {
-        LinkedList<Map.Entry<String, V>> result = new LinkedList<>();
+        LinkedList<Map.Entry<String, V>> result = new LinkedList<Map.Entry<String, V>>();
         StringBuilder sb = new StringBuilder();
         BaseNode branch = this;
         for (int i = begin; i < chars.length; ++i)
@@ -213,7 +213,7 @@ public class BinTrie<V> extends BaseNode<V>
             sb.append(aChar);
             if (branch.status == Status.WORD_MIDDLE_2 || branch.status == Status.WORD_END_3)
             {
-                result.add(new AbstractMap.SimpleEntry<>(sb.toString(), (V) branch.value));
+                result.add(new AbstractMap.SimpleEntry<String, V>(sb.toString(), (V) branch.value));
             }
         }
 
@@ -359,7 +359,7 @@ public class BinTrie<V> extends BaseNode<V>
             int flag = byteArray.nextInt();
             if (flag == 1)
             {
-                child[i] = new Node<>();
+                child[i] = new Node<V>();
                 child[i].walkToLoad(byteArray, valueArray);
             }
         }
@@ -385,7 +385,7 @@ public class BinTrie<V> extends BaseNode<V>
             int flag = byteArray.nextInt();
             if (flag == 1)
             {
-                child[i] = new Node<>();
+                child[i] = new Node<V>();
                 child[i].walkToLoad(byteArray, valueArray);
             }
         }
@@ -401,7 +401,7 @@ public class BinTrie<V> extends BaseNode<V>
             int flag = byteArray.nextInt();
             if (flag == 1)
             {
-                child[i] = new Node<>();
+                child[i] = new Node<V>();
                 child[i].walkToLoad(byteArray, valueArray);
             }
         }

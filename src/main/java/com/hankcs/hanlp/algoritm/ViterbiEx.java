@@ -35,7 +35,7 @@ public class ViterbiEx<E extends Enum<E>>
     public List<E> computeTagList()
     {
         int length = roleTagList.size() - 1;
-        List<E> tagList = new LinkedList<>();
+        List<E> tagList = new LinkedList<E>();
         double[][] cost = new double[length][];
         Iterator<EnumItem<E>> iterator = roleTagList.iterator();
         EnumItem<E> start = iterator.next();

@@ -24,7 +24,7 @@ public class EnumItem<E extends Enum<E>>
 
     public EnumItem()
     {
-        labelMap = new TreeMap<>();
+        labelMap = new TreeMap<E, Integer>();
     }
 
     /**
@@ -97,7 +97,7 @@ public class EnumItem<E extends Enum<E>>
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
-        ArrayList<Map.Entry<E, Integer>> entries = new ArrayList<>(labelMap.entrySet());
+        ArrayList<Map.Entry<E, Integer>> entries = new ArrayList<Map.Entry<E, Integer>>(labelMap.entrySet());
         Collections.sort(entries, new Comparator<Map.Entry<E, Integer>>()
         {
             @Override

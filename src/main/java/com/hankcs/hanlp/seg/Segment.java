@@ -128,7 +128,7 @@ public abstract class Segment
      */
     protected static List<AtomNode> simpleAtomSegment(char[] charArray, int start, int end)
     {
-        List<AtomNode> atomNodeList = new LinkedList<>();
+        List<AtomNode> atomNodeList = new LinkedList<AtomNode>();
         atomNodeList.add(new AtomNode(new String(charArray, start, end - start), Predefine.CT_LETTER));
         return atomNodeList;
     }

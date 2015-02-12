@@ -64,9 +64,9 @@ public class Occurrence
 
     public Occurrence()
     {
-        triePair = new BinTrie<>();
-        trieSingle = new BinTrie<>();
-        trieTria = new BinTrie<>();
+        triePair = new BinTrie<PairFrequency>();
+        trieSingle = new BinTrie<TermFrequency>();
+        trieTria = new BinTrie<TriaFrequency>();
         totalTerm = totalPair = 0;
     }
 
@@ -187,7 +187,7 @@ public class Occurrence
 
     public List<PairFrequency> getPhraseByMi()
     {
-        List<PairFrequency> pairFrequencyList = new ArrayList<>(entrySetPair.size());
+        List<PairFrequency> pairFrequencyList = new ArrayList<PairFrequency>(entrySetPair.size());
         for (Map.Entry<String, PairFrequency> entry : entrySetPair)
         {
             pairFrequencyList.add(entry.getValue());
@@ -205,7 +205,7 @@ public class Occurrence
 
     public List<PairFrequency> getPhraseByLe()
     {
-        List<PairFrequency> pairFrequencyList = new ArrayList<>(entrySetPair.size());
+        List<PairFrequency> pairFrequencyList = new ArrayList<PairFrequency>(entrySetPair.size());
         for (Map.Entry<String, PairFrequency> entry : entrySetPair)
         {
             pairFrequencyList.add(entry.getValue());
@@ -223,7 +223,7 @@ public class Occurrence
 
     public List<PairFrequency> getPhraseByRe()
     {
-        List<PairFrequency> pairFrequencyList = new ArrayList<>(entrySetPair.size());
+        List<PairFrequency> pairFrequencyList = new ArrayList<PairFrequency>(entrySetPair.size());
         for (Map.Entry<String, PairFrequency> entry : entrySetPair)
         {
             pairFrequencyList.add(entry.getValue());
@@ -241,7 +241,7 @@ public class Occurrence
 
     public List<PairFrequency> getPhraseByScore()
     {
-        List<PairFrequency> pairFrequencyList = new ArrayList<>(entrySetPair.size());
+        List<PairFrequency> pairFrequencyList = new ArrayList<PairFrequency>(entrySetPair.size());
         for (Map.Entry<String, PairFrequency> entry : entrySetPair)
         {
             pairFrequencyList.add(entry.getValue());

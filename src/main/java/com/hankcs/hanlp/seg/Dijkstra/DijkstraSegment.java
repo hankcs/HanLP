@@ -113,7 +113,7 @@ public class DijkstraSegment extends HiddenMarkovModelSegment
      */
     private static List<Vertex> dijkstra(Graph graph)
     {
-        List<Vertex> resultList = new LinkedList<>();
+        List<Vertex> resultList = new LinkedList<Vertex>();
         Vertex[] vertexes = graph.getVertexes();
         List<EdgeFrom>[] edgesTo = graph.getEdgesTo();
         double[] d = new double[vertexes.length];

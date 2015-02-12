@@ -66,4 +66,12 @@ public class TestPersonRecognition extends TestCase
         Segment segment = new DijkstraSegment().enableJapaneseNameRecognize(true);
         System.out.println(segment.seg("北川景子参演了林诣彬导演"));
     }
+
+    public void testChineseNameRecognition() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        Segment segment = new DijkstraSegment();
+        System.out.println(segment.seg("张立平调研农村改革发展情况"));
+
+    }
 }

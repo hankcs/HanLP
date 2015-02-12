@@ -45,14 +45,14 @@ public class TranslatedPersonDictionary
 
     static boolean load()
     {
-        trie = new DoubleArrayTrie<>();
+        trie = new DoubleArrayTrie<Boolean>();
         if (loadDat()) return true;
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
             String line;
-            TreeMap<String, Boolean> map = new TreeMap<>();
-            TreeMap<Character, Integer> charFrequencyMap = new TreeMap<>();
+            TreeMap<String, Boolean> map = new TreeMap<String, Boolean>();
+            TreeMap<Character, Integer> charFrequencyMap = new TreeMap<Character, Integer>();
             while ((line = br.readLine()) != null)
             {
                 map.put(line, true);

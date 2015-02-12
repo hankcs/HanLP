@@ -31,7 +31,7 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
     @Override
     public List<String> extractPhrase(String text, int size)
     {
-        List<String> phraseList = new LinkedList<>();
+        List<String> phraseList = new LinkedList<String>();
         Occurrence occurrence = new Occurrence();
         Filter[] filterChain = new Filter[]
                 {

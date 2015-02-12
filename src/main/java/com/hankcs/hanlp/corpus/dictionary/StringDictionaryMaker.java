@@ -63,7 +63,7 @@ public class StringDictionaryMaker
     public static StringDictionary combine(String... args)
     {
         String[] pathArray = args.clone();
-        List<StringDictionary> dictionaryList = new LinkedList<>();
+        List<StringDictionary> dictionaryList = new LinkedList<StringDictionary>();
         for (String path : pathArray)
         {
             StringDictionary dictionary = load(path);

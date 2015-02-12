@@ -89,7 +89,7 @@ public class OrganizationRecognition
                     {
                         if (vertex.getAttribute().totalFrequency <= 1000)
                         {
-                            tagList.add(new EnumItem<>(NT.F, 1000));
+                            tagList.add(new EnumItem<NT>(NT.F, 1000));
                             continue;
                         }
                     }
@@ -99,7 +99,7 @@ public class OrganizationRecognition
                     case nis:
                     case nit:
                     {
-                        EnumItem<NT> ntEnumItem = new EnumItem<>(NT.K, 1000);
+                        EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.K, 1000);
                         ntEnumItem.addLabel(NT.D, 1000);
                         tagList.add(ntEnumItem);
                         continue;
@@ -110,7 +110,7 @@ public class OrganizationRecognition
             EnumItem<NT> NTEnumItem = OrganizationDictionary.dictionary.get(vertex.word);  // 此处用等效词，更加精准
             if (NTEnumItem == null)
             {
-                NTEnumItem = new EnumItem<>(NT.Z, OrganizationDictionary.transformMatrixDictionary.getTotalFrequency(NT.Z));
+                NTEnumItem = new EnumItem<NT>(NT.Z, OrganizationDictionary.transformMatrixDictionary.getTotalFrequency(NT.Z));
             }
             tagList.add(NTEnumItem);
 //            line += vertex.realWord.length();
@@ -126,7 +126,7 @@ public class OrganizationRecognition
      */
     public static List<NT> viterbiExCompute(List<EnumItem<NT>> roleTagList)
     {
-        ViterbiEx<NT> viterbiEx = new ViterbiEx<>(roleTagList, OrganizationDictionary.transformMatrixDictionary);
+        ViterbiEx<NT> viterbiEx = new ViterbiEx<NT>(roleTagList, OrganizationDictionary.transformMatrixDictionary);
         return viterbiEx.computeTagList();
     }
 }

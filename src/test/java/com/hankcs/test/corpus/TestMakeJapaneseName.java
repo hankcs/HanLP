@@ -35,7 +35,7 @@ public class TestMakeJapaneseName extends TestCase
     {
         String root = "D:\\JavaProjects\\SougouDownload\\data\\";
         String[] pathArray = new String[]{"日本名人大合集.txt", "日剧电影动漫和日本明星.txt", "日本女优.txt", "日本AV女优(A片)EXTEND版.txt", "日本女优大全.txt"};
-        Set<String> wordSet = new TreeSet<>();
+        Set<String> wordSet = new TreeSet<String>();
         for (String path : pathArray)
         {
             path = root + path;
@@ -47,7 +47,7 @@ public class TestMakeJapaneseName extends TestCase
             }
         }
 
-        TreeSet<String> firstNameSet = new TreeSet<>();
+        TreeSet<String> firstNameSet = new TreeSet<String>();
         firstNameSet.addAll(IOUtil.readLineList("data/dictionary/person/日本姓氏.txt"));
         Iterator<String> iterator = wordSet.iterator();
         while (iterator.hasNext())
@@ -64,9 +64,9 @@ public class TestMakeJapaneseName extends TestCase
 
     public void testMakeRoleDictionary() throws Exception
     {
-        TreeSet<String> firstNameSet = new TreeSet<>();
+        TreeSet<String> firstNameSet = new TreeSet<String>();
         firstNameSet.addAll(IOUtil.readLineList("data/dictionary/person/日本姓氏.txt"));
-        TreeSet<String> fullNameSet = new TreeSet<>();
+        TreeSet<String> fullNameSet = new TreeSet<String>();
         fullNameSet.addAll(IOUtil.readLineList("data/dictionary/person/日本人名.txt"));
         StringDictionary dictionary = new StringDictionary(" ");
         for (String fullName : fullNameSet)
@@ -114,7 +114,7 @@ public class TestMakeJapaneseName extends TestCase
 
     public void testImport() throws Exception
     {
-        TreeSet<String> set = new TreeSet<>();
+        TreeSet<String> set = new TreeSet<String>();
         for (String name : IOUtil.readLineList("D:\\Doc\\语料库\\corpus-master\\日本姓氏.txt"))
         {
             name = HanLP.convertToSimplifiedChinese(Arrays.toString(name.toCharArray()));

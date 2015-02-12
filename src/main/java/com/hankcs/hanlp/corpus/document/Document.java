@@ -61,7 +61,7 @@ public class Document implements Serializable
      */
     public List<IWord> getWordList()
     {
-        List<IWord> wordList = new LinkedList<>();
+        List<IWord> wordList = new LinkedList<IWord>();
         for (Sentence sentence : sentenceList)
         {
             wordList.addAll(sentence.wordList);
@@ -72,7 +72,7 @@ public class Document implements Serializable
     public List<Word> getSimpleWordList()
     {
         List<IWord> wordList = getWordList();
-        List<Word> simpleWordList = new LinkedList<>();
+        List<Word> simpleWordList = new LinkedList<Word>();
         for (IWord word : wordList)
         {
             if (word instanceof CompoundWord)
@@ -94,10 +94,10 @@ public class Document implements Serializable
      */
     public List<List<Word>> getSimpleSentenceList()
     {
-        List<List<Word>> simpleList = new LinkedList<>();
+        List<List<Word>> simpleList = new LinkedList<List<Word>>();
         for (Sentence sentence : sentenceList)
         {
-            List<Word> wordList = new LinkedList<>();
+            List<Word> wordList = new LinkedList<Word>();
             for (IWord word : sentence.wordList)
             {
                 if (word instanceof CompoundWord)
@@ -124,7 +124,7 @@ public class Document implements Serializable
      */
     public List<List<IWord>> getComplexSentenceList()
     {
-        List<List<IWord>> complexList = new LinkedList<>();
+        List<List<IWord>> complexList = new LinkedList<List<IWord>>();
         for (Sentence sentence : sentenceList)
         {
             complexList.add(sentence.wordList);
@@ -140,10 +140,10 @@ public class Document implements Serializable
      */
     public List<List<Word>> getSimpleSentenceList(boolean spilt)
     {
-        List<List<Word>> simpleList = new LinkedList<>();
+        List<List<Word>> simpleList = new LinkedList<List<Word>>();
         for (Sentence sentence : sentenceList)
         {
-            List<Word> wordList = new LinkedList<>();
+            List<Word> wordList = new LinkedList<Word>();
             for (IWord word : sentence.wordList)
             {
                 if (word instanceof CompoundWord)
@@ -178,10 +178,10 @@ public class Document implements Serializable
      */
     public List<List<Word>> getSimpleSentenceList(Set<String> labelSet)
     {
-        List<List<Word>> simpleList = new LinkedList<>();
+        List<List<Word>> simpleList = new LinkedList<List<Word>>();
         for (Sentence sentence : sentenceList)
         {
-            List<Word> wordList = new LinkedList<>();
+            List<Word> wordList = new LinkedList<Word>();
             for (IWord word : sentence.wordList)
             {
                 if (word instanceof CompoundWord)

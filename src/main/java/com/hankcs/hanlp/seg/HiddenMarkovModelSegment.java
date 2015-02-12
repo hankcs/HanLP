@@ -475,7 +475,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
      */
     protected static List<Term> decorateResultForIndexMode(List<Vertex> vertexList, WordNet wordNetAll)
     {
-        List<Term> termList = new LinkedList<>();
+        List<Term> termList = new LinkedList<Term>();
         int line = 1;
         ListIterator<Vertex> listIterator = vertexList.listIterator();
         listIterator.next();

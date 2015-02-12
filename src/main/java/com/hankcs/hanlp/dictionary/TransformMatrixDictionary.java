@@ -197,7 +197,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
 
     protected E convert(String label)
     {
-        return E.valueOf(enumType, label);
+        return Enum.valueOf(enumType, label);
     }
 
     @Override

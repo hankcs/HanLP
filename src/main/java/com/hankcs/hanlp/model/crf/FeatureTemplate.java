@@ -46,8 +46,8 @@ public class FeatureTemplate implements ICacheAble
     public static FeatureTemplate create(String template)
     {
         FeatureTemplate featureTemplate = new FeatureTemplate();
-        featureTemplate.delimiterList = new LinkedList<>();
-        featureTemplate.offsetList = new ArrayList<>(3);
+        featureTemplate.delimiterList = new LinkedList<String>();
+        featureTemplate.offsetList = new ArrayList<int[]>(3);
         featureTemplate.template = template;
         Matcher matcher = pattern.matcher(template);
         int start = 0;
@@ -99,13 +99,13 @@ public class FeatureTemplate implements ICacheAble
     {
         template = byteArray.nextUTF();
         int size = byteArray.nextInt();
-        offsetList = new ArrayList<>(size);
+        offsetList = new ArrayList<int[]>(size);
         for (int i = 0; i < size; ++i)
         {
             offsetList.add(new int[]{byteArray.nextInt(), byteArray.nextInt()});
         }
         size = byteArray.nextInt();
-        delimiterList = new ArrayList<>(size);
+        delimiterList = new ArrayList<String>(size);
         for (int i = 0; i < size; ++i)
         {
             delimiterList.add(byteArray.nextUTF());

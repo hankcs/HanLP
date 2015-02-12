@@ -34,7 +34,7 @@ public class testCharType extends TestCase
     {
         int preType = 5;
         int preChar = 0;
-        List<int[]> typeList = new LinkedList<>();
+        List<int[]> typeList = new LinkedList<int[]>();
         for (int i = 0; i <= Character.MAX_VALUE; ++i)
         {
             int type = TextUtility.charType((char) i);

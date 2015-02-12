@@ -27,7 +27,7 @@ public class SentencesUtil
 
         StringBuilder sb = new StringBuilder();
 
-        List<String> sentences = new LinkedList<>();
+        List<String> sentences = new LinkedList<String>();
 
         for (int i = 0; i < chars.length; ++i)
         {

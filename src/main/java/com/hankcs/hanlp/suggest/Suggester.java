@@ -31,7 +31,7 @@ public class Suggester implements ISuggester
 
     public Suggester()
     {
-        scorerList = new ArrayList<>();
+        scorerList = new ArrayList<BaseScorer>();
         scorerList.add(new IdVectorScorer());
         scorerList.add(new EditDistanceScorer());
         scorerList.add(new PinyinScorer());
@@ -48,7 +48,7 @@ public class Suggester implements ISuggester
      */
     public Suggester(BaseScorer... scorers)
     {
-        scorerList = new ArrayList<>(scorers.length);
+        scorerList = new ArrayList<BaseScorer>(scorers.length);
         for (BaseScorer scorer : scorers)
         {
             scorerList.add(scorer);
@@ -67,8 +67,8 @@ public class Suggester implements ISuggester
     @Override
     public List<String> suggest(String key, int size)
     {
-        List<String> resultList = new ArrayList<>(size);
-        TreeMap<String, Double> scoreMap = new TreeMap<>();
+        List<String> resultList = new ArrayList<String>(size);
+        TreeMap<String, Double> scoreMap = new TreeMap<String, Double>();
         for (BaseScorer scorer : scorerList)
         {
             Map<String, Double> map = scorer.computeScore(key);
@@ -99,13 +99,13 @@ public class Suggester implements ISuggester
      */
     private static TreeMap<Double ,Set<String>> sortScoreMap(TreeMap<String, Double> scoreMap)
     {
-        TreeMap<Double, Set<String>> result = new TreeMap<>(Collections.reverseOrder());
+        TreeMap<Double, Set<String>> result = new TreeMap<Double, Set<String>>(Collections.reverseOrder());
         for (Map.Entry<String, Double> entry : scoreMap.entrySet())
         {
             Set<String> sentenceSet = result.get(entry.getValue());
             if (sentenceSet == null)
             {
-                sentenceSet = new HashSet<>();
+                sentenceSet = new HashSet<String>();
                 result.put(entry.getValue(), sentenceSet);
             }
             sentenceSet.add(entry.getKey());

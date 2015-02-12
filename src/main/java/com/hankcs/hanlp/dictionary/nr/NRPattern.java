@@ -36,6 +36,8 @@ public enum NRPattern
     FE,
     FC,
     FB,
+    FG,
     Y,
     XD,
+    GD,
 }

@@ -11,11 +11,11 @@
  */
 package com.hankcs.hanlp.model.maxent;
 
+import com.hankcs.hanlp.collection.dartsclone.Pair;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
-import javafx.util.Pair;
 
 import java.io.*;
 import java.util.*;
@@ -74,11 +74,11 @@ public class MaxEntModel
      */
     public final List<Pair<String, Double>> predict(String[] context)
     {
-        List<Pair<String, Double>> result = new ArrayList<>(outcomeNames.length);
+        List<Pair<String, Double>> result = new ArrayList<Pair<String, Double>>(outcomeNames.length);
         double[] p = eval(context);
         for (int i = 0; i < p.length; ++i)
         {
-            result.add(new Pair<>(outcomeNames[i], p[i]));
+            result.add(new Pair<String, Double>(outcomeNames[i], p[i]));
         }
         return result;
     }
@@ -215,8 +215,8 @@ public class MaxEntModel
             int NUM_PREDS = Integer.parseInt(br.readLine());
             out.writeInt(NUM_PREDS);
             String[] predLabels = new String[NUM_PREDS];
-            m.pmap = new DoubleArrayTrie<>();
-            TreeMap<String, Integer> tmpMap = new TreeMap<>();
+            m.pmap = new DoubleArrayTrie<Integer>();
+            TreeMap<String, Integer> tmpMap = new TreeMap<String, Integer>();
             for (int i = 0; i < NUM_PREDS; i++)
             {
                 predLabels[i] = br.readLine();
@@ -295,7 +295,7 @@ public class MaxEntModel
         // feature
         int NUM_PREDS = byteArray.nextInt();
         String[] predLabels = new String[NUM_PREDS];
-        m.pmap = new DoubleArrayTrie<>();
+        m.pmap = new DoubleArrayTrie<Integer>();
         for (int i = 0; i < NUM_PREDS; i++)
         {
             predLabels[i] = byteArray.nextString();

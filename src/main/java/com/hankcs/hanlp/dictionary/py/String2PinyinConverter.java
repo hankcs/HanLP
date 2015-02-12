@@ -35,7 +35,7 @@ public class String2PinyinConverter
     static
     {
         trie = new Trie().remainLongest();
-        map = new TreeMap<>();
+        map = new TreeMap<String, Pinyin>();
         int end = Pinyin.none5.ordinal();
         for (int i = 0; i < end; ++i)
         {
@@ -67,7 +67,7 @@ public class String2PinyinConverter
      */
     public static List<Pinyin> convert(String complexText)
     {
-        List<Pinyin> pinyinList = new LinkedList<>();
+        List<Pinyin> pinyinList = new LinkedList<Pinyin>();
         Collection<Token> tokenize = trie.tokenize(complexText);
 //        System.out.println(tokenize);
         for (Token token : tokenize)
@@ -111,8 +111,8 @@ public class String2PinyinConverter
      */
     public static Pair<List<Pinyin>, List<Boolean>> convert2Pair(String complexText, boolean removeTone)
     {
-        List<Pinyin> pinyinList = new LinkedList<>();
-        List<Boolean> booleanList = new LinkedList<>();
+        List<Pinyin> pinyinList = new LinkedList<Pinyin>();
+        List<Boolean> booleanList = new LinkedList<Boolean>();
         Collection<Token> tokenize = trie.tokenize(complexText);
         for (Token token : tokenize)
         {
@@ -142,7 +142,7 @@ public class String2PinyinConverter
             }
         }
         makeToneToTheSame(pinyinList);
-        return new Pair<>(pinyinList, booleanList);
+        return new Pair<List<Pinyin>, List<Boolean>>(pinyinList, booleanList);
     }
 
     /**

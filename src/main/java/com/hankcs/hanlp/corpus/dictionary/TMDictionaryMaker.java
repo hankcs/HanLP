@@ -30,7 +30,7 @@ public class TMDictionaryMaker implements ISaveAble
 
     public TMDictionaryMaker()
     {
-        transferMatrix = new TreeMap<>();
+        transferMatrix = new TreeMap<String, Map<String, Integer>>();
     }
 
     /**
@@ -43,7 +43,7 @@ public class TMDictionaryMaker implements ISaveAble
         Map<String, Integer> firstMatrix = transferMatrix.get(first);
         if (firstMatrix == null)
         {
-            firstMatrix = new TreeMap<>();
+            firstMatrix = new TreeMap<String, Integer>();
             transferMatrix.put(first, firstMatrix);
         }
         Integer frequency = firstMatrix.get(second);
@@ -54,7 +54,7 @@ public class TMDictionaryMaker implements ISaveAble
     @Override
     public String toString()
     {
-        Set<String> labelSet = new TreeSet<>();
+        Set<String> labelSet = new TreeSet<String>();
         for (Map.Entry<String, Map<String, Integer>> first : transferMatrix.entrySet())
         {
             labelSet.add(first.getKey());
@@ -71,7 +71,7 @@ public class TMDictionaryMaker implements ISaveAble
         for (String first : labelSet)
         {
             Map<String, Integer> firstMatrix = transferMatrix.get(first);
-            if (firstMatrix == null) firstMatrix = new TreeMap<>();
+            if (firstMatrix == null) firstMatrix = new TreeMap<String, Integer>();
             sb.append(first);
             for (String second : labelSet)
             {

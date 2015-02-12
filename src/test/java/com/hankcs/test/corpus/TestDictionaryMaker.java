@@ -84,7 +84,7 @@ public class TestDictionaryMaker extends TestCase
     public void testLoadItemList() throws Exception
     {
         List<Item> itemList = DictionaryMaker.loadAsItemList("data/2014_dictionary.txt");
-        Map<String, Integer> labelMap = new TreeMap<>();
+        Map<String, Integer> labelMap = new TreeMap<String, Integer>();
         for (Item item : itemList)
         {
             for (Map.Entry<String, Integer> entry : item.labelMap.entrySet())

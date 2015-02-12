@@ -43,7 +43,7 @@ public class Graph
 
     public List<Vertex> viterbi()
     {
-        LinkedList<Vertex> vertexList = new LinkedList<>();
+        LinkedList<Vertex> vertexList = new LinkedList<Vertex>();
         for (Node node : nodes[1])
         {
             node.updateFrom(nodes[0][0]);

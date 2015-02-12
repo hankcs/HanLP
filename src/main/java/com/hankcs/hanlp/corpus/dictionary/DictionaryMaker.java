@@ -76,7 +76,7 @@ public class DictionaryMaker implements ISaveAble
      */
     public static List<Item> loadAsItemList(String path)
     {
-        List<Item> itemList = new LinkedList<>();
+        List<Item> itemList = new LinkedList<Item>();
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -344,7 +344,7 @@ public class DictionaryMaker implements ISaveAble
     {
         for (Item item : itemList)
         {
-            ArrayList<Map.Entry<String, Integer>> entryArray = new ArrayList<>(item.labelMap.entrySet());
+            ArrayList<Map.Entry<String, Integer>> entryArray = new ArrayList<Map.Entry<String, Integer>>(item.labelMap.entrySet());
             Collections.sort(entryArray, new Comparator<Map.Entry<String, Integer>>()
             {
                 @Override

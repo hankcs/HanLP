@@ -37,7 +37,7 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment().enableCustomDictionary(false);
         System.out.println(segment.seg(
-                                               "我喜欢陈膺奥"
+                "我喜欢陈膺奥"
         ));
     }
 

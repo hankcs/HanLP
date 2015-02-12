@@ -24,7 +24,7 @@ public class CoreDictionaryTransformMatrixDictionary
     public static TransformMatrixDictionary<Nature> transformMatrixDictionary;
     static
     {
-        transformMatrixDictionary = new TransformMatrixDictionary<>(Nature.class);
+        transformMatrixDictionary = new TransformMatrixDictionary<Nature>(Nature.class);
         long start = System.currentTimeMillis();
         if (!transformMatrixDictionary.load(HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath))
         {

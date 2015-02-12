@@ -122,7 +122,7 @@ public class TextRankKeyword extends KeywordExtractor
         });
 //        System.out.println(entryList);
         int limit = Math.min(nKeyword, entryList.size());
-        List<String> result = new ArrayList<>(limit);
+        List<String> result = new ArrayList<String>(limit);
         for (int i = 0; i < limit; ++i)
         {
             result.add(entryList.get(i).getKey()) ;

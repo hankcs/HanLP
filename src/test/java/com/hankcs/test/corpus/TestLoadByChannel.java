@@ -22,7 +22,7 @@ public class TestLoadByChannel extends TestCase
 {
     public void testLoad() throws Exception
     {
-        DoubleArrayTrie<Integer> trie = new DoubleArrayTrie<>();
+        DoubleArrayTrie<Integer> trie = new DoubleArrayTrie<Integer>();
         trie.load("data/dictionary/CoreNatureDictionary.txt.trie.dat", new Integer[0]);
     }
 

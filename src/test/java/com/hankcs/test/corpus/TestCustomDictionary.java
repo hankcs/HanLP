@@ -42,7 +42,7 @@ public class TestCustomDictionary extends TestCase
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("data/dictionary/CustomDictionary.txt")));
         String line;
-        Set<String> fixedDictionary = new TreeSet<>();
+        Set<String> fixedDictionary = new TreeSet<String>();
         while ((line = br.readLine()) != null)
         {
             String[] param = line.split("\\s");
@@ -67,7 +67,7 @@ public class TestCustomDictionary extends TestCase
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("data/dictionary/CustomDictionary.txt")));
         String line;
-        Set<String> fixedDictionary = new TreeSet<>();
+        Set<String> fixedDictionary = new TreeSet<String>();
         while ((line = br.readLine()) != null)
         {
             String[] param = line.split("\\s");

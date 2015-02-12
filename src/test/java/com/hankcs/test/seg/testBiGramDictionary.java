@@ -113,7 +113,7 @@ public class testBiGramDictionary extends TestCase
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(HanLP.Config.BiGramDictionaryPath)));
         String line;
-        List<String[]> twoWordList = new LinkedList<>();
+        List<String[]> twoWordList = new LinkedList<String[]>();
         while ((line = br.readLine()) != null)
         {
             String[] params = line.split("\\s");

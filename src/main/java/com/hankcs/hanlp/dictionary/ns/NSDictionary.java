@@ -40,7 +40,7 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
         {
             return valueArray;
         }
-        List<EnumItem<NS>> valueList = new LinkedList<>();
+        List<EnumItem<NS>> valueList = new LinkedList<EnumItem<NS>>();
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -48,7 +48,7 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
             while ((line = br.readLine()) != null)
             {
                 Map.Entry<String, Map.Entry<String, Integer>[]> args = EnumItem.create(line);
-                EnumItem<NS> NSEnumItem = new EnumItem<>();
+                EnumItem<NS> NSEnumItem = new EnumItem<NS>();
                 for (Map.Entry<String, Integer> e : args.getValue())
                 {
                     NSEnumItem.labelMap.put(NS.valueOf(e.getKey()), e.getValue());
@@ -84,7 +84,7 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
         {
             int currentSize = ByteUtil.bytesHighFirstToInt(bytes, index);
             index += 4;
-            EnumItem<NS> item = new EnumItem<>();
+            EnumItem<NS> item = new EnumItem<NS>();
             for (int j = 0; j < currentSize; ++j)
             {
                 NS NS = NSArray[ByteUtil.bytesHighFirstToInt(bytes, index)];

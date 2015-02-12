@@ -59,8 +59,8 @@ public class MDAGUnsimplifyTest extends TestCase
 
     public void testSimplifyMap() throws Exception
     {
-        MDAGMap<String> mdagMap = new MDAGMap<>();
-        List<String> validKeySet = new ArrayList<>();
+        MDAGMap<String> mdagMap = new MDAGMap<String>();
+        List<String> validKeySet = new ArrayList<String>();
         validKeySet.add("hers");
         validKeySet.add("his");
         validKeySet.add("she");

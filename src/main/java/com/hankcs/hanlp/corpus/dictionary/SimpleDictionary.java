@@ -28,7 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public abstract class SimpleDictionary<V>
 {
-    BinTrie<V> trie = new BinTrie<>();
+    BinTrie<V> trie = new BinTrie<V>();
 
     public boolean load(String path)
     {

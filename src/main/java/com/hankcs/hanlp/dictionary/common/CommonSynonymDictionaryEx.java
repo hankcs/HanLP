@@ -41,15 +41,15 @@ public class CommonSynonymDictionaryEx
             return dictionary;
         }
 
-        TreeSet<Float> set = new TreeSet<>();
+//        TreeSet<Float> set = new TreeSet<Float>();
 
         return null;
     }
 
     public boolean load(InputStream inputStream)
     {
-        trie = new DoubleArrayTrie<>();
-        TreeMap<String, Set<Long>> treeMap = new TreeMap<>();
+        trie = new DoubleArrayTrie<Long[]>();
+        TreeMap<String, Set<Long>> treeMap = new TreeMap<String, Set<Long>>();
         String line = null;
         try
         {
@@ -63,19 +63,19 @@ public class CommonSynonymDictionaryEx
                     Set<Long> idSet = treeMap.get(synonym.realWord);
                     if (idSet == null)
                     {
-                        idSet = new TreeSet<>();
+                        idSet = new TreeSet<Long>();
                         treeMap.put(synonym.realWord, idSet);
                     }
                     idSet.add(synonym.id);
                 }
             }
             bw.close();
-            List<String> keyList = new ArrayList<>(treeMap.size());
+            List<String> keyList = new ArrayList<String>(treeMap.size());
             for (String key : treeMap.keySet())
             {
                 keyList.add(key);
             }
-            List<Long[]> valueList = new ArrayList<>(treeMap.size());
+            List<Long[]> valueList = new ArrayList<Long[]>(treeMap.size());
             for (Set<Long> idSet : treeMap.values())
             {
                 valueList.add(idSet.toArray(new Long[0]));

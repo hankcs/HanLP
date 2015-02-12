@@ -144,143 +144,116 @@ public class NTDictionaryMaker extends CommonDictionaryMaker
                         for (Word inner : ((CompoundWord) word).innerList)
                         {
                             last = inner;
-                            switch (inner.label)
+                            String innerLabel = inner.label;
+                            if (innerLabel.startsWith("ns"))
                             {
-                                case "ns":
-                                case "nsf":
-                                {
-                                    inner.setValue(Predefine.TAG_PLACE);
-                                    inner.setLabel(NT.G.toString());
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "nt":
-                                case "ntc":
-                                case "ntcf":
-                                case "ntcb":
-                                case "ntch":
-                                case "nto":
-                                case "ntu":
-                                case "nts":
-                                case "nth":
-                                {
-                                    inner.value = Predefine.TAG_GROUP;
-                                    inner.label = NT.K.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "b":
-                                case "ng":
-                                case "j":
-                                {
-                                    inner.label = NT.J.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "n":
-                                case "an":
-                                case "a":
-                                case "vn":
-                                case "vd":
-                                case "vl":
-                                case "v":
-                                case "vi":
-                                case "nnt":
-                                case "nnd":
-                                case "nf":
-                                case "cc":
-                                case "t":
-                                case "z":
-                                {
-                                    inner.label = NT.C.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "nz":
-                                {
-                                    inner.label = NT.I.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "m":
-                                {
-                                    inner.value = Predefine.TAG_NUMBER;
-                                    inner.label = NT.M.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "w":
-                                {
-                                    inner.label = NT.W.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "nr":
-                                case "nrf":
-                                case "x":
-                                case "nx":
-                                {
-                                    inner.value = Predefine.TAG_PEOPLE;
-                                    inner.label = NT.F.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "nis":
-                                case "nit":
-                                case "nic":
-                                {
-                                    inner.label = NT.D.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                case "f":
-                                case "s":
-                                {
-                                    inner.label = NT.L.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
-                                break;
-                                default:
-                                {
-                                    inner.label = NT.P.toString();
-                                    listIterator.add(inner);
-                                    sbPattern.append(inner.label);
-                                }
+                                inner.setValue(Predefine.TAG_PLACE);
+                                inner.setLabel(NT.G.toString());
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
                             }
-                        }
-                        if (last != null)
-                        {
-                            last.label = NT.D.toString();
-                            sbPattern.deleteCharAt(sbPattern.length() - 1);
-                            sbPattern.append(last.label);
-                            tfDictionary.add(sbPattern.toString());
-                            sbPattern.setLength(0);
-                        }
+                            else if (innerLabel.startsWith("nt"))
+                            {
+                                inner.value = Predefine.TAG_GROUP;
+                                inner.label = NT.K.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else if (innerLabel.equals("b") || innerLabel.equals("ng") || innerLabel.equals("j"))
+                            {
+                                inner.label = NT.J.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else if ("n".equals(innerLabel) ||
+                                    "an".equals(innerLabel) ||
+                                    "a".equals(innerLabel) ||
+                                    "vn".equals(innerLabel) ||
+                                    "vd".equals(innerLabel) ||
+                                    "vl".equals(innerLabel) ||
+                                    "v".equals(innerLabel) ||
+                                    "vi".equals(innerLabel) ||
+                                    "nnt".equals(innerLabel) ||
+                                    "nnd".equals(innerLabel) ||
+                                    "nf".equals(innerLabel) ||
+                                    "cc".equals(innerLabel) ||
+                                    "t".equals(innerLabel) ||
+                                    "z".equals(innerLabel)
+                                    )
+                            {
+                                inner.label = NT.C.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else if ("nz".equals(innerLabel))
+                            {
+                                inner.label = NT.I.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else if ("m".equals(innerLabel))
+                            {
+                                inner.value = Predefine.TAG_NUMBER;
+                                inner.label = NT.M.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else if ("w".equals(innerLabel))
+                            {
+                                inner.label = NT.W.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else if (innerLabel.startsWith("nr") || "x".equals(innerLabel) || "nx".equals(innerLabel))
+                            {
+                                inner.value = Predefine.TAG_PEOPLE;
+                                inner.label = NT.F.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else if (innerLabel.startsWith("ni"))
+                            {
+                                inner.label = NT.D.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else if ("f".equals(innerLabel) || "s".equals(innerLabel))
+                            {
+                                inner.label = NT.L.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
+                            else
+                            {
+                                inner.label = NT.P.toString();
+                                listIterator.add(inner);
+                                sbPattern.append(inner.label);
+                            }
                     }
-                    else
+                    if (last != null)
                     {
-                        word.setLabel(NT.K.toString());
+                        last.label = NT.D.toString();
+                        sbPattern.deleteCharAt(sbPattern.length() - 1);
+                        sbPattern.append(last.label);
+                        tfDictionary.add(sbPattern.toString());
+                        sbPattern.setLength(0);
                     }
                 }
                 else
                 {
-                    word.setLabel(NT.Z.toString());
+                    word.setLabel(NT.K.toString());
                 }
             }
-            if (verbose) System.out.println("处理整个 " + wordList);
-            wordLinkedList.getFirst().setLabel(NT.S.toString());
+            else
+            {
+                word.setLabel(NT.Z.toString());
+            }
         }
+        if (verbose) System.out.println("处理整个 " + wordList);
+        wordLinkedList.getFirst().setLabel(NT.S.toString());
     }
+
+}
 
     @Override
     public boolean saveTxtTo(String path)

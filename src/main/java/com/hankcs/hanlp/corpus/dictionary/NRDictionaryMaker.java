@@ -104,15 +104,9 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
                 IWord word = listIterator.previous();
                 if (word.getLabel().equals(Nature.nr.toString()))
                 {
-                    switch (next.getLabel())
-                    {
-                        case "A":
-                            next.setLabel("L");
-                            break;
-                        case "K":
-                            next.setLabel("M");
-                            break;
-                    }
+                    String label = next.getLabel();
+                    if (label.equals("A")) next.setLabel("L");
+                    else if (label.equals("K")) next.setLabel("M");
                 }
                 next = word;
             }

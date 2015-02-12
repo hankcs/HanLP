@@ -163,7 +163,7 @@ public class Trie
     private static void remainLongest(Collection<Emit> collectedEmits)
     {
         if (collectedEmits.size() < 2) return;
-        Map<Integer, Emit> emitMapStart = new TreeMap<>();
+        Map<Integer, Emit> emitMapStart = new TreeMap<Integer, Emit>();
         for (Emit emit : collectedEmits)
         {
             Emit pre = emitMapStart.get(emit.getStart());
@@ -178,7 +178,7 @@ public class Trie
             collectedEmits.addAll(emitMapStart.values());
             return;
         }
-        Map<Integer, Emit> emitMapEnd = new TreeMap<>();
+        Map<Integer, Emit> emitMapEnd = new TreeMap<Integer, Emit>();
         for (Emit emit : emitMapStart.values())
         {
             Emit pre = emitMapEnd.get(emit.getEnd());

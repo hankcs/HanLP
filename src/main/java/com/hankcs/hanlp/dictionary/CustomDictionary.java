@@ -36,7 +36,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class CustomDictionary
 {
     static BinTrie<CoreDictionary.Attribute> trie;
-    static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> act = new AhoCorasickDoubleArrayTrie<>();
+    static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> act = new AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute>();
     /**
      * 第一个是主词典，其他是副词典
      */
@@ -60,7 +60,7 @@ public class CustomDictionary
     {
         logger.info("自定义词典开始加载:" + mainPath);
         if (loadDat(mainPath)) return true;
-        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<>();
+        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         try
         {
             for (String p : path)
@@ -91,7 +91,7 @@ public class CustomDictionary
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
             // 缓存值文件
-            List<CoreDictionary.Attribute> attributeList = new LinkedList<>();
+            List<CoreDictionary.Attribute> attributeList = new LinkedList<CoreDictionary.Attribute>();
             for (Map.Entry<String, CoreDictionary.Attribute> entry : map.entrySet())
             {
                 attributeList.add(entry.getValue());
@@ -211,7 +211,7 @@ public class CustomDictionary
         if (word == null) return false;
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
-        if (trie == null) trie = new BinTrie<>();
+        if (trie == null) trie = new BinTrie<CoreDictionary.Attribute>();
         trie.put(word, att);
         return true;
     }
@@ -342,13 +342,13 @@ public class CustomDictionary
         protected Searcher(char[] c)
         {
             super(c);
-            entryList = new LinkedList<>();
+            entryList = new LinkedList<Map.Entry<String, CoreDictionary.Attribute>>();
         }
 
         protected Searcher(String text)
         {
             super(text);
-            entryList = new LinkedList<>();
+            entryList = new LinkedList<Map.Entry<String, CoreDictionary.Attribute>>();
         }
 
         @Override

@@ -23,11 +23,11 @@ public class BinarySearch
 {
     public static void main(String[] args)
     {
-        TreeSet<Long> setA = new TreeSet<>();
+        TreeSet<Long> setA = new TreeSet<Long>();
         setA.add(5L);
         setA.add(4L);
 
-        TreeSet<Long> setB = new TreeSet<>();
+        TreeSet<Long> setB = new TreeSet<Long>();
         setB.add(1L);
         setB.add(2L);
         setB.add(3L);

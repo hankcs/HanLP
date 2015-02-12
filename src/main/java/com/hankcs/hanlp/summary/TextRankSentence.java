@@ -195,7 +195,7 @@ public class TextRankSentence
         for (String sentence : sentenceList)
         {
             List<Term> termList = NShortSegment.parse(sentence);
-            List<String> wordList = new LinkedList<>();
+            List<String> wordList = new LinkedList<String>();
             for (Term term : termList)
             {
                 if (CoreStopWordDictionary.shouldInclude(term))
@@ -208,7 +208,7 @@ public class TextRankSentence
         }
         TextRankSentence textRank = new TextRankSentence(docs);
         int[] topSentence = textRank.getTopSentence(size);
-        List<String> resultList = new LinkedList<>();
+        List<String> resultList = new LinkedList<String>();
         for (int i : topSentence)
         {
             resultList.add(sentenceList.get(i));

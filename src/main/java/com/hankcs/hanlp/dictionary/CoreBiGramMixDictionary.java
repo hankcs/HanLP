@@ -55,7 +55,7 @@ public class CoreBiGramMixDictionary
     {
         trie = new DoubleArrayTrie<Integer>();
         if (loadDat(datPath)) return true;
-        TreeMap<String, Integer> map = new TreeMap<>();
+        TreeMap<String, Integer> map = new TreeMap<String, Integer>();
         BufferedReader br;
         try
         {

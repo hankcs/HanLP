@@ -23,7 +23,7 @@ public abstract class BaseScorer<T extends ISentenceKey> implements IScorer
 {
     public BaseScorer()
     {
-        storage = new TreeMap<>();
+        storage = new TreeMap<T, Set<String>>();
     }
 
     /**
@@ -54,7 +54,7 @@ public abstract class BaseScorer<T extends ISentenceKey> implements IScorer
         Set<String> set = storage.get(key);
         if (set == null)
         {
-            set = new TreeSet<>();
+            set = new TreeSet<String>();
             storage.put(key, set);
         }
         set.add(sentence);
@@ -70,7 +70,7 @@ public abstract class BaseScorer<T extends ISentenceKey> implements IScorer
     @Override
     public Map<String, Double> computeScore(String outerSentence)
     {
-        TreeMap<String, Double> result = new TreeMap<>(Collections.reverseOrder());
+        TreeMap<String, Double> result = new TreeMap<String, Double>(Collections.reverseOrder());
         T keyOuter = generateKey(outerSentence);
         if (keyOuter == null) return result;
         for (Map.Entry<T, Set<String>> entry : storage.entrySet())

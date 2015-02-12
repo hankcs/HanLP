@@ -17,7 +17,7 @@ public class DartMapTest extends TestCase
     public void setUp() throws Exception
     {
         IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/CoreNatureDictionary.ngram.txt");
-        validKeySet = new TreeSet<>();
+        validKeySet = new TreeSet<String>();
         while (iterator.hasNext())
         {
             validKeySet.add(iterator.next().split("\\s")[0]);
@@ -26,7 +26,7 @@ public class DartMapTest extends TestCase
 
     public void testGenerateInvalidKeySet() throws Exception
     {
-        invalidKeySet = new TreeSet<>();
+        invalidKeySet = new TreeSet<String>();
         Random random = new Random(System.currentTimeMillis());
         while (invalidKeySet.size() < validKeySet.size())
         {
@@ -43,14 +43,14 @@ public class DartMapTest extends TestCase
 
     public void testBuild() throws Exception
     {
-        ArrayList<String> keyList = new ArrayList<>(validKeySet);
-        ArrayList<Integer> valList = new ArrayList<>(keyList.size());
+        ArrayList<String> keyList = new ArrayList<String>(validKeySet);
+        ArrayList<Integer> valList = new ArrayList<Integer>(keyList.size());
         for (String key : keyList)
         {
             valList.add(key.length());
         }
 
-        dartMap = new DartMap<>(keyList, valList);
+        dartMap = new DartMap<Integer>(keyList, valList);
     }
 
     public void testContainsAndNoteContains() throws Exception
@@ -81,8 +81,8 @@ public class DartMapTest extends TestCase
         {
 
         }
-        DoubleArrayTrie<Integer> trie = new DoubleArrayTrie<>();
-        TreeMap<String, Integer> map = new TreeMap<>();
+        DoubleArrayTrie<Integer> trie = new DoubleArrayTrie<Integer>();
+        TreeMap<String, Integer> map = new TreeMap<String, Integer>();
         for (String key : validKeySet)
         {
             map.put(key, key.length());

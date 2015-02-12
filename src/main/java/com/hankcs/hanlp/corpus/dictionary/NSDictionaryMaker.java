@@ -136,34 +136,32 @@ public class NSDictionaryMaker extends CommonDictionaryMaker
                 IWord word = listIterator.next();
                 String label = word.getLabel();
                 if (label.equals(label.toUpperCase())) continue;
-                switch (label)
+                if (label.startsWith("ns"))
                 {
-                    case "ns":
-                    case "nsf":
+                    String value = word.getValue();
+                    int longestSuffixLength = PlaceSuffixDictionary.dictionary.getLongestSuffixLength(value);
+                    int wordLength = value.length() - longestSuffixLength;
+                    if (longestSuffixLength == 0 || wordLength == 0)
                     {
-                        String value = word.getValue();
-                        int longestSuffixLength = PlaceSuffixDictionary.dictionary.getLongestSuffixLength(value);
-                        int wordLength = value.length() - longestSuffixLength;
-                        if (longestSuffixLength == 0 || wordLength == 0)
-                        {
-                            word.setLabel(NS.G.toString());
-                            continue;
-                        }
-                        listIterator.remove();
-                        if (wordLength > 3)
-                        {
-                            listIterator.add(new Word(value.substring(0, wordLength), NS.G.toString()));
-                            listIterator.add(new Word(value.substring(wordLength), NS.H.toString()));
-                            continue;
-                        }
-                        for (int l = 1, tag = NS.C.ordinal(); l <= wordLength; ++l, ++tag)
-                        {
-                            listIterator.add(new Word(value.substring(l - 1, l), NS.values()[tag].toString()));
-                        }
+                        word.setLabel(NS.G.toString());
+                        continue;
+                    }
+                    listIterator.remove();
+                    if (wordLength > 3)
+                    {
+                        listIterator.add(new Word(value.substring(0, wordLength), NS.G.toString()));
                         listIterator.add(new Word(value.substring(wordLength), NS.H.toString()));
-                    }break;
-                    default:
-                        word.setLabel(NS.Z.toString());
+                        continue;
+                    }
+                    for (int l = 1, tag = NS.C.ordinal(); l <= wordLength; ++l, ++tag)
+                    {
+                        listIterator.add(new Word(value.substring(l - 1, l), NS.values()[tag].toString()));
+                    }
+                    listIterator.add(new Word(value.substring(wordLength), NS.H.toString()));
+                }
+                else
+                {
+                    word.setLabel(NS.Z.toString());
                 }
             }
             if (verbose) System.out.println("处理整个 " + wordList);

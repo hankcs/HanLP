@@ -28,7 +28,7 @@ public class DartMap<V> extends DoubleArray implements Map<String, V>
         {
             valueArray[i] = i;
         }
-        this.valueArray = new ArrayList<>(valueList);
+        this.valueArray = new ArrayList<V>(valueList);
         build(keyList, valueArray);
     }
 
@@ -85,7 +85,7 @@ public class DartMap<V> extends DoubleArray implements Map<String, V>
     {
         byte[] keyBytes = key.getBytes(utf8);
         List<Pair<Integer, Integer>> pairList = commonPrefixSearch(keyBytes, offset, maxResults);
-        ArrayList<Pair<String, V>> resultList = new ArrayList<>(pairList.size());
+        ArrayList<Pair<String, V>> resultList = new ArrayList<Pair<String, V>>(pairList.size());
         for (Pair<Integer, Integer> pair : pairList)
         {
             resultList.add(new Pair<String, V>(new String(keyBytes, 0, pair.first), valueArray.get(pair.second)));

@@ -10,13 +10,13 @@ import java.util.TreeSet;
 
 public class MDAGMapTest extends TestCase
 {
-    MDAGMap<Integer> mdagMap = new MDAGMap<>();
+    MDAGMap<Integer> mdagMap = new MDAGMap<Integer>();
     Set<String> validKeySet;
 
     public void setUp() throws Exception
     {
         IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/custom/CustomDictionary.txt");
-        validKeySet = new TreeSet<>();
+        validKeySet = new TreeSet<String>();
         while (iterator.hasNext())
         {
             validKeySet.add(iterator.next().split("\\s")[0]);
@@ -58,7 +58,7 @@ public class MDAGMapTest extends TestCase
     public void testBenchmark() throws Exception
     {
         testPut();
-        BinTrie<Integer> binTrie = new BinTrie<>();
+        BinTrie<Integer> binTrie = new BinTrie<Integer>();
         for (String key : validKeySet)
         {
             binTrie.put(key, key.length());

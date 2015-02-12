@@ -34,7 +34,7 @@ public class TestPhrase extends TestCase
     public void testExtract() throws Exception
     {
         List<File> fileList = FolderWalker.open(FOLDER);
-        Map<String, String> phraseMap = new TreeMap<>();
+        Map<String, String> phraseMap = new TreeMap<String, String>();
         int i = 0;
         for (File file : fileList)
         {

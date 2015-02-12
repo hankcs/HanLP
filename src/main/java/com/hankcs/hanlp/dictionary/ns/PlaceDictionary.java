@@ -67,8 +67,8 @@ public class PlaceDictionary
         logger.info(HanLP.Config.PlaceDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<NS>(NS.class);
         transformMatrixDictionary.load(HanLP.Config.PlaceDictionaryTrPath);
-        trie = new AhoCorasickDoubleArrayTrie<>();
-        TreeMap<String, String> patternMap = new TreeMap<>();
+        trie = new AhoCorasickDoubleArrayTrie<String>();
+        TreeMap<String, String> patternMap = new TreeMap<String, String>();
         patternMap.put("CH", "CH");
         patternMap.put("CDH", "CDH");
         patternMap.put("CDEH", "CDEH");

@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class MDAGMap<V> extends AbstractMap<String, V>
 {
-    ArrayList<V> valueList = new ArrayList<>();
+    ArrayList<V> valueList = new ArrayList<V>();
     MDAGForMap mdag = new MDAGForMap();
 
     @Override
@@ -69,7 +69,7 @@ public class MDAGMap<V> extends AbstractMap<String, V>
     public Set<String> keySet()
     {
         HashSet<String> stringSet = mdag.getAllStrings();
-        LinkedHashSet<String> keySet = new LinkedHashSet<>();
+        LinkedHashSet<String> keySet = new LinkedHashSet<String>();
         Iterator<String> iterator = stringSet.iterator();
         while (iterator.hasNext())
         {
@@ -88,7 +88,7 @@ public class MDAGMap<V> extends AbstractMap<String, V>
     public LinkedList<Entry<String, V>> commonPrefixSearchWithValue(char[] key, int begin)
     {
         LinkedList<Entry<String, Integer>> valueIndex = mdag.commonPrefixSearchWithValueIndex(key, begin);
-        LinkedList<Entry<String, V>> entryList = new LinkedList<>();
+        LinkedList<Entry<String, V>> entryList = new LinkedList<Entry<String, V>>();
         for (Entry<String, Integer> entry : valueIndex)
         {
             entryList.add(new SimpleEntry<String, V>(entry.getKey(), valueList.get(entry.getValue())));
@@ -175,7 +175,7 @@ public class MDAGMap<V> extends AbstractMap<String, V>
 
         public LinkedList<Entry<String, Integer>> commonPrefixSearchWithValueIndex(char[] key, int begin)
         {
-            LinkedList<Map.Entry<String, Integer>> result = new LinkedList<>();
+            LinkedList<Map.Entry<String, Integer>> result = new LinkedList<Map.Entry<String, Integer>>();
             if (sourceNode != null)
             {
                 int charCount = key.length;

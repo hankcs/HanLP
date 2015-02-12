@@ -114,15 +114,13 @@ public class NatureDictionaryMaker extends CommonDictionaryMaker
              */
             boolean shouldInclude(Word word)
             {
-                switch (word.label)
+                if ("m".equals(word.label) || "mq".equals(word.label) || "w".equals(word.label) || "t".equals(word.label))
                 {
-                    case "m":
-                    case "mq":
-                    case "w":
-                    case "t":
-                        if (!TextUtility.isAllChinese(word.value)) return false;
-                    case "nr":
-                        return false;
+                    if (!TextUtility.isAllChinese(word.value)) return false;
+                }
+                else if ("nr".equals(word.label))
+                {
+                    return false;
                 }
 
                 return true;

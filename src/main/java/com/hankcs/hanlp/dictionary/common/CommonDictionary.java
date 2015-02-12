@@ -46,7 +46,7 @@ public abstract class CommonDictionary<V>
             logger.info("加载键" + path + ".trie.dat成功，耗时" + (System.currentTimeMillis() - start) + "ms");
             return true;
         }
-        List<String> keyList = new ArrayList<>(valueArray.length);
+        List<String> keyList = new ArrayList<String>(valueArray.length);
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -66,11 +66,18 @@ public abstract class CommonDictionary<V>
         if (resultCode != 0)
         {
             logger.warning("trie建立失败" + resultCode + ",正在尝试排序后重载");
-            if (!sort(path))
+            TreeMap<String, V> map = new TreeMap<String, V>();
+            for (int i = 0; i < valueArray.length; ++i)
             {
-                return false;
+                map.put(keyList.get(i), valueArray[i]);
             }
-            load(path);
+            trie = new DoubleArrayTrie<V>();
+            trie.build(map);
+            int i = 0;
+            for (V v : map.values())
+            {
+                valueArray[i++] = v;
+            }
         }
         trie.save(path + ".trie.dat");
         onSaveValue(valueArray, path);

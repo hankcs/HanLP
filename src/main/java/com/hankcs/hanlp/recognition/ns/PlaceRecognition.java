@@ -103,13 +103,13 @@ public class PlaceRecognition
 //            }
             if (Nature.ns == vertex.getNature() && vertex.getAttribute().totalFrequency <= 1000)
             {
-                tagList.add(new EnumItem<>(NS.H, 1000));
+                tagList.add(new EnumItem<NS>(NS.H, 1000));
                 continue;
             }
             EnumItem<NS> NSEnumItem = PlaceDictionary.dictionary.get(vertex.word);  // 此处用等效词，更加精准
             if (NSEnumItem == null)
             {
-                NSEnumItem = new EnumItem<>(NS.Z, PlaceDictionary.transformMatrixDictionary.getTotalFrequency(NS.Z));
+                NSEnumItem = new EnumItem<NS>(NS.Z, PlaceDictionary.transformMatrixDictionary.getTotalFrequency(NS.Z));
             }
             tagList.add(NSEnumItem);
 //            line += vertex.realWord.length();
@@ -122,7 +122,7 @@ public class PlaceRecognition
         Vertex vertex = wordNetAll.getFirst(line);
         assert vertex != null : "全词网居然有空白行！";
         listIterator.add(vertex);
-        tagList.add(new EnumItem<>(ns, 1000));
+        tagList.add(new EnumItem<NS>(ns, 1000));
     }
 
     /**
@@ -132,7 +132,7 @@ public class PlaceRecognition
      */
     public static List<NS> viterbiExCompute(List<EnumItem<NS>> roleTagList)
     {
-        ViterbiEx<NS> viterbiEx = new ViterbiEx<>(roleTagList, PlaceDictionary.transformMatrixDictionary);
+        ViterbiEx<NS> viterbiEx = new ViterbiEx<NS>(roleTagList, PlaceDictionary.transformMatrixDictionary);
         return viterbiEx.computeTagList();
     }
 }

@@ -64,7 +64,7 @@ public class CRFModel implements ICacheAble
         lineIterator.next();    // blank
         String line;
         int id = 0;
-        CRFModel.tag2id = new HashMap<>();
+        CRFModel.tag2id = new HashMap<String, Integer>();
         while ((line = lineIterator.next()).length() != 0)
         {
             CRFModel.tag2id.put(line, id);
@@ -76,9 +76,9 @@ public class CRFModel implements ICacheAble
         {
             CRFModel.id2tag[entry.getValue()] = entry.getKey();
         }
-        TreeMap<String, FeatureFunction> featureFunctionMap = new TreeMap<>();  // 构建trie树的时候用
-        List<FeatureFunction> featureFunctionList = new LinkedList<>(); // 读取权值的时候用
-        CRFModel.featureTemplateList = new LinkedList<>();
+        TreeMap<String, FeatureFunction> featureFunctionMap = new TreeMap<String, FeatureFunction>();  // 构建trie树的时候用
+        List<FeatureFunction> featureFunctionList = new LinkedList<FeatureFunction>(); // 读取权值的时候用
+        CRFModel.featureTemplateList = new LinkedList<FeatureTemplate>();
         while ((line = lineIterator.next()).length() != 0)
         {
             if (!"B".equals(line))
@@ -130,7 +130,7 @@ public class CRFModel implements ICacheAble
         }
         lineIterator.close();
         logger.info("开始构建双数组trie树");
-        CRFModel.featureFunctionTrie = new DoubleArrayTrie<>();
+        CRFModel.featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
         CRFModel.featureFunctionTrie.build(featureFunctionMap);
         // 缓存bin
         try
@@ -202,7 +202,7 @@ public class CRFModel implements ICacheAble
 
     public LinkedList<double[]> computeScoreList(Table table, int current)
     {
-        LinkedList<double[]> scoreList = new LinkedList<>();
+        LinkedList<double[]> scoreList = new LinkedList<double[]>();
         for (FeatureTemplate featureTemplate : featureTemplateList)
         {
             char[] o = featureTemplate.generateParameter(table, current);
@@ -273,7 +273,7 @@ public class CRFModel implements ICacheAble
         if (byteArray == null) return false;
         int size = byteArray.nextInt();
         id2tag = new String[size];
-        tag2id = new HashMap<>(size);
+        tag2id = new HashMap<String, Integer>(size);
         for (int i = 0; i < id2tag.length; i++)
         {
             id2tag[i] = byteArray.nextUTF();
@@ -285,10 +285,10 @@ public class CRFModel implements ICacheAble
             valueArray[i] = new FeatureFunction();
             valueArray[i].load(byteArray);
         }
-        featureFunctionTrie = new DoubleArrayTrie<>();
+        featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
         featureFunctionTrie.load(byteArray, valueArray);
         size = byteArray.nextInt();
-        featureTemplateList = new ArrayList<>(size);
+        featureTemplateList = new ArrayList<FeatureTemplate>(size);
         for (int i = 0; i < size; ++i)
         {
             FeatureTemplate featureTemplate = new FeatureTemplate();

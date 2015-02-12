@@ -40,7 +40,7 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
         {
             return valueArray;
         }
-        List<EnumItem<NR>> valueList = new LinkedList<>();
+        List<EnumItem<NR>> valueList = new LinkedList<EnumItem<NR>>();
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
@@ -48,7 +48,7 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
             while ((line = br.readLine()) != null)
             {
                 Map.Entry<String, Map.Entry<String, Integer>[]> args = EnumItem.create(line);
-                EnumItem<NR> nrEnumItem = new EnumItem<>();
+                EnumItem<NR> nrEnumItem = new EnumItem<NR>();
                 for (Map.Entry<String, Integer> e : args.getValue())
                 {
                     nrEnumItem.labelMap.put(NR.valueOf(e.getKey()), e.getValue());
@@ -85,7 +85,7 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
         {
             int currentSize = ByteUtil.bytesHighFirstToInt(bytes, index);
             index += 4;
-            EnumItem<NR> item = new EnumItem<>();
+            EnumItem<NR> item = new EnumItem<NR>();
             for (int j = 0; j < currentSize; ++j)
             {
                 NR nr = nrArray[ByteUtil.bytesHighFirstToInt(bytes, index)];

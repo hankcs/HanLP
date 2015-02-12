@@ -27,7 +27,7 @@ public class SimplifyNGramDictionary extends TestCase
     public void testSimplify() throws Exception
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-        TreeMap<String, Integer> map = new TreeMap<>();
+        TreeMap<String, Integer> map = new TreeMap<String, Integer>();
         String line;
         while ((line = br.readLine()) != null)
         {

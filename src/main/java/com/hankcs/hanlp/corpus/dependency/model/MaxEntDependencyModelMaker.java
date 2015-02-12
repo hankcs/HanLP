@@ -43,7 +43,7 @@ public class MaxEntDependencyModelMaker
                 {
                     if (i == j) continue;
                     // 这就是一个边的实例，从i出发，到j，当然它可能存在也可能不存在，不存在取null照样是一个实例
-                    List<String> contextList = new LinkedList<>();
+                    List<String> contextList = new LinkedList<String>();
                     // 先生成i和j的原子特征
                     contextList.addAll(generateSingleWordContext(word, i, "i"));
                     contextList.addAll(generateSingleWordContext(word, j, "j"));
@@ -68,7 +68,7 @@ public class MaxEntDependencyModelMaker
 
     public static Collection<String> generateSingleWordContext(CoNLLWord[] word, int index, String mark)
     {
-        Collection<String> context = new LinkedList<>();
+        Collection<String> context = new LinkedList<String>();
         for (int i = index - 2; i < index + 2 + 1; ++i)
         {
             CoNLLWord w = i >= 0 && i < word.length ? word[i] : CoNLLWord.NULL;
@@ -81,7 +81,7 @@ public class MaxEntDependencyModelMaker
 
     public static Collection<String> generateUniContext(CoNLLWord[] word, int i, int j)
     {
-        Collection<String> context = new LinkedList<>();
+        Collection<String> context = new LinkedList<String>();
         context.add(word[i].NAME + '→' + word[j].NAME);
         context.add(word[i].POSTAG + '→' + word[j].POSTAG);
         context.add(word[i].NAME + '→' + word[j].NAME + (i - j));

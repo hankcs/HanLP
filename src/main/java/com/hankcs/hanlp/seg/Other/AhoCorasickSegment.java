@@ -72,7 +72,7 @@ public class AhoCorasickSegment extends Segment
                 }
             });
         }
-        LinkedList<Term> termList = new LinkedList<>();
+        LinkedList<Term> termList = new LinkedList<Term>();
         if (config.speechTagging)
         {
             for (int i = 0; i < natureArray.length; )

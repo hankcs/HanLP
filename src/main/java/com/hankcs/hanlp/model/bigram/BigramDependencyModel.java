@@ -48,9 +48,9 @@ public class BigramDependencyModel
 
     static boolean load(String path)
     {
-        trie = new DoubleArrayTrie<>();
+        trie = new DoubleArrayTrie<String>();
         if (loadDat(path + ".bi" + Predefine.BIN_EXT)) return true;
-        TreeMap<String, String> map = new TreeMap<>();
+        TreeMap<String, String> map = new TreeMap<String, String>();
         for (String line : IOUtil.readLineListWithLessMemory(path))
         {
             String[] param = line.split(" ");

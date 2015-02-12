@@ -29,7 +29,7 @@ public class TermOccurrence
 
     public TermOccurrence()
     {
-        trieSingle = new BinTrie<>();
+        trieSingle = new BinTrie<TermFrequency>();
     }
 
     public void add(String term)

@@ -30,7 +30,7 @@ public class TestBinTrieSaveLoad extends TestCase
 
     public void testSaveAndLoad() throws Exception
     {
-        BinTrie<Integer> trie = new BinTrie<>();
+        BinTrie<Integer> trie = new BinTrie<Integer>();
         trie.put("haha", 0);
         trie.put("hankcs", 1);
         trie.put("hello", 2);
@@ -38,7 +38,7 @@ public class TestBinTrieSaveLoad extends TestCase
         trie.put("zb", 4);
         trie.put("zzz", 5);
         System.out.println(trie.save(OUT_BINTRIE_DAT));
-        trie = new BinTrie<>();
+        trie = new BinTrie<Integer>();
         Integer[] value = new Integer[100];
         for (int i = 0; i < value.length; ++i)
         {

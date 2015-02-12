@@ -32,7 +32,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class PinyinDictionary
 {
-    static AhoCorasickDoubleArrayTrie<Pinyin[]> trie = new AhoCorasickDoubleArrayTrie<>();
+    static AhoCorasickDoubleArrayTrie<Pinyin[]> trie = new AhoCorasickDoubleArrayTrie<Pinyin[]>();
     public static final Pinyin[] pinyins = Integer2PinyinConverter.pinyins;
 
     static
@@ -57,7 +57,7 @@ public class PinyinDictionary
         // 从文本中载入并且尝试生成dat
         StringDictionary dictionary = new StringDictionary("=");
         if (!dictionary.load(path)) return false;
-        TreeMap<String, Pinyin[]> map = new TreeMap<>();
+        TreeMap<String, Pinyin[]> map = new TreeMap<String, Pinyin[]>();
         for (Map.Entry<String, String> entry : dictionary.entrySet())
         {
             String[] args = entry.getValue().split(",");
@@ -190,7 +190,7 @@ public class PinyinDictionary
                 }
             }
         });
-        List<Pinyin> pinyinList = new ArrayList<>(charArray.length);
+        List<Pinyin> pinyinList = new ArrayList<Pinyin>(charArray.length);
         for (int offset = 0; offset < wordNet.length; )
         {
             if (wordNet[offset] == null)

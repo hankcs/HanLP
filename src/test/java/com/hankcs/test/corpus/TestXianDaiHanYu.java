@@ -126,7 +126,7 @@ public class TestXianDaiHanYu extends TestCase
         {
             String[] args = line.split("\\s");
             // 愛面子	爱面子	ai4 mian4 zi5
-            List<Pinyin> pinyinList = new ArrayList<>(args.length - 2);
+            List<Pinyin> pinyinList = new ArrayList<Pinyin>(args.length - 2);
             for (int i = 2; i < args.length; ++i)
             {
                 pinyinList.add(TonePinyinString2PinyinConverter.convertFromToneNumber(args[i]));
@@ -206,7 +206,7 @@ public class TestXianDaiHanYu extends TestCase
 
     public void testEnumChar() throws Exception
     {
-        Set<Character> characterSet = new TreeSet<>();
+        Set<Character> characterSet = new TreeSet<Character>();
         for (Pinyin pinyin : PinyinDictionary.pinyins)
         {
             for (char c : pinyin.getPinyinWithToneMark().toCharArray())
@@ -244,7 +244,7 @@ public class TestXianDaiHanYu extends TestCase
         Matcher matcher = pattern.matcher(text);
         DictionaryMaker dictionaryMaker = new DictionaryMaker();
         dictionaryMaker.add("希望 v 7685 vn 616");
-        Map<String, String> mapChineseToNature = new TreeMap<>();
+        Map<String, String> mapChineseToNature = new TreeMap<String, String>();
         mapChineseToNature.put("名", Nature.n.toString());
         mapChineseToNature.put("动", Nature.v.toString());
         mapChineseToNature.put("形", Nature.a.toString());
@@ -272,7 +272,7 @@ public class TestXianDaiHanYu extends TestCase
     {
         String root = "D:\\JavaProjects\\SougouDownload\\data\\";
         String[] pathArray = new String[]{"最详细的全国地名大全.txt"};
-        Set<String> wordSet = new TreeSet<>();
+        Set<String> wordSet = new TreeSet<String>();
         for (String path : pathArray)
         {
             path = root + path;
@@ -291,7 +291,7 @@ public class TestXianDaiHanYu extends TestCase
     {
         String root = "D:\\JavaProjects\\SougouDownload\\data\\";
         String[] pathArray = new String[]{"上海地名街道名.txt", "上海公交线路名", "上海公交站点.txt", "上海市道路名.txt", "上海市地铁站名.txt"};
-        Set<String> wordSet = new TreeSet<>();
+        Set<String> wordSet = new TreeSet<String>();
         for (String path : pathArray)
         {
             path = root + path;
@@ -307,7 +307,7 @@ public class TestXianDaiHanYu extends TestCase
 
     public void testFixDiMing() throws Exception
     {
-        Set<String> wordSet = new TreeSet<>();
+        Set<String> wordSet = new TreeSet<String>();
         for (String word : IOUtil.readLineList("data/dictionary/custom/全国地名大全.txt"))
         {
             if (!TextUtility.isAllChinese(word)) continue;

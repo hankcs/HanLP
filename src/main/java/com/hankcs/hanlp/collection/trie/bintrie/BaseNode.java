@@ -174,7 +174,7 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         child = new BaseNode[childSize];
         for (int i = 0; i < childSize; ++i)
         {
-            child[i] = new Node<>();
+            child[i] = new Node<V>();
             child[i].walkToLoad(byteArray, valueArray);
         }
     }

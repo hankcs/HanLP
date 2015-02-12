@@ -117,7 +117,7 @@ public class TFDictionary extends SimpleDictionary<TermFrequency> implements ISa
     @Override
     public boolean saveTxtTo(String path)
     {
-        LinkedList<TermFrequency> termFrequencyLinkedList = new LinkedList<>();
+        LinkedList<TermFrequency> termFrequencyLinkedList = new LinkedList<TermFrequency>();
         for (Map.Entry<String, TermFrequency> entry : trie.entrySet())
         {
             termFrequencyLinkedList.add(entry.getValue());
@@ -132,7 +132,7 @@ public class TFDictionary extends SimpleDictionary<TermFrequency> implements ISa
      */
     public boolean saveKeyTo(String path)
     {
-        LinkedList<String> keyList = new LinkedList<>();
+        LinkedList<String> keyList = new LinkedList<String>();
         for (Map.Entry<String, TermFrequency> entry : trie.entrySet())
         {
             keyList.add(entry.getKey());

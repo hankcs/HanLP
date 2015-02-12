@@ -61,7 +61,7 @@ public class BaseChineseDictionary
         if (!dictionary.load(path)) return false;
         if (reverse) dictionary = dictionary.reverse();
         Set<Map.Entry<String, String>> entrySet = dictionary.entrySet();
-        TreeMap<String, String> map = new TreeMap<>();
+        TreeMap<String, String> map = new TreeMap<String, String>();
         for (Map.Entry<String, String> entry : entrySet)
         {
             map.put(entry.getKey(), entry.getValue());

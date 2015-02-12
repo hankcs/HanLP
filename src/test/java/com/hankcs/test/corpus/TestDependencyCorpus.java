@@ -114,7 +114,7 @@ public class TestDependencyCorpus extends TestCase
      */
     public void testMakeCRFTemplate() throws Exception
     {
-        Set<String> templateList = new LinkedHashSet<>();
+        Set<String> templateList = new LinkedHashSet<String>();
         int maxDistance = 4;
         // 字特征
         for (int i = -maxDistance; i <= maxDistance; ++i)
@@ -192,7 +192,7 @@ public class TestDependencyCorpus extends TestCase
 
     public void testMakeSimpleCRFTemplate() throws Exception
     {
-        Set<String> templateList = new LinkedHashSet<>();
+        Set<String> templateList = new LinkedHashSet<String>();
         int maxDistance = 4;
         // 字特征
         for (int i = -maxDistance; i <= maxDistance; ++i)
