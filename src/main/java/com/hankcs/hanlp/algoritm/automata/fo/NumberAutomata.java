@@ -22,7 +22,7 @@ public class NumberAutomata implements IBiAutomata
     static byte[] isNum = new byte[Character.MAX_VALUE];
     static
     {
-        String number = "第特新自编附首甲乙丙丁学侧负门边01234567890０１２３４５６７８９零一二三四五六七八九十ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" +
+        String number = "第特新自编附首甲乙丙丁学侧负门边上01234567890０１２３４５６７８９零一二三四五六七八九十ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" +
                 "ＡＢＣＤＥＦＧ—－-~#、东南西北";
         for (int i = 0; i < number.length(); ++i)
         {
