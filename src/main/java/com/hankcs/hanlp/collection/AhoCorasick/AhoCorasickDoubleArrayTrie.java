@@ -528,10 +528,10 @@ public class AhoCorasickDoubleArrayTrie<V>
 //    private void dfs(State currentState, String path, IWalker walker)
 //    {
 //        walker.meet(path, currentState);
-//        for (Character transition : currentState.getTransitions())
+//        for (Character _transition : currentState.getTransitions())
 //        {
-//            State targetState = currentState.nextState(transition);
-//            dfs(targetState, path + transition, walker);
+//            State targetState = currentState.nextState(_transition);
+//            dfs(targetState, path + _transition, walker);
 //        }
 //    }
 //

@@ -11,10 +11,11 @@
  */
 package com.hankcs.test.algorithm;
 
-import com.hankcs.hanlp.algoritm.automata.BiAutomata;
+import com.hankcs.hanlp.algoritm.automata.dat.BiAutomataDat;
 import junit.framework.TestCase;
 
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * @author hankcs
@@ -23,20 +24,20 @@ public class TestBiAutomata extends TestCase
 {
     public void testBuild() throws Exception
     {
-        TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<Integer, TreeMap<Integer, Integer>>();
+        TreeMap<Integer, TreeSet<Integer>> map = new TreeMap<Integer, TreeSet<Integer>>();
         {
-            TreeMap<Integer, Integer> value = new TreeMap<Integer, Integer>();
-            value.put(3, 3);
-            value.put(5, 5);
+            TreeSet<Integer> value = new TreeSet<Integer>();
+            value.add(3);
+            value.add(5);
             map.put(1, value);
         }
         {
-            TreeMap<Integer, Integer> value = new TreeMap<Integer, Integer>();
-            value.put(4, 4);
+            TreeSet<Integer> value = new TreeSet<Integer>();
+            value.add(4);
             map.put(2, value);
         }
-        BiAutomata<Integer> automata = new BiAutomata<Integer>();
+        BiAutomataDat<Boolean> automata = new BiAutomataDat<Boolean>();
         automata.build(map);
-        System.out.println(automata.get(2, 4));
+        System.out.println(automata.transition(1, 3));
     }
 }

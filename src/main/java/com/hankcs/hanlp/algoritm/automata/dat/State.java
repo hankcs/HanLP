@@ -1,4 +1,4 @@
-package com.hankcs.hanlp.algoritm.automata;
+package com.hankcs.hanlp.algoritm.automata.dat;
 
 import java.util.*;
 

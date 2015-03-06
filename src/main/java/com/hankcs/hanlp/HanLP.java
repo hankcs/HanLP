@@ -127,7 +127,7 @@ public class HanLP
         /**
          * 地址识别角色词典路径
          */
-        public static String AddressRoleDictionaryPath = "data/dictionary/address/role.txt";
+        public static String AddressRoleDictionaryPath = "data/dictionary/address/poi.txt";
 
         /**
          * 地址识别示例文件路径

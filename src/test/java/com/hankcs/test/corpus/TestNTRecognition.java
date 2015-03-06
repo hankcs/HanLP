@@ -31,7 +31,7 @@ public class TestNTRecognition extends TestCase
         segment.enableCustomDictionary(false);
 
         segment.enableOrganizationRecognize(true);
-        System.out.println(segment.seg("欧共体企业在欧洲摄像机市场上所占的份额已由百分之四十八"));
+        System.out.println(segment.seg("清河工业园区"));
     }
 
     public void testGeneratePatternJavaCode() throws Exception

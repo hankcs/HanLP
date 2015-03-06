@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.algoritm.automata;
+package com.hankcs.hanlp.algoritm.automata.dat;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
 
@@ -21,9 +21,10 @@ import java.util.*;
 
 /**
  * 二阶自动机（基于类双数组Trie树原理）
+ *
  * @author hankcs
  */
-public class BiAutomata<V>
+public class BiAutomataDat<V>
 {
     /**
      * 双数组值check
@@ -82,6 +83,7 @@ public class BiAutomata<V>
 
     /**
      * 获取值
+     *
      * @param key 键
      * @return
      */
@@ -97,8 +99,20 @@ public class BiAutomata<V>
     }
 
     /**
+     * 有了这个方法，这个深度仅有2的双数组trie树终于有点像自动机了
+     * @param from 一个状态
+     * @param to 另一个状态
+     * @return 是否可以发生转移
+     */
+    public boolean transition(int from, int to)
+    {
+        return exactMatchSearch(from, to) >= 0;
+    }
+
+    /**
      * 从值数组中提取下标为index的值<br>
-     *     注意为了效率，此处不进行参数校验
+     * 注意为了效率，此处不进行参数校验
+     *
      * @param index 下标
      * @return 值
      */
@@ -114,7 +128,7 @@ public class BiAutomata<V>
      * @param c
      * @return
      */
-    protected int transition(int current, char c)
+    protected int _transition(int current, int c)
     {
         int b = current;
         int p;
@@ -155,7 +169,12 @@ public class BiAutomata<V>
     /**
      * 由一个排序好的map创建
      */
-    public void build(TreeMap<Integer, TreeMap<Integer, V>> map)
+    public void build(TreeMap<Integer, TreeMap<Integer, V>> map, V[] valueType)
+    {
+        new Builder().build(map, valueType);
+    }
+
+    public void build(TreeMap<Integer, TreeSet<Integer>> map)
     {
         new Builder().build(map);
     }
@@ -276,10 +295,10 @@ public class BiAutomata<V>
 //    private void dfs(State currentState, String path, IWalker walker)
 //    {
 //        walker.meet(path, currentState);
-//        for (Character transition : currentState.getTransitions())
+//        for (Character _transition : currentState.getTransitions())
 //        {
-//            State targetState = currentState.nextState(transition);
-//            dfs(targetState, path + transition, walker);
+//            State targetState = currentState.nextState(_transition);
+//            dfs(targetState, path + _transition, walker);
 //        }
 //    }
 //
@@ -405,6 +424,7 @@ public class BiAutomata<V>
 
     /**
      * 大小，即包含多少个模式串
+     *
      * @return
      */
     public int size()
@@ -446,13 +466,33 @@ public class BiAutomata<V>
          * 由一个排序好的map创建
          */
         @SuppressWarnings("unchecked")
-        public void build(TreeMap<Integer, TreeMap<Integer, V>> map)
+        public void build(TreeMap<Integer, TreeMap<Integer, V>> map, V[] valueType)
         {
             // 把值保存下来
-            v = (V[]) map.values().toArray();
+            ArrayList<V> storage = new ArrayList<V>();
+            for (Map.Entry<Integer, TreeMap<Integer, V>> entry : map.entrySet())
+            {
+                for (Map.Entry<Integer, V> value : entry.getValue().entrySet())
+                {
+                    storage.add(value.getValue());
+                }
+            }
+            v = storage.toArray(valueType);
             Set<Integer> keySet = map.keySet();
             // 构建二分trie树
-            buildTrieTree(map);
+            buildTrieTreeWithValue(map);
+            // 在二分trie树的基础上构建双数组trie树
+            buildDoubleArrayTrie(keySet);
+            used = null;
+            rootState = null;
+            loseWeight();
+        }
+
+        public void build(TreeMap<Integer, TreeSet<Integer>> map)
+        {
+            Set<Integer> keySet = map.keySet();
+            // 构建二分trie树
+            buildTrieTreeWithOutValue(map);
             // 在二分trie树的基础上构建双数组trie树
             buildDoubleArrayTrie(keySet);
             used = null;
@@ -465,7 +505,7 @@ public class BiAutomata<V>
          *
          * @param map
          */
-        private void buildTrieTree(TreeMap<Integer, TreeMap<Integer, V>> map)
+        private void buildTrieTreeWithValue(TreeMap<Integer, TreeMap<Integer, V>> map)
         {
             int i = 0;
             for (Map.Entry<Integer, TreeMap<Integer, V>> entry : map.entrySet())
@@ -474,6 +514,20 @@ public class BiAutomata<V>
                 for (Map.Entry<Integer, V> to : entry.getValue().entrySet())
                 {
                     State second = first.addState(to.getKey());
+                    second.addEmit(i++);
+                }
+            }
+        }
+
+        private void buildTrieTreeWithOutValue(TreeMap<Integer, TreeSet<Integer>> map)
+        {
+            int i = 0;
+            for (Map.Entry<Integer, TreeSet<Integer>> entry : map.entrySet())
+            {
+                State first = this.rootState.addState(entry.getKey());
+                for (Integer to : entry.getValue())
+                {
+                    State second = first.addState(to);
                     second.addEmit(i++);
                 }
             }

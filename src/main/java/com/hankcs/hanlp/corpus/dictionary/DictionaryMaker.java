@@ -88,6 +88,7 @@ public class DictionaryMaker implements ISaveAble
                 {
                     logger.warning("使用【" + line + "】创建Item失败");
                     return null;
+//                    continue;
                 }
                 itemList.add(item);
             }

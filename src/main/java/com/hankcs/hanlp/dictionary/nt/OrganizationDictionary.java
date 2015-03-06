@@ -64,6 +64,7 @@ public class OrganizationDictionary
         logger.info(HanLP.Config.OrganizationDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<NT>(NT.class);
         transformMatrixDictionary.load(HanLP.Config.OrganizationDictionaryTrPath);
+        // TODO:什么时候有空了升级到双数组吧
         trie = new Trie().removeOverlaps();
         trie.addKeyword("CCCCCCCCD");
         trie.addKeyword("CCCCCCCD");

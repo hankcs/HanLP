@@ -142,4 +142,9 @@ public class SimpleItem
         }
         return frequency;
     }
+
+    public String getMostLikelyLabel()
+    {
+        return labelMap.entrySet().iterator().next().getKey();
+    }
 }

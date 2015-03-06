@@ -45,19 +45,19 @@ public class MDAGNode
      */
     private boolean isAcceptNode;
     
-    //The TreeMap to contain entries that represent a transition (label and target node)
+    //The TreeMap to contain entries that represent a _transition (label and target node)
     /**
      * 状态转移函数
      */
     private final TreeMap<Character, MDAGNode> outgoingTransitionTreeMap;
 
-    //The int representing this node's incoming transition node count
+    //The int representing this node's incoming _transition node count
     /**
      * 入度
      */
     private int incomingTransitionCount = 0;
     
-    //The int denoting index in a simplified mdag data array that this node's transition set begins at
+    //The int denoting index in a simplified mdag data array that this node's _transition set begins at
     /**
      * 在简化的MDAG中表示该节点的转移状态集合的起始位置
      */
@@ -97,7 +97,7 @@ public class MDAGNode
         isAcceptNode = node.isAcceptNode;
         outgoingTransitionTreeMap = new TreeMap<Character, MDAGNode>(node.outgoingTransitionTreeMap);
         
-        //Loop through the nodes in this node's outgoing transition set, incrementing the number of
+        //Loop through the nodes in this node's outgoing _transition set, incrementing the number of
         //incoming transitions of each by 1 (to account for this newly created node's outgoing transitions)
         for(Entry<Character, MDAGNode> transitionKeyValuePair : outgoingTransitionTreeMap.entrySet())
             transitionKeyValuePair.getValue().incomingTransitionCount++;
@@ -122,12 +122,12 @@ public class MDAGNode
     /**
      * 克隆一个状态<br>
      * 原来soleParentNode转移到本状态，现在转移到克隆后的状态
-     * Creates an MDAGNode possessing the same accept state status ant transition set 
+     * Creates an MDAGNode possessing the same accept state status ant _transition set
      * (incoming & outgoing) as this node. outgoing transitions as this node.
      
-     * @param soleParentNode                        the MDAGNode possessing the only transition that targets this node
-     * @param parentToCloneTransitionLabelChar      the char which labels the transition from {@code soleParentNode} to this node
-     * @return                                      an MDAGNode possessing the same accept state status and transition set as this node. 
+     * @param soleParentNode                        the MDAGNode possessing the only _transition that targets this node
+     * @param parentToCloneTransitionLabelChar      the char which labels the _transition from {@code soleParentNode} to this node
+     * @return                                      an MDAGNode possessing the same accept state status and _transition set as this node.
      */
     public MDAGNode clone(MDAGNode soleParentNode, char parentToCloneTransitionLabelChar)
     {
@@ -141,10 +141,10 @@ public class MDAGNode
 
     /**
      * Retrieves the index in a simplified mdag data array that the SimpleMDAGNode
-     * representation of this node's outgoing transition set begins at.
+     * representation of this node's outgoing _transition set begins at.
      
-     * @return      the index in a simplified mdag data array that this node's transition set begins at,
-     *              or -1 if its transition set is not present in such an array
+     * @return      the index in a simplified mdag data array that this node's _transition set begins at,
+     *              or -1 if its _transition set is not present in such an array
      */
     public int getTransitionSetBeginIndex()
     {
@@ -154,7 +154,7 @@ public class MDAGNode
     
     
     /**
-     * Retrieves this node's outgoing transition count.
+     * Retrieves this node's outgoing _transition count.
      
      * @return      an int representing this node's number of outgoing transitions
      */
@@ -166,7 +166,7 @@ public class MDAGNode
     
     
     /**
-     * Retrieves this node's incoming transition count
+     * Retrieves this node's incoming _transition count
      
      * @return      an int representing this node's number of incoming transitions
      */
@@ -216,10 +216,10 @@ public class MDAGNode
     
     /**
      * 转移状态在数组中的起始下标<br>
-     * Records the index that this node's transition set starts at
+     * Records the index that this node's _transition set starts at
      * in an array containing this node's containing MDAG data (simplified MDAG).
      
-     * @param transitionSetBeginIndex       a transition set
+     * @param transitionSetBeginIndex       a _transition set
      */
     public void setTransitionSetBeginIndex(int transitionSetBeginIndex)
     {
@@ -229,10 +229,10 @@ public class MDAGNode
     
     
     /**
-     * Determines whether this node has an outgoing transition with a given label.
+     * Determines whether this node has an outgoing _transition with a given label.
      
-     * @param letter        the char labeling the desired transition
-     * @return              true if this node possesses a transition labeled with
+     * @param letter        the char labeling the desired _transition
+     * @return              true if this node possesses a _transition labeled with
      *                      {@code letter}, and false otherwise
      */
     public boolean hasOutgoingTransition(char letter)
@@ -245,7 +245,7 @@ public class MDAGNode
     /**
      * Determines whether this node has any outgoing transitions.
      
-     * @return      true if this node has at least one outgoing transition, false otherwise
+     * @return      true if this node has at least one outgoing _transition, false otherwise
      */
     public boolean hasTransitions()
     {
@@ -255,11 +255,11 @@ public class MDAGNode
     
     
     /**
-     * Follows an outgoing transition of this node labeled with a given char.
+     * Follows an outgoing _transition of this node labeled with a given char.
      
-     * @param letter        the char representation of the desired transition's label
-     * @return              the MDAGNode that is the target of the transition labeled with {@code letter},
-     *                      or null if there is no such labeled transition from this node
+     * @param letter        the char representation of the desired _transition's label
+     * @return              the MDAGNode that is the target of the _transition labeled with {@code letter},
+     *                      or null if there is no such labeled _transition from this node
      */
     public MDAGNode transition(char letter)
     {
@@ -270,18 +270,18 @@ public class MDAGNode
     
     /**
      * 沿着一个路径转移<br>
-     * Follows a transition path starting from this node.
+     * Follows a _transition path starting from this node.
      
-     * @param str               a String corresponding a transition path in the MDAG
-     * @return                  the MDAGNode at the end of the transition path corresponding to 
-     *                          {@code str}, or null if such a transition path is not present in the MDAG
+     * @param str               a String corresponding a _transition path in the MDAG
+     * @return                  the MDAGNode at the end of the _transition path corresponding to
+     *                          {@code str}, or null if such a _transition path is not present in the MDAG
      */
     public MDAGNode transition(String str)
     {
         int charCount = str.length();
         MDAGNode currentNode = this;
         
-        //Iteratively transition through the MDAG using the chars in str
+        //Iteratively _transition through the MDAG using the chars in str
         for(int i = 0; i < charCount; i++)
         {
             currentNode = currentNode.transition(str.charAt(i));
@@ -297,7 +297,7 @@ public class MDAGNode
         int charCount = str.length;
         MDAGNode currentNode = this;
 
-        //Iteratively transition through the MDAG using the chars in str
+        //Iteratively _transition through the MDAG using the chars in str
         for(int i = 0; i < charCount; ++i)
         {
             currentNode = currentNode.transition(str[i]);
@@ -313,7 +313,7 @@ public class MDAGNode
         int charCount = str.length - offset;
         MDAGNode currentNode = this;
 
-        //Iteratively transition through the MDAG using the chars in str
+        //Iteratively _transition through the MDAG using the chars in str
         for(int i = 0; i < charCount; ++i)
         {
             currentNode = currentNode.transition(str[i + offset]);
@@ -326,11 +326,11 @@ public class MDAGNode
 
     /**
      * 获取一个字符串路径上经过的节点<br>
-     * Retrieves the nodes in the transition path starting
+     * Retrieves the nodes in the _transition path starting
      * from this node corresponding to a given String .
      
-     * @param str       a String corresponding to a transition path starting from this node
-     * @return          a Stack of MDAGNodes containing the nodes in the transition path 
+     * @param str       a String corresponding to a _transition path starting from this node
+     * @return          a Stack of MDAGNodes containing the nodes in the _transition path
      *                  denoted by {@code str}, in the order they are encountered in during transitioning
      */
     public Stack<MDAGNode> getTransitionPathNodes(String str)
@@ -340,7 +340,7 @@ public class MDAGNode
         MDAGNode currentNode = this;
         int numberOfChars = str.length();
         
-        //Iteratively transition through the MDAG using the chars in str,
+        //Iteratively _transition through the MDAG using the chars in str,
         //putting each encountered node in nodeStack
         for(int i = 0; i < numberOfChars && currentNode != null; i++)
         {
@@ -369,7 +369,7 @@ public class MDAGNode
     
     /**
      * 本状态的目标状态们的入度减一
-     * Decrements (by 1) the incoming transition counts of all of the nodes
+     * Decrements (by 1) the incoming _transition counts of all of the nodes
      * that are targets of outgoing transitions from this node.
      */
     public void decrementTargetIncomingTransitionCounts()
@@ -384,9 +384,9 @@ public class MDAGNode
      * 重新设置转移状态函数的目标
      * Reassigns the target node of one of this node's outgoing transitions.
      
-     * @param letter            the char which labels the outgoing transition of interest
-     * @param oldTargetNode     the MDAGNode that is currently the target of the transition of interest
-     * @param newTargetNode     the MDAGNode that is to be the target of the transition of interest
+     * @param letter            the char which labels the outgoing _transition of interest
+     * @param oldTargetNode     the MDAGNode that is currently the target of the _transition of interest
+     * @param newTargetNode     the MDAGNode that is to be the target of the _transition of interest
      */
     public void reassignOutgoingTransition(char letter, MDAGNode oldTargetNode, MDAGNode newTargetNode)
     {
@@ -400,12 +400,12 @@ public class MDAGNode
     
     /**
      * 新建一个转移目标<br>
-     * Creates an outgoing transition labeled with a 
+     * Creates an outgoing _transition labeled with a
      * given char that has a new node as its target.
      
-     * @param letter                        a char representing the desired label of the transition
-     * @param targetAcceptStateStatus       a boolean representing to-be-created transition target node's accept status
-     * @return                              the (newly created) MDAGNode that is the target of the created transition
+     * @param letter                        a char representing the desired label of the _transition
+     * @param targetAcceptStateStatus       a boolean representing to-be-created _transition target node's accept status
+     * @return                              the (newly created) MDAGNode that is the target of the created _transition
      */
     public MDAGNode addOutgoingTransition(char letter, boolean targetAcceptStateStatus)
     {
@@ -434,10 +434,10 @@ public class MDAGNode
     
     /**
      * 移除一个转移目标<br>
-     * Removes a transition labeled with a given char. This only removes the connection
-     * between this node and the transition's target node; the target node is not deleted.
+     * Removes a _transition labeled with a given char. This only removes the connection
+     * between this node and the _transition's target node; the target node is not deleted.
      
-     * @param letter        the char labeling the transition of interest
+     * @param letter        the char labeling the _transition of interest
      */
     public void removeOutgoingTransition(char letter)
     {
@@ -459,7 +459,7 @@ public class MDAGNode
         
         if(outgoingTransitionTreeMap1.size() == outgoingTransitionTreeMap2.size())
         {
-            //For each transition in outgoingTransitionTreeMap1, get the identically lableed transition
+            //For each _transition in outgoingTransitionTreeMap1, get the identically lableed _transition
             //in outgoingTransitionTreeMap2 (if present), and test the equality of the transitions' target nodes
             for(Entry<Character, MDAGNode> transitionKeyValuePair : outgoingTransitionTreeMap1.entrySet())
             {
@@ -497,7 +497,7 @@ public class MDAGNode
      
      * @param obj       an object
      * @return          true of {@code obj} is an MDAGNode and the set of 
-     *                  transition paths from this node and obj are equivalent
+     *                  _transition paths from this node and obj are equivalent
      */
     @Override
     public boolean equals(Object obj)
@@ -516,7 +516,7 @@ public class MDAGNode
     
     
     /**
-     * Hashes this node using its accept state status and set of outgoing transition paths.
+     * Hashes this node using its accept state status and set of outgoing _transition paths.
      * This is an expensive operation, so the result is cached and only cleared when necessary.
     
      * @return      an int of this node's hash code
@@ -529,7 +529,7 @@ public class MDAGNode
             int hash = 7;
             hash = 53 * hash + (this.isAcceptNode ? 1 : 0);
             hash = 53 * hash + (this.outgoingTransitionTreeMap != null ? this.outgoingTransitionTreeMap.hashCode() : 0);    //recursively hashes the nodes in all the 
-                                                                                                                                //transition paths stemming from this node
+                                                                                                                                //_transition paths stemming from this node
             storedHashCode = hash;
             return hash;
         }
