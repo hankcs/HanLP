@@ -312,6 +312,16 @@ public class CoreDictionary
             return result;
         }
 
+        /**
+         * 是否有某个词性
+         * @param nature
+         * @return
+         */
+        public boolean hasNature(Nature nature)
+        {
+            return getNatureFrequency(nature) > 0;
+        }
+
         @Override
         public String toString()
         {
