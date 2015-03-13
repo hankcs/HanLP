@@ -17,7 +17,7 @@ import java.util.AbstractMap;
  * 词与词频的简单封装
  * @author hankcs
  */
-public class TermFrequency extends AbstractMap.SimpleEntry<String, Integer>
+public class TermFrequency extends AbstractMap.SimpleEntry<String, Integer> implements Comparable<TermFrequency>
 {
     public TermFrequency(String term, Integer frequency)
     {
@@ -57,5 +57,12 @@ public class TermFrequency extends AbstractMap.SimpleEntry<String, Integer>
     public int increase()
     {
         return increase(1);
+    }
+
+    @Override
+    public int compareTo(TermFrequency o)
+    {
+        if (this.getFrequency().compareTo(o.getFrequency()) == 0) return getKey().compareTo(o.getKey());
+        return this.getFrequency().compareTo(o.getFrequency());
     }
 }

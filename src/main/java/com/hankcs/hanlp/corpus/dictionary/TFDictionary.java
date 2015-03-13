@@ -18,9 +18,7 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.AbstractMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 词频词典
@@ -138,5 +136,21 @@ public class TFDictionary extends SimpleDictionary<TermFrequency> implements ISa
             keyList.add(entry.getKey());
         }
         return IOUtil.saveCollectionToTxt(keyList, path);
+    }
+
+    /**
+     * 按照频率从高到低排序的条目
+     * @return
+     */
+    public TreeSet<TermFrequency> values()
+    {
+        TreeSet<TermFrequency> set = new TreeSet<TermFrequency>(Collections.reverseOrder());
+
+        for (Map.Entry<String, TermFrequency> entry : entrySet())
+        {
+            set.add(entry.getValue());
+        }
+
+        return set;
     }
 }

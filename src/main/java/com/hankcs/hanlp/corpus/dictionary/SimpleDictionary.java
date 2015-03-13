@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
@@ -95,6 +96,22 @@ public abstract class SimpleDictionary<V>
     public Set<Map.Entry<String, V>> entrySet()
     {
         return trie.entrySet();
+    }
+
+    /**
+     * 键集合
+     * @return
+     */
+    public Set<String> keySet()
+    {
+        TreeSet<String> keySet = new TreeSet<String>();
+
+        for (Map.Entry<String, V> entry : entrySet())
+        {
+            keySet.add(entry.getKey());
+        }
+
+        return keySet;
     }
 
     /**

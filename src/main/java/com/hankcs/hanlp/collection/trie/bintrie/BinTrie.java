@@ -45,6 +45,7 @@ public class BinTrie<V> extends BaseNode<V>
      */
     public void put(String key, V value)
     {
+        if (key.length() == 0) return;  // 安全起见
         BaseNode branch = this;
         char[] chars = key.toCharArray();
         for (int i = 0; i < chars.length - 1; ++i)
@@ -156,6 +157,21 @@ public class BinTrie<V> extends BaseNode<V>
             node.walk(new StringBuilder(sb.toString()), entrySet);
         }
         return entrySet;
+    }
+
+    /**
+     * 键集合
+     * @return
+     */
+    public Set<String> keySet()
+    {
+        TreeSet<String> keySet = new TreeSet<String>();
+        for (Map.Entry<String, V> entry : entrySet())
+        {
+            keySet.add(entry.getKey());
+        }
+
+        return keySet;
     }
 
     /**

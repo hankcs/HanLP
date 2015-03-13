@@ -138,6 +138,11 @@ public class HanLP
         public static String AddressExamplePath = "data/dictionary/address/example.txt";
 
         /**
+         * 地址名后缀词典路径
+         */
+        public static String AddressSuffixPath = "data/dictionary/address/suffix.txt";
+
+        /**
          * 字符类型对应表
          */
         public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
@@ -210,6 +215,7 @@ public class HanLP
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 AddressRoleDictionaryPath = root + p.getProperty("AddressRoleDictionaryPath", AddressRoleDictionaryPath);
                 AddressExamplePath = root + p.getProperty("AddressExamplePath", AddressExamplePath);
+                AddressSuffixPath = root + p.getProperty("AddressSuffixPath", AddressSuffixPath);
             }
             catch (Exception e)
             {

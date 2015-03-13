@@ -68,6 +68,17 @@ public class DictionaryMaker implements ISaveAble
         return get(word.getValue());
     }
 
+    public TreeSet<String> labelSet()
+    {
+        TreeSet<String> labelSet = new TreeSet<String>();
+        for (Map.Entry<String, Item> entry : entrySet())
+        {
+            labelSet.addAll(entry.getValue().labelMap.keySet());
+        }
+
+        return labelSet;
+    }
+
     /**
      * 读取所有条目
      *
@@ -167,6 +178,11 @@ public class DictionaryMaker implements ISaveAble
     public Set<Map.Entry<String, Item>> entrySet()
     {
         return trie.entrySet();
+    }
+
+    public Set<String> keySet()
+    {
+        return trie.keySet();
     }
 
     /**

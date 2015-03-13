@@ -51,9 +51,9 @@ public class Item extends SimpleItem
         });
         for (Map.Entry<String, Integer> entry : entries)
         {
-            sb.append(' ');
+            sb.append('\t');
             sb.append(entry.getKey());
-            sb.append(' ');
+            sb.append('\t');
             sb.append(entry.getValue());
         }
         return sb.toString();
@@ -67,7 +67,9 @@ public class Item extends SimpleItem
     public static Item create(String param)
     {
         if (param == null) return null;
-        String[] array = param.split("\\s");
+        String mark = "\\s";    // 分隔符，历史格式用空格，但是现在觉得用制表符比较好
+        if (param.indexOf('\t') > 0) mark = "\t";
+        String[] array = param.split(mark);
         return create(array);
     }
 
