@@ -117,7 +117,7 @@ public class BiAutomataBin implements IBiAutomata
     @Override
     public boolean transmit(int from, int to)
     {
-        return uniTransmit(from, to);
+        return uniTransmit(from, to);   // 用一元文法查全率更高，再加上pattern的校验，效果不错
 //        return biTransmit(from, to);
     }
 

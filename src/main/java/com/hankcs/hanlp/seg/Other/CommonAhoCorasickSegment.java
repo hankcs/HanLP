@@ -13,6 +13,7 @@ package com.hankcs.hanlp.seg.Other;
 
 
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.common.ResultTerm;
 
 import java.util.LinkedList;
@@ -96,9 +97,11 @@ public class CommonAhoCorasickSegment
             {
                 StringBuilder sbTerm = new StringBuilder();
                 int offset = i - 1;
-                while (i > 0 && wordNet[i] == null)
+                byte preCharType = CharType.get(charArray[offset]);
+                while (i > 0 && wordNet[i] == null && CharType.get(charArray[i - 1]) == preCharType)
                 {
                     sbTerm.append(charArray[i - 1]);
+                    preCharType = CharType.get(charArray[i - 1]);
                     --i;
                 }
                 termList.addFirst(new ResultTerm<V>(sbTerm.reverse().toString(), null, offset));

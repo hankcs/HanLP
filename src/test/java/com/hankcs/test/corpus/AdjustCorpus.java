@@ -14,15 +14,17 @@ package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
+import com.hankcs.hanlp.corpus.dictionary.TFDictionary;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
+import com.hankcs.hanlp.corpus.document.CorpusLoader;
+import com.hankcs.hanlp.corpus.document.Document;
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import junit.framework.TestCase;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -83,5 +85,28 @@ public class AdjustCorpus extends TestCase
     {
         text = text.replaceAll("\\" + c + "/w ", c);
         return text.replaceAll("\\" + c, c + "/w ");
+    }
+
+    public void testPlay() throws Exception
+    {
+        final TFDictionary tfDictionary = new TFDictionary();
+        CorpusLoader.walk("D:\\JavaProjects\\CorpusToolBox\\data\\2014", new CorpusLoader.Handler()
+        {
+            @Override
+            public void handle(Document document)
+            {
+                for (List<IWord> wordList : document.getComplexSentenceList())
+                {
+                    for (IWord word : wordList)
+                    {
+                        if (word instanceof CompoundWord && word.getLabel().equals("ns"))
+                        {
+                            tfDictionary.add(word.toString());
+                        }
+                    }
+                }
+            }
+        });
+        tfDictionary.saveTxtTo("data/test/complex_ns.txt");
     }
 }
