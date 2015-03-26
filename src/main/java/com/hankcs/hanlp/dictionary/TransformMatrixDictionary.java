@@ -71,7 +71,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             // 第一行是矩阵的各个类型
             String line = br.readLine();
             String[] _param = line.split(",");

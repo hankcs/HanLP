@@ -59,7 +59,7 @@ public class CoreBiGramMixDictionary
         BufferedReader br;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = br.readLine()) != null)

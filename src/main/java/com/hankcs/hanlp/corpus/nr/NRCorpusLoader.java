@@ -30,7 +30,7 @@ public class NRCorpusLoader
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             DictionaryMaker dictionaryMaker = new DictionaryMaker();
             while ((line = br.readLine()) != null)

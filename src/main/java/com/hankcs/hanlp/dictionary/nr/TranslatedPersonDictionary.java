@@ -49,7 +49,7 @@ public class TranslatedPersonDictionary
         if (loadDat()) return true;
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             TreeMap<String, Boolean> map = new TreeMap<String, Boolean>();
             TreeMap<Character, Integer> charFrequencyMap = new TreeMap<Character, Integer>();

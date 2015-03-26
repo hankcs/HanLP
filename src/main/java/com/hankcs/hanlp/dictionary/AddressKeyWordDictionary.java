@@ -42,7 +42,7 @@ public class AddressKeyWordDictionary
         BufferedReader br = null;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {

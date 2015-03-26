@@ -29,7 +29,7 @@ public class DictionaryUtil
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             TreeMap<String, String> map = new TreeMap<String, String>();
             String line;
 

@@ -29,15 +29,15 @@ public class DemoCustomDictionary
     public static void main(String[] args)
     {
         // 动态增加
-        CustomDictionary.add("孔雀女");
+        CustomDictionary.add("工程狮");
         // 强行插入
-        CustomDictionary.insert("码农", "nz 1024");
+        CustomDictionary.insert("白富美", "nz 1024");
         // 删除词语（注释掉试试）
-//        CustomDictionary.remove("码农");
-        System.out.println(CustomDictionary.add("裸婚", "v 2 nz 1"));
-        System.out.println(CustomDictionary.get("裸婚"));
+//        CustomDictionary.remove("单身狗");
+        System.out.println(CustomDictionary.add("单身狗", "nz 1024 n 1"));
+        System.out.println(CustomDictionary.get("单身狗"));
 
-        String text = "码农和孔雀女裸婚了";  // 怎么可能噗哈哈！
+        String text = "工程狮迎娶白富美，走上人生巅峰";  // 怎么可能噗哈哈！
 
         // AhoCorasickDoubleArrayTrie自动机分词
         final char[] charArray = text.toCharArray();

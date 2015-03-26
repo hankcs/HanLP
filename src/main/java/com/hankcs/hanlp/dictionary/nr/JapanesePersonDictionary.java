@@ -58,7 +58,7 @@ public class JapanesePersonDictionary
         if (loadDat()) return true;
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             TreeMap<String, Character> map = new TreeMap<String, Character>();
             while ((line = br.readLine()) != null)

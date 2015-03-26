@@ -43,7 +43,7 @@ public class NTDictionary extends CommonDictionary<EnumItem<NT>>
         List<EnumItem<NT>> valueList = new LinkedList<EnumItem<NT>>();
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {

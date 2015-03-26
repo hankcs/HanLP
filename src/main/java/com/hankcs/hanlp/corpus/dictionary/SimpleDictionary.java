@@ -35,7 +35,7 @@ public abstract class SimpleDictionary<V>
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {

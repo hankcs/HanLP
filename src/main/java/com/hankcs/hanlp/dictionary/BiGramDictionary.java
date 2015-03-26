@@ -59,7 +59,7 @@ public class BiGramDictionary
         BufferedReader br;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -146,7 +146,7 @@ public class BiGramDictionary
         BufferedReader br;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {

@@ -66,7 +66,7 @@ public class CoreBiGramTableDictionary
         TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<Integer, TreeMap<Integer, Integer>>();
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             String line;
             int total = 0;
             int maxWordId = CoreDictionary.trie.size();

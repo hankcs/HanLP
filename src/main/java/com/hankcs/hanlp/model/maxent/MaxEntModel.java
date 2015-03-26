@@ -178,7 +178,7 @@ public class MaxEntModel
         MaxEntModel m = new MaxEntModel();
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
             br.readLine();  // type
             m.correctionConstant = Integer.parseInt(br.readLine());  // correctionConstant
