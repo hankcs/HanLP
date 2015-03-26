@@ -13,7 +13,6 @@ package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
-import com.hankcs.hanlp.dictionary.address.AddressDictionary;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
@@ -23,7 +22,6 @@ import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
-import com.hankcs.hanlp.seg.common.AddressTerm;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.TextRankKeyword;
 import com.hankcs.hanlp.summary.TextRankSentence;
@@ -31,7 +29,6 @@ import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -138,11 +135,6 @@ public class HanLP
         public static String AddressExamplePath = "data/dictionary/address/example.txt";
 
         /**
-         * 地址名后缀词典路径
-         */
-        public static String AddressSuffixPath = "data/dictionary/address/suffix.txt";
-
-        /**
          * 字符类型对应表
          */
         public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
@@ -213,9 +205,6 @@ public class HanLP
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
-                AddressRoleDictionaryPath = root + p.getProperty("AddressRoleDictionaryPath", AddressRoleDictionaryPath);
-                AddressExamplePath = root + p.getProperty("AddressExamplePath", AddressExamplePath);
-                AddressSuffixPath = root + p.getProperty("AddressSuffixPath", AddressSuffixPath);
             }
             catch (Exception e)
             {
@@ -406,17 +395,6 @@ public class HanLP
     public static List<String> extractKeyword(String document, int size)
     {
         return TextRankKeyword.getKeywordList(document, size);
-    }
-
-    /**
-     * 地址提取接口
-     *
-     * @param text 文本
-     * @return 地址列表
-     */
-    public static LinkedList<AddressTerm> extractAddress(String text)
-    {
-        return AddressDictionary.extractAddress(text.toCharArray());
     }
 
     /**
