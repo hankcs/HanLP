@@ -179,6 +179,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
             public DTag(String tag)
             {
                 String[] args = tag.split("_", 2);
+                if (args[0].charAt(0) == '+') args[0] = args[0].substring(1);
                 offset = Integer.parseInt(args[0]);
                 pos = args[1];
             }
