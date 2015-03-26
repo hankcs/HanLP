@@ -17,8 +17,8 @@
     </organization>
     <licenses>
         <license>
-            <name>GNU GENERAL PUBLIC LICENSE, Version 3</name>
-            <url>http://www.gnu.org/licenses/gpl.html</url>
+            <name>Apache License Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
     </licenses>
     <inceptionYear>2014</inceptionYear>
