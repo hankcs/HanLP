@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.dictionary.py;
 
 /**
- * 拼音，组成部分=声母+韵母+12345
+ * 拼音，组成部分=声母+韵母+声调12345
  * @author hankcs
  */
 public enum Pinyin

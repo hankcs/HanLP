@@ -36,7 +36,9 @@ import java.util.logging.Level;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 常用接口合集
+ * HanLP: Han Language Processing <br>
+ * 汉语言处理包 <br>
+ * 常用接口工具类
  *
  * @author hankcs
  */
@@ -378,7 +380,7 @@ public class HanLP
      * 提取短语
      * @param text 文本
      * @param size 需要多少个短语
-     * @return 一个短语列表，长度 <= size
+     * @return 一个短语列表，大小 <= size
      */
     public static List<String> extractPhrase(String text, int size)
     {
