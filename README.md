@@ -60,7 +60,9 @@ HanLP: Han Language Processing
 ## 项目主页
 
 HanLP项目主页：http://hanlp.linrunsoft.com/
+
 HanLP下载地址：http://hanlp.linrunsoft.com/services.html
+
 最新binary、文档都以项目主页为准。GitHub的说明为历史遗留，仅做参考。
 
 ------
@@ -754,5 +756,7 @@ HanLP.Config.enableDebug();
 - TextRank: Bringing Order into Texts, Rada Mihalcea and Paul Tarau
 
 感谢上海林原信息科技有限公司的刘先生，允许我利用工作时间开发HanLP，提供服务器和域名，并且促成了开源。感谢诸位用户的关注和使用，HanLP并不完善，未来还恳求各位NLP爱好者多多关照，提出宝贵意见。
+
 作者 [@hankcs](http://weibo.com/hankcs/)
+
 2014年12月16日
