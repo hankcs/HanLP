@@ -15,13 +15,9 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
-import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
-import com.hankcs.hanlp.algoritm.ahocorasick.trie.Emit;
-import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.*;

@@ -20,7 +20,6 @@ import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
 import com.hankcs.hanlp.phrase.IPhraseExtractor;
 import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.seg.Segment;
-import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.TextRankKeyword;
@@ -165,7 +164,7 @@ public class HanLP
             Properties p = new Properties();
             try
             {
-                p.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("HanLP.properties"), "UTF-8"));
+                p.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("hanlp.properties"), "UTF-8"));
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (!root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);

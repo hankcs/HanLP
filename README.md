@@ -57,15 +57,33 @@ HanLP: Han Language Processing
 
 ------
 
+## 项目主页
+
+HanLP项目主页：http://hanlp.linrunsoft.com/
+HanLP下载地址：http://hanlp.linrunsoft.com/services.html
+最新binary、文档都以项目主页为准。GitHub的说明为历史遗留，仅做参考。
+
+------
+
 ## 下载与配置
 
 **HanLP**将数据与程序分离，给予用户自定义的自由。
 
 ### 1、下载jar
 
-[HanLP-1.0.jar](http://www.hankcs.com/)
+[hanlp.jar](http://hanlp.linrunsoft.com/services.html)
 
 ### 2、下载data
+
+#### 任选一个数据包
+
+| 数据包        | 功能   |  体积（MB）  |
+| --------   | -----:  | :----:  |
+| [data.full.zip](http://hanlp.linrunsoft.com/services.html)     | 全部 |   255     |
+| data.standard.zip        |   全部词典，不含模型   |   47   |
+| data.mini.zip        |    小体积词典，不含模型    |  22  |
+下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
+
 **HanLP**中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
 
     data
@@ -74,16 +92,9 @@ HanLP: Han Language Processing
     └─model
 
 用户可以自行增删替换，如果不需要句法分析功能的话，随时可以删除model文件夹。
-#### 可选自定义数据包
 
-| 数据包        | 功能   |  体积（MB）  |
-| --------   | -----:  | :----:  |
-| [data.full.zip](http://www.hankcs.com/)     | 全部 |   1000     |
-| data.standard.zip        |   全部词典，不含模型   |   94   |
-| data.mini.zip        |    小体积词典，不含模型    |  20  |
-下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
 ### 3、配置文件
-示例配置文件:[HanLP.properties](http://www.hankcs.com/)
+示例配置文件:[hanlp.properties](http://hanlp.linrunsoft.com/services.html)
 
 配置文件的作用是告诉HanLP数据包的位置，只需修改第一行
 
@@ -95,15 +106,19 @@ HanLP: Han Language Processing
 CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
 BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
 
-最后将HanLP.properties放入classpath即可。
+最后将HanLP.properties放入classpath即可，对于Eclipse，一般是：
+
+    $Project/bin
+---
+
 Web项目的话可以放在如下位置：
 
-    Webapp/WEB-INF/lib
-    Webapp/WEB-INF/classes
-    Appserver/lib
-    JRE/lib
-
+    $Project/WEB-INF/classes
 ---
+
+对于任何项目，都可以放到src目录下，编译时IDE会自动将其复制到classpath中。
+
+如果放置不当，HanLP会智能提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
 
 ## 调用方法
 
@@ -123,7 +138,7 @@ System.out.println(HanLP.segment("你好，欢迎使用HanLP汉语处理包！")
   * 如果内存非常有限，请使用小词典。**HanLP**默认使用大词典，同时提供小词典，请参考配置文件章节。
   * 在一些句法分析场景中，需要加载几百兆的模型。如果发生java.lang.OutOfMemoryError，则建议使用JVM option `-Xms512m -Xmx512m -Xmn256m`。
 - 写给正在编译**HanLP**的开发者
-  * 如果你正在编译运行从Github检出的**HanLP**代码，并且没有下载data，那么首次加载词典/模型会发生一个*自动缓存*的过程。
+  * 如果你正在编译运行从Github检出的**HanLP**代码，并且没有下载data缓存，那么首次加载词典/模型会发生一个*自动缓存*的过程。
   * *自动缓存*的目的是为了加速词典载入速度，在下次载入时，缓存的词典文件会带来毫秒级的加载速度。由于词典体积很大，*自动缓存*会耗费一些时间，请耐心等待。
   * *自动缓存*缓存的不是明文词典，而是双数组Trie树、DAWG、AhoCorasickDoubleArrayTrie等数据结构。
 
@@ -719,6 +734,25 @@ HanLP.Config.enableDebug();
 - Apache License Version 2.0
 - HanLP产品初始知识产权归上海林原信息科技有限公司所有，任何人和企业可以无偿使用，可以对产品、源代码进行任何形式的修改，可以打包在其他产品中进行销售。
 - 任何使用了HanLP的全部或部分功能、词典、模型的项目、产品或文章等形式的成果必须显式注明HanLP及此项目主页。
+### 鸣谢
+感谢下列优秀开源项目：
 
+- [darts-clone-java](https://github.com/hiroshi-manabe/darts-clone-java)
+- [aho-corasick](https://github.com/robert-bor/aho-corasick)
+- [SharpICTCLAS](http://www.cnblogs.com/zhenyulu/archive/2007/04/18/718383.html)
+- [snownlp](https://github.com/isnowfy/snownlp)
+- [ansj_seg](https://github.com/NLPchina/ansj_seg)
+- [nlp-lang](https://github.com/NLPchina/nlp-lang)
+
+感谢NLP界各位学者老师的著作：
+
+- 《基于角色标注的中国人名自动识别研究》张华平 刘群
+- 《基于层叠隐马尔可夫模型的中文命名实体识别》俞鸿魁 张华平 刘群 吕学强 施水才
+- 《基于角色标注的中文机构名识别》俞鸿魁 张华平 刘群
+- 《基于最大熵的依存句法分析》 辛霄 范士喜 王轩 王晓龙
+- An Efficient Implementation of Trie Structures, JUN-ICHI AOE AND KATSUSHI MORIMOTO
+- TextRank: Bringing Order into Texts, Rada Mihalcea and Paul Tarau
+
+感谢上海林原信息科技有限公司的刘先生，允许我利用工作时间开发HanLP，提供服务器和域名，并且促成了开源。感谢诸位用户的关注和使用，HanLP并不完善，未来还恳求各位NLP爱好者多多关照，提出宝贵意见。
 作者 [@hankcs](http://weibo.com/hankcs/)
 2014年12月16日
