@@ -736,11 +736,11 @@ HanLP.Config.enableDebug();
 - Apache License Version 2.0
 - HanLP产品初始知识产权归上海林原信息科技有限公司所有，任何人和企业可以无偿使用，可以对产品、源代码进行任何形式的修改，可以打包在其他产品中进行销售。
 - 任何使用了HanLP的全部或部分功能、词典、模型的项目、产品或文章等形式的成果必须显式注明HanLP及此项目主页。
+
 ### 鸣谢
 感谢下列优秀开源项目：
 
 - [darts-clone-java](https://github.com/hiroshi-manabe/darts-clone-java)
-- [aho-corasick](https://github.com/robert-bor/aho-corasick)
 - [SharpICTCLAS](http://www.cnblogs.com/zhenyulu/archive/2007/04/18/718383.html)
 - [snownlp](https://github.com/isnowfy/snownlp)
 - [ansj_seg](https://github.com/NLPchina/ansj_seg)
