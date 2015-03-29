@@ -3,6 +3,9 @@ package com.hankcs.hanlp.utility;
 
 import java.io.*;
 
+/**
+ * 文本工具类
+ */
 public class TextUtility
 {
 

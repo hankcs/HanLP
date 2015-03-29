@@ -12,10 +12,9 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
 
 /**
- * 依存句法解析
+ * 依存句法分析
  * @author hankcs
  */
 public class DemoDependencyParser

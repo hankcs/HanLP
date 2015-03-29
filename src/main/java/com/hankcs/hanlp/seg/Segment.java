@@ -141,7 +141,18 @@ public abstract class Segment
      */
     public List<Term> seg(String text)
     {
-        return segSentence(text.toCharArray());
+        return segSentence(text.toCharArray()); // 针对大文本，未来考虑先拆成句子，后分词，避免内存峰值太大
+    }
+
+    /**
+     * 分词
+     *
+     * @param text 待分词文本
+     * @return 单词列表
+     */
+    public List<Term> seg(char[] text)
+    {
+        return segSentence(text);
     }
 
     /**

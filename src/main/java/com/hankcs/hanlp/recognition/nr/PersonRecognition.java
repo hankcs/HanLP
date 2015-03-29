@@ -31,7 +31,6 @@ import java.util.List;
  */
 public class PersonRecognition
 {
-//    static Logger logger = LoggerFactory.getLogger(PersonRecognition.class);
     public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NR>> roleTagList = roleTag(pWordSegResult);

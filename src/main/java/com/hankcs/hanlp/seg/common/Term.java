@@ -34,6 +34,11 @@ public class Term
      */
     public int offset;
 
+    /**
+     * 构造一个单词
+     * @param word 词语
+     * @param nature 词性
+     */
     public Term(String word, Nature nature)
     {
         this.word = word;

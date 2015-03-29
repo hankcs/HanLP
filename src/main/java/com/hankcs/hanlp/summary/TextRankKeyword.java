@@ -16,7 +16,7 @@ public class TextRankKeyword extends KeywordExtractor
     /**
      * 提取多少个关键字
      */
-    public int nKeyword = 10;
+    int nKeyword = 10;
     /**
      * 阻尼系数（ＤａｍｐｉｎｇＦａｃｔｏｒ），一般取值为0.85
      */

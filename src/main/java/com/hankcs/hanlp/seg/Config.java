@@ -57,6 +57,9 @@ public class Config
      */
     public boolean offset = false;
 
+    /**
+     * 更新命名实体识别总开关
+     */
     public void updateNerConfig()
     {
         ner = nameRecognize || translatedNameRecognize || japaneseNameRecognize || placeRecognize || organizationRecognize;

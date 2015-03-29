@@ -261,15 +261,15 @@ public class DemoCustomDictionary
     public static void main(String[] args)
     {
         // 动态增加
-        CustomDictionary.add("孔雀女");
+        CustomDictionary.add("攻城狮");
         // 强行插入
-        CustomDictionary.insert("码农", "nz 1024");
+        CustomDictionary.insert("白富美", "nz 1024");
         // 删除词语（注释掉试试）
-//        CustomDictionary.remove("码农");
-        System.out.println(CustomDictionary.add("裸婚", "v 2 nz 1"));
-        System.out.println(CustomDictionary.get("裸婚"));
+//        CustomDictionary.remove("攻城狮");
+        System.out.println(CustomDictionary.add("单身狗", "nz 1024 n 1"));
+        System.out.println(CustomDictionary.get("单身狗"));
 
-        String text = "码农和孔雀女裸婚了";  // 怎么可能噗哈哈！
+        String text = "攻城狮逆袭单身狗，迎娶白富美，走上人生巅峰";  // 怎么可能噗哈哈！
 
         // AhoCorasickDoubleArrayTrie自动机分词
         final char[] charArray = text.toCharArray();
@@ -396,10 +396,9 @@ for (String sentence : testCase)
 
 ```java
 String[] testCase = new String[]{
-         "我在上海林原科技有限公司兼职工作，",
-        "同时在上海外国语大学日本文化经济学院学习经济与外语。",
-        "我经常在荣祥餐厅吃饭，",
-        "济南杨铭宇餐饮管理有限公司是由杨先生创办的餐饮企业。",
+    "我在上海林原科技有限公司兼职工作，",
+    "我经常在台川喜宴餐厅吃饭，",
+    "偶尔去地中海影城看电影。",
 };
 Segment segment = HanLP.newSegment().enableOrganizationRecognize(true);
 for (String sentence : testCase)

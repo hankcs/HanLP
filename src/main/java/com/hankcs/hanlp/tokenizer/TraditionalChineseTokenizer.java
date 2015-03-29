@@ -40,4 +40,14 @@ public class TraditionalChineseTokenizer
         }
         return termList;
     }
+
+    /**
+     * 分词
+     * @param text 文本
+     * @return 分词结果
+     */
+    public static List<Term> segment(char[] text)
+    {
+        return SEGMENT.seg(text);
+    }
 }

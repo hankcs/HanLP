@@ -12,7 +12,6 @@
 package com.hankcs.hanlp.tokenizer;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
@@ -39,6 +38,15 @@ public class StandardTokenizer
         return SEGMENT.seg(text);
     }
 
+    /**
+     * 分词
+     * @param text 文本
+     * @return 分词结果
+     */
+    public static List<Term> segment(char[] text)
+    {
+        return SEGMENT.seg(text);
+    }
 
     public static List<Term> parse(String text)
     {

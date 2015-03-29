@@ -14,6 +14,7 @@ package com.hankcs.hanlp.suggest.scorer.pinyin;
 import com.hankcs.hanlp.suggest.scorer.BaseScorer;
 
 /**
+ * 拼音打分器
  * @author hankcs
  */
 public class PinyinScorer extends BaseScorer<PinyinKey>

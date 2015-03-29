@@ -72,7 +72,7 @@ public class PersonDictionary
      * @param nrList         确定的标注序列
      * @param vertexList     原始的未加角色标注的序列
      * @param wordNetOptimum 待优化的图
-     * @param wordNetAll
+     * @param wordNetAll     全词图
      */
     public static void parsePattern(List<NR> nrList, List<Vertex> vertexList, final WordNet wordNetOptimum, final WordNet wordNetAll)
     {
@@ -141,7 +141,7 @@ public class PersonDictionary
 //        logger.trace("对应串：{}", vertexList);
 //        if (pattern.length() != vertexList.size())
 //        {
-//            logger.warn("人民识别模式串有bug", pattern, vertexList);
+//            logger.warn("人名识别模式串有bug", pattern, vertexList);
 //            return;
 //        }
         final Vertex[] wordArray = vertexList.toArray(new Vertex[0]);
