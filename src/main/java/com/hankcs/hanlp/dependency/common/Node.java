@@ -180,6 +180,7 @@ public class Node
             case wb:
             case wh:
                 label = "x";
+                break;
             case begin:
                 label = "root";
                 break;

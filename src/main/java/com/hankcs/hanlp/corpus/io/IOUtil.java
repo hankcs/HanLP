@@ -215,7 +215,7 @@ public class IOUtil
         String line = null;
         try
         {
-            BufferedReader bw = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader bw = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
             while ((line = bw.readLine()) != null)
             {
                 result.add(line);
