@@ -168,6 +168,7 @@ public class HanLP
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (!root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
+                CoreDictionaryTransformMatrixDictionaryPath = root + p.getProperty("CoreDictionaryTransformMatrixDictionaryPath", CoreDictionaryTransformMatrixDictionaryPath);
                 BiGramDictionaryPath = root + p.getProperty("BiGramDictionaryPath", BiGramDictionaryPath);
                 CoreStopWordDictionaryPath = root + p.getProperty("CoreStopWordDictionaryPath", CoreStopWordDictionaryPath);
                 CoreSynonymDictionaryDictionaryPath = root + p.getProperty("CoreSynonymDictionaryDictionaryPath", CoreSynonymDictionaryDictionaryPath);
