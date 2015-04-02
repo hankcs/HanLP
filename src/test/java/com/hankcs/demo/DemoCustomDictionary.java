@@ -41,7 +41,7 @@ public class DemoCustomDictionary
 
         // AhoCorasickDoubleArrayTrie自动机分词
         final char[] charArray = text.toCharArray();
-        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
         {
             @Override
             public void hit(int begin, int end, CoreDictionary.Attribute value)
