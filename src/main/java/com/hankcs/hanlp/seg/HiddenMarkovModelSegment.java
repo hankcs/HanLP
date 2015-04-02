@@ -445,7 +445,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
                 }
             });
         }
-        List<Vertex>[] vertexes = wordNetStorage.getVertexes();
+        LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
         for (int i = 1; i < vertexes.length;)
         {
             if (vertexes[i].isEmpty())
@@ -456,14 +456,9 @@ public abstract class HiddenMarkovModelSegment extends Segment
                     if (!vertexes[j].isEmpty()) break;
                 }
                 wordNetStorage.add(i, AtomSegment(charArray, i - 1, j - 1));
-                // 保证前面的可达这个原子节点
-                if (wordNetStorage.get(i - 1, 1) == null && i > 3)
-                {
-                    wordNetStorage.add(i - 1, AtomSegment(charArray, i - 2, i - 1));
-                }
                 i = j;
             }
-            else ++i;
+            else i += vertexes[i].getLast().realWord.length();
         }
         return wordNetStorage;
     }

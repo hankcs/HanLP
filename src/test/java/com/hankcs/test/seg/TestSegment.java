@@ -104,4 +104,11 @@ public class TestSegment extends TestCase
         segment.enablePartOfSpeechTagging(true);
         System.out.println(segment.seg("江西鄱阳湖干枯，中国最大淡水湖变成大草原"));
     }
+
+    public void testIssue2() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        String text = "BENQphone";
+        System.out.println(HanLP.segment(text));
+    }
 }

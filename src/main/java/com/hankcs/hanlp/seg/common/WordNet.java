@@ -31,7 +31,7 @@ public class WordNet
     /**
      * 节点，每一行都是前缀词，跟图的表示方式不同
      */
-    private List<Vertex> vertexes[];
+    private LinkedList<Vertex> vertexes[];
 
     /**
      * 共有多少个节点
@@ -61,7 +61,7 @@ public class WordNet
     public WordNet(char[] charArray)
     {
         this.charArray = charArray;
-        vertexes = new List[charArray.length + 2];
+        vertexes = new LinkedList[charArray.length + 2];
         for (int i = 0; i < vertexes.length; ++i)
         {
             vertexes[i] = new LinkedList<Vertex>();
@@ -388,7 +388,7 @@ public class WordNet
      * 获取内部顶点表格，谨慎操作！
      * @return
      */
-    public List<Vertex>[] getVertexes()
+    public LinkedList<Vertex>[] getVertexes()
     {
         return vertexes;
     }
