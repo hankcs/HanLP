@@ -119,5 +119,6 @@ public class TestSegment extends TestCase
         assertEquals(CharType.CT_DELIMITER, CharType.get('*'));;
         System.out.println(HanLP.segment("300g*2"));
         System.out.println(HanLP.segment("３００ｇ＊２"));
+        System.out.println(HanLP.segment("鱼300克*2/组"));
     }
 }
