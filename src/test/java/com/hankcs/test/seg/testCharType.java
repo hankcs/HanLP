@@ -18,9 +18,7 @@ import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +28,11 @@ import java.util.List;
  */
 public class testCharType extends TestCase
 {
-    public static void main(String[] args) throws IOException
+    /**
+     * 制作字符类型表
+     * @throws Exception
+     */
+    public void testMakeCharType() throws Exception
     {
         int preType = 5;
         int preChar = 0;
@@ -83,16 +85,10 @@ public class testCharType extends TestCase
         }
     }
 
-    public void testSaveBin() throws Exception
-    {
-        DataOutputStream out = new DataOutputStream(new FileOutputStream("data/dictionary/other/TestCharType.dat"));
-        for (int i = 0; i <= Character.MAX_VALUE; ++i)
-        {
-            out.writeByte(TextUtility.charType((char) i));
-        }
-        out.close();
-    }
-
+    /**
+     * 测试字符类型表
+     * @throws Exception
+     */
     public void testGet() throws Exception
     {
 //        for (int i = 0; i < Character.MAX_VALUE; ++i)

@@ -225,8 +225,8 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 将一条路径转为最终结果
-     *
      * @param vertexList
+     * @param offsetEnabled 是否计算offset
      * @return
      */
     protected static List<Term> convert(List<Vertex> vertexList, boolean offsetEnabled)

@@ -74,7 +74,7 @@ public class TextUtility
             int ub2 = getUnsigned(b2);
             if (ub1 < 128)
             {
-                if (" \"!,.?()[]{}+=".indexOf((char) b1) != -1)
+                if (" *\"!,.?()[]{}+=".indexOf((char) b1) != -1)
                     return CT_DELIMITER;
                 return CT_SINGLE;
             }

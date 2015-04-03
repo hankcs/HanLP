@@ -13,6 +13,7 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
+import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.Other.AhoCorasickSegment;
 import com.hankcs.hanlp.seg.Segment;
@@ -22,6 +23,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
@@ -110,5 +112,12 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         String text = "BENQphone";
         System.out.println(HanLP.segment(text));
+    }
+
+    public void testIssue3() throws Exception
+    {
+        assertEquals(CharType.CT_DELIMITER, CharType.get('*'));;
+        System.out.println(HanLP.segment("300g*2"));
+        System.out.println(HanLP.segment("３００ｇ＊２"));
     }
 }

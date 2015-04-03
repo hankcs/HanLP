@@ -13,6 +13,7 @@ package com.hankcs.hanlp.utility;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * 一些预定义的静态全局变量
@@ -29,6 +30,10 @@ public class Predefine
     public final static int CT_NUM = CT_SINGLE + 4;       //HanYu Pinyin
     public final static int CT_INDEX = CT_SINGLE + 5;     //HanYu Pinyin
     public final static int CT_OTHER = CT_SINGLE + 12;    //Other
+    /**
+     * 浮点数正则
+     */
+    public static final Pattern PATTERN_FLOAT_NUMBER = Pattern.compile("^(-?\\d+)(\\.\\d+)?$");
 
     public static String POSTFIX_SINGLE =
         "坝邦堡城池村单岛道堤店洞渡队峰府冈港阁宫沟国海号河湖环集江礁角街井郡坑口矿里岭楼路门盟庙弄牌派坡铺旗桥区渠泉山省市水寺塔台滩坛堂厅亭屯湾屋溪峡县线乡巷洋窑营屿园苑院闸寨站镇州庄族陂庵町";

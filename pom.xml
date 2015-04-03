@@ -88,11 +88,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <version>${maven-jetty-plugin.version}</version>
-            </plugin>
             <!--  运行 mvn sonar:sonar 可将项目发布给质量管理平台-->
             <!-- 软件环境： jdk1.7.0_51 apache-maven-3.0.4 sonar-3.6 -->
             <plugin>
@@ -111,22 +106,9 @@
         <maven-surefire-plugin.version>2.14</maven-surefire-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
-        <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
         <sonar-maven3-plugin.version>3.5</sonar-maven3-plugin.version>
 
-        <javaee-web-api.version>6.0</javaee-web-api.version>
         <junit.version>3.8.1</junit.version>
-        <jsoup.version>1.7.2</jsoup.version>
-        <slf4j-api.version>1.6.4</slf4j-api.version>
-        <logback-classic.version>0.9.28</logback-classic.version>
-        <httpclient.version>3.1</httpclient.version>
-        <json.version>chargebee-1.0</json.version>
-        <nekohtml.version>1.9.19</nekohtml.version>
-        <stanford-parser.version>3.3.1</stanford-parser.version>
-        <jcl-over-slf4j.version>1.6.4</jcl-over-slf4j.version>
-        <jackson.version>1.9.13</jackson.version>
-        <!-- 数据库驱动 -->
-        <mysql.version>5.1.18</mysql.version>
     </properties>
     <dependencies>
         <dependency>

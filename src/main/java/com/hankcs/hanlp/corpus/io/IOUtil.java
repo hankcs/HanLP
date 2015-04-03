@@ -17,6 +17,7 @@ import com.hankcs.hanlp.utility.TextUtility;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -105,7 +106,7 @@ public class IOUtil
             return null;
         }
 
-        return new String(fileContent);
+        return new String(fileContent, Charset.forName("UTF-8"));
     }
 
     public static LinkedList<String[]> readCsv(String path)

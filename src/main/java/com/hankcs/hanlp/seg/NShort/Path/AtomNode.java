@@ -14,8 +14,6 @@ package com.hankcs.hanlp.seg.NShort.Path;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.Predefine;
 
-import java.util.regex.Pattern;
-
 /**
  * 原子分词节点
  * @author hankcs
@@ -61,7 +59,7 @@ public class AtomNode
                 sWord = "未##串";
                 break;
             case Predefine.CT_SINGLE://12021-2129-3121
-                if (Pattern.compile("^(-?\\d+)(\\.\\d+)?$").matcher(sWord).matches())//匹配浮点数
+                if (Predefine.PATTERN_FLOAT_NUMBER.matcher(sWord).matches())//匹配浮点数
                 {
                     nature = Nature.m;
                     sWord = "未##数";
