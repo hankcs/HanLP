@@ -15,6 +15,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -33,7 +34,6 @@ public class CoreStopWordDictionary
     static StopWordDictionary dictionary;
     static
     {
-        dictionary = new StopWordDictionary();
         ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT);
         if (byteArray == null)
         {
@@ -46,11 +46,12 @@ public class CoreStopWordDictionary
             }
             catch (Exception e)
             {
-                logger.log(Level.SEVERE, "载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败", e);
+                System.err.println("载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败"  + TextUtility.exceptionToString(e));
             }
         }
         else
         {
+            dictionary = new StopWordDictionary();
             dictionary.load(byteArray);
         }
     }

@@ -35,10 +35,6 @@ public class SegmentWrapper
      * termArray下标
      */
     int index;
-    /**
-     * 整个br级别的起始位置
-     */
-    int globalStart;
 
     public SegmentWrapper(BufferedReader br, Segment segment)
     {
@@ -56,7 +52,6 @@ public class SegmentWrapper
         this.br = br;
         termArray = null;
         index = 0;
-        globalStart = 0;
     }
 
     public Term next() throws IOException

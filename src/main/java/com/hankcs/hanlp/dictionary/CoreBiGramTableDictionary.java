@@ -258,6 +258,12 @@ public class CoreBiGramTableDictionary
         return pair[index + 1];
     }
 
+    /**
+     * 获取共现频次
+     * @param idA 第一个词的id
+     * @param idB 第二个词的id
+     * @return 共现频次
+     */
     public static int getBiFrequency(int idA, int idB)
     {
         if (idA == -1)
@@ -277,8 +283,8 @@ public class CoreBiGramTableDictionary
     /**
      * 获取词语的ID
      *
-     * @param a
-     * @return
+     * @param a 词语
+     * @return id
      */
     public static int getWordID(String a)
     {

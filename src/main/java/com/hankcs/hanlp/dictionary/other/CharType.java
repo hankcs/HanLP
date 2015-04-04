@@ -24,17 +24,17 @@ public class CharType
     /**
      * 单字节
      */
-    public static final byte CT_SINGLE = 5;// SINGLE byte
+    public static final byte CT_SINGLE = 5;
 
     /**
      * 分隔符"!,.?()[]{}+=
      */
-    public static final byte CT_DELIMITER = CT_SINGLE + 1;// delimiter
+    public static final byte CT_DELIMITER = CT_SINGLE + 1;
 
     /**
      * 中文字符
      */
-    public static final byte CT_CHINESE = CT_SINGLE + 2;// Chinese Char
+    public static final byte CT_CHINESE = CT_SINGLE + 2;
 
     /**
      * 字母
@@ -54,7 +54,7 @@ public class CharType
     /**
      * 其他
      */
-    public static final byte CT_OTHER = CT_SINGLE + 12;// Other
+    public static final byte CT_OTHER = CT_SINGLE + 12;
     
     static byte[] type;
 
@@ -66,7 +66,8 @@ public class CharType
         ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CharTypePath);
         if (byteArray == null)
         {
-            logger.severe("字符类型对应表加载失败：" + HanLP.Config.CharTypePath);
+            System.err.println("字符类型对应表加载失败：" + HanLP.Config.CharTypePath);
+            System.exit(-1);
         }
         else
         {

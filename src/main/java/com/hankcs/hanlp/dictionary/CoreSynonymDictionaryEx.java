@@ -40,7 +40,8 @@ public class CoreSynonymDictionaryEx
         }
         catch (Exception e)
         {
-            logger.warning("载入核心同义词词典失败" + e);
+            System.err.println("载入核心同义词词典失败" + e);
+            System.exit(-1);
         }
     }
 
