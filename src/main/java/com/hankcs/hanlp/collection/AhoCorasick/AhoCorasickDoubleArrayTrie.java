@@ -153,6 +153,11 @@ public class AhoCorasickDoubleArrayTrie<V>
         }
     }
 
+    /**
+     * 持久化
+     * @param out 一个DataOutputStream
+     * @throws Exception 可能的IO异常等
+     */
     public void save(DataOutputStream out) throws Exception
     {
         out.writeInt(size);
@@ -182,6 +187,11 @@ public class AhoCorasickDoubleArrayTrie<V>
         }
     }
 
+    /**
+     * 持久化
+     * @param out 一个ObjectOutputStream
+     * @throws IOException 可能的IO异常
+     */
     public void save(ObjectOutputStream out) throws IOException
     {
         out.writeObject(base);
@@ -191,6 +201,13 @@ public class AhoCorasickDoubleArrayTrie<V>
         out.writeObject(l);
     }
 
+    /**
+     * 载入
+     * @param in 一个ObjectInputStream
+     * @param value 值（持久化的时候并没有持久化值，现在需要额外提供）
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void load(ObjectInputStream in, V[] value) throws IOException, ClassNotFoundException
     {
         base = (int[]) in.readObject();
@@ -201,6 +218,12 @@ public class AhoCorasickDoubleArrayTrie<V>
         v = value;
     }
 
+    /**
+     * 载入
+     * @param byteArray 一个字节数组
+     * @param value 值数组
+     * @return 成功与否
+     */
     public boolean load(ByteArray byteArray, V[] value)
     {
         if (byteArray == null) return false;
@@ -934,6 +957,9 @@ public class AhoCorasickDoubleArrayTrie<V>
             return begin;
         }
 
+        /**
+         * 释放空闲的内存
+         */
         private void loseWeight()
         {
             int nbase[] = new int[size + 65535];

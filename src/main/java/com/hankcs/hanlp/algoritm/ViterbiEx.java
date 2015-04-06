@@ -11,7 +11,6 @@
  */
 package com.hankcs.hanlp.algoritm;
 
-import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 

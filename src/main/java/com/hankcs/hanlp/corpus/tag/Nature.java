@@ -14,7 +14,7 @@ package com.hankcs.hanlp.corpus.tag;
 /**
  * 词性
  *
- * @author He Han
+ * @author hankcs
  */
 public enum Nature
 {
