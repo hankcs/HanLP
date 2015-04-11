@@ -22,10 +22,6 @@
 
 package com.hankcs.hanlp.collection.MDAG;
 
-import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.corpus.io.ICacheAble;
-
-import java.io.DataOutputStream;
 import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TreeMap;

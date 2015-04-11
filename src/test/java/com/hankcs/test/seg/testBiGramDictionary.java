@@ -29,8 +29,8 @@ public class testBiGramDictionary extends TestCase
 {
     public void testBiGramDictionary()
     {
-//        assertEquals(15, BiGramDictionary.getBiFrequency("团结", "奋斗"));
-//        assertEquals(1, BiGramDictionary.getBiFrequency("团结", "拼搏"));
+        assertEquals(15, BiGramDictionary.getBiFrequency("团结", "奋斗"));
+        assertEquals(1, BiGramDictionary.getBiFrequency("团结", "拼搏"));
 //        BufferedReader br = null;
 //        try
 //        {

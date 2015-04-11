@@ -33,6 +33,16 @@ public class NotionalTokenizer
     static final Segment SEGMENT = HanLP.newSegment();
     public static List<Term> segment(String text)
     {
+        return segment(text.toCharArray());
+    }
+
+    /**
+     * 分词
+     * @param text 文本
+     * @return 分词结果
+     */
+    public static List<Term> segment(char[] text)
+    {
         List<Term> resultList = SEGMENT.seg(text);
         ListIterator<Term> listIterator = resultList.listIterator();
         while (listIterator.hasNext())
@@ -44,16 +54,6 @@ public class NotionalTokenizer
         }
 
         return resultList;
-    }
-
-    /**
-     * 分词
-     * @param text 文本
-     * @return 分词结果
-     */
-    public static List<Term> segment(char[] text)
-    {
-        return SEGMENT.seg(text);
     }
 
     /**

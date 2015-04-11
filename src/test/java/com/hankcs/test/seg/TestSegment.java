@@ -22,6 +22,7 @@ import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
+import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
@@ -41,6 +42,11 @@ public class TestSegment extends TestCase
         System.out.println(segment.seg(
                 "我喜欢陈膺奥"
         ));
+    }
+
+    public void testNotional() throws Exception
+    {
+        System.out.println(NotionalTokenizer.segment("算法可以宽泛的分为三类"));
     }
 
     public void testNGram() throws Exception

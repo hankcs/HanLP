@@ -11,12 +11,15 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.corpus.tag.Nature;
+import junit.framework.TestCase;
+
 /**
  * @author hankcs
  */
-public class ZZGenerateNature
+public class ZZGenerateNature extends TestCase
 {
-    public static void main(String[] args)
+    public void testGenerate() throws Exception
     {
         String text = "n 名词\n" +
                 "nr 人名\n" +
@@ -159,5 +162,10 @@ public class ZZGenerateNature
 //                                       "*/\n" +
 //                                       p.substring(0, cut) +",\n");
         }
+    }
+
+    public void testSize() throws Exception
+    {
+            System.out.println(Nature.values().length);
     }
 }

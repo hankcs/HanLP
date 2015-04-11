@@ -25,4 +25,9 @@ public class TestStopWordDictionary extends TestCase
         HanLP.Config.enableDebug();
         System.out.println(CoreStopWordDictionary.contains("这就是说"));
     }
+
+    public void testContainsSomeWords() throws Exception
+    {
+        assertEquals(true, CoreStopWordDictionary.contains("可以"));
+    }
 }

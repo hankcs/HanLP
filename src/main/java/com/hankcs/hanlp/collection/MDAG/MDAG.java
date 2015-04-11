@@ -169,7 +169,7 @@ public class MDAG implements ICacheAble
      */
     public MDAG(File dataFile) throws IOException
     {
-        BufferedReader dataFileBufferedReader = new BufferedReader(new FileReader(dataFile));
+        BufferedReader dataFileBufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), "UTF-8"));
         String currentString = "";
         String previousString = "";
 
