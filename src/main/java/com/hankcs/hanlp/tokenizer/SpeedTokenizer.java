@@ -29,7 +29,7 @@ public class SpeedTokenizer
     public static final Segment SEGMENT = new AhoCorasickSegment();
     public static List<Term> segment(String text)
     {
-        return SEGMENT.seg(text);
+        return SEGMENT.seg(text.toCharArray());
     }
 
     /**
@@ -40,5 +40,15 @@ public class SpeedTokenizer
     public static List<Term> segment(char[] text)
     {
         return SEGMENT.seg(text);
+    }
+
+    /**
+     * 切分为句子形式
+     * @param text 文本
+     * @return 句子列表
+     */
+    public static List<List<Term>> seg2sentence(String text)
+    {
+        return SEGMENT.seg2sentence(text);
     }
 }

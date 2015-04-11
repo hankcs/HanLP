@@ -12,10 +12,12 @@
 package com.hankcs.hanlp.tokenizer;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * 标准分词器
@@ -35,7 +37,7 @@ public class StandardTokenizer
      */
     public static List<Term> segment(String text)
     {
-        return SEGMENT.seg(text);
+        return SEGMENT.seg(text.toCharArray());
     }
 
     /**
@@ -48,8 +50,13 @@ public class StandardTokenizer
         return SEGMENT.seg(text);
     }
 
-    public static List<Term> parse(String text)
+    /**
+     * 切分为句子形式
+     * @param text 文本
+     * @return 句子列表
+     */
+    public static List<List<Term>> seg2sentence(String text)
     {
-        return segment(text);
+        return SEGMENT.seg2sentence(text);
     }
 }

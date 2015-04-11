@@ -50,4 +50,14 @@ public class TraditionalChineseTokenizer
     {
         return SEGMENT.seg(text);
     }
+
+    /**
+     * 切分为句子形式
+     * @param text 文本
+     * @return 句子列表
+     */
+    public static List<List<Term>> seg2sentence(String text)
+    {
+        return SEGMENT.seg2sentence(text);
+    }
 }
