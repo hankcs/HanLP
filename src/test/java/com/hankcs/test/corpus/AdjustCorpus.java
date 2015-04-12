@@ -12,6 +12,7 @@
 package com.hankcs.test.corpus;
 
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
 import com.hankcs.hanlp.corpus.dictionary.TFDictionary;
@@ -22,10 +23,13 @@ import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.corpus.occurrence.TermFrequency;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import junit.framework.TestCase;
 
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 部分标注有问题，比如逗号缺少标注等等，尝试修复它
@@ -108,5 +112,28 @@ public class AdjustCorpus extends TestCase
             }
         });
         tfDictionary.saveTxtTo("data/test/complex_ns.txt");
+    }
+
+    public void testAdjustNGram() throws Exception
+    {
+        IOUtil.LineIterator iterator = new IOUtil.LineIterator(HanLP.Config.BiGramDictionaryPath);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(HanLP.Config.BiGramDictionaryPath + "adjust.txt"), "UTF-8"));
+        while (iterator.hasNext())
+        {
+            String line = iterator.next();
+            String[] params = line.split(" ");
+            String first = params[0].split("@", 2)[0];
+            String second = params[0].split("@", 2)[1];
+            int biFrequency = Integer.parseInt(params[1]);
+            CoreDictionary.Attribute attribute = CoreDictionary.get(first + second);
+            if (attribute != null && first.length() == 1 && second.length() == 1)
+            {
+                System.out.println(line);
+                continue;
+            }
+            bw.write(line);
+            bw.newLine();
+        }
+        bw.close();
     }
 }

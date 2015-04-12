@@ -44,6 +44,15 @@ public class TestSegment extends TestCase
         ));
     }
 
+    public void testViterbi() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        Segment segment = new DijkstraSegment();
+        System.out.println(segment.seg(
+                "放下你的无效社交"
+        ));
+    }
+
     public void testNotional() throws Exception
     {
         System.out.println(NotionalTokenizer.segment("算法可以宽泛的分为三类"));

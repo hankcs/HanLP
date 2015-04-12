@@ -121,7 +121,7 @@ public class CoreBiGramTableDictionary
                 start[i + 1] = offset;
             }
 
-            logger.info("二元词典读取完毕:" + path + "，开始构建双数组Trie树(DoubleArrayTrie)……");
+            logger.info("二元词典读取完毕:" + path + "，构建为TableBin结构");
         }
         catch (FileNotFoundException e)
         {

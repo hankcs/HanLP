@@ -60,7 +60,7 @@ public class TranslatedPersonDictionary
                 for (char c : line.toCharArray())
                 {
                     // 排除一些过于常用的字
-                    if (c == '不') continue;
+                    if ("不赞".indexOf(c) >= 0) continue;
                     Integer f = charFrequencyMap.get(c);
                     if (f == null) f = 0;
                     charFrequencyMap.put(c, f + 1);

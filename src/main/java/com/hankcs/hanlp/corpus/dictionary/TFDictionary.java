@@ -26,10 +26,22 @@ import java.util.*;
  */
 public class TFDictionary extends SimpleDictionary<TermFrequency> implements ISaveAble
 {
+    String delimeter;
+
+    public TFDictionary(String delimeter)
+    {
+        this.delimeter = delimeter;
+    }
+
+    public TFDictionary()
+    {
+        this("=");
+    }
+
     @Override
     protected Map.Entry<String, TermFrequency> onGenerateEntry(String line)
     {
-        String[] param = line.split("=");
+        String[] param = line.split(delimeter);
         return new AbstractMap.SimpleEntry<String, TermFrequency>(param[0], new TermFrequency(param[0], Integer.valueOf(param[1])));
     }
 
@@ -115,16 +127,28 @@ public class TFDictionary extends SimpleDictionary<TermFrequency> implements ISa
     @Override
     public boolean saveTxtTo(String path)
     {
-        LinkedList<TermFrequency> termFrequencyLinkedList = new LinkedList<TermFrequency>();
-        for (Map.Entry<String, TermFrequency> entry : trie.entrySet())
+        if ("=".equals(delimeter))
         {
-            termFrequencyLinkedList.add(entry.getValue());
+            LinkedList<TermFrequency> termFrequencyLinkedList = new LinkedList<TermFrequency>();
+            for (Map.Entry<String, TermFrequency> entry : trie.entrySet())
+            {
+                termFrequencyLinkedList.add(entry.getValue());
+            }
+            return IOUtil.saveCollectionToTxt(termFrequencyLinkedList, path);
         }
-        return IOUtil.saveCollectionToTxt(termFrequencyLinkedList, path);
+        else
+        {
+            ArrayList<String> outList = new ArrayList<String>(size());
+            for (Map.Entry<String, TermFrequency> entry : trie.entrySet())
+            {
+                outList.add(entry.getKey() + delimeter + entry.getValue().getFrequency());
+            }
+            return IOUtil.saveCollectionToTxt(outList, path);
+        }
     }
 
     /**
-     * 将值保存到文件
+     * 仅仅将值保存到文件
      * @param path
      * @return
      */
