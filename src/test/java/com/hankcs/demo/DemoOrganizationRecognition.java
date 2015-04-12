@@ -28,7 +28,7 @@ public class DemoOrganizationRecognition
         String[] testCase = new String[]{
                 "我在上海林原科技有限公司兼职工作，",
                 "我经常在台川喜宴餐厅吃饭，",
-                "偶尔去地中海影城看电影。",
+                "偶尔去开元地中海影城看电影。",
         };
         Segment segment = HanLP.newSegment().enableOrganizationRecognize(true);
         for (String sentence : testCase)

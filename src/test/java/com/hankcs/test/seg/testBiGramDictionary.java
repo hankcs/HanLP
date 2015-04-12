@@ -60,6 +60,11 @@ public class testBiGramDictionary extends TestCase
         BiGramDictionary.getBiFrequency("团结@奋斗");
     }
 
+    public void testTable() throws Exception
+    {
+        assertEquals(106, CoreBiGramTableDictionary.getBiFrequency("延续", "未##时"));
+    }
+
     /**
      * 测试两者兼容性，顺便将二元词典中多出来的词语记录下来，可以回写到核心词典中
      * @throws Exception

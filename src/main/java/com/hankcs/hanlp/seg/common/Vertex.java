@@ -73,12 +73,12 @@ public class Vertex
     public Vertex(String word, String realWord, CoreDictionary.Attribute attribute, int wordID)
     {
         if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.n, 1);   // 安全起见
+        this.wordID = wordID;
         if (word == null) word = compileRealWord(realWord, attribute);
         assert word.length() > 0 : "构造空白节点会导致死循环！";
         this.word = word;
         this.realWord = realWord;
         this.attribute = attribute;
-        this.wordID = wordID;
     }
 
     /**
@@ -87,7 +87,7 @@ public class Vertex
      * @param attribute 等效词串
      * @return
      */
-    private static String compileRealWord(String realWord, CoreDictionary.Attribute attribute)
+    private String compileRealWord(String realWord, CoreDictionary.Attribute attribute)
     {
         if (attribute.nature.length == 1)
         {
@@ -99,16 +99,19 @@ public class Vertex
                 case nrf:
                 case nrj:
                 {
+                    wordID = CoreDictionary.NR_WORD_ID;
                     return Predefine.TAG_PEOPLE;
                 }
                 case ns:
                 case nsf:
                 {
+                    wordID = CoreDictionary.NS_WORD_ID;
                     return Predefine.TAG_PLACE;
                 }
 //                case nz:
                 case nx:
                 {
+                    wordID = CoreDictionary.NX_WORD_ID;
                     return Predefine.TAG_PROPER;
                 }
                 case nt:
@@ -120,16 +123,20 @@ public class Vertex
                 case ntu:
                 case nts:
                 case nth:
+                case nit:
                 {
+                    wordID = CoreDictionary.NT_WORD_ID;
                     return Predefine.TAG_GROUP;
                 }
                 case m:
                 case mq:
                 {
+                    wordID = CoreDictionary.M_WORD_ID;
                     return Predefine.TAG_NUMBER;
                 }
                 case x:
                 {
+                    wordID = CoreDictionary.X_WORD_ID;
                     return Predefine.TAG_CLUSTER;
                 }
 //                case xx:
@@ -140,6 +147,7 @@ public class Vertex
 //                break;
                 case t:
                 {
+                    wordID = CoreDictionary.T_WORD_ID;
                     return Predefine.TAG_TIME;
                 }
             }

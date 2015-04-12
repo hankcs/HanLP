@@ -59,6 +59,8 @@ public class TranslatedPersonDictionary
                 // 音译人名常用字词典自动生成
                 for (char c : line.toCharArray())
                 {
+                    // 排除一些过于常用的字
+                    if (c == '不') continue;
                     Integer f = charFrequencyMap.get(c);
                     if (f == null) f = 0;
                     charFrequencyMap.put(c, f + 1);

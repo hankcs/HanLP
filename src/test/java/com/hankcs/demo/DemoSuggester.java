@@ -35,7 +35,7 @@ public class DemoSuggester
             suggester.addSentence(title);
         }
 
-        System.out.println(suggester.suggest("发言", 1));       // 语义
+        System.out.println(suggester.suggest("陈述", 2));       // 语义
         System.out.println(suggester.suggest("危机公关", 1));   // 字符
         System.out.println(suggester.suggest("mayun", 1));      // 拼音
     }
