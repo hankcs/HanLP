@@ -157,6 +157,10 @@ public class HanLP
          * CRF依存模型
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
+        /**
+         * 分词结果是否展示词性
+         */
+        public static boolean ShowTermNature = true;
 
         static
         {
@@ -207,6 +211,7 @@ public class HanLP
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
+                ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
             }
             catch (Exception e)
             {

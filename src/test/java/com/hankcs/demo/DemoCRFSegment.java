@@ -11,6 +11,7 @@
  */
 package com.hankcs.demo;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -18,13 +19,14 @@ import com.hankcs.hanlp.seg.common.Term;
 import java.util.List;
 
 /**
- * CRF分词
+ * CRF分词（目前效果还不满意，正在训练新模型，持续改进中）
  * @author hankcs
  */
 public class DemoCRFSegment
 {
     public static void main(String[] args)
     {
+        HanLP.Config.enableDebug();
         Segment segment = new CRFSegment();
         segment.enablePartOfSpeechTagging(true);
         List<Term> termList = segment.seg("你看过穆赫兰道吗");

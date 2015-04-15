@@ -46,10 +46,10 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "放下你的无效社交"
+                "书法家陈剑谷为南京军区航务军代处基层官兵送书艺"
         ));
     }
 

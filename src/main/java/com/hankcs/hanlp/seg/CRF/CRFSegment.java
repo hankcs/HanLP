@@ -66,31 +66,25 @@ public class CRFSegment extends Segment
             System.out.println("CRF标注结果");
             System.out.println(table);
         }
-        for (String[] line : table.v)
+        for (int i = 0; i < table.v.length; i++)
         {
+            String[] line = table.v[i];
             switch (line[1].charAt(0))
             {
                 case 'B':
                 {
                     sbTerm.append(line[0]);
-                }break;
-                case 'E':
-                {
+                    while ((++i) < table.v.length && (line = table.v[i])[1].charAt(0) != 'E')
+                    {
+                        sbTerm.append(line[0]);
+                    }
                     sbTerm.append(line[0]);
                     termList.add(new Term(sbTerm.toString(), null));
                     sbTerm.setLength(0);
                 }break;
-                case 'M':
-                {
-                    sbTerm.append(line[0]);
-                }break;
-                case 'S':
-                {
-                    termList.add(new Term(line[0], null));
-                }break;
                 default:
                 {
-                    logger.warning("CRF分词出了意外" + Arrays.toString(line));
+                    termList.add(new Term(line[0], null));
                 }break;
             }
         }
