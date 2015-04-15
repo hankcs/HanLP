@@ -29,7 +29,7 @@ public class DemoCRFSegment
         HanLP.Config.enableDebug();
         Segment segment = new CRFSegment();
         segment.enablePartOfSpeechTagging(true);
-        List<Term> termList = segment.seg("你看过穆赫兰道吗");
+        List<Term> termList = segment.seg("乐视超级手机能否承载贾布斯的生态梦");
         System.out.println(termList);
         for (Term term : termList)
         {

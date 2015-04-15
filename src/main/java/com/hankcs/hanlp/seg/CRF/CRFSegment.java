@@ -22,11 +22,8 @@ import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import static com.hankcs.hanlp.utility.Predefine.logger;
+import java.util.*;
+
 
 /**
  * 基于CRF的分词器
@@ -50,6 +47,7 @@ public class CRFSegment extends Segment
     @Override
     protected List<Term> segSentence(char[] sentence)
     {
+        if (sentence.length == 0) return Collections.emptyList();
         String v[][] = new String[sentence.length][2];
         int length = sentence.length;
         for (int i = 0; i < length; ++i)
@@ -60,7 +58,6 @@ public class CRFSegment extends Segment
         table.v = v;
         CRFSegmentModel.crfModel.tag(table);
         List<Term> termList = new LinkedList<Term>();
-        StringBuilder sbTerm = new StringBuilder();
         if (HanLP.Config.DEBUG)
         {
             System.out.println("CRF标注结果");
@@ -73,14 +70,21 @@ public class CRFSegment extends Segment
             {
                 case 'B':
                 {
-                    sbTerm.append(line[0]);
-                    while ((++i) < table.v.length && (line = table.v[i])[1].charAt(0) != 'E')
+                    int begin = i;
+                    while (table.v[i][1].charAt(0) != 'E')
                     {
-                        sbTerm.append(line[0]);
+                        ++i;
+                        if (i == table.v.length)
+                        {
+                            break;
+                        }
                     }
-                    sbTerm.append(line[0]);
-                    termList.add(new Term(sbTerm.toString(), null));
-                    sbTerm.setLength(0);
+                    if (i == table.v.length)
+                    {
+                        termList.add(new Term(new String(sentence, begin, i - begin), null));
+                    }
+                    else
+                        termList.add(new Term(new String(sentence, begin, i - begin + 1), null));
                 }break;
                 default:
                 {

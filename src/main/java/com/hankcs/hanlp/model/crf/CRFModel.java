@@ -135,7 +135,7 @@ public class CRFModel implements ICacheAble
         // 缓存bin
         try
         {
-            logger.info("开始缓存"+ path + Predefine.BIN_EXT);
+            logger.info("开始缓存" + path + Predefine.BIN_EXT);
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
             CRFModel.save(out);
             out.close();
@@ -150,41 +150,41 @@ public class CRFModel implements ICacheAble
 
     /**
      * 维特比后向算法标注
+     *
      * @param table
      */
     public void tag(Table table)
     {
         int size = table.size();
+        if (size == 1)
+        {
+            table.setLast(0, "S");
+            return;
+        }
         double bestScore = 0;
         int bestTag = 0;
         int tagSize = id2tag.length;
         LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数
-        for (int i = 0; i < tagSize; ++i)   // -1位置的标签遍历
+        // 0位置只可能是B或者S
         {
-            for (int j = 0; j < tagSize; ++j)   // 0位置的标签遍历
+            bestScore = computeScore(scoreList, 0);
+            bestTag = 0;
+            double curScore = computeScore(scoreList, 3);
+            if (curScore > bestScore)
             {
-                double curScore = computeScore(scoreList, j);
-                if (matrix != null)
-                {
-                    curScore += matrix[i][j];
-                }
-                if (curScore > bestScore)
-                {
-                    bestScore = curScore;
-                    bestTag = j;
-                }
+                bestTag = 3;
             }
         }
         table.setLast(0, id2tag[bestTag]);
         int preTag = bestTag;
         // 0位置打分完毕，接下来打剩下的
-        for (int i = 1; i < size; ++i)
+        for (int i = 1; i < size - 1; ++i)
         {
             scoreList = computeScoreList(table, i);    // i位置命中的特征函数
             bestScore = Double.MIN_VALUE;
             for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
             {
-                double curScore =  computeScore(scoreList, j);
+                double curScore = computeScore(scoreList, j);
                 if (matrix != null)
                 {
                     curScore += matrix[preTag][j];
@@ -198,6 +198,17 @@ public class CRFModel implements ICacheAble
             table.setLast(i, id2tag[bestTag]);
             preTag = bestTag;
         }
+        scoreList = computeScoreList(table, size - 1);    // size - 1位置命中的特征函数
+        // size - 1位置只可能是E或者S
+        {
+            bestScore = computeScore(scoreList, 1);
+            bestTag = 1;
+            if (computeScore(scoreList, 3) > bestScore)
+            {
+                bestTag = 3;
+            }
+        }
+        table.setLast(size - 1, id2tag[bestTag]);
     }
 
     public LinkedList<double[]> computeScoreList(Table table, int current)
@@ -216,6 +227,7 @@ public class CRFModel implements ICacheAble
 
     /**
      * 给一系列特征函数结合tag打分
+     *
      * @param scoreList
      * @param tag
      * @return
