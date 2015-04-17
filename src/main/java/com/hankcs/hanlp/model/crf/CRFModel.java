@@ -198,17 +198,8 @@ public class CRFModel implements ICacheAble
             table.setLast(i, id2tag[bestTag]);
             preTag = bestTag;
         }
-        scoreList = computeScoreList(table, size - 1);    // size - 1位置命中的特征函数
-        // size - 1位置只可能是E或者S
-        {
-            bestScore = computeScore(scoreList, 1);
-            bestTag = 1;
-            if (computeScore(scoreList, 3) > bestScore)
-            {
-                bestTag = 3;
-            }
-        }
-        table.setLast(size - 1, id2tag[bestTag]);
+        // size - 1位置只可能是E或者S，其实从最终合并逻辑上看，S就足够
+        table.setLast(size - 1, "S");
     }
 
     public LinkedList<double[]> computeScoreList(Table table, int current)

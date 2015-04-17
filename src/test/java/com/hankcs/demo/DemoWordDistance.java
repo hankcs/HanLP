@@ -12,7 +12,6 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.dictionary.CoreSynonymDictionary;
-import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary;
 
 /**
  * 语义距离
@@ -47,11 +46,12 @@ public class DemoWordDistance
                         "教师",
                         "会计",
                 };
+        System.out.printf("%-5s\t%-5s\t%-10s\t%-5s\n", "词A", "词B", "语义距离", "语义相似度");
         for (String a : wordArray)
         {
             for (String b : wordArray)
             {
-                System.out.println(a + "\t" + b + "\t之间的距离是\t" + CoreSynonymDictionary.distance(a, b));
+                System.out.printf("%-5s\t%-5s\t%-15d\t%-5.10f\n", a, b, CoreSynonymDictionary.distance(a, b), CoreSynonymDictionary.similarity(a, b));
             }
         }
     }

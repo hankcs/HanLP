@@ -13,10 +13,12 @@ package com.hankcs.hanlp.dictionary.common;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.synonym.Synonym;
+import com.hankcs.hanlp.corpus.synonym.SynonymHelper;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -30,6 +32,11 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class CommonSynonymDictionary
 {
     DoubleArrayTrie<SynonymItem> trie;
+
+    /**
+     * 词典中最大的语义ID距离
+     */
+    private long maxSynonymItemIdDistance;
 
     private CommonSynonymDictionary()
     {
@@ -54,10 +61,11 @@ public class CommonSynonymDictionary
         try
         {
             BufferedReader bw = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            ArrayList<Synonym> synonymList = null;
             while ((line = bw.readLine()) != null)
             {
                 String[] args = line.split(" ");
-                List<Synonym> synonymList = Synonym.create(args);
+                synonymList = Synonym.create(args);
                 char type = args[0].charAt(args[0].length() - 1);
                 for (Synonym synonym : synonymList)
                 {
@@ -67,6 +75,11 @@ public class CommonSynonymDictionary
                 }
             }
             bw.close();
+            // 获取最大语义id
+            if (synonymList != null && synonymList.size() > 0)
+            {
+                maxSynonymItemIdDistance = synonymList.get(synonymList.size() - 1).id - SynonymHelper.convertString2IdWithIndex("Aa01A01", 0) + 1;
+            }
             int resultCode = trie.build(treeMap);
             if (resultCode != 0)
             {
@@ -85,6 +98,15 @@ public class CommonSynonymDictionary
     public SynonymItem get(String key)
     {
         return trie.get(key);
+    }
+
+    /**
+     * 获取最大id
+     * @return 一个长整型的id
+     */
+    public long getMaxSynonymItemIdDistance()
+    {
+        return maxSynonymItemIdDistance;
     }
 
     /**
@@ -203,5 +225,6 @@ public class CommonSynonymDictionary
             SynonymItem item = new SynonymItem(new Synonym(word, word.hashCode() * 1000000 + Long.MAX_VALUE / 3), null, Type.UNDEFINED);
             return item;
         }
+
     }
 }

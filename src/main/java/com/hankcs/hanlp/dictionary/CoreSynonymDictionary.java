@@ -33,7 +33,9 @@ public class CoreSynonymDictionary
     {
         try
         {
+            long start = System.currentTimeMillis();
             dictionary = CommonSynonymDictionary.create(new FileInputStream(HanLP.Config.CoreSynonymDictionaryDictionaryPath));
+            logger.info("载入核心同义词词典成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
         }
         catch (Exception e)
         {
@@ -71,6 +73,20 @@ public class CoreSynonymDictionary
         if (itemA == null || itemB == null) return Long.MAX_VALUE;
 
         return distance(itemA, itemB);
+    }
+
+    /**
+     * 计算两个单词之间的相似度，0表示不相似，1表示完全相似
+     * @param A
+     * @param B
+     * @return
+     */
+    public static double similarity(String A, String B)
+    {
+        long distance = distance(A, B);
+        if (distance > dictionary.getMaxSynonymItemIdDistance()) return 0.0;
+
+        return (dictionary.getMaxSynonymItemIdDistance() - distance) / (double) dictionary.getMaxSynonymItemIdDistance();
     }
 
     /**

@@ -19,7 +19,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import java.util.List;
 
 /**
- * CRF分词（目前效果还不满意，正在训练新模型，持续改进中）
+ * CRF分词（新训练了一个模型，体积比较大，效果有进步）
  * @author hankcs
  */
 public class DemoCRFSegment

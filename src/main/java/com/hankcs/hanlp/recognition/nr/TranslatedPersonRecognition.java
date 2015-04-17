@@ -40,7 +40,6 @@ public class TranslatedPersonRecognition
     {
         StringBuilder sbName = new StringBuilder();
         int appendTimes = 0;
-        // nrf触发识别
         ListIterator<Vertex> listIterator = segResult.listIterator();
         listIterator.next();
         int line = 1;
@@ -72,7 +71,10 @@ public class TranslatedPersonRecognition
             }
             else
             {
-                if (vertex.guessNature() == Nature.nrf || TranslatedPersonDictionary.containsKey(vertex.realWord))
+                // nrf触发识别
+                if (vertex.guessNature() == Nature.nrf
+//                        || TranslatedPersonDictionary.containsKey(vertex.realWord)
+                        )
                 {
                     sbName.append(vertex.realWord);
                     ++appendTimes;
