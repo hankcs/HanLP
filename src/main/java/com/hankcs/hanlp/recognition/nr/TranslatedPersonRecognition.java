@@ -71,8 +71,8 @@ public class TranslatedPersonRecognition
             }
             else
             {
-                // nrf触发识别
-                if (vertex.guessNature() == Nature.nrf
+                // nrf和nsf触发识别
+                if (vertex.guessNature() == Nature.nrf || vertex.getNature() == Nature.nsf
 //                        || TranslatedPersonDictionary.containsKey(vertex.realWord)
                         )
                 {
