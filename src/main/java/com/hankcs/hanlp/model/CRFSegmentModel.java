@@ -27,6 +27,12 @@ public class CRFSegmentModel
         logger.info("CRF分词模型正在加载 " + HanLP.Config.CRFSegmentModelPath);
         long start = System.currentTimeMillis();
         crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath);
-        logger.info("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 完毕，耗时 " + (System.currentTimeMillis() - start) + " ms");
+        if (crfModel == null)
+        {
+            logger.severe("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 失败，耗时 " + (System.currentTimeMillis() - start) + " ms");
+            System.exit(-1);
+        }
+        else
+            logger.info("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
     }
 }
