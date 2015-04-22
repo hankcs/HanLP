@@ -11,10 +11,10 @@
  */
 package com.hankcs.test.model;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.model.crf.FeatureTemplate;
 import com.hankcs.hanlp.model.crf.CRFModel;
@@ -23,7 +23,6 @@ import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import junit.framework.TestCase;
 
 import java.io.*;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -76,10 +75,10 @@ public class TestCRF extends TestCase
 
     public void testSegment() throws Exception
     {
-//        HanLP.Config.enableDebug();
+        HanLP.Config.enableDebug();
         CRFSegment segment = new CRFSegment();
 //        segment.enablePartOfSpeechTagging(true);
-        System.out.println(segment.seg("你看过穆赫兰道吗"));
+        System.out.println(segment.seg("乐视超级手机能否承载贾布斯的生态梦"));
     }
 
     /**
