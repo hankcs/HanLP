@@ -40,6 +40,9 @@ public class CRFSegmentModel extends CRFModel
             logger.info("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
     }
 
+    private static int idB = crfModel.getTagId("B");
+    private static int idS = crfModel.getTagId("S");
+
     @Override
     public void tag(Table table)
     {
@@ -50,17 +53,17 @@ public class CRFSegmentModel extends CRFModel
             return;
         }
         double bestScore;
-        int bestTag;
+        int bestTag;    // BESM
         int tagSize = id2tag.length;
         LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数
         // 0位置只可能是B或者S
         {
-            bestScore = computeScore(scoreList, 0);
-            bestTag = 0;
-            double curScore = computeScore(scoreList, 3);
+            bestScore = computeScore(scoreList, idB);
+            bestTag = idB;
+            double curScore = computeScore(scoreList, idS);
             if (curScore > bestScore)
             {
-                bestTag = 3;
+                bestTag = idS;
             }
         }
         table.setLast(0, id2tag[bestTag]);

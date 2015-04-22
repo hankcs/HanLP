@@ -315,4 +315,14 @@ public class CRFModel implements ICacheAble
     {
         return loadTxt(path, new CRFModel());
     }
+
+    /**
+     * 获取某个tag的ID
+     * @param tag
+     * @return
+     */
+    public Integer getTagId(String tag)
+    {
+        return tag2id.get(tag);
+    }
 }
