@@ -141,4 +141,13 @@ public class TestCRF extends TestCase
         );
         bw.close();
     }
+
+    public void testEnglishAndNumber() throws Exception
+    {
+        String text = "123你好abc456good";
+//        System.out.println(CRFSegment.atomSegment(text.toCharArray()));
+        HanLP.Config.enableDebug();
+        CRFSegment segment = new CRFSegment();
+        System.out.println(segment.seg(text));
+    }
 }
