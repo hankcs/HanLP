@@ -12,12 +12,15 @@
 package com.hankcs.hanlp.dependency;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.ITrie;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.dependency.common.POSUtil;
 import com.hankcs.hanlp.model.bigram.BigramDependencyModel;
 import com.hankcs.hanlp.model.crf.CRFModel;
+import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.Table;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
@@ -66,14 +69,14 @@ public class CRFDependencyParser extends AbstractDependencyParser
     static boolean load(String path)
     {
         if (loadDat(path + Predefine.BIN_EXT)) return true;
-        crfModel = CRFModel.loadTxt(path, new CRFModelForDependency()); // 使用特化版的CRF
+        crfModel = CRFModel.loadTxt(path, new CRFModelForDependency(new DoubleArrayTrie<FeatureFunction>())); // 使用特化版的CRF
         return crfModel != null;
     }
     static boolean loadDat(String path)
     {
         ByteArray byteArray = ByteArray.createByteArray(path);
         if (byteArray == null) return false;
-        crfModel = new CRFModelForDependency();
+        crfModel = new CRFModelForDependency(new DoubleArrayTrie<FeatureFunction>());
         return crfModel.load(byteArray);
     }
     static boolean saveDat(String path)
@@ -168,6 +171,12 @@ public class CRFDependencyParser extends AbstractDependencyParser
      */
     static class CRFModelForDependency extends CRFModel
     {
+
+        public CRFModelForDependency(ITrie<FeatureFunction> featureFunctionTrie)
+        {
+            super(featureFunctionTrie);
+        }
+
         /**
          * 每个tag的分解。内部类的内部类你到底累不累
          */

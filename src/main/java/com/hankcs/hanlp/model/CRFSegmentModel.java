@@ -12,7 +12,10 @@
 package com.hankcs.hanlp.model;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.trie.ITrie;
+import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.model.crf.CRFModel;
+import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.Table;
 
 import java.util.LinkedList;
@@ -30,7 +33,7 @@ public class CRFSegmentModel extends CRFModel
     {
         logger.info("CRF分词模型正在加载 " + HanLP.Config.CRFSegmentModelPath);
         long start = System.currentTimeMillis();
-        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel());
+        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel(new BinTrie<FeatureFunction>()));
         if (crfModel == null)
         {
             logger.severe("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 失败，耗时 " + (System.currentTimeMillis() - start) + " ms");
@@ -43,6 +46,11 @@ public class CRFSegmentModel extends CRFModel
     private final static int idB = crfModel.getTagId("B");
     private final static int idE = crfModel.getTagId("E");
     private final static int idS = crfModel.getTagId("S");
+
+    public CRFSegmentModel(ITrie<FeatureFunction> featureFunctionTrie)
+    {
+        super(featureFunctionTrie);
+    }
 
     @Override
     public void tag(Table table)

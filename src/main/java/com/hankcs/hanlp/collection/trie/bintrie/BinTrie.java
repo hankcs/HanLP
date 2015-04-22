@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.collection.trie.bintrie;
 
+import com.hankcs.hanlp.collection.trie.ITrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.TextUtility;
@@ -26,7 +27,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class BinTrie<V> extends BaseNode<V>
+public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
 {
     private int size;
 
@@ -140,6 +141,20 @@ public class BinTrie<V> extends BaseNode<V>
         // 下面这句可以保证只有成词的节点被返回
         if (!(branch.status == Status.WORD_END_3 || branch.status == Status.WORD_MIDDLE_2)) return null;
         return (V) branch.getValue();
+    }
+
+    @Override
+    public V[] getValueArray(V[] a)
+    {
+        if (a.length < size)
+            a = (V[]) java.lang.reflect.Array.newInstance(
+                    a.getClass().getComponentType(), size);
+        int i = 0;
+        for (Map.Entry<String, V> entry : entrySet())
+        {
+            a[i++] = entry.getValue();
+        }
+        return a;
     }
 
     /**
@@ -323,6 +338,16 @@ public class BinTrie<V> extends BaseNode<V>
         }
 
         return true;
+    }
+
+    @Override
+    public int build(TreeMap<String, V> keyValueMap)
+    {
+        for (Map.Entry<String, V> entry : keyValueMap.entrySet())
+        {
+            put(entry.getKey(), entry.getValue());
+        }
+        return 0;
     }
 
     /**

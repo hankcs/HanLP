@@ -12,6 +12,8 @@
 package com.hankcs.hanlp.model.crf;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.ITrie;
+import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -34,7 +36,7 @@ public class CRFModel implements ICacheAble
      */
     Map<String, Integer> tag2id;
     protected String[] id2tag;
-    DoubleArrayTrie<FeatureFunction> featureFunctionTrie;
+    ITrie<FeatureFunction> featureFunctionTrie;
     List<FeatureTemplate> featureTemplateList;
     /**
      * tag的转移矩阵
@@ -43,6 +45,12 @@ public class CRFModel implements ICacheAble
 
     public CRFModel()
     {
+        featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
+    }
+
+    public CRFModel(ITrie<FeatureFunction> featureFunctionTrie)
+    {
+        this.featureFunctionTrie = featureFunctionTrie;
     }
 
     protected void onLoadTxtFinished()
@@ -129,8 +137,7 @@ public class CRFModel implements ICacheAble
             logger.warning("文本读取有残留，可能会出问题！" + path);
         }
         lineIterator.close();
-        logger.info("开始构建双数组trie树");
-        CRFModel.featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
+        logger.info("开始构建trie树");
         CRFModel.featureFunctionTrie.build(featureFunctionMap);
         // 缓存bin
         try
@@ -287,7 +294,6 @@ public class CRFModel implements ICacheAble
             valueArray[i] = new FeatureFunction();
             valueArray[i].load(byteArray);
         }
-        featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
         featureFunctionTrie.load(byteArray, valueArray);
         size = byteArray.nextInt();
         featureTemplateList = new ArrayList<FeatureTemplate>(size);
@@ -313,7 +319,7 @@ public class CRFModel implements ICacheAble
 
     public static CRFModel loadTxt(String path)
     {
-        return loadTxt(path, new CRFModel());
+        return loadTxt(path, new CRFModel(new DoubleArrayTrie<FeatureFunction>()));
     }
 
     /**

@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * 双数组Trie树
  */
-public class DoubleArrayTrie<V> implements Serializable
+public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 {
     private final static int BUF_SIZE = 16384;
     private final static int UNIT_SIZE = 8; // size of int + int
