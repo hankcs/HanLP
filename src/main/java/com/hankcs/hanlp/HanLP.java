@@ -141,6 +141,11 @@ public class HanLP
         public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
 
         /**
+         * 字符正规化表（全角转半角，繁体转简体）
+         */
+        public static String CharTablePath = "data/dictionary/other/CharTable.bin.yes";
+
+        /**
          * 词-词性-依存关系模型
          */
         public static String WordNatureModelPath = "data/model/dependency/WordNature.txt";
@@ -207,6 +212,7 @@ public class HanLP
                 OrganizationDictionaryPath = root + p.getProperty("OrganizationDictionaryPath", OrganizationDictionaryPath);
                 OrganizationDictionaryTrPath = root + p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
                 CharTypePath = root + p.getProperty("CharTypePath", CharTypePath);
+                CharTablePath = root + p.getProperty("CharTablePath", CharTablePath);
                 WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);

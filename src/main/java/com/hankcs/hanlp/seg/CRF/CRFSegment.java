@@ -16,6 +16,7 @@ import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.CRFSegmentModel;
 import com.hankcs.hanlp.model.crf.Table;
 import com.hankcs.hanlp.seg.Segment;
@@ -52,16 +53,9 @@ public class CRFSegment extends Segment
     protected List<Term> segSentence(char[] sentence)
     {
         if (sentence.length == 0) return Collections.emptyList();
-        List<String> atomList = atomSegment(sentence);
-        Iterator<String> iterator = atomList.iterator();
-        int length = atomList.size();
-        String v[][] = new String[length][2];
-        for (int i = 0; i < length; ++i)
-        {
-            v[i][0] = iterator.next();
-        }
+        char[] sentenceConverted = CharTable.convert(sentence);
         Table table = new Table();
-        table.v = v;
+        table.v = atomSegmentToTable(sentenceConverted);
         CRFSegmentModel.crfModel.tag(table);
         List<Term> termList = new LinkedList<Term>();
         if (HanLP.Config.DEBUG)
@@ -70,17 +64,17 @@ public class CRFSegment extends Segment
             System.out.println(table);
         }
         int offset = 0;
-        for (int i = 0; i < table.v.length; offset += table.v[i][0].length(), ++i)
+        for (int i = 0; i < table.v.length; offset += table.v[i][1].length(), ++i)
         {
             String[] line = table.v[i];
-            switch (line[1].charAt(0))
+            switch (line[2].charAt(0))
             {
                 case 'B':
                 {
                     int begin = offset;
-                    while (table.v[i][1].charAt(0) != 'E')
+                    while (table.v[i][2].charAt(0) != 'E')
                     {
-                        offset += table.v[i][0].length();
+                        offset += table.v[i][1].length();
                         ++i;
                         if (i == table.v.length)
                         {
@@ -92,12 +86,12 @@ public class CRFSegment extends Segment
                         termList.add(new Term(new String(sentence, begin, offset - begin), null));
                     }
                     else
-                        termList.add(new Term(new String(sentence, begin, offset - begin + table.v[i][0].length()), null));
+                        termList.add(new Term(new String(sentence, begin, offset - begin + table.v[i][1].length()), null));
                 }
                 break;
                 default:
                 {
-                    termList.add(new Term(line[0], null));
+                    termList.add(new Term(new String(sentence, offset, table.v[i][1].length()), null));
                 }
                 break;
             }
@@ -191,4 +185,93 @@ public class CRFSegment extends Segment
 
         return atomList;
     }
+
+    public static String[][] atomSegmentToTable(char[] sentence)
+    {
+        String table[][] = new String[sentence.length][3];
+        int size = 0;
+        final int maxLen = sentence.length - 1;
+        final StringBuilder sbAtom = new StringBuilder();
+        out:
+        for (int i = 0; i < sentence.length; i++)
+        {
+            if (sentence[i] >= '0' && sentence[i] <= '9')
+            {
+                sbAtom.append(sentence[i]);
+                if (i == maxLen)
+                {
+                    table[size][0] = "M";
+                    table[size][1] = sbAtom.toString();
+                    ++size;
+                    sbAtom.setLength(0);
+                    break;
+                }
+                char c = sentence[++i];
+                while (c == '.' || c == '%' || (c >= '0' && c <= '9'))
+                {
+                    sbAtom.append(sentence[i]);
+                    if (i == maxLen)
+                    {
+                        table[size][0] = "M";
+                        table[size][1] = sbAtom.toString();
+                        ++size;
+                        sbAtom.setLength(0);
+                        break out;
+                    }
+                    c = sentence[++i];
+                }
+                table[size][0] = "M";
+                table[size][1] = sbAtom.toString();
+                ++size;
+                sbAtom.setLength(0);
+                --i;
+            }
+            else if (CharacterHelper.isEnglishLetter(sentence[i]))
+            {
+                sbAtom.append(sentence[i]);
+                if (i == maxLen)
+                {
+                    table[size][0] = "W";
+                    table[size][1] = sbAtom.toString();
+                    ++size;
+                    sbAtom.setLength(0);
+                    break;
+                }
+                char c = sentence[++i];
+                while (CharacterHelper.isEnglishLetter(c))
+                {
+                    sbAtom.append(sentence[i]);
+                    if (i == maxLen)
+                    {
+                        table[size][0] = "W";
+                        table[size][1] = sbAtom.toString();
+                        ++size;
+                        sbAtom.setLength(0);
+                        break out;
+                    }
+                    c = sentence[++i];
+                }
+                table[size][0] = "W";
+                table[size][1] = sbAtom.toString();
+                ++size;
+                sbAtom.setLength(0);
+                --i;
+            }
+            else
+            {
+                table[size][0] = table[size][1] = String.valueOf(sentence[i]);
+                ++size;
+            }
+        }
+
+        return resizeArray(table, size);
+    }
+
+    public static String[][] resizeArray(String[][] array, int size)
+    {
+        String[][] nArray = new String[size][];
+        System.arraycopy(array, 0, nArray, 0, size);
+        return nArray;
+    }
+
 }

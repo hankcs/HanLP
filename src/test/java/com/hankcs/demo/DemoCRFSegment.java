@@ -19,24 +19,29 @@ import com.hankcs.hanlp.seg.common.Term;
 import java.util.List;
 
 /**
- * CRF分词（新训练了一个模型，体积比较大，效果有进步）
+ * CRF分词(在未压缩200MB+模型下，能够取得较好的效果，可以投入生产环境)
  * @author hankcs
  */
 public class DemoCRFSegment
 {
     public static void main(String[] args)
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug();
+        HanLP.Config.ShowTermNature = false;
         Segment segment = new CRFSegment();
         segment.enablePartOfSpeechTagging(true);
-        List<Term> termList = segment.seg("乐视超级手机能否承载贾布斯的生态梦");
-        System.out.println(termList);
-        for (Term term : termList)
+        String[] sentenceArray = new String[]
+                {
+                        "HanLP是由一系列模型与算法组成的Java工具包，目标是普及自然语言处理在生产环境中的应用。",
+                        "駁謝長廷“國民黨像東廠” 藍營吁其勿惡意嘲諷？",
+                        "今日APPS：Sago Mini Toolbox培养孩子动手能力",
+                        "财政部副部长王保安调任国家统计局党组书记",
+                        "乐视超级手机能否承载贾布斯的生态梦"
+                };
+        for (String sentence : sentenceArray)
         {
-            if (term.nature == null)
-            {
-                System.out.println("识别到新词：" + term.word);
-            }
+            List<Term> termList = segment.seg(sentence);
+            System.out.println(termList);
         }
     }
 }
