@@ -11,8 +11,12 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import junit.framework.TestCase;
+
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * @author hankcs
@@ -24,5 +28,15 @@ public class TestCharTable extends TestCase
         System.out.println(CharTable.CONVERT['關']);
         System.out.println(CharTable.CONVERT['Ａ']);
         System.out.println(CharTable.CONVERT['“']);
+        System.out.println(CharTable.CONVERT['．']);
+    }
+
+    public void testFix() throws Exception
+    {
+        CharTable.CONVERT['.'] = '.';
+        CharTable.CONVERT['．'] = '.';
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(HanLP.Config.CharTablePath));
+        out.writeObject(CharTable.CONVERT);
+        out.close();
     }
 }

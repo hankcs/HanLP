@@ -144,7 +144,7 @@ public class TestCRF extends TestCase
 
     public void testEnglishAndNumber() throws Exception
     {
-        String text = "123你好abc456good";
+        String text = "2.34米";
 //        System.out.println(CRFSegment.atomSegment(text.toCharArray()));
         HanLP.Config.enableDebug();
         CRFSegment segment = new CRFSegment();
