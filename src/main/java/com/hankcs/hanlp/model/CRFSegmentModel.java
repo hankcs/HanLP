@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.model;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.ITrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.model.crf.CRFModel;
@@ -24,16 +25,18 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 静态CRF分词模型
+ *
  * @author hankcs
  */
 public class CRFSegmentModel extends CRFModel
 {
     public static CRFModel crfModel;
+
     static
     {
         logger.info("CRF分词模型正在加载 " + HanLP.Config.CRFSegmentModelPath);
         long start = System.currentTimeMillis();
-        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel(new BinTrie<FeatureFunction>()));
+        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel(new DoubleArrayTrie<FeatureFunction>()));
         if (crfModel == null)
         {
             logger.severe("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 失败，耗时 " + (System.currentTimeMillis() - start) + " ms");
@@ -61,61 +64,45 @@ public class CRFSegmentModel extends CRFModel
             table.setLast(0, "S");
             return;
         }
-        double bestScore;
-        int bestTag;    // BESM
-        int tagSize = id2tag.length;
-        LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数
-        // 末位置只可能是E或者S
+        double[][] net = new double[size][4];
+        for (int i = 0; i < size; ++i)
         {
-            bestScore = computeScore(scoreList, idE);
-            bestTag = idE;
-            double curScore = computeScore(scoreList, idS);
-            if (curScore > bestScore)
+            LinkedList<double[]> scoreList = computeScoreList(table, i);
+            for (int tag = 0; tag < 4; ++tag)
             {
-                bestTag = idS;
+                net[i][tag] = computeScore(scoreList, tag);
             }
         }
-        table.setLast(size - 1, id2tag[bestTag]);
-        int nextTag = bestTag;
-        // 末位置打分完毕，接下来打剩下的
+        net[0][1] = -1000.0;
+        net[0][3] = -1000.0;
+        int[][] from = new int[size][4];
+        for (int i = 1; i < size; ++i)
+        {
+            for (int now = 0; now < 4; ++now)
+            {
+                double maxScore = -1e10;
+                for (int pre = 0; pre < 4; ++pre)
+                {
+                    if (matrix[pre][now] <= 0) continue;
+                    double score = net[i - 1][pre] + matrix[pre][now] + net[i][now];
+                    if (score > maxScore)
+                    {
+                        maxScore = score;
+                        from[i][now] = pre;
+                    }
+                }
+                net[i][now] = maxScore;
+            }
+        }
+        // 反向回溯最佳路径
+        int maxTag = net[size - 1][idS] > net[size - 1][idE] ? idS : idE;
+        table.setLast(size - 1, id2tag[maxTag]);
+        maxTag = from[size - 1][maxTag];
         for (int i = size - 2; i > 0; --i)
         {
-            scoreList = computeScoreList(table, i);    // i位置命中的特征函数
-            bestScore = -1000.0;
-            for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
-            {
-                double curScore = computeScore(scoreList, j);
-                if (matrix != null)
-                {
-                    curScore += matrix[j][nextTag];
-                }
-                if (curScore > bestScore)
-                {
-                    bestScore = curScore;
-                    bestTag = j;
-                }
-            }
-            table.setLast(i, id2tag[bestTag]);
-            nextTag = bestTag;
+            table.setLast(i, id2tag[maxTag]);
+            maxTag = from[i][maxTag];
         }
-        // 0位置只可能是B或者S
-        {
-            bestScore = computeScore(scoreList, idB);
-            if (matrix != null)
-            {
-                bestScore += matrix[idB][nextTag];
-            }
-            bestTag = idB;
-            double curScore = computeScore(scoreList, idS);
-            if (matrix != null)
-            {
-                curScore += matrix[idS][nextTag];
-            }
-            if (curScore > bestScore)
-            {
-                bestTag = idS;
-            }
-        }
-        table.setLast(0, id2tag[bestTag]);
+        table.setLast(0, id2tag[maxTag]);
     }
 }

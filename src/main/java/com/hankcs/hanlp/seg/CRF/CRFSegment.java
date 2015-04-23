@@ -92,7 +92,7 @@ public class CRFSegment extends Segment
                         termList.add(new Term(new String(sentence, begin, offset - begin), null));
                     }
                     else
-                        termList.add(new Term(new String(sentence, begin, offset - begin + 1), null));
+                        termList.add(new Term(new String(sentence, begin, offset - begin + table.v[i][0].length()), null));
                 }
                 break;
                 default:
