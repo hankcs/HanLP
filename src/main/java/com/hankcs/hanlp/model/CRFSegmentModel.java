@@ -36,7 +36,7 @@ public class CRFSegmentModel extends CRFModel
     {
         logger.info("CRF分词模型正在加载 " + HanLP.Config.CRFSegmentModelPath);
         long start = System.currentTimeMillis();
-        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel(new DoubleArrayTrie<FeatureFunction>()));
+        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel(new BinTrie<FeatureFunction>()));
         if (crfModel == null)
         {
             logger.severe("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 失败，耗时 " + (System.currentTimeMillis() - start) + " ms");
@@ -50,6 +50,10 @@ public class CRFSegmentModel extends CRFModel
     private final static int idE = crfModel.getTagId("E");
     private final static int idS = crfModel.getTagId("S");
 
+    /**
+     * 以指定的trie树结构储存内部特征函数
+     * @param featureFunctionTrie
+     */
     public CRFSegmentModel(ITrie<FeatureFunction> featureFunctionTrie)
     {
         super(featureFunctionTrie);

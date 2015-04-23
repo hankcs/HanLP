@@ -48,6 +48,10 @@ public class CRFModel implements ICacheAble
         featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
     }
 
+    /**
+     * 以指定的trie树结构储存内部特征函数
+     * @param featureFunctionTrie
+     */
     public CRFModel(ITrie<FeatureFunction> featureFunctionTrie)
     {
         this.featureFunctionTrie = featureFunctionTrie;
@@ -280,38 +284,46 @@ public class CRFModel implements ICacheAble
     public boolean load(ByteArray byteArray)
     {
         if (byteArray == null) return false;
-        int size = byteArray.nextInt();
-        id2tag = new String[size];
-        tag2id = new HashMap<String, Integer>(size);
-        for (int i = 0; i < id2tag.length; i++)
+        try
         {
-            id2tag[i] = byteArray.nextUTF();
-            tag2id.put(id2tag[i], i);
-        }
-        FeatureFunction[] valueArray = new FeatureFunction[byteArray.nextInt()];
-        for (int i = 0; i < valueArray.length; i++)
-        {
-            valueArray[i] = new FeatureFunction();
-            valueArray[i].load(byteArray);
-        }
-        featureFunctionTrie.load(byteArray, valueArray);
-        size = byteArray.nextInt();
-        featureTemplateList = new ArrayList<FeatureTemplate>(size);
-        for (int i = 0; i < size; ++i)
-        {
-            FeatureTemplate featureTemplate = new FeatureTemplate();
-            featureTemplate.load(byteArray);
-            featureTemplateList.add(featureTemplate);
-        }
-        size = byteArray.nextInt();
-        if (size == 0) return true;
-        matrix = new double[size][size];
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
+            int size = byteArray.nextInt();
+            id2tag = new String[size];
+            tag2id = new HashMap<String, Integer>(size);
+            for (int i = 0; i < id2tag.length; i++)
             {
-                matrix[i][j] = byteArray.nextDouble();
+                id2tag[i] = byteArray.nextUTF();
+                tag2id.put(id2tag[i], i);
             }
+            FeatureFunction[] valueArray = new FeatureFunction[byteArray.nextInt()];
+            for (int i = 0; i < valueArray.length; i++)
+            {
+                valueArray[i] = new FeatureFunction();
+                valueArray[i].load(byteArray);
+            }
+            featureFunctionTrie.load(byteArray, valueArray);
+            size = byteArray.nextInt();
+            featureTemplateList = new ArrayList<FeatureTemplate>(size);
+            for (int i = 0; i < size; ++i)
+            {
+                FeatureTemplate featureTemplate = new FeatureTemplate();
+                featureTemplate.load(byteArray);
+                featureTemplateList.add(featureTemplate);
+            }
+            size = byteArray.nextInt();
+            if (size == 0) return true;
+            matrix = new double[size][size];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    matrix[i][j] = byteArray.nextDouble();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            logger.warning("缓存载入失败，可能是由于版本变迁带来的不兼容。具体异常是：\n" + TextUtility.exceptionToString(e));
+            return false;
         }
 
         return true;
