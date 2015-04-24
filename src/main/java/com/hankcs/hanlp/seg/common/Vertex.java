@@ -464,6 +464,24 @@ public class Vertex
         return new Vertex(Predefine.TAG_TIME, realWord, new CoreDictionary.Attribute(Nature.t, 1000));
     }
 
+    /**
+     * 生成线程安全的起始节点
+     * @return
+     */
+    public static Vertex newB()
+    {
+        return new Vertex(Predefine.TAG_BIGIN, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
+    }
+
+    /**
+     * 生成线程安全的终止节点
+     * @return
+     */
+    public static Vertex newE()
+    {
+        return new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
+    }
+
     @Override
     public String toString()
     {

@@ -66,8 +66,8 @@ public class WordNet
         {
             vertexes[i] = new LinkedList<Vertex>();
         }
-        vertexes[0].add(Vertex.B);
-        vertexes[vertexes.length - 1].add(Vertex.E);
+        vertexes[0].add(Vertex.newB());
+        vertexes[vertexes.length - 1].add(Vertex.newE());
         size = 2;
     }
 
