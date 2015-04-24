@@ -134,6 +134,34 @@ public abstract class Segment
     }
 
     /**
+     * 快速原子分词，希望用这个方法替换掉原来缓慢的方法
+     * @param charArray
+     * @param start
+     * @param end
+     * @return
+     */
+    private static List<AtomNode> quickAtomSegment(char[] charArray, int start, int end)
+    {
+        List<AtomNode> atomNodeList = new LinkedList<AtomNode>();
+        int offset = start;
+        int preType = CharType.get(charArray[offset]);
+        int curType;
+        while (++offset < end)
+        {
+            curType = CharType.get(charArray[offset]);
+            if (curType != preType)
+            {
+                atomNodeList.add(new AtomNode(new String(charArray, start, offset - start), preType));
+                start = offset;
+            }
+            preType = curType;
+        }
+        atomNodeList.add(new AtomNode(new String(charArray, start, offset - start), preType));
+
+        return atomNodeList;
+    }
+
+    /**
      * 分词
      *
      * @param text 待分词文本

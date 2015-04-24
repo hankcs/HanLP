@@ -15,11 +15,14 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.util.Precompiler;
 import com.hankcs.hanlp.model.crf.FeatureTemplate;
 import com.hankcs.hanlp.model.crf.CRFModel;
 import com.hankcs.hanlp.model.crf.Table;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
+import com.hankcs.hanlp.utility.Predefine;
 import junit.framework.TestCase;
 
 import java.io.*;
@@ -96,13 +99,19 @@ public class TestCRF extends TestCase
                               {
                                   try
                                   {
-                                      List<List<IWord>> sentenceList = document.getComplexSentenceList();
-                                      for (List<IWord> sentence : sentenceList)
+                                      List<List<Word>> sentenceList = document.getSimpleSentenceList();
+                                      for (List<Word> sentence : sentenceList)
                                       {
                                           for (IWord iWord : sentence)
                                           {
                                               String word = iWord.getValue();
-                                              if (word.length() == 1)
+                                              String tag = iWord.getLabel();
+                                              String compiledString = compile(tag);
+                                              if (compiledString != null)
+                                              {
+                                                  word = compiledString;
+                                              }
+                                              if (word.length() == 1 || compiledString != null)
                                               {
                                                   bw.write(word);
                                                   bw.write('\t');
@@ -149,5 +158,13 @@ public class TestCRF extends TestCase
         HanLP.Config.enableDebug();
         CRFSegment segment = new CRFSegment();
         System.out.println(segment.seg(text));
+    }
+
+    public static String compile(String tag)
+    {
+        if (tag.startsWith("m")) return "M";
+        else if (tag.equals("x")) return "W";
+        else if (tag.equals("nx")) return "W";
+        return null;
     }
 }

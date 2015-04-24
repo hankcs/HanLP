@@ -23,6 +23,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,8 +36,7 @@ public class ViterbiSegment extends HiddenMarkovModelSegment
     @Override
     protected List<Term> segSentence(char[] sentence)
     {
-        WordNet wordNetOptimum = new WordNet(sentence);
-        WordNet wordNetAll = new WordNet(wordNetOptimum.charArray);
+        WordNet wordNetAll = new WordNet(sentence);
         ////////////////生成词网////////////////////
         GenerateWordNet(null, wordNetAll);
         ///////////////生成词图////////////////////
@@ -52,6 +52,7 @@ public class ViterbiSegment extends HiddenMarkovModelSegment
         // 实体命名识别
         if (config.ner)
         {
+            WordNet wordNetOptimum = new WordNet(sentence);
             wordNetOptimum.addAll(vertexList);
             int preSize = wordNetOptimum.size();
             if (config.nameRecognize)

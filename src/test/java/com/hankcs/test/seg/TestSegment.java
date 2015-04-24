@@ -136,4 +136,18 @@ public class TestSegment extends TestCase
         System.out.println(HanLP.segment("３００ｇ＊２"));
         System.out.println(HanLP.segment("鱼300克*2/组"));
     }
+
+    public void testQuickAtomSegment() throws Exception
+    {
+        String text = "你好1234abc Good一二三四3.14";
+//        System.out.println(Segment.quickAtomSegment(text.toCharArray(), 0, text.length()));
+    }
+
+    public void testJP() throws Exception
+    {
+        String text = "北川景子参演了林诣彬导演的《速度与激情3》";
+        Segment segment = new DijkstraSegment().enableJapaneseNameRecognize(true);
+        HanLP.Config.enableDebug();
+        System.out.println(segment.seg(text));
+    }
 }
