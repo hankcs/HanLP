@@ -19,11 +19,13 @@ import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
 import com.hankcs.hanlp.seg.HiddenMarkovModelSegment;
 import com.hankcs.hanlp.seg.Viterbi.Path.Graph;
+import com.hankcs.hanlp.seg.Viterbi.Path.SimpleGraph;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -107,6 +109,32 @@ public class ViterbiSegment extends HiddenMarkovModelSegment
 
     private static List<Vertex> viterbi(WordNet wordNet)
     {
-        return new Graph(wordNet.getVertexes()).viterbi();
+        // 避免生成对象，优化速度
+        LinkedList<Vertex> nodes[] = wordNet.getVertexes();
+        LinkedList<Vertex> vertexList = new LinkedList<Vertex>();
+        for (Vertex node : nodes[1])
+        {
+            node.updateFrom(nodes[0].getFirst());
+        }
+        for (int i = 1; i < nodes.length - 1; ++i)
+        {
+            LinkedList<Vertex> nodeArray = nodes[i];
+            if (nodeArray == null) continue;
+            for (Vertex node : nodeArray)
+            {
+                if (node.from == null) continue;
+                for (Vertex to : nodes[i + node.realWord.length()])
+                {
+                    to.updateFrom(node);
+                }
+            }
+        }
+        Vertex from = nodes[nodes.length - 1].getFirst();
+        while (from != null)
+        {
+            vertexList.addFirst(from);
+            from = from.from;
+        }
+        return vertexList;
     }
 }

@@ -13,6 +13,7 @@ package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.Map;
@@ -57,6 +58,26 @@ public class Vertex
      * 末##末
      */
     public static Vertex E = new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
+
+    ////////在最短路相关计算中用到的几个变量，之所以放在这里，是为了避免再去生成对象，浪费时间////////
+    /**
+     * 到该节点的最短路径的前驱节点
+     */
+    public Vertex from;
+    /**
+     * 最短路径对应的权重
+     */
+    public double weight;
+
+    public void updateFrom(Vertex from)
+    {
+        double weight = from.weight + MathTools.calculateWeight(from, this);
+        if (this.from == null || this.weight > weight)
+        {
+            this.from = from;
+            this.weight = weight;
+        }
+    }
 
     /**
      * 最复杂的构造函数

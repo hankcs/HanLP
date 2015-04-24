@@ -140,7 +140,7 @@ public abstract class Segment
      * @param end
      * @return
      */
-    private static List<AtomNode> quickAtomSegment(char[] charArray, int start, int end)
+    protected static List<AtomNode> quickAtomSegment(char[] charArray, int start, int end)
     {
         List<AtomNode> atomNodeList = new LinkedList<AtomNode>();
         int offset = start;
