@@ -145,7 +145,7 @@ public class TestSegment extends TestCase
 
     public void testJP() throws Exception
     {
-        String text = "北川景子参演了林诣彬导演的《速度与激情3》";
+        String text = "王总和小丽结婚了";
         Segment segment = new DijkstraSegment().enableJapaneseNameRecognize(true);
         HanLP.Config.enableDebug();
         System.out.println(segment.seg(text));

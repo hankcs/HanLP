@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.recognition.nt;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.algoritm.ViterbiEx;
+import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NT;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -126,7 +126,6 @@ public class OrganizationRecognition
      */
     public static List<NT> viterbiExCompute(List<EnumItem<NT>> roleTagList)
     {
-        ViterbiEx<NT> viterbiEx = new ViterbiEx<NT>(roleTagList, OrganizationDictionary.transformMatrixDictionary);
-        return viterbiEx.computeTagList();
+        return Viterbi.computeEnumSimply(roleTagList, OrganizationDictionary.transformMatrixDictionary);
     }
 }

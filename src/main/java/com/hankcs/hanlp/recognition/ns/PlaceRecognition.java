@@ -13,10 +13,7 @@ package com.hankcs.hanlp.recognition.ns;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.Viterbi;
-import com.hankcs.hanlp.algoritm.ViterbiEx;
-import com.hankcs.hanlp.corpus.dictionary.PlaceSuffixDictionary;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
-import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.NS;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.ns.PlaceDictionary;
@@ -132,7 +129,6 @@ public class PlaceRecognition
      */
     public static List<NS> viterbiExCompute(List<EnumItem<NS>> roleTagList)
     {
-        ViterbiEx<NS> viterbiEx = new ViterbiEx<NS>(roleTagList, PlaceDictionary.transformMatrixDictionary);
-        return viterbiEx.computeTagList();
+        return Viterbi.computeEnumSimply(roleTagList, PlaceDictionary.transformMatrixDictionary);
     }
 }

@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.algoritm;
 
+import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
@@ -19,17 +20,19 @@ import java.util.*;
 
 /**
  * 维特比算法
+ *
  * @author hankcs
  */
 public class Viterbi
 {
     /**
      * 求解HMM模型，所有概率请提前取对数
-     * @param obs 观测序列
-     * @param states 隐状态
+     *
+     * @param obs     观测序列
+     * @param states  隐状态
      * @param start_p 初始概率（隐状态）
      * @param trans_p 转移概率（隐状态）
-     * @param emit_p 发射概率 （隐状态表现为显状态的概率）
+     * @param emit_p  发射概率 （隐状态表现为显状态的概率）
      * @return 最可能的序列
      */
     public static int[] compute(int[] obs, int[] states, double[] start_p, double[][] trans_p, double[][] emit_p)
@@ -92,10 +95,11 @@ public class Viterbi
 
     /**
      * 特化版的求解HMM模型
-     * @param vertexList 包含Vertex.B节点的路径
+     *
+     * @param vertexList                包含Vertex.B节点的路径
      * @param transformMatrixDictionary
      */
-    public static void compute(List<Vertex> vertexList, TransformMatrixDictionary<Nature>transformMatrixDictionary)
+    public static void compute(List<Vertex> vertexList, TransformMatrixDictionary<Nature> transformMatrixDictionary)
     {
         int length = vertexList.size() - 1;
         double[][] cost = new double[length][];
@@ -127,5 +131,138 @@ public class Viterbi
             pre = item.attribute.nature[perfect_j];
             item.confirmNature(pre);
         }
+    }
+
+    /**
+     * 标准版的Viterbi算法，查准率高，效率稍低
+     *
+     * @param roleTagList               观测序列
+     * @param transformMatrixDictionary 转移矩阵
+     * @param <E>                       EnumItem的具体类型
+     * @return 预测结果
+     */
+    public static <E extends Enum<E>> List<E> computeEnum(List<EnumItem<E>> roleTagList, TransformMatrixDictionary<E> transformMatrixDictionary)
+    {
+        int length = roleTagList.size() - 1;
+        List<E> tagList = new LinkedList<E>();
+        double[][] cost = new double[length][];
+        Iterator<EnumItem<E>> iterator = roleTagList.iterator();
+        EnumItem<E> start = iterator.next();
+        E pre = start.labelMap.entrySet().iterator().next().getKey();
+        // 第一个是确定的
+        tagList.add(pre);
+        double total = 0.0;
+        // 第二个也可以简单地算出来
+        Map.Entry<E, Integer>[] preEntryArray;
+        {
+            EnumItem<E> item = iterator.next();
+            cost[0] = new double[item.labelMap.size()];
+            Map.Entry<E, Integer>[] entryArray = new Map.Entry[item.labelMap.size()];
+            Set<Map.Entry<E, Integer>> entrySet = item.labelMap.entrySet();
+            Iterator<Map.Entry<E, Integer>> _i = entrySet.iterator();
+            for (int _ = 0; _ < entryArray.length; ++_)
+            {
+                entryArray[_] = _i.next();
+            }
+            for (int j = 0; j < cost[0].length; ++j)
+            {
+                E cur = entryArray[j].getKey();
+                cost[0][j] = total + transformMatrixDictionary.transititon_probability[pre.ordinal()][cur.ordinal()] - Math.log((item.getFrequency(cur) + 1e-8) / transformMatrixDictionary.getTotalFrequency(cur));
+            }
+            preEntryArray = entryArray;
+        }
+        // 第三个开始复杂一些
+        for (int i = 1; i < cost.length; ++i)
+        {
+            EnumItem<E> item = iterator.next();
+            cost[i] = new double[item.labelMap.size()];
+            Map.Entry<E, Integer>[] entryArray = new Map.Entry[item.labelMap.size()];
+            Set<Map.Entry<E, Integer>> entrySet = item.labelMap.entrySet();
+            Iterator<Map.Entry<E, Integer>> _i = entrySet.iterator();
+            for (int _ = 0; _ < entryArray.length; ++_)
+            {
+                entryArray[_] = _i.next();
+            }
+            int perfect_j = 0;
+            double perfect_cost_line = Double.MAX_VALUE;
+            for (int k = 0; k < cost[i].length; ++k)
+            {
+                cost[i][k] = Double.MAX_VALUE;
+                for (int j = 0; j < cost[i - 1].length; ++j)
+                {
+                    E cur = entryArray[k].getKey();
+                    double now = cost[i - 1][j] + transformMatrixDictionary.transititon_probability[preEntryArray[j].getKey().ordinal()][cur.ordinal()] - Math.log((item.getFrequency(cur) + 1e-8) / transformMatrixDictionary.getTotalFrequency(cur));
+                    if (now < cost[i][k])
+                    {
+                        cost[i][k] = now;
+                        if (now < perfect_cost_line)
+                        {
+                            perfect_cost_line = now;
+                            perfect_j = j;
+                        }
+                    }
+                }
+            }
+            pre = preEntryArray[perfect_j].getKey();
+            tagList.add(pre);
+            preEntryArray = entryArray;
+        }
+        return tagList;
+    }
+
+    /**
+     * 仅仅利用了转移矩阵的“维特比”算法
+     *
+     * @param roleTagList               观测序列
+     * @param transformMatrixDictionary 转移矩阵
+     * @param <E>                       EnumItem的具体类型
+     * @return 预测结果
+     */
+    public static <E extends Enum<E>> List<E> computeEnumSimply(List<EnumItem<E>> roleTagList, TransformMatrixDictionary<E> transformMatrixDictionary)
+    {
+        int length = roleTagList.size() - 1;
+        List<E> tagList = new LinkedList<E>();
+        double[][] cost = new double[length][];
+        Iterator<EnumItem<E>> iterator = roleTagList.iterator();
+        EnumItem<E> start = iterator.next();
+        E pre = start.labelMap.entrySet().iterator().next().getKey();
+        // 第一个是确定的
+        tagList.add(pre);
+        double total = 0.0;
+        for (int i = 0; i < cost.length; ++i)
+        {
+            EnumItem<E> item = iterator.next();
+            cost[i] = new double[item.labelMap.size()];
+            Map.Entry<E, Integer>[] entryArray = new Map.Entry[item.labelMap.size()];
+            Set<Map.Entry<E, Integer>> entrySet = item.labelMap.entrySet();
+            Iterator<Map.Entry<E, Integer>> _i = entrySet.iterator();
+            for (int _ = 0; _ < entryArray.length; ++_)
+            {
+                entryArray[_] = _i.next();
+            }
+            for (int j = 0; j < cost[i].length; ++j)
+            {
+                E cur = entryArray[j].getKey();
+                cost[i][j] = total + transformMatrixDictionary.transititon_probability[pre.ordinal()][cur.ordinal()] - Math.log((item.getFrequency(cur) + 1e-8) / transformMatrixDictionary.getTotalFrequency(cur));
+            }
+            double perfect_cost_line = Double.MAX_VALUE;
+            int perfect_j = 0;
+            for (int j = 0; j < cost[i].length; ++j)
+            {
+                if (perfect_cost_line > cost[i][j])
+                {
+                    perfect_cost_line = cost[i][j];
+                    perfect_j = j;
+                }
+            }
+            total = perfect_cost_line;
+            pre = entryArray[perfect_j].getKey();
+            tagList.add(pre);
+        }
+//        if (HanLP.Config.DEBUG)
+//        {
+//            System.out.printf("viterbi_weight:%f\n", total);
+//        }
+        return tagList;
     }
 }

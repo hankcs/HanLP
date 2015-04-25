@@ -36,7 +36,7 @@ public class CRFSegmentModel extends CRFModel
     {
         logger.info("CRF分词模型正在加载 " + HanLP.Config.CRFSegmentModelPath);
         long start = System.currentTimeMillis();
-        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel(new BinTrie<FeatureFunction>()));
+        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel(new DoubleArrayTrie<FeatureFunction>()));
         if (crfModel == null)
         {
             logger.severe("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 失败，耗时 " + (System.currentTimeMillis() - start) + " ms");
