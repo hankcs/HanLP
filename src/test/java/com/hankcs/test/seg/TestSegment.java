@@ -50,7 +50,7 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "自建协会"
+                "总趋势是心理学系会逐渐壮大"
         ));
     }
 
