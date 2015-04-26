@@ -98,11 +98,11 @@ public class WordNet
      */
     public void add(int line, Vertex vertex)
     {
-//        for (Vertex oldVertex : vertexes[line])
-//        {
-//            // 保证唯一性
-//            if (oldVertex.realWord.length() == vertex.realWord.length()) return;
-//        }
+        for (Vertex oldVertex : vertexes[line])
+        {
+            // 保证唯一性
+            if (oldVertex.realWord.length() == vertex.realWord.length()) return;
+        }
         vertexes[line].add(vertex);
         ++size;
     }
@@ -262,7 +262,6 @@ public class WordNet
         {
             String sWord = atomNode.sWord;//init the word
             Nature nature = Nature.n;
-            int dValue = 1;
             switch (atomNode.nPOS)
             {
                 case Predefine.CT_CHINESE:
@@ -286,7 +285,7 @@ public class WordNet
                 default:
                     break;
             }
-            add(line + offset, new Vertex(sWord, atomNode.sWord, new CoreDictionary.Attribute(nature, dValue)));
+            add(line + offset, new Vertex(sWord, atomNode.sWord, new CoreDictionary.Attribute(nature, 1)));
             offset += atomNode.sWord.length();
         }
     }

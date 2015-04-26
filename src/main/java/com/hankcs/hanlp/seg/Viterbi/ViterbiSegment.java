@@ -36,19 +36,19 @@ public class ViterbiSegment extends HiddenMarkovModelSegment
     @Override
     protected List<Term> segSentence(char[] sentence)
     {
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         WordNet wordNetAll = new WordNet(sentence);
         ////////////////生成词网////////////////////
         GenerateWordNet(null, wordNetAll);
         ///////////////生成词图////////////////////
-        System.out.println("构图：" + (System.currentTimeMillis() - start));
+//        System.out.println("构图：" + (System.currentTimeMillis() - start));
         if (HanLP.Config.DEBUG)
         {
             System.out.printf("粗分词网：\n%s\n", wordNetAll);
         }
-        start = System.currentTimeMillis();
+//        start = System.currentTimeMillis();
         List<Vertex> vertexList = viterbi(wordNetAll);
-        System.out.println("最短路：" + (System.currentTimeMillis() - start));
+//        System.out.println("最短路：" + (System.currentTimeMillis() - start));
         if (HanLP.Config.DEBUG)
         {
             System.out.println("粗分结果" + convert(vertexList, false));
