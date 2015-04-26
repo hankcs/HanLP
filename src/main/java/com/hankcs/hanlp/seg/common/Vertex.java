@@ -239,18 +239,6 @@ public class Vertex
     }
 
     /**
-     * 与另一个顶点合并
-     *
-     * @param other 另一个顶点
-     * @return 合并后的自己
-     */
-    public Vertex add(Vertex other)
-    {
-        this.realWord += other.realWord;
-        return this;
-    }
-
-    /**
      * 将属性的词性锁定为nature
      *
      * @param nature 词性
