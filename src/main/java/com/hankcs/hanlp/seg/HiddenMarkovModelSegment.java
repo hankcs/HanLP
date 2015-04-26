@@ -425,14 +425,24 @@ public abstract class HiddenMarkovModelSegment extends Segment
     {
         final char[] charArray = wordNetStorage.charArray;
 
+        final int[] offset = new int[]{0};
         CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHitFull<CoreDictionary.Attribute>()
         {
             @Override
             public void hit(int begin, int end, CoreDictionary.Attribute value, int index)
             {
+                if (begin > offset[0])
+                {
+                    wordNetStorage.add(offset[0] + 1, quickAtomSegment(charArray, offset[0], begin));
+                }
                 wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value, index));
+                offset[0] = end;
             }
         });
+        if (offset[0] < charArray.length)
+        {
+            wordNetStorage.add(offset[0] + 1, quickAtomSegment(charArray, offset[0], charArray.length));
+        }
         // 用户词典查询
         if (config.useCustomDictionary)
         {
@@ -444,21 +454,6 @@ public abstract class HiddenMarkovModelSegment extends Segment
                     wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
                 }
             });
-        }
-        LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
-        for (int i = 1; i < vertexes.length;)
-        {
-            if (vertexes[i].isEmpty())
-            {
-                int j = i + 1;
-                for (; j < vertexes.length - 1; ++j)
-                {
-                    if (!vertexes[j].isEmpty()) break;
-                }
-                wordNetStorage.add(i, AtomSegment(charArray, i - 1, j - 1));
-                i = j;
-            }
-            else i += vertexes[i].getLast().realWord.length();
         }
         return wordNetStorage;
     }

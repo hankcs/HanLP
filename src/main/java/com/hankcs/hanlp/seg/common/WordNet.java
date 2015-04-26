@@ -96,11 +96,11 @@ public class WordNet
      */
     public void add(int line, Vertex vertex)
     {
-        for (Vertex oldVertex : vertexes[line])
-        {
-            // 保证唯一性
-            if (oldVertex.realWord.length() == vertex.realWord.length()) return;
-        }
+//        for (Vertex oldVertex : vertexes[line])
+//        {
+//            // 保证唯一性
+//            if (oldVertex.realWord.length() == vertex.realWord.length()) return;
+//        }
         vertexes[line].add(vertex);
         ++size;
     }

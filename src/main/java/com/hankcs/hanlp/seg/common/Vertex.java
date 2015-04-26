@@ -96,7 +96,7 @@ public class Vertex
         if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.n, 1);   // 安全起见
         this.wordID = wordID;
         if (word == null) word = compileRealWord(realWord, attribute);
-        assert word.length() > 0 : "构造空白节点会导致死循环！";
+        assert realWord.length() > 0 : "构造空白节点会导致死循环！";
         this.word = word;
         this.realWord = realWord;
         this.attribute = attribute;

@@ -146,9 +146,8 @@ public class TestSegment extends TestCase
 
     public void testJP() throws Exception
     {
-        String text = "王总和小丽结婚了";
-        Segment segment = new ViterbiSegment().enableJapaneseNameRecognize(true);
-        HanLP.Config.enableDebug();
+        String text = "89你好abc";
+        Segment segment = new ViterbiSegment().enableCustomDictionary(false).enableAllNamedEntityRecognize(false);
         System.out.println(segment.seg(text));
     }
 
@@ -161,7 +160,7 @@ public class TestSegment extends TestCase
                 ;
         System.out.println(segment.seg(text));
         long start = System.currentTimeMillis();
-        int pressure = 10000;
+        int pressure = 1000000;
         for (int i = 0; i < pressure; ++i)
         {
             segment.seg(text);

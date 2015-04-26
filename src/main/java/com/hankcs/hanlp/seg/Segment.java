@@ -143,20 +143,20 @@ public abstract class Segment
     protected static List<AtomNode> quickAtomSegment(char[] charArray, int start, int end)
     {
         List<AtomNode> atomNodeList = new LinkedList<AtomNode>();
-        int offset = start;
-        int preType = CharType.get(charArray[offset]);
+        int offsetAtom = start;
+        int preType = CharType.get(charArray[offsetAtom]);
         int curType;
-        while (++offset < end)
+        while (++offsetAtom < end)
         {
-            curType = CharType.get(charArray[offset]);
+            curType = CharType.get(charArray[offsetAtom]);
             if (curType != preType)
             {
-                atomNodeList.add(new AtomNode(new String(charArray, start, offset - start), preType));
-                start = offset;
+                atomNodeList.add(new AtomNode(new String(charArray, start, offsetAtom - start), preType));
+                start = offsetAtom;
             }
             preType = curType;
         }
-        atomNodeList.add(new AtomNode(new String(charArray, start, offset - start), preType));
+        atomNodeList.add(new AtomNode(new String(charArray, start, offsetAtom - start), preType));
 
         return atomNodeList;
     }
