@@ -71,6 +71,23 @@ public class WordNet
         size = 2;
     }
 
+    public WordNet(char[] charArray, List<Vertex> vertexList)
+    {
+        this.charArray = charArray;
+        vertexes = new LinkedList[charArray.length + 2];
+        for (int i = 0; i < vertexes.length; ++i)
+        {
+            vertexes[i] = new LinkedList<Vertex>();
+        }
+        int i = 0;
+        for (Vertex vertex : vertexList)
+        {
+            vertexes[i].add(vertex);
+            ++size;
+            i += vertex.realWord.length();
+        }
+    }
+
     /**
      * 添加顶点
      *

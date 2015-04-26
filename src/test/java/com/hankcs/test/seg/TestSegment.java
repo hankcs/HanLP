@@ -23,6 +23,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
+import com.hankcs.hanlp.tokenizer.SpeedTokenizer;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
@@ -146,8 +147,26 @@ public class TestSegment extends TestCase
     public void testJP() throws Exception
     {
         String text = "王总和小丽结婚了";
-        Segment segment = new DijkstraSegment().enableJapaneseNameRecognize(true);
+        Segment segment = new ViterbiSegment().enableJapaneseNameRecognize(true);
         HanLP.Config.enableDebug();
         System.out.println(segment.seg(text));
+    }
+
+    public void testSpeedOfSecondViterbi() throws Exception
+    {
+        String text = "王总和小丽结婚了";
+        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(false)
+                .enableNameRecognize(true)
+                .enableCustomDictionary(false)
+                ;
+        System.out.println(segment.seg(text));
+        long start = System.currentTimeMillis();
+        int pressure = 10000;
+        for (int i = 0; i < pressure; ++i)
+        {
+            segment.seg(text);
+        }
+        double costTime = (System.currentTimeMillis() - start) / (double)1000;
+        System.out.printf("分词速度：%.2f字每秒", text.length() * pressure / costTime);
     }
 }
