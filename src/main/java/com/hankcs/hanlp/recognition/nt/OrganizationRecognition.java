@@ -126,6 +126,6 @@ public class OrganizationRecognition
      */
     public static List<NT> viterbiExCompute(List<EnumItem<NT>> roleTagList)
     {
-        return Viterbi.computeEnumSimply(roleTagList, OrganizationDictionary.transformMatrixDictionary);
+        return Viterbi.computeEnum(roleTagList, OrganizationDictionary.transformMatrixDictionary);
     }
 }
