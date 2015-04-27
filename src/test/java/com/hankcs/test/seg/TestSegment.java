@@ -47,10 +47,10 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-        HanLP.Config.enableDebug();
+        HanLP.Config.enableDebug(true);
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "总趋势是心理学系会逐渐壮大"
+                "分钟救回脑梗病人"
         ));
     }
 
@@ -146,7 +146,7 @@ public class TestSegment extends TestCase
 
     public void testJP() throws Exception
     {
-        String text = "89你好abc";
+        String text = "明天8.9你好abc对了";
         Segment segment = new ViterbiSegment().enableCustomDictionary(false).enableAllNamedEntityRecognize(false);
         System.out.println(segment.seg(text));
     }

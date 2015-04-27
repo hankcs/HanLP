@@ -76,6 +76,8 @@ public class TextUtility
             {
                 if (" *\"!,.?()[]{}+=/\\;:|".indexOf((char) b1) != -1)
                     return CT_DELIMITER;
+                if ("0123456789".indexOf((char)b1) != -1)
+                    return CT_NUM;
                 return CT_SINGLE;
             }
             else if (ub1 == 162)

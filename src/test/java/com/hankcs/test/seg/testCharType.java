@@ -100,4 +100,15 @@ public class testCharType extends TestCase
             assertEquals(TextUtility.charType((char) i) , (int)CharType.get((char) i));
         }
     }
+
+    public void testNumber() throws Exception
+    {
+        for (int i = 0; i <= Character.MAX_VALUE; ++i)
+        {
+            if (CharType.get((char) i) == CharType.CT_NUM)
+                System.out.println((char)i);
+        }
+        assertEquals(CharType.CT_NUM, CharType.get('1'));
+
+    }
 }

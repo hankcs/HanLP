@@ -24,7 +24,8 @@ import java.util.List;
 /**
  * 分词器（分词服务）<br>
  * 是所有分词器的基类（Abstract）<br>
- *     分词器的分词方法是线程安全的，但配置方法则不保证
+ * 分词器的分词方法是线程安全的，但配置方法则不保证
+ *
  * @author hankcs
  */
 public abstract class Segment
@@ -44,9 +45,10 @@ public abstract class Segment
 
     /**
      * 原子分词
+     *
      * @param charArray
-     * @param start 从start开始（包含）
-     * @param end 到end结束（不包含end）
+     * @param start     从start开始（包含）
+     * @param end       到end结束（不包含end）
      * @return 一个列表，代表从start到from的所有字构成的原子节点
      */
     protected static List<AtomNode> AtomSegment(char[] charArray, int start, int end)
@@ -64,9 +66,9 @@ public abstract class Segment
             c = charArray[i + start];
             charTypeArray[i] = CharType.get(c);
 
-            if (c == '.' && i  + start < (charArray.length - 1) && CharType.get(charArray[i + start + 1]) == CharType.CT_NUM)
+            if (c == '.' && i + start < (charArray.length - 1) && CharType.get(charArray[i + start + 1]) == CharType.CT_NUM)
                 charTypeArray[i] = CharType.CT_NUM;
-            else if (c == '.' && i  + start < (charArray.length - 1) && charArray[i  + start + 1] >= '0' && charArray[i  + start + 1] <= '9')
+            else if (c == '.' && i + start < (charArray.length - 1) && charArray[i + start + 1] >= '0' && charArray[i + start + 1] <= '9')
                 charTypeArray[i] = CharType.CT_SINGLE;
             else if (charTypeArray[i] == CharType.CT_LETTER)
                 charTypeArray[i] = CharType.CT_SINGLE;
@@ -121,6 +123,7 @@ public abstract class Segment
 
     /**
      * 简易原子分词，将所有字放到一起作为一个词
+     *
      * @param charArray
      * @param start
      * @param end
@@ -135,6 +138,7 @@ public abstract class Segment
 
     /**
      * 快速原子分词，希望用这个方法替换掉原来缓慢的方法
+     *
      * @param charArray
      * @param start
      * @param end
@@ -151,12 +155,22 @@ public abstract class Segment
             curType = CharType.get(charArray[offsetAtom]);
             if (curType != preType)
             {
+                // 浮点数识别
+                if (charArray[offsetAtom] == '.' && preType == CharType.CT_NUM)
+                {
+                    while (++offsetAtom < end)
+                    {
+                        curType = CharType.get(charArray[offsetAtom]);
+                        if (curType != CharType.CT_NUM) break;
+                    }
+                }
                 atomNodeList.add(new AtomNode(new String(charArray, start, offsetAtom - start), preType));
                 start = offsetAtom;
             }
             preType = curType;
         }
-        atomNodeList.add(new AtomNode(new String(charArray, start, offsetAtom - start), preType));
+        if (offsetAtom == end)
+            atomNodeList.add(new AtomNode(new String(charArray, start, offsetAtom - start), preType));
 
         return atomNodeList;
     }
@@ -223,6 +237,7 @@ public abstract class Segment
 
     /**
      * 开启词性标注
+     *
      * @param enable
      * @return
      */
@@ -234,6 +249,7 @@ public abstract class Segment
 
     /**
      * 开启人名识别
+     *
      * @param enable
      * @return
      */
@@ -246,6 +262,7 @@ public abstract class Segment
 
     /**
      * 开启地名识别
+     *
      * @param enable
      * @return
      */
@@ -258,6 +275,7 @@ public abstract class Segment
 
     /**
      * 开启机构名识别
+     *
      * @param enable
      * @return
      */
@@ -305,6 +323,7 @@ public abstract class Segment
 
     /**
      * 是否启用偏移量计算（开启后Term.offset才会被计算）
+     *
      * @param enable
      * @return
      */
@@ -316,6 +335,7 @@ public abstract class Segment
 
     /**
      * 是否启用所有的命名实体识别
+     *
      * @param enable
      * @return
      */
