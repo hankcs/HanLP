@@ -15,6 +15,8 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
@@ -22,7 +24,7 @@ import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.*;
 
-import static com.hankcs.hanlp.corpus.tag.NR.B;
+import static com.hankcs.hanlp.corpus.tag.NR.*;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 import static com.hankcs.hanlp.dictionary.nr.NRConstant.*;
 
@@ -45,6 +47,8 @@ public class PersonDictionary
      * AC算法用到的Trie树
      */
     public static AhoCorasickDoubleArrayTrie<NRPattern> trie;
+
+    public static final CoreDictionary.Attribute ATTRIBUTE = new CoreDictionary.Attribute(Nature.nr, 1);
 
     static
     {
@@ -169,6 +173,12 @@ public class PersonDictionary
                 {
                     case BCD:
                         if (name.charAt(0) == name.charAt(2)) return; // 姓和最后一个名不可能相等的
+//                        String cd = name.substring(1);
+//                        if (CoreDictionary.contains(cd))
+//                        {
+//                            EnumItem<NR> item = PersonDictionary.dictionary.get(cd);
+//                            if (item == null || !item.containsLabel(Z)) return; // 三字名字但是后两个字不在词典中，有很大可能性是误命中
+//                        }
                         break;
                 }
                 if (isBadCase(name)) return;
@@ -196,6 +206,5 @@ public class PersonDictionary
         EnumItem<NR> nrEnumItem = dictionary.get(name);
         if (nrEnumItem == null) return false;
         return nrEnumItem.containsLabel(NR.A);
-
     }
 }

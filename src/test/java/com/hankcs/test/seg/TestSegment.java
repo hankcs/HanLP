@@ -48,11 +48,12 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-        HanLP.Config.enableDebug(true);
+//        HanLP.Config.enableDebug(true);
+//        HanLP.Config.ShowTermNature = true;
         Segment segment = new DijkstraSegment();
-        CustomDictionary.insert("救回", "v 1000");
+        CustomDictionary.insert("同天", "v 1000");
         System.out.println(segment.seg(
-                "分钟救回脑梗病人"
+                "尽量都守在位置上，并另外搬来舒服的椅子坐在队伍外面，眼睛盯着自己那张用来排队的椅子。"
         ));
     }
 
