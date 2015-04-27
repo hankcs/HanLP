@@ -131,7 +131,8 @@ public class CustomDictionary
 
     /**
      * 加载用户词典（追加）
-     * @param path 词典路径
+     *
+     * @param path          词典路径
      * @param defaultNature 默认词性
      * @return
      */
@@ -179,7 +180,8 @@ public class CustomDictionary
 
     /**
      * 往自定义词典中插入一个新词（非覆盖模式）
-     * @param word 新词 如“裸婚”
+     *
+     * @param word                新词 如“裸婚”
      * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”
      * @return 是否插入成功（失败的原因可能是不覆盖、natureWithFrequency有问题等，后者可以通过调试模式了解原因）
      */
@@ -191,6 +193,7 @@ public class CustomDictionary
 
     /**
      * 增加新词
+     *
      * @param word
      * @return
      */
@@ -202,8 +205,9 @@ public class CustomDictionary
 
     /**
      * 往自定义词典中插入一个新词（覆盖模式）
-     * @param word 新词 如“裸婚”
-     * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”
+     *
+     * @param word                新词 如“裸婚”
+     * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”。
      * @return 是否插入成功（失败的原因可能是natureWithFrequency问题，可以通过调试模式了解原因）
      */
     public static boolean insert(String word, String natureWithFrequency)
@@ -211,6 +215,7 @@ public class CustomDictionary
         if (word == null) return false;
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
+        if (act.set(word, att)) return true;
         if (trie == null) trie = new BinTrie<CoreDictionary.Attribute>();
         trie.put(word, att);
         return true;
@@ -218,6 +223,7 @@ public class CustomDictionary
 
     /**
      * 以覆盖模式增加新词
+     *
      * @param word
      * @return
      */
@@ -276,6 +282,7 @@ public class CustomDictionary
 
     /**
      * 删除单词
+     *
      * @param key
      */
     public static void remove(String key)
@@ -379,8 +386,9 @@ public class CustomDictionary
 
     /**
      * 获取词典对应的trie树
-     * @deprecated 谨慎操作，有可能废弃此接口
+     *
      * @return
+     * @deprecated 谨慎操作，有可能废弃此接口
      */
     public static BinTrie<CoreDictionary.Attribute> getTrie()
     {

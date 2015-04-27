@@ -13,6 +13,7 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.Other.AhoCorasickSegment;
@@ -49,6 +50,7 @@ public class TestSegment extends TestCase
     {
         HanLP.Config.enableDebug(true);
         Segment segment = new DijkstraSegment();
+        CustomDictionary.insert("救回", "v 1000");
         System.out.println(segment.seg(
                 "分钟救回脑梗病人"
         ));
