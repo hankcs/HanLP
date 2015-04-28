@@ -156,32 +156,33 @@ public class CRFModel implements ICacheAble
     public void tag(Table table)
     {
         int size = table.size();
-        if (size == 1)
-        {
-            table.setLast(0, "S");
-            return;
-        }
         double bestScore = 0;
         int bestTag = 0;
         int tagSize = id2tag.length;
         LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数
-        // 0位置只可能是B或者S
+        for (int i = 0; i < tagSize; ++i)   // -1位置的标签遍历
         {
-            bestScore = computeScore(scoreList, 0);
-            bestTag = 0;
-            double curScore = computeScore(scoreList, 3);
-            if (curScore > bestScore)
+            for (int j = 0; j < tagSize; ++j)   // 0位置的标签遍历
             {
-                bestTag = 3;
+                double curScore = computeScore(scoreList, j);
+                if (matrix != null)
+                {
+                    curScore += matrix[i][j];
+                }
+                if (curScore > bestScore)
+                {
+                    bestScore = curScore;
+                    bestTag = j;
+                }
             }
         }
         table.setLast(0, id2tag[bestTag]);
         int preTag = bestTag;
         // 0位置打分完毕，接下来打剩下的
-        for (int i = 1; i < size - 1; ++i)
+        for (int i = 1; i < size; ++i)
         {
             scoreList = computeScoreList(table, i);    // i位置命中的特征函数
-            bestScore = Double.MIN_VALUE;
+            bestScore = -1000.0;
             for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
             {
                 double curScore = computeScore(scoreList, j);
@@ -198,8 +199,6 @@ public class CRFModel implements ICacheAble
             table.setLast(i, id2tag[bestTag]);
             preTag = bestTag;
         }
-        // size - 1位置只可能是E或者S，其实从最终合并逻辑上看，S就足够
-        table.setLast(size - 1, "S");
     }
 
     public LinkedList<double[]> computeScoreList(Table table, int current)
@@ -315,5 +314,15 @@ public class CRFModel implements ICacheAble
     public static CRFModel loadTxt(String path)
     {
         return loadTxt(path, new CRFModel());
+    }
+
+    /**
+     * 获取某个tag的ID
+     * @param tag
+     * @return
+     */
+    public Integer getTagId(String tag)
+    {
+        return tag2id.get(tag);
     }
 }
