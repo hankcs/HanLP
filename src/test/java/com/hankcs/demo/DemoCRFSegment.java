@@ -20,14 +20,14 @@ import java.util.List;
 
 /**
  * CRF分词(在最新训练的未压缩100MB模型下，能够取得较好的效果，可以投入生产环境)
+ *
  * @author hankcs
  */
 public class DemoCRFSegment
 {
     public static void main(String[] args)
     {
-//        HanLP.Config.enableDebug();
-        HanLP.Config.ShowTermNature = false;
+        HanLP.Config.ShowTermNature = false;    // 关闭词性显示
         Segment segment = new CRFSegment();
         segment.enablePartOfSpeechTagging(true);
         String[] sentenceArray = new String[]
