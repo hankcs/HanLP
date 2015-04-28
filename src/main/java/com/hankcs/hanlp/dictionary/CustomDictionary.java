@@ -144,6 +144,7 @@ public class CustomDictionary
             while ((line = br.readLine()) != null)
             {
                 String[] param = line.split("\\s");
+                if (param[0].length() == 0) continue;   // 排除空行
                 if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
                 {
                     continue;
