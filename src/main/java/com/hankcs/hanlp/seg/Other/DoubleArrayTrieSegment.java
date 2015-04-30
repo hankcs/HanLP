@@ -29,7 +29,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class AhoCorasickSegment extends Segment
+public class DoubleArrayTrieSegment extends Segment
 {
     @Override
     protected List<Term> segSentence(char[] sentence)
@@ -110,7 +110,7 @@ public class AhoCorasickSegment extends Segment
         return termList;
     }
 
-    public AhoCorasickSegment()
+    public DoubleArrayTrieSegment()
     {
         super();
         config.useCustomDictionary = false;

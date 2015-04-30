@@ -13,10 +13,8 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
-import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharType;
-import com.hankcs.hanlp.seg.NShort.NShortSegment;
-import com.hankcs.hanlp.seg.Other.AhoCorasickSegment;
+import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
@@ -24,9 +22,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
-import com.hankcs.hanlp.tokenizer.SpeedTokenizer;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
-import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
@@ -122,7 +118,7 @@ public class TestSegment extends TestCase
 
     public void testACSegment() throws Exception
     {
-        Segment segment = new AhoCorasickSegment();
+        Segment segment = new DoubleArrayTrieSegment();
         segment.enablePartOfSpeechTagging(true);
         System.out.println(segment.seg("江西鄱阳湖干枯，中国最大淡水湖变成大草原"));
     }
