@@ -67,8 +67,8 @@ public class TestSegment extends TestCase
     public void testShortest() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(false);
-        System.out.println(segment.seg("区长庄木弟新年致辞"));
+        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(true);
+        System.out.println(segment.seg("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
     }
 
     public void testIndexSeg() throws Exception
