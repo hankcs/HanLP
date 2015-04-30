@@ -1017,12 +1017,11 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         return p;
     }
 
+    /**
+     * 一个搜索工具
+     */
     public class Searcher
     {
-        /**
-         * charArray的起始位置
-         */
-        private int offset;
         /**
          * key的起点
          */
@@ -1051,13 +1050,16 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
          * 上一个字符的下标
          */
         private int i;
+        /**
+         * charArray的长度，效率起见，开个变量
+         */
         private int arrayLength;
 
         public Searcher(int offset, char[] charArray)
         {
-            this.offset = offset;
             this.charArray = charArray;
             this.i = offset;
+            this.begin = offset;
             last = base[0];
             arrayLength = charArray.length;
         }
@@ -1087,6 +1089,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
                 {
                     length = i - begin + 1;
                     index = -n - 1;
+                    value = v[index];
                     last = b;
                     ++i;
                     return true;
@@ -1127,6 +1130,37 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         p = b;
         return p;
+    }
+
+    /**
+     * 更新某个键对应的值
+     *
+     * @param key   键
+     * @param value 值
+     * @return 是否成功（失败的原因是没有这个键）
+     */
+    public boolean set(String key, V value)
+    {
+        int index = exactMatchSearch(key);
+        if (index >= 0)
+        {
+            v[index] = value;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 从值数组中提取下标为index的值<br>
+     * 注意为了效率，此处不进行参数校验
+     *
+     * @param index 下标
+     * @return 值
+     */
+    public V get(int index)
+    {
+        return v[index];
     }
 
 

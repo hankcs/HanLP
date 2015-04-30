@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg.Other;
 
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
@@ -37,22 +38,19 @@ public class AhoCorasickSegment extends Segment
         final int[] wordNet = new int[charArray.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
-        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(sentence, 0);
+        while (searcher.next())
         {
-            @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute value)
+            int length = searcher.length;
+            if (length > wordNet[searcher.begin])
             {
-                int length = end - begin;
-                if (length > wordNet[begin])
+                wordNet[searcher.begin] = length;
+                if (config.speechTagging)
                 {
-                    wordNet[begin] = length;
-                    if (config.speechTagging)
-                    {
-                        natureArray[begin] = value.nature[0];
-                    }
+                    natureArray[searcher.begin] = searcher.value.nature[0];
                 }
             }
-        });
+        }
         if (config.useCustomDictionary)
         {
             CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
@@ -84,7 +82,7 @@ public class AhoCorasickSegment extends Segment
                     {
                         if (natureArray[j] != null) break;
                     }
-                    List<AtomNode> atomNodeList = AtomSegment(charArray, i, j);
+                    List<AtomNode> atomNodeList = quickAtomSegment(charArray, i, j);
                     for (AtomNode atomNode : atomNodeList)
                     {
                         if (atomNode.sWord.length() >= wordNet[i])

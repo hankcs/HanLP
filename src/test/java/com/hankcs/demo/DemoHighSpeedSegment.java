@@ -14,7 +14,7 @@ package com.hankcs.demo;
 import com.hankcs.hanlp.tokenizer.SpeedTokenizer;
 
 /**
- * 演示极速分词，基于AhoCorasickDoubleArrayTrie实现的词典分词，适用于“高吞吐量”“精度一般”的场合
+ * 演示极速分词，基于DoubleArrayTrie实现的词典正向最长分词，适用于“高吞吐量”“精度一般”的场合
  * @author hankcs
  */
 public class DemoHighSpeedSegment

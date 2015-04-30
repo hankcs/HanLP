@@ -13,6 +13,7 @@ package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.*;
 import com.hankcs.hanlp.dictionary.other.CharType;
@@ -425,23 +426,20 @@ public abstract class HiddenMarkovModelSegment extends Segment
     {
         final char[] charArray = wordNetStorage.charArray;
 
-        final int[] offset = new int[]{0};
-        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHitFull<CoreDictionary.Attribute>()
+        int offset = 0;
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(charArray, 0);
+        while (searcher.next())
         {
-            @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute value, int index)
+            if (searcher.begin > offset)
             {
-                if (begin > offset[0])
-                {
-                    wordNetStorage.add(offset[0] + 1, quickAtomSegment(charArray, offset[0], begin));
-                }
-                wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value, index));
-                offset[0] = end;
+                wordNetStorage.add(offset + 1, quickAtomSegment(charArray, offset, searcher.begin));
             }
-        });
-        if (offset[0] < charArray.length)
+            wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value, searcher.index));
+            offset = searcher.begin + searcher.length;
+        }
+        if (offset < charArray.length)
         {
-            wordNetStorage.add(offset[0] + 1, quickAtomSegment(charArray, offset[0], charArray.length));
+            wordNetStorage.add(offset + 1, quickAtomSegment(charArray, offset, charArray.length));
         }
         // 用户词典查询
         if (config.useCustomDictionary)

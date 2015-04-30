@@ -182,16 +182,16 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
         System.out.printf("%d ms\n", System.currentTimeMillis() - timeMillis);
     }
 
-    public void testCoreDictionaryACDAT() throws Exception
-    {
-        final String text = "商品和服务";
-        CoreDictionary.trie.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
-        {
-            @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute value)
-            {
-                System.out.printf("[%d:%d]=%s\n", begin, end, text.substring(begin, end));
-            }
-        });
-    }
+//    public void testCoreDictionaryACDAT() throws Exception
+//    {
+//        final String text = "商品和服务";
+//        CoreDictionary.trie.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+//        {
+//            @Override
+//            public void hit(int begin, int end, CoreDictionary.Attribute value)
+//            {
+//                System.out.printf("[%d:%d]=%s\n", begin, end, text.substring(begin, end));
+//            }
+//        });
+//    }
 }

@@ -14,6 +14,7 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
@@ -36,7 +37,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class CustomDictionary
 {
     static BinTrie<CoreDictionary.Attribute> trie;
-    static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> act = new AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute>();
+    static DoubleArrayTrie<CoreDictionary.Attribute> act = new DoubleArrayTrie<CoreDictionary.Attribute>();
     /**
      * 第一个是主词典，其他是副词典
      */
@@ -398,7 +399,6 @@ public class CustomDictionary
 
     public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
     {
-        act.parseText(text, processor);
         if (trie != null)
         {
             BaseSearcher searcher = CustomDictionary.getSearcher(text);
@@ -409,6 +409,11 @@ public class CustomDictionary
                 offset = searcher.getOffset();
                 processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
             }
+        }
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = act.getSearcher(text, 0);
+        while (searcher.next())
+        {
+            processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
         }
     }
 }
