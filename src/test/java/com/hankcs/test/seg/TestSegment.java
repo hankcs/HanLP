@@ -54,7 +54,7 @@ public class TestSegment extends TestCase
 //        segment.enableCustomDictionary(false);
 //        CustomDictionary.insert("同天", "v 1000");
         System.out.println(segment.seg(
-                "少女清纯可人"
+                "很多华裔美国"
         ));
     }
 

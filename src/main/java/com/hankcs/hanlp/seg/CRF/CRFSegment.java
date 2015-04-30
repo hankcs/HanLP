@@ -267,6 +267,13 @@ public class CRFSegment extends Segment
         return resizeArray(table, size);
     }
 
+    /**
+     * 数组减肥，原子分词可能会导致表格比原来的短
+     *
+     * @param array
+     * @param size
+     * @return
+     */
     public static String[][] resizeArray(String[][] array, int size)
     {
         String[][] nArray = new String[size][];

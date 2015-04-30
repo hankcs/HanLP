@@ -29,7 +29,6 @@ public class DemoCRFSegment
     {
         HanLP.Config.ShowTermNature = false;    // 关闭词性显示
         Segment segment = new CRFSegment();
-        segment.enablePartOfSpeechTagging(true);
         String[] sentenceArray = new String[]
                 {
                         "HanLP是由一系列模型与算法组成的Java工具包，目标是普及自然语言处理在生产环境中的应用。",
@@ -39,6 +38,7 @@ public class DemoCRFSegment
                         "《夜晚的骰子》通过描述浅草的舞女在暗夜中扔骰子的情景,寄托了作者对庶民生活区的情感",    // 非新闻语料
                         "这个像是真的[委屈]前面那个打扮太江户了，一点不上品...@hankcs",                       // 微博
                         "鼎泰丰的小笼一点味道也没有...每样都淡淡的...淡淡的，哪有食堂2A的好次",
+                        "克里斯蒂娜·克罗尔说：不，我不是虎妈。我全家都热爱音乐，我也鼓励他们这么做。",
                         "今日APPS：Sago Mini Toolbox培养孩子动手能力",
                         "财政部副部长王保安调任国家统计局党组书记",
                         "2.34米男子娶1.53米女粉丝 称夫妻生活没问题",

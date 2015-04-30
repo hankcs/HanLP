@@ -1,12 +1,12 @@
 /**
  * DoubleArrayTrie: Java implementation of Darts (Double-ARray Trie System)
- *
+ * <p/>
  * <p>
  * Copyright(C) 2001-2007 Taku Kudo &lt;taku@chasen.org&gt;<br />
  * Copyright(C) 2009 MURAWAKI Yugo &lt;murawaki@nlp.kuee.kyoto-u.ac.jp&gt;
  * Copyright(C) 2012 KOMIYA Atsushi &lt;komiya.atsushi@gmail.com&gt;
  * </p>
- *
+ * <p/>
  * <p>
  * The contents of this file may be used under the terms of either of the GNU
  * Lesser General Public License Version 2.1 or later (the "LGPL"), or the BSD
@@ -757,26 +757,17 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         for (int i = pos; i < len; i++)
         {
+            p = b + (int) (keyChars[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
+            if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
+                b = base[p];
+            else
+                return result;
             p = b;
             n = base[p];
             if (b == check[p] && n < 0)         // base[p] == check[p] && base[p] < 0 查到一个词
             {
                 result.add(-n - 1);
             }
-
-            p = b + (int) (keyChars[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
-            if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
-                b = base[p];
-            else
-                return result;
-        }
-
-        p = b;
-        n = base[p];
-
-        if (b == check[p] && n < 0)
-        {
-            result.add(-n - 1);
         }
 
         return result;
@@ -1026,8 +1017,99 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         return p;
     }
 
+    public class Searcher
+    {
+        /**
+         * charArray的起始位置
+         */
+        private int offset;
+        /**
+         * key的起点
+         */
+        public int begin;
+        /**
+         * key的长度
+         */
+        public int length;
+        /**
+         * key的字典序坐标
+         */
+        public int index;
+        /**
+         * key对应的value
+         */
+        public V value;
+        /**
+         * 传入的字符数组
+         */
+        private char[] charArray;
+        /**
+         * 上一个node位置
+         */
+        private int last;
+        /**
+         * 上一个字符的下标
+         */
+        private int i;
+        private int arrayLength;
+
+        public Searcher(int offset, char[] charArray)
+        {
+            this.offset = offset;
+            this.charArray = charArray;
+            this.i = offset;
+            last = base[0];
+            arrayLength = charArray.length;
+        }
+
+        public boolean next()
+        {
+            if (i >= arrayLength) return false;
+            int b = last;
+            int n;
+            int p;
+
+            for (; i < arrayLength; i++)
+            {
+                p = b + (int) (charArray[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
+                if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
+                    b = base[p];
+                else
+                {
+                    i = begin;
+                    ++begin;
+                    b = base[0];
+                    continue;
+                }
+                p = b;
+                n = base[p];
+                if (b == check[p] && n < 0)         // base[p] == check[p] && base[p] < 0 查到一个词
+                {
+                    length = i - begin + 1;
+                    index = -n - 1;
+                    last = b;
+                    ++i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public Searcher getSearcher(String text, int offset)
+    {
+        return new Searcher(offset, text.toCharArray());
+    }
+
+    public Searcher getSearcher(char[] text, int offset)
+    {
+        return new Searcher(offset, text);
+    }
+
     /**
      * 转移状态
+     *
      * @param current
      * @param c
      * @return
