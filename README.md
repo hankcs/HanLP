@@ -79,6 +79,8 @@ HanLP下载地址：http://hanlp.linrunsoft.com/services.html
 
 #### 任选一个数据包
 
+**GitHub代码库中已经包含了data.standard.zip中的词典，直接编译运行自动缓存即可**
+
 | 数据包        | 功能   |  体积（MB）  |
 | --------   | -----:  | :----:  |
 | [data.full.zip](http://hanlp.linrunsoft.com/services.html)     | 全部 |   255     |
