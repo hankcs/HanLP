@@ -14,7 +14,6 @@ package com.hankcs.hanlp.tokenizer;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.dictionary.stopword.Filter;
-import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
@@ -23,6 +22,7 @@ import java.util.ListIterator;
 
 /**
  * 实词分词器，自动移除停用词
+ *
  * @author hankcs
  */
 public class NotionalTokenizer
@@ -31,6 +31,7 @@ public class NotionalTokenizer
      * 预置分词器
      */
     static final Segment SEGMENT = HanLP.newSegment();
+
     public static List<Term> segment(String text)
     {
         return segment(text.toCharArray());
@@ -38,6 +39,7 @@ public class NotionalTokenizer
 
     /**
      * 分词
+     *
      * @param text 文本
      * @return 分词结果
      */
@@ -58,6 +60,7 @@ public class NotionalTokenizer
 
     /**
      * 切分为句子形式
+     *
      * @param text
      * @return
      */
@@ -81,11 +84,12 @@ public class NotionalTokenizer
 
     /**
      * 切分为句子形式
+     *
      * @param text
      * @param filterArrayChain 自定义过滤器链
      * @return
      */
-    public static List<List<Term>> seg2sentence(String text, Filter filterArrayChain[])
+    public static List<List<Term>> seg2sentence(String text, Filter... filterArrayChain)
     {
         List<List<Term>> sentenceList = SEGMENT.seg2sentence(text);
         for (List<Term> sentence : sentenceList)
