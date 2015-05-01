@@ -193,6 +193,7 @@ public class IOUtil
 
     /**
      * 将资源中的一个资源读入byte数组
+     *
      * @param path
      * @return
      * @throws IOException
@@ -201,9 +202,29 @@ public class IOUtil
     {
         InputStream is = IOUtil.class.getResourceAsStream("/" + path);
         byte[] targetArray = new byte[is.available()];
-        is.read(targetArray);
+        int len;
+        int off = 0;
+        while ((len = is.read(targetArray, off, targetArray.length - off)) != -1 && off < targetArray.length)
+        {
+            off += len;
+        }
         is.close();
         return targetArray;
+    }
+
+    public static byte[] getBytes(InputStream is) throws IOException
+    {
+
+        int len;
+        int size = 1024;
+        byte[] buf;
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        buf = new byte[size];
+        while ((len = is.read(buf, 0, size)) != -1)
+            bos.write(buf, 0, len);
+        buf = bos.toByteArray();
+        return buf;
     }
 
     public static LinkedList<String> readLineList(String path)
@@ -402,6 +423,7 @@ public class IOUtil
 
     /**
      * 智能获取InputStream，如果是资源文件则返回相应的InputStream
+     *
      * @param path
      * @return
      * @throws FileNotFoundException
