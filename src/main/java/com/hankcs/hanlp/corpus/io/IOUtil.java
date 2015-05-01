@@ -170,6 +170,7 @@ public class IOUtil
     {
         try
         {
+            if (isResource(path)) return readBytesFromResource(path);
             FileInputStream fis = new FileInputStream(path);
             FileChannel channel = fis.getChannel();
             int fileSize = (int) channel.size();
@@ -188,6 +189,21 @@ public class IOUtil
         }
 
         return null;
+    }
+
+    /**
+     * 将资源中的一个资源读入byte数组
+     * @param path
+     * @return
+     * @throws IOException
+     */
+    public static byte[] readBytesFromResource(String path) throws IOException
+    {
+        InputStream is = IOUtil.class.getResourceAsStream("/" + path);
+        byte[] targetArray = new byte[is.available()];
+        is.read(targetArray);
+        is.close();
+        return targetArray;
     }
 
     public static LinkedList<String> readLineList(String path)
@@ -360,5 +376,38 @@ public class IOUtil
         {
             throw new UnsupportedOperationException("只读，不可写！");
         }
+    }
+
+    /**
+     * 判断文件是否存在
+     *
+     * @param path
+     * @return
+     */
+    public static boolean isFileExists(String path)
+    {
+        return new File(path).exists();
+    }
+
+    /**
+     * 判断资源是否位于jar中
+     *
+     * @param path
+     * @return
+     */
+    public static boolean isResource(String path)
+    {
+        return path.startsWith("data/");   // 这样未必好，比如用户的root就叫/data/就会发生问题，不过目前就这么办了
+    }
+
+    /**
+     * 智能获取InputStream，如果是资源文件则返回相应的InputStream
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     */
+    public static InputStream getInputStream(String path) throws FileNotFoundException
+    {
+        return isResource(path) ? IOUtil.class.getResourceAsStream("/" + path) : new FileInputStream(path);
     }
 }

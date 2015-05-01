@@ -13,6 +13,7 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.EditDistance;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary;
 import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionaryEx;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
@@ -36,7 +37,7 @@ public class CoreSynonymDictionaryEx
     {
         try
         {
-            dictionary = CommonSynonymDictionaryEx.create(new FileInputStream(HanLP.Config.CoreSynonymDictionaryDictionaryPath));
+            dictionary = CommonSynonymDictionaryEx.create(IOUtil.getInputStream(HanLP.Config.CoreSynonymDictionaryDictionaryPath));
         }
         catch (Exception e)
         {

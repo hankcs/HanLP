@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.dictionary;
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -71,7 +73,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.getInputStream(path)));
             // 第一行是矩阵的各个类型
             String line = br.readLine();
             String[] _param = line.split(",");

@@ -16,7 +16,9 @@
 package com.hankcs.hanlp.collection.trie;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.ByteUtil;
+import sun.misc.IOUtils;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -571,26 +573,8 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     {
         try
         {
-            FileInputStream fis = new FileInputStream(path);
-            // 1.从FileInputStream对象获取文件通道FileChannel
-            FileChannel channel = fis.getChannel();
-            int fileSize = (int) channel.size();
-
-            // 2.从通道读取文件内容
-            ByteBuffer byteBuffer = ByteBuffer.allocate(fileSize);
-
-            // channel.read(ByteBuffer) 方法就类似于 inputstream.read(byte)
-            // 每次read都将读取 allocate 个字节到ByteBuffer
-            channel.read(byteBuffer);
-            // 注意先调用flip方法反转Buffer,再从Buffer读取数据
-            byteBuffer.flip();
-            // 有几种方式可以操作ByteBuffer
-            // 可以将当前Buffer包含的字节数组全部读取出来
-            byte[] bytes = byteBuffer.array();
-            byteBuffer.clear();
-            // 关闭通道和文件流
-            channel.close();
-            fis.close();
+            byte[] bytes = IOUtil.readBytes(path);
+            if (bytes == null) return false;
 
             int index = 0;
             size = ByteUtil.bytesHighFirstToInt(bytes, index);

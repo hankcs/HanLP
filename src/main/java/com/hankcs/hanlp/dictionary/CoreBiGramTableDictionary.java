@@ -13,6 +13,7 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.*;
@@ -192,7 +193,7 @@ public class CoreBiGramTableDictionary
 
         try
         {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(path));
+            ObjectInputStream in = new ObjectInputStream(IOUtil.getInputStream(path));
             start = (int[]) in.readObject();
             pair = (int[]) in.readObject();
             in.close();
@@ -207,10 +208,11 @@ public class CoreBiGramTableDictionary
 
     /**
      * 二分搜索，由于二元接续前一个词固定时，后一个词比较少，所以二分也能取得很高的性能
-     * @param a 目标数组
+     *
+     * @param a         目标数组
      * @param fromIndex 开始下标
-     * @param length 长度
-     * @param key 词的id
+     * @param length    长度
+     * @param key       词的id
      * @return 共现频次
      */
     private static int binarySearch(int[] a, int fromIndex, int length, int key)
@@ -260,6 +262,7 @@ public class CoreBiGramTableDictionary
 
     /**
      * 获取共现频次
+     *
      * @param idA 第一个词的id
      * @param idB 第二个词的id
      * @return 共现频次

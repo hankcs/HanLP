@@ -50,6 +50,7 @@ public class CustomDictionary
         if (!loadMainDictionary(path[0]))
         {
             logger.warning("自定义词典" + Arrays.toString(path) + "加载失败");
+            CustomDictionary.act = null;
         }
         else
         {
@@ -88,6 +89,7 @@ public class CustomDictionary
                 if (!success) logger.warning("失败：" + p);
             }
             logger.info("正在构建AhoCorasickDoubleArrayTrie……");
+            if (map.size() == 0) return false;
             act.build(map);
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
@@ -173,7 +175,8 @@ public class CustomDictionary
         }
         catch (Exception e)
         {
-            logger.severe("自定义词典" + path + "读取错误！" + e);
+            if (!path.startsWith("."))
+                logger.severe("自定义词典" + path + "读取错误！" + e);
             return false;
         }
 
@@ -410,6 +413,7 @@ public class CustomDictionary
                 processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
             }
         }
+        if (act == null) return;
         DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = act.getSearcher(text, 0);
         while (searcher.next())
         {
