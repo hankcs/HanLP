@@ -7,7 +7,7 @@
     <version>portable-1.1.5</version>
 
     <name>HanLP</name>
-    <url>http://www.hankcs.com/</url>
+    <url>https://github.com/hankcs/HanLP</url>
     <description>
         汉语言处理包
     </description>
@@ -29,6 +29,11 @@
             <url>http://www.hankcs.com</url>
         </developer>
     </developers>
+    <scm>
+        <connection>scm:git@github.com:hankcs/HanLP.git</connection>
+        <developerConnection>scm:git@github.com:hankcs/HanLP.git</developerConnection>
+        <url>git@github.com:hankcs/HanLP.git</url>
+    </scm>
 
     <build>
         <plugins>
