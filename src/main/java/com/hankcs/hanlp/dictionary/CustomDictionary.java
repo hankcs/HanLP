@@ -220,7 +220,7 @@ public class CustomDictionary
         if (word == null) return false;
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
-        if (act.set(word, att)) return true;
+        if (act != null && act.set(word, att)) return true;
         if (trie == null) trie = new BinTrie<CoreDictionary.Attribute>();
         trie.put(word, att);
         return true;
@@ -333,7 +333,7 @@ public class CustomDictionary
 
     public static boolean contains(String key)
     {
-        if (act.exactMatchSearch(key) >= 0) return true;
+        if (act != null && act.exactMatchSearch(key) >= 0) return true;
         return trie != null && trie.containsKey(key);
     }
 
