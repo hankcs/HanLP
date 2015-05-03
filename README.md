@@ -97,7 +97,7 @@ HanLP下载地址：http://hanlp.linrunsoft.com/services.html
 
 | 数据包        | 功能   |  体积（MB）  |
 | --------   | -----:  | :----:  |
-| [data.full.zip](http://hanlp.linrunsoft.com/services.html)     | 全部 |   255     |
+| [data.zip](http://hanlp.linrunsoft.com/services.html)     | 全部 |   255     |
 下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
 
 **HanLP**中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
