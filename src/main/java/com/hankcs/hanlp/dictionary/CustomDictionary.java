@@ -257,7 +257,7 @@ public class CustomDictionary
                     attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            if (!dat.load(byteArray, attributes)) return false;
+            if (!dat.load(byteArray, attributes) || byteArray.hasMore()) return false;
         }
         catch (Exception e)
         {

@@ -153,7 +153,7 @@ public class CoreDictionary
                     attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            if (!trie.load(byteArray, attributes)) return false;
+            if (!trie.load(byteArray, attributes) || byteArray.hasMore()) return false;
         }
         catch (Exception e)
         {

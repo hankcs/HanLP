@@ -81,7 +81,7 @@ public abstract class CommonDictionary<V>
         }
         trie.save(path + ".trie.dat");
         onSaveValue(valueArray, path);
-        logger.warning(path + "加载成功");
+        logger.info(path + "加载成功");
         return true;
     }
 

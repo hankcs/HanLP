@@ -44,7 +44,7 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-        HanLP.Config.enableDebug(true);
+//        HanLP.Config.enableDebug(true);
         HanLP.Config.ShowTermNature = false;
         Segment segment = new DijkstraSegment();
         segment.enableCustomDictionary(true);
