@@ -39,7 +39,7 @@ public class DemoCustomDictionary
 
         String text = "攻城狮逆袭单身狗，迎娶白富美，走上人生巅峰";  // 怎么可能噗哈哈！
 
-        // AhoCorasickDoubleArrayTrie自动机分词
+        // DoubleArrayTrie分词
         final char[] charArray = text.toCharArray();
         CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
         {
@@ -49,7 +49,7 @@ public class DemoCustomDictionary
                 System.out.printf("[%d:%d]=%s %s\n", begin, end, new String(charArray, begin, end - begin), value);
             }
         });
-        // trie树分词
+        // 首字哈希之后二分的trie树分词
         BaseSearcher searcher = CustomDictionary.getSearcher(text);
         Map.Entry entry;
         while ((entry = searcher.next()) != null)
@@ -59,5 +59,9 @@ public class DemoCustomDictionary
 
         // 标准分词
         System.out.println(HanLP.segment(text));
+
+        // Note:动态增删不会影响词典文件
+        // 目前CustomDictionary使用DAT储存词典文件中的词语，用BinTrie储存动态加入的词语，前者性能高，后者性能低
+        // 之所以保留动态增删功能，一方面是历史遗留特性，另一方面是调试用；未来可能会去掉动态增删特性。
     }
 }
