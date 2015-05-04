@@ -11,9 +11,13 @@
  */
 package com.hankcs.hanlp.seg;
 
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.SentencesUtil;
 
@@ -173,6 +177,58 @@ public abstract class Segment
             atomNodeList.add(new AtomNode(new String(charArray, start, offsetAtom - start), preType));
 
         return atomNodeList;
+    }
+
+    /**
+     * 使用用户词典合并粗分结果
+     * @param vertexList 粗分结果
+     * @return 合并后的结果
+     */
+    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList)
+    {
+        Vertex[] wordNet = new Vertex[vertexList.size()];
+        vertexList.toArray(wordNet);
+        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
+        for (int i = 0; i < wordNet.length; ++i)
+        {
+            int state = 1;
+            state = dat.transition(wordNet[i].realWord, state);
+            if (state > 0)
+            {
+                int start = i;
+                int to = i + 1;
+                int end = - 1;
+                CoreDictionary.Attribute value = null;
+                for (; to < wordNet.length; ++to)
+                {
+                    state = dat.transition(wordNet[to].realWord, state);
+                    if (state < 0) break;
+                    CoreDictionary.Attribute output = dat.output(state);
+                    if (output != null)
+                    {
+                        value = output;
+                        end = to + 1;
+                    }
+                }
+                if (value != null)
+                {
+                    StringBuilder sbTerm = new StringBuilder();
+                    for (int j = start; j < end; ++j)
+                    {
+                        sbTerm.append(wordNet[j]);
+                        wordNet[j] = null;
+                    }
+                    wordNet[i] = new Vertex(sbTerm.toString(), value);
+                    i = end - 1;
+                }
+            }
+        }
+        vertexList.clear();
+        for (Vertex vertex : wordNet)
+        {
+            if (vertex != null) vertexList.add(vertex);
+        }
+        return vertexList;
     }
 
     /**

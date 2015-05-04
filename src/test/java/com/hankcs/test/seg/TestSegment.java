@@ -38,7 +38,7 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment().enableCustomDictionary(false);
         System.out.println(segment.seg(
-                "工信处女干事"
+                "我喜欢陈膺奥"
         ));
     }
 
@@ -47,10 +47,10 @@ public class TestSegment extends TestCase
 //        HanLP.Config.enableDebug(true);
 //        HanLP.Config.ShowTermNature = true;
         Segment segment = new DijkstraSegment();
-//        segment.enableCustomDictionary(false);
+        segment.enableCustomDictionary(true);
 //        CustomDictionary.insert("同天", "v 1000");
         System.out.println(segment.seg(
-                "很多华裔美国"
+                "他一丁不识啊"
         ));
     }
 

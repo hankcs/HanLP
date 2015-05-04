@@ -1018,6 +1018,48 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     }
 
     /**
+     * 沿着路径转移状态
+     *
+     * @param path 路径
+     * @param from 起点（根起点为base[0]=1）
+     * @return 转移后的状态（双数组下标）
+     */
+    public int transition(String path, int from)
+    {
+        int b = from;
+        int p;
+
+        for (int i = 0; i < path.length(); ++i)
+        {
+            p = b + (int) (path.charAt(i)) + 1;
+            if (b == check[p])
+                b = base[p];
+            else
+                return -1;
+        }
+
+        p = b;
+        return p;
+    }
+
+    /**
+     * 检查状态是否对应输出
+     *
+     * @param state 双数组下标
+     * @return 对应的值，null表示不输出
+     */
+    public V output(int state)
+    {
+        if (state < 0) return null;
+        int n = base[state];
+        if (state == check[state] && n < 0)
+        {
+            return v[-n - 1];
+        }
+        return null;
+    }
+
+    /**
      * 一个搜索工具
      */
     public class Searcher

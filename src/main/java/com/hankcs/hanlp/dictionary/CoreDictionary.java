@@ -12,7 +12,6 @@
 package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -25,7 +24,7 @@ import java.util.*;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 使用AhoCorasickDoubleArrayTrie实现的核心词典
+ * 使用DoubleArrayTrie实现的核心词典
  * @author hankcs
  */
 public class CoreDictionary
