@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class DemoStopWordDictionary
+public class DemoStopWord
 {
     public static void main(String[] args)
     {
