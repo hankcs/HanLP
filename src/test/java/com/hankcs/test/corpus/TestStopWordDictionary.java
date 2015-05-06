@@ -12,8 +12,12 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.MDAG.MDAGSet;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import junit.framework.TestCase;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author hankcs
@@ -29,5 +33,18 @@ public class TestStopWordDictionary extends TestCase
     public void testContainsSomeWords() throws Exception
     {
         assertEquals(true, CoreStopWordDictionary.contains("可以"));
+    }
+
+    public void testMDAG() throws Exception
+    {
+        List<String> wordList = new LinkedList<String>();
+        wordList.add("zoo");
+        wordList.add("hello");
+        wordList.add("world");
+        MDAGSet set = new MDAGSet(wordList);
+        set.add("bee");
+        assertEquals(true, set.contains("bee"));
+        set.remove("bee");
+        assertEquals(false, set.contains("bee"));
     }
 }

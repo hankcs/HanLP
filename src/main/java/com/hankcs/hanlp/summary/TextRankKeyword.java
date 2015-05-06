@@ -20,12 +20,12 @@ public class TextRankKeyword extends KeywordExtractor
     /**
      * 阻尼系数（ＤａｍｐｉｎｇＦａｃｔｏｒ），一般取值为0.85
      */
-    final float d = 0.85f;
+    final static float d = 0.85f;
     /**
      * 最大迭代次数
      */
-    final int max_iter = 200;
-    final float min_diff = 0.001f;
+    final static int max_iter = 200;
+    final static float min_diff = 0.001f;
 
     public TextRankKeyword()
     {

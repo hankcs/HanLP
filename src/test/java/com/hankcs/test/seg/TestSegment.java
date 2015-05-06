@@ -44,13 +44,13 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-//        HanLP.Config.enableDebug(true);
+        HanLP.Config.enableDebug(true);
         HanLP.Config.ShowTermNature = false;
         Segment segment = new DijkstraSegment();
         segment.enableCustomDictionary(true);
 //        CustomDictionary.insert("同天", "v 1000");
         System.out.println(segment.seg(
-                "现在无数当红小生"
+                "最大化开发"
         ));
     }
 
@@ -155,7 +155,7 @@ public class TestSegment extends TestCase
     {
         String text = "王总和小丽结婚了";
         Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(false)
-                .enableNameRecognize(true)
+                .enableNameRecognize(false) // 人名识别需要二次维特比，比较慢
                 .enableCustomDictionary(false)
                 ;
         System.out.println(segment.seg(text));

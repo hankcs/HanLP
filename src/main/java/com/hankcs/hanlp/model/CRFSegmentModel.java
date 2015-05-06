@@ -46,7 +46,7 @@ public class CRFSegmentModel extends CRFModel
             logger.info("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
     }
 
-    private final static int idB = crfModel.getTagId("B");
+    private final static int idM = crfModel.getTagId("M");
     private final static int idE = crfModel.getTagId("E");
     private final static int idS = crfModel.getTagId("S");
 
@@ -77,8 +77,8 @@ public class CRFSegmentModel extends CRFModel
                 net[i][tag] = computeScore(scoreList, tag);
             }
         }
-        net[0][1] = -1000.0;
-        net[0][3] = -1000.0;
+        net[0][idM] = -1000.0;  // 第一个字不可能是M或E
+        net[0][idE] = -1000.0;
         int[][] from = new int[size][4];
         for (int i = 1; i < size; ++i)
         {
