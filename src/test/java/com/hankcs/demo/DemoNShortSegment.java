@@ -27,7 +27,7 @@ public class DemoNShortSegment
         Segment nShortSegment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
         Segment shortestSegment = new ViterbiSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
         String[] testCase = new String[]{
-                "刘喜杰石国祥会见吴亚琴先进事迹报告团成员",
+                "今天，刘志军案的关键人物,山西女商人丁书苗在市二中院出庭受审。",
         };
         for (String sentence : testCase)
         {
