@@ -110,6 +110,12 @@ public class NShortSegment extends HiddenMarkovModelSegment
             }
         }
 
+        // 数字识别
+        if (config.numberQuantifierRecognize)
+        {
+            mergeNumberQuantifier(vertexList);
+        }
+
         // 如果是索引模式则全切分
         if (config.indexMode)
         {
@@ -167,31 +173,6 @@ public class NShortSegment extends HiddenMarkovModelSegment
             coarseResult.add(vertexes);
         }
         return coarseResult;
-    }
-
-    /**
-     * 最快的分词方式
-     *
-     * @param sSentence
-     * @return
-     */
-    public List<Term> spiltSimply(char[] sSentence)
-    {
-        ////////////////生成词网////////////////////
-        WordNet wordNet = GenerateWordNet(sSentence, new WordNet(sSentence));
-//        logger.trace("词网大小：" + wordNet.size());
-//        logger.trace("打印词网：\n" + wordNet);
-        ///////////////生成词图////////////////////
-        Graph graph = GenerateBiGraph(wordNet);
-        if (HanLP.Config.DEBUG)
-        {
-//            logger.trace(graph.toString());
-            System.out.printf("打印词图：%s\n", graph.printByTo());
-        }
-        ///////////////N-最短路径////////////////////
-        NShortPath nShortPath = new NShortPath(graph, 1);
-        List<int[]> spResult = nShortPath.getNPaths(1);
-        return convert(graph.parsePath(spResult.get(0)));
     }
 
     /**

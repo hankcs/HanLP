@@ -56,6 +56,10 @@ public class Config
      * 是否计算偏移量
      */
     public boolean offset = false;
+    /**
+     * 是否识别数字
+     */
+    public boolean numberQuantifierRecognize = false;
 
     /**
      * 更新命名实体识别总开关

@@ -63,7 +63,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
         //--------------------------------------------------------------------
         //Merge all seperate continue num into one number
-        MergeContinueNumIntoOne(linkedArray);
+        mergeContinueNumIntoOne(linkedArray);
 
         //--------------------------------------------------------------------
         //The delimiter "－－"
@@ -379,7 +379,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
      *
      * @param linkedArray
      */
-    private static void MergeContinueNumIntoOne(List<Vertex> linkedArray)
+    private static void mergeContinueNumIntoOne(List<Vertex> linkedArray)
     {
         if (linkedArray.size() < 2)
             return;

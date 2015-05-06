@@ -44,13 +44,13 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-        HanLP.Config.enableDebug(true);
+//        HanLP.Config.enableDebug(true);
         HanLP.Config.ShowTermNature = false;
-        Segment segment = new DijkstraSegment();
-        segment.enableCustomDictionary(true);
+        Segment segment = new DijkstraSegment().enableNumberQuantifierRecognize(true);
+//        segment.enableCustomDictionary(true);
 //        CustomDictionary.insert("同天", "v 1000");
         System.out.println(segment.seg(
-                "最大化开发"
+                "百千万亿佰仟％‰"
         ));
     }
 
@@ -167,5 +167,21 @@ public class TestSegment extends TestCase
         }
         double costTime = (System.currentTimeMillis() - start) / (double)1000;
         System.out.printf("分词速度：%.2f字每秒", text.length() * pressure / costTime);
+    }
+
+    public void testNumberAndQuantifier() throws Exception
+    {
+        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        String[] testCase = new String[]
+                {
+                        "十九元套餐包括什么",
+                        "九千九百九十九朵玫瑰",
+                        "壹佰块钱都不给我",
+                        "９０１２３４５６７８只蚂蚁",
+                };
+        for (String sentence : testCase)
+        {
+            System.out.println(StandardTokenizer.segment(sentence));
+        }
     }
 }

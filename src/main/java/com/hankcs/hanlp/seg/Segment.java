@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharType;
@@ -24,6 +25,7 @@ import com.hankcs.hanlp.utility.SentencesUtil;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * 分词器（分词服务）<br>
@@ -55,7 +57,7 @@ public abstract class Segment
      * @param end       到end结束（不包含end）
      * @return 一个列表，代表从start到from的所有字构成的原子节点
      */
-    protected static List<AtomNode> AtomSegment(char[] charArray, int start, int end)
+    protected static List<AtomNode> atomSegment(char[] charArray, int start, int end)
     {
         List<AtomNode> atomSegment = new ArrayList<AtomNode>();
         int pCur = start, nCurType, nNextType;
@@ -232,6 +234,45 @@ public abstract class Segment
     }
 
     /**
+     * 合并数字
+     * @param termList
+     */
+    protected void mergeNumberQuantifier(List<Vertex> termList)
+    {
+        if (termList.size() < 4) return;
+        StringBuilder sbQuantifier = new StringBuilder();
+        ListIterator<Vertex> iterator = termList.listIterator();
+        iterator.next();
+        while (iterator.hasNext())
+        {
+            Vertex pre = iterator.next();
+            if (pre.hasNature(Nature.m))
+            {
+                sbQuantifier.append(pre.realWord);
+                Vertex cur = null;
+                while (iterator.hasNext() && (cur = iterator.next()).hasNature(Nature.m))
+                {
+                    sbQuantifier.append(cur.realWord);
+                    iterator.remove();
+                }
+                if (cur != null &&
+                        (cur.hasNature(Nature.q) || cur.hasNature(Nature.qv) || cur.hasNature(Nature.qt))
+                        )
+                {
+                    sbQuantifier.append(cur.realWord);
+                    pre.attribute = new CoreDictionary.Attribute(Nature.mq);
+                    iterator.remove();
+                }
+                if (sbQuantifier.length() != pre.realWord.length())
+                {
+                    pre.realWord = sbQuantifier.toString();
+                    sbQuantifier.setLength(0);
+                }
+            }
+        }
+    }
+
+    /**
      * 分词
      *
      * @param text 待分词文本
@@ -386,6 +427,18 @@ public abstract class Segment
     public Segment enableOffset(boolean enable)
     {
         config.offset = enable;
+        return this;
+    }
+
+    /**
+     * 是否启用数词和数量词识别<br>
+     *     即[二 十 一] => [二十一]，[十 九 元] => [十九元]
+     * @param enable
+     * @return
+     */
+    public Segment enableNumberQuantifierRecognize(boolean enable)
+    {
+        config.numberQuantifierRecognize = enable;
         return this;
     }
 

@@ -91,6 +91,12 @@ public class DijkstraSegment extends HiddenMarkovModelSegment
             }
         }
 
+        // 数字识别
+        if (config.numberQuantifierRecognize)
+        {
+            mergeNumberQuantifier(vertexList);
+        }
+
         // 如果是索引模式则全切分
         if (config.indexMode)
         {

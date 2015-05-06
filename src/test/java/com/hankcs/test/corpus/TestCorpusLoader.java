@@ -60,6 +60,35 @@ public class TestCorpusLoader extends TestCase
         });
     }
 
+    public void testCombineToTxt() throws Exception
+    {
+        final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("D:\\Doc\\语料库\\2014.txt"), "UTF-8"));
+        CorpusLoader.walk("D:\\Doc\\语料库\\2014", new CorpusLoader.Handler()
+        {
+            @Override
+            public void handle(Document document)
+            {
+                try
+                {
+                    for (List<IWord> sentence : document.getComplexSentenceList())
+                    {
+                        for (IWord word : sentence)
+                        {
+                            bw.write(word.getValue());
+                        }
+                        bw.newLine();
+                    }
+                    bw.newLine();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            });
+        bw.close();
+    }
+
     public void testConvert2SimpleSentenceList() throws Exception
     {
         List<List<Word>> simpleSentenceList = CorpusLoader.convert2SimpleSentenceList("data/2014");
