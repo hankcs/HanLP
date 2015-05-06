@@ -285,7 +285,7 @@ public class DictionaryMaker implements ISaveAble
         if (trie.size() == 0) return true;  // 如果没有词条，那也算成功了
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
             Set<Map.Entry<String, Item>> entries = trie.entrySet();
             for (Map.Entry<String, Item> entry : entries)
             {

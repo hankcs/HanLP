@@ -15,9 +15,15 @@ import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
 import com.hankcs.hanlp.corpus.dictionary.TFDictionary;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
+import com.hankcs.hanlp.corpus.document.CorpusLoader;
+import com.hankcs.hanlp.corpus.document.Document;
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.occurrence.TermFrequency;
+import com.hankcs.hanlp.corpus.util.CorpusUtil;
 import junit.framework.TestCase;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,5 +68,28 @@ public class TestAdjustCoreDictionary extends TestCase
     {
         DictionaryMaker dictionaryMaker = DictionaryMaker.load(DATA_DICTIONARY_CORE_NATURE_DICTIONARY_TXT);
         dictionaryMaker.saveTxtTo(DATA_DICTIONARY_CORE_NATURE_DICTIONARY_TXT);
+    }
+
+    public void testSimplifyNZ() throws Exception
+    {
+        final DictionaryMaker nzDictionary = new DictionaryMaker();
+        CorpusLoader.walk("D:\\Doc\\语料库\\2014", new CorpusLoader.Handler()
+        {
+            @Override
+            public void handle(Document document)
+            {
+                for (List<IWord> sentence : document.getComplexSentenceList())
+                {
+                    for (IWord word : sentence)
+                    {
+                        if (word instanceof CompoundWord && "nz".equals(word.getLabel()))
+                        {
+                            nzDictionary.add(word);
+                        }
+                    }
+                }
+            }
+        });
+        nzDictionary.saveTxtTo("data/test/nz.txt");
     }
 }

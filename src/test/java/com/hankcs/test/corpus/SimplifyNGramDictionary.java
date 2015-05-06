@@ -11,7 +11,10 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.TFDictionary;
+import com.hankcs.hanlp.corpus.occurrence.TermFrequency;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import junit.framework.TestCase;
 
 import java.io.*;
@@ -97,6 +100,44 @@ public class SimplifyNGramDictionary extends TestCase
         }
         // 输出
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+        for (Map.Entry<String, Integer> entry : map.entrySet())
+        {
+            bw.write(entry.getKey());
+            bw.write(' ');
+            bw.write(String.valueOf(entry.getValue()));
+            bw.newLine();
+        }
+        bw.close();
+    }
+
+    /**
+     * 有些词条不在CoreDictionary里面，那就把它们删掉
+     * @throws Exception
+     */
+    public void testLoseWeight() throws Exception
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+        TreeMap<String, Integer> map = new TreeMap<String, Integer>();
+        String line;
+        while ((line = br.readLine()) != null)
+        {
+            String[] param = line.split(" ");
+            map.put(param[0], Integer.valueOf(param[1]));
+        }
+        br.close();
+        Iterator<String> iterator = map.keySet().iterator();
+        while (iterator.hasNext())
+        {
+            line = iterator.next();
+            String[] params = line.split("@", 2);
+            String one = params[0];
+            String two = params[1];
+            if (!CoreDictionary.contains(one) || !CoreDictionary.contains(two))
+                iterator.remove();
+        }
+
+        // 输出
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
         for (Map.Entry<String, Integer> entry : map.entrySet())
         {
             bw.write(entry.getKey());
