@@ -61,7 +61,7 @@ HanLP: Han Language Processing
 
 HanLP项目主页：http://hanlp.linrunsoft.com/
 
-HanLP下载地址：http://hanlp.linrunsoft.com/services.html
+HanLP下载地址：https://github.com/hankcs/HanLP/releases
 
 最新binary、文档都以项目主页为准。GitHub的说明为历史遗留，仅做参考。
 
