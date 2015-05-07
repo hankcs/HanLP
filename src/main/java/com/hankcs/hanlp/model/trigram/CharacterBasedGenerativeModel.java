@@ -27,10 +27,25 @@ import java.util.List;
  */
 public class CharacterBasedGenerativeModel implements ICacheAble
 {
+    /**
+     * 2阶隐马的三个参数
+     */
     double l1, l2, l3;
+    /**
+     * 频次统计
+     */
     Probability tf;
+    /**
+     * 用到的标签
+     */
     static final char[] id2tag = new char[]{'b', 'm', 'e', 's'};
+    /**
+     * 视野范围外的事件
+     */
     static final char[] bos = {'\b', 'x'};
+    /**
+     * 无穷小
+     */
     static final double inf = -1e10;
 
     public CharacterBasedGenerativeModel()
@@ -38,6 +53,10 @@ public class CharacterBasedGenerativeModel implements ICacheAble
         tf = new Probability();
     }
 
+    /**
+     * 让模型观测一个句子
+     * @param wordList
+     */
     public void learn(List<Word> wordList)
     {
         LinkedList<char[]> sentence = new LinkedList<char[]>();
@@ -74,6 +93,9 @@ public class CharacterBasedGenerativeModel implements ICacheAble
         }
     }
 
+    /**
+     * 观测结束，开始训练
+     */
     public void train()
     {
         double tl1 = 0.0;
@@ -104,74 +126,28 @@ public class CharacterBasedGenerativeModel implements ICacheAble
         l3 = div(tl3, tl1 + tl2 + tl3);
     }
 
+    /**
+     * 求概率
+     * @param s1 前2个状态
+     * @param s2 前1个状态
+     * @param s3 当前状态
+     * @return 序列的概率
+     */
     double log_prob(char[] s1, char[] s2, char[] s3)
     {
-//        System.out.print(s1);
-//        System.out.print(s2);
-//        System.out.print(s3);
-
         double uni = l1 * tf.freq(s3);
         double bi = div(l2 * tf.get(s2, s3), tf.get(s2));
-        double tri = div(l3 * tf.get(s1, s2, s3),
-                         tf.get(s1, s2));
+        double tri = div(l3 * tf.get(s1, s2, s3), tf.get(s1, s2));
         if (uni + bi + tri == 0)
-        {
-//            System.out.println("inf");
             return inf;
-        }
-//        System.out.printf("%.2f\n", Math.log(uni + bi + tri));
         return Math.log(uni + bi + tri);
     }
 
-    static class Path
-    {
-        double score;
-        List<Character> path;
-
-        public Path()
-        {
-            path = new LinkedList<Character>();
-        }
-
-        public void add(char tag, double score)
-        {
-            path.add(tag);
-            this.score = score;
-        }
-
-        @Override
-        public String toString()
-        {
-            return path + "=" + (score > inf ? score : "inf");
-        }
-    }
-
-    static class Debug
-    {
-        Path[][] pathArray;
-
-        public Debug(Path[][] pathArray)
-        {
-            this.pathArray = pathArray;
-        }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder sbInfo = new StringBuilder();
-            for (Path[] line : pathArray)
-            {
-                for (Path path : line)
-                {
-                    sbInfo.append(path);
-                    sbInfo.append('\n');
-                }
-            }
-
-            return sbInfo.toString();
-        }
-    }
-
+    /**
+     * 序列标注
+     * @param charArray 观测序列
+     * @return 标注序列
+     */
     public char[] tag(char[] charArray)
     {
         if (charArray.length == 0) return new char[0];
@@ -180,6 +156,7 @@ public class CharacterBasedGenerativeModel implements ICacheAble
         double[][] now = new double[4][4];
         double[] first = new double[4];
 
+        // link[i][s][t] := 第i个节点在前一个状态是s，当前状态是t时，前2个状态的tag的值
         int[][][] link = new int[charArray.length][4][4];
         for (int s = 0; s < 4; ++s)
         {
@@ -196,22 +173,20 @@ public class CharacterBasedGenerativeModel implements ICacheAble
                 link[1][f][s] = f;
             }
         }
+        double[][] pre = new double[4][4];
         for (int i = 2; i < charArray.length; i++)
         {
-            double[][] pre = now;
-            now = new double[4][4];
-            for (int _ = 0; _ < now.length; _++)
+            // swap(now, pre)
+            double[][] _ = pre;
+            pre = now;
+            now = _;
+            // end of swap
+            for (int s = 0; s < 4; ++s)
             {
-                for (int __ = 0; __ < now[_].length; __++)
+                for (int t = 0; t < 4; ++t)
                 {
-                    now[_][__] = -1e20;
-                }
-            }
-            for (int f = 0; f < 4; ++f)
-            {
-                for (int s = 0; s < 4; ++s)
-                {
-                    for (int t = 0; t < 4; ++t)
+                    now[s][t] = -1e20;
+                    for (int f = 0; f < 4; ++f)
                     {
                         double p = pre[f][s] + log_prob(new char[]{charArray[i - 2], id2tag[f]},
                                                         new char[]{charArray[i - 1], id2tag[s]},
@@ -250,17 +225,28 @@ public class CharacterBasedGenerativeModel implements ICacheAble
         return tag;
     }
 
-
+    /**
+     * 安全除法
+     * @param v1
+     * @param v2
+     * @return
+     */
     private static double div(int v1, int v2)
     {
         if (v2 == 0) return 0.0;
         return v1 / (double) v2;
     }
 
+    /**
+     * 安全除法
+     * @param v1
+     * @param v2
+     * @return
+     */
     private static double div(double v1, double v2)
     {
         if (v2 == 0) return 0.0;
-        return v1 / (double) v2;
+        return v1 / v2;
     }
 
     @Override

@@ -55,6 +55,13 @@ public class Probability implements ICacheAble
         return f;
     }
 
+    public int get(char... key)
+    {
+        Integer f = d.get(key);
+        if (f == null) return 0;
+        return f;
+    }
+
     public double freq(String key)
     {
         Integer f = get(key);
