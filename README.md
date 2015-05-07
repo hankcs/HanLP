@@ -89,7 +89,7 @@ HanLP下载地址：http://hanlp.linrunsoft.com/services.html
 
 #### 1、下载jar
 
-[hanlp.jar](http://hanlp.linrunsoft.com/services.html)
+[hanlp.jar](https://github.com/hankcs/HanLP/releases)
 
 #### 2、下载data
 
@@ -97,7 +97,7 @@ HanLP下载地址：http://hanlp.linrunsoft.com/services.html
 
 | 数据包        | 功能   |  体积（MB）  |
 | --------   | -----:  | :----:  |
-| [data.zip](http://hanlp.linrunsoft.com/services.html)     | 全部 |   255     |
+| [data.zip](https://github.com/hankcs/HanLP/releases)     | 全部 |   255     |
 下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
 
 **HanLP**中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
@@ -110,7 +110,7 @@ HanLP下载地址：http://hanlp.linrunsoft.com/services.html
 用户可以自行增删替换，如果不需要句法分析功能的话，随时可以删除model文件夹。
 
 #### 3、配置文件
-示例配置文件:[hanlp.properties](http://hanlp.linrunsoft.com/services.html)
+示例配置文件:[hanlp.properties](https://github.com/hankcs/HanLP/releases)
 
 配置文件的作用是告诉HanLP数据包的位置，只需修改第一行
 
