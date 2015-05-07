@@ -21,7 +21,7 @@ public class DemoNumberAndQuantifierRecognition
 {
     public static void main(String[] args)
     {
-        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true).enableIndexMode(true);
         String[] testCase = new String[]
                 {
                         "十九元套餐包括什么",

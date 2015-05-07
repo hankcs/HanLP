@@ -18,7 +18,7 @@ import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
 import com.hankcs.hanlp.seg.Dijkstra.Path.State;
-import com.hankcs.hanlp.seg.NGramModelSegment;
+import com.hankcs.hanlp.seg.WordBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.common.*;
 
 import java.util.*;
@@ -27,7 +27,7 @@ import java.util.*;
  * 最短路径分词
  * @author hankcs
  */
-public class DijkstraSegment extends NGramModelSegment
+public class DijkstraSegment extends WordBasedGenerativeModelSegment
 {
     @Override
     public List<Term> segSentence(char[] sentence)

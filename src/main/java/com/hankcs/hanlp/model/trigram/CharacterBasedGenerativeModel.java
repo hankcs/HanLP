@@ -103,7 +103,7 @@ public class CharacterBasedGenerativeModel implements ICacheAble
         double tl3 = 0.0;
         for (String key : tf.d.keySet())
         {
-            if (key.length() != 6) continue;
+            if (key.length() != 6) continue;    // tri samples
             char[][] now = new char[][]
                     {
                             {key.charAt(0), key.charAt(1)},
@@ -158,12 +158,14 @@ public class CharacterBasedGenerativeModel implements ICacheAble
 
         // link[i][s][t] := 第i个节点在前一个状态是s，当前状态是t时，前2个状态的tag的值
         int[][][] link = new int[charArray.length][4][4];
+        // 第一个字，只可能是bs
         for (int s = 0; s < 4; ++s)
         {
             double p = (s == 1 || s == 2) ? inf : log_prob(bos, bos, new char[]{charArray[0], id2tag[s]});
             first[s] = p;
         }
 
+        // 第二个字，尚不能完全利用TriGram
         for (int f = 0; f < 4; ++f)
         {
             for (int s = 0; s < 4; ++s)
@@ -173,6 +175,8 @@ public class CharacterBasedGenerativeModel implements ICacheAble
                 link[1][f][s] = f;
             }
         }
+
+        // 第三个字开始，利用TriGram标注
         double[][] pre = new double[4][4];
         for (int i = 2; i < charArray.length; i++)
         {
@@ -190,7 +194,7 @@ public class CharacterBasedGenerativeModel implements ICacheAble
                     {
                         double p = pre[f][s] + log_prob(new char[]{charArray[i - 2], id2tag[f]},
                                                         new char[]{charArray[i - 1], id2tag[s]},
-                                                        new char[]{charArray[i], id2tag[t]});
+                                                        new char[]{charArray[i],     id2tag[t]});
                         if (p > now[s][t])
                         {
                             now[s][t] = p;

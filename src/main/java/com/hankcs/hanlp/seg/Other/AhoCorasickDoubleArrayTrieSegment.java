@@ -1,76 +1,66 @@
 /*
  * <summary></summary>
- * <author>He Han</author>
- * <email>hankcs.cn@gmail.com</email>
- * <create-date>2014/12/23 21:34</create-date>
+ * <author>hankcs</author>
+ * <email>me@hankcs.com</email>
+ * <create-date>2015/5/7 18:48</create-date>
  *
- * <copyright file="AhoCorasickSegment.java" company="上海林原信息科技有限公司">
- * Copyright (c) 2003-2014, 上海林原信息科技有限公司. All Right Reserved, http://www.linrunsoft.com/
- * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
+ * <copyright file="AhoCorasickDoubleArrayTrieSegment.java">
+ * Copyright (c) 2003-2015, hankcs. All Right Reserved, http://www.hankcs.com/
  * </copyright>
  */
 package com.hankcs.hanlp.seg.Other;
 
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.DictionaryBasedSegment;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 使用DoubleArrayTrie实现的最长分词器
+ * 使用AhoCorasickDoubleArrayTrie实现的最长分词器<br>
+ * 需要用户调用setTrie()提供一个AhoCorasickDoubleArrayTrie
  *
  * @author hankcs
  */
-public class DoubleArrayTrieSegment extends DictionaryBasedSegment
+public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
 {
+    AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie;
+
     @Override
     protected List<Term> segSentence(char[] sentence)
     {
+        if (trie == null)
+        {
+            System.err.println("还未传入AhoCorasickDoubleArrayTrie");
+            return Collections.emptyList();
+        }
         char[] charArray = sentence;
         final int[] wordNet = new int[charArray.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
-        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(sentence, 0);
-        while (searcher.next())
+        trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
         {
-            int length = searcher.length;
-            if (length > wordNet[searcher.begin])
+            @Override
+            public void hit(int begin, int end, CoreDictionary.Attribute value)
             {
-                wordNet[searcher.begin] = length;
-                if (config.speechTagging)
+                int length = end - begin;
+                if (length > wordNet[begin])
                 {
-                    natureArray[searcher.begin] = searcher.value.nature[0];
-                }
-            }
-        }
-        if (config.useCustomDictionary)
-        {
-            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
-            {
-                @Override
-                public void hit(int begin, int end, CoreDictionary.Attribute value)
-                {
-                    int length = end - begin;
-                    if (length > wordNet[begin])
+                    wordNet[begin] = length;
+                    if (config.speechTagging)
                     {
-                        wordNet[begin] = length;
-                        if (config.speechTagging)
-                        {
-                            natureArray[begin] = value.nature[0];
-                        }
+                        natureArray[begin] = value.nature[0];
                     }
                 }
-            });
-        }
+            }
+        });
         LinkedList<Term> termList = new LinkedList<Term>();
         if (config.speechTagging)
         {
@@ -111,9 +101,25 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
         return termList;
     }
 
-    public DoubleArrayTrieSegment()
+    public AhoCorasickDoubleArrayTrieSegment()
     {
         super();
         config.useCustomDictionary = false;
+    }
+
+    @Override
+    public Segment enableCustomDictionary(boolean enable)
+    {
+        throw new UnsupportedOperationException("AhoCorasickDoubleArrayTrieSegment暂时不支持用户词典。");
+    }
+
+    public AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> getTrie()
+    {
+        return trie;
+    }
+
+    public void setTrie(AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie)
+    {
+        this.trie = trie;
     }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 基于2阶HMM（TriGram3阶文法模型）+BMES序列标注的分词器
+ * 基于2阶HMM（A Second-Order Hidden Markov Model, TriGram3阶文法模型）+BMES序列标注的分词器
  *
  * @author hankcs
  */
