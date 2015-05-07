@@ -94,7 +94,7 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
         // 数字识别
         if (config.numberQuantifierRecognize)
         {
-            mergeNumberQuantifier(vertexList);
+            mergeNumberQuantifier(vertexList, wordNetAll, config);
         }
 
         // 如果是索引模式则全切分

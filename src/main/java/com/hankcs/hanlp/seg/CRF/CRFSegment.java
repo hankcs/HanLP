@@ -97,11 +97,11 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
                 Vertex vertex = new Vertex(term.word, attribute);
                 vertexList.add(vertex);
             }
-            // 数字识别
-            if (config.numberQuantifierRecognize)
-            {
-                mergeNumberQuantifier(vertexList);
-            }
+//            // 数字识别
+//            if (config.numberQuantifierRecognize)
+//            {
+//                mergeNumberQuantifier(vertexList, null, config);
+//            }
             Viterbi.compute(vertexList, CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary);
             int i = 0;
             for (Term term : termList)
@@ -278,7 +278,8 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
     @Override
     public Segment enableNumberQuantifierRecognize(boolean enable)
     {
-        enablePartOfSpeechTagging(enable);
-        return super.enableNumberQuantifierRecognize(enable);
+        throw new UnsupportedOperationException("暂不支持");
+//        enablePartOfSpeechTagging(enable);
+//        return super.enableNumberQuantifierRecognize(enable);
     }
 }

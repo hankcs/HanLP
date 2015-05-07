@@ -19,6 +19,7 @@ import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
+import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.SentencesUtil;
 
@@ -237,12 +238,13 @@ public abstract class Segment
      * 合并数字
      * @param termList
      */
-    protected void mergeNumberQuantifier(List<Vertex> termList)
+    protected void mergeNumberQuantifier(List<Vertex> termList, WordNet wordNetAll, Config config)
     {
         if (termList.size() < 4) return;
         StringBuilder sbQuantifier = new StringBuilder();
         ListIterator<Vertex> iterator = termList.listIterator();
         iterator.next();
+        int line = 1;
         while (iterator.hasNext())
         {
             Vertex pre = iterator.next();
@@ -259,6 +261,10 @@ public abstract class Segment
                         (cur.hasNature(Nature.q) || cur.hasNature(Nature.qv) || cur.hasNature(Nature.qt))
                         )
                 {
+                    if (config.indexMode)
+                    {
+                        wordNetAll.add(line, new Vertex(sbQuantifier.toString(), new CoreDictionary.Attribute(Nature.m)));
+                    }
                     sbQuantifier.append(cur.realWord);
                     pre.attribute = new CoreDictionary.Attribute(Nature.mq);
                     iterator.remove();
@@ -269,7 +275,9 @@ public abstract class Segment
                     sbQuantifier.setLength(0);
                 }
             }
+            line += pre.realWord.length();
         }
+        System.out.println(wordNetAll);
     }
 
     /**

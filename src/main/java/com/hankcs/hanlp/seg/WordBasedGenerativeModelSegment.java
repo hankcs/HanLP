@@ -489,7 +489,10 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                     List<Vertex> vertexListCurrentLine = wordNetAll.get(currentLine);    // 这一行的词
                     for (Vertex smallVertex : vertexListCurrentLine) // 这一行的短词
                     {
-                        if (smallVertex.realWord.length() > 1 && smallVertex != vertex)
+                        if (
+                                ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
+                                smallVertex.realWord.length() > 1)
+                                        && smallVertex != vertex)
                         {
                             listIterator.add(smallVertex);
                             Term termSub = convert(smallVertex);
