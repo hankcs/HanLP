@@ -61,10 +61,5 @@ public class DemoHMMSegment
         }
         double costTime = (System.currentTimeMillis() - start) / (double)1000;
         System.out.printf("HMM2分词速度：%.2f字每秒\n", text.length() * pressure / costTime);
-        // 与其他分词器作比较
-        System.gc();
-        DemoBasicTokenizer.main(null);
-        System.gc();
-        DemoHighSpeedSegment.main(null);
     }
 }
