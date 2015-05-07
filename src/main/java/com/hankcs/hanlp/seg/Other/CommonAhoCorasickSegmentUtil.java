@@ -23,7 +23,7 @@ import java.util.LinkedList;
  *
  * @author hankcs
  */
-public class CommonAhoCorasickSegment
+public class CommonAhoCorasickSegmentUtil
 {
     /**
      * 最长分词，合并未知语素
