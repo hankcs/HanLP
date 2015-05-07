@@ -31,10 +31,10 @@ import java.util.*;
  * 隐马模型分词器基类
  * @author hankcs
  */
-public abstract class HiddenMarkovModelSegment extends Segment
+public abstract class NGramModelSegment extends Segment
 {
 
-    public HiddenMarkovModelSegment()
+    public NGramModelSegment()
     {
         super();
     }

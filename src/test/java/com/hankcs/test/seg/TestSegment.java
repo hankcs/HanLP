@@ -44,13 +44,11 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-//        HanLP.Config.enableDebug(true);
+        HanLP.Config.enableDebug(true);
         HanLP.Config.ShowTermNature = false;
-        Segment segment = new DijkstraSegment().enableNumberQuantifierRecognize(true);
-//        segment.enableCustomDictionary(true);
-//        CustomDictionary.insert("同天", "v 1000");
+        Segment segment = new DijkstraSegment().enableAllNamedEntityRecognize(false);
         System.out.println(segment.seg(
-                "百千万亿佰仟％‰"
+                "呼伦贝尔天翼大众"
         ));
     }
 

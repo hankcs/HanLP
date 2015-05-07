@@ -159,6 +159,10 @@ public class HanLP
          */
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.mini.txt";
         /**
+         * HMM分词模型
+         */
+        public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
+        /**
          * CRF依存模型
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
@@ -217,6 +221,7 @@ public class HanLP
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
+                HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
             }
             catch (Exception e)

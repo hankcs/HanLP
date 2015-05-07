@@ -17,7 +17,7 @@ import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
-import com.hankcs.hanlp.seg.HiddenMarkovModelSegment;
+import com.hankcs.hanlp.seg.NGramModelSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class ViterbiSegment extends HiddenMarkovModelSegment
+public class ViterbiSegment extends NGramModelSegment
 {
     @Override
     protected List<Term> segSentence(char[] sentence)

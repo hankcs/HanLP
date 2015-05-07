@@ -18,7 +18,7 @@ import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
-import com.hankcs.hanlp.seg.HiddenMarkovModelSegment;
+import com.hankcs.hanlp.seg.NGramModelSegment;
 import com.hankcs.hanlp.seg.NShort.Path.*;
 import com.hankcs.hanlp.seg.common.Graph;
 import com.hankcs.hanlp.seg.common.Term;
@@ -32,7 +32,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class NShortSegment extends HiddenMarkovModelSegment
+public class NShortSegment extends NGramModelSegment
 {
     List<Vertex> BiOptimumSegment(WordNet wordNetOptimum)
     {

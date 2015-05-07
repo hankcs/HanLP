@@ -57,7 +57,7 @@ public class Config
      */
     public boolean offset = false;
     /**
-     * 是否识别数字
+     * 是否识别数字和量词
      */
     public boolean numberQuantifierRecognize = false;
 
