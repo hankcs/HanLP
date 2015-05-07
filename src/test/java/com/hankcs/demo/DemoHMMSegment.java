@@ -49,5 +49,22 @@ public class DemoHMMSegment
             List<Term> termList = segment.seg(sentence);
             System.out.println(termList);
         }
+
+        // 测个速度
+        String text = "江西鄱阳湖干枯，中国最大淡水湖变成大草原";
+        System.out.println(segment.seg(text));
+        long start = System.currentTimeMillis();
+        int pressure = 1000;
+        for (int i = 0; i < pressure; ++i)
+        {
+            segment.seg(text);
+        }
+        double costTime = (System.currentTimeMillis() - start) / (double)1000;
+        System.out.printf("HMM2分词速度：%.2f字每秒\n", text.length() * pressure / costTime);
+        // 与其他分词器作比较
+        System.gc();
+        DemoBasicTokenizer.main(null);
+        System.gc();
+        DemoHighSpeedSegment.main(null);
     }
 }

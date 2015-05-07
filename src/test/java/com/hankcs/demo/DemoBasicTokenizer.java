@@ -33,6 +33,6 @@ public class DemoBasicTokenizer
             BasicTokenizer.segment(text);
         }
         double costTime = (System.currentTimeMillis() - start) / (double) 1000;
-        System.out.printf("分词速度：%.2f字每秒", text.length() * pressure / costTime);
+        System.out.printf("BasicTokenizer分词速度：%.2f字每秒\n", text.length() * pressure / costTime);
     }
 }
