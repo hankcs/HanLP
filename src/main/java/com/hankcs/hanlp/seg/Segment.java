@@ -275,6 +275,7 @@ public abstract class Segment
                     sbQuantifier.setLength(0);
                 }
             }
+            sbQuantifier.setLength(0);
             line += pre.realWord.length();
         }
 //        System.out.println(wordNetAll);
