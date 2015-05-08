@@ -27,12 +27,6 @@ public class TextRankKeyword extends KeywordExtractor
     final static int max_iter = 200;
     final static float min_diff = 0.001f;
 
-    public TextRankKeyword()
-    {
-        // jdk bug : Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
-        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
-    }
-
     /**
      * 提取关键词
      * @param document 文档内容
@@ -117,7 +111,7 @@ public class TextRankKeyword extends KeywordExtractor
             @Override
             public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2)
             {
-                return (o1.getValue() - o2.getValue() > 0 ? -1 : 1);
+                return o2.getValue().compareTo(o1.getValue());
             }
         });
 //        System.out.println(entryList);
