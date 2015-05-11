@@ -244,4 +244,13 @@ public class TestSegment extends TestCase
         Segment segment = new ViterbiSegment().enableMultithreading(100);
         System.out.println(segment.seg(text));
     }
+
+    public void testCRFSegment() throws Exception
+    {
+//        HanLP.Config.enableDebug();
+        HanLP.Config.ShowTermNature = false;
+        Segment segment = new CRFSegment();
+        System.out.println(segment.seg("尼玛不是新词，王尼玛是新词"));
+        System.out.println(segment.seg("周杰伦在出品范特西之后，又出品了依然范特西"));
+    }
 }

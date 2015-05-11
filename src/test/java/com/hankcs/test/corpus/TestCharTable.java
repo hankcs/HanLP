@@ -31,10 +31,27 @@ public class TestCharTable extends TestCase
         System.out.println(CharTable.CONVERT['．']);
     }
 
+    public void testEnd() throws Exception
+    {
+        System.out.println(CharTable.CONVERT['，']);
+        System.out.println(CharTable.CONVERT['。']);
+        System.out.println(CharTable.CONVERT['！']);
+        System.out.println(CharTable.CONVERT['…']);
+    }
+
     public void testFix() throws Exception
     {
         CharTable.CONVERT['.'] = '.';
         CharTable.CONVERT['．'] = '.';
+        CharTable.CONVERT['。'] = '，';
+        CharTable.CONVERT['！'] = '，';
+        CharTable.CONVERT['，'] = '，';
+        CharTable.CONVERT['…'] = '，';
+        for (int i = 0; i < CharTable.CONVERT.length; i++)
+        {
+            if (CharTable.CONVERT[i] == '。')
+                CharTable.CONVERT[i] = '，';
+        }
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(HanLP.Config.CharTablePath));
         out.writeObject(CharTable.CONVERT);
         out.close();
