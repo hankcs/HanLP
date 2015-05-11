@@ -22,11 +22,11 @@ import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.SentencesUtil;
+import com.hankcs.hanlp.utility.TextUtility;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 分词器（分词服务）<br>
@@ -289,7 +289,88 @@ public abstract class Segment
      */
     public List<Term> seg(String text)
     {
-        return segSentence(text.toCharArray()); // 针对大文本，未来考虑先拆成句子，后分词，避免内存峰值太大
+        char[] charArray = text.toCharArray();
+        if (config.threadNumber > 1)
+        {
+            List<String> sentenceList = SentencesUtil.toSentenceList(charArray);
+            String[] sentenceArray = new String[sentenceList.size()];
+            //noinspection unchecked
+            List<Term>[] termListArray = new List[sentenceArray.length];
+            sentenceList.toArray(sentenceArray);
+            final int per = sentenceArray.length / config.threadNumber;
+            WorkThread[] threadArray = new WorkThread[config.threadNumber];
+            for (int i = 0; i < config.threadNumber - 1; ++i)
+            {
+                int from = i * per;
+                threadArray[i] = new WorkThread(sentenceArray, termListArray, from, from + per);
+                threadArray[i].start();
+            }
+            threadArray[config.threadNumber - 1] = new WorkThread(sentenceArray, termListArray, (config.threadNumber - 1) * per, sentenceArray.length);
+            threadArray[config.threadNumber - 1].start();
+            try
+            {
+                for (WorkThread thread : threadArray)
+                {
+                    thread.join();
+                }
+            }
+            catch (InterruptedException e)
+            {
+                logger.severe("线程同步异常：" + TextUtility.exceptionToString(e));
+                return Collections.emptyList();
+            }
+            List<Term> termList = new LinkedList<Term>();
+            if (config.offset || config.indexMode)  // 由于分割了句子，所以需要重新校正offset
+            {
+                int sentenceOffset = 0;
+                for (int i = 0; i < sentenceArray.length; ++i)
+                {
+                    for (Term term : termListArray[i])
+                    {
+                        term.offset += sentenceOffset;
+                        termList.add(term);
+                    }
+                    sentenceOffset += sentenceArray[i].length();
+                }
+            }
+            else
+            {
+                for (List<Term> list : termListArray)
+                {
+                    termList.addAll(list);
+                }
+            }
+
+            return termList;
+        }
+//        if (text.length() > 10000)  // 针对大文本，先拆成句子，后分词，避免内存峰值太大
+//        {
+//            List<Term> termList = new LinkedList<Term>();
+//            if (config.offset || config.indexMode)
+//            {
+//                int sentenceOffset = 0;
+//                for (String sentence : SentencesUtil.toSentenceList(charArray))
+//                {
+//                    List<Term> termOfSentence = segSentence(sentence.toCharArray());
+//                    for (Term term : termOfSentence)
+//                    {
+//                        term.offset += sentenceOffset;
+//                        termList.add(term);
+//                    }
+//                    sentenceOffset += sentence.length();
+//                }
+//            }
+//            else
+//            {
+//                for (String sentence : SentencesUtil.toSentenceList(charArray))
+//                {
+//                    termList.addAll(segSentence(sentence.toCharArray()));
+//                }
+//            }
+//
+//            return termList;
+//        }
+        return segSentence(charArray);
     }
 
     /**
@@ -465,6 +546,54 @@ public abstract class Segment
         config.placeRecognize = enable;
         config.organizationRecognize = enable;
         config.updateNerConfig();
+        return this;
+    }
+
+    class WorkThread extends Thread
+    {
+        String[] sentenceArray;
+        List<Term>[] termListArray;
+        int from;
+        int to;
+
+        public WorkThread(String[] sentenceArray, List<Term>[] termListArray, int from, int to)
+        {
+            this.sentenceArray = sentenceArray;
+            this.termListArray = termListArray;
+            this.from = from;
+            this.to = to;
+        }
+
+        @Override
+        public void run()
+        {
+            for (int i = from; i < to; ++i)
+            {
+                termListArray[i] = segSentence(sentenceArray[i].toCharArray());
+            }
+        }
+    }
+
+    /**
+     * 开启多线程
+     * @param enable
+     * @return
+     */
+    public Segment enableMultithreading(boolean enable)
+    {
+        if (enable) config.threadNumber = 4;
+        else config.threadNumber = 1;
+        return this;
+    }
+
+    /**
+     * 开启多线程
+     * @param threadNumber 线程数量
+     * @return
+     */
+    public Segment enableMultithreading(int threadNumber)
+    {
+        config.threadNumber = threadNumber;
         return this;
     }
 }

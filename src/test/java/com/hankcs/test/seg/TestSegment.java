@@ -14,12 +14,14 @@ package com.hankcs.test.seg;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.dictionary.other.CharType;
+import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
+import com.hankcs.hanlp.tokenizer.BasicTokenizer;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
@@ -27,6 +29,7 @@ import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -49,7 +52,7 @@ public class TestSegment extends TestCase
         HanLP.Config.ShowTermNature = false;
         Segment segment = new DijkstraSegment().enableAllNamedEntityRecognize(false);
         System.out.println(segment.seg(
-                "呼伦贝尔天翼大众"
+                "江西鄱阳湖干枯，"
         ));
     }
 
@@ -196,5 +199,42 @@ public class TestSegment extends TestCase
         System.out.println(termList);
         termList = IndexTokenizer.segment("15307971214话费还有多少");
         System.out.println(termList);
+    }
+
+    public void testMultiThreading() throws Exception
+    {
+        Segment segment = BasicTokenizer.SEGMENT;
+        // 测个速度
+        String text = "江西鄱阳湖干枯，中国最大淡水湖变成大草原。";
+        System.out.println(segment.seg(text));
+        int pressure = 100000;
+        StringBuilder sbBigText = new StringBuilder(text.length() * pressure);
+        for (int i = 0; i < pressure; i++)
+        {
+            sbBigText.append(text);
+        }
+        text = sbBigText.toString();
+        long start = System.currentTimeMillis();
+        List<Term> termList1 = segment.seg(text);
+        double costTime = (System.currentTimeMillis() - start) / (double)1000;
+        System.out.printf("单线程分词速度：%.2f字每秒\n", text.length() / costTime);
+
+        segment.enableMultithreading(4);
+        start = System.currentTimeMillis();
+        List<Term> termList2 = segment.seg(text);
+        costTime = (System.currentTimeMillis() - start) / (double)1000;
+        System.out.printf("四线程分词速度：%.2f字每秒\n", text.length() / costTime);
+
+        assertEquals(termList1.size(), termList2.size());
+        Iterator<Term> iterator1 = termList1.iterator();
+        Iterator<Term> iterator2 = termList2.iterator();
+        while (iterator1.hasNext())
+        {
+            Term term1 = iterator1.next();
+            Term term2 = iterator2.next();
+            assertEquals(term1.word, term2.word);
+            assertEquals(term1.nature, term2.nature);
+            assertEquals(term1.offset, term2.offset);
+        }
     }
 }

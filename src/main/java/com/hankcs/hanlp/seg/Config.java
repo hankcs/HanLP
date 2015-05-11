@@ -60,6 +60,10 @@ public class Config
      * 是否识别数字和量词
      */
     public boolean numberQuantifierRecognize = false;
+    /**
+     * 并行分词的线程数
+     */
+    public int threadNumber = 1;
 
     /**
      * 更新命名实体识别总开关
