@@ -36,17 +36,24 @@ public class DemoMultithreadingSegment
             sbBigText.append(text);
         }
         text = sbBigText.toString();
+        System.gc();
 
+        long start;
+        double costTime;
         // 测个速度
-        long start = System.currentTimeMillis();
+
+        segment.enableMultithreading(false);
+        start = System.currentTimeMillis();
         segment.seg(text);
-        double costTime = (System.currentTimeMillis() - start) / (double) 1000;
+        costTime = (System.currentTimeMillis() - start) / (double) 1000;
         System.out.printf("单线程分词速度：%.2f字每秒\n", text.length() / costTime);
+        System.gc();
 
         segment.enableMultithreading(true); // 或者 segment.enableMultithreading(4);
         start = System.currentTimeMillis();
         segment.seg(text);
         costTime = (System.currentTimeMillis() - start) / (double) 1000;
         System.out.printf("多线程分词速度：%.2f字每秒\n", text.length() / costTime);
+        System.gc();
     }
 }

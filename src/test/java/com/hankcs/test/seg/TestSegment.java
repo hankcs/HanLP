@@ -237,4 +237,11 @@ public class TestSegment extends TestCase
             assertEquals(term1.offset, term2.offset);
         }
     }
+
+    public void testTryToCrashSegment() throws Exception
+    {
+        String text = "尝试玩坏分词器";
+        Segment segment = new ViterbiSegment().enableMultithreading(100);
+        System.out.println(segment.seg(text));
+    }
 }

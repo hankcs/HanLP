@@ -290,7 +290,7 @@ public abstract class Segment
     public List<Term> seg(String text)
     {
         char[] charArray = text.toCharArray();
-        if (config.threadNumber > 1)
+        if (config.threadNumber > 1 && charArray.length > 10000)    // 小文本多线程没意义，反而变慢了
         {
             List<String> sentenceList = SentencesUtil.toSentenceList(charArray);
             String[] sentenceArray = new String[sentenceList.size()];
@@ -575,7 +575,7 @@ public abstract class Segment
     }
 
     /**
-     * 开启多线程
+     * 开启多线程（默认4线程）
      * @param enable
      * @return
      */
