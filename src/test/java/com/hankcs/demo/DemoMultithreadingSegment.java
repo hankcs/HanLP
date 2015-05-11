@@ -29,7 +29,7 @@ public class DemoMultithreadingSegment
                 "铭记二战历史，更是为了提醒国际社会，需要共同捍卫二战胜利成果和国际公平正义，" +
                 "必须警惕和抵制在历史认知和维护战后国际秩序问题上的倒行逆施。";
         System.out.println(segment.seg(text));
-        int pressure = 1000;
+        int pressure = 10000;
         StringBuilder sbBigText = new StringBuilder(text.length() * pressure);
         for (int i = 0; i < pressure; i++)
         {
