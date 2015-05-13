@@ -294,9 +294,9 @@ public abstract class Segment
         {
             List<String> sentenceList = SentencesUtil.toSentenceList(charArray);
             String[] sentenceArray = new String[sentenceList.size()];
+            sentenceList.toArray(sentenceArray);
             //noinspection unchecked
             List<Term>[] termListArray = new List[sentenceArray.length];
-            sentenceList.toArray(sentenceArray);
             final int per = sentenceArray.length / config.threadNumber;
             WorkThread[] threadArray = new WorkThread[config.threadNumber];
             for (int i = 0; i < config.threadNumber - 1; ++i)
@@ -387,8 +387,8 @@ public abstract class Segment
     /**
      * 分词断句 输出句子形式
      *
-     * @param text
-     * @return
+     * @param text 待分词句子
+     * @return 句子列表，每个句子由一个单词列表组成
      */
     public List<List<Term>> seg2sentence(String text)
     {
@@ -522,7 +522,7 @@ public abstract class Segment
 
     /**
      * 是否启用数词和数量词识别<br>
-     *     即[二 十 一] => [二十一]，[十 九 元] => [十九元]
+     *     即[二, 十, 一] => [二十一]，[十, 九, 元] => [十九元]
      * @param enable
      * @return
      */
