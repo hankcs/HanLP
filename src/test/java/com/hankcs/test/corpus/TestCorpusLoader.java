@@ -17,12 +17,10 @@ import com.hankcs.hanlp.corpus.document.Document;
 import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import junit.framework.TestCase;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.List;
 
 
@@ -62,19 +60,20 @@ public class TestCorpusLoader extends TestCase
 
     public void testCombineToTxt() throws Exception
     {
-        final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("D:\\Doc\\语料库\\2014.txt"), "UTF-8"));
-        CorpusLoader.walk("D:\\Doc\\语料库\\2014", new CorpusLoader.Handler()
+        final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("D:\\Doc\\语料库\\2014_cn.txt"), "UTF-8"));
+        CorpusLoader.walk("D:\\Doc\\语料库\\2014_hankcs", new CorpusLoader.Handler()
         {
             @Override
             public void handle(Document document)
             {
                 try
                 {
-                    for (List<IWord> sentence : document.getComplexSentenceList())
+                    for (List<Word> sentence : document.getSimpleSentenceList())
                     {
                         for (IWord word : sentence)
                         {
                             bw.write(word.getValue());
+                            bw.write(' ');
                         }
                         bw.newLine();
                     }
@@ -141,5 +140,74 @@ public class TestCorpusLoader extends TestCase
             }
         });
         dictionaryMaker.saveTxtTo("data/dictionary/custom/机构名词典.txt");
+    }
+
+    /**
+     * 语料库中有很多句号标注得不对，尝试纠正它们
+     * 比如“方言/n 版/n [新年/t 祝福/vn]/nz 。你/rr 的/ude1 一段/mq 话/n ”
+     * @throws Exception
+     */
+    public void testAdjustDot() throws Exception
+    {
+        CorpusLoader.walk("D:\\JavaProjects\\CorpusToolBox\\data\\2014", new CorpusLoader.Handler()
+        {
+            int id = 0;
+            @Override
+            public void handle(Document document)
+            {
+                try
+                {
+                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("D:\\Doc\\语料库\\2014_hankcs\\" + (++id) + ".txt"), "UTF-8"));
+                    for (List<IWord> wordList : document.getComplexSentenceList())
+                    {
+                        if (wordList.size() == 0) continue;
+                        for (IWord word : wordList)
+                        {
+                            if (word.getValue().length() > 1 && word.getValue().charAt(0) == '。')
+                            {
+                                bw.write("。/w");
+                                bw.write(word.getValue().substring(1));
+                                bw.write('/');
+                                bw.write(word.getLabel());
+                                bw.write(' ');
+                                continue;
+                            }
+                            bw.write(word.toString());
+                            bw.write(' ');
+                        }
+                        bw.newLine();
+                    }
+                    bw.close();
+                }
+                catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void testLoadMyCorpus() throws Exception
+    {
+        CorpusLoader.walk("D:\\Doc\\语料库\\2014_hankcs\\", new CorpusLoader.Handler()
+        {
+            @Override
+            public void handle(Document document)
+            {
+                for (List<IWord> wordList : document.getComplexSentenceList())
+                {
+                    System.out.println(wordList);
+                }
+            }
+        });
+
     }
 }

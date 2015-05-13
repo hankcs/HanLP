@@ -14,7 +14,7 @@ package com.hankcs.hanlp.summary;
 
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.seg.NShort.NShortSegment;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.*;
 
@@ -194,7 +194,7 @@ public class TextRankSentence
         List<List<String>> docs = new ArrayList<List<String>>();
         for (String sentence : sentenceList)
         {
-            List<Term> termList = NShortSegment.parse(sentence);
+            List<Term> termList = StandardTokenizer.segment(sentence.toCharArray());
             List<String> wordList = new LinkedList<String>();
             for (Term term : termList)
             {

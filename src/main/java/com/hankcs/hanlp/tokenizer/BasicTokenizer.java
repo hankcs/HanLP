@@ -20,7 +20,7 @@ import java.util.List;
  * 基础分词器，只做基本NGram分词，不识别命名实体，不使用用户词典
  * @author hankcs
  */
-public class BasicTokenizer extends StandardTokenizer
+public class BasicTokenizer
 {
     /**
      * 预置分词器

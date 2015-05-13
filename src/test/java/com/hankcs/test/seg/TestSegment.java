@@ -39,10 +39,10 @@ public class TestSegment extends TestCase
 {
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment().enableCustomDictionary(false);
         System.out.println(segment.seg(
-                "我喜欢陈膺奥"
+                "这是故事最终的结局"
         ));
     }
 
