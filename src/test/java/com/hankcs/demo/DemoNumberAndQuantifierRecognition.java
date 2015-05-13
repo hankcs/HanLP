@@ -28,6 +28,7 @@ public class DemoNumberAndQuantifierRecognition
                         "九千九百九十九朵玫瑰",
                         "壹佰块都不给我",
                         "９０１２３４５６７８只蚂蚁",
+                        "牛奶三〇〇克*2",
                 };
         for (String sentence : testCase)
         {
