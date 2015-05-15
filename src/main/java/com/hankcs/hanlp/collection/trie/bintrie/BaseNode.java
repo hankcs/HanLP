@@ -16,7 +16,6 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.AbstractMap;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -162,7 +161,7 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         }
     }
 
-    protected void walkToLoad(ByteArray byteArray, ValueArray valueArray)
+    protected void walkToLoad(ByteArray byteArray, _ValueArray<V> valueArray)
     {
         c = byteArray.nextChar();
         status = ARRAY_STATUS[byteArray.nextInt()];
@@ -179,7 +178,7 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         }
     }
 
-    public static enum Status
+    public enum Status
     {
         /**
          * 未指定，用于删除词条
@@ -209,51 +208,6 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
         public int compareTo(TrieEntry o)
         {
             return getKey().compareTo(o.getKey());
-        }
-    }
-
-    /**
-     * 对值数组的包装，可以方便地取下一个
-     */
-    public class ValueArray
-    {
-        V[] value;
-        int offset;
-
-        public ValueArray(V[] value)
-        {
-            this.value = value;
-        }
-
-        public V nextValue()
-        {
-            return value[offset++];
-        }
-
-        /**
-         * 仅仅给子类用，不要用
-         */
-        protected ValueArray()
-        {
-        }
-
-        public ValueArray setValue(V[] value)
-        {
-            this.value = value;
-            return this;
-        }
-    }
-
-    public class EmptyValueArray extends ValueArray
-    {
-        public EmptyValueArray()
-        {
-        }
-
-        @Override
-        public V nextValue()
-        {
-            return null;
         }
     }
 
