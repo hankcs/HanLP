@@ -77,7 +77,7 @@ HanLP下载地址：https://github.com/hankcs/HanLP/releases
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.1.5</version>
+    <version>portable-1.2.2</version>
 </dependency>
 ```
 
