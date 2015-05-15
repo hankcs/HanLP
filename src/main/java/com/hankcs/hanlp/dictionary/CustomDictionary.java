@@ -105,7 +105,7 @@ public class CustomDictionary
                     out.writeInt(attribute.frequency[i]);
                 }
             }
-            act.save(out);
+            dat.save(out);
             out.close();
         }
         catch (FileNotFoundException e)
@@ -276,7 +276,12 @@ public class CustomDictionary
      */
     public static CoreDictionary.Attribute get(String key)
     {
-        return trie.get(key);
+        if (dat == null)
+        {
+            if (trie != null) return trie.get(key);
+            return null;
+        }
+        else return dat.get(key);
     }
 
     /**

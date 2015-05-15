@@ -12,6 +12,7 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
@@ -63,7 +64,7 @@ public class HanLP
         /**
          * 用户自定义词典路径
          */
-        public static String CustomDictionaryPath[] = new String[]{"./data/dictionary/custom/CustomDictionary.txt"};
+        public static String CustomDictionaryPath[] = new String[]{"data/dictionary/custom/CustomDictionary.txt"};
         /**
          * 2元语法词典路径
          */
@@ -126,16 +127,6 @@ public class HanLP
         public static String JapanesePersonDictionaryPath = "data/dictionary/person/nrj.txt";
 
         /**
-         * 地址识别角色词典路径
-         */
-        public static String AddressRoleDictionaryPath = "data/dictionary/address/poi.txt";
-
-        /**
-         * 地址识别示例文件路径
-         */
-        public static String AddressExamplePath = "data/dictionary/address/example.txt";
-
-        /**
          * 字符类型对应表
          */
         public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
@@ -157,7 +148,11 @@ public class HanLP
         /**
          * CRF分词模型
          */
-        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.mini.txt";
+        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
+        /**
+         * HMM分词模型
+         */
+        public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
          * CRF依存模型
          */
@@ -241,6 +236,7 @@ public class HanLP
                 MaxEntModelPath = p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 CRFSegmentModelPath = p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
+                HMMSegmentModelPath = p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
             }
             catch (Exception e)
