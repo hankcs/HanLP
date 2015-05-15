@@ -326,7 +326,7 @@ public class HanLP
     /**
      * 转化为拼音
      *
-     * @param text 代解析的文本
+     * @param text 待解析的文本
      * @return 一个拼音列表
      */
     public static List<Pinyin> convertToPinyinList(String text)
