@@ -14,7 +14,7 @@ package com.hankcs.hanlp.summary;
 
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.seg.NShort.NShortSegment;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.*;
 
@@ -27,12 +27,12 @@ public class TextRankSentence
     /**
      * 阻尼系数（ＤａｍｐｉｎｇＦａｃｔｏｒ），一般取值为0.85
      */
-    final double d = 0.85;
+    final static double d = 0.85;
     /**
      * 最大迭代次数
      */
-    final int max_iter = 200;
-    final double min_diff = 0.001;
+    final static int max_iter = 200;
+    final static double min_diff = 0.001;
     /**
      * 文档句子的个数
      */
@@ -194,7 +194,7 @@ public class TextRankSentence
         List<List<String>> docs = new ArrayList<List<String>>();
         for (String sentence : sentenceList)
         {
-            List<Term> termList = NShortSegment.parse(sentence);
+            List<Term> termList = StandardTokenizer.segment(sentence.toCharArray());
             List<String> wordList = new LinkedList<String>();
             for (Term term : termList)
             {

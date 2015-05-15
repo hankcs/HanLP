@@ -15,14 +15,10 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
-import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.Predefine;
-import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
 import java.util.*;
@@ -37,7 +33,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class CustomDictionary
 {
     static BinTrie<CoreDictionary.Attribute> trie;
-    static DoubleArrayTrie<CoreDictionary.Attribute> act = new DoubleArrayTrie<CoreDictionary.Attribute>();
+    public static DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
     /**
      * 第一个是主词典，其他是副词典
      */
@@ -50,11 +46,10 @@ public class CustomDictionary
         if (!loadMainDictionary(path[0]))
         {
             logger.warning("自定义词典" + Arrays.toString(path) + "加载失败");
-            CustomDictionary.act = null;
         }
         else
         {
-            logger.info("自定义词典加载成功:" + act.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
+            logger.info("自定义词典加载成功:" + dat.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
     }
 
@@ -89,8 +84,7 @@ public class CustomDictionary
                 if (!success) logger.warning("失败：" + p);
             }
             logger.info("正在构建AhoCorasickDoubleArrayTrie……");
-            if (map.size() == 0) return false;
-            act.build(map);
+            dat.build(map);
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
             // 缓存值文件
@@ -220,7 +214,7 @@ public class CustomDictionary
         if (word == null) return false;
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
-        if (act != null && act.set(word, att)) return true;
+        if (dat != null && dat.set(word, att)) return true;
         if (trie == null) trie = new BinTrie<CoreDictionary.Attribute>();
         trie.put(word, att);
         return true;
@@ -264,7 +258,7 @@ public class CustomDictionary
                     attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            if (!act.load(byteArray, attributes)) return false;
+            if (!dat.load(byteArray, attributes)) return false;
         }
         catch (Exception e)
         {
@@ -333,7 +327,7 @@ public class CustomDictionary
 
     public static boolean contains(String key)
     {
-        if (act != null && act.exactMatchSearch(key) >= 0) return true;
+        if (dat != null && dat.exactMatchSearch(key) >= 0) return true;
         return trie != null && trie.containsKey(key);
     }
 
@@ -413,8 +407,8 @@ public class CustomDictionary
                 processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
             }
         }
-        if (act == null) return;
-        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = act.getSearcher(text, 0);
+        if (dat == null) return;
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
         while (searcher.next())
         {
             processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);

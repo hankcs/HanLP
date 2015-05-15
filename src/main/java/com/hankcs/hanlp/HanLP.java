@@ -12,7 +12,6 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
@@ -279,7 +278,6 @@ public class HanLP
 
         /**
          * 开启调试模式(会降低性能)
-         *
          * @param enable
          */
         public static void enableDebug(boolean enable)
@@ -347,7 +345,7 @@ public class HanLP
     /**
      * 转化为拼音
      *
-     * @param text 代解析的文本
+     * @param text 待解析的文本
      * @return 一个拼音列表
      */
     public static List<Pinyin> convertToPinyinList(String text)
@@ -417,7 +415,6 @@ public class HanLP
 
     /**
      * 提取短语
-     *
      * @param text 文本
      * @param size 需要多少个短语
      * @return 一个短语列表，大小 <= size
@@ -430,9 +427,8 @@ public class HanLP
 
     /**
      * 提取关键词
-     *
      * @param document 文档内容
-     * @param size     希望提取几个关键词
+     * @param size 希望提取几个关键词
      * @return 一个列表
      */
     public static List<String> extractKeyword(String document, int size)
@@ -442,9 +438,8 @@ public class HanLP
 
     /**
      * 自动摘要
-     *
      * @param document 目标文档
-     * @param size     需要的关键句的个数
+     * @param size 需要的关键句的个数
      * @return 关键句列表
      */
     public static List<String> extractSummary(String document, int size)

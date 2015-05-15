@@ -28,13 +28,14 @@ import com.hankcs.hanlp.utility.Predefine;
 import java.util.*;
 
 /**
- * 隐马模型分词器基类
+ * 基于词语NGram模型的分词器基类
+ *
  * @author hankcs
  */
-public abstract class HiddenMarkovModelSegment extends Segment
+public abstract class WordBasedGenerativeModelSegment extends Segment
 {
 
-    public HiddenMarkovModelSegment()
+    public WordBasedGenerativeModelSegment()
     {
         super();
     }
@@ -56,6 +57,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 通过规则修正一些结果
+     *
      * @param linkedArray
      */
     protected static void fixResultByRule(List<Vertex> linkedArray)
@@ -63,7 +65,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
         //--------------------------------------------------------------------
         //Merge all seperate continue num into one number
-        MergeContinueNumIntoOne(linkedArray);
+        mergeContinueNumIntoOne(linkedArray);
 
         //--------------------------------------------------------------------
         //The delimiter "－－"
@@ -226,6 +228,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 将一条路径转为最终结果
+     *
      * @param vertexList
      * @param offsetEnabled 是否计算offset
      * @return
@@ -272,6 +275,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
     {
         return convert(vertexList, false);
     }
+
     /**
      * 生成二元词图
      *
@@ -285,11 +289,12 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 原子分词
-     * @deprecated 应该使用字符数组的版本
+     *
      * @param sSentence
      * @param start
      * @param end
      * @return
+     * @deprecated 应该使用字符数组的版本
      */
     private static List<AtomNode> AtomSegment(String sSentence, int start, int end)
     {
@@ -379,7 +384,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
      *
      * @param linkedArray
      */
-    private static void MergeContinueNumIntoOne(List<Vertex> linkedArray)
+    private static void mergeContinueNumIntoOne(List<Vertex> linkedArray)
     {
         if (linkedArray.size() < 2)
             return;
@@ -458,6 +463,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 为了索引模式修饰结果
+     *
      * @param vertexList
      * @param wordNetAll
      */
@@ -483,7 +489,10 @@ public abstract class HiddenMarkovModelSegment extends Segment
                     List<Vertex> vertexListCurrentLine = wordNetAll.get(currentLine);    // 这一行的词
                     for (Vertex smallVertex : vertexListCurrentLine) // 这一行的短词
                     {
-                        if (smallVertex.realWord.length() > 1 && smallVertex != vertex)
+                        if (
+                                ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
+                                smallVertex.realWord.length() > 1)
+                                        && smallVertex != vertex)
                         {
                             listIterator.add(smallVertex);
                             Term termSub = convert(smallVertex);
@@ -502,6 +511,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 将节点列表转为term列表
+     *
      * @param vertex
      * @return
      */
@@ -512,6 +522,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 词性标注
+     *
      * @param vertexList
      */
     protected static void speechTagging(List<Vertex> vertexList)

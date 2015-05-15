@@ -393,7 +393,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
     {
         byte[] bytes = IOUtil.readBytes(path);
         if (bytes == null) return false;
-        ValueArray valueArray = new ValueArray(value);
+        _ValueArray valueArray = new _ValueArray(value);
         ByteArray byteArray = new ByteArray(bytes);
         for (int i = 0; i < child.length; ++i)
         {
@@ -419,7 +419,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
     {
         byte[] bytes = IOUtil.readBytes(path);
         if (bytes == null) return false;
-        ValueArray valueArray = new EmptyValueArray();
+        _ValueArray valueArray = new _EmptyValueArray();
         ByteArray byteArray = new ByteArray(bytes);
         for (int i = 0; i < child.length; ++i)
         {
@@ -435,7 +435,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
         return true;
     }
 
-    public boolean load(ByteArray byteArray, ValueArray valueArray)
+    public boolean load(ByteArray byteArray, _ValueArray valueArray)
     {
         for (int i = 0; i < child.length; ++i)
         {
@@ -456,8 +456,8 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
         return load(byteArray, newValueArray().setValue(value));
     }
 
-    public ValueArray newValueArray()
+    public _ValueArray newValueArray()
     {
-        return new ValueArray();
+        return new _ValueArray();
     }
 }

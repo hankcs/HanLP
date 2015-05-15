@@ -61,7 +61,7 @@ HanLP: Han Language Processing
 
 HanLP项目主页：http://hanlp.linrunsoft.com/
 
-HanLP下载地址：http://hanlp.linrunsoft.com/services.html
+HanLP下载地址：https://github.com/hankcs/HanLP/releases
 
 最新binary、文档都以项目主页为准。GitHub的说明为历史遗留，仅做参考。
 
@@ -69,23 +69,35 @@ HanLP下载地址：http://hanlp.linrunsoft.com/services.html
 
 ## 下载与配置
 
+###方式一、Maven
+
+为了方便用户，特提供内置了数据包的Portable版，只需在pom.xml加入：
+
+```
+<dependency>
+    <groupId>com.hankcs</groupId>
+    <artifactId>hanlp</artifactId>
+    <version>portable-1.1.5</version>
+</dependency>
+```
+
+零配置，即可使用基本功能（除CRF分词、依存句法分析外的全部功能）。如果用户有自定义的需求，可以参考方式二，使用hanlp.properties进行配置。
+
+###方式二、下载jar、data、hanlp.properties
+
 **HanLP**将数据与程序分离，给予用户自定义的自由。
 
-### 1、下载jar
+#### 1、下载jar
 
-[hanlp.jar](http://hanlp.linrunsoft.com/services.html)
+[hanlp.jar](https://github.com/hankcs/HanLP/releases)
 
-### 2、下载data
+#### 2、下载data
 
-#### 任选一个数据包
-
-**GitHub代码库中已经包含了data.standard.zip中的词典，直接编译运行自动缓存即可**
+**GitHub代码库中已经包含了data.zip中的词典，直接编译运行自动缓存即可；模型则需要额外下载。**
 
 | 数据包        | 功能   |  体积（MB）  |
 | --------   | -----:  | :----:  |
-| [data.full.zip](http://hanlp.linrunsoft.com/services.html)     | 全部 |   255     |
-| data.standard.zip        |   全部词典，不含模型   |   47   |
-| data.mini.zip        |    小体积词典，不含模型    |  22  |
+| [data.zip](https://github.com/hankcs/HanLP/releases)     | 全部 |   255     |
 下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
 
 **HanLP**中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
@@ -97,8 +109,8 @@ HanLP下载地址：http://hanlp.linrunsoft.com/services.html
 
 用户可以自行增删替换，如果不需要句法分析功能的话，随时可以删除model文件夹。
 
-### 3、配置文件
-示例配置文件:[hanlp.properties](http://hanlp.linrunsoft.com/services.html)
+#### 3、配置文件
+示例配置文件:[hanlp.properties](https://github.com/hankcs/HanLP/releases)
 
 配置文件的作用是告诉HanLP数据包的位置，只需修改第一行
 
@@ -106,7 +118,7 @@ HanLP下载地址：http://hanlp.linrunsoft.com/services.html
 
 为data的**父目录**即可，比如data目录是`/Users/hankcs/Documents/data`，那么`root=/Users/hankcs/Documents/` 。
 
-- 如果选用mini数据包的话，则需要修改配置文件：
+- 如果选用mini词典的话，则需要修改配置文件：
 CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
 BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
 

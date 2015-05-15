@@ -200,7 +200,7 @@ public class CoreBiGramTableDictionary
         }
         catch (Exception e)
         {
-            logger.log(Level.WARNING, "尝试载入缓存文件" + path + "发生异常", e);
+            logger.warning("尝试载入缓存文件" + path + "发生异常[" + e + "]，下面将载入源文件并自动缓存……");
             return false;
         }
         return true;

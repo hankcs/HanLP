@@ -27,4 +27,5 @@ public interface ITrie<V>
     boolean load(ByteArray byteArray, V[] value);
     V get(char[] key);
     V[] getValueArray(V[] a);
+    boolean containsKey(String key);
 }

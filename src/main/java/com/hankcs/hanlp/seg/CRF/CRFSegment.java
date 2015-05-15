@@ -19,6 +19,8 @@ import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.CRFSegmentModel;
 import com.hankcs.hanlp.model.crf.Table;
+import com.hankcs.hanlp.model.trigram.CharacterBasedGenerativeModel;
+import com.hankcs.hanlp.seg.CharacterBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
@@ -32,22 +34,8 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class CRFSegment extends Segment
+public class CRFSegment extends CharacterBasedGenerativeModelSegment
 {
-
-    private boolean speechTagging;
-
-    /**
-     * 开启词性标注
-     *
-     * @param enable
-     * @return
-     */
-    public CRFSegment enablePartOfSpeechTagging(boolean enable)
-    {
-        speechTagging = enable;
-        return this;
-    }
 
     @Override
     protected List<Term> segSentence(char[] sentence)
@@ -96,7 +84,8 @@ public class CRFSegment extends Segment
                 break;
             }
         }
-        if (speechTagging)
+
+        if (config.speechTagging)
         {
             ArrayList<Vertex> vertexList = new ArrayList<Vertex>(termList.size() + 1);
             vertexList.add(Vertex.B);
@@ -108,6 +97,11 @@ public class CRFSegment extends Segment
                 Vertex vertex = new Vertex(term.word, attribute);
                 vertexList.add(vertex);
             }
+//            // 数字识别
+//            if (config.numberQuantifierRecognize)
+//            {
+//                mergeNumberQuantifier(vertexList, null, config);
+//            }
             Viterbi.compute(vertexList, CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary);
             int i = 0;
             for (Term term : termList)
@@ -274,11 +268,18 @@ public class CRFSegment extends Segment
      * @param size
      * @return
      */
-    public static String[][] resizeArray(String[][] array, int size)
+    private static String[][] resizeArray(String[][] array, int size)
     {
         String[][] nArray = new String[size][];
         System.arraycopy(array, 0, nArray, 0, size);
         return nArray;
     }
 
+    @Override
+    public Segment enableNumberQuantifierRecognize(boolean enable)
+    {
+        throw new UnsupportedOperationException("暂不支持");
+//        enablePartOfSpeechTagging(enable);
+//        return super.enableNumberQuantifierRecognize(enable);
+    }
 }
