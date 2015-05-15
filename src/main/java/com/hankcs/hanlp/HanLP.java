@@ -26,6 +26,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.TextRankKeyword;
 import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -183,7 +184,7 @@ public class HanLP
                     if (property.startsWith("data") && !"CustomDictionaryPath".equals(key))
                     {
                         String path = root + property;
-                        if (IOUtil.isFileExists(path)) return path;
+                        if (IOUtil.isFileExists(path) || IOUtil.isFileExists(path + Predefine.BIN_EXT)) return path;
                         return defaultValue;
                     }
                     return property;
