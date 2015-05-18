@@ -11,10 +11,12 @@
  */
 package com.hankcs.hanlp.seg;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.common.Term;
@@ -290,6 +292,10 @@ public abstract class Segment
     public List<Term> seg(String text)
     {
         char[] charArray = text.toCharArray();
+        if (HanLP.Config.Normalization)
+        {
+            CharTable.normalization(charArray);
+        }
         if (config.threadNumber > 1 && charArray.length > 10000)    // 小文本多线程没意义，反而变慢了
         {
             List<String> sentenceList = SentencesUtil.toSentenceList(charArray);

@@ -170,6 +170,10 @@ public class HanLP
          * 分词结果是否展示词性
          */
         public static boolean ShowTermNature = true;
+        /**
+         * 是否执行字符正规化（繁体->简体，全角->半角，大写->小写），切换配置后必须删CustomDictionary.txt.bin缓存
+         */
+        public static boolean Normalization = false;
 
         static
         {
@@ -223,6 +227,7 @@ public class HanLP
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
+                Normalization = "true".equals(p.getProperty("Normalization", "true"));
             }
             catch (Exception e)
             {

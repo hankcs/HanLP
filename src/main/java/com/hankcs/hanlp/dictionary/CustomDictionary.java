@@ -18,6 +18,7 @@ import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.*;
@@ -143,6 +144,7 @@ public class CustomDictionary
             {
                 String[] param = line.split("\\s");
                 if (param[0].length() == 0) continue;   // 排除空行
+                if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
                 if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
                 {
                     continue;
@@ -197,6 +199,7 @@ public class CustomDictionary
      */
     public static boolean add(String word)
     {
+        if (HanLP.Config.Normalization) word = CharTable.convert(word);
         if (contains(word)) return false;
         return insert(word, null);
     }
@@ -211,6 +214,7 @@ public class CustomDictionary
     public static boolean insert(String word, String natureWithFrequency)
     {
         if (word == null) return false;
+        if (HanLP.Config.Normalization) word = CharTable.convert(word);
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
         if (dat.set(word, att)) return true;
@@ -275,6 +279,7 @@ public class CustomDictionary
      */
     public static CoreDictionary.Attribute get(String key)
     {
+        if (HanLP.Config.Normalization) key = CharTable.convert(key);
         return trie.get(key);
     }
 
@@ -285,6 +290,7 @@ public class CustomDictionary
      */
     public static void remove(String key)
     {
+        if (HanLP.Config.Normalization) key = CharTable.convert(key);
         trie.remove(key);
     }
 

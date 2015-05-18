@@ -13,6 +13,7 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
@@ -252,5 +253,16 @@ public class TestSegment extends TestCase
         Segment segment = new CRFSegment();
         System.out.println(segment.seg("尼玛不是新词，王尼玛是新词"));
         System.out.println(segment.seg("周杰伦在出品范特西之后，又出品了依然范特西"));
+    }
+
+    public void testIssue16() throws Exception
+    {
+        CustomDictionary.insert("爱听4g", "nz 1000");
+        Segment segment = new ViterbiSegment();
+        System.out.println(segment.seg("爱听4g"));
+        System.out.println(segment.seg("爱听4G"));
+        System.out.println(segment.seg("爱听４G"));
+        System.out.println(segment.seg("爱听４Ｇ"));
+        System.out.println(segment.seg("愛聽４Ｇ"));
     }
 }
