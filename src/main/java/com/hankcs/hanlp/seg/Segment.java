@@ -387,6 +387,11 @@ public abstract class Segment
      */
     public List<Term> seg(char[] text)
     {
+        assert text != null;
+        if (HanLP.Config.Normalization)
+        {
+            CharTable.normalization(text);
+        }
         return segSentence(text);
     }
 

@@ -126,16 +126,6 @@ public class HanLP
         public static String JapanesePersonDictionaryPath = "data/dictionary/person/nrj.txt";
 
         /**
-         * 地址识别角色词典路径
-         */
-        public static String AddressRoleDictionaryPath = "data/dictionary/address/poi.txt";
-
-        /**
-         * 地址识别示例文件路径
-         */
-        public static String AddressExamplePath = "data/dictionary/address/example.txt";
-
-        /**
          * 字符类型对应表
          */
         public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
