@@ -147,7 +147,7 @@ public class HanLP
         /**
          * CRF分词模型
          */
-        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.mini.txt";
+        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
         /**
          * HMM分词模型
          */

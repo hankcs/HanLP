@@ -111,6 +111,7 @@ HanLP下载地址：https://github.com/hankcs/HanLP/releases
 
 #### 3、配置文件
 示例配置文件:[hanlp.properties](https://github.com/hankcs/HanLP/releases)
+在GitHub的发布页中，```hanlp.properties```一般和```jar```打包在同一个```zip```包中。
 
 配置文件的作用是告诉HanLP数据包的位置，只需修改第一行
 
