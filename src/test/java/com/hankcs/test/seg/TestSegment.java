@@ -54,7 +54,7 @@ public class TestSegment extends TestCase
         HanLP.Config.ShowTermNature = false;
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "陕西首富吴一坚被带走 与令计划妻子有交集"
+                "巴曙松：房地产如何估价才合理"
         ));
     }
 
