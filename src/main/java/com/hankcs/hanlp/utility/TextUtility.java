@@ -58,6 +58,7 @@ public class TextUtility
     {
         if (str != null && str.length() > 0)
         {
+            if ("零○一二两三四五六七八九十廿百千万亿壹贰叁肆伍陆柒捌玖拾佰仟".contains(str)) return CT_NUM;
             byte[] b;
             try
             {
@@ -76,7 +77,7 @@ public class TextUtility
             {
                 if (" *\"!,.?()[]{}+=/\\;:|".indexOf((char) b1) != -1)
                     return CT_DELIMITER;
-                if ("0123456789零○一二两三四五六七八九十廿百千万亿壹贰叁肆伍陆柒捌玖拾佰仟".indexOf((char)b1) != -1)
+                if ("0123456789".indexOf((char)b1) != -1)
                     return CT_NUM;
                 return CT_SINGLE;
             }
