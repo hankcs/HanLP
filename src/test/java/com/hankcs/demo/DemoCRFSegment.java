@@ -43,6 +43,7 @@ public class DemoCRFSegment
                         "财政部副部长王保安调任国家统计局党组书记",
                         "2.34米男子娶1.53米女粉丝 称夫妻生活没问题",
                         "你看过穆赫兰道吗",
+                        "国办发布网络提速降费十四条指导意见 鼓励流量不清零",
                         "乐视超级手机能否承载贾布斯的生态梦"
                 };
         for (String sentence : sentenceArray)

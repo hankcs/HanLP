@@ -50,11 +50,11 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-        HanLP.Config.enableDebug(true);
+//        HanLP.Config.enableDebug(true);
         HanLP.Config.ShowTermNature = false;
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "十四"
+                "陕西首富吴一坚被带走 与令计划妻子有交集"
         ));
     }
 
