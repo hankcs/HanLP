@@ -52,6 +52,13 @@ public class TestCharTable extends TestCase
             if (CharTable.CONVERT[i] == '。')
                 CharTable.CONVERT[i] = '，';
         }
+        for (int i = 0; i < CharTable.CONVERT.length; i++)
+        {
+            if (CharTable.CONVERT[i] == '\u0000')
+            {
+                if (i != '\u0000') CharTable.CONVERT[i] = (char) i;
+            }
+        }
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(HanLP.Config.CharTablePath));
         out.writeObject(CharTable.CONVERT);
         out.close();

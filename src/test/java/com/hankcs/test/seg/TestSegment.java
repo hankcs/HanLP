@@ -14,6 +14,7 @@ package com.hankcs.test.seg;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
@@ -264,5 +265,15 @@ public class TestSegment extends TestCase
         System.out.println(segment.seg("爱听４G"));
         System.out.println(segment.seg("爱听４Ｇ"));
         System.out.println(segment.seg("愛聽４Ｇ"));
+    }
+
+    public void testIssuse17() throws Exception
+    {
+        System.out.println(CharType.get('\u0000'));
+        System.out.println(CharType.get(' '));
+        assertEquals(CharTable.convert(' '), ' ');
+        System.out.println(CharTable.convert('﹗'));
+        HanLP.Config.Normalization = true;
+        System.out.println(StandardTokenizer.segment("号 "));
     }
 }
