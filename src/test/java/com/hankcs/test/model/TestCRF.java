@@ -91,7 +91,7 @@ public class TestCRF extends TestCase
      */
     public void testPrepareCRFTrainingCorpus() throws Exception
     {
-        final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("D:\\Tools\\CRF++-0.58\\example\\seg_cn\\2014.txt"), "UTF-8"));
+        final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("D:\\Tools\\CRF++-0.58\\example\\seg_cn\\2014人民日报语料BMES切分.txt"), "UTF-8"));
         CorpusLoader.walk("H:\\seg_corpus", new CorpusLoader.Handler()
                           {
                               @Override
