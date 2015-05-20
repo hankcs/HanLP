@@ -330,7 +330,7 @@ public class DictionaryMaker implements ISaveAble
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
             Set<Map.Entry<String, Item>> entries = trie.entrySet();
             for (Map.Entry<String, Item> entry : entries)
             {

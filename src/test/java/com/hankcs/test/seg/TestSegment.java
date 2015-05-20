@@ -52,9 +52,9 @@ public class TestSegment extends TestCase
     {
         HanLP.Config.enableDebug(true);
         HanLP.Config.ShowTermNature = false;
-        Segment segment = new DijkstraSegment().enableAllNamedEntityRecognize(false).enableOrganizationRecognize(true).enableCustomDictionary(false);
+        Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "在市二中院"
+                "提速降费十四条"
         ));
     }
 

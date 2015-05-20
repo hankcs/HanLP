@@ -48,6 +48,13 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
         {
             System.out.println("粗分结果" + convert(vertexList, false));
         }
+
+        // 数字识别
+        if (config.numberQuantifierRecognize)
+        {
+            mergeNumberQuantifier(vertexList, wordNetAll, config);
+        }
+
         // 实体命名识别
         if (config.ner)
         {
@@ -89,12 +96,6 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
                     System.out.printf("细分词图：%s\n", graph.printByTo());
                 }
             }
-        }
-
-        // 数字识别
-        if (config.numberQuantifierRecognize)
-        {
-            mergeNumberQuantifier(vertexList, wordNetAll, config);
         }
 
         // 如果是索引模式则全切分
