@@ -57,6 +57,7 @@ public class TestCharTable extends TestCase
             if (CharTable.CONVERT[i] == '\u0000')
             {
                 if (i != '\u0000') CharTable.CONVERT[i] = (char) i;
+                else CharTable.CONVERT[i] = ' ';
             }
         }
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(HanLP.Config.CharTablePath));
