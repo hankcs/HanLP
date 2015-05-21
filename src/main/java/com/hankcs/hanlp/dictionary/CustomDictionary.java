@@ -84,7 +84,7 @@ public class CustomDictionary
                 boolean success = load(p, defaultNature, map);
                 if (!success) logger.warning("失败：" + p);
             }
-            logger.info("正在构建AhoCorasickDoubleArrayTrie……");
+            logger.info("正在构建DoubleArrayTrie……");
             dat.build(map);
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
