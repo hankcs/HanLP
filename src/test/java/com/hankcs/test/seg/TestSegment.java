@@ -129,8 +129,10 @@ public class TestSegment extends TestCase
 
     public void testIssue2() throws Exception
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug();
         String text = "BENQphone";
+        System.out.println(HanLP.segment(text));
+        CustomDictionary.insert("BENQ");
         System.out.println(HanLP.segment(text));
     }
 
