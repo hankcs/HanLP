@@ -431,20 +431,11 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
     {
         final char[] charArray = wordNetStorage.charArray;
 
-        int offset = 0;
+        // 核心词典查询
         DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(charArray, 0);
         while (searcher.next())
         {
-            if (searcher.begin > offset)
-            {
-                wordNetStorage.add(offset + 1, quickAtomSegment(charArray, offset, searcher.begin));
-            }
             wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value, searcher.index));
-            offset = searcher.begin + searcher.length;
-        }
-        if (offset < charArray.length)
-        {
-            wordNetStorage.add(offset + 1, quickAtomSegment(charArray, offset, charArray.length));
         }
         // 用户词典查询
         if (config.useCustomDictionary)
@@ -457,6 +448,22 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                     wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
                 }
             });
+        }
+        // 原子分词，保证图连通
+        LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
+        for (int i = 1; i < vertexes.length;)
+        {
+            if (vertexes[i].isEmpty())
+            {
+                int j = i + 1;
+                for (; j < vertexes.length - 1; ++j)
+                {
+                    if (!vertexes[j].isEmpty()) break;
+                }
+                wordNetStorage.add(i, quickAtomSegment(charArray, i - 1, j - 1));
+                i = j;
+            }
+            else i += vertexes[i].getLast().realWord.length();
         }
         return wordNetStorage;
     }
