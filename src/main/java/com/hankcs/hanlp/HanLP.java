@@ -372,10 +372,62 @@ public class HanLP
      * 与直接new一个分词器相比，使用本方法的好处是，以后HanLP升级了，总能用上最合适的分词器
      * @return 一个分词器
      */
-    public static Segment newSegment()
+    /*public static Segment newSegment()
     {
         return new ViterbiSegment();   // Viterbi分词器是目前效率和效果的最佳平衡
-    }
+    }*/
+    
+    
+    public static Segment newSegment() {
+		return segmentLocal.get();// 以Viterbi分词器做为默认分词工具，同时支持用户选择其他分词器
+	}
+    public static final byte CRF_SEGMENT = 0;
+	public static final byte HMM_SEGMENT = 1;
+	public static final byte AHO_CORASICK_DOUBLE_ARRAY_TRIE_SEGMENT = 2;
+	public static final byte DOUBLE_ARRAY_TRIE_SEGMENT = 3;
+	public static final byte DIJKSTRA_SEGMENT = 4;
+	public static final byte N_SHORT_SEGMENT = 5;
+	public static final byte VITERBI_SEGMENT = 6;
+	public static ThreadLocal<Segment> segmentLocal = new ThreadLocal<Segment>(){
+		protected Segment initialValue() {
+	        return new ViterbiSegment();
+	    }
+	};
+	public static Segment setSegment(Segment segment){
+		segmentLocal.set(segment);
+		return segment;
+	}
+	public static Segment setSegment(byte segment){
+		Segment segmentObj;
+		switch(segment){
+			case 0:
+				segmentObj = new CRFSegment();
+				break;
+			case 1:
+				segmentObj = new HMMSegment();
+				break;
+			case 2:
+				segmentObj = new AhoCorasickDoubleArrayTrieSegment();
+				break;
+			case 3:
+				segmentObj = new DoubleArrayTrieSegment();
+				break;
+			case 4:
+				segmentObj = new DijkstraSegment();
+				break;
+			case 5:
+				segmentObj = new NShortSegment();
+				break;
+			case 6:
+				segmentObj = new ViterbiSegment();
+				break;
+			default:
+				segmentObj = new ViterbiSegment();
+		}
+		return setSegment(segmentObj);
+	}
+
+    
 
     /**
      * 依存文法分析
