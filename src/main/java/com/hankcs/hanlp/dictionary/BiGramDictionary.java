@@ -23,10 +23,13 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.*;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 2元语法词典
+ *
+ * @deprecated 现在基于DoubleArrayTrie的BiGramDictionary已经由CoreBiGramTableDictionary替代，可以显著降低内存
  * @author hankcs
  */
 public class BiGramDictionary
@@ -35,6 +38,7 @@ public class BiGramDictionary
 
     public final static String path = HanLP.Config.BiGramDictionaryPath;
     public static final int totalFrequency = 37545990;
+
     // 自动加载词典
     static
     {
@@ -49,9 +53,10 @@ public class BiGramDictionary
             logger.info(path + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
     }
+
     public static boolean load(String path)
     {
-        logger.info("二元词典开始加载:"+ path);
+        logger.info("二元词典开始加载:" + path);
         trie = new DoubleArrayTrie<Integer>();
         boolean create = !loadDat(path);
         if (!create) return true;
@@ -70,18 +75,20 @@ public class BiGramDictionary
             }
             br.close();
             logger.info("二元词典读取完毕:" + path + "，开始构建双数组Trie树(DoubleArrayTrie)……");
-        } catch (FileNotFoundException e)
+        }
+        catch (FileNotFoundException e)
         {
-            logger.severe("二元词典" + path + "不存在！"+ e);
+            logger.severe("二元词典" + path + "不存在！" + e);
             return false;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
-            logger.severe("二元词典" + path + "读取错误！"+ e);
+            logger.severe("二元词典" + path + "读取错误！" + e);
             return false;
         }
 
         int resultCode = trie.build(map);
-        logger.info("二元词典DAT构建结果:{}"+ resultCode);
+        logger.info("二元词典DAT构建结果:{}" + resultCode);
 //        reSaveDictionary(map, path);
         logger.info("二元词典加载成功:" + trie.size() + "个词条");
         if (create)
@@ -109,6 +116,7 @@ public class BiGramDictionary
 
     /**
      * 从dat文件中加载排好的trie
+     *
      * @param path
      * @return
      */
@@ -137,8 +145,9 @@ public class BiGramDictionary
 
     /**
      * 找寻特殊字串，如未##串
-     * @deprecated 没事就不要用了
+     *
      * @return 一个包含特殊词串的set
+     * @deprecated 没事就不要用了
      */
     public static Set<String> _findSpecialString()
     {
@@ -162,10 +171,12 @@ public class BiGramDictionary
                 }
             }
             br.close();
-        } catch (FileNotFoundException e)
+        }
+        catch (FileNotFoundException e)
         {
             e.printStackTrace();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -175,8 +186,9 @@ public class BiGramDictionary
 
     /**
      * 获取共现频次
+     *
      * @param from 第一个词
-     * @param to 第二个词
+     * @param to   第二个词
      * @return 第一个词@第二个词出现的频次
      */
     public static int getBiFrequency(String from, String to)
@@ -186,6 +198,7 @@ public class BiGramDictionary
 
     /**
      * 获取共现频次
+     *
      * @param twoWord 用@隔开的两个词
      * @return 共现频次
      */
@@ -197,6 +210,7 @@ public class BiGramDictionary
 
     /**
      * 将NGram词典重新写回去
+     *
      * @param map
      * @param path
      * @return
@@ -217,6 +231,7 @@ public class BiGramDictionary
 
     /**
      * 接受键数组与值数组，排序以供建立trie树
+     *
      * @param wordList
      * @param freqList
      */
@@ -238,10 +253,12 @@ public class BiGramDictionary
                 bw.newLine();
             }
             bw.close();
-        } catch (FileNotFoundException e)
+        }
+        catch (FileNotFoundException e)
         {
             e.printStackTrace();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }

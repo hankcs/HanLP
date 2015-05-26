@@ -57,5 +57,10 @@ public class DemoMultithreadingSegment
         costTime = (System.currentTimeMillis() - start) / (double) 1000;
         System.out.printf("多线程分词速度：%.2f字每秒\n", text.length() / costTime);
         System.gc();
+
+        // Note:
+        // 内部的并行化机制可以对1万字以上的大文本开启多线程分词
+        // 另一方面，HanLP中的任何Segment本身都是线程安全的。
+        // 你可以开10个线程用同一个CRFSegment对象切分任意文本，不需要任何线程同步的措施，每个线程都可以得到正确的结果。
     }
 }

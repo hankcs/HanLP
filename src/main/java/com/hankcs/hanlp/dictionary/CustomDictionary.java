@@ -330,12 +330,22 @@ public class CustomDictionary
                 '}';
     }
 
+    /**
+     * 词典中是否含有词语
+     * @param key 词语
+     * @return 是否包含
+     */
     public static boolean contains(String key)
     {
         if (dat.exactMatchSearch(key) >= 0) return true;
         return trie != null && trie.containsKey(key);
     }
 
+    /**
+     * 获取一个BinTrie的查询工具
+     * @param charArray 文本
+     * @return 查询者
+     */
     public static BaseSearcher getSearcher(char[] charArray)
     {
         return new Searcher(charArray);
@@ -399,6 +409,11 @@ public class CustomDictionary
         return trie;
     }
 
+    /**
+     * 解析一段文本（目前采用了BinTrie+DAT的混合储存形式，此方法可以统一两个数据结构）
+     * @param text         文本
+     * @param processor    处理器
+     */
     public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
     {
         if (trie != null)

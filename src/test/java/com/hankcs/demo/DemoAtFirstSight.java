@@ -15,6 +15,7 @@ import com.hankcs.hanlp.HanLP;
 
 /**
  * 第一个Demo，惊鸿一瞥
+ *
  * @author hankcs
  */
 public class DemoAtFirstSight
