@@ -1108,25 +1108,27 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         public boolean next()
         {
-            if (i == arrayLength)
-            {
-                ++begin;
-                i = begin;
-                last = base[0];
-            }
             int b = last;
             int n;
             int p;
 
-            for (; i < arrayLength; ++i)
+            for (; ; ++i)
             {
-                p = b + (int) (charArray[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
+                if (i == arrayLength)               // 指针到头了，将起点往前挪一个，重新开始，状态归零
+                {
+                    ++begin;
+                    if (begin == arrayLength) break;
+                    i = begin;
+                    b = base[0];
+                }
+                p = b + (int) (charArray[i]) + 1;   // 状态转移 p = base[char[i-1]] + char[i] + 1
                 if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
-                    b = base[p];
+                    b = base[p];                    // 转移成功
                 else
                 {
-                    i = begin;
+                    i = begin;                      // 转移失败，也将起点往前挪一个，重新开始，状态归零
                     ++begin;
+                    if (begin == arrayLength) break;
                     b = base[0];
                     continue;
                 }

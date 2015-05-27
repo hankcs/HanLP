@@ -13,6 +13,7 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
@@ -277,5 +278,17 @@ public class TestSegment extends TestCase
         System.out.println(CharTable.convert('﹗'));
         HanLP.Config.Normalization = true;
         System.out.println(StandardTokenizer.segment("号 "));
+    }
+
+    public void testIssue22() throws Exception
+    {
+        CoreDictionary.Attribute attribute = CoreDictionary.get("年");
+        System.out.println(attribute);
+        List<Term> termList = StandardTokenizer.segment("三年");
+        System.out.println(termList);
+        assertEquals(attribute.nature[0], termList.get(1).nature);
+        System.out.println(StandardTokenizer.segment("三元"));
+        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        System.out.println(StandardTokenizer.segment("三年"));
     }
 }
