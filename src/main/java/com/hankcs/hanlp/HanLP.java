@@ -44,7 +44,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class HanLP
 {
     /**
-     * 库的全局配置
+     * 库的全局配置，既可以用代码修改，也可以通过hanlp.properties配置（按照 变量名=值 的形式）
      */
     public static final class Config
     {
@@ -126,19 +126,14 @@ public class HanLP
         public static String JapanesePersonDictionaryPath = "data/dictionary/person/nrj.txt";
 
         /**
-         * 地址识别角色词典路径
-         */
-        public static String AddressRoleDictionaryPath = "data/dictionary/address/poi.txt";
-
-        /**
-         * 地址识别示例文件路径
-         */
-        public static String AddressExamplePath = "data/dictionary/address/example.txt";
-
-        /**
          * 字符类型对应表
          */
         public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
+
+        /**
+         * 字符正规化表（全角转半角，繁体转简体）
+         */
+        public static String CharTablePath = "data/dictionary/other/CharTable.bin.yes";
 
         /**
          * 词-词性-依存关系模型
@@ -152,11 +147,23 @@ public class HanLP
         /**
          * CRF分词模型
          */
-        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.mini.txt";
+        public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
+        /**
+         * HMM分词模型
+         */
+        public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
          * CRF依存模型
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
+        /**
+         * 分词结果是否展示词性
+         */
+        public static boolean ShowTermNature = true;
+        /**
+         * 是否执行字符正规化（繁体->简体，全角->半角，大写->小写），切换配置后必须删CustomDictionary.txt.bin缓存
+         */
+        public static boolean Normalization = false;
 
         static
         {
@@ -203,10 +210,14 @@ public class HanLP
                 OrganizationDictionaryPath = root + p.getProperty("OrganizationDictionaryPath", OrganizationDictionaryPath);
                 OrganizationDictionaryTrPath = root + p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
                 CharTypePath = root + p.getProperty("CharTypePath", CharTypePath);
+                CharTablePath = root + p.getProperty("CharTablePath", CharTablePath);
                 WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
+                HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
+                ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
+                Normalization = "true".equals(p.getProperty("Normalization", "true"));
             }
             catch (Exception e)
             {
@@ -310,7 +321,7 @@ public class HanLP
     /**
      * 转化为拼音
      *
-     * @param text 代解析的文本
+     * @param text 待解析的文本
      * @return 一个拼音列表
      */
     public static List<Pinyin> convertToPinyinList(String text)

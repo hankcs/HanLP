@@ -12,6 +12,8 @@
 package com.hankcs.hanlp.model.crf;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.ITrie;
+import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -34,7 +36,7 @@ public class CRFModel implements ICacheAble
      */
     Map<String, Integer> tag2id;
     protected String[] id2tag;
-    DoubleArrayTrie<FeatureFunction> featureFunctionTrie;
+    ITrie<FeatureFunction> featureFunctionTrie;
     List<FeatureTemplate> featureTemplateList;
     /**
      * tag的转移矩阵
@@ -43,6 +45,16 @@ public class CRFModel implements ICacheAble
 
     public CRFModel()
     {
+        featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
+    }
+
+    /**
+     * 以指定的trie树结构储存内部特征函数
+     * @param featureFunctionTrie
+     */
+    public CRFModel(ITrie<FeatureFunction> featureFunctionTrie)
+    {
+        this.featureFunctionTrie = featureFunctionTrie;
     }
 
     protected void onLoadTxtFinished()
@@ -129,13 +141,12 @@ public class CRFModel implements ICacheAble
             logger.warning("文本读取有残留，可能会出问题！" + path);
         }
         lineIterator.close();
-        logger.info("开始构建双数组trie树");
-        CRFModel.featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
+        logger.info("开始构建trie树");
         CRFModel.featureFunctionTrie.build(featureFunctionMap);
         // 缓存bin
         try
         {
-            logger.info("开始缓存"+ path + Predefine.BIN_EXT);
+            logger.info("开始缓存" + path + Predefine.BIN_EXT);
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
             CRFModel.save(out);
             out.close();
@@ -150,6 +161,7 @@ public class CRFModel implements ICacheAble
 
     /**
      * 维特比后向算法标注
+     *
      * @param table
      */
     public void tag(Table table)
@@ -181,10 +193,10 @@ public class CRFModel implements ICacheAble
         for (int i = 1; i < size; ++i)
         {
             scoreList = computeScoreList(table, i);    // i位置命中的特征函数
-            bestScore = Double.MIN_VALUE;
+            bestScore = -1000.0;
             for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
             {
-                double curScore =  computeScore(scoreList, j);
+                double curScore = computeScore(scoreList, j);
                 if (matrix != null)
                 {
                     curScore += matrix[preTag][j];
@@ -216,6 +228,7 @@ public class CRFModel implements ICacheAble
 
     /**
      * 给一系列特征函数结合tag打分
+     *
      * @param scoreList
      * @param tag
      * @return
@@ -271,39 +284,46 @@ public class CRFModel implements ICacheAble
     public boolean load(ByteArray byteArray)
     {
         if (byteArray == null) return false;
-        int size = byteArray.nextInt();
-        id2tag = new String[size];
-        tag2id = new HashMap<String, Integer>(size);
-        for (int i = 0; i < id2tag.length; i++)
+        try
         {
-            id2tag[i] = byteArray.nextUTF();
-            tag2id.put(id2tag[i], i);
-        }
-        FeatureFunction[] valueArray = new FeatureFunction[byteArray.nextInt()];
-        for (int i = 0; i < valueArray.length; i++)
-        {
-            valueArray[i] = new FeatureFunction();
-            valueArray[i].load(byteArray);
-        }
-        featureFunctionTrie = new DoubleArrayTrie<FeatureFunction>();
-        featureFunctionTrie.load(byteArray, valueArray);
-        size = byteArray.nextInt();
-        featureTemplateList = new ArrayList<FeatureTemplate>(size);
-        for (int i = 0; i < size; ++i)
-        {
-            FeatureTemplate featureTemplate = new FeatureTemplate();
-            featureTemplate.load(byteArray);
-            featureTemplateList.add(featureTemplate);
-        }
-        size = byteArray.nextInt();
-        if (size == 0) return true;
-        matrix = new double[size][size];
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
+            int size = byteArray.nextInt();
+            id2tag = new String[size];
+            tag2id = new HashMap<String, Integer>(size);
+            for (int i = 0; i < id2tag.length; i++)
             {
-                matrix[i][j] = byteArray.nextDouble();
+                id2tag[i] = byteArray.nextUTF();
+                tag2id.put(id2tag[i], i);
             }
+            FeatureFunction[] valueArray = new FeatureFunction[byteArray.nextInt()];
+            for (int i = 0; i < valueArray.length; i++)
+            {
+                valueArray[i] = new FeatureFunction();
+                valueArray[i].load(byteArray);
+            }
+            featureFunctionTrie.load(byteArray, valueArray);
+            size = byteArray.nextInt();
+            featureTemplateList = new ArrayList<FeatureTemplate>(size);
+            for (int i = 0; i < size; ++i)
+            {
+                FeatureTemplate featureTemplate = new FeatureTemplate();
+                featureTemplate.load(byteArray);
+                featureTemplateList.add(featureTemplate);
+            }
+            size = byteArray.nextInt();
+            if (size == 0) return true;
+            matrix = new double[size][size];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    matrix[i][j] = byteArray.nextDouble();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            logger.warning("缓存载入失败，可能是由于版本变迁带来的不兼容。具体异常是：\n" + TextUtility.exceptionToString(e));
+            return false;
         }
 
         return true;
@@ -311,6 +331,16 @@ public class CRFModel implements ICacheAble
 
     public static CRFModel loadTxt(String path)
     {
-        return loadTxt(path, new CRFModel());
+        return loadTxt(path, new CRFModel(new DoubleArrayTrie<FeatureFunction>()));
+    }
+
+    /**
+     * 获取某个tag的ID
+     * @param tag
+     * @return
+     */
+    public Integer getTagId(String tag)
+    {
+        return tag2id.get(tag);
     }
 }

@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
 
 /**
@@ -48,7 +49,9 @@ public class Term
     @Override
     public String toString()
     {
-        return word + "/" + nature;
+        if (HanLP.Config.ShowTermNature)
+            return word + "/" + nature;
+        return word;
     }
 
     /**

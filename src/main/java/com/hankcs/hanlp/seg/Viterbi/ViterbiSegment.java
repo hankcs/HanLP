@@ -17,42 +17,53 @@ import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
-import com.hankcs.hanlp.seg.HiddenMarkovModelSegment;
-import com.hankcs.hanlp.seg.Viterbi.Path.Graph;
+import com.hankcs.hanlp.seg.WordBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Viterbi分词器<br>
- *     也是最短路分词，最短路求解采用Viterbi算法
+ * 也是最短路分词，最短路求解采用Viterbi算法
+ *
  * @author hankcs
  */
-public class ViterbiSegment extends HiddenMarkovModelSegment
+public class ViterbiSegment extends WordBasedGenerativeModelSegment
 {
     @Override
     protected List<Term> segSentence(char[] sentence)
     {
-        WordNet wordNetOptimum = new WordNet(sentence);
-        WordNet wordNetAll = new WordNet(wordNetOptimum.charArray);
+//        long start = System.currentTimeMillis();
+        WordNet wordNetAll = new WordNet(sentence);
         ////////////////生成词网////////////////////
         GenerateWordNet(null, wordNetAll);
         ///////////////生成词图////////////////////
+//        System.out.println("构图：" + (System.currentTimeMillis() - start));
         if (HanLP.Config.DEBUG)
         {
             System.out.printf("粗分词网：\n%s\n", wordNetAll);
         }
+//        start = System.currentTimeMillis();
         List<Vertex> vertexList = viterbi(wordNetAll);
+//        System.out.println("最短路：" + (System.currentTimeMillis() - start));
         if (HanLP.Config.DEBUG)
         {
             System.out.println("粗分结果" + convert(vertexList, false));
         }
+
+        // 数字识别
+        if (config.numberQuantifierRecognize)
+        {
+            mergeNumberQuantifier(vertexList, wordNetAll, config);
+        }
+
         // 实体命名识别
         if (config.ner)
         {
-            wordNetOptimum.addAll(vertexList);
+            WordNet wordNetOptimum = new WordNet(sentence, vertexList);
             int preSize = wordNetOptimum.size();
             if (config.nameRecognize)
             {
@@ -106,6 +117,72 @@ public class ViterbiSegment extends HiddenMarkovModelSegment
 
     private static List<Vertex> viterbi(WordNet wordNet)
     {
-        return new Graph(wordNet.getVertexes()).viterbi();
+        // 避免生成对象，优化速度
+        LinkedList<Vertex> nodes[] = wordNet.getVertexes();
+        LinkedList<Vertex> vertexList = new LinkedList<Vertex>();
+        for (Vertex node : nodes[1])
+        {
+            node.updateFrom(nodes[0].getFirst());
+        }
+        for (int i = 1; i < nodes.length - 1; ++i)
+        {
+            LinkedList<Vertex> nodeArray = nodes[i];
+            if (nodeArray == null) continue;
+            for (Vertex node : nodeArray)
+            {
+                if (node.from == null) continue;
+                for (Vertex to : nodes[i + node.realWord.length()])
+                {
+                    to.updateFrom(node);
+                }
+            }
+        }
+        Vertex from = nodes[nodes.length - 1].getFirst();
+        while (from != null)
+        {
+            vertexList.addFirst(from);
+            from = from.from;
+        }
+        return vertexList;
     }
+
+    /**
+     * 第二次维特比，可以利用前一次的结果，降低复杂度
+     *
+     * @param wordNet
+     * @return
+     */
+//    private static List<Vertex> viterbiOptimal(WordNet wordNet)
+//    {
+//        LinkedList<Vertex> nodes[] = wordNet.getVertexes();
+//        LinkedList<Vertex> vertexList = new LinkedList<Vertex>();
+//        for (Vertex node : nodes[1])
+//        {
+//            if (node.isNew)
+//                node.updateFrom(nodes[0].getFirst());
+//        }
+//        for (int i = 1; i < nodes.length - 1; ++i)
+//        {
+//            LinkedList<Vertex> nodeArray = nodes[i];
+//            if (nodeArray == null) continue;
+//            for (Vertex node : nodeArray)
+//            {
+//                if (node.from == null) continue;
+//                if (node.isNew)
+//                {
+//                    for (Vertex to : nodes[i + node.realWord.length()])
+//                    {
+//                        to.updateFrom(node);
+//                    }
+//                }
+//            }
+//        }
+//        Vertex from = nodes[nodes.length - 1].getFirst();
+//        while (from != null)
+//        {
+//            vertexList.addFirst(from);
+//            from = from.from;
+//        }
+//        return vertexList;
+//    }
 }

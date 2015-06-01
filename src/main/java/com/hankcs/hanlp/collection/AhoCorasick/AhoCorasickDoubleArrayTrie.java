@@ -107,6 +107,7 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     /**
      * 处理文本
+     *
      * @param text
      * @param processor
      */
@@ -131,6 +132,7 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     /**
      * 处理文本
+     *
      * @param text
      * @param processor
      */
@@ -155,6 +157,7 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     /**
      * 持久化
+     *
      * @param out 一个DataOutputStream
      * @throws Exception 可能的IO异常等
      */
@@ -189,6 +192,7 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     /**
      * 持久化
+     *
      * @param out 一个ObjectOutputStream
      * @throws IOException 可能的IO异常
      */
@@ -203,7 +207,8 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     /**
      * 载入
-     * @param in 一个ObjectInputStream
+     *
+     * @param in    一个ObjectInputStream
      * @param value 值（持久化的时候并没有持久化值，现在需要额外提供）
      * @throws IOException
      * @throws ClassNotFoundException
@@ -220,8 +225,9 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     /**
      * 载入
+     *
      * @param byteArray 一个字节数组
-     * @param value 值数组
+     * @param value     值数组
      * @return 成功与否
      */
     public boolean load(ByteArray byteArray, V[] value)
@@ -258,6 +264,7 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     /**
      * 获取值
+     *
      * @param key 键
      * @return
      */
@@ -273,8 +280,28 @@ public class AhoCorasickDoubleArrayTrie<V>
     }
 
     /**
+     * 更新某个键对应的值
+     *
+     * @param key   键
+     * @param value 值
+     * @return 是否成功（失败的原因是没有这个键）
+     */
+    public boolean set(String key, V value)
+    {
+        int index = exactMatchSearch(key);
+        if (index >= 0)
+        {
+            v[index] = value;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * 从值数组中提取下标为index的值<br>
-     *     注意为了效率，此处不进行参数校验
+     * 注意为了效率，此处不进行参数校验
+     *
      * @param index 下标
      * @return 值
      */
@@ -301,8 +328,8 @@ public class AhoCorasickDoubleArrayTrie<V>
     public interface IHitFull<V>
     {
         /**
-         *
          * 命中一个模式串
+         *
          * @param begin 模式串在母文本中的起始位置
          * @param end   模式串在母文本中的终止位置
          * @param value 模式串对应的值
@@ -680,6 +707,7 @@ public class AhoCorasickDoubleArrayTrie<V>
 
     /**
      * 大小，即包含多少个模式串
+     *
      * @return
      */
     public int size()

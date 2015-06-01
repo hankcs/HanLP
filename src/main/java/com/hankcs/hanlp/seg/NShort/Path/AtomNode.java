@@ -12,6 +12,8 @@
 package com.hankcs.hanlp.seg.NShort.Path;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.Predefine;
 
 /**
@@ -82,5 +84,44 @@ public class AtomNode
                 "word='" + sWord + '\'' +
                 ", nature=" + nPOS +
                 '}';
+    }
+
+    public static Vertex convert(String word, int type)
+    {
+        String name = word;
+        Nature nature = Nature.n;
+        int dValue = 1;
+        switch (type)
+        {
+            case Predefine.CT_CHINESE:
+                break;
+            case Predefine.CT_INDEX:
+            case Predefine.CT_NUM:
+                nature = Nature.m;
+                word = "未##数";
+                break;
+            case Predefine.CT_DELIMITER:
+                nature = Nature.w;
+                break;
+            case Predefine.CT_LETTER:
+                nature = Nature.nx;
+                word = "未##串";
+                break;
+            case Predefine.CT_SINGLE://12021-2129-3121
+//                if (Pattern.compile("^(-?\\d+)(\\.\\d+)?$").matcher(word).matches())//匹配浮点数
+//                {
+//                    nature = Nature.m;
+//                    word = "未##数";
+//                } else
+//                {
+                    nature = Nature.nx;
+                    word = "未##串";
+//                }
+                break;
+            default:
+                break;
+        }
+
+        return new Vertex(word, name, new CoreDictionary.Attribute(nature, dValue));
     }
 }

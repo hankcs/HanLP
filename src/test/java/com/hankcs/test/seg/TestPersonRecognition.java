@@ -71,7 +71,7 @@ public class TestPersonRecognition extends TestCase
     {
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
-        System.out.println(segment.seg("张立平调研农村改革发展情况"));
+        System.out.println(segment.seg("编剧邵钧林和稽道青说"));
 
     }
 }

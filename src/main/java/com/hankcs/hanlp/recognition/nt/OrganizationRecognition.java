@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.recognition.nt;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.algoritm.ViterbiEx;
+import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NT;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -74,37 +74,37 @@ public class OrganizationRecognition
     public static List<EnumItem<NT>> roleTag(List<Vertex> vertexList, WordNet wordNetAll)
     {
         List<EnumItem<NT>> tagList = new LinkedList<EnumItem<NT>>();
-        ListIterator<Vertex> listIterator = vertexList.listIterator();
-//        int line = 0;
-        while (listIterator.hasNext())
+        //        int line = 0;
+        for (Vertex vertex : vertexList)
         {
-            Vertex vertex = listIterator.next();
             // 构成更长的
-            Nature nature = vertex.getNature();
-            if (nature != null)
+            Nature nature = vertex.guessNature();
+            switch (nature)
             {
-                switch (nature)
+                case nz:
                 {
-                    case nz:
+                    if (vertex.getAttribute().totalFrequency <= 1000)
                     {
-                        if (vertex.getAttribute().totalFrequency <= 1000)
-                        {
-                            tagList.add(new EnumItem<NT>(NT.F, 1000));
-                            continue;
-                        }
-                    }
-                    break;
-                    case ni:
-                    case nic:
-                    case nis:
-                    case nit:
-                    {
-                        EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.K, 1000);
-                        ntEnumItem.addLabel(NT.D, 1000);
-                        tagList.add(ntEnumItem);
-                        continue;
+                        tagList.add(new EnumItem<NT>(NT.F, 1000));
                     }
                 }
+                continue;
+                case ni:
+                case nic:
+                case nis:
+                case nit:
+                {
+                    EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.K, 1000);
+                    ntEnumItem.addLabel(NT.D, 1000);
+                    tagList.add(ntEnumItem);
+                }
+                continue;
+                case m:
+                {
+                    EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.M, 1000);
+                    tagList.add(ntEnumItem);
+                }
+                continue;
             }
 
             EnumItem<NT> NTEnumItem = OrganizationDictionary.dictionary.get(vertex.word);  // 此处用等效词，更加精准
@@ -126,7 +126,6 @@ public class OrganizationRecognition
      */
     public static List<NT> viterbiExCompute(List<EnumItem<NT>> roleTagList)
     {
-        ViterbiEx<NT> viterbiEx = new ViterbiEx<NT>(roleTagList, OrganizationDictionary.transformMatrixDictionary);
-        return viterbiEx.computeTagList();
+        return Viterbi.computeEnum(roleTagList, OrganizationDictionary.transformMatrixDictionary);
     }
 }

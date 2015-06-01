@@ -13,6 +13,7 @@ package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.Map;
@@ -58,6 +59,26 @@ public class Vertex
      */
     public static Vertex E = new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
 
+    ////////在最短路相关计算中用到的几个变量，之所以放在这里，是为了避免再去生成对象，浪费时间////////
+    /**
+     * 到该节点的最短路径的前驱节点
+     */
+    public Vertex from;
+    /**
+     * 最短路径对应的权重
+     */
+    public double weight;
+
+    public void updateFrom(Vertex from)
+    {
+        double weight = from.weight + MathTools.calculateWeight(from, this);
+        if (this.from == null || this.weight > weight)
+        {
+            this.from = from;
+            this.weight = weight;
+        }
+    }
+
     /**
      * 最复杂的构造函数
      *
@@ -75,7 +96,7 @@ public class Vertex
         if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.n, 1);   // 安全起见
         this.wordID = wordID;
         if (word == null) word = compileRealWord(realWord, attribute);
-        assert word.length() > 0 : "构造空白节点会导致死循环！";
+        assert realWord.length() > 0 : "构造空白节点会导致死循环！";
         this.word = word;
         this.realWord = realWord;
         this.attribute = attribute;
@@ -215,18 +236,6 @@ public class Vertex
     public CoreDictionary.Attribute getAttribute()
     {
         return attribute;
-    }
-
-    /**
-     * 与另一个顶点合并
-     *
-     * @param other 另一个顶点
-     * @return 合并后的自己
-     */
-    public Vertex add(Vertex other)
-    {
-        this.realWord += other.realWord;
-        return this;
     }
 
     /**
@@ -441,6 +450,24 @@ public class Vertex
     public static Vertex newTimeInstance(String realWord)
     {
         return new Vertex(Predefine.TAG_TIME, realWord, new CoreDictionary.Attribute(Nature.t, 1000));
+    }
+
+    /**
+     * 生成线程安全的起始节点
+     * @return
+     */
+    public static Vertex newB()
+    {
+        return new Vertex(Predefine.TAG_BIGIN, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
+    }
+
+    /**
+     * 生成线程安全的终止节点
+     * @return
+     */
+    public static Vertex newE()
+    {
+        return new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.end, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
     }
 
     @Override

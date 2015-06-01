@@ -83,11 +83,11 @@ public class Predefine
     public static int MAX_WORDS = 650;
     public static int MAX_SEGMENT_NUM = 10;
 
-    public static final int MAX_FREQUENCY = 32910822 * 2; //2079997;   //7528283+329805  //1993123+86874  // 原词典1107668 // 新词典 32910822
+    public static final int MAX_FREQUENCY = 25146057; // 现在总词频25146057
     /**
      * Smoothing 平滑因子
      */
-    public static final double dTemp = (double) 1 / MAX_FREQUENCY;
+    public static final double dTemp = (double) 1 / MAX_FREQUENCY + 0.00001;
     /**
      * 平滑参数
      */

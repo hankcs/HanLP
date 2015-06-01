@@ -18,7 +18,7 @@ import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
 import com.hankcs.hanlp.seg.Dijkstra.Path.State;
-import com.hankcs.hanlp.seg.HiddenMarkovModelSegment;
+import com.hankcs.hanlp.seg.WordBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.common.*;
 
 import java.util.*;
@@ -27,7 +27,7 @@ import java.util.*;
  * 最短路径分词
  * @author hankcs
  */
-public class DijkstraSegment extends HiddenMarkovModelSegment
+public class DijkstraSegment extends WordBasedGenerativeModelSegment
 {
     @Override
     public List<Term> segSentence(char[] sentence)
@@ -48,6 +48,13 @@ public class DijkstraSegment extends HiddenMarkovModelSegment
         {
             System.out.println("粗分结果" + convert(vertexList, false));
         }
+
+        // 数字识别
+        if (config.numberQuantifierRecognize)
+        {
+            mergeNumberQuantifier(vertexList, wordNetAll, config);
+        }
+
         // 实体命名识别
         if (config.ner)
         {

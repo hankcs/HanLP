@@ -14,14 +14,12 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.seg.common.Vertex;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.utility.Predefine;
-import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
 import java.util.*;
@@ -36,7 +34,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class CustomDictionary
 {
     static BinTrie<CoreDictionary.Attribute> trie;
-    static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> act = new AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute>();
+    public static DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
     /**
      * 第一个是主词典，其他是副词典
      */
@@ -52,7 +50,7 @@ public class CustomDictionary
         }
         else
         {
-            logger.info("自定义词典加载成功:" + act.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
+            logger.info("自定义词典加载成功:" + dat.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
     }
 
@@ -86,8 +84,8 @@ public class CustomDictionary
                 boolean success = load(p, defaultNature, map);
                 if (!success) logger.warning("失败：" + p);
             }
-            logger.info("正在构建AhoCorasickDoubleArrayTrie……");
-            act.build(map);
+            logger.info("正在构建DoubleArrayTrie……");
+            dat.build(map);
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
             // 缓存值文件
@@ -108,7 +106,7 @@ public class CustomDictionary
                     out.writeInt(attribute.frequency[i]);
                 }
             }
-            act.save(out);
+            dat.save(out);
             out.close();
         }
         catch (FileNotFoundException e)
@@ -131,7 +129,8 @@ public class CustomDictionary
 
     /**
      * 加载用户词典（追加）
-     * @param path 词典路径
+     *
+     * @param path          词典路径
      * @param defaultNature 默认词性
      * @return
      */
@@ -144,6 +143,8 @@ public class CustomDictionary
             while ((line = br.readLine()) != null)
             {
                 String[] param = line.split("\\s");
+                if (param[0].length() == 0) continue;   // 排除空行
+                if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
                 if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
                 {
                     continue;
@@ -179,7 +180,8 @@ public class CustomDictionary
 
     /**
      * 往自定义词典中插入一个新词（非覆盖模式）
-     * @param word 新词 如“裸婚”
+     *
+     * @param word                新词 如“裸婚”
      * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”
      * @return 是否插入成功（失败的原因可能是不覆盖、natureWithFrequency有问题等，后者可以通过调试模式了解原因）
      */
@@ -191,26 +193,31 @@ public class CustomDictionary
 
     /**
      * 增加新词
+     *
      * @param word
      * @return
      */
     public static boolean add(String word)
     {
+        if (HanLP.Config.Normalization) word = CharTable.convert(word);
         if (contains(word)) return false;
         return insert(word, null);
     }
 
     /**
      * 往自定义词典中插入一个新词（覆盖模式）
-     * @param word 新词 如“裸婚”
-     * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”
+     *
+     * @param word                新词 如“裸婚”
+     * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”。
      * @return 是否插入成功（失败的原因可能是natureWithFrequency问题，可以通过调试模式了解原因）
      */
     public static boolean insert(String word, String natureWithFrequency)
     {
         if (word == null) return false;
+        if (HanLP.Config.Normalization) word = CharTable.convert(word);
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
+        if (dat.set(word, att)) return true;
         if (trie == null) trie = new BinTrie<CoreDictionary.Attribute>();
         trie.put(word, att);
         return true;
@@ -218,6 +225,7 @@ public class CustomDictionary
 
     /**
      * 以覆盖模式增加新词
+     *
      * @param word
      * @return
      */
@@ -253,7 +261,7 @@ public class CustomDictionary
                     attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            if (!act.load(byteArray, attributes)) return false;
+            if (!dat.load(byteArray, attributes) || byteArray.hasMore()) return false;
         }
         catch (Exception e)
         {
@@ -271,15 +279,18 @@ public class CustomDictionary
      */
     public static CoreDictionary.Attribute get(String key)
     {
+        if (HanLP.Config.Normalization) key = CharTable.convert(key);
         return trie.get(key);
     }
 
     /**
      * 删除单词
+     *
      * @param key
      */
     public static void remove(String key)
     {
+        if (HanLP.Config.Normalization) key = CharTable.convert(key);
         trie.remove(key);
     }
 
@@ -319,12 +330,22 @@ public class CustomDictionary
                 '}';
     }
 
+    /**
+     * 词典中是否含有词语
+     * @param key 词语
+     * @return 是否包含
+     */
     public static boolean contains(String key)
     {
-        if (act.exactMatchSearch(key) >= 0) return true;
+        if (dat.exactMatchSearch(key) >= 0) return true;
         return trie != null && trie.containsKey(key);
     }
 
+    /**
+     * 获取一个BinTrie的查询工具
+     * @param charArray 文本
+     * @return 查询者
+     */
     public static BaseSearcher getSearcher(char[] charArray)
     {
         return new Searcher(charArray);
@@ -379,17 +400,22 @@ public class CustomDictionary
 
     /**
      * 获取词典对应的trie树
-     * @deprecated 谨慎操作，有可能废弃此接口
+     *
      * @return
+     * @deprecated 谨慎操作，有可能废弃此接口
      */
     public static BinTrie<CoreDictionary.Attribute> getTrie()
     {
         return trie;
     }
 
+    /**
+     * 解析一段文本（目前采用了BinTrie+DAT的混合储存形式，此方法可以统一两个数据结构）
+     * @param text         文本
+     * @param processor    处理器
+     */
     public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
     {
-        act.parseText(text, processor);
         if (trie != null)
         {
             BaseSearcher searcher = CustomDictionary.getSearcher(text);
@@ -400,6 +426,11 @@ public class CustomDictionary
                 offset = searcher.getOffset();
                 processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
             }
+        }
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
+        while (searcher.next())
+        {
+            processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
         }
     }
 }

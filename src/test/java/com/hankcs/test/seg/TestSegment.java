@@ -13,22 +13,27 @@ package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
-import com.hankcs.hanlp.seg.NShort.NShortSegment;
-import com.hankcs.hanlp.seg.Other.AhoCorasickSegment;
+import com.hankcs.hanlp.seg.CRF.CRFSegment;
+import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
+import com.hankcs.hanlp.tokenizer.BasicTokenizer;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
-import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author hankcs
@@ -37,19 +42,20 @@ public class TestSegment extends TestCase
 {
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment().enableCustomDictionary(false);
         System.out.println(segment.seg(
-                "我喜欢陈膺奥"
+                "这是故事最终的结局"
         ));
     }
 
     public void testViterbi() throws Exception
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug(true);
+        HanLP.Config.ShowTermNature = false;
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "放下你的无效社交"
+                "巴曙松：房地产如何估价才合理"
         ));
     }
 
@@ -66,8 +72,8 @@ public class TestSegment extends TestCase
     public void testShortest() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(false);
-        System.out.println(segment.seg("区长庄木弟新年致辞"));
+        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(true);
+        System.out.println(segment.seg("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
     }
 
     public void testIndexSeg() throws Exception
@@ -117,15 +123,17 @@ public class TestSegment extends TestCase
 
     public void testACSegment() throws Exception
     {
-        Segment segment = new AhoCorasickSegment();
+        Segment segment = new DoubleArrayTrieSegment();
         segment.enablePartOfSpeechTagging(true);
         System.out.println(segment.seg("江西鄱阳湖干枯，中国最大淡水湖变成大草原"));
     }
 
     public void testIssue2() throws Exception
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug();
         String text = "BENQphone";
+        System.out.println(HanLP.segment(text));
+        CustomDictionary.insert("BENQ");
         System.out.println(HanLP.segment(text));
     }
 
@@ -135,5 +143,152 @@ public class TestSegment extends TestCase
         System.out.println(HanLP.segment("300g*2"));
         System.out.println(HanLP.segment("３００ｇ＊２"));
         System.out.println(HanLP.segment("鱼300克*2/组"));
+    }
+
+    public void testQuickAtomSegment() throws Exception
+    {
+        String text = "你好1234abc Good一二三四3.14";
+//        System.out.println(Segment.quickAtomSegment(text.toCharArray(), 0, text.length()));
+    }
+
+    public void testJP() throws Exception
+    {
+        String text = "明天8.9你好abc对了";
+        Segment segment = new ViterbiSegment().enableCustomDictionary(false).enableAllNamedEntityRecognize(false);
+        System.out.println(segment.seg(text));
+    }
+
+    public void testSpeedOfSecondViterbi() throws Exception
+    {
+        String text = "王总和小丽结婚了";
+        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(false)
+                .enableNameRecognize(false) // 人名识别需要二次维特比，比较慢
+                .enableCustomDictionary(false)
+                ;
+        System.out.println(segment.seg(text));
+        long start = System.currentTimeMillis();
+        int pressure = 1000000;
+        for (int i = 0; i < pressure; ++i)
+        {
+            segment.seg(text);
+        }
+        double costTime = (System.currentTimeMillis() - start) / (double)1000;
+        System.out.printf("分词速度：%.2f字每秒", text.length() * pressure / costTime);
+    }
+
+    public void testNumberAndQuantifier() throws Exception
+    {
+        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        String[] testCase = new String[]
+                {
+                        "十九元套餐包括什么",
+                        "九千九百九十九朵玫瑰",
+                        "壹佰块钱都不给我",
+                        "９０１２３４５６７８只蚂蚁",
+                };
+        for (String sentence : testCase)
+        {
+            System.out.println(StandardTokenizer.segment(sentence));
+        }
+    }
+
+    public void testIssue10() throws Exception
+    {
+        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        IndexTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        List termList = StandardTokenizer.segment("此帐号有欠费业务是什么");
+        System.out.println(termList);
+        termList = IndexTokenizer.segment("此帐号有欠费业务是什么");
+        System.out.println(termList);
+        termList = StandardTokenizer.segment("15307971214话费还有多少");
+        System.out.println(termList);
+        termList = IndexTokenizer.segment("15307971214话费还有多少");
+        System.out.println(termList);
+    }
+
+    public void testMultiThreading() throws Exception
+    {
+        Segment segment = BasicTokenizer.SEGMENT;
+        // 测个速度
+        String text = "江西鄱阳湖干枯，中国最大淡水湖变成大草原。";
+        System.out.println(segment.seg(text));
+        int pressure = 100000;
+        StringBuilder sbBigText = new StringBuilder(text.length() * pressure);
+        for (int i = 0; i < pressure; i++)
+        {
+            sbBigText.append(text);
+        }
+        text = sbBigText.toString();
+        long start = System.currentTimeMillis();
+        List<Term> termList1 = segment.seg(text);
+        double costTime = (System.currentTimeMillis() - start) / (double)1000;
+        System.out.printf("单线程分词速度：%.2f字每秒\n", text.length() / costTime);
+
+        segment.enableMultithreading(4);
+        start = System.currentTimeMillis();
+        List<Term> termList2 = segment.seg(text);
+        costTime = (System.currentTimeMillis() - start) / (double)1000;
+        System.out.printf("四线程分词速度：%.2f字每秒\n", text.length() / costTime);
+
+        assertEquals(termList1.size(), termList2.size());
+        Iterator<Term> iterator1 = termList1.iterator();
+        Iterator<Term> iterator2 = termList2.iterator();
+        while (iterator1.hasNext())
+        {
+            Term term1 = iterator1.next();
+            Term term2 = iterator2.next();
+            assertEquals(term1.word, term2.word);
+            assertEquals(term1.nature, term2.nature);
+            assertEquals(term1.offset, term2.offset);
+        }
+    }
+
+    public void testTryToCrashSegment() throws Exception
+    {
+        String text = "尝试玩坏分词器";
+        Segment segment = new ViterbiSegment().enableMultithreading(100);
+        System.out.println(segment.seg(text));
+    }
+
+    public void testCRFSegment() throws Exception
+    {
+//        HanLP.Config.enableDebug();
+        HanLP.Config.ShowTermNature = false;
+        Segment segment = new CRFSegment();
+        System.out.println(segment.seg("尼玛不是新词，王尼玛是新词"));
+        System.out.println(segment.seg("周杰伦在出品范特西之后，又出品了依然范特西"));
+    }
+
+    public void testIssue16() throws Exception
+    {
+        CustomDictionary.insert("爱听4g", "nz 1000");
+        Segment segment = new ViterbiSegment();
+        System.out.println(segment.seg("爱听4g"));
+        System.out.println(segment.seg("爱听4G"));
+        System.out.println(segment.seg("爱听４G"));
+        System.out.println(segment.seg("爱听４Ｇ"));
+        System.out.println(segment.seg("愛聽４Ｇ"));
+    }
+
+    public void testIssuse17() throws Exception
+    {
+        System.out.println(CharType.get('\u0000'));
+        System.out.println(CharType.get(' '));
+        assertEquals(CharTable.convert(' '), ' ');
+        System.out.println(CharTable.convert('﹗'));
+        HanLP.Config.Normalization = true;
+        System.out.println(StandardTokenizer.segment("号 "));
+    }
+
+    public void testIssue22() throws Exception
+    {
+        CoreDictionary.Attribute attribute = CoreDictionary.get("年");
+        System.out.println(attribute);
+        List<Term> termList = StandardTokenizer.segment("三年");
+        System.out.println(termList);
+        assertEquals(attribute.nature[0], termList.get(1).nature);
+        System.out.println(StandardTokenizer.segment("三元"));
+        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        System.out.println(StandardTokenizer.segment("三年"));
     }
 }

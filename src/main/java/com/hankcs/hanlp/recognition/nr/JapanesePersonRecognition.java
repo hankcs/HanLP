@@ -27,15 +27,17 @@ import static com.hankcs.hanlp.dictionary.nr.NRConstant.WORD_ID;
 
 /**
  * 日本人名识别
+ *
  * @author hankcs
  */
 public class JapanesePersonRecognition
 {
     /**
      * 执行识别
-     * @param segResult 粗分结果
+     *
+     * @param segResult      粗分结果
      * @param wordNetOptimum 粗分结果对应的词图
-     * @param wordNetAll 全词图
+     * @param wordNetAll     全词图
      */
     public static void Recognition(List<Vertex> segResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
@@ -53,7 +55,7 @@ public class JapanesePersonRecognition
             int offset = searcher.getOffset();
             if (preOffset != offset)
             {
-                if (appendTimes > 1)
+                if (appendTimes > 1 && sbName.length() > 2) // 日本人名最短为3字
                 {
                     wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new CoreDictionary.Attribute(Nature.nrj), WORD_ID), wordNetAll);
                 }
@@ -78,7 +80,7 @@ public class JapanesePersonRecognition
                 }
                 else
                 {
-                    if (appendTimes > 1)
+                    if (appendTimes > 1 && sbName.length() > 2)
                     {
                         wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new CoreDictionary.Attribute(Nature.nrj), WORD_ID), wordNetAll);
                     }

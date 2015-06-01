@@ -13,6 +13,7 @@ package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.*;
 import com.hankcs.hanlp.dictionary.other.CharType;
@@ -27,13 +28,14 @@ import com.hankcs.hanlp.utility.Predefine;
 import java.util.*;
 
 /**
- * 隐马模型分词器基类
+ * 基于词语NGram模型的分词器基类
+ *
  * @author hankcs
  */
-public abstract class HiddenMarkovModelSegment extends Segment
+public abstract class WordBasedGenerativeModelSegment extends Segment
 {
 
-    public HiddenMarkovModelSegment()
+    public WordBasedGenerativeModelSegment()
     {
         super();
     }
@@ -55,6 +57,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 通过规则修正一些结果
+     *
      * @param linkedArray
      */
     protected static void fixResultByRule(List<Vertex> linkedArray)
@@ -62,7 +65,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
         //--------------------------------------------------------------------
         //Merge all seperate continue num into one number
-        MergeContinueNumIntoOne(linkedArray);
+        mergeContinueNumIntoOne(linkedArray);
 
         //--------------------------------------------------------------------
         //The delimiter "－－"
@@ -225,6 +228,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 将一条路径转为最终结果
+     *
      * @param vertexList
      * @param offsetEnabled 是否计算offset
      * @return
@@ -271,6 +275,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
     {
         return convert(vertexList, false);
     }
+
     /**
      * 生成二元词图
      *
@@ -284,11 +289,12 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 原子分词
-     * @deprecated 应该使用字符数组的版本
+     *
      * @param sSentence
      * @param start
      * @param end
      * @return
+     * @deprecated 应该使用字符数组的版本
      */
     private static List<AtomNode> AtomSegment(String sSentence, int start, int end)
     {
@@ -378,7 +384,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
      *
      * @param linkedArray
      */
-    private static void MergeContinueNumIntoOne(List<Vertex> linkedArray)
+    private static void mergeContinueNumIntoOne(List<Vertex> linkedArray)
     {
         if (linkedArray.size() < 2)
             return;
@@ -425,14 +431,12 @@ public abstract class HiddenMarkovModelSegment extends Segment
     {
         final char[] charArray = wordNetStorage.charArray;
 
-        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHitFull<CoreDictionary.Attribute>()
+        // 核心词典查询
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(charArray, 0);
+        while (searcher.next())
         {
-            @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute value, int index)
-            {
-                wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value, index));
-            }
-        });
+            wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value, searcher.index));
+        }
         // 用户词典查询
         if (config.useCustomDictionary)
         {
@@ -445,6 +449,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
                 }
             });
         }
+        // 原子分词，保证图连通
         LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
         for (int i = 1; i < vertexes.length;)
         {
@@ -455,7 +460,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
                 {
                     if (!vertexes[j].isEmpty()) break;
                 }
-                wordNetStorage.add(i, AtomSegment(charArray, i - 1, j - 1));
+                wordNetStorage.add(i, quickAtomSegment(charArray, i - 1, j - 1));
                 i = j;
             }
             else i += vertexes[i].getLast().realWord.length();
@@ -465,6 +470,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 为了索引模式修饰结果
+     *
      * @param vertexList
      * @param wordNetAll
      */
@@ -490,7 +496,10 @@ public abstract class HiddenMarkovModelSegment extends Segment
                     List<Vertex> vertexListCurrentLine = wordNetAll.get(currentLine);    // 这一行的词
                     for (Vertex smallVertex : vertexListCurrentLine) // 这一行的短词
                     {
-                        if (smallVertex.realWord.length() > 1 && smallVertex != vertex)
+                        if (
+                                ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
+                                smallVertex.realWord.length() > 1)
+                                        && smallVertex != vertex)
                         {
                             listIterator.add(smallVertex);
                             Term termSub = convert(smallVertex);
@@ -509,6 +518,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 将节点列表转为term列表
+     *
      * @param vertex
      * @return
      */
@@ -519,6 +529,7 @@ public abstract class HiddenMarkovModelSegment extends Segment
 
     /**
      * 词性标注
+     *
      * @param vertexList
      */
     protected static void speechTagging(List<Vertex> vertexList)

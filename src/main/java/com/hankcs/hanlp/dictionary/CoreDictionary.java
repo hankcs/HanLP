@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.Predefine;
@@ -24,12 +24,12 @@ import java.util.*;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 使用AhoCorasickDoubleArrayTrie实现的核心词典
+ * 使用DoubleArrayTrie实现的核心词典
  * @author hankcs
  */
 public class CoreDictionary
 {
-    public static AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie = new AhoCorasickDoubleArrayTrie<Attribute>();
+    public static DoubleArrayTrie<Attribute> trie = new DoubleArrayTrie<Attribute>();
     public final static String path = HanLP.Config.CoreDictionaryPath;
     public static final int totalFrequency = 221894;
 
@@ -57,7 +57,7 @@ public class CoreDictionary
     public static final int M_WORD_ID = getWordID(Predefine.TAG_NUMBER);
     public static final int NX_WORD_ID = getWordID(Predefine.TAG_PROPER);
 
-    public static boolean load(String path)
+    private static boolean load(String path)
     {
         logger.info("核心词典开始加载:" + path);
         if (loadDat(path)) return true;
@@ -153,7 +153,7 @@ public class CoreDictionary
                     attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            if (!trie.load(byteArray, attributes)) return false;
+            if (!trie.load(byteArray, attributes) || byteArray.hasMore()) return false;
         }
         catch (Exception e)
         {
@@ -196,6 +196,11 @@ public class CoreDictionary
         return attribute.totalFrequency;
     }
 
+    /**
+     * 是否包含词语
+     * @param key
+     * @return
+     */
     public static boolean contains(String key)
     {
         return trie.get(key) != null;

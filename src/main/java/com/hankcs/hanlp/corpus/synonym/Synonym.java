@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.synonym;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,9 +80,9 @@ public class Synonym implements ISynonym
      * @param args
      * @return
      */
-    public static List<Synonym> create(String[] args)
+    public static ArrayList<Synonym> create(String[] args)
     {
-        List<Synonym> synonymList = new LinkedList<Synonym>();
+        ArrayList<Synonym> synonymList = new ArrayList<Synonym>(args.length - 1);
 
         String idString = args[0];
         Type type;

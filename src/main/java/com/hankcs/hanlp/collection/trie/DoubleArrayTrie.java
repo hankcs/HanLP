@@ -1,12 +1,12 @@
 /**
  * DoubleArrayTrie: Java implementation of Darts (Double-ARray Trie System)
- *
+ * <p/>
  * <p>
  * Copyright(C) 2001-2007 Taku Kudo &lt;taku@chasen.org&gt;<br />
  * Copyright(C) 2009 MURAWAKI Yugo &lt;murawaki@nlp.kuee.kyoto-u.ac.jp&gt;
  * Copyright(C) 2012 KOMIYA Atsushi &lt;komiya.atsushi@gmail.com&gt;
  * </p>
- *
+ * <p/>
  * <p>
  * The contents of this file may be used under the terms of either of the GNU
  * Lesser General Public License Version 2.1 or later (the "LGPL"), or the BSD
@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * 双数组Trie树
  */
-public class DoubleArrayTrie<V> implements Serializable
+public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 {
     private final static int BUF_SIZE = 16384;
     private final static int UNIT_SIZE = 8; // size of int + int
@@ -757,26 +757,17 @@ public class DoubleArrayTrie<V> implements Serializable
 
         for (int i = pos; i < len; i++)
         {
+            p = b + (int) (keyChars[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
+            if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
+                b = base[p];
+            else
+                return result;
             p = b;
             n = base[p];
             if (b == check[p] && n < 0)         // base[p] == check[p] && base[p] < 0 查到一个词
             {
                 result.add(-n - 1);
             }
-
-            p = b + (int) (keyChars[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
-            if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
-                b = base[p];
-            else
-                return result;
-        }
-
-        p = b;
-        n = base[p];
-
-        if (b == check[p] && n < 0)
-        {
-            result.add(-n - 1);
         }
 
         return result;
@@ -1027,7 +1018,150 @@ public class DoubleArrayTrie<V> implements Serializable
     }
 
     /**
+     * 沿着路径转移状态
+     *
+     * @param path 路径
+     * @param from 起点（根起点为base[0]=1）
+     * @return 转移后的状态（双数组下标）
+     */
+    public int transition(String path, int from)
+    {
+        int b = from;
+        int p;
+
+        for (int i = 0; i < path.length(); ++i)
+        {
+            p = b + (int) (path.charAt(i)) + 1;
+            if (b == check[p])
+                b = base[p];
+            else
+                return -1;
+        }
+
+        p = b;
+        return p;
+    }
+
+    /**
+     * 检查状态是否对应输出
+     *
+     * @param state 双数组下标
+     * @return 对应的值，null表示不输出
+     */
+    public V output(int state)
+    {
+        if (state < 0) return null;
+        int n = base[state];
+        if (state == check[state] && n < 0)
+        {
+            return v[-n - 1];
+        }
+        return null;
+    }
+
+    /**
+     * 一个搜索工具
+     */
+    public class Searcher
+    {
+        /**
+         * key的起点
+         */
+        public int begin;
+        /**
+         * key的长度
+         */
+        public int length;
+        /**
+         * key的字典序坐标
+         */
+        public int index;
+        /**
+         * key对应的value
+         */
+        public V value;
+        /**
+         * 传入的字符数组
+         */
+        private char[] charArray;
+        /**
+         * 上一个node位置
+         */
+        private int last;
+        /**
+         * 上一个字符的下标
+         */
+        private int i;
+        /**
+         * charArray的长度，效率起见，开个变量
+         */
+        private int arrayLength;
+
+        public Searcher(int offset, char[] charArray)
+        {
+            this.charArray = charArray;
+            this.i = offset;
+            this.begin = offset;
+            last = base[0];
+            arrayLength = charArray.length;
+        }
+
+        public boolean next()
+        {
+            int b = last;
+            int n;
+            int p;
+
+            for (; ; ++i)
+            {
+                if (i == arrayLength)               // 指针到头了，将起点往前挪一个，重新开始，状态归零
+                {
+                    ++begin;
+                    if (begin == arrayLength) break;
+                    i = begin;
+                    b = base[0];
+                }
+                p = b + (int) (charArray[i]) + 1;   // 状态转移 p = base[char[i-1]] + char[i] + 1
+                if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
+                    b = base[p];                    // 转移成功
+                else
+                {
+                    i = begin;                      // 转移失败，也将起点往前挪一个，重新开始，状态归零
+                    ++begin;
+                    if (begin == arrayLength) break;
+                    b = base[0];
+                    continue;
+                }
+                p = b;
+                n = base[p];
+                if (b == check[p] && n < 0)         // base[p] == check[p] && base[p] < 0 查到一个词
+                {
+                    length = i - begin + 1;
+                    index = -n - 1;
+                    value = v[index];
+                    last = b;
+                    ++i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public Searcher getSearcher(String text, int offset)
+    {
+        return new Searcher(offset, text.toCharArray());
+    }
+
+    public Searcher getSearcher(char[] text, int offset)
+    {
+        return new Searcher(offset, text);
+    }
+
+    /**
      * 转移状态
+     *
      * @param current
      * @param c
      * @return
@@ -1045,6 +1179,37 @@ public class DoubleArrayTrie<V> implements Serializable
 
         p = b;
         return p;
+    }
+
+    /**
+     * 更新某个键对应的值
+     *
+     * @param key   键
+     * @param value 值
+     * @return 是否成功（失败的原因是没有这个键）
+     */
+    public boolean set(String key, V value)
+    {
+        int index = exactMatchSearch(key);
+        if (index >= 0)
+        {
+            v[index] = value;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 从值数组中提取下标为index的值<br>
+     * 注意为了效率，此处不进行参数校验
+     *
+     * @param index 下标
+     * @return 值
+     */
+    public V get(int index)
+    {
+        return v[index];
     }
 
 

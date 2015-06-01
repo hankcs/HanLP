@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.regex.Pattern;
 import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * @author hankcs
  */
@@ -40,6 +40,7 @@ public class WordNet
 
     /**
      * 原始句子
+     *
      * @deprecated 应当使用数组，这样比较快
      */
     public String sentence;
@@ -51,6 +52,7 @@ public class WordNet
 
     /**
      * 为一个句子生成空白词网
+     *
      * @param sentence 句子
      */
     public WordNet(String sentence)
@@ -66,9 +68,26 @@ public class WordNet
         {
             vertexes[i] = new LinkedList<Vertex>();
         }
-        vertexes[0].add(Vertex.B);
-        vertexes[vertexes.length - 1].add(Vertex.E);
+        vertexes[0].add(Vertex.newB());
+        vertexes[vertexes.length - 1].add(Vertex.newE());
         size = 2;
+    }
+
+    public WordNet(char[] charArray, List<Vertex> vertexList)
+    {
+        this.charArray = charArray;
+        vertexes = new LinkedList[charArray.length + 2];
+        for (int i = 0; i < vertexes.length; ++i)
+        {
+            vertexes[i] = new LinkedList<Vertex>();
+        }
+        int i = 0;
+        for (Vertex vertex : vertexList)
+        {
+            vertexes[i].add(vertex);
+            ++size;
+            i += vertex.realWord.length();
+        }
     }
 
     /**
@@ -90,6 +109,7 @@ public class WordNet
 
     /**
      * 强行添加，替换已有的顶点
+     *
      * @param line
      * @param vertex
      */
@@ -111,6 +131,7 @@ public class WordNet
 
     /**
      * 添加顶点，同时检查此顶点是否悬孤，如果悬孤则自动补全
+     *
      * @param line
      * @param vertex
      * @param wordNetAll 这是一个完全的词图
@@ -169,6 +190,7 @@ public class WordNet
 
     /**
      * 全自动添加顶点
+     *
      * @param vertexList
      */
     public void addAll(List<Vertex> vertexList)
@@ -183,6 +205,7 @@ public class WordNet
 
     /**
      * 获取某一行的所有节点
+     *
      * @param line 行号
      * @return 一个数组
      */
@@ -193,6 +216,7 @@ public class WordNet
 
     /**
      * 获取某一行的第一个节点
+     *
      * @param line
      * @return
      */
@@ -206,6 +230,7 @@ public class WordNet
 
     /**
      * 获取某一行长度为length的节点
+     *
      * @param line
      * @param length
      * @return
@@ -237,7 +262,6 @@ public class WordNet
         {
             String sWord = atomNode.sWord;//init the word
             Nature nature = Nature.n;
-            int dValue = 1;
             switch (atomNode.nPOS)
             {
                 case Predefine.CT_CHINESE:
@@ -255,20 +279,13 @@ public class WordNet
                     sWord = "未##串";
                     break;
                 case Predefine.CT_SINGLE://12021-2129-3121
-                    if (Pattern.compile("^(-?\\d+)(\\.\\d+)?$").matcher(sWord).matches())//匹配浮点数
-                    {
-                        nature = Nature.m;
-                        sWord = "未##数";
-                    } else
-                    {
-                        nature = Nature.nx;
-                        sWord = "未##串";
-                    }
+                    nature = Nature.nx;
+                    sWord = "未##串";
                     break;
                 default:
                     break;
             }
-            add(line + offset, new Vertex(sWord, atomNode.sWord, new CoreDictionary.Attribute(nature, dValue)));
+            add(line + offset, new Vertex(sWord, atomNode.sWord, new CoreDictionary.Attribute(nature, 1)));
             offset += atomNode.sWord.length();
         }
     }
@@ -301,6 +318,7 @@ public class WordNet
 
     /**
      * 词网转词图
+     *
      * @return 词图
      */
     public Graph toGraph()
@@ -386,6 +404,7 @@ public class WordNet
 
     /**
      * 获取内部顶点表格，谨慎操作！
+     *
      * @return
      */
     public LinkedList<Vertex>[] getVertexes()

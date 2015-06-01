@@ -1,7 +1,6 @@
 package com.hankcs.hanlp.summary;
 
 
-import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
@@ -20,18 +19,12 @@ public class TextRankKeyword extends KeywordExtractor
     /**
      * 阻尼系数（ＤａｍｐｉｎｇＦａｃｔｏｒ），一般取值为0.85
      */
-    final float d = 0.85f;
+    final static float d = 0.85f;
     /**
      * 最大迭代次数
      */
-    final int max_iter = 200;
-    final float min_diff = 0.001f;
-
-    public TextRankKeyword()
-    {
-        // jdk bug : Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
-        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
-    }
+    final static int max_iter = 200;
+    final static float min_diff = 0.001f;
 
     /**
      * 提取关键词
@@ -59,13 +52,13 @@ public class TextRankKeyword extends KeywordExtractor
             }
         }
 //        System.out.println(wordList);
-        BinTrie<BinTrie<Boolean>> words = new BinTrie<BinTrie<Boolean>>();
+        Map<String, Set<String>> words = new TreeMap<String, Set<String>>();
         Queue<String> que = new LinkedList<String>();
         for (String w : wordList)
         {
             if (!words.containsKey(w))
             {
-                words.put(w, new BinTrie<Boolean>());
+                words.put(w, new TreeSet<String>());
             }
             que.offer(w);
             if (que.size() > 5)
@@ -82,8 +75,8 @@ public class TextRankKeyword extends KeywordExtractor
                         continue;
                     }
 
-                    words.get(w1).put(w2, true);
-                    words.get(w2).put(w1, true);
+                    words.get(w1).add(w2);
+                    words.get(w2).add(w1);
                 }
             }
         }
@@ -93,18 +86,16 @@ public class TextRankKeyword extends KeywordExtractor
         {
             Map<String, Float> m = new HashMap<String, Float>();
             float max_diff = 0;
-            for (Map.Entry<String, BinTrie<Boolean>> entry : words.entrySet())
+            for (Map.Entry<String, Set<String>> entry : words.entrySet())
             {
                 String key = entry.getKey();
-                BinTrie<Boolean> value = entry.getValue();
+                Set<String> value = entry.getValue();
                 m.put(key, 1 - d);
-                Set<Map.Entry<String, Boolean>> set = value.entrySet();
-                for (Map.Entry<String, Boolean> element : set)
+                for (String element : value)
                 {
-                    String other = element.getKey();
-                    int size = words.get(other).size();
-                    if (key.equals(other) || size == 0) continue;
-                    m.put(key, m.get(key) + d / size * (score.get(other) == null ? 0 : score.get(other)));
+                    int size = words.get(element).size();
+                    if (key.equals(element) || size == 0) continue;
+                    m.put(key, m.get(key) + d / size * (score.get(element) == null ? 0 : score.get(element)));
                 }
                 max_diff = Math.max(max_diff, Math.abs(m.get(key) - (score.get(key) == null ? 0 : score.get(key))));
             }
@@ -117,7 +108,7 @@ public class TextRankKeyword extends KeywordExtractor
             @Override
             public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2)
             {
-                return (o1.getValue() - o2.getValue() > 0 ? -1 : 1);
+                return o2.getValue().compareTo(o1.getValue());
             }
         });
 //        System.out.println(entryList);

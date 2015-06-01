@@ -12,9 +12,11 @@
 package com.hankcs.hanlp.seg.Other;
 
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.seg.DictionaryBasedSegment;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -24,11 +26,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 使用AhoCorasickDoubleArrayTrie实现的最长分词器
+ * 使用DoubleArrayTrie实现的最长分词器
  *
  * @author hankcs
  */
-public class AhoCorasickSegment extends Segment
+public class DoubleArrayTrieSegment extends DictionaryBasedSegment
 {
     @Override
     protected List<Term> segSentence(char[] sentence)
@@ -37,22 +39,19 @@ public class AhoCorasickSegment extends Segment
         final int[] wordNet = new int[charArray.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
-        CoreDictionary.trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(sentence, 0);
+        while (searcher.next())
         {
-            @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute value)
+            int length = searcher.length;
+            if (length > wordNet[searcher.begin])
             {
-                int length = end - begin;
-                if (length > wordNet[begin])
+                wordNet[searcher.begin] = length;
+                if (config.speechTagging)
                 {
-                    wordNet[begin] = length;
-                    if (config.speechTagging)
-                    {
-                        natureArray[begin] = value.nature[0];
-                    }
+                    natureArray[searcher.begin] = searcher.value.nature[0];
                 }
             }
-        });
+        }
         if (config.useCustomDictionary)
         {
             CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
@@ -84,7 +83,7 @@ public class AhoCorasickSegment extends Segment
                     {
                         if (natureArray[j] != null) break;
                     }
-                    List<AtomNode> atomNodeList = AtomSegment(charArray, i, j);
+                    List<AtomNode> atomNodeList = quickAtomSegment(charArray, i, j);
                     for (AtomNode atomNode : atomNodeList)
                     {
                         if (atomNode.sWord.length() >= wordNet[i])
@@ -112,21 +111,9 @@ public class AhoCorasickSegment extends Segment
         return termList;
     }
 
-    public AhoCorasickSegment()
+    public DoubleArrayTrieSegment()
     {
         super();
         config.useCustomDictionary = false;
-    }
-
-
-    /**
-     * 开启数词和英文识别（与标准意义上的词性标注不同，只是借用这个配置方法，不是真的开启了词性标注。
-     * 一般用词典分词的用户不太可能是NLP专业人士，对词性准确率要求不高，所以干脆不为词典分词实现词性标注。）
-     * @param enable
-     * @return
-     */
-    public Segment enablePartOfSpeechTagging(boolean enable)
-    {
-        return super.enablePartOfSpeechTagging(enable);
     }
 }

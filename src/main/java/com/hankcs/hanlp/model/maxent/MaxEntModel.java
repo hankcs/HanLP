@@ -260,6 +260,7 @@ public class MaxEntModel
         catch (Exception e)
         {
             logger.severe("从" + path + "加载最大熵模型失败！" + TextUtility.exceptionToString(e));
+            return null;
         }
         return m;
     }

@@ -68,8 +68,8 @@ public class TranslatedPersonDictionary
             }
             br.close();
             map.put(String.valueOf('·'), true);
-            map.put(String.valueOf('-'), true);
-            map.put(String.valueOf('—'), true);
+//            map.put(String.valueOf('-'), true);
+//            map.put(String.valueOf('—'), true);
             // 将常用字也加进去
             for (Map.Entry<Character, Integer> entry : charFrequencyMap.entrySet())
             {
