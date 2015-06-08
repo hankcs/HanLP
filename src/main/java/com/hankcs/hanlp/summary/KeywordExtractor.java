@@ -51,7 +51,7 @@ public class KeywordExtractor
             }
             default:
             {
-                if (term.word.length() > 1 && !CoreStopWordDictionary.contains(term.word))
+                if (term.word.trim().length() > 1 && !CoreStopWordDictionary.contains(term.word))
                 {
                     return true;
                 }
