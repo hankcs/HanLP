@@ -43,9 +43,9 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
 //        HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(false);
+        Segment segment = new DijkstraSegment().enableCustomDictionary(false).enablePlaceRecognize(true);
         System.out.println(segment.seg(
-                "这是故事最终的结局"
+                "你在万宝沟还是九里坪"
         ));
     }
 

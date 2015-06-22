@@ -129,6 +129,6 @@ public class PlaceRecognition
      */
     public static List<NS> viterbiExCompute(List<EnumItem<NS>> roleTagList)
     {
-        return Viterbi.computeEnumSimply(roleTagList, PlaceDictionary.transformMatrixDictionary);
+        return Viterbi.computeEnum(roleTagList, PlaceDictionary.transformMatrixDictionary);
     }
 }
