@@ -100,7 +100,10 @@ public class PlaceRecognition
 //            }
             if (Nature.ns == vertex.getNature() && vertex.getAttribute().totalFrequency <= 1000)
             {
-                tagList.add(new EnumItem<NS>(NS.H, 1000));
+                if (vertex.realWord.length() < 3)               // 二字地名，认为其可以再接一个后缀或前缀
+                    tagList.add(new EnumItem<NS>(NS.H, NS.G));
+                else
+                    tagList.add(new EnumItem<NS>(NS.G));        // 否则只可以再加后缀
                 continue;
             }
             EnumItem<NS> NSEnumItem = PlaceDictionary.dictionary.get(vertex.word);  // 此处用等效词，更加精准
