@@ -271,6 +271,11 @@ public class HanLP
     }
 
     /**
+     * 工具类，不需要生成实例
+     */
+    private HanLP() {}
+
+    /**
      * 简转繁
      *
      * @param traditionalChineseString 繁体中文
