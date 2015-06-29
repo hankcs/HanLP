@@ -51,9 +51,9 @@ public class Item extends SimpleItem
         });
         for (Map.Entry<String, Integer> entry : entries)
         {
-            sb.append('\t');
+            sb.append(' ');             // 现阶段词典分隔符统一使用空格
             sb.append(entry.getKey());
-            sb.append('\t');
+            sb.append(' ');
             sb.append(entry.getValue());
         }
         return sb.toString();
