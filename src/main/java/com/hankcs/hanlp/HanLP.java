@@ -217,7 +217,7 @@ public class HanLP
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
-                Normalization = "true".equals(p.getProperty("Normalization", "true"));
+                Normalization = "true".equals(p.getProperty("Normalization", "false"));
             }
             catch (Exception e)
             {
