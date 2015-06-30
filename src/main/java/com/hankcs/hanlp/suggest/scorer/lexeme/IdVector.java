@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.suggest.scorer.lexeme;
 
 import com.hankcs.hanlp.algoritm.ArrayCompare;
-import com.hankcs.hanlp.algoritm.BinarySearch;
+import com.hankcs.hanlp.algoritm.ArrayDistance;
 import com.hankcs.hanlp.dictionary.CoreSynonymDictionaryEx;
 import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
@@ -53,7 +53,7 @@ public class IdVector implements Comparable<IdVector>, ISentenceKey<IdVector>
         {
             Long[] c1 = iterator1.next();
             Long[] c2 = iterator2.next();
-            if (BinarySearch.computeMinimumDistance(c1, c2) != 0)
+            if (ArrayDistance.computeMinimumDistance(c1, c2) != 0)
             {
                 return ArrayCompare.compare(c1, c2);
             }
@@ -70,7 +70,7 @@ public class IdVector implements Comparable<IdVector>, ISentenceKey<IdVector>
         {
             for (Long[] b : other.idArrayList)
             {
-                Long distance = BinarySearch.computeAverageDistance(a, b);
+                Long distance = ArrayDistance.computeAverageDistance(a, b);
                 score += 1.0 / (0.1 + distance);
             }
         }

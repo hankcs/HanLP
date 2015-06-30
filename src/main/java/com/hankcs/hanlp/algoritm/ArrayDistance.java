@@ -19,23 +19,8 @@ import java.util.TreeSet;
  *
  * @author hankcs
  */
-public class BinarySearch
+public class ArrayDistance
 {
-    public static void main(String[] args)
-    {
-        TreeSet<Long> setA = new TreeSet<Long>();
-        setA.add(5L);
-        setA.add(4L);
-
-        TreeSet<Long> setB = new TreeSet<Long>();
-        setB.add(1L);
-        setB.add(2L);
-        setB.add(3L);
-        setB.add(8L);
-        setB.add(16L);
-        System.out.println(computeMinimumDistance(setA, setB));
-    }
-
     public static Long computeMinimumDistance(TreeSet<Long> setA, TreeSet<Long> setB)
     {
         Long[] arrayA = setA.toArray(new Long[0]);
