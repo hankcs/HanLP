@@ -427,7 +427,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
      * @param sSentence 句子
      * @return 词网
      */
-    protected WordNet GenerateWordNet(final char[] sSentence, final WordNet wordNetStorage)
+    protected void GenerateWordNet(final WordNet wordNetStorage)
     {
         final char[] charArray = wordNetStorage.charArray;
 
@@ -465,7 +465,6 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
             }
             else i += vertexes[i].getLast().realWord.length();
         }
-        return wordNetStorage;
     }
 
     /**

@@ -35,7 +35,7 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
         WordNet wordNetOptimum = new WordNet(sentence);
         WordNet wordNetAll = new WordNet(wordNetOptimum.charArray);
         ////////////////生成词网////////////////////
-        GenerateWordNet(null, wordNetAll);
+        GenerateWordNet(wordNetAll);
         ///////////////生成词图////////////////////
         Graph graph = GenerateBiGraph(wordNetAll);
         if (HanLP.Config.DEBUG)
