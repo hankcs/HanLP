@@ -420,12 +420,10 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
 //        logger.trace("数字识别后：" + Graph.parseResult(linkedArray));
     }
 
-
     /**
      * 生成一元词网
      *
-     * @param sSentence 句子
-     * @return 词网
+     * @param wordNetStorage
      */
     protected void GenerateWordNet(final WordNet wordNetStorage)
     {
@@ -451,7 +449,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
         }
         // 原子分词，保证图连通
         LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
-        for (int i = 1; i < vertexes.length;)
+        for (int i = 1; i < vertexes.length; )
         {
             if (vertexes[i].isEmpty())
             {
@@ -497,7 +495,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                     {
                         if (
                                 ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
-                                smallVertex.realWord.length() > 1)
+                                        smallVertex.realWord.length() > 1)
                                         && smallVertex != vertex)
                         {
                             listIterator.add(smallVertex);
