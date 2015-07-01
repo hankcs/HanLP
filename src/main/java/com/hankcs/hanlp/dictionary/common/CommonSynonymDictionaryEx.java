@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.common;
 
-import com.hankcs.hanlp.algoritm.BinarySearch;
+import com.hankcs.hanlp.algoritm.ArrayDistance;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.synonym.Synonym;
 
@@ -113,7 +113,7 @@ public class CommonSynonymDictionaryEx
         Long[] itemB = get(b);
         if (itemB == null) return Long.MAX_VALUE / 3;
 
-        return BinarySearch.computeAverageDistance(itemA, itemB);
+        return ArrayDistance.computeAverageDistance(itemA, itemB);
     }
 
     /**

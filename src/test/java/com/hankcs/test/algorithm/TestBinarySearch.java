@@ -11,11 +11,6 @@
  */
 package com.hankcs.test.algorithm;
 
-import com.hankcs.hanlp.algoritm.BinarySearch;
-
-import java.util.Arrays;
-import java.util.TreeSet;
-
 /**
  * 求两个集合中最相近的两个数
  *
