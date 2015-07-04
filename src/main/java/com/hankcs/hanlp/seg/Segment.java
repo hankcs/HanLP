@@ -291,6 +291,7 @@ public abstract class Segment
      */
     public List<Term> seg(String text)
     {
+        if (text == null || text.length() == 0) return Collections.emptyList();
         char[] charArray = text.toCharArray();
         if (HanLP.Config.Normalization)
         {
