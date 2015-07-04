@@ -87,6 +87,7 @@ public class OrganizationRecognition
                     {
                         tagList.add(new EnumItem<NT>(NT.F, 1000));
                     }
+                    else break;
                 }
                 continue;
                 case ni:

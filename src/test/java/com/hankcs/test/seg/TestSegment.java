@@ -45,7 +45,7 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment().enableCustomDictionary(false).enableOrganizationRecognize(true);
         System.out.println(segment.seg(
-                "葵花药业集团董事长关彦斌指出"
+                "”一位不愿透露姓名的业内人士指出。”葵花药业集团董事长关彦斌指出，"
         ));
     }
 
