@@ -1105,14 +1105,14 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         public Searcher(int offset, char[] charArray)
         {
             this.charArray = charArray;
-            this.i = offset;
-            this.begin = offset;
+            i = offset;
             last = base[0];
             arrayLength = charArray.length;
             // A trick，如果文本长度为0的话，调用next()时，会带来越界的问题。
             // 所以我要在第一次调用next()的时候触发begin == arrayLength进而返回false。
             // 当然也可以改成begin >= arrayLength，不过我觉得操作符>=的效率低于==
             if (arrayLength == 0) begin = -1;
+            else begin = offset;
         }
 
         /**
