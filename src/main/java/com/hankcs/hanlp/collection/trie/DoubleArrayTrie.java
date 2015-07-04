@@ -1097,6 +1097,11 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
          */
         private int arrayLength;
 
+        /**
+         * 构造一个双数组搜索工具
+         * @param offset 搜索的起始位置
+         * @param charArray 搜索的目标字符数组
+         */
         public Searcher(int offset, char[] charArray)
         {
             this.charArray = charArray;
@@ -1106,9 +1111,14 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             arrayLength = charArray.length;
             // A trick，如果文本长度为0的话，调用next()时，会带来越界的问题。
             // 所以我要在第一次调用next()的时候触发begin == arrayLength进而返回false。
+            // 当然也可以改成begin >= arrayLength，不过我觉得操作符>=的效率低于==
             if (arrayLength == 0) begin = -1;
         }
 
+        /**
+         * 取出下一个命中输出
+         * @return 是否命中，当返回false表示搜索结束，否则使用公开的成员读取命中的详细信息
+         */
         public boolean next()
         {
             int b = last;
