@@ -1060,7 +1060,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     }
 
     /**
-     * 一个搜索工具
+     * 一个搜索工具（注意，当调用next()返回false后不应该继续调用next()，除非reset状态）
      */
     public class Searcher
     {
@@ -1104,6 +1104,9 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             this.begin = offset;
             last = base[0];
             arrayLength = charArray.length;
+            // A trick，如果文本长度为0的话，调用next()时，会带来越界的问题。
+            // 所以我要在第一次调用next()的时候触发begin == arrayLength进而返回false。
+            if (arrayLength == 0) begin = -1;
         }
 
         public boolean next()

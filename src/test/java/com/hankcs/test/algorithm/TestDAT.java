@@ -17,6 +17,9 @@ import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import junit.framework.TestCase;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * @author hankcs
  */
@@ -83,6 +86,19 @@ public class TestDAT extends TestCase
                     i = end - 1;
                 }
             }
+        }
+    }
+
+    public void testHandleEmptyString() throws Exception
+    {
+        String emptyString = "";
+        DoubleArrayTrie<String> dat = new DoubleArrayTrie<String>();
+        TreeMap<String, String> dictionary = new TreeMap<String, String>();
+        dictionary.put("bug", "问题");
+        dat.build(dictionary);
+        DoubleArrayTrie<String>.Searcher searcher = dat.getSearcher(emptyString, 0);
+        while (searcher.next())
+        {
         }
     }
 }
