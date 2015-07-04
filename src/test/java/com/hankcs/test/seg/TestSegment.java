@@ -42,10 +42,10 @@ public class TestSegment extends TestCase
 {
     public void testSeg() throws Exception
     {
-//        HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(false).enablePlaceRecognize(true);
+        HanLP.Config.enableDebug();
+        Segment segment = new DijkstraSegment().enableCustomDictionary(false).enableOrganizationRecognize(true);
         System.out.println(segment.seg(
-                "你在万宝沟还是九里坪"
+                "葵花药业集团董事长关彦斌指出"
         ));
     }
 
