@@ -291,4 +291,11 @@ public class TestSegment extends TestCase
         StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
         System.out.println(StandardTokenizer.segment("三年"));
     }
+
+    public void testTime() throws Exception
+    {
+        String text = "下午3时由北京出发";
+        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        System.out.println(StandardTokenizer.segment(text));
+    }
 }
