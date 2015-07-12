@@ -33,7 +33,10 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CustomDictionary
 {
-    static BinTrie<CoreDictionary.Attribute> trie;
+    /**
+     * 用于储存用户动态插入词条的二分trie树
+     */
+    public static BinTrie<CoreDictionary.Attribute> trie;
     public static DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
     /**
      * 第一个是主词典，其他是副词典
