@@ -59,7 +59,6 @@ HanLP: Han Language Processing
 
 ## 项目主页
 
-HanLP项目主页：http://hanlp.linrunsoft.com/
 
 HanLP下载地址：https://github.com/hankcs/HanLP/releases
 
@@ -77,7 +76,7 @@ HanLP下载地址：https://github.com/hankcs/HanLP/releases
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.2.2</version>
+    <version>portable-1.2.4</version>
 </dependency>
 ```
 
