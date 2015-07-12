@@ -235,6 +235,7 @@ public abstract class Segment
         {
             for (int i = 0; i < wordNet.length; ++i)
             {
+                if (wordNet[i] == null) continue;
                 BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
                 if (state != null)
                 {
