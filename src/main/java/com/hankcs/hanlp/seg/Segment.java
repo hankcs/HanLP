@@ -245,6 +245,7 @@ public abstract class Segment
                     CoreDictionary.Attribute value = null;
                     for (; to < wordNet.length; ++to)
                     {
+                        if (wordNet[to] == null) continue;
                         state = state.transition(wordNet[to].realWord.toCharArray(), 0);
                         if (state == null) break;
                         if (state.getValue() != null)
@@ -258,6 +259,7 @@ public abstract class Segment
                         StringBuilder sbTerm = new StringBuilder();
                         for (int j = start; j < end; ++j)
                         {
+                            if (wordNet[j] == null) continue;
                             sbTerm.append(wordNet[j]);
                             wordNet[j] = null;
                         }
