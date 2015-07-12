@@ -46,7 +46,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 public class HanLP
 {
     /**
-     * 库的全局配置
+     * 库的全局配置，既可以用代码修改，也可以通过hanlp.properties配置（按照 变量名=值 的形式）
      */
     public static final class Config
     {
@@ -162,6 +162,10 @@ public class HanLP
          * 分词结果是否展示词性
          */
         public static boolean ShowTermNature = true;
+        /**
+         * 是否执行字符正规化（繁体->简体，全角->半角，大写->小写），切换配置后必须删CustomDictionary.txt.bin缓存
+         */
+        public static boolean Normalization = false;
 
         static
         {
@@ -239,6 +243,7 @@ public class HanLP
                 CRFDependencyModelPath = p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
+                Normalization = "true".equals(p.getProperty("Normalization", "false"));
             }
             catch (Exception e)
             {
@@ -290,6 +295,11 @@ public class HanLP
             }
         }
     }
+
+    /**
+     * 工具类，不需要生成实例
+     */
+    private HanLP() {}
 
     /**
      * 简转繁

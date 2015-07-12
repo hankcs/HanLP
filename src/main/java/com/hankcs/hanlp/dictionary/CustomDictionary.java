@@ -18,6 +18,7 @@ import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.*;
@@ -32,7 +33,10 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CustomDictionary
 {
-    static BinTrie<CoreDictionary.Attribute> trie;
+    /**
+     * 用于储存用户动态插入词条的二分trie树
+     */
+    public static BinTrie<CoreDictionary.Attribute> trie;
     public static DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
     /**
      * 第一个是主词典，其他是副词典
@@ -83,7 +87,7 @@ public class CustomDictionary
                 boolean success = load(p, defaultNature, map);
                 if (!success) logger.warning("失败：" + p);
             }
-            logger.info("正在构建AhoCorasickDoubleArrayTrie……");
+            logger.info("正在构建DoubleArrayTrie……");
             dat.build(map);
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
@@ -143,6 +147,7 @@ public class CustomDictionary
             {
                 String[] param = line.split("\\s");
                 if (param[0].length() == 0) continue;   // 排除空行
+                if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
                 if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
                 {
                     continue;
@@ -198,6 +203,7 @@ public class CustomDictionary
      */
     public static boolean add(String word)
     {
+        if (HanLP.Config.Normalization) word = CharTable.convert(word);
         if (contains(word)) return false;
         return insert(word, null);
     }
@@ -212,6 +218,7 @@ public class CustomDictionary
     public static boolean insert(String word, String natureWithFrequency)
     {
         if (word == null) return false;
+        if (HanLP.Config.Normalization) word = CharTable.convert(word);
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
         if (dat != null && dat.set(word, att)) return true;
@@ -258,7 +265,7 @@ public class CustomDictionary
                     attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            if (!dat.load(byteArray, attributes)) return false;
+            if (!dat.load(byteArray, attributes) || byteArray.hasMore()) return false;
         }
         catch (Exception e)
         {
@@ -276,6 +283,7 @@ public class CustomDictionary
      */
     public static CoreDictionary.Attribute get(String key)
     {
+        if (HanLP.Config.Normalization) key = CharTable.convert(key);
         if (dat == null)
         {
             if (trie != null) return trie.get(key);
@@ -291,6 +299,7 @@ public class CustomDictionary
      */
     public static void remove(String key)
     {
+        if (HanLP.Config.Normalization) key = CharTable.convert(key);
         trie.remove(key);
     }
 
@@ -330,12 +339,22 @@ public class CustomDictionary
                 '}';
     }
 
+    /**
+     * 词典中是否含有词语
+     * @param key 词语
+     * @return 是否包含
+     */
     public static boolean contains(String key)
     {
         if (dat != null && dat.exactMatchSearch(key) >= 0) return true;
         return trie != null && trie.containsKey(key);
     }
 
+    /**
+     * 获取一个BinTrie的查询工具
+     * @param charArray 文本
+     * @return 查询者
+     */
     public static BaseSearcher getSearcher(char[] charArray)
     {
         return new Searcher(charArray);
@@ -399,6 +418,11 @@ public class CustomDictionary
         return trie;
     }
 
+    /**
+     * 解析一段文本（目前采用了BinTrie+DAT的混合储存形式，此方法可以统一两个数据结构）
+     * @param text         文本
+     * @param processor    处理器
+     */
     public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
     {
         if (trie != null)

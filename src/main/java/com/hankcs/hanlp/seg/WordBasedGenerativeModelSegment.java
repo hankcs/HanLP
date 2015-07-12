@@ -420,45 +420,49 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
 //        logger.trace("数字识别后：" + Graph.parseResult(linkedArray));
     }
 
-
     /**
      * 生成一元词网
      *
-     * @param sSentence 句子
-     * @return 词网
+     * @param wordNetStorage
      */
-    protected WordNet GenerateWordNet(final char[] sSentence, final WordNet wordNetStorage)
+    protected void GenerateWordNet(final WordNet wordNetStorage)
     {
         final char[] charArray = wordNetStorage.charArray;
 
-        int offset = 0;
+        // 核心词典查询
         DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(charArray, 0);
         while (searcher.next())
         {
-            if (searcher.begin > offset)
-            {
-                wordNetStorage.add(offset + 1, quickAtomSegment(charArray, offset, searcher.begin));
-            }
             wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value, searcher.index));
-            offset = searcher.begin + searcher.length;
-        }
-        if (offset < charArray.length)
-        {
-            wordNetStorage.add(offset + 1, quickAtomSegment(charArray, offset, charArray.length));
         }
         // 用户词典查询
-        if (config.useCustomDictionary)
+//        if (config.useCustomDictionary)
+//        {
+//            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+//            {
+//                @Override
+//                public void hit(int begin, int end, CoreDictionary.Attribute value)
+//                {
+//                    wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
+//                }
+//            });
+//        }
+        // 原子分词，保证图连通
+        LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
+        for (int i = 1; i < vertexes.length; )
         {
-            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            if (vertexes[i].isEmpty())
             {
-                @Override
-                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                int j = i + 1;
+                for (; j < vertexes.length - 1; ++j)
                 {
-                    wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
+                    if (!vertexes[j].isEmpty()) break;
                 }
-            });
+                wordNetStorage.add(i, quickAtomSegment(charArray, i - 1, j - 1));
+                i = j;
+            }
+            else i += vertexes[i].getLast().realWord.length();
         }
-        return wordNetStorage;
     }
 
     /**
@@ -491,7 +495,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                     {
                         if (
                                 ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
-                                smallVertex.realWord.length() > 1)
+                                        smallVertex.realWord.length() > 1)
                                         && smallVertex != vertex)
                         {
                             listIterator.add(smallVertex);

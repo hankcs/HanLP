@@ -20,19 +20,19 @@ public class PairFrequency extends TermFrequency
     /**
      * 互信息值
      */
-    public double mi = 0;
+    public double mi;
     /**
      * 左信息熵
      */
-    public double le = 0;
+    public double le;
     /**
      * 右信息熵
      */
-    public double re = 0;
+    public double re;
     /**
      * 分数
      */
-    public double score = 0;
+    public double score;
     public String first;
     public String second;
     public char delimiter;

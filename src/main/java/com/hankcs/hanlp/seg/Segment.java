@@ -11,10 +11,13 @@
  */
 package com.hankcs.hanlp.seg;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.common.Term;
@@ -191,6 +194,7 @@ public abstract class Segment
     {
         Vertex[] wordNet = new Vertex[vertexList.size()];
         vertexList.toArray(wordNet);
+        // DAT合并
         DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
         for (int i = 0; i < wordNet.length; ++i)
         {
@@ -223,6 +227,43 @@ public abstract class Segment
                     }
                     wordNet[i] = new Vertex(sbTerm.toString(), value);
                     i = end - 1;
+                }
+            }
+        }
+        // BinTrie合并
+        if (CustomDictionary.trie != null)
+        {
+            for (int i = 0; i < wordNet.length; ++i)
+            {
+                if (wordNet[i] == null) continue;
+                BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
+                if (state != null)
+                {
+                    int start = i;
+                    int to = i + 1;
+                    int end = - 1;
+                    CoreDictionary.Attribute value = null;
+                    for (; to < wordNet.length; ++to)
+                    {
+                        state = state.transition(wordNet[to].realWord.toCharArray(), 0);
+                        if (state == null) break;
+                        if (state.getValue() != null)
+                        {
+                            value = state.getValue();
+                            end = to + 1;
+                        }
+                    }
+                    if (value != null)
+                    {
+                        StringBuilder sbTerm = new StringBuilder();
+                        for (int j = start; j < end; ++j)
+                        {
+                            sbTerm.append(wordNet[j]);
+                            wordNet[j] = null;
+                        }
+                        wordNet[i] = new Vertex(sbTerm.toString(), value);
+                        i = end - 1;
+                    }
                 }
             }
         }
@@ -290,6 +331,10 @@ public abstract class Segment
     public List<Term> seg(String text)
     {
         char[] charArray = text.toCharArray();
+        if (HanLP.Config.Normalization)
+        {
+            CharTable.normalization(charArray);
+        }
         if (config.threadNumber > 1 && charArray.length > 10000)    // 小文本多线程没意义，反而变慢了
         {
             List<String> sentenceList = SentencesUtil.toSentenceList(charArray);
@@ -381,6 +426,11 @@ public abstract class Segment
      */
     public List<Term> seg(char[] text)
     {
+        assert text != null;
+        if (HanLP.Config.Normalization)
+        {
+            CharTable.normalization(text);
+        }
         return segSentence(text);
     }
 

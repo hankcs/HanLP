@@ -1044,7 +1044,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     }
 
     /**
-     * 一个搜索工具
+     * 一个搜索工具（注意，当调用next()返回false后不应该继续调用next()，除非reset状态）
      */
     public class Searcher
     {
@@ -1081,36 +1081,51 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
          */
         private int arrayLength;
 
+        /**
+         * 构造一个双数组搜索工具
+         * @param offset 搜索的起始位置
+         * @param charArray 搜索的目标字符数组
+         */
         public Searcher(int offset, char[] charArray)
         {
             this.charArray = charArray;
-            this.i = offset;
-            this.begin = offset;
+            i = offset;
             last = base[0];
             arrayLength = charArray.length;
+            // A trick，如果文本长度为0的话，调用next()时，会带来越界的问题。
+            // 所以我要在第一次调用next()的时候触发begin == arrayLength进而返回false。
+            // 当然也可以改成begin >= arrayLength，不过我觉得操作符>=的效率低于==
+            if (arrayLength == 0) begin = -1;
+            else begin = offset;
         }
 
+        /**
+         * 取出下一个命中输出
+         * @return 是否命中，当返回false表示搜索结束，否则使用公开的成员读取命中的详细信息
+         */
         public boolean next()
         {
-            if (i == arrayLength)
-            {
-                ++begin;
-                i = begin;
-                last = base[0];
-            }
             int b = last;
             int n;
             int p;
 
-            for (; i < arrayLength; ++i)
+            for (; ; ++i)
             {
-                p = b + (int) (charArray[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
+                if (i == arrayLength)               // 指针到头了，将起点往前挪一个，重新开始，状态归零
+                {
+                    ++begin;
+                    if (begin == arrayLength) break;
+                    i = begin;
+                    b = base[0];
+                }
+                p = b + (int) (charArray[i]) + 1;   // 状态转移 p = base[char[i-1]] + char[i] + 1
                 if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
-                    b = base[p];
+                    b = base[p];                    // 转移成功
                 else
                 {
-                    i = begin;
+                    i = begin;                      // 转移失败，也将起点往前挪一个，重新开始，状态归零
                     ++begin;
+                    if (begin == arrayLength) break;
                     b = base[0];
                     continue;
                 }

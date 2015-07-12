@@ -3777,7 +3777,7 @@ public class OrganizationDictionary
     }
 
     /**
-     * 因为任何算法都无法解决100%的问题，总是有一些bad case，这些bad case会以“盖公章 A 1”的形式加入词典中<BR>
+     * 因为任何算法都无法解决100%的问题，总是有一些bad case，这些bad case会以“单词 Z 1”的形式加入词典中<BR>
      * 这个方法返回是否是bad case
      *
      * @param name

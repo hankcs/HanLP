@@ -39,7 +39,7 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
 //        long start = System.currentTimeMillis();
         WordNet wordNetAll = new WordNet(sentence);
         ////////////////生成词网////////////////////
-        GenerateWordNet(null, wordNetAll);
+        GenerateWordNet(wordNetAll);
         ///////////////生成词图////////////////////
 //        System.out.println("构图：" + (System.currentTimeMillis() - start));
         if (HanLP.Config.DEBUG)
@@ -49,10 +49,23 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
 //        start = System.currentTimeMillis();
         List<Vertex> vertexList = viterbi(wordNetAll);
 //        System.out.println("最短路：" + (System.currentTimeMillis() - start));
+
+        if (config.useCustomDictionary)
+        {
+            combineByCustomDictionary(vertexList);
+        }
+
         if (HanLP.Config.DEBUG)
         {
             System.out.println("粗分结果" + convert(vertexList, false));
         }
+
+        // 数字识别
+        if (config.numberQuantifierRecognize)
+        {
+            mergeNumberQuantifier(vertexList, wordNetAll, config);
+        }
+
         // 实体命名识别
         if (config.ner)
         {
@@ -91,12 +104,6 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
                     System.out.printf("细分词网：\n%s\n", wordNetOptimum);
                 }
             }
-        }
-
-        // 数字识别
-        if (config.numberQuantifierRecognize)
-        {
-            mergeNumberQuantifier(vertexList, wordNetAll, config);
         }
 
         // 如果是索引模式则全切分

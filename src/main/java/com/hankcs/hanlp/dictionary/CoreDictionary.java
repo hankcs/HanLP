@@ -57,7 +57,7 @@ public class CoreDictionary
     public static final int M_WORD_ID = getWordID(Predefine.TAG_NUMBER);
     public static final int NX_WORD_ID = getWordID(Predefine.TAG_PROPER);
 
-    public static boolean load(String path)
+    private static boolean load(String path)
     {
         logger.info("核心词典开始加载:" + path);
         if (loadDat(path)) return true;
@@ -196,6 +196,11 @@ public class CoreDictionary
         return attribute.totalFrequency;
     }
 
+    /**
+     * 是否包含词语
+     * @param key
+     * @return
+     */
     public static boolean contains(String key)
     {
         return trie.get(key) != null;

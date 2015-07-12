@@ -68,4 +68,29 @@ public class CharTable
 
         return result;
     }
+
+    public static String convert(String charArray)
+    {
+        assert charArray != null;
+        char[] result = new char[charArray.length()];
+        for (int i = 0; i < charArray.length(); i++)
+        {
+            result[i] = CONVERT[charArray.charAt(i)];
+        }
+
+        return new String(result);
+    }
+
+    /**
+     * 正规化一些字符（原地正规化）
+     * @param charArray 字符
+     */
+    public static void normalization(char[] charArray)
+    {
+        assert charArray != null;
+        for (int i = 0; i < charArray.length; i++)
+        {
+            charArray[i] = CONVERT[charArray[i]];
+        }
+    }
 }

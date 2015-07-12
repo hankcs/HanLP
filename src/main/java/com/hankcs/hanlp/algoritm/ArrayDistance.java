@@ -19,23 +19,8 @@ import java.util.TreeSet;
  *
  * @author hankcs
  */
-public class BinarySearch
+public class ArrayDistance
 {
-    public static void main(String[] args)
-    {
-        TreeSet<Long> setA = new TreeSet<Long>();
-        setA.add(5L);
-        setA.add(4L);
-
-        TreeSet<Long> setB = new TreeSet<Long>();
-        setB.add(1L);
-        setB.add(2L);
-        setB.add(3L);
-        setB.add(8L);
-        setB.add(16L);
-        System.out.println(computeMinimumDistance(setA, setB));
-    }
-
     public static Long computeMinimumDistance(TreeSet<Long> setA, TreeSet<Long> setB)
     {
         Long[] arrayA = setA.toArray(new Long[0]);
@@ -45,27 +30,30 @@ public class BinarySearch
 
     public static Long computeMinimumDistance(Long[] arrayA, Long[] arrayB)
     {
-        int startIndex = 0;
-        Long min_distance = Long.MAX_VALUE;
-        for (int i = 0; i < arrayA.length; ++i)
+        int aIndex = 0;
+        int bIndex = 0;
+        long min = Math.abs(arrayA[0] - arrayB[0]);
+        while (true)
         {
-            startIndex = Arrays.binarySearch(arrayB, startIndex, arrayB.length, arrayA[i]);
-            if (startIndex < 0)
+            if (arrayA[aIndex] > arrayB[bIndex])
             {
-                startIndex = -startIndex - 1;
-                if (startIndex - 1 >= 0)
-                {
-                    min_distance = Math.min(min_distance, arrayA[i] - arrayB[startIndex - 1]);
-                }
-                if (startIndex < arrayB.length)
-                {
-                    min_distance = Math.min(min_distance, arrayB[startIndex] - arrayA[i]);
-                }
+                bIndex++;
             }
-            else return 0L;
+            else
+            {
+                aIndex++;
+            }
+            if (aIndex >= arrayA.length || bIndex >= arrayB.length)
+            {
+                break;
+            }
+            if (Math.abs(arrayA[aIndex] - arrayB[bIndex]) < min)
+            {
+                min = Math.abs(arrayA[aIndex] - arrayB[bIndex]);
+            }
         }
 
-        return min_distance;
+        return min;
     }
 
     public static Long computeAverageDistance(Long[] arrayA, Long[] arrayB)

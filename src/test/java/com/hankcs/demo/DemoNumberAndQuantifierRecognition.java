@@ -29,6 +29,7 @@ public class DemoNumberAndQuantifierRecognition
                         "壹佰块都不给我",
                         "９０１２３４５６７８只蚂蚁",
                         "牛奶三〇〇克*2",
+                        "ChinaJoy“扫黄”细则露胸超2厘米罚款",
                 };
         for (String sentence : testCase)
         {

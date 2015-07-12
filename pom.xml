@@ -4,7 +4,7 @@
 
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.2.2</version>
+    <version>portable-1.2.4</version>
 
     <name>HanLP</name>
     <url>https://github.com/hankcs/HanLP</url>
@@ -60,15 +60,6 @@
                     <excludes>
                         <exclude>**/*.properties</exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-            <!-- 单元测试插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
             <!-- resource插件, 设定编码 -->
@@ -146,10 +137,8 @@
 
         <maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-        <maven-surefire-plugin.version>2.14</maven-surefire-plugin.version>
-        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
-        <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
-        <sonar-maven3-plugin.version>3.5</sonar-maven3-plugin.version>
+        <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+        <maven-source-plugin.version>2.4</maven-source-plugin.version>
 
         <junit.version>3.8.1</junit.version>
     </properties>

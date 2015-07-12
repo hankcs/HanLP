@@ -48,6 +48,17 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
      */
     protected V value;
 
+    public BaseNode<V> transition(char[] path, int begin)
+    {
+        BaseNode<V> cur = this;
+        for (int i = begin; i < path.length; ++i)
+        {
+            cur = cur.getChild(path[i]);
+            if (cur == null || cur.status == Status.UNDEFINED_0) return null;
+        }
+        return cur;
+    }
+
     /**
      * 添加子节点
      *

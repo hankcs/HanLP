@@ -41,10 +41,10 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
             return valueArray;
         }
         List<EnumItem<NR>> valueList = new LinkedList<EnumItem<NR>>();
+        String line = null;
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
-            String line;
             while ((line = br.readLine()) != null)
             {
                 Map.Entry<String, Map.Entry<String, Integer>[]> args = EnumItem.create(line);
@@ -59,7 +59,7 @@ public class NRDictionary extends CommonDictionary<EnumItem<NR>>
         }
         catch (Exception e)
         {
-            logger.warning("读取" + path + "失败" + e);
+            logger.severe("读取" + path + "失败[" + e + "]\n该词典这一行格式不对：" + line);
             return null;
         }
         valueArray = valueList.toArray(new EnumItem[0]);
