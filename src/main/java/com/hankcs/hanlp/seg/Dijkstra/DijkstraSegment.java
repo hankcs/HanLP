@@ -44,6 +44,12 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
         }
         List<Vertex> vertexList = dijkstra(graph);
 //        fixResultByRule(vertexList);
+
+        if (config.useCustomDictionary)
+        {
+            combineByCustomDictionary(vertexList);
+        }
+
         if (HanLP.Config.DEBUG)
         {
             System.out.println("粗分结果" + convert(vertexList, false));
@@ -108,11 +114,6 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
         if (config.speechTagging)
         {
             speechTagging(vertexList);
-        }
-
-        if (config.useCustomDictionary)
-        {
-            combineByCustomDictionary(vertexList);
         }
 
         return convert(vertexList, config.offset);

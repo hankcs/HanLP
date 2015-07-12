@@ -55,7 +55,7 @@ public class TestSegment extends TestCase
         HanLP.Config.ShowTermNature = false;
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "巴曙松：房地产如何估价才合理"
+                "上外日本文化经济学院的陆晚霞教授正在教授泛读课程"
         ));
     }
 

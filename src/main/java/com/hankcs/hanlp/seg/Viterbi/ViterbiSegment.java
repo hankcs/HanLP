@@ -49,6 +49,12 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
 //        start = System.currentTimeMillis();
         List<Vertex> vertexList = viterbi(wordNetAll);
 //        System.out.println("最短路：" + (System.currentTimeMillis() - start));
+
+        if (config.useCustomDictionary)
+        {
+            combineByCustomDictionary(vertexList);
+        }
+
         if (HanLP.Config.DEBUG)
         {
             System.out.println("粗分结果" + convert(vertexList, false));
@@ -110,11 +116,6 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
         if (config.speechTagging)
         {
             speechTagging(vertexList);
-        }
-
-        if (config.useCustomDictionary)
-        {
-            combineByCustomDictionary(vertexList);
         }
 
         return convert(vertexList, config.offset);
