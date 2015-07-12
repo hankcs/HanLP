@@ -84,13 +84,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--  运行 mvn sonar:sonar 可将项目发布给质量管理平台-->
-            <!-- 软件环境： jdk1.7.0_51 apache-maven-3.0.4 sonar-3.6 -->
-            <plugin>
-                <groupId>org.codehaus.sonar</groupId>
-                <artifactId>sonar-maven3-plugin</artifactId>
-                <version>${sonar-maven3-plugin.version}</version>
-            </plugin>
             <!-- Javadoc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
