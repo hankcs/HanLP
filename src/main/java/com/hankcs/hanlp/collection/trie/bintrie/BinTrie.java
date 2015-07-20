@@ -79,6 +79,16 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
     }
 
     /**
+     * 设置键值对，当键不存在的时候会自动插入
+     * @param key
+     * @param value
+     */
+    public void set(String key, V value)
+    {
+        put(key.toCharArray(), value);
+    }
+
+    /**
      * 删除一个词
      *
      * @param key

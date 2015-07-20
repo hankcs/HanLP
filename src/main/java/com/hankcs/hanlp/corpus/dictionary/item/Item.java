@@ -60,6 +60,15 @@ public class Item extends SimpleItem
     }
 
     /**
+     * 获取首个label
+     * @return
+     */
+    public String firstLabel()
+    {
+        return labelMap.keySet().iterator().next();
+    }
+
+    /**
      *
      * @param param 类似 “希望 v 7685 vn 616” 的字串
      * @return

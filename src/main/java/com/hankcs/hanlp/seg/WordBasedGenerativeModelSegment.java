@@ -438,14 +438,11 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
         // 用户词典查询
 //        if (config.useCustomDictionary)
 //        {
-//            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+//            searcher = CustomDictionary.dat.getSearcher(charArray, 0);
+//            while (searcher.next())
 //            {
-//                @Override
-//                public void hit(int begin, int end, CoreDictionary.Attribute value)
-//                {
-//                    wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
-//                }
-//            });
+//                wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value));
+//            }
 //        }
         // 原子分词，保证图连通
         LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();

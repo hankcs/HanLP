@@ -283,6 +283,8 @@ public class CustomDictionary
     public static CoreDictionary.Attribute get(String key)
     {
         if (HanLP.Config.Normalization) key = CharTable.convert(key);
+        CoreDictionary.Attribute attribute = dat.get(key);
+        if (attribute != null) return attribute;
         return trie.get(key);
     }
 
