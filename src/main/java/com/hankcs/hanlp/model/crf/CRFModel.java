@@ -13,7 +13,6 @@ package com.hankcs.hanlp.model.crf;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.ITrie;
-import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -35,11 +34,20 @@ public class CRFModel implements ICacheAble
      * 标签和id的相互转换
      */
     Map<String, Integer> tag2id;
+    /**
+     * id转标签
+     */
     protected String[] id2tag;
+    /**
+     * 特征函数
+     */
     ITrie<FeatureFunction> featureFunctionTrie;
+    /**
+     * 特征模板
+     */
     List<FeatureTemplate> featureTemplateList;
     /**
-     * tag的转移矩阵
+     * tag的二元转移矩阵，适用于BiGram Feature
      */
     protected double[][] matrix;
 
@@ -62,6 +70,12 @@ public class CRFModel implements ICacheAble
         // do no thing
     }
 
+    /**
+     * 加载Txt形式的CRF++模型
+     * @param path 模型路径
+     * @param instance 模型的实例（这里允许用户构造不同的CRFModel来储存最终读取的结果）
+     * @return 该模型
+     */
     public static CRFModel loadTxt(String path, CRFModel instance)
     {
         CRFModel CRFModel = instance;
@@ -167,52 +181,74 @@ public class CRFModel implements ICacheAble
     public void tag(Table table)
     {
         int size = table.size();
-        double bestScore = 0;
-        int bestTag = 0;
         int tagSize = id2tag.length;
-        LinkedList<double[]> scoreList = computeScoreList(table, 0);    // 0位置命中的特征函数
-        for (int i = 0; i < tagSize; ++i)   // -1位置的标签遍历
+        double[][] net = new double[size][tagSize];
+        for (int i = 0; i < size; ++i)
         {
-            for (int j = 0; j < tagSize; ++j)   // 0位置的标签遍历
+            LinkedList<double[]> scoreList = computeScoreList(table, i);
+            for (int tag = 0; tag < tagSize; ++tag)
             {
-                double curScore = computeScore(scoreList, j);
-                if (matrix != null)
-                {
-                    curScore += matrix[i][j];
-                }
-                if (curScore > bestScore)
-                {
-                    bestScore = curScore;
-                    bestTag = j;
-                }
+                net[i][tag] = computeScore(scoreList, tag);
             }
         }
-        table.setLast(0, id2tag[bestTag]);
-        int preTag = bestTag;
-        // 0位置打分完毕，接下来打剩下的
+
+        if (size == 1)
+        {
+            double maxScore = -1e10;
+            int bestTag = 0;
+            for (int tag = 0; tag < net[0].length; tag++)
+            {
+                if (net[0][tag] > maxScore)
+                {
+                    maxScore = net[0][tag];
+                    bestTag = tag;
+                }
+            }
+            table.setLast(0, id2tag[bestTag]);
+            return;
+        }
+
+        int[][] from = new int[size][tagSize];
         for (int i = 1; i < size; ++i)
         {
-            scoreList = computeScoreList(table, i);    // i位置命中的特征函数
-            bestScore = -1000.0;
-            for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
+            for (int now = 0; now < tagSize; ++now)
             {
-                double curScore = computeScore(scoreList, j);
-                if (matrix != null)
+                double maxScore = -1e10;
+                for (int pre = 0; pre < tagSize; ++pre)
                 {
-                    curScore += matrix[preTag][j];
+                    double score = net[i - 1][pre] + matrix[pre][now] + net[i][now];
+                    if (score > maxScore)
+                    {
+                        maxScore = score;
+                        from[i][now] = pre;
+                    }
                 }
-                if (curScore > bestScore)
-                {
-                    bestScore = curScore;
-                    bestTag = j;
-                }
+                net[i][now] = maxScore;
             }
-            table.setLast(i, id2tag[bestTag]);
-            preTag = bestTag;
         }
+        // 反向回溯最佳路径
+        double maxScore = -1e10;
+        int maxTag = 0;
+        for (int tag = 0; tag < net[size - 1].length; tag++)
+        {
+            if (net[size - 1][tag] > maxScore)
+            {
+                maxScore = net[size - 1][tag];
+                maxTag = tag;
+            }
+        }
+
+        table.setLast(size - 1, id2tag[maxTag]);
+        maxTag = from[size - 1][maxTag];
+        for (int i = size - 2; i > 0; --i)
+        {
+            table.setLast(i, id2tag[maxTag]);
+            maxTag = from[i][maxTag];
+        }
+        table.setLast(0, id2tag[maxTag]);
     }
 
-    public LinkedList<double[]> computeScoreList(Table table, int current)
+    protected LinkedList<double[]> computeScoreList(Table table, int current)
     {
         LinkedList<double[]> scoreList = new LinkedList<double[]>();
         for (FeatureTemplate featureTemplate : featureTemplateList)
@@ -329,6 +365,11 @@ public class CRFModel implements ICacheAble
         return true;
     }
 
+    /**
+     * 加载Txt形式的CRF++模型
+     * @param path 模型路径
+     * @return 该模型
+     */
     public static CRFModel loadTxt(String path)
     {
         return loadTxt(path, new CRFModel(new DoubleArrayTrie<FeatureFunction>()));

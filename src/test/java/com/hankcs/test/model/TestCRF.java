@@ -167,4 +167,21 @@ public class TestCRF extends TestCase
         else if (tag.equals("nx")) return "W";
         return null;
     }
+
+    public void testLoadModelWithBiGramFeature() throws Exception
+    {
+        String path = "E:\\model.txt";
+        CRFModel model = CRFModel.loadTxt(path);
+
+        Table table = new Table();
+        String text = "人民生活进一步改善了";
+        table.v = new String[text.length()][2];
+        for (int i = 0; i < text.length(); i++)
+        {
+            table.v[i][0] = String.valueOf(text.charAt(i));
+        }
+
+        model.tag(table);
+        System.out.println(table);
+    }
 }
