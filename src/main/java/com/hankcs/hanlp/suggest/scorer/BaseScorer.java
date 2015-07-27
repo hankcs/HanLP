@@ -84,4 +84,10 @@ public abstract class BaseScorer<T extends ISentenceKey> implements IScorer
         }
         return result;
     }
+
+    @Override
+    public void removeAllSentences()
+    {
+        storage.clear();
+    }
 }

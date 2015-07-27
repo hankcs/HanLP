@@ -181,6 +181,7 @@ public class CRFModel implements ICacheAble
     public void tag(Table table)
     {
         int size = table.size();
+        if (size == 0) return;
         int tagSize = id2tag.length;
         double[][] net = new double[size][tagSize];
         for (int i = 0; i < size; ++i)
@@ -196,7 +197,7 @@ public class CRFModel implements ICacheAble
         {
             double maxScore = -1e10;
             int bestTag = 0;
-            for (int tag = 0; tag < net[0].length; tag++)
+            for (int tag = 0; tag < net[0].length; ++tag)
             {
                 if (net[0][tag] > maxScore)
                 {
@@ -229,7 +230,7 @@ public class CRFModel implements ICacheAble
         // 反向回溯最佳路径
         double maxScore = -1e10;
         int maxTag = 0;
-        for (int tag = 0; tag < net[size - 1].length; tag++)
+        for (int tag = 0; tag < net[size - 1].length; ++tag)
         {
             if (net[size - 1][tag] > maxScore)
             {

@@ -12,16 +12,19 @@
 package com.hankcs.test.seg;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
+import com.hankcs.hanlp.seg.Other.CommonAhoCorasickSegmentUtil;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
+import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.BasicTokenizer;
@@ -33,7 +36,9 @@ import junit.framework.TestCase;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * @author hankcs
@@ -297,5 +302,18 @@ public class TestSegment extends TestCase
         String text = "下午3时由北京出发";
         StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
         System.out.println(StandardTokenizer.segment(text));
+    }
+
+    public void testBuildASimpleSegment() throws Exception
+    {
+        TreeMap<String, String> dictionary = new TreeMap<String, String>();
+        dictionary.put("HanLP", "名词");
+        dictionary.put("特别", "副词");
+        dictionary.put("方便", "形容词");
+        AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
+        acdat.build(dictionary);
+        LinkedList<ResultTerm<String>> termList =
+                CommonAhoCorasickSegmentUtil.segment("HanLP是不是特别方便？".toCharArray(), acdat);
+        System.out.println(termList);
     }
 }
