@@ -1,8 +1,8 @@
-HanLP: Han Language Processing
+﻿HanLP: Han Language Processing
 =====
 
 汉语言处理包
-
+    
 ------
 
 **HanLP**是由一系列模型与算法组成的Java工具包，目标是普及自然语言处理在生产环境中的应用。**HanLP**具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
