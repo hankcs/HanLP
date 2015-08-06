@@ -27,10 +27,7 @@ import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
-import com.hankcs.hanlp.tokenizer.BasicTokenizer;
-import com.hankcs.hanlp.tokenizer.IndexTokenizer;
-import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
-import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.tokenizer.*;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
@@ -48,9 +45,9 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(false).enableOrganizationRecognize(true);
+        Segment segment = new DijkstraSegment().enableCustomDictionary(false).enableNameRecognize(true).enableNumberQuantifierRecognize(true);
         System.out.println(segment.seg(
-                "”一位不愿透露姓名的业内人士指出。”葵花药业集团董事长关彦斌指出，"
+                "请收回李硒300元钱"
         ));
     }
 
@@ -313,7 +310,14 @@ public class TestSegment extends TestCase
         AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
         acdat.build(dictionary);
         LinkedList<ResultTerm<String>> termList =
-                CommonAhoCorasickSegmentUtil.segment("HanLP是不是特别方便？".toCharArray(), acdat);
+                CommonAhoCorasickSegmentUtil.segment("HanLP是不是特别方便？", acdat);
         System.out.println(termList);
+    }
+
+    public void testNLPSegment() throws Exception
+    {
+        String text = "本田先生最喜欢穿和服";
+        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(true);
+        System.out.println(segment.seg(text));
     }
 }

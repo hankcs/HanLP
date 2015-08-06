@@ -59,10 +59,7 @@ HanLP: Han Language Processing
 
 ## 项目主页
 
-
 HanLP下载地址：https://github.com/hankcs/HanLP/releases
-
-最新binary、文档都以项目主页为准。GitHub的说明为历史遗留，仅做参考。
 
 ------
 
@@ -107,6 +104,7 @@ HanLP下载地址：https://github.com/hankcs/HanLP/releases
     └─model
 
 用户可以自行增删替换，如果不需要句法分析功能的话，随时可以删除model文件夹。
+- 模型跟词典没有绝对的区别，隐马模型被做成人人都可以编辑的词典形式，不代表它不是模型。
 
 #### 3、配置文件
 示例配置文件:[hanlp.properties](https://github.com/hankcs/HanLP/releases)
