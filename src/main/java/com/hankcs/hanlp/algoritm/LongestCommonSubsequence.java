@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.algoritm;
 
 /**
+ * 最长公共子序列（Longest Common Subsequence）指的是两个字符串中的最长公共子序列，不要求子序列连续。
  * @author hankcs
  */
 public class LongestCommonSubsequence
