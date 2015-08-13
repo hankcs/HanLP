@@ -23,6 +23,7 @@ import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.util.*;
 
+import static com.hankcs.hanlp.utility.Predefine.BIN_EXT;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -367,13 +368,41 @@ public class CRFModel implements ICacheAble
     }
 
     /**
-     * 加载Txt形式的CRF++模型
+     * 加载Txt形式的CRF++模型<br>
+     *     同时生成path.bin模型缓存
      * @param path 模型路径
      * @return 该模型
      */
     public static CRFModel loadTxt(String path)
     {
         return loadTxt(path, new CRFModel(new DoubleArrayTrie<FeatureFunction>()));
+    }
+
+    /**
+     * 加载CRF++模型<br>
+     *     如果存在缓存的话，优先读取缓存，否则读取txt，并且建立缓存
+     * @param path txt的路径，即使不存在.txt，只存在.bin，也应传入txt的路径，方法内部会自动加.bin后缀
+     * @return
+     */
+    public static CRFModel load(String path)
+    {
+        CRFModel model = loadBin(path + BIN_EXT);
+        if (model != null) return model;
+        return loadTxt(path, new CRFModel(new DoubleArrayTrie<FeatureFunction>()));
+    }
+
+    /**
+     * 加载Bin形式的CRF++模型
+     * @param path
+     * @return
+     */
+    public static CRFModel loadBin(String path)
+    {
+        ByteArray byteArray = ByteArray.createByteArray(path);
+        if (byteArray == null) return null;
+        CRFModel model = new CRFModel();
+        if (model.load(byteArray)) return model;
+        return null;
     }
 
     /**
