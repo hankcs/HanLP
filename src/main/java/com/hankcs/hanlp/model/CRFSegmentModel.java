@@ -51,6 +51,13 @@ public class CRFSegmentModel extends CRFModel
     private final static int idS = crfModel.getTagId("S");
 
     /**
+     * 单例包装静态模型，不允许构造实例
+     */
+    private CRFSegmentModel()
+    {
+    }
+
+    /**
      * 以指定的trie树结构储存内部特征函数
      * @param featureFunctionTrie
      */
