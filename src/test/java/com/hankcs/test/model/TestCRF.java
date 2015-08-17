@@ -12,12 +12,14 @@
 package com.hankcs.test.model;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.util.Precompiler;
+import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.FeatureTemplate;
 import com.hankcs.hanlp.model.crf.CRFModel;
 import com.hankcs.hanlp.model.crf.Table;
@@ -170,8 +172,9 @@ public class TestCRF extends TestCase
 
     public void testLoadModelWithBiGramFeature() throws Exception
     {
-        String path = "E:\\model.txt";
-        CRFModel model = CRFModel.loadTxt(path);
+        String path = HanLP.Config.CRFSegmentModelPath + Predefine.BIN_EXT;
+        CRFModel model = new CRFModel(new BinTrie<FeatureFunction>());
+        model.load(ByteArray.createByteArray(path));
 
         Table table = new Table();
         String text = "人民生活进一步改善了";
