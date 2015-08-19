@@ -244,6 +244,7 @@ public class MaxEntModel
             for (int i = 0; i < NUM_PREDS; i++)
             {
                 predLabels[i] = br.readLine();
+                assert !tmpMap.containsKey(predLabels[i]) : "重复的键： " + predLabels[i] + " 请使用 -Dfile.encoding=UTF-8 训练";
                 TextUtility.writeString(predLabels[i], out);
                 tmpMap.put(predLabels[i], i);
             }
