@@ -84,6 +84,29 @@ public class MaxEntModel
     }
 
     /**
+     * 预测概率最高的分类
+     *
+     * @param context
+     * @return
+     */
+    public final Pair<String, Double> predictBest(String[] context)
+    {
+        List<Pair<String, Double>> resultList = predict(context);
+        double bestP = -1.0;
+        Pair<String, Double> bestPair = null;
+        for (Pair<String, Double> pair : resultList)
+        {
+            if (pair.getSecond() > bestP)
+            {
+                bestP = pair.getSecond();
+                bestPair = pair;
+            }
+        }
+
+        return bestPair;
+    }
+
+    /**
      * 预测分布
      *
      * @param context
@@ -334,5 +357,18 @@ public class MaxEntModel
         // eval
         m.evalParams = new EvalParameters(params, m.correctionParam, m.correctionConstant, outcomeLabels.length);
         return m;
+    }
+
+    /**
+     * 加载最大熵模型<br>
+     *     如果存在缓存的话，优先读取缓存，否则读取txt，并且建立缓存
+     * @param txtPath txt的路径，即使不存在.txt，只存在.bin，也应传入txt的路径，方法内部会自动加.bin后缀
+     * @return
+     */
+    public static MaxEntModel load(String txtPath)
+    {
+        ByteArray byteArray = ByteArray.createByteArray(txtPath + Predefine.BIN_EXT);
+        if (byteArray != null) return create(byteArray);
+        return create(txtPath);
     }
 }
