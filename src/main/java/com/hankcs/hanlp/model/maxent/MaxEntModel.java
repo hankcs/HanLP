@@ -126,6 +126,7 @@ public class MaxEntModel
      */
     public final double[] eval(String[] context, double[] outsums)
     {
+        assert context != null;
         int[] scontexts = new int[context.length];
         for (int i = 0; i < context.length; i++)
         {
