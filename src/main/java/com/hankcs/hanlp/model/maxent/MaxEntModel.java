@@ -279,6 +279,7 @@ public class MaxEntModel
             m.prior.setLabels(outcomeLabels);
             // eval
             m.evalParams = new EvalParameters(params, m.correctionParam, m.correctionConstant, outcomeLabels.length);
+            out.close();
         }
         catch (Exception e)
         {
