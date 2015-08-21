@@ -53,20 +53,16 @@ public class TraditionalChineseTokenizer
         Iterator<ResultTerm<String>> tsIterator = tsList.iterator();
         ResultTerm<String> tsTerm = tsIterator.next();
         int offset = 0;
-        while (termIterator.hasNext())
-        {
+        while (termIterator.hasNext()) {
             Term term = termIterator.next();
             term.offset = offset;
-            if (offset > tsTerm.offset) tsTerm = tsIterator.next();
+            if (offset > tsTerm.offset+tsTerm.word.length()) tsTerm = tsIterator.next();
 
-            if (offset == tsTerm.offset && term.length() == tsTerm.label.length())
-            {
+            if (offset == tsTerm.offset && term.length() == tsTerm.label.length()) {
                 term.word = tsTerm.word;
-            }
-            else term.word = SimplifiedChineseDictionary.convertToTraditionalChinese(term.word);
+            } else term.word = SimplifiedChineseDictionary.convertToTraditionalChinese(term.word);
             offset += term.length();
         }
-
         return termList;
     }
 
