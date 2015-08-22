@@ -28,7 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CRFSegmentModel extends CRFModel
+public final class CRFSegmentModel extends CRFModel
 {
     public static CRFModel crfModel;
 
