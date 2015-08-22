@@ -11,20 +11,20 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.tokenizer.TraditionalChineseTokenizer;
 
 import java.util.List;
 
 /**
  * 繁体中文分词
+ *
  * @author hankcs
  */
 public class DemoTraditionalChineseSegment
 {
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         List<Term> termList = TraditionalChineseTokenizer.segment("大衛貝克漢不僅僅是名著名球員，球場以外，其妻為前" +
                                                                           "辣妹合唱團成員維多利亞·碧咸，亦由於他擁有" +
                                                                           "突出外表、百變髮型及正面的形象，以至自己" +
@@ -35,7 +35,7 @@ public class DemoTraditionalChineseSegment
         System.out.println(termList);
 
         termList = TraditionalChineseTokenizer.segment("（中央社記者黃巧雯台北20日電）外需不振，影響接單動能，經濟部今天公布7月外銷訂單金額362.9億美元，年減5%，" +
-                                                        "連續4個月衰退，減幅較6月縮小。1040820\n");
+                                                               "連續4個月衰退，減幅較6月縮小。1040820\n");
         System.out.println(termList);
 
         termList = TraditionalChineseTokenizer.segment("中央社记者黄巧雯台北20日电");

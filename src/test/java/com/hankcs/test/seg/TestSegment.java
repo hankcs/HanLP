@@ -296,9 +296,7 @@ public class TestSegment extends TestCase
 
     public void testTime() throws Exception
     {
-        String text = "下午3时由北京出发";
-        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
-        System.out.println(StandardTokenizer.segment(text));
+        TraditionalChineseTokenizer.segment("认可程度");
     }
 
     public void testBuildASimpleSegment() throws Exception
@@ -319,5 +317,10 @@ public class TestSegment extends TestCase
         String text = "本田先生最喜欢穿和服";
         Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(true);
         System.out.println(segment.seg(text));
+    }
+
+    public void testTraditionalSegment() throws Exception
+    {
+        System.out.println(TraditionalChineseTokenizer.segment("中央社記者黃巧雯台北20日電，士多啤梨漲價了"));
     }
 }
