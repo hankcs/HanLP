@@ -60,6 +60,7 @@ HanLP: Han Language Processing
 ## 项目主页
 
 HanLP下载地址：https://github.com/hankcs/HanLP/releases
+
 Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 
 ------
