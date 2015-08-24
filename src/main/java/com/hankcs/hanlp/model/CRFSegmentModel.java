@@ -94,7 +94,6 @@ public final class CRFSegmentModel extends CRFModel
                 double maxScore = -1e10;
                 for (int pre = 0; pre < 4; ++pre)
                 {
-                    if (matrix[pre][now] <= 0) continue;
                     double score = net[i - 1][pre] + matrix[pre][now] + net[i][now];
                     if (score > maxScore)
                     {
