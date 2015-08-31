@@ -314,13 +314,16 @@ public class TestSegment extends TestCase
 
     public void testNLPSegment() throws Exception
     {
-        String text = "本田先生最喜欢穿和服";
-        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(true);
-        System.out.println(segment.seg(text));
+        String text = "2013年4月27日11时54分";
+        NLPTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
+        System.out.println(NLPTokenizer.segment(text));
     }
 
     public void testTraditionalSegment() throws Exception
     {
-        System.out.println(TraditionalChineseTokenizer.segment("中央社記者黃巧雯台北20日電，士多啤梨漲價了"));
+        HanLP.Config.enableDebug();
+        StandardTokenizer.SEGMENT.enableAllNamedEntityRecognize(true);
+        String text = "展览活动，以“高雄FUN IN中”为主题";
+        System.out.println(HanLP.segment(text));
     }
 }
