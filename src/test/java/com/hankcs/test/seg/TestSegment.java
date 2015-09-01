@@ -45,9 +45,10 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(false);
+        CustomDictionary.insert("义消人员");
+        Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "基隆市长"
+                "基隆市长林右昌对义消人员长期协助消防救灾工作"
         ));
     }
 
@@ -321,9 +322,8 @@ public class TestSegment extends TestCase
 
     public void testTraditionalSegment() throws Exception
     {
-        HanLP.Config.enableDebug();
-        StandardTokenizer.SEGMENT.enableAllNamedEntityRecognize(true);
-        String text = "展览活动，以“高雄FUN IN中”为主题";
-        System.out.println(HanLP.segment(text));
+        CustomDictionary.insert("义消人员");
+        String text = "基隆市長林右昌對義消人員長期協助消防救災工作";
+        System.out.println(TraditionalChineseTokenizer.segment(text));
     }
 }
