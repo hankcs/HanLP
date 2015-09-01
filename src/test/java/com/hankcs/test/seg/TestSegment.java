@@ -45,9 +45,9 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableCustomDictionary(false).enableNameRecognize(true).enableNumberQuantifierRecognize(true);
+        Segment segment = new DijkstraSegment().enableCustomDictionary(false);
         System.out.println(segment.seg(
-                "请收回李硒300元钱"
+                "基隆市长"
         ));
     }
 
