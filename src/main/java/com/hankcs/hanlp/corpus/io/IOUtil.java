@@ -361,4 +361,61 @@ public class IOUtil
             throw new UnsupportedOperationException("只读，不可写！");
         }
     }
+
+    /**
+     * 创建一个BufferedWriter
+     *
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public static BufferedWriter newBufferedWriter(String path) throws FileNotFoundException, UnsupportedEncodingException
+    {
+        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+    }
+
+    /**
+     * 创建一个BufferedReader
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public static BufferedReader newBufferedReader(String path) throws FileNotFoundException, UnsupportedEncodingException
+    {
+        return new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+    }
+
+    public static BufferedWriter newBufferedWriter(String path, boolean append) throws FileNotFoundException, UnsupportedEncodingException
+    {
+        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, append), "UTF-8"));
+    }
+
+    /**
+     * 获取最后一个分隔符的后缀
+     * @param name
+     * @param delimiter
+     * @return
+     */
+    public static String getSuffix(String name, String delimiter)
+    {
+        return name.substring(name.lastIndexOf(delimiter) + 1);
+    }
+
+    /**
+     * 写数组，用制表符分割
+     * @param bw
+     * @param params
+     * @throws IOException
+     */
+    public static void writeLine(BufferedWriter bw, String... params) throws IOException
+    {
+        for (int i = 0; i < params.length - 1; i++)
+        {
+            bw.write(params[i]);
+            bw.write('\t');
+        }
+        bw.write(params[params.length - 1]);
+    }
 }
