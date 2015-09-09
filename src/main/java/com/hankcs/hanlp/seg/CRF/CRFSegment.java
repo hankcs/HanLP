@@ -16,17 +16,19 @@ import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
-import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.CRFSegmentModel;
 import com.hankcs.hanlp.model.crf.Table;
-import com.hankcs.hanlp.model.trigram.CharacterBasedGenerativeModel;
 import com.hankcs.hanlp.seg.CharacterBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.CharacterHelper;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.*;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 
 /**
@@ -220,7 +222,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
                 sbAtom.setLength(0);
                 --i;
             }
-            else if (CharacterHelper.isEnglishLetter(sentence[i]))
+            else if (CharacterHelper.isEnglishLetter(sentence[i]) || sentence[i] == ' ')
             {
                 sbAtom.append(sentence[i]);
                 if (i == maxLen)
@@ -232,7 +234,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
                     break;
                 }
                 char c = sentence[++i];
-                while (CharacterHelper.isEnglishLetter(c))
+                while (CharacterHelper.isEnglishLetter(c) || sentence[i] == ' ')
                 {
                     sbAtom.append(sentence[i]);
                     if (i == maxLen)
@@ -281,5 +283,96 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
         throw new UnsupportedOperationException("暂不支持");
 //        enablePartOfSpeechTagging(enable);
 //        return super.enableNumberQuantifierRecognize(enable);
+    }
+
+    /**
+     * 字符正规化表，相较于com/hankcs/hanlp/dictionary/other/CharTable.java,做了一些调整
+     * @author hankcs
+     */
+    static private class CharTable
+    {
+        /**
+         * 正规化使用的对应表
+         */
+        public static char[] CONVERT;
+
+        static
+        {
+            long start = System.currentTimeMillis();
+            try
+            {
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(HanLP.Config.CharTablePath));
+                CONVERT = (char[]) in.readObject();
+                in.close();
+            }
+            catch (Exception e)
+            {
+                logger.severe("字符正规化表加载失败，原因如下：");
+                e.printStackTrace();
+                System.exit(-1);
+            }
+            // see https://github.com/hankcs/HanLP/issues/13
+            CONVERT['“'] = '“';
+            CONVERT['”'] = '”';
+            CONVERT['.'] = '.';
+            CONVERT['．'] = '.';
+            CONVERT['。'] = '，';
+            CONVERT['！'] = '，';
+            CONVERT['，'] = '，';
+            CONVERT['…'] = '，';
+            for (int i = 0; i < CONVERT.length; i++)
+            {
+                if (CONVERT[i] == '。')
+                    CONVERT[i] = '，';
+            }
+
+            logger.info("字符正规化表加载成功：" + (System.currentTimeMillis() - start) + " ms");
+        }
+
+        /**
+         * 将一个字符正规化
+         * @param c 字符
+         * @return 正规化后的字符
+         */
+        public static char convert(char c)
+        {
+            return CONVERT[c];
+        }
+
+        public static char[] convert(char[] charArray)
+        {
+            char[] result = new char[charArray.length];
+            for (int i = 0; i < charArray.length; i++)
+            {
+                result[i] = CONVERT[charArray[i]];
+            }
+
+            return result;
+        }
+
+        public static String convert(String charArray)
+        {
+            assert charArray != null;
+            char[] result = new char[charArray.length()];
+            for (int i = 0; i < charArray.length(); i++)
+            {
+                result[i] = CONVERT[charArray.charAt(i)];
+            }
+
+            return new String(result);
+        }
+
+        /**
+         * 正规化一些字符（原地正规化）
+         * @param charArray 字符
+         */
+        public static void normalization(char[] charArray)
+        {
+            assert charArray != null;
+            for (int i = 0; i < charArray.length; i++)
+            {
+                charArray[i] = CONVERT[charArray[i]];
+            }
+        }
     }
 }

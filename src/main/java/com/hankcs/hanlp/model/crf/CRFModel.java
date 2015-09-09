@@ -250,6 +250,12 @@ public class CRFModel implements ICacheAble
         table.setLast(0, id2tag[maxTag]);
     }
 
+    /**
+     * 根据特征函数计算输出
+     * @param table
+     * @param current
+     * @return
+     */
     protected LinkedList<double[]> computeScoreList(Table table, int current)
     {
         LinkedList<double[]> scoreList = new LinkedList<double[]>();

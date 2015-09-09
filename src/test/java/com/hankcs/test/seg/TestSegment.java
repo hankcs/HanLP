@@ -255,11 +255,10 @@ public class TestSegment extends TestCase
 
     public void testCRFSegment() throws Exception
     {
-//        HanLP.Config.enableDebug();
+        HanLP.Config.enableDebug();
         HanLP.Config.ShowTermNature = false;
         Segment segment = new CRFSegment();
-        System.out.println(segment.seg("尼玛不是新词，王尼玛是新词"));
-        System.out.println(segment.seg("周杰伦在出品范特西之后，又出品了依然范特西"));
+        System.out.println(segment.seg("“碰瓷”后依靠罚球得分一直是哈登的主要得分手段"));
     }
 
     public void testIssue16() throws Exception
