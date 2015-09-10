@@ -41,17 +41,17 @@ public class TestCharTable extends TestCase
 
     public void testFix() throws Exception
     {
-        CharTable.CONVERT['.'] = '.';
-        CharTable.CONVERT['．'] = '.';
-        CharTable.CONVERT['。'] = '，';
-        CharTable.CONVERT['！'] = '，';
-        CharTable.CONVERT['，'] = '，';
-        CharTable.CONVERT['…'] = '，';
-        for (int i = 0; i < CharTable.CONVERT.length; i++)
-        {
-            if (CharTable.CONVERT[i] == '。')
-                CharTable.CONVERT[i] = '，';
-        }
+//        CharTable.CONVERT['.'] = '.';
+//        CharTable.CONVERT['．'] = '.';
+//        CharTable.CONVERT['。'] = '，';
+//        CharTable.CONVERT['！'] = '，';
+//        CharTable.CONVERT['，'] = '，';
+//        CharTable.CONVERT['…'] = '，';
+//        for (int i = 0; i < CharTable.CONVERT.length; i++)
+//        {
+//            if (CharTable.CONVERT[i] == '。')
+//                CharTable.CONVERT[i] = '，';
+//        }
         for (int i = 0; i < CharTable.CONVERT.length; i++)
         {
             if (CharTable.CONVERT[i] == '\u0000')
@@ -64,4 +64,5 @@ public class TestCharTable extends TestCase
         out.writeObject(CharTable.CONVERT);
         out.close();
     }
+
 }

@@ -258,7 +258,7 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         HanLP.Config.ShowTermNature = false;
         Segment segment = new CRFSegment();
-        System.out.println(segment.seg("“碰瓷”后依靠罚球得分一直是哈登的主要得分手段"));
+        System.out.println(segment.seg("李  扬"));
     }
 
     public void testIssue16() throws Exception
