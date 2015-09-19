@@ -120,7 +120,7 @@ public class Vertex
                 case nrf:
                 case nrj:
                 {
-//                    wordID = CoreDictionary.NR_WORD_ID;
+                    wordID = CoreDictionary.NR_WORD_ID;
 //                    this.attribute = CoreDictionary.get(CoreDictionary.NR_WORD_ID);
                     return Predefine.TAG_PEOPLE;
                 }
