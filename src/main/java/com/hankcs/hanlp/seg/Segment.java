@@ -325,7 +325,8 @@ public abstract class Segment
     }
 
     /**
-     * 分词
+     * 分词<br>
+     * 此方法是线程安全的
      *
      * @param text 待分词文本
      * @return 单词列表
