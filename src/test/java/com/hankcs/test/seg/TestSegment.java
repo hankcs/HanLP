@@ -55,11 +55,10 @@ public class TestSegment extends TestCase
     public void testViterbi() throws Exception
     {
 //        HanLP.Config.enableDebug(true);
-        HanLP.Config.ShowTermNature = false;
-        Segment segment = new DijkstraSegment();
-        System.out.println(segment.seg(
-                "奥巴马挑战荒野求生"
-        ));
+        CustomDictionary.add("荒野求生");
+        Segment seg = HanLP.newSegment().enableAllNamedEntityRecognize(true);
+        List<Term> termList = seg.seg("奥巴马挑战荒野求生");
+        System.out.println(termList);
     }
 
     public void testNotional() throws Exception
