@@ -148,10 +148,10 @@ public class CustomDictionary
                 String[] param = line.split("\\s");
                 if (param[0].length() == 0) continue;   // 排除空行
                 if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
-                if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
-                {
-                    continue;
-                }
+//                if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
+//                {
+//                    continue;
+//                }
                 int natureCount = (param.length - 1) / 2;
                 CoreDictionary.Attribute attribute;
                 if (natureCount == 0)
