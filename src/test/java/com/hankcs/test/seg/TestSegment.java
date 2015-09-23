@@ -45,19 +45,18 @@ public class TestSegment extends TestCase
     public void testSeg() throws Exception
     {
         HanLP.Config.enableDebug();
-        CustomDictionary.insert("义消人员");
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "基隆市长林右昌对义消人员长期协助消防救灾工作"
+                "王春桂"
         ));
     }
 
     public void testViterbi() throws Exception
     {
 //        HanLP.Config.enableDebug(true);
-        CustomDictionary.add("荒野求生");
+//        CustomDictionary.add("荒野求生");
         Segment seg = HanLP.newSegment().enableAllNamedEntityRecognize(true);
-        List<Term> termList = seg.seg("奥巴马挑战荒野求生");
+        List<Term> termList = seg.seg("中国海军152舰艇编队到访埃及");
         System.out.println(termList);
     }
 
