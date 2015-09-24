@@ -47,7 +47,7 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "王春桂"
+                "并有望在那与1993年就结识的友人重聚。"
         ));
     }
 
