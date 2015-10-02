@@ -53,10 +53,10 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-//        HanLP.Config.enableDebug(true);
-//        CustomDictionary.add("荒野求生");
-        Segment seg = HanLP.newSegment().enableAllNamedEntityRecognize(true);
-        List<Term> termList = seg.seg("中国海军152舰艇编队到访埃及");
+        HanLP.Config.enableDebug(true);
+        CustomDictionary.add("网剧");
+        Segment seg = new DijkstraSegment();
+        List<Term> termList = seg.seg("优酷总裁魏明介绍了优酷2015年的内容战略，表示要以“大电影、大网剧、大综艺”为关键词");
         System.out.println(termList);
     }
 
