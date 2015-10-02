@@ -195,10 +195,10 @@ public class CustomDictionary
     }
 
     /**
-     * 增加新词
+     * 往自定义词典中插入一个新词（非覆盖模式）
      *
-     * @param word
-     * @return
+     * @param word                新词 如“裸婚”
+     * @return 是否插入成功（失败的原因可能是不覆盖等，可以通过调试模式了解原因）
      */
     public static boolean add(String word)
     {
