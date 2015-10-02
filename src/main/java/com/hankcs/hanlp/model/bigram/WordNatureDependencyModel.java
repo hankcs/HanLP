@@ -29,6 +29,7 @@ import java.util.TreeMap;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
+ * 词、词性相互构成依存关系的统计句法分析模型
  * @author hankcs
  */
 public class WordNatureDependencyModel
