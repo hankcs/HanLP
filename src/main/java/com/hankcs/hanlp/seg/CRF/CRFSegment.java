@@ -54,6 +54,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
             System.out.println(table);
         }
         int offset = 0;
+        OUTER:
         for (int i = 0; i < table.v.length; offset += table.v[i][1].length(), ++i)
         {
             String[] line = table.v[i];
@@ -74,6 +75,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
                     if (i == table.v.length)
                     {
                         termList.add(new Term(new String(sentence, begin, offset - begin), null));
+                        break OUTER;
                     }
                     else
                         termList.add(new Term(new String(sentence, begin, offset - begin + table.v[i][1].length()), null));
