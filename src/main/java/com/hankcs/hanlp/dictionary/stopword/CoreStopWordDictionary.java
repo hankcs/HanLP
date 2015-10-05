@@ -81,8 +81,7 @@ public class CoreStopWordDictionary
     public static boolean shouldInclude(Term term)
     {
         // 除掉停用词
-        if (term.nature == null) return false;
-        String nature = term.nature.toString();
+        String nature = term.nature != null ? term.nature.toString() : "N";
         char firstChar = nature.charAt(0);
         switch (firstChar)
         {
