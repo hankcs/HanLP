@@ -254,9 +254,9 @@ public class TestSegment extends TestCase
     public void testCRFSegment() throws Exception
     {
         HanLP.Config.enableDebug();
-        HanLP.Config.ShowTermNature = false;
+//        HanLP.Config.ShowTermNature = false;
         Segment segment = new CRFSegment();
-        System.out.println(segment.seg("李  扬"));
+        System.out.println(segment.seg("有句谚语叫做一个萝卜一个坑儿"));
     }
 
     public void testIssue16() throws Exception
