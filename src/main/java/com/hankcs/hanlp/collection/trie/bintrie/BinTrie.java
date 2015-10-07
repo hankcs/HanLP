@@ -33,7 +33,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
 
     public BinTrie()
     {
-        child = new BaseNode[65535];    // (int)Character.MAX_VALUE
+        child = new BaseNode[65535 + 1];    // (int)Character.MAX_VALUE
         size = 0;
         status = Status.NOT_WORD_1;
     }
@@ -447,7 +447,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
 
     public boolean load(ByteArray byteArray, _ValueArray valueArray)
     {
-        for (int i = 0; i < child.length; ++i)
+        for (int i = 0; i < child.length - 1; ++i)  // TODO:暂时的兼容策略，发布新模型后，还原为 i < child.length
         {
             int flag = byteArray.nextInt();
             if (flag == 1)
