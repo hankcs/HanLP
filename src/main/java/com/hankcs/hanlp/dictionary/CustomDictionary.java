@@ -83,7 +83,7 @@ public class CustomDictionary
                         continue;
                     }
                 }
-                logger.info("加载自定义词典" + p + "中……");
+                logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
                 boolean success = load(p, defaultNature, map);
                 if (!success) logger.warning("失败：" + p);
             }
