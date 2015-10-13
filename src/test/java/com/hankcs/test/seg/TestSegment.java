@@ -292,6 +292,14 @@ public class TestSegment extends TestCase
         System.out.println(StandardTokenizer.segment("三年"));
     }
 
+    public void testIssue71() throws Exception
+    {
+        Segment segment = HanLP.newSegment();
+        segment = segment.enableAllNamedEntityRecognize(true);
+        segment = segment.enableNumberQuantifierRecognize(true);
+        System.out.println(segment.seg("曾幻想过，若干年后的我就是这个样子的吗"));
+    }
+
     public void testTime() throws Exception
     {
         TraditionalChineseTokenizer.segment("认可程度");
