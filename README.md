@@ -91,8 +91,6 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 
 #### 2、下载data
 
-**GitHub代码库中已经包含了data.zip中的词典，直接编译运行自动缓存即可；模型则需要额外下载。**
-
 | 数据包        | 功能   |  体积（MB）  |
 | --------   | -----:  | :----:  |
 | [data.zip](https://github.com/hankcs/HanLP/releases)     | 全部 |   255     |
@@ -107,6 +105,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 
 用户可以自行增删替换，如果不需要句法分析功能的话，随时可以删除model文件夹。
 - 模型跟词典没有绝对的区别，隐马模型被做成人人都可以编辑的词典形式，不代表它不是模型。
+- GitHub代码库中已经包含了data.zip中的词典，直接编译运行自动缓存即可；模型则需要额外下载。
 
 #### 3、配置文件
 示例配置文件:[hanlp.properties](https://github.com/hankcs/HanLP/releases)
@@ -132,7 +131,7 @@ Web项目的话可以放在如下位置：
     $Project/WEB-INF/classes
 ---
 
-对于任何项目，都可以放到src目录下，编译时IDE会自动将其复制到classpath中。
+对于任何项目，都可以放到src或resource目录下，编译时IDE会自动将其复制到classpath中。
 
 如果放置不当，HanLP会智能提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
 
@@ -167,6 +166,7 @@ System.out.println(termList);
 - 说明
   * **HanLP**中有一系列“开箱即用”的静态分词器，以`Tokenizer`结尾，在接下来的例子中会继续介绍。
   * `HanLP.segment`其实是对`StandardTokenizer.segment`的包装。
+  * 分词结果包含词性，每个词性的意思请查阅[《HanLP词性标注集》](http://www.hankcs.com/nlp/part-of-speech-tagging.html#h2-8)。
 - 算法详解
   * [《词图的生成》](http://www.hankcs.com/nlp/segment/the-word-graph-is-generated.html)
 
@@ -227,7 +227,7 @@ for (Term term : termList)
 }
 ```
 - 说明
-  * CRF对新词有很好的识别能力，但是无法利用自定义词典。
+  * CRF对新词有很好的识别能力，但是开销较大。
 - 算法详解
   * [《CRF分词的纯Java实现》](http://www.hankcs.com/nlp/segment/crf-segmentation-of-the-pure-java-implementation.html)
   * [《CRF++模型格式说明》](http://www.hankcs.com/nlp/the-crf-model-format-description.html)
