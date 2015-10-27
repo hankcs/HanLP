@@ -117,9 +117,8 @@ public class TestSegment extends TestCase
     public void testNT() throws Exception
     {
         HanLP.Config.enableDebug();
-        DijkstraSegment segment = new DijkstraSegment();
-        segment.enableOrganizationRecognize(true);
-        System.out.println(segment.seg("我在上海林原科技有限公司兼职工作"));
+        Segment segment = new DijkstraSegment().enableOrganizationRecognize(true);
+        System.out.println(segment.seg("张克智与潍坊地铁建设工程公司"));
     }
 
     public void testACSegment() throws Exception
