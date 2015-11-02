@@ -254,9 +254,11 @@ public class TextRankSentence
         }
 
         resultList = permutation(resultList, sentenceList);
-        resultList = pick_sentences(resultList, max_length);
-        String summary = String.join("", resultList);
-        return summary;
+        // TODO: Missing functions
+        return null;
+//        resultList = pick_sentences(resultList, max_length);
+//        String summary = String.join("", resultList);
+//        return summary;
     }
 
     public static List<String> permutation(List<String> resultList, List<String> sentenceList)
