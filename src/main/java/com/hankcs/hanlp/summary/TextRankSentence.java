@@ -15,6 +15,7 @@ package com.hankcs.hanlp.summary;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.utility.TextUtility;
 
 import java.util.*;
 
@@ -255,8 +256,7 @@ public class TextRankSentence
 
         resultList = permutation(resultList, sentenceList);
         resultList = pick_sentences(resultList, max_length);
-        String summary = String.join("。", esultList);
-        return summary;
+        return TextUtility.join("。", resultList);
     }
 
     public static List<String> permutation(List<String> resultList, List<String> sentenceList)
@@ -286,29 +286,29 @@ public class TextRankSentence
     }
     
     public static List<String> pick_sentences(List<String> resultList, int max_length)
-+    {
-+        int length_counter = 0;
-+        int length_buffer;
-+        int length_jump;
-+        List<String> resultBuffer = new LinkedList<String>();
-+        for(int i = 0; i < resultList.size(); i++)
-+        {
-+            length_buffer = length_counter + resultList.get(i).length();
-+            if (length_buffer <= max_length)
-+            {
-+                resultBuffer.add(resultList.get(i));
-+                length_counter += resultList.get(i).length();
-+            }
-+            else if (i < (resultList.size()-1)) {
-+                length_jump = length_counter + resultList.get(i+1).length();
-+                if (length_jump <= max_length) {
-+                    resultBuffer.add(resultList.get(i + 1));
-+                    length_counter += resultList.get(i + 1).length();
-+                    i++;
-+                }
-+            }
-+        }
-+        return resultBuffer;
-+    }
+  {
+      int length_counter = 0;
+      int length_buffer;
+      int length_jump;
+      List<String> resultBuffer = new LinkedList<String>();
+      for(int i = 0; i < resultList.size(); i++)
+      {
+          length_buffer = length_counter + resultList.get(i).length();
+          if (length_buffer <= max_length)
+          {
+              resultBuffer.add(resultList.get(i));
+              length_counter += resultList.get(i).length();
+          }
+          else if (i < (resultList.size()-1)) {
+              length_jump = length_counter + resultList.get(i+1).length();
+              if (length_jump <= max_length) {
+                  resultBuffer.add(resultList.get(i + 1));
+                  length_counter += resultList.get(i + 1).length();
+                  i++;
+              }
+          }
+      }
+      return resultBuffer;
+  }
 
 }

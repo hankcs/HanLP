@@ -2,6 +2,7 @@ package com.hankcs.hanlp.utility;
 
 
 import java.io.*;
+import java.util.Collection;
 
 /**
  * 文本工具类
@@ -695,5 +696,16 @@ public class TextUtility
             }
         }
         return true;
+    }
+
+    public static String join(String delimiter, Collection<String> stringCollection)
+    {
+        StringBuilder sb = new StringBuilder(stringCollection.size() * (16 + delimiter.length()));
+        for (String str : stringCollection)
+        {
+            sb.append(sb).append(str).append(delimiter);
+        }
+
+        return sb.toString();
     }
 }
