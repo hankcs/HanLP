@@ -215,4 +215,73 @@ public class TextRankSentence
         }
         return resultList;
     }
+    
+    /**
+     * 一句话调用接口
+     * @param document 目标文档
+     * @param max_length 需要摘要的长度
+     * @return 摘要文本
+     */
+    public static String getSummary(String document, int max_length)
+    {
+        List<String> sentenceList = spiltSentence(document);
+
+        int sentence_count = sentenceList.size();
+        int document_length = document.length();
+        int sentence_length_avg = document_length/sentence_count;
+        int size = max_length/sentence_length_avg + 1;
+        List<List<String>> docs = new ArrayList<List<String>>();
+        for (String sentence : sentenceList)
+        {
+            List<Term> termList = StandardTokenizer.segment(sentence.toCharArray());
+            List<String> wordList = new LinkedList<String>();
+            for (Term term : termList)
+            {
+                if (CoreStopWordDictionary.shouldInclude(term))
+                {
+                    wordList.add(term.word);
+                }
+            }
+            docs.add(wordList);
+        }
+
+        TextRankSentence textRank = new TextRankSentence(docs);
+        int[] topSentence = textRank.getTopSentence(size);
+        List<String> resultList = new LinkedList<String>();
+        for (int i : topSentence)
+        {
+            resultList.add(sentenceList.get(i));
+        }
+
+        resultList = permutation(resultList, sentenceList);
+        resultList = pick_sentences(resultList, max_length);
+        String summary = String.join("", resultList);
+        return summary;
+    }
+
+    public static List<String> permutation(List<String> resultList, List<String> sentenceList)
+    {
+        int index_buffer_x;
+        int index_buffer_y;
+        String sen_x;
+        String sen_y;
+        int length = resultList.size();
+        // bubble sort derivative
+        for (int i = 0; i < length; i++)
+            for (int offset=0; offset < length - i; offset++)
+            {
+                sen_x = resultList.get(i);
+                sen_y = resultList.get(i + offset);
+                index_buffer_x = sentenceList.indexOf(sen_x);
+                index_buffer_y = sentenceList.indexOf(sen_y);
+                // if the sentence order in sentenceList does not conform that is in resultList, reverse it
+                if (index_buffer_x > index_buffer_y)
+                {
+                    resultList.set(i, sen_y);
+                    resultList.set(i+offset, sen_x);
+                }
+            }
+
+        return resultList;
+    }
 }
