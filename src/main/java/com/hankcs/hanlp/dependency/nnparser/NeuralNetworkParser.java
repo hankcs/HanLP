@@ -355,6 +355,9 @@ public class NeuralNetworkParser implements ICacheAble
         }
     }
 
+    /**
+     * 初始化
+     */
     void setup_system()
     {
         system = new TransitionSystem();
@@ -574,6 +577,14 @@ public class NeuralNetworkParser implements ICacheAble
         get_valency_features(ctx, s.nr_left_children, s.nr_right_children, features);
     }
 
+    /**
+     * 生成特征
+     * @param s 当前状态
+     * @param cluster4
+     * @param cluster6
+     * @param cluster
+     * @param features 输出特征
+     */
     void get_features(final State s,
                       final List<Integer> cluster4,
                       final List<Integer> cluster6,

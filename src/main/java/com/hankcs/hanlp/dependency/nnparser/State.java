@@ -24,14 +24,32 @@ import java.util.List;
 public class State
 {
     //! The pointer to the previous state.
+    /**
+     * 栈
+     */
     List<Integer> stack;
+    /**
+     * 队列的队首元素（的下标）
+     */
     int buffer;               //! The front word in the buffer.
+    /**
+     * 上一个状态
+     */
     State previous;    //! The pointer to the previous state.
     Dependency ref;    //! The pointer to the dependency tree.
     double score;             //! The score.
+    /**
+     * 上一次动作
+     */
     Action last_action;       //! The last action.
 
+    /**
+     * 栈顶元素
+     */
     int top0;                 //! The top word on the stack.
+    /**
+     * 栈顶元素的下一个元素（全栈第二个元素）
+     */
     int top1;                 //! The second top word on the stack.
     List<Integer> heads;   //! Use to record the heads in current state.
     List<Integer> deprels; //! The dependency relation cached in state.
@@ -95,6 +113,10 @@ public class State
         return stack_size() >= 2;
     }
 
+    /**
+     * 克隆一个状态到自己
+     * @param source 源状态
+     */
     void copy(State source)
     {
         this.ref = source.ref;
@@ -115,6 +137,9 @@ public class State
         this.nr_right_children = source.nr_right_children;
     }
 
+    /**
+     * 更新栈的信息
+     */
     void refresh_stack_information()
     {
         int sz = stack.size();
@@ -135,6 +160,11 @@ public class State
         }
     }
 
+    /**
+     * 不建立依存关系，只转移句法分析的焦点，即原来的右焦点词变为新的左焦点词（本状态），依此类推。
+     * @param source 右焦点词
+     * @return 是否shift成功
+     */
     boolean shift(State source)
     {
         if (!source.can_shift())
@@ -358,11 +388,19 @@ public class State
         return T[len_l - 1][len_r - 1][0] + penalty;
     }
 
+    /**
+     * 队列是否为空
+     * @return
+     */
     boolean buffer_empty()
     {
         return (this.buffer == this.ref.size());
     }
 
+    /**
+     * 栈的大小
+     * @return
+     */
     int stack_size()
     {
         return (this.stack.size());

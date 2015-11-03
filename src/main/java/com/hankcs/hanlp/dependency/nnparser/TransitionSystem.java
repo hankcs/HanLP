@@ -95,6 +95,12 @@ public class TransitionSystem
         }
     }
 
+    /**
+     * 转移状态
+     * @param source
+     * @param act 动作
+     * @param target
+     */
     void transit(State source, Action act, State target)
     {
         int deprel = 0;

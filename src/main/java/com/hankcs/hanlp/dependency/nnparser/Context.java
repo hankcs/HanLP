@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.dependency.nnparser;
 
 /**
+ * 上下文
  * @author hankcs
  */
 public class Context
