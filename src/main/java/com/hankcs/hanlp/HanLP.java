@@ -145,6 +145,10 @@ public class HanLP
          */
         public static String MaxEntModelPath = "data/model/dependency/MaxEntModel.txt";
         /**
+         * 神经网络依存模型路径
+         */
+        public static String NNParserModelPath = "data/model/dependency/NNParserModel.txt";
+        /**
          * CRF分词模型
          */
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
@@ -213,6 +217,7 @@ public class HanLP
                 CharTablePath = root + p.getProperty("CharTablePath", CharTablePath);
                 WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
+                NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
