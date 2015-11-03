@@ -184,15 +184,13 @@ public class TextRankSentence
     }
 
     /**
-     * 一句话调用接口
-     * @param document 目标文档
-     * @param size 需要的关键句的个数
-     * @return 关键句列表
+     * 将句子列表转化为文档
+     * @param sentenceList
+     * @return
      */
-    public static List<String> getTopSentenceList(String document, int size)
+    private static List<List<String>> convertSentenceListToDocument(List<String> sentenceList)
     {
-        List<String> sentenceList = spiltSentence(document);
-        List<List<String>> docs = new ArrayList<List<String>>();
+        List<List<String>> docs = new ArrayList<List<String>>(sentenceList.size());
         for (String sentence : sentenceList)
         {
             List<Term> termList = StandardTokenizer.segment(sentence.toCharArray());
@@ -205,8 +203,20 @@ public class TextRankSentence
                 }
             }
             docs.add(wordList);
-//            System.out.println(wordList);
         }
+        return docs;
+    }
+
+    /**
+     * 一句话调用接口
+     * @param document 目标文档
+     * @param size 需要的关键句的个数
+     * @return 关键句列表
+     */
+    public static List<String> getTopSentenceList(String document, int size)
+    {
+        List<String> sentenceList = spiltSentence(document);
+        List<List<String>> docs = convertSentenceListToDocument(sentenceList);
         TextRankSentence textRank = new TextRankSentence(docs);
         int[] topSentence = textRank.getTopSentence(size);
         List<String> resultList = new LinkedList<String>();
@@ -231,21 +241,7 @@ public class TextRankSentence
         int document_length = document.length();
         int sentence_length_avg = document_length/sentence_count;
         int size = max_length/sentence_length_avg + 1;
-        List<List<String>> docs = new ArrayList<List<String>>();
-        for (String sentence : sentenceList)
-        {
-            List<Term> termList = StandardTokenizer.segment(sentence.toCharArray());
-            List<String> wordList = new LinkedList<String>();
-            for (Term term : termList)
-            {
-                if (CoreStopWordDictionary.shouldInclude(term))
-                {
-                    wordList.add(term.word);
-                }
-            }
-            docs.add(wordList);
-        }
-
+        List<List<String>> docs = convertSentenceListToDocument(sentenceList);
         TextRankSentence textRank = new TextRankSentence(docs);
         int[] topSentence = textRank.getTopSentence(size);
         List<String> resultList = new LinkedList<String>();
