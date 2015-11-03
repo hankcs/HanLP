@@ -703,7 +703,7 @@ public class TextUtility
         StringBuilder sb = new StringBuilder(stringCollection.size() * (16 + delimiter.length()));
         for (String str : stringCollection)
         {
-            sb.append(sb).append(str).append(delimiter);
+            sb.append(str).append(delimiter);
         }
 
         return sb.toString();
