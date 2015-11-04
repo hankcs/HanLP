@@ -27,7 +27,7 @@ public class ActionFactory implements ActionType
 
     /**
      * 建立右焦点词依存于左焦点词的依存关系
-     * @param rel
+     * @param rel 依存关系
      * @return
      */
     public static Action make_left_arc(final int rel)
@@ -37,7 +37,7 @@ public class ActionFactory implements ActionType
 
     /**
      * 建立左焦点词依存于右焦点词的依存关系
-     * @param rel
+     * @param rel 依存关系
      * @return
      */
     public static Action make_right_arc(final int rel)

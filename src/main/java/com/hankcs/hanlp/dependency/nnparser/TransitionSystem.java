@@ -59,6 +59,11 @@ public class TransitionSystem
         L = l;
     }
 
+    /**
+     * 获取当前状态可能的动作（动作=shift | left | right + 依存关系，也就是说是一条既有方向又有依存关系名称的依存边）
+     * @param source 当前状态
+     * @param actions 输出可能动作
+     */
     void get_possible_actions(State source,
                               List<Action> actions)
     {
@@ -97,9 +102,9 @@ public class TransitionSystem
 
     /**
      * 转移状态
-     * @param source
+     * @param source 源状态
      * @param act 动作
-     * @param target
+     * @param target 目标状态
      */
     void transit(State source, Action act, State target)
     {
@@ -142,6 +147,11 @@ public class TransitionSystem
         }
     }
 
+    /**
+     * 转换动作为动作id
+     * @param act 动作
+     * @return 动作类型的依存关系id
+     */
     int transform(Action act)
     {
         int deprel = 0;
@@ -167,6 +177,11 @@ public class TransitionSystem
         return -1;
     }
 
+    /**
+     * 转换动作id为动作
+     * @param act 动作类型的依存关系id
+     * @return 动作
+     */
     Action transform(int act)
     {
         if (act == 0)

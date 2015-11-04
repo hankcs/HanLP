@@ -17,7 +17,7 @@ package com.hankcs.hanlp.dependency.nnparser;
  */
 public class Context
 {
-    int S0, S1, S2, N0, N1, N2;
-    int S0L, S0R, S0L2, S0R2, S0LL, S0RR;
+    int S0, S1, S2, N0, N1, N2;             // 栈和队列的第i个元素
+    int S0L, S0R, S0L2, S0R2, S0LL, S0RR;   // 该元素最左右的子节点、倒数第2个最左右的子节点
     int S1L, S1R, S1L2, S1R2, S1LL, S1RR;
 }

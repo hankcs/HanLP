@@ -41,11 +41,23 @@ public class NeuralNetworkParser implements ICacheAble
     Alphabet forms_alphabet;
     Alphabet postags_alphabet;
     Alphabet deprels_alphabet;
+    /**
+     * 少量类目数的聚类
+     */
     Alphabet cluster4_types_alphabet;
+    /**
+     * 中等类目数的聚类
+     */
     Alphabet cluster6_types_alphabet;
+    /**
+     * 大量类目数的聚类
+     */
     Alphabet cluster_types_alphabet;
 
     Map<Integer, Integer> precomputation_id_encoder;
+    /**
+     * 将词映射到词聚类中的某个类
+     */
     Map<Integer, Integer> form_to_cluster4;
     Map<Integer, Integer> form_to_cluster6;
     Map<Integer, Integer> form_to_cluster;
@@ -81,6 +93,9 @@ public class NeuralNetworkParser implements ICacheAble
     int kNilCluster6;
     int kNilCluster;
 
+    /**
+     * 词语特征在特征空间中的起始位置
+     */
     int kFormInFeaturespace;
     int kPostagInFeaturespace;
     int kDeprelInFeaturespace;
@@ -543,6 +558,11 @@ public class NeuralNetworkParser implements ICacheAble
         }
     }
 
+    /**
+     * 获取某个状态的上下文
+     * @param s 状态
+     * @param ctx 上下文
+     */
     void get_context(final State s, Context ctx)
     {
         ctx.S0 = (s.stack.size() > 0 ? s.stack.get(s.stack.size() - 1) : -1);
@@ -599,26 +619,57 @@ public class NeuralNetworkParser implements ICacheAble
         get_cluster_features(ctx, cluster4, cluster6, cluster, features);
     }
 
+    /**
+     * 获取单词
+     * @param forms 单词列表
+     * @param id 单词下标
+     * @return 单词
+     */
     int FORM(final List<Integer> forms, int id)
     {
         return ((id != -1) ? (forms.get(id)) : kNilForm);
     }
 
+    /**
+     * 获取词性
+     * @param postags 词性列表
+     * @param id 词性下标
+     * @return 词性
+     */
     int POSTAG(final List<Integer> postags, int id)
     {
         return ((id != -1) ? (postags.get(id) + kPostagInFeaturespace) : kNilPostag);
     }
 
+    /**
+     * 获取依存
+     * @param deprels 依存列表
+     * @param id 依存下标
+     * @return 依存
+     */
     int DEPREL(final List<Integer> deprels, int id)
     {
         return ((id != -1) ? (deprels.get(id) + kDeprelInFeaturespace) : kNilDeprel);
     }
 
+    /**
+     * 添加特征
+     * @param features 输出特征的储存位置
+     * @param feat 特征
+     */
     void PUSH(List<Integer> features, int feat)
     {
         features.add(feat);
     }
 
+    /**
+     * 获取基本特征
+     * @param ctx 上下文
+     * @param forms 单词
+     * @param postags 词性
+     * @param deprels 依存
+     * @param features 输出特征的储存位置
+     */
     void get_basic_features(final Context ctx,
                             final List<Integer> forms,
                             final List<Integer> postags,
@@ -675,6 +726,11 @@ public class NeuralNetworkParser implements ICacheAble
         PUSH(features, DEPREL(deprels, ctx.S1RR));
     }
 
+    /**
+     * 获取距离特征
+     * @param ctx 当前特征
+     * @param features 输出特征
+     */
     void get_distance_features(final Context ctx,
                                List<Integer> features)
     {
@@ -686,7 +742,7 @@ public class NeuralNetworkParser implements ICacheAble
         int dist = 8;
         if (ctx.S0 >= 0 && ctx.S1 >= 0)
         {
-            dist = math.binned_1_2_3_4_5_6_10[ctx.S0 - ctx.S1];
+            dist = math.binned_1_2_3_4_5_6_10[ctx.S0 - ctx.S1]; // 这里和论文有出入，论文是S0和N0的距离
             if (dist == 10)
             {
                 dist = 7;
@@ -695,6 +751,13 @@ public class NeuralNetworkParser implements ICacheAble
         features.add(dist + kDistanceInFeaturespace);
     }
 
+    /**
+     * 获取(S0和S1的)配价特征
+     * @param ctx 上下文
+     * @param nr_left_children 左孩子数量列表
+     * @param nr_right_children 右孩子数量列表
+     * @param features 输出特征
+     */
     void get_valency_features(final Context ctx,
                               final List<Integer> nr_left_children,
                               final List<Integer> nr_right_children,
@@ -757,7 +820,14 @@ public class NeuralNetworkParser implements ICacheAble
         return (id >= 0 ? (cluster6.get(id) + kCluster6InFeaturespace) : kNilCluster6);
     }
 
-
+    /**
+     * 获取词聚类特征
+     * @param ctx 上下文
+     * @param cluster4
+     * @param cluster6
+     * @param cluster
+     * @param features 输出特征
+     */
     void get_cluster_features(final Context ctx,
                               final List<Integer> cluster4,
                               final List<Integer> cluster6,

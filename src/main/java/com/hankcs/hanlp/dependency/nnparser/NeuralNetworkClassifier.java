@@ -183,7 +183,11 @@ public class NeuralNetworkClassifier
         nr_classes = 0;
     }
 
-
+    /**
+     * 给每个类别打分
+     * @param attributes 属性
+     * @param retval 返回各个类别的得分
+     */
     void score(final List<Integer> attributes,
                List<Double> retval)
     {

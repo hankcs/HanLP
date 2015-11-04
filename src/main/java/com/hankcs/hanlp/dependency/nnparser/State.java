@@ -53,7 +53,13 @@ public class State
     int top1;                 //! The second top word on the stack.
     List<Integer> heads;   //! Use to record the heads in current state.
     List<Integer> deprels; //! The dependency relation cached in state.
+    /**
+     * 当前节点的左孩子数量
+     */
     List<Integer> nr_left_children;      //! The number of left children in this state.
+    /**
+     * 当前节点的右孩子数量
+     */
     List<Integer> nr_right_children;     //! The number of right children in this state.
     List<Integer> left_most_child;       //! The left most child for each word in this state.
     List<Integer> right_most_child;      //! The right most child for each word in this state.

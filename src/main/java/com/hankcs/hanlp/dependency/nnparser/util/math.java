@@ -16,6 +16,9 @@ package com.hankcs.hanlp.dependency.nnparser.util;
  */
 public class math
 {
+    /**
+     * 对距离的度量（距离越大，返回的值越大，但总是限制在10以内）
+     */
     public static int binned_1_2_3_4_5_6_10[] = {
             0, 1, 2, 3, 4, 5, 6, 6, 6, 6,
             6, 10, 10, 10, 10, 10, 10, 10, 10, 10,

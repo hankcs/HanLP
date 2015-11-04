@@ -19,6 +19,7 @@ import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
+ * 静态调用的伪 Windows “dll”
  * @author hankcs
  */
 public class parser_dll
