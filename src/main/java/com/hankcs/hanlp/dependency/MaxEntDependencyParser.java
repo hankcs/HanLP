@@ -15,6 +15,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.dartsclone.Pair;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ByteArrayStream;
 import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
 import com.hankcs.hanlp.model.maxent.MaxEntModel;
@@ -38,7 +39,7 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
     static
     {
         long start = System.currentTimeMillis();
-        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        ByteArray byteArray = ByteArrayStream.createByteArrayStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
         if (byteArray != null)
         {
             model = MaxEntModel.create(byteArray);

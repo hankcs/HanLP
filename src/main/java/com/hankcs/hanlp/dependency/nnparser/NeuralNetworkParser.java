@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.dependency.nnparser;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ByteArrayStream;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
@@ -131,7 +132,7 @@ public class NeuralNetworkParser implements ICacheAble
     public boolean load(String path)
     {
         String binPath = path + Predefine.BIN_EXT;
-        if (load(ByteArray.createByteArray(binPath))) return true;
+        if (load(ByteArrayStream.createByteArrayStream(binPath))) return true;
         if (!loadTxt(path)) return false;
         try
         {

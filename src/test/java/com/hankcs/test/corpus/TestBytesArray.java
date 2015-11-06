@@ -11,7 +11,11 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ByteArrayStream;
+import com.hankcs.hanlp.model.maxent.MaxEntModel;
+import com.hankcs.hanlp.utility.Predefine;
 import junit.framework.TestCase;
 
 import java.io.DataOutputStream;
@@ -23,7 +27,7 @@ import java.io.FileOutputStream;
 public class TestBytesArray extends TestCase
 {
 
-    public static final String DATA_OUT_DAT = "data/out.dat";
+    public static final String DATA_OUT_DAT = "data/test/out.dat";
 
     public void testWriteAndRead() throws Exception
     {
@@ -39,5 +43,69 @@ public class TestBytesArray extends TestCase
         {
             System.out.println(byteArray.nextChar());
         }
+    }
+
+    public void testWriteBigFile() throws Exception
+    {
+        DataOutputStream out = new DataOutputStream(new FileOutputStream(DATA_OUT_DAT));
+        for (int i = 0; i < 10000; i++)
+        {
+            out.writeInt(i);
+        }
+        out.close();
+    }
+
+    public void testStream() throws Exception
+    {
+        ByteArray byteArray = ByteArrayStream.createByteArrayStream(DATA_OUT_DAT);
+        while (byteArray.hasMore())
+        {
+            System.out.println(byteArray.nextInt());
+        }
+    }
+
+    /**
+     * 无法在-Xms512m -Xmx512m -Xmn256m下运行<br>
+     *     java.lang.OutOfMemoryError: GC overhead limit exceeded
+     * @throws Exception
+     */
+    public void testLoadByteArray() throws Exception
+    {
+        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        MaxEntModel.create(byteArray);
+    }
+
+    /**
+     * 能够在-Xms512m -Xmx512m -Xmn256m下运行
+     * @throws Exception
+     */
+    public void testLoadByteArrayStream() throws Exception
+    {
+        ByteArray byteArray = ByteArrayStream.createByteArrayStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        MaxEntModel.create(byteArray);
+    }
+
+    public void testBenchmark() throws Exception
+    {
+        long start;
+
+        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        MaxEntModel.create(byteArray);
+
+        byteArray = ByteArrayStream.createByteArrayStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        MaxEntModel.create(byteArray);
+
+        start = System.currentTimeMillis();
+        byteArray = ByteArray.createByteArray(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        MaxEntModel.create(byteArray);
+        System.out.printf("ByteArray: %d ms\n", (System.currentTimeMillis() - start));
+
+        start = System.currentTimeMillis();
+        byteArray = ByteArrayStream.createByteArrayStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        MaxEntModel.create(byteArray);
+        System.out.printf("ByteArrayStream: %d ms\n", (System.currentTimeMillis() - start));
+
+//        ByteArray: 2626 ms
+//        ByteArrayStream: 4165 ms
     }
 }
