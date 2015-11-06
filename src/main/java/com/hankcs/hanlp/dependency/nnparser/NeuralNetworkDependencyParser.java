@@ -30,7 +30,7 @@ import java.util.List;
 public class NeuralNetworkDependencyParser extends AbstractDependencyParser
 {
     private static final AbstractDependencyParser INSTANCE = new NeuralNetworkDependencyParser();
-    public static Segment SEGMENT = StandardTokenizer.SEGMENT;
+    public static Segment SEGMENT = NLPTokenizer.SEGMENT;
 
     @Override
     public CoNLLSentence parse(List<Term> termList)
