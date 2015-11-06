@@ -11,8 +11,8 @@
  */
 package com.hankcs.hanlp.dependency.nnparser;
 
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.ITrie;
-import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.utility.TextUtility;
@@ -32,7 +32,7 @@ public class Alphabet implements ICacheAble
 
     public Alphabet()
     {
-        trie = new BinTrie<Integer>();
+        trie = new DoubleArrayTrie<Integer>();
     }
 
     /**

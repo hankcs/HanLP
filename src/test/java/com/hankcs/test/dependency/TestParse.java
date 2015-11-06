@@ -61,8 +61,7 @@ public class TestParse extends TestCase
 
     public void testNNParser() throws Exception
     {
-        StandardTokenizer.SEGMENT.enableCustomDictionary(false);
-        System.out.println(NeuralNetworkDependencyParser.compute("工作取得显著成绩"));
+        System.out.println(NeuralNetworkDependencyParser.compute("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。"));
     }
 
     public void testCrfParser() throws Exception
