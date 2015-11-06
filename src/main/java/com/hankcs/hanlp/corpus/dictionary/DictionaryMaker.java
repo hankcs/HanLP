@@ -222,7 +222,7 @@ public class DictionaryMaker implements ISaveAble
      * @param pathArray
      * @return
      */
-    public static DictionaryMaker combine(String[] pathArray)
+    public static DictionaryMaker combine(String... pathArray)
     {
         DictionaryMaker dictionaryMaker = new DictionaryMaker();
         for (String path : pathArray)

@@ -145,6 +145,10 @@ public class HanLP
          */
         public static String MaxEntModelPath = "data/model/dependency/MaxEntModel.txt";
         /**
+         * 神经网络依存模型路径
+         */
+        public static String NNParserModelPath = "data/model/dependency/NNParserModel.txt";
+        /**
          * CRF分词模型
          */
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
@@ -213,6 +217,7 @@ public class HanLP
                 CharTablePath = root + p.getProperty("CharTablePath", CharTablePath);
                 WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
+                NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
@@ -424,5 +429,18 @@ public class HanLP
     public static List<String> extractSummary(String document, int size)
     {
         return TextRankSentence.getTopSentenceList(document, size);
+    }
+    
+    /**
+     * 自动摘要
+     * @param document 目标文档
+     * @param max_length 需要摘要的长度
+     * @return 摘要文本
+     */
+    public static String getSummary(String document, int max_length)
+    {
+        // Parameter size in this method refers to the string length of the summary required;
+        // The actual length of the summary generated may be short than the required length, but never longer;
+        return TextRankSentence.getSummary(document, max_length);
     }
 }

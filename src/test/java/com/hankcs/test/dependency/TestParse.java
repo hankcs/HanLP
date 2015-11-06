@@ -20,7 +20,10 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dependency.CRFDependencyParser;
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
 import com.hankcs.hanlp.dependency.WordNatureDependencyParser;
+import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.NLPTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import junit.framework.TestCase;
 
 import java.util.LinkedList;
@@ -54,6 +57,12 @@ public class TestParse extends TestCase
     {
         HanLP.Config.enableDebug();
         System.out.println(CRFDependencyParser.compute("我每天骑车上学"));
+    }
+
+    public void testNNParser() throws Exception
+    {
+        StandardTokenizer.SEGMENT.enableCustomDictionary(false);
+        System.out.println(NeuralNetworkDependencyParser.compute("工作取得显著成绩"));
     }
 
     public void testCrfParser() throws Exception
