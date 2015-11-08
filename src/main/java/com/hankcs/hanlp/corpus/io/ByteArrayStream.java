@@ -98,17 +98,15 @@ public class ByteArrayStream extends ByteArray
     }
 
     @Override
-    public String nextUTF()
-    {
-        return super.nextUTF();
-    }
-
-    @Override
     public boolean hasMore()
     {
         return offset < bufferSize || fileChannel != null;
     }
 
+    /**
+     * 确保buffer数组余有size个字节
+     * @param size
+     */
     private void ensureAvailableBytes(int size)
     {
         if (offset + size > bufferSize)
