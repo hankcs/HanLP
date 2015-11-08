@@ -118,7 +118,11 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
         for (Term term : termList)
         {
             CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
-            if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.nz);
+            if (attribute == null)
+            {
+                if (term.word.trim().length() == 0) attribute = new CoreDictionary.Attribute(Nature.x);
+                else attribute = new CoreDictionary.Attribute(Nature.nz);
+            }
             else term.nature = attribute.nature[0];
             Vertex vertex = new Vertex(term.word, attribute);
             vertexList.add(vertex);
