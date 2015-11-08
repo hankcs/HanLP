@@ -1221,6 +1221,11 @@ public class Matrix implements Cloneable, java.io.Serializable, ICacheAble
         return getColumnDimension();
     }
 
+    /**
+     * 取出第j列作为一个列向量
+     * @param j
+     * @return
+     */
     public Matrix col(int j)
     {
         double[][] X = new double[m][1];
@@ -1231,6 +1236,11 @@ public class Matrix implements Cloneable, java.io.Serializable, ICacheAble
         return new Matrix(X);
     }
 
+    /**
+     * 取出第i行作为一个行向量
+     * @param i
+     * @return
+     */
     public Matrix row(int i)
     {
         double[][] X = new double[1][n];
@@ -1246,6 +1256,10 @@ public class Matrix implements Cloneable, java.io.Serializable, ICacheAble
         return getMatrix(i, i + p - 1, j, j + q - 1);
     }
 
+    /**
+     * 返回矩阵的立方（以数组形式）
+     * @return
+     */
     public double[][] cube()
     {
         double[][] X = new double[m][n];

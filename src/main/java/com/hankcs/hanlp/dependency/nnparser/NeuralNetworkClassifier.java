@@ -47,6 +47,9 @@ public class NeuralNetworkClassifier
     // Precomputed matrix
     // The configuration
     int embedding_size;      //! The size of the embedding.
+    /**
+     * 隐藏层节点数量
+     */
     int hidden_layer_size;   //! The size of the hidden layer
     int nr_objects;          //! The sum of forms, postags and deprels
     int nr_feature_types;    //! The number of feature types
