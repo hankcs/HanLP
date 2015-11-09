@@ -12,11 +12,14 @@
 package com.hankcs.hanlp.dependency.nnparser.action;
 
 /**
- * Yamada 和 Matsumoto 提出的分析动作
+ * arc-standard system (Nivre, 2004) 用到的动作，类似于 Yamada 和 Matsumoto 提出的分析动作
  * @author hankcs
  */
 public interface ActionType
 {
+    /**
+     * 无效动作，正常情况下不会用到
+     */
     int kNone = 0;  //! Placeholder for illegal action.
     /**
      * 不建立依存关系，只转移句法分析的焦点，即新的左焦点词是原来的右焦点词，依此类推。
