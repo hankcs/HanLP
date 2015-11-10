@@ -29,14 +29,26 @@ public class WordNatureDependencyParser extends MinimumSpanningTreeParser
 {
     static final WordNatureDependencyParser INSTANCE = new WordNatureDependencyParser();
 
+    /**
+     * 分析句子的依存句法
+     *
+     * @param termList 句子，可以是任何具有词性标注功能的分词器的分词结果
+     * @return CoNLL格式的依存句法树
+     */
     public static CoNLLSentence compute(List<Term> termList)
     {
         return INSTANCE.parse(termList);
     }
 
-    public static CoNLLSentence compute(String text)
+    /**
+     * 分析句子的依存句法
+     *
+     * @param sentence 句子
+     * @return CoNLL格式的依存句法树
+     */
+    public static CoNLLSentence compute(String sentence)
     {
-        return compute(NLPTokenizer.segment(text));
+        return INSTANCE.parse(sentence);
     }
 
     @Override

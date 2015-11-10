@@ -255,6 +255,18 @@ public class IOUtil
         return saveTxt(path, sbOut.toString());
     }
 
+    /**
+     * 获取文件所在目录的路径
+     * @param path
+     * @return
+     */
+    public static String dirname(String path)
+    {
+        int index = path.lastIndexOf('/');
+        if (index == -1) return path;
+        return path.substring(0, index + 1);
+    }
+
     public static LineIterator readLine(String path)
     {
         return new LineIterator(path);
@@ -278,10 +290,12 @@ public class IOUtil
             catch (FileNotFoundException e)
             {
                 logger.warning("文件" + path + "不存在，接下来的调用会返回null" + TextUtility.exceptionToString(e));
+                bw = null;
             }
             catch (IOException e)
             {
                 logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
+                bw = null;
             }
         }
 

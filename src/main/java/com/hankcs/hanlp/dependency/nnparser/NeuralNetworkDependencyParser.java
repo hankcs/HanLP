@@ -14,6 +14,9 @@ package com.hankcs.hanlp.dependency.nnparser;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.dependency.AbstractDependencyParser;
+import com.hankcs.hanlp.dependency.IDependencyParser;
+import com.hankcs.hanlp.dependency.nnparser.option.BasicOption;
+import com.hankcs.hanlp.dependency.nnparser.option.ConfigOption;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
@@ -32,11 +35,9 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
     /**
      * 内置实例
      */
-    private static final AbstractDependencyParser INSTANCE = new NeuralNetworkDependencyParser();
-    /**
-     * 本Parser使用的分词器，可以自由替换
-     */
-    public static Segment SEGMENT = NLPTokenizer.SEGMENT;
+    public static final IDependencyParser INSTANCE = new NeuralNetworkDependencyParser()
+            .setDeprelTranslater(ConfigOption.DEPRL_DESCRIPTION_PATH)
+            .enableDeprelTranslator(false);
 
     @Override
     public CoNLLSentence parse(List<Term> termList)
@@ -70,13 +71,25 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
         return new CoNLLSentence(wordArray);
     }
 
+    /**
+     * 分析句子的依存句法
+     *
+     * @param termList 句子，可以是任何具有词性标注功能的分词器的分词结果
+     * @return CoNLL格式的依存句法树
+     */
     public static CoNLLSentence compute(List<Term> termList)
     {
         return INSTANCE.parse(termList);
     }
 
-    public static CoNLLSentence compute(String text)
+    /**
+     * 分析句子的依存句法
+     *
+     * @param sentence 句子
+     * @return CoNLL格式的依存句法树
+     */
+    public static CoNLLSentence compute(String sentence)
     {
-        return compute(SEGMENT.seg(text));
+        return INSTANCE.parse(sentence);
     }
 }

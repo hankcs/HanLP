@@ -19,11 +19,8 @@ import com.hankcs.hanlp.corpus.dependency.CoNll.Evaluator;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dependency.CRFDependencyParser;
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
-import com.hankcs.hanlp.dependency.WordNatureDependencyParser;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.NLPTokenizer;
-import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import junit.framework.TestCase;
 
 import java.util.LinkedList;
