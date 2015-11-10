@@ -12,7 +12,7 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
+import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
@@ -394,7 +394,7 @@ public class HanLP
      */
     public static CoNLLSentence parseDependency(String sentence)
     {
-        return MaxEntDependencyParser.compute(sentence);
+        return NeuralNetworkDependencyParser.compute(sentence);
     }
 
     /**

@@ -37,7 +37,7 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
      */
     public static final IDependencyParser INSTANCE = new NeuralNetworkDependencyParser()
             .setDeprelTranslater(ConfigOption.DEPRL_DESCRIPTION_PATH)
-            .enableDeprelTranslator(false);
+            .enableDeprelTranslator(true);
 
     @Override
     public CoNLLSentence parse(List<Term> termList)
