@@ -24,12 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 基于神经网络分类模型-Yamada转移动作的判决式依存句法分析器
+ * 基于神经网络分类模型arc-standard转移动作的判决式依存句法分析器
  * @author hankcs
  */
 public class NeuralNetworkDependencyParser extends AbstractDependencyParser
 {
+    /**
+     * 内置实例
+     */
     private static final AbstractDependencyParser INSTANCE = new NeuralNetworkDependencyParser();
+    /**
+     * 本Parser使用的分词器，可以自由替换
+     */
     public static Segment SEGMENT = NLPTokenizer.SEGMENT;
 
     @Override

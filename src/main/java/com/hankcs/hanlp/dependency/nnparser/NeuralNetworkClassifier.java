@@ -20,16 +20,33 @@ import static com.hankcs.hanlp.dependency.nnparser.util.Log.ERROR_LOG;
 import static com.hankcs.hanlp.dependency.nnparser.util.Log.INFO_LOG;
 
 /**
+ * 基于神经网络模型的分类器
  * @author hankcs
  */
 public class NeuralNetworkClassifier
 {
+    /**
+     * 输入层到隐藏层的权值矩阵
+     */
     Matrix W1;
+    /**
+     * 隐藏层到输出层（softmax层）的权值矩阵
+     */
     Matrix W2;
+    /**
+     * 向量化（词向量、词性向量、依存关系向量）
+     */
     Matrix E;
+    /**
+     * 输入层的偏置
+     */
     Matrix b1;
+    /**
+     * 预先计算的矩阵乘法结果
+     */
     Matrix saved;
 
+    // 以下是训练相关参数，暂未实现
     Matrix grad_W1;
     Matrix grad_W2;
     Matrix grad_E;
@@ -51,8 +68,17 @@ public class NeuralNetworkClassifier
      * 隐藏层节点数量
      */
     int hidden_layer_size;   //! The size of the hidden layer
+    /**
+     * 特征个数
+     */
     int nr_objects;          //! The sum of forms, postags and deprels
+    /**
+     * 特征种数
+     */
     int nr_feature_types;    //! The number of feature types
+    /**
+     * 分类个数
+     */
     int nr_classes;          //! The number of classes
 
     int batch_size;
@@ -64,6 +90,9 @@ public class NeuralNetworkClassifier
     double ada_eps;
     double ada_alpha;
 
+    /**
+     * 将某个特征映射到预计算的矩阵的某一个列号
+     */
     Map<Integer, Integer> precomputation_id_encoder;
 
     boolean initialized;
@@ -209,14 +238,15 @@ public class NeuralNetworkClassifier
             }
             else
             {
+                // 使用向量而不是特征本身
                 // W1[0:hidden_layer, off:off+embedding_size] * E[fid:]'
                 hidden_layer.plusEquals(W1.block(0, off, hidden_layer_size, embedding_size).times(E.col(aid)));
             }
         }
 
-        hidden_layer.plusEquals(b1);
+        hidden_layer.plusEquals(b1);    // 加上偏置
 
-        Matrix output = W2.times(new Matrix (hidden_layer.cube()));
+        Matrix output = W2.times(new Matrix (hidden_layer.cube())); // 立方激活函数
 //        retval.resize(nr_classes, 0.);
         retval.clear();
         for (int i = 0; i < nr_classes; ++i)
@@ -483,7 +513,9 @@ public class NeuralNetworkClassifier
 //        }
 //    }
 
-
+    /**
+     * 初始化参数
+     */
     void canonical()
     {
         hidden_layer_size = b1.rows();
