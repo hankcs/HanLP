@@ -671,26 +671,46 @@ public class DemoWordDistance
 - 算法
   * 为每个词分配一个语义ID，词与词的距离通过语义ID的差得到。语义ID通过《同义词词林扩展版》计算而来。
 
-### 21. 依存句法解析
+### 21. 依存句法分析
 
 ```java
 /**
- * 依存句法解析
+ * 依存句法分析（CRF句法模型需要-Xms512m -Xmx512m -Xmn256m，MaxEnt和神经网络句法模型需要-Xms1g -Xmx1g -Xmn512m）
  * @author hankcs
  */
 public class DemoDependencyParser
 {
     public static void main(String[] args)
     {
-        System.out.println(HanLP.parseDependency("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
+        CoNLLSentence sentence = HanLP.parseDependency("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。");
+        System.out.println(sentence);
+        // 可以方便地遍历它
+        for (CoNLLWord word : sentence)
+        {
+            System.out.printf("%s --(%s)--> %s\n", word.LEMMA, word.DEPREL, word.HEAD.LEMMA);
+        }
+        // 也可以直接拿到数组，任意顺序或逆序遍历
+        CoNLLWord[] wordArray = sentence.getWordArray();
+        for (int i = wordArray.length - 1; i >= 0; i--)
+        {
+            CoNLLWord word = wordArray[i];
+            System.out.printf("%s --(%s)--> %s\n", word.LEMMA, word.DEPREL, word.HEAD.LEMMA);
+        }
+        // 还可以直接遍历子树，从某棵子树的某个节点一路遍历到虚根
+        CoNLLWord head = wordArray[1];
+        while ((head = head.HEAD) != null)
+        {
+            if (head == CoNLLWord.ROOT) System.out.println(head.LEMMA);
+            else System.out.printf("%s --(%s)--> ", head.LEMMA, head.DEPREL);
+        }
     }
 }
 ```
 - 说明
-  * 内部采用`MaxEntDependencyParser`实现，用户可以直接调用`MaxEntDependencyParser.compute(sentence)`
-  * 也可以调用基于随机条件场的依存句法分析器`CRFDependencyParser.compute(sentence)`
-  * 在封闭测试集上准确率有90%以上，但在开放测试集上则不理想。
+  * 内部采用`NeuralNetworkDependencyParser`实现，用户可以直接调用`NeuralNetworkDependencyParser.compute(sentence)`
+  * 也可以调用基于随机条件场的依存句法分析器`MaxEntDependencyParser.compute(sentence)`
 - 算法详解
+  * [《基于神经网络分类模型与转移系统的判决式依存句法分析器》](http://www.hankcs.com/nlp/parsing/neural-network-based-dependency-parser)
   * [《最大熵依存句法分析器的实现》](http://www.hankcs.com/nlp/parsing/to-achieve-the-maximum-entropy-of-the-dependency-parser.html)
   * [《基于CRF序列标注的中文依存句法分析器的Java实现》](http://www.hankcs.com/nlp/parsing/crf-sequence-annotation-chinese-dependency-parser-implementation-based-on-java.html)
 
