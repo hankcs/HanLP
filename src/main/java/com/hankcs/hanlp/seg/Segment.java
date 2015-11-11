@@ -310,6 +310,7 @@ public abstract class Segment
                     }
                     sbQuantifier.append(cur.realWord);
                     pre.attribute = new CoreDictionary.Attribute(Nature.mq);
+                    pre.wordID = -1;    // -1代表NGram模型中的“万能词”，保证二次维特比得分一定更高
                     iterator.remove();
                 }
                 if (sbQuantifier.length() != pre.realWord.length())
@@ -325,7 +326,8 @@ public abstract class Segment
     }
 
     /**
-     * 分词
+     * 分词<br>
+     * 此方法是线程安全的
      *
      * @param text 待分词文本
      * @return 单词列表

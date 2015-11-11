@@ -274,13 +274,9 @@ public class CoreBiGramTableDictionary
      */
     public static int getBiFrequency(int idA, int idB)
     {
-        if (idA == -1)
+        if (idA == -1 || idB == -1)
         {
-            return 0;
-        }
-        if (idB == -1)
-        {
-            return 0;
+            return 1000;   // -1表示用户词典，返回正值增加其亲和度
         }
         int index = binarySearch(pair, start[idA], start[idA + 1] - start[idA], idB);
         if (index < 0) return 0;

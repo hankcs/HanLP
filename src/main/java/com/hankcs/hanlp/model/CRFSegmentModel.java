@@ -28,7 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CRFSegmentModel extends CRFModel
+public final class CRFSegmentModel extends CRFModel
 {
     public static CRFModel crfModel;
 
@@ -49,6 +49,13 @@ public class CRFSegmentModel extends CRFModel
     private final static int idM = crfModel.getTagId("M");
     private final static int idE = crfModel.getTagId("E");
     private final static int idS = crfModel.getTagId("S");
+
+    /**
+     * 单例包装静态模型，不允许构造实例
+     */
+    private CRFSegmentModel()
+    {
+    }
 
     /**
      * 以指定的trie树结构储存内部特征函数
@@ -87,7 +94,6 @@ public class CRFSegmentModel extends CRFModel
                 double maxScore = -1e10;
                 for (int pre = 0; pre < 4; ++pre)
                 {
-                    if (matrix[pre][now] <= 0) continue;
                     double score = net[i - 1][pre] + matrix[pre][now] + net[i][now];
                     if (score > maxScore)
                     {

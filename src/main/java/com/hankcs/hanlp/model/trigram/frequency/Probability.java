@@ -10,7 +10,9 @@
  */
 package com.hankcs.hanlp.model.trigram.frequency;
 
+import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.collection.trie.bintrie._ValueArray;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
@@ -30,7 +32,16 @@ public class Probability implements ICacheAble
 
     public Probability()
     {
-        d = new BinTrie<Integer>();
+        d = new BinTrie<Integer>(){
+            @Override
+            public boolean load(ByteArray byteArray, _ValueArray valueArray)
+            {
+                BaseNode<Integer>[] nchild = new BaseNode[child.length - 1];    // 兼容旧模型
+                System.arraycopy(child, 0, nchild, 0, nchild.length);
+                child = nchild;
+                return super.load(byteArray, valueArray);
+            }
+        };
     }
 
     public boolean exists(String key)

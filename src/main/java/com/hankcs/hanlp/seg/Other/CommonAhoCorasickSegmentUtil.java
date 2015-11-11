@@ -27,6 +27,17 @@ public class CommonAhoCorasickSegmentUtil
 {
     /**
      * 最长分词，合并未知语素
+     * @param text 文本
+     * @param trie 自动机
+     * @param <V> 类型
+     * @return 结果链表
+     */
+    public static <V> LinkedList<ResultTerm<V>> segment(String text, AhoCorasickDoubleArrayTrie<V> trie)
+    {
+        return segment(text.toCharArray(), trie);
+    }
+    /**
+     * 最长分词，合并未知语素
      * @param charArray 文本
      * @param trie 自动机
      * @param <V> 类型
@@ -67,6 +78,18 @@ public class CommonAhoCorasickSegmentUtil
             }
         }
         return termList;
+    }
+
+    /**
+     * 逆向最长分词，合并未知语素
+     * @param text 文本
+     * @param trie 自动机
+     * @param <V> 类型
+     * @return 结果链表
+     */
+    public static <V> LinkedList<ResultTerm<V>> segmentReverseOrder(String text, AhoCorasickDoubleArrayTrie<V> trie)
+    {
+        return segmentReverseOrder(text.toCharArray(), trie);
     }
 
     /**

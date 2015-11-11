@@ -65,6 +65,15 @@ public class Suggester implements ISuggester
     }
 
     @Override
+    public void removeAllSentences()
+    {
+        for (IScorer scorer : scorerList)
+        {
+            scorer.removeAllSentences();
+        }
+    }
+
+    @Override
     public List<String> suggest(String key, int size)
     {
         List<String> resultList = new ArrayList<String>(size);

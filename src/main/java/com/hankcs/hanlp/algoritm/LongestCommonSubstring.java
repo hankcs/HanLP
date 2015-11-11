@@ -12,7 +12,8 @@
 package com.hankcs.hanlp.algoritm;
 
 /**
- * 求最长公共字串的长度
+ * 求最长公共字串的长度<br>
+ *     最长公共子串（Longest Common Substring）指的是两个字符串中的最长公共子串，要求子串一定连续
  *
  * @author hankcs
  */

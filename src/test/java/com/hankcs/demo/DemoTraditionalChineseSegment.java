@@ -12,13 +12,13 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.tokenizer.TraditionalChineseTokenizer;
 
 import java.util.List;
 
 /**
  * 繁体中文分词
+ *
  * @author hankcs
  */
 public class DemoTraditionalChineseSegment
@@ -32,6 +32,13 @@ public class DemoTraditionalChineseSegment
                                                                           "Adidas的代言人，因此對大眾傳播媒介和時尚界" +
                                                                           "等方面都具很大的影響力，在足球圈外所獲得的" +
                                                                           "認受程度可謂前所未見。");
+        System.out.println(termList);
+
+        termList = TraditionalChineseTokenizer.segment("（中央社記者黃巧雯台北20日電）外需不振，影響接單動能，經濟部今天公布7月外銷訂單金額362.9億美元，年減5%，" +
+                                                               "連續4個月衰退，減幅較6月縮小。1040820\n");
+        System.out.println(termList);
+
+        termList = TraditionalChineseTokenizer.segment("中央社记者黄巧雯台北20日电");
         System.out.println(termList);
     }
 }

@@ -83,7 +83,7 @@ public class CustomDictionary
                         continue;
                     }
                 }
-                logger.info("加载自定义词典" + p + "中……");
+                logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
                 boolean success = load(p, defaultNature, map);
                 if (!success) logger.warning("失败：" + p);
             }
@@ -148,10 +148,10 @@ public class CustomDictionary
                 String[] param = line.split("\\s");
                 if (param[0].length() == 0) continue;   // 排除空行
                 if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
-                if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
-                {
-                    continue;
-                }
+//                if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
+//                {
+//                    continue;
+//                }
                 int natureCount = (param.length - 1) / 2;
                 CoreDictionary.Attribute attribute;
                 if (natureCount == 0)
@@ -196,10 +196,10 @@ public class CustomDictionary
     }
 
     /**
-     * 增加新词
+     * 往自定义词典中插入一个新词（非覆盖模式）
      *
-     * @param word
-     * @return
+     * @param word                新词 如“裸婚”
+     * @return 是否插入成功（失败的原因可能是不覆盖等，可以通过调试模式了解原因）
      */
     public static boolean add(String word)
     {
@@ -284,12 +284,10 @@ public class CustomDictionary
     public static CoreDictionary.Attribute get(String key)
     {
         if (HanLP.Config.Normalization) key = CharTable.convert(key);
-        if (dat == null)
-        {
-            if (trie != null) return trie.get(key);
-            return null;
-        }
-        else return dat.get(key);
+        CoreDictionary.Attribute attribute = dat == null ? null : dat.get(key);
+        if (attribute != null) return attribute;
+        if (trie == null) return null;
+        return trie.get(key);
     }
 
     /**
@@ -300,6 +298,7 @@ public class CustomDictionary
     public static void remove(String key)
     {
         if (HanLP.Config.Normalization) key = CharTable.convert(key);
+        if (trie == null) return;
         trie.remove(key);
     }
 
@@ -436,7 +435,6 @@ public class CustomDictionary
                 processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
             }
         }
-        if (dat == null) return;
         DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
         while (searcher.next())
         {

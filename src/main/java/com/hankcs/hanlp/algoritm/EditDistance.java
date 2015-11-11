@@ -125,6 +125,18 @@ public class EditDistance
     /**
      * 编辑距离
      *
+     * @param a 串A，其实它们两个调换位置还是一样的
+     * @param b 串B
+     * @return 它们之间的距离
+     */
+    public static int compute(String a, String b)
+    {
+        return ed(a, b);
+    }
+
+    /**
+     * 编辑距离
+     *
      * @param wrongWord 串A，其实它们两个调换位置还是一样的
      * @param rightWord 串B
      * @return 它们之间的距离

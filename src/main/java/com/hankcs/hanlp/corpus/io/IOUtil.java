@@ -292,6 +292,18 @@ public class IOUtil
         return saveTxt(path, sbOut.toString());
     }
 
+    /**
+     * 获取文件所在目录的路径
+     * @param path
+     * @return
+     */
+    public static String dirname(String path)
+    {
+        int index = path.lastIndexOf('/');
+        if (index == -1) return path;
+        return path.substring(0, index + 1);
+    }
+
     public static LineIterator readLine(String path)
     {
         return new LineIterator(path);
@@ -315,10 +327,12 @@ public class IOUtil
             catch (FileNotFoundException e)
             {
                 logger.warning("文件" + path + "不存在，接下来的调用会返回null" + TextUtility.exceptionToString(e));
+                bw = null;
             }
             catch (IOException e)
             {
                 logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
+                bw = null;
             }
         }
 
@@ -431,5 +445,62 @@ public class IOUtil
     public static InputStream getInputStream(String path) throws FileNotFoundException
     {
         return isResource(path) ? IOUtil.class.getResourceAsStream("/" + path) : new FileInputStream(path);
+    }
+
+    /**
+     * 创建一个BufferedWriter
+     *
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public static BufferedWriter newBufferedWriter(String path) throws FileNotFoundException, UnsupportedEncodingException
+    {
+        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+    }
+
+    /**
+     * 创建一个BufferedReader
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public static BufferedReader newBufferedReader(String path) throws FileNotFoundException, UnsupportedEncodingException
+    {
+        return new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+    }
+
+    public static BufferedWriter newBufferedWriter(String path, boolean append) throws FileNotFoundException, UnsupportedEncodingException
+    {
+        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, append), "UTF-8"));
+    }
+
+    /**
+     * 获取最后一个分隔符的后缀
+     * @param name
+     * @param delimiter
+     * @return
+     */
+    public static String getSuffix(String name, String delimiter)
+    {
+        return name.substring(name.lastIndexOf(delimiter) + 1);
+    }
+
+    /**
+     * 写数组，用制表符分割
+     * @param bw
+     * @param params
+     * @throws IOException
+     */
+    public static void writeLine(BufferedWriter bw, String... params) throws IOException
+    {
+        for (int i = 0; i < params.length - 1; i++)
+        {
+            bw.write(params[i]);
+            bw.write('\t');
+        }
+        bw.write(params[params.length - 1]);
     }
 }

@@ -33,7 +33,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
 
     public BinTrie()
     {
-        child = new BaseNode[65535];    // (int)Character.MAX_VALUE
+        child = new BaseNode[65535 + 1];    // (int)Character.MAX_VALUE
         size = 0;
         status = Status.NOT_WORD_1;
     }
@@ -76,6 +76,16 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
         {
             ++size; // 维护size
         }
+    }
+
+    /**
+     * 设置键值对，当键不存在的时候会自动插入
+     * @param key
+     * @param value
+     */
+    public void set(String key, V value)
+    {
+        put(key.toCharArray(), value);
     }
 
     /**

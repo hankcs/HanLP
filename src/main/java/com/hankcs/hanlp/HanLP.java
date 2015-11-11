@@ -12,8 +12,7 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
+import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
@@ -26,7 +25,6 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.TextRankKeyword;
 import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
-import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -147,6 +145,10 @@ public class HanLP
          */
         public static String MaxEntModelPath = "data/model/dependency/MaxEntModel.txt";
         /**
+         * 神经网络依存模型路径
+         */
+        public static String NNParserModelPath = "data/model/dependency/NNParserModel.txt";
+        /**
          * CRF分词模型
          */
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
@@ -239,6 +241,7 @@ public class HanLP
                 CharTablePath = p.getProperty("CharTablePath", CharTablePath);
                 WordNatureModelPath = p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = p.getProperty("MaxEntModelPath", MaxEntModelPath);
+                NNParserModelPath = p.getProperty("NNParserModelPath", NNParserModelPath);
                 CRFSegmentModelPath = p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
@@ -417,7 +420,7 @@ public class HanLP
      */
     public static CoNLLSentence parseDependency(String sentence)
     {
-        return MaxEntDependencyParser.compute(sentence);
+        return NeuralNetworkDependencyParser.compute(sentence);
     }
 
     /**
@@ -452,5 +455,18 @@ public class HanLP
     public static List<String> extractSummary(String document, int size)
     {
         return TextRankSentence.getTopSentenceList(document, size);
+    }
+
+    /**
+     * 自动摘要
+     * @param document 目标文档
+     * @param max_length 需要摘要的长度
+     * @return 摘要文本
+     */
+    public static String getSummary(String document, int max_length)
+    {
+        // Parameter size in this method refers to the string length of the summary required;
+        // The actual length of the summary generated may be short than the required length, but never longer;
+        return TextRankSentence.getSummary(document, max_length);
     }
 }

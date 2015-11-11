@@ -12,10 +12,19 @@
 package com.hankcs.hanlp.tokenizer;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.dictionary.other.CharTable;
+import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
+import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
+import com.hankcs.hanlp.seg.Other.CommonAhoCorasickSegmentUtil;
 import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.utility.SentencesUtil;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,34 +39,92 @@ public class TraditionalChineseTokenizer
      */
     public static Segment SEGMENT = HanLP.newSegment();
 
+    private static List<Term> segSentence(String text)
+    {
+        if (text.length() == 0) return Collections.emptyList();
+        LinkedList<ResultTerm<String>> tsList = CommonAhoCorasickSegmentUtil.segment(text, TraditionalChineseDictionary.trie);
+        StringBuilder sbSimplifiedChinese = new StringBuilder(text.length());
+        boolean equal = true;
+        for (ResultTerm<String> term : tsList)
+        {
+            if (term.label == null) term.label = term.word;
+            else if (term.label.length() != term.word.length()) equal = false;
+            sbSimplifiedChinese.append(term.label);
+        }
+        String simplifiedChinese = sbSimplifiedChinese.toString();
+        List<Term> termList = SEGMENT.seg(simplifiedChinese);
+        if (equal)
+        {
+            int offset = 0;
+            for (Term term : termList)
+            {
+                term.word = text.substring(offset, offset + term.length());
+                term.offset = offset;
+                offset += term.length();
+            }
+        }
+        else
+        {
+            Iterator<Term> termIterator = termList.iterator();
+            Iterator<ResultTerm<String>> tsIterator = tsList.iterator();
+            ResultTerm<String> tsTerm = tsIterator.next();
+            int offset = 0;
+            while (termIterator.hasNext())
+            {
+                Term term = termIterator.next();
+                term.offset = offset;
+                if (offset > tsTerm.offset + tsTerm.word.length()) tsTerm = tsIterator.next();
+
+                if (offset == tsTerm.offset && term.length() == tsTerm.label.length())
+                {
+                    term.word = tsTerm.word;
+                }
+                else term.word = SimplifiedChineseDictionary.convertToTraditionalChinese(term.word);
+                offset += term.length();
+            }
+        }
+
+        return termList;
+    }
+
     public static List<Term> segment(String text)
     {
-        text = HanLP.convertToSimplifiedChinese(text);
-        List<Term> termList = SEGMENT.seg(text);
-        for (Term term : termList)
+        List<Term> termList = new LinkedList<Term>();
+        for (String sentence : SentencesUtil.toSentenceList(text))
         {
-            term.word = HanLP.convertToTraditionalChinese(term.word);
+            termList.addAll(segSentence(sentence));
         }
+
         return termList;
     }
 
     /**
      * 分词
+     *
      * @param text 文本
      * @return 分词结果
      */
     public static List<Term> segment(char[] text)
     {
-        return SEGMENT.seg(text);
+        return segment(CharTable.convert(text));
     }
 
     /**
      * 切分为句子形式
+     *
      * @param text 文本
      * @return 句子列表
      */
     public static List<List<Term>> seg2sentence(String text)
     {
-        return SEGMENT.seg2sentence(text);
+        List<List<Term>> resultList = new LinkedList<List<Term>>();
+        {
+            for (String sentence : SentencesUtil.toSentenceList(text))
+            {
+                resultList.add(segment(sentence));
+            }
+        }
+
+        return resultList;
     }
 }
