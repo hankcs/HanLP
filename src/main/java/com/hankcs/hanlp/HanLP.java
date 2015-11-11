@@ -184,7 +184,7 @@ public class HanLP
                     }
                     if ("root".equals(key)) return root;
                     String property = getProperty(key);
-                    if (property == null) return defaultValue;
+                    if (property == null) property = defaultValue;
                     if (property.startsWith("data") && !"CustomDictionaryPath".equals(key))
                     {
                         String path = root + property;
