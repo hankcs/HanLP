@@ -697,7 +697,7 @@ public class DemoDependencyParser
             System.out.printf("%s --(%s)--> %s\n", word.LEMMA, word.DEPREL, word.HEAD.LEMMA);
         }
         // 还可以直接遍历子树，从某棵子树的某个节点一路遍历到虚根
-        CoNLLWord head = wordArray[1];
+        CoNLLWord head = wordArray[12];
         while ((head = head.HEAD) != null)
         {
             if (head == CoNLLWord.ROOT) System.out.println(head.LEMMA);
