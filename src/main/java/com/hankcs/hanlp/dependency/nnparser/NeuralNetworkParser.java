@@ -743,7 +743,7 @@ public class NeuralNetworkParser implements ICacheAble
         int dist = 8;
         if (ctx.S0 >= 0 && ctx.S1 >= 0)
         {
-            dist = math.binned_1_2_3_4_5_6_10[ctx.S0 - ctx.S1]; // 这里和论文有出入，论文是S0和N0的距离
+            dist = math.binned_1_2_3_4_5_6_10[ctx.S0 - ctx.S1];
             if (dist == 10)
             {
                 dist = 7;
