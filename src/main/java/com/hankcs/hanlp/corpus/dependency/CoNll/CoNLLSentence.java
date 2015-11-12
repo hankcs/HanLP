@@ -111,7 +111,7 @@ public class CoNLLSentence implements Iterable<CoNLLWord>
             @Override
             public boolean hasNext()
             {
-                return index < word.length - 1;
+                return index < word.length;
             }
 
             @Override
