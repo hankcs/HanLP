@@ -12,6 +12,7 @@ package com.hankcs.demo;
 
 
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
+import com.hankcs.hanlp.dictionary.stopword.Filter;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.BasicTokenizer;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
@@ -38,5 +39,20 @@ public class DemoStopWord
         System.out.println(termList);
         CoreStopWordDictionary.apply(termList);
         System.out.println(termList);
+        // 还可以自定义过滤逻辑
+        CoreStopWordDictionary.FILTER = new Filter()
+        {
+            @Override
+            public boolean shouldInclude(Term term)
+            {
+                switch (term.nature)
+                {
+                    case nz:
+                    return !CoreStopWordDictionary.contains(term.word);
+                }
+                return false;
+            }
+        };
+        System.out.println(NotionalTokenizer.segment(text));
     }
 }
