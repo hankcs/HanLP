@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.dictionary.common;
 
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.corpus.dependency.CoNll.PosTagCompiler;
 import com.hankcs.hanlp.corpus.synonym.Synonym;
 import com.hankcs.hanlp.corpus.synonym.SynonymHelper;
 
@@ -20,7 +21,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.TreeMap;
+import com.hankcs.hanlp.corpus.synonym.Synonym.Type;
+import com.hankcs.hanlp.corpus.util.Precompiler;
+import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
+import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.utility.Predefine;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
@@ -126,6 +134,82 @@ public class CommonSynonymDictionary
         return itemA.distance(itemB);
     }
 
+    public String rewriteQuickly(String text)
+    {
+        assert text != null;
+        StringBuilder sbOut = new StringBuilder((int) (text.length() * 1.2));
+        String preWord = Predefine.SENTENCE_BEGIN;
+        for (int i = 0; i < text.length(); ++i)
+        {
+            int state = 1;
+            state = trie.transition(text.charAt(i), state);
+            if (state > 0)
+            {
+                int start = i;
+                int to = i + 1;
+                int end = - 1;
+                SynonymItem value = null;
+                for (; to < text.length(); ++to)
+                {
+                    state = trie.transition(text.charAt(to), state);
+                    if (state < 0) break;
+                    SynonymItem output = trie.output(state);
+                    if (output != null)
+                    {
+                        value = output;
+                        end = to + 1;
+                    }
+                }
+                if (value != null)
+                {
+                    Synonym synonym = value.randomSynonym(Type.EQUAL, preWord);
+                    if (synonym != null)
+                    {
+                        sbOut.append(synonym.realWord);
+                        preWord = synonym.realWord;
+                    }
+                    else
+                    {
+                        preWord = text.substring(start, end);
+                        sbOut.append(preWord);
+                    }
+                    i = end - 1;
+                }
+                else
+                {
+                    preWord = String.valueOf(text.charAt(i));
+                    sbOut.append(text.charAt(i));
+                }
+            }
+            else
+            {
+                preWord = String.valueOf(text.charAt(i));
+                sbOut.append(text.charAt(i));
+            }
+        }
+
+        return sbOut.toString();
+    }
+
+    public String rewrite(String text)
+    {
+        List<Term> termList = StandardTokenizer.segment(text.toCharArray());
+        StringBuilder sbOut = new StringBuilder((int) (text.length() * 1.2));
+        String preWord = Predefine.SENTENCE_BEGIN;
+        for (Term term : termList)
+        {
+            SynonymItem synonymItem = get(term.word);
+            Synonym synonym;
+            if (synonymItem != null && (synonym = synonymItem.randomSynonym(Type.EQUAL, preWord)) != null)
+            {
+                sbOut.append(synonym.realWord);
+            }
+            else sbOut.append(term.word);
+            preWord = PosTagCompiler.compile(term.nature.toString(), term.word);
+        }
+        return sbOut.toString();
+    }
+
     /**
      * 词典中的一个条目
      */
@@ -139,27 +223,6 @@ public class CommonSynonymDictionary
          * 条目的value，是key的同义词列表
          */
         public List<Synonym> synonymList;
-
-        public static enum Type
-        {
-            /**
-             * 完全同义词，对应词典中的=号
-             */
-            EQUAL,
-            /**
-             * 同类词，对应#
-             */
-            LIKE,
-            /**
-             * 封闭词，没有同义词或同类词
-             */
-            SINGLE,
-
-            /**
-             * 未定义，通常属于非词典中的词
-             */
-            UNDEFINED,
-        }
 
         /**
          * 这个条目的类型，同义词或同类词或封闭词
@@ -189,6 +252,29 @@ public class CommonSynonymDictionary
                     this.type = Type.SINGLE;
                     break;
             }
+        }
+
+        /**
+         * 随机挑一个近义词
+         * @param type 类型
+         * @return
+         */
+        public Synonym randomSynonym(Type type, String preWord)
+        {
+            ArrayList<Synonym> synonymArrayList = new ArrayList<Synonym>(synonymList);
+            ListIterator<Synonym> listIterator = synonymArrayList.listIterator();
+            if (type != null) while (listIterator.hasNext())
+            {
+                Synonym synonym = listIterator.next();
+                if (synonym.type != type || (preWord != null && CoreBiGramTableDictionary.getBiFrequency(preWord, synonym.realWord) == 0)) listIterator.remove();
+            }
+            if (synonymArrayList.size() == 0) return null;
+            return synonymArrayList.get((int) (System.currentTimeMillis() % (long)synonymArrayList.size()));
+        }
+
+        public Synonym randomSynonym()
+        {
+            return randomSynonym(null, null);
         }
 
         @Override
@@ -225,6 +311,5 @@ public class CommonSynonymDictionary
             SynonymItem item = new SynonymItem(new Synonym(word, word.hashCode() * 1000000 + Long.MAX_VALUE / 3), null, Type.UNDEFINED);
             return item;
         }
-
     }
 }
