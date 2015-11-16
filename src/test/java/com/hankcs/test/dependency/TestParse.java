@@ -61,6 +61,15 @@ public class TestParse extends TestCase
         System.out.println(NeuralNetworkDependencyParser.compute("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。"));
     }
 
+    public void testNatureMap() throws Exception
+    {
+        System.out.println('Ｏ' == 'Ｏ');
+        String text = "二Ｏ一二年四月五日";
+        List<Term> termList = NeuralNetworkDependencyParser.INSTANCE.getSegment().seg(text);
+        System.out.println(termList);
+        System.out.println(NeuralNetworkDependencyParser.compute(termList));
+    }
+
     public void testCrfParser() throws Exception
     {
         HanLP.Config.enableDebug();
