@@ -75,7 +75,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.2.4</version>
+    <version>portable-1.2.7</version>
 </dependency>
 ```
 
@@ -91,8 +91,6 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 
 #### 2、下载data
 
-**GitHub代码库中已经包含了data.zip中的词典，直接编译运行自动缓存即可；模型则需要额外下载。**
-
 | 数据包        | 功能   |  体积（MB）  |
 | --------   | -----:  | :----:  |
 | [data.zip](https://github.com/hankcs/HanLP/releases)     | 全部 |   255     |
@@ -107,6 +105,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 
 用户可以自行增删替换，如果不需要句法分析功能的话，随时可以删除model文件夹。
 - 模型跟词典没有绝对的区别，隐马模型被做成人人都可以编辑的词典形式，不代表它不是模型。
+- GitHub代码库中已经包含了data.zip中的词典，直接编译运行自动缓存即可；模型则需要额外下载。
 
 #### 3、配置文件
 示例配置文件:[hanlp.properties](https://github.com/hankcs/HanLP/releases)
@@ -132,7 +131,7 @@ Web项目的话可以放在如下位置：
     $Project/WEB-INF/classes
 ---
 
-对于任何项目，都可以放到src目录下，编译时IDE会自动将其复制到classpath中。
+对于任何项目，都可以放到src或resource目录下，编译时IDE会自动将其复制到classpath中。
 
 如果放置不当，HanLP会智能提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
 
@@ -167,6 +166,7 @@ System.out.println(termList);
 - 说明
   * **HanLP**中有一系列“开箱即用”的静态分词器，以`Tokenizer`结尾，在接下来的例子中会继续介绍。
   * `HanLP.segment`其实是对`StandardTokenizer.segment`的包装。
+  * 分词结果包含词性，每个词性的意思请查阅[《HanLP词性标注集》](http://www.hankcs.com/nlp/part-of-speech-tagging.html#h2-8)。
 - 算法详解
   * [《词图的生成》](http://www.hankcs.com/nlp/segment/the-word-graph-is-generated.html)
 
@@ -227,7 +227,7 @@ for (Term term : termList)
 }
 ```
 - 说明
-  * CRF对新词有很好的识别能力，但是无法利用自定义词典。
+  * CRF对新词有很好的识别能力，但是开销较大。
 - 算法详解
   * [《CRF分词的纯Java实现》](http://www.hankcs.com/nlp/segment/crf-segmentation-of-the-pure-java-implementation.html)
   * [《CRF++模型格式说明》](http://www.hankcs.com/nlp/the-crf-model-format-description.html)
@@ -671,26 +671,46 @@ public class DemoWordDistance
 - 算法
   * 为每个词分配一个语义ID，词与词的距离通过语义ID的差得到。语义ID通过《同义词词林扩展版》计算而来。
 
-### 21. 依存句法解析
+### 21. 依存句法分析
 
 ```java
 /**
- * 依存句法解析
+ * 依存句法分析（CRF句法模型需要-Xms512m -Xmx512m -Xmn256m，MaxEnt和神经网络句法模型需要-Xms1g -Xmx1g -Xmn512m）
  * @author hankcs
  */
 public class DemoDependencyParser
 {
     public static void main(String[] args)
     {
-        System.out.println(HanLP.parseDependency("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
+        CoNLLSentence sentence = HanLP.parseDependency("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。");
+        System.out.println(sentence);
+        // 可以方便地遍历它
+        for (CoNLLWord word : sentence)
+        {
+            System.out.printf("%s --(%s)--> %s\n", word.LEMMA, word.DEPREL, word.HEAD.LEMMA);
+        }
+        // 也可以直接拿到数组，任意顺序或逆序遍历
+        CoNLLWord[] wordArray = sentence.getWordArray();
+        for (int i = wordArray.length - 1; i >= 0; i--)
+        {
+            CoNLLWord word = wordArray[i];
+            System.out.printf("%s --(%s)--> %s\n", word.LEMMA, word.DEPREL, word.HEAD.LEMMA);
+        }
+        // 还可以直接遍历子树，从某棵子树的某个节点一路遍历到虚根
+        CoNLLWord head = wordArray[12];
+        while ((head = head.HEAD) != null)
+        {
+            if (head == CoNLLWord.ROOT) System.out.println(head.LEMMA);
+            else System.out.printf("%s --(%s)--> ", head.LEMMA, head.DEPREL);
+        }
     }
 }
 ```
 - 说明
-  * 内部采用`MaxEntDependencyParser`实现，用户可以直接调用`MaxEntDependencyParser.compute(sentence)`
-  * 也可以调用基于随机条件场的依存句法分析器`CRFDependencyParser.compute(sentence)`
-  * 在封闭测试集上准确率有90%以上，但在开放测试集上则不理想。
+  * 内部采用`NeuralNetworkDependencyParser`实现，用户可以直接调用`NeuralNetworkDependencyParser.compute(sentence)`
+  * 也可以调用基于最大熵的依存句法分析器`MaxEntDependencyParser.compute(sentence)`
 - 算法详解
+  * [《基于神经网络分类模型与转移系统的判决式依存句法分析器》](http://www.hankcs.com/nlp/parsing/neural-network-based-dependency-parser.html)
   * [《最大熵依存句法分析器的实现》](http://www.hankcs.com/nlp/parsing/to-achieve-the-maximum-entropy-of-the-dependency-parser.html)
   * [《基于CRF序列标注的中文依存句法分析器的Java实现》](http://www.hankcs.com/nlp/parsing/crf-sequence-annotation-chinese-dependency-parser-implementation-based-on-java.html)
 

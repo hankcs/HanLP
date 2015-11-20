@@ -24,7 +24,12 @@ public interface ICacheAble
      * @param out
      * @throws Exception
      */
-    public void save(DataOutputStream out) throws Exception;
+    void save(DataOutputStream out) throws Exception;
 
-    public boolean load(ByteArray byteArray);
+    /**
+     * 载入
+     * @param byteArray
+     * @return
+     */
+    boolean load(ByteArray byteArray);
 }

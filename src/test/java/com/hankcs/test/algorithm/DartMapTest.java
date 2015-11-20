@@ -43,14 +43,13 @@ public class DartMapTest extends TestCase
 
     public void testBuild() throws Exception
     {
-        ArrayList<String> keyList = new ArrayList<String>(validKeySet);
-        ArrayList<Integer> valList = new ArrayList<Integer>(keyList.size());
-        for (String key : keyList)
+        TreeMap<String, Integer> map = new TreeMap<String, Integer>();
+        for (String key : validKeySet)
         {
-            valList.add(key.length());
+            map.put(key, key.length());
         }
 
-        dartMap = new DartMap<Integer>(keyList, valList);
+        dartMap = new DartMap<Integer>(map);
     }
 
     public void testContainsAndNoteContains() throws Exception

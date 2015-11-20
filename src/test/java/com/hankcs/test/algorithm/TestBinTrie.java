@@ -27,4 +27,10 @@ public class TestBinTrie extends TestCase
 
         assertEquals(new Boolean(false), trie.get("加入"));
     }
+
+    public void testArrayIndexOutOfBoundsException() throws Exception
+    {
+        BinTrie<Boolean> trie = new BinTrie<Boolean>();
+        trie.put(new char[]{'\uffff'}, true);
+    }
 }

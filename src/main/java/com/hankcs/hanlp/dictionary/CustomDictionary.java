@@ -83,7 +83,7 @@ public class CustomDictionary
                         continue;
                     }
                 }
-                logger.info("加载自定义词典" + p + "中……");
+                logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
                 boolean success = load(p, defaultNature, map);
                 if (!success) logger.warning("失败：" + p);
             }
@@ -195,10 +195,10 @@ public class CustomDictionary
     }
 
     /**
-     * 增加新词
+     * 往自定义词典中插入一个新词（非覆盖模式）
      *
-     * @param word
-     * @return
+     * @param word                新词 如“裸婚”
+     * @return 是否插入成功（失败的原因可能是不覆盖等，可以通过调试模式了解原因）
      */
     public static boolean add(String word)
     {
@@ -285,6 +285,7 @@ public class CustomDictionary
         if (HanLP.Config.Normalization) key = CharTable.convert(key);
         CoreDictionary.Attribute attribute = dat.get(key);
         if (attribute != null) return attribute;
+        if (trie == null) return null;
         return trie.get(key);
     }
 
@@ -296,6 +297,7 @@ public class CustomDictionary
     public static void remove(String key)
     {
         if (HanLP.Config.Normalization) key = CharTable.convert(key);
+        if (trie == null) return;
         trie.remove(key);
     }
 

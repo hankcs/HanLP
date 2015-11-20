@@ -54,6 +54,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
             System.out.println(table);
         }
         int offset = 0;
+        OUTER:
         for (int i = 0; i < table.v.length; offset += table.v[i][1].length(), ++i)
         {
             String[] line = table.v[i];
@@ -74,6 +75,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
                     if (i == table.v.length)
                     {
                         termList.add(new Term(new String(sentence, begin, offset - begin), null));
+                        break OUTER;
                     }
                     else
                         termList.add(new Term(new String(sentence, begin, offset - begin + table.v[i][1].length()), null));
@@ -89,21 +91,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
 
         if (config.speechTagging)
         {
-            ArrayList<Vertex> vertexList = new ArrayList<Vertex>(termList.size() + 1);
-            vertexList.add(Vertex.B);
-            for (Term term : termList)
-            {
-                CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
-                if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.nz);
-                else term.nature = attribute.nature[0];
-                Vertex vertex = new Vertex(term.word, attribute);
-                vertexList.add(vertex);
-            }
-//            // 数字识别
-//            if (config.numberQuantifierRecognize)
-//            {
-//                mergeNumberQuantifier(vertexList, null, config);
-//            }
+            List<Vertex> vertexList = toVertexList(termList, true);
             Viterbi.compute(vertexList, CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary);
             int i = 0;
             for (Term term : termList)
@@ -112,7 +100,83 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
                 ++i;
             }
         }
+
+        if (config.useCustomDictionary)
+        {
+            List<Vertex> vertexList = toVertexList(termList, false);
+            combineByCustomDictionary(vertexList);
+            termList = toTermList(vertexList, config.offset);
+        }
+
         return termList;
+    }
+
+    private static List<Vertex> toVertexList(List<Term> termList, boolean appendStart)
+    {
+        ArrayList<Vertex> vertexList = new ArrayList<Vertex>(termList.size() + 1);
+        if (appendStart) vertexList.add(Vertex.B);
+        for (Term term : termList)
+        {
+            CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
+            if (attribute == null)
+            {
+                if (term.word.trim().length() == 0) attribute = new CoreDictionary.Attribute(Nature.x);
+                else attribute = new CoreDictionary.Attribute(Nature.nz);
+            }
+            else term.nature = attribute.nature[0];
+            Vertex vertex = new Vertex(term.word, attribute);
+            vertexList.add(vertex);
+        }
+
+        return vertexList;
+    }
+
+    /**
+     * 将一条路径转为最终结果
+     *
+     * @param vertexList
+     * @param offsetEnabled 是否计算offset
+     * @return
+     */
+    protected static List<Term> toTermList(List<Vertex> vertexList, boolean offsetEnabled)
+    {
+        assert vertexList != null;
+        int length = vertexList.size();
+        List<Term> resultList = new ArrayList<Term>(length);
+        Iterator<Vertex> iterator = vertexList.iterator();
+        if (offsetEnabled)
+        {
+            int offset = 0;
+            for (int i = 0; i < length; ++i)
+            {
+                Vertex vertex = iterator.next();
+                Term term = convert(vertex);
+                term.offset = offset;
+                offset += term.length();
+                resultList.add(term);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < length; ++i)
+            {
+                Vertex vertex = iterator.next();
+                Term term = convert(vertex);
+                resultList.add(term);
+            }
+        }
+        return resultList;
+    }
+
+    /**
+     * 将节点转为term
+     *
+     * @param vertex
+     * @return
+     */
+    private static Term convert(Vertex vertex)
+    {
+        return new Term(vertex.realWord, vertex.guessNature());
     }
 
     public static List<String> atomSegment(char[] sentence)

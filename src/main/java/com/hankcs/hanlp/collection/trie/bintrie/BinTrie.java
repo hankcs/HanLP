@@ -33,7 +33,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
 
     public BinTrie()
     {
-        child = new BaseNode[65535];    // (int)Character.MAX_VALUE
+        child = new BaseNode[65535 + 1];    // (int)Character.MAX_VALUE
         size = 0;
         status = Status.NOT_WORD_1;
     }

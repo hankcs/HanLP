@@ -33,7 +33,7 @@ public class TestCustomDictionary extends TestCase
 {
     public void testGet() throws Exception
     {
-        System.out.println(CustomDictionary.get("工信处"));
+        System.out.println(CustomDictionary.get("一个心眼儿"));
     }
 
     /**

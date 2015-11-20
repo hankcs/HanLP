@@ -15,6 +15,7 @@ package com.hankcs.hanlp.summary;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.utility.TextUtility;
 
 import java.util.*;
 
@@ -183,15 +184,13 @@ public class TextRankSentence
     }
 
     /**
-     * 一句话调用接口
-     * @param document 目标文档
-     * @param size 需要的关键句的个数
-     * @return 关键句列表
+     * 将句子列表转化为文档
+     * @param sentenceList
+     * @return
      */
-    public static List<String> getTopSentenceList(String document, int size)
+    private static List<List<String>> convertSentenceListToDocument(List<String> sentenceList)
     {
-        List<String> sentenceList = spiltSentence(document);
-        List<List<String>> docs = new ArrayList<List<String>>();
+        List<List<String>> docs = new ArrayList<List<String>>(sentenceList.size());
         for (String sentence : sentenceList)
         {
             List<Term> termList = StandardTokenizer.segment(sentence.toCharArray());
@@ -204,8 +203,20 @@ public class TextRankSentence
                 }
             }
             docs.add(wordList);
-//            System.out.println(wordList);
         }
+        return docs;
+    }
+
+    /**
+     * 一句话调用接口
+     * @param document 目标文档
+     * @param size 需要的关键句的个数
+     * @return 关键句列表
+     */
+    public static List<String> getTopSentenceList(String document, int size)
+    {
+        List<String> sentenceList = spiltSentence(document);
+        List<List<String>> docs = convertSentenceListToDocument(sentenceList);
         TextRankSentence textRank = new TextRankSentence(docs);
         int[] topSentence = textRank.getTopSentence(size);
         List<String> resultList = new LinkedList<String>();
@@ -215,4 +226,85 @@ public class TextRankSentence
         }
         return resultList;
     }
+    
+    /**
+     * 一句话调用接口
+     * @param document 目标文档
+     * @param max_length 需要摘要的长度
+     * @return 摘要文本
+     */
+    public static String getSummary(String document, int max_length)
+    {
+        List<String> sentenceList = spiltSentence(document);
+
+        int sentence_count = sentenceList.size();
+        int document_length = document.length();
+        int sentence_length_avg = document_length/sentence_count;
+        int size = max_length/sentence_length_avg + 1;
+        List<List<String>> docs = convertSentenceListToDocument(sentenceList);
+        TextRankSentence textRank = new TextRankSentence(docs);
+        int[] topSentence = textRank.getTopSentence(size);
+        List<String> resultList = new LinkedList<String>();
+        for (int i : topSentence)
+        {
+            resultList.add(sentenceList.get(i));
+        }
+
+        resultList = permutation(resultList, sentenceList);
+        resultList = pick_sentences(resultList, max_length);
+        return TextUtility.join("。", resultList);
+    }
+
+    public static List<String> permutation(List<String> resultList, List<String> sentenceList)
+    {
+        int index_buffer_x;
+        int index_buffer_y;
+        String sen_x;
+        String sen_y;
+        int length = resultList.size();
+        // bubble sort derivative
+        for (int i = 0; i < length; i++)
+            for (int offset=0; offset < length - i; offset++)
+            {
+                sen_x = resultList.get(i);
+                sen_y = resultList.get(i + offset);
+                index_buffer_x = sentenceList.indexOf(sen_x);
+                index_buffer_y = sentenceList.indexOf(sen_y);
+                // if the sentence order in sentenceList does not conform that is in resultList, reverse it
+                if (index_buffer_x > index_buffer_y)
+                {
+                    resultList.set(i, sen_y);
+                    resultList.set(i+offset, sen_x);
+                }
+            }
+
+        return resultList;
+    }
+    
+    public static List<String> pick_sentences(List<String> resultList, int max_length)
+  {
+      int length_counter = 0;
+      int length_buffer;
+      int length_jump;
+      List<String> resultBuffer = new LinkedList<String>();
+      for(int i = 0; i < resultList.size(); i++)
+      {
+          length_buffer = length_counter + resultList.get(i).length();
+          if (length_buffer <= max_length)
+          {
+              resultBuffer.add(resultList.get(i));
+              length_counter += resultList.get(i).length();
+          }
+          else if (i < (resultList.size()-1)) {
+              length_jump = length_counter + resultList.get(i+1).length();
+              if (length_jump <= max_length) {
+                  resultBuffer.add(resultList.get(i + 1));
+                  length_counter += resultList.get(i + 1).length();
+                  i++;
+              }
+          }
+      }
+      return resultBuffer;
+  }
+
 }

@@ -14,6 +14,8 @@ package com.hankcs.test.corpus;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.dictionary.BiGramDictionary;
+import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.nr.JapanesePersonDictionary;
@@ -21,10 +23,8 @@ import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.io.BufferedWriter;
+import java.util.*;
 
 /**
  * @author hankcs
@@ -136,5 +136,32 @@ public class TestMakeJapaneseName extends TestCase
         DijkstraSegment segment = new DijkstraSegment();
         segment.enableJapaneseNameRecognize(true);
         System.out.println(segment.seg("林志玲亮相网友:确定不是波多野结衣？"));
+    }
+
+    public void testCountBadCase() throws Exception
+    {
+        BufferedWriter bw = IOUtil.newBufferedWriter(HanLP.Config.JapanesePersonDictionaryPath + ".badcase.txt");
+        List<String> xList = new LinkedList<String>();
+        List<String> mList = new LinkedList<String>();
+        IOUtil.LineIterator iterator = new IOUtil.LineIterator(HanLP.Config.JapanesePersonDictionaryPath);
+        while (iterator.hasNext())
+        {
+            String line = iterator.next();
+            String[] args = line.split("\\s");
+            if ("x".equals(args[1])) xList.add(args[0]);
+            else mList.add(args[0]);
+        }
+        for (String x : xList)
+        {
+            for (String m : mList)
+            {
+                if (CoreBiGramTableDictionary.getBiFrequency(x, m) > 0)
+                {
+                    bw.write(x + m + " A");
+                    bw.newLine();
+                }
+            }
+        }
+        bw.close();
     }
 }

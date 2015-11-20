@@ -53,10 +53,10 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-//        HanLP.Config.enableDebug(true);
-//        CustomDictionary.add("荒野求生");
-        Segment seg = HanLP.newSegment().enableAllNamedEntityRecognize(true);
-        List<Term> termList = seg.seg("中国海军152舰艇编队到访埃及");
+        HanLP.Config.enableDebug(true);
+        CustomDictionary.add("网剧");
+        Segment seg = new DijkstraSegment();
+        List<Term> termList = seg.seg("优酷总裁魏明介绍了优酷2015年的内容战略，表示要以“大电影、大网剧、大综艺”为关键词");
         System.out.println(termList);
     }
 
@@ -117,9 +117,8 @@ public class TestSegment extends TestCase
     public void testNT() throws Exception
     {
         HanLP.Config.enableDebug();
-        DijkstraSegment segment = new DijkstraSegment();
-        segment.enableOrganizationRecognize(true);
-        System.out.println(segment.seg("我在上海林原科技有限公司兼职工作"));
+        Segment segment = new DijkstraSegment().enableOrganizationRecognize(true);
+        System.out.println(segment.seg("张克智与潍坊地铁建设工程公司"));
     }
 
     public void testACSegment() throws Exception
@@ -254,9 +253,9 @@ public class TestSegment extends TestCase
     public void testCRFSegment() throws Exception
     {
         HanLP.Config.enableDebug();
-        HanLP.Config.ShowTermNature = false;
+//        HanLP.Config.ShowTermNature = false;
         Segment segment = new CRFSegment();
-        System.out.println(segment.seg("李  扬"));
+        System.out.println(segment.seg("有句谚语叫做一个萝卜一个坑儿"));
     }
 
     public void testIssue16() throws Exception
@@ -290,6 +289,14 @@ public class TestSegment extends TestCase
         System.out.println(StandardTokenizer.segment("三元"));
         StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
         System.out.println(StandardTokenizer.segment("三年"));
+    }
+
+    public void testIssue71() throws Exception
+    {
+        Segment segment = HanLP.newSegment();
+        segment = segment.enableAllNamedEntityRecognize(true);
+        segment = segment.enableNumberQuantifierRecognize(true);
+        System.out.println(segment.seg("曾幻想过，若干年后的我就是这个样子的吗"));
     }
 
     public void testTime() throws Exception
