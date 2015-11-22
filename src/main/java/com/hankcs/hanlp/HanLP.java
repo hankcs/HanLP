@@ -27,6 +27,7 @@ import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Properties;
@@ -43,11 +44,21 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class HanLP
 {
+	public static String PropertiesFilePath;
+    /**
+     * 指定properties文件位置
+     */
+    public static void SetPropertiesFile(String sPath)
+    {
+    	PropertiesFilePath = sPath;
+    }
+    
     /**
      * 库的全局配置，既可以用代码修改，也可以通过hanlp.properties配置（按照 变量名=值 的形式）
      */
     public static final class Config
     {
+    	
         /**
          * 开发模式
          */
@@ -175,7 +186,15 @@ public class HanLP
             Properties p = new Properties();
             try
             {
-                p.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("hanlp.properties"), "UTF-8"));
+            	if( HanLP.PropertiesFilePath != null)
+            	{
+            		File file = new File( HanLP.PropertiesFilePath );  
+            		FileInputStream fIn = new FileInputStream(file);  
+            		InputStreamReader isr = new InputStreamReader(fIn);  
+            		p.load( isr );
+            	} else {
+            		p.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("hanlp.properties"), "UTF-8"));
+            	}
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (!root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
@@ -256,6 +275,8 @@ public class HanLP
         {
             enableDebug(true);
         }
+        
+        
 
         /**
          * 开启调试模式(会降低性能)
