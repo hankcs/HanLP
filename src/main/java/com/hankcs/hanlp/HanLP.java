@@ -190,7 +190,7 @@ public class HanLP
             	{
             		File file = new File( HanLP.PropertiesFilePath );  
             		FileInputStream fIn = new FileInputStream(file);  
-            		InputStreamReader isr = new InputStreamReader(fIn);  
+            		InputStreamReader isr = new InputStreamReader(fIn, "UTF-8");  
             		p.load( isr );
             	} else {
             		p.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("hanlp.properties"), "UTF-8"));
