@@ -21,6 +21,7 @@ import java.util.*;
 
 /**
  * TextRank 自动摘要
+ *
  * @author hankcs
  */
 public class TextRankSentence
@@ -119,6 +120,7 @@ public class TextRankSentence
 
     /**
      * 获取前几个关键句子
+     *
      * @param size 要几个
      * @return 关键句子的下标
      */
@@ -137,6 +139,7 @@ public class TextRankSentence
 
     /**
      * 简单的求和
+     *
      * @param array
      * @return
      */
@@ -162,6 +165,7 @@ public class TextRankSentence
 
     /**
      * 将文章分割为句子
+     *
      * @param document
      * @return
      */
@@ -185,6 +189,7 @@ public class TextRankSentence
 
     /**
      * 将句子列表转化为文档
+     *
      * @param sentenceList
      * @return
      */
@@ -209,8 +214,9 @@ public class TextRankSentence
 
     /**
      * 一句话调用接口
+     *
      * @param document 目标文档
-     * @param size 需要的关键句的个数
+     * @param size     需要的关键句的个数
      * @return 关键句列表
      */
     public static List<String> getTopSentenceList(String document, int size)
@@ -226,10 +232,11 @@ public class TextRankSentence
         }
         return resultList;
     }
-    
+
     /**
      * 一句话调用接口
-     * @param document 目标文档
+     *
+     * @param document   目标文档
      * @param max_length 需要摘要的长度
      * @return 摘要文本
      */
@@ -239,8 +246,8 @@ public class TextRankSentence
 
         int sentence_count = sentenceList.size();
         int document_length = document.length();
-        int sentence_length_avg = document_length/sentence_count;
-        int size = max_length/sentence_length_avg + 1;
+        int sentence_length_avg = document_length / sentence_count;
+        int size = max_length / sentence_length_avg + 1;
         List<List<String>> docs = convertSentenceListToDocument(sentenceList);
         TextRankSentence textRank = new TextRankSentence(docs);
         int[] topSentence = textRank.getTopSentence(size);
@@ -264,7 +271,7 @@ public class TextRankSentence
         int length = resultList.size();
         // bubble sort derivative
         for (int i = 0; i < length; i++)
-            for (int offset=0; offset < length - i; offset++)
+            for (int offset = 0; offset < length - i; offset++)
             {
                 sen_x = resultList.get(i);
                 sen_y = resultList.get(i + offset);
@@ -274,37 +281,39 @@ public class TextRankSentence
                 if (index_buffer_x > index_buffer_y)
                 {
                     resultList.set(i, sen_y);
-                    resultList.set(i+offset, sen_x);
+                    resultList.set(i + offset, sen_x);
                 }
             }
 
         return resultList;
     }
-    
+
     public static List<String> pick_sentences(List<String> resultList, int max_length)
-  {
-      int length_counter = 0;
-      int length_buffer;
-      int length_jump;
-      List<String> resultBuffer = new LinkedList<String>();
-      for(int i = 0; i < resultList.size(); i++)
-      {
-          length_buffer = length_counter + resultList.get(i).length();
-          if (length_buffer <= max_length)
-          {
-              resultBuffer.add(resultList.get(i));
-              length_counter += resultList.get(i).length();
-          }
-          else if (i < (resultList.size()-1)) {
-              length_jump = length_counter + resultList.get(i+1).length();
-              if (length_jump <= max_length) {
-                  resultBuffer.add(resultList.get(i + 1));
-                  length_counter += resultList.get(i + 1).length();
-                  i++;
-              }
-          }
-      }
-      return resultBuffer;
-  }
+    {
+        int length_counter = 0;
+        int length_buffer;
+        int length_jump;
+        List<String> resultBuffer = new LinkedList<String>();
+        for (int i = 0; i < resultList.size(); i++)
+        {
+            length_buffer = length_counter + resultList.get(i).length();
+            if (length_buffer <= max_length)
+            {
+                resultBuffer.add(resultList.get(i));
+                length_counter += resultList.get(i).length();
+            }
+            else if (i < (resultList.size() - 1))
+            {
+                length_jump = length_counter + resultList.get(i + 1).length();
+                if (length_jump <= max_length)
+                {
+                    resultBuffer.add(resultList.get(i + 1));
+                    length_counter += resultList.get(i + 1).length();
+                    i++;
+                }
+            }
+        }
+        return resultBuffer;
+    }
 
 }
