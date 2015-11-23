@@ -44,13 +44,18 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class HanLP
 {
-	public static String PropertiesFilePath;
+    /**
+     * 配置文件位置
+     */
+    private static String PropertiesFilePath;
+
     /**
      * 指定properties文件位置
+     * @param path properties文件位置
      */
-    public static void SetPropertiesFile(String sPath)
+    public static void setPropertiesFilePath(String path)
     {
-    	PropertiesFilePath = sPath;
+    	PropertiesFilePath = path;
     }
     
     /**
