@@ -85,7 +85,9 @@ public class CustomDictionary
                 }
                 logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
                 boolean success = load(p, defaultNature, map);
-                if (!success) logger.warning("失败：" + p);
+                if (!success){
+				   	logger.warning("失败：" + p);
+					return false;
             }
             logger.info("正在构建DoubleArrayTrie……");
             dat.build(map);
