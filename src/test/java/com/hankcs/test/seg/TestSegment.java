@@ -110,8 +110,9 @@ public class TestSegment extends TestCase
 
     public void testCustomDictionary() throws Exception
     {
-        DijkstraSegment segment = new DijkstraSegment();
-        System.out.println(segment.seg("你在一汽马自达汽车销售有限公司上班吧"));
+        CustomDictionary.insert("肯德基", "ns 1000");
+        Segment segment = new ViterbiSegment();
+        System.out.println(segment.seg("肯德基"));
     }
 
     public void testNT() throws Exception
