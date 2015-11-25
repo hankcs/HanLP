@@ -85,9 +85,12 @@ public class CustomDictionary
                 }
                 logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
                 boolean success = load(p, defaultNature, map);
-                if (!success){
-				   	logger.warning("失败：" + p);
-					return false;
+                if (!success) logger.warning("失败：" + p);
+            }
+            if (map.size() == 0)
+            {
+                logger.warning("没有加载到任何词条");
+                map.put(Predefine.TAG_OTHER, null);     // 当作空白占位符
             }
             logger.info("正在构建DoubleArrayTrie……");
             dat.build(map);
