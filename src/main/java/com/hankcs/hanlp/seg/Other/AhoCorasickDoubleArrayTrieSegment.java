@@ -11,17 +11,19 @@
 package com.hankcs.hanlp.seg.Other;
 
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.seg.DictionaryBasedSegment;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.utility.TextUtility;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import static com.hankcs.hanlp.utility.Predefine.logger;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 使用AhoCorasickDoubleArrayTrie实现的最长分词器<br>
@@ -38,14 +40,13 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
     {
         if (trie == null)
         {
-            System.err.println("还未传入AhoCorasickDoubleArrayTrie");
+            System.err.println("还未加载任何词典");
             return Collections.emptyList();
         }
-        char[] charArray = sentence;
-        final int[] wordNet = new int[charArray.length];
+        final int[] wordNet = new int[sentence.length];
         Arrays.fill(wordNet, 1);
-        final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
-        trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        final Nature[] natureArray = config.speechTagging ? new Nature[sentence.length] : null;
+        trie.parseText(sentence, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
         {
             @Override
             public void hit(int begin, int end, CoreDictionary.Attribute value)
@@ -73,7 +74,7 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
                     {
                         if (natureArray[j] != null) break;
                     }
-                    List<AtomNode> atomNodeList = quickAtomSegment(charArray, i, j);
+                    List<AtomNode> atomNodeList = quickAtomSegment(sentence, i, j);
                     for (AtomNode atomNode : atomNodeList)
                     {
                         if (atomNode.sWord.length() >= wordNet[i])
@@ -93,7 +94,7 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
         }
         for (int i = 0; i < wordNet.length; )
         {
-            Term term = new Term(new String(charArray, i, wordNet[i]), config.speechTagging ? (natureArray[i] == null ? Nature.nz : natureArray[i]) : null);
+            Term term = new Term(new String(sentence, i, wordNet[i]), config.speechTagging ? (natureArray[i] == null ? Nature.nz : natureArray[i]) : null);
             term.offset = i;
             termList.add(term);
             i += wordNet[i];
@@ -105,6 +106,7 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
     {
         super();
         config.useCustomDictionary = false;
+        config.speechTagging = true;
     }
 
     @Override
@@ -121,5 +123,26 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
     public void setTrie(AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie)
     {
         this.trie = trie;
+    }
+
+    public AhoCorasickDoubleArrayTrieSegment loadDictionary(String... pathArray)
+    {
+        trie = new AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute>();
+        TreeMap<String, CoreDictionary.Attribute> map = null;
+        try
+        {
+            map = IOUtil.loadDictionary(pathArray);
+        }
+        catch (IOException e)
+        {
+            logger.warning("加载词典失败\n" + TextUtility.exceptionToString(e));
+            return this;
+        }
+        if (map != null && !map.isEmpty())
+        {
+            trie.build(map);
+        }
+
+        return this;
     }
 }
