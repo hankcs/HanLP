@@ -19,6 +19,7 @@ import com.hankcs.hanlp.corpus.dependency.CoNll.Evaluator;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dependency.CRFDependencyParser;
 import com.hankcs.hanlp.dependency.MaxEntDependencyParser;
+import com.hankcs.hanlp.dependency.WordNatureDependencyParser;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
@@ -53,7 +54,19 @@ public class TestParse extends TestCase
     public void testMaxEntParser() throws Exception
     {
         HanLP.Config.enableDebug();
-        System.out.println(CRFDependencyParser.compute("我每天骑车上学"));
+        System.out.println(MaxEntDependencyParser.compute("我每天骑车上学"));
+    }
+
+    public void testCRFParser() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        System.out.println(MaxEntDependencyParser.compute("我每天骑车上学"));
+    }
+
+    public void testWordNatureParser() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        System.out.println(WordNatureDependencyParser.compute("我每天骑车上学"));
     }
 
     public void testNNParser() throws Exception

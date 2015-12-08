@@ -45,7 +45,8 @@ public class WordNatureDependencyModel
         }
         else
         {
-            logger.warning("加载依存句法生成模型" + HanLP.Config.WordNatureModelPath + "失败，耗时：" + (System.currentTimeMillis() - start) + " ms");
+            logger.severe("加载依存句法生成模型" + HanLP.Config.WordNatureModelPath + "失败，耗时：" + (System.currentTimeMillis() - start) + " ms");
+            System.exit(-1);
         }
     }
 
