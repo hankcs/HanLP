@@ -60,7 +60,7 @@ public class TestParse extends TestCase
     public void testCRFParser() throws Exception
     {
         HanLP.Config.enableDebug();
-        System.out.println(MaxEntDependencyParser.compute("我每天骑车上学"));
+        System.out.println(CRFDependencyParser.compute("我每天骑车上学"));
     }
 
     public void testWordNatureParser() throws Exception
