@@ -28,6 +28,7 @@ import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Properties;
@@ -181,7 +182,10 @@ public class HanLP
                 {  // IKVM (v.0.44.0.5) doesn't set context classloader
                     loader = HanLP.Config.class.getClassLoader();
                 }
-                p.load(new InputStreamReader(loader.getResourceAsStream(Predefine.HANLP_PROPERTIES_PATH), "UTF-8"));
+                p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
+                        loader.getResourceAsStream("hanlp.properties") :
+                        new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
+                        , "UTF-8"));
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (!root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);

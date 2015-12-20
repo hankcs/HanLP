@@ -24,7 +24,7 @@ public class Predefine
      * hanlp.properties的路径，一般情况下位于classpath目录中。
      * 但在某些极端情况下（不标准的Java虚拟机，用户缺乏相关知识等），允许将其设为绝对路径
      */
-    public static String HANLP_PROPERTIES_PATH = "hanlp.properties";
+    public static String HANLP_PROPERTIES_PATH;
     public final static double MIN_PROBABILITY = 1e-10;
     public final static int CT_SENTENCE_BEGIN = 1;        //Sentence begin
     public final static int CT_SENTENCE_END = 4;          //Sentence ending
@@ -50,13 +50,6 @@ public class Predefine
         "水库","隧道","特区","铁路","新村","雪峰","盐场","盐湖","渔场","直辖市",
         "自治区","自治县","自治州"};
 
-    public static String TRANS_ENGLISH =
-        "·—阿埃艾爱安昂敖奥澳笆芭巴白拜班邦保堡鲍北贝本比毕彼别波玻博勃伯泊卜布才采仓查差柴彻川茨慈次达大戴代丹旦但当道德得的登迪狄蒂帝丁东杜敦多额俄厄鄂恩尔伐法范菲芬费佛夫福弗甫噶盖干冈哥戈革葛格各根古瓜哈海罕翰汗汉豪合河赫亨侯呼胡华霍基吉及加贾坚简杰金京久居君喀卡凯坎康考柯科可克肯库奎拉喇莱来兰郎朗劳勒雷累楞黎理李里莉丽历利立力连廉良列烈林隆卢虏鲁路伦仑罗洛玛马买麦迈曼茅茂梅门蒙盟米蜜密敏明摩莫墨默姆木穆那娜纳乃奈南内尼年涅宁纽努诺欧帕潘畔庞培佩彭皮平泼普其契恰强乔切钦沁泉让热荣肉儒瑞若萨塞赛桑瑟森莎沙山善绍舍圣施诗石什史士守斯司丝苏素索塔泰坦汤唐陶特提汀图土吐托陀瓦万王旺威韦维魏温文翁沃乌吾武伍西锡希喜夏相香歇谢辛新牙雅亚彦尧叶依伊衣宜义因音英雍尤于约宰泽增詹珍治中仲朱诸卓孜祖佐伽娅尕腓滕济嘉津赖莲琳律略慕妮聂裴浦奇齐琴茹珊卫欣逊札哲智兹芙汶迦珀琪梵斐胥黛";
-    public static String TRANS_RUSSIAN =
-        "·阿安奥巴比彼波布察茨大德得丁杜尔法夫伏甫盖格哈基加坚捷金卡科可克库拉莱兰勒雷里历利连列卢鲁罗洛马梅蒙米姆娜涅宁诺帕泼普奇齐乔切日萨色山申什斯索塔坦特托娃维文乌西希谢亚耶叶依伊以扎佐柴达登蒂戈果海赫华霍吉季津柯理琳玛曼穆纳尼契钦丘桑沙舍泰图瓦万雅卓兹";
-    public static String TRANS_JAPANESE =
-        "安奥八白百邦保北倍本比滨博步部彩菜仓昌长朝池赤川船淳次村大代岛稻道德地典渡尔繁饭风福冈高工宫古谷关广桂贵好浩和合河黑横恒宏后户荒绘吉纪佳加见健江介金今进井静敬靖久酒菊俊康可克口梨理里礼栗丽利立凉良林玲铃柳隆鹿麻玛美萌弥敏木纳南男内鸟宁朋片平崎齐千前浅桥琴青清庆秋丘曲泉仁忍日荣若三森纱杉山善上伸神圣石实矢世市室水顺司松泰桃藤天田土万望尾未文武五舞西细夏宪相小孝新星行雄秀雅亚岩杨洋阳遥野也叶一伊衣逸义益樱永由有佑宇羽郁渊元垣原远月悦早造则泽增扎宅章昭沼真政枝知之植智治中忠仲竹助椎子佐阪坂堀荻菅薰浜濑鸠筱";
-
     //Translation type
     public static int TT_ENGLISH = 0;
     public static int TT_RUSSIAN = 1;
@@ -69,10 +62,6 @@ public class Predefine
     public static String SEPERATOR_E_SUB_SENTENCE = ",()*'";
     //注释：原来程序为",()\042'"，"\042"为10进制42好ASC字符，为*
     public static String SEPERATOR_LINK = "\n\r 　";
-
-    //Sentence begin and ending String
-    public static String SENTENCE_BEGIN = "始##始";
-    public static String SENTENCE_END = "末##末";
 
     //Seperator between two words
     public static String WORD_SEGMENTER = "@";
@@ -97,19 +86,6 @@ public class Predefine
      * 平滑参数
      */
     public static final double dSmoothingPara = 0.1;
-
-    public static int MAX_SENTENCE_LEN = 100;
-
-    //if MIN_PROBLEM==1 then INFINITE_VALUE 10000.00  //The shortest path
-    //else INFINITE_VALUE 0.00  //infinite value
-    public static int MIN_PROBLEM = 1;
-    public static double INFINITE_VALUE = 10000.00;
-
-    public static int MAX_WORDS_PER_SENTENCE = 120;
-    public static int MAX_UNKNOWN_PER_SENTENCE = 200;
-    public static int MAX_POS_PER_WORD = 20;
-    public static int LITTLE_FREQUENCY = 6;
-
     /**
      * 地址 ns
      */

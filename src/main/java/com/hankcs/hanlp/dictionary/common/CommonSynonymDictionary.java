@@ -138,7 +138,7 @@ public class CommonSynonymDictionary
     {
         assert text != null;
         StringBuilder sbOut = new StringBuilder((int) (text.length() * 1.2));
-        String preWord = Predefine.SENTENCE_BEGIN;
+        String preWord = Predefine.TAG_BIGIN;
         for (int i = 0; i < text.length(); ++i)
         {
             int state = 1;
@@ -195,7 +195,7 @@ public class CommonSynonymDictionary
     {
         List<Term> termList = StandardTokenizer.segment(text.toCharArray());
         StringBuilder sbOut = new StringBuilder((int) (text.length() * 1.2));
-        String preWord = Predefine.SENTENCE_BEGIN;
+        String preWord = Predefine.TAG_BIGIN;
         for (Term term : termList)
         {
             SynonymItem synonymItem = get(term.word);
