@@ -25,6 +25,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.TextRankKeyword;
 import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -180,7 +181,7 @@ public class HanLP
                 {  // IKVM (v.0.44.0.5) doesn't set context classloader
                     loader = HanLP.Config.class.getClassLoader();
                 }
-                p.load(new InputStreamReader(loader.getResourceAsStream("hanlp.properties"), "UTF-8"));
+                p.load(new InputStreamReader(loader.getResourceAsStream(Predefine.HANLP_PROPERTIES_PATH), "UTF-8"));
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (!root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);

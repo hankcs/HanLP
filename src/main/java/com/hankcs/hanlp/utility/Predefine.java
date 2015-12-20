@@ -20,6 +20,11 @@ import java.util.regex.Pattern;
  */
 public class Predefine
 {
+    /**
+     * hanlp.properties的路径，一般情况下位于classpath目录中。
+     * 但在某些极端情况下（不标准的Java虚拟机，用户缺乏相关知识等），允许将其设为绝对路径
+     */
+    public static String HANLP_PROPERTIES_PATH = "hanlp.properties";
     public final static double MIN_PROBABILITY = 1e-10;
     public final static int CT_SENTENCE_BEGIN = 1;        //Sentence begin
     public final static int CT_SENTENCE_END = 4;          //Sentence ending
