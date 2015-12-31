@@ -783,4 +783,14 @@ public enum Nature
     {
         return toString().charAt(0) == prefix;
     }
+
+    /**
+     * 词性的首字母<br>
+     *     词性根据开头的几个字母可以判断大的类别
+     * @return
+     */
+    public char firstChar()
+    {
+        return toString().charAt(0);
+    }
 }

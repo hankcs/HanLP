@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.algoritm;
 
+import com.hankcs.hanlp.corpus.synonym.Synonym;
 import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class VectorDistance
             for (CommonSynonymDictionary.SynonymItem itemB : synonymItemListB)
             {
                 long distance;
-                if (itemA.type != CommonSynonymDictionary.SynonymItem.Type.UNDEFINED && itemB.type != CommonSynonymDictionary.SynonymItem.Type.UNDEFINED)
+                if (itemA.type != Synonym.Type.UNDEFINED && itemB.type != Synonym.Type.UNDEFINED)
                 {
                     distance = Math.abs(itemA.entry.id - itemB.entry.id);
                 }

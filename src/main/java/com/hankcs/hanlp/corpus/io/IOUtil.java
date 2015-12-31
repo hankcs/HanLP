@@ -12,6 +12,8 @@
 package com.hankcs.hanlp.corpus.io;
 
 
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
@@ -502,5 +504,48 @@ public class IOUtil
             bw.write('\t');
         }
         bw.write(params[params.length - 1]);
+    }
+
+    /**
+     * 加载词典，词典必须遵守HanLP核心词典格式
+     * @param pathArray 词典路径，可以有任意个
+     * @return 一个储存了词条的map
+     * @throws IOException 异常表示加载失败
+     */
+    public static TreeMap<String, CoreDictionary.Attribute> loadDictionary(String... pathArray) throws IOException
+    {
+        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
+        for (String path : pathArray)
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            loadDictionary(br, map);
+        }
+
+        return map;
+    }
+
+    /**
+     * 将一个BufferedReader中的词条加载到词典
+     * @param br 源
+     * @param storage 储存位置
+     * @throws IOException 异常表示加载失败
+     */
+    public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage) throws IOException
+    {
+        String line;
+        while ((line = br.readLine()) != null)
+        {
+            String param[] = line.split("\\s");
+            int natureCount = (param.length - 1) / 2;
+            CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natureCount);
+            for (int i = 0; i < natureCount; ++i)
+            {
+                attribute.nature[i] = Enum.valueOf(Nature.class, param[1 + 2 * i]);
+                attribute.frequency[i] = Integer.parseInt(param[2 + 2 * i]);
+                attribute.totalFrequency += attribute.frequency[i];
+            }
+            storage.put(param[0], attribute);
+        }
+        br.close();
     }
 }

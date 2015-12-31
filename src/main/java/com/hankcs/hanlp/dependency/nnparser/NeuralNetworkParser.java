@@ -458,7 +458,8 @@ public class NeuralNetworkParser implements ICacheAble
             {
                 form = forms_alphabet.idOf(SpecialOption.UNKNOWN);
             }
-            int postag = postags_alphabet.idOf(data.postags.get(i));
+            Integer postag = postags_alphabet.idOf(data.postags.get(i));
+            if (postag == null) postag = postags_alphabet.idOf(SpecialOption.UNKNOWN);
             int deprel = (with_dependencies ? deprels_alphabet.idOf(data.deprels.get(i)) : -1);
 
             dependency.forms.add(form);

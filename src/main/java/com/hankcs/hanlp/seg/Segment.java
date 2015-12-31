@@ -204,8 +204,8 @@ public abstract class Segment
             {
                 int start = i;
                 int to = i + 1;
-                int end = - 1;
-                CoreDictionary.Attribute value = null;
+                int end = to;
+                CoreDictionary.Attribute value = dat.output(state);
                 for (; to < wordNet.length; ++to)
                 {
                     state = dat.transition(wordNet[to].realWord, state);
@@ -241,8 +241,8 @@ public abstract class Segment
                 {
                     int start = i;
                     int to = i + 1;
-                    int end = - 1;
-                    CoreDictionary.Attribute value = null;
+                    int end = to;
+                    CoreDictionary.Attribute value = state.getValue();
                     for (; to < wordNet.length; ++to)
                     {
                         if (wordNet[to] == null) continue;
