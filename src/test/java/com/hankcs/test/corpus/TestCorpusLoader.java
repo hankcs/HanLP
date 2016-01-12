@@ -210,4 +210,29 @@ public class TestCorpusLoader extends TestCase
         });
 
     }
+
+    /**
+     * 有些引号不对
+     * @throws Exception
+     */
+    public void testFindQuote() throws Exception
+    {
+        CorpusLoader.walk("D:\\Doc\\语料库\\2014_hankcs\\", new CorpusLoader.Handler()
+        {
+            @Override
+            public void handle(Document document)
+            {
+                for (List<Word> wordList : document.getSimpleSentenceList())
+                {
+                    for (Word word : wordList)
+                    {
+                        if(word.value.length() > 1 && word.value.endsWith("\""))
+                        {
+                            System.out.println(word);
+                        }
+                    }
+                }
+            }
+        });
+    }
 }

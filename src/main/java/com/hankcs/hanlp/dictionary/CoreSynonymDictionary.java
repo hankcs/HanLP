@@ -50,6 +50,21 @@ public class CoreSynonymDictionary
     }
 
     /**
+     * 不分词直接转换
+     * @param text
+     * @return
+     */
+    public static String rewriteQuickly(String text)
+    {
+        return dictionary.rewriteQuickly(text);
+    }
+
+    public static String rewrite(String text)
+    {
+        return dictionary.rewrite(text);
+    }
+
+    /**
      * 语义距离
      * @param itemA
      * @param itemB

@@ -28,7 +28,7 @@ public class DemoCRFSegment
     public static void main(String[] args)
     {
         HanLP.Config.ShowTermNature = false;    // 关闭词性显示
-        Segment segment = new CRFSegment();
+        Segment segment = new CRFSegment().enableCustomDictionary(false);
         String[] sentenceArray = new String[]
                 {
                         "HanLP是由一系列模型与算法组成的Java工具包，目标是普及自然语言处理在生产环境中的应用。",

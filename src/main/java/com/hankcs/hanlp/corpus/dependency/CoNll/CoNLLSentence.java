@@ -11,13 +11,14 @@
  */
 package com.hankcs.hanlp.corpus.dependency.CoNll;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * CoNLL中的一个句子
  * @author hankcs
  */
-public class CoNLLSentence
+public class CoNLLSentence implements Iterable<CoNLLWord>
 {
     /**
      * 有许多行，每行是一个单词
@@ -94,5 +95,36 @@ public class CoNLLSentence
         System.arraycopy(word, 0, wordArray, 1, word.length);
 
         return wordArray;
+    }
+
+    public CoNLLWord[] getWordArray()
+    {
+        return word;
+    }
+
+    @Override
+    public Iterator<CoNLLWord> iterator()
+    {
+        return new Iterator<CoNLLWord>()
+        {
+            int index;
+            @Override
+            public boolean hasNext()
+            {
+                return index < word.length;
+            }
+
+            @Override
+            public CoNLLWord next()
+            {
+                return word[index++];
+            }
+
+            @Override
+            public void remove()
+            {
+                throw new UnsupportedOperationException("CoNLLSentence是只读对象，不允许删除");
+            }
+        };
     }
 }

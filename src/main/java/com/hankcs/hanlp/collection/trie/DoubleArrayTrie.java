@@ -1043,6 +1043,26 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     }
 
     /**
+     * 转移状态
+     * @param c
+     * @param from
+     * @return
+     */
+    public int transition(char c, int from)
+    {
+        int b = from;
+        int p;
+
+        p = b + (int) (c) + 1;
+        if (b == check[p])
+            b = base[p];
+        else
+            return -1;
+
+        return b;
+    }
+
+    /**
      * 检查状态是否对应输出
      *
      * @param state 双数组下标
@@ -1099,7 +1119,8 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         /**
          * 构造一个双数组搜索工具
-         * @param offset 搜索的起始位置
+         *
+         * @param offset    搜索的起始位置
          * @param charArray 搜索的目标字符数组
          */
         public Searcher(int offset, char[] charArray)
@@ -1117,6 +1138,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         /**
          * 取出下一个命中输出
+         *
          * @return 是否命中，当返回false表示搜索结束，否则使用公开的成员读取命中的详细信息
          */
         public boolean next()

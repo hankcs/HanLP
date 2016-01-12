@@ -204,8 +204,8 @@ public abstract class Segment
             {
                 int start = i;
                 int to = i + 1;
-                int end = - 1;
-                CoreDictionary.Attribute value = null;
+                int end = to;
+                CoreDictionary.Attribute value = dat.output(state);
                 for (; to < wordNet.length; ++to)
                 {
                     state = dat.transition(wordNet[to].realWord, state);
@@ -241,8 +241,8 @@ public abstract class Segment
                 {
                     int start = i;
                     int to = i + 1;
-                    int end = - 1;
-                    CoreDictionary.Attribute value = null;
+                    int end = to;
+                    CoreDictionary.Attribute value = state.getValue();
                     for (; to < wordNet.length; ++to)
                     {
                         if (wordNet[to] == null) continue;
@@ -310,6 +310,7 @@ public abstract class Segment
                     }
                     sbQuantifier.append(cur.realWord);
                     pre.attribute = new CoreDictionary.Attribute(Nature.mq);
+                    pre.wordID = -1;    // -1代表NGram模型中的“万能词”，保证二次维特比得分一定更高
                     iterator.remove();
                 }
                 if (sbQuantifier.length() != pre.realWord.length())
@@ -325,7 +326,8 @@ public abstract class Segment
     }
 
     /**
-     * 分词
+     * 分词<br>
+     * 此方法是线程安全的
      *
      * @param text 待分词文本
      * @return 单词列表

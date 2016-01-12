@@ -22,6 +22,7 @@ import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.SentencesUtil;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,33 +39,60 @@ public class TraditionalChineseTokenizer
      */
     public static Segment SEGMENT = HanLP.newSegment();
 
-    public static List<Term> segment(String text)
+    private static List<Term> segSentence(String text)
     {
+        if (text.length() == 0) return Collections.emptyList();
         LinkedList<ResultTerm<String>> tsList = CommonAhoCorasickSegmentUtil.segment(text, TraditionalChineseDictionary.trie);
         StringBuilder sbSimplifiedChinese = new StringBuilder(text.length());
+        boolean equal = true;
         for (ResultTerm<String> term : tsList)
         {
             if (term.label == null) term.label = term.word;
+            else if (term.label.length() != term.word.length()) equal = false;
             sbSimplifiedChinese.append(term.label);
         }
         String simplifiedChinese = sbSimplifiedChinese.toString();
         List<Term> termList = SEGMENT.seg(simplifiedChinese);
-        Iterator<Term> termIterator = termList.iterator();
-        Iterator<ResultTerm<String>> tsIterator = tsList.iterator();
-        ResultTerm<String> tsTerm = tsIterator.next();
-        int offset = 0;
-        while (termIterator.hasNext())
+        if (equal)
         {
-            Term term = termIterator.next();
-            term.offset = offset;
-            if (offset > tsTerm.offset) tsTerm = tsIterator.next();
-
-            if (offset == tsTerm.offset && term.length() == tsTerm.label.length())
+            int offset = 0;
+            for (Term term : termList)
             {
-                term.word = tsTerm.word;
+                term.word = text.substring(offset, offset + term.length());
+                term.offset = offset;
+                offset += term.length();
             }
-            else term.word = SimplifiedChineseDictionary.convertToTraditionalChinese(term.word);
-            offset += term.length();
+        }
+        else
+        {
+            Iterator<Term> termIterator = termList.iterator();
+            Iterator<ResultTerm<String>> tsIterator = tsList.iterator();
+            ResultTerm<String> tsTerm = tsIterator.next();
+            int offset = 0;
+            while (termIterator.hasNext())
+            {
+                Term term = termIterator.next();
+                term.offset = offset;
+                if (offset > tsTerm.offset + tsTerm.word.length()) tsTerm = tsIterator.next();
+
+                if (offset == tsTerm.offset && term.length() == tsTerm.label.length())
+                {
+                    term.word = tsTerm.word;
+                }
+                else term.word = SimplifiedChineseDictionary.convertToTraditionalChinese(term.word);
+                offset += term.length();
+            }
+        }
+
+        return termList;
+    }
+
+    public static List<Term> segment(String text)
+    {
+        List<Term> termList = new LinkedList<Term>();
+        for (String sentence : SentencesUtil.toSentenceList(text))
+        {
+            termList.addAll(segSentence(sentence));
         }
 
         return termList;

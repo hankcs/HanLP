@@ -148,7 +148,7 @@ public class Synonym implements ISynonym
         return Math.abs(id - other.id);
     }
 
-    public static enum Type
+    public enum Type
     {
         /**
          * 完全同义词，对应词典中的=号

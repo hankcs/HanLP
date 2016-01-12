@@ -751,12 +751,12 @@ public enum Nature
     wh,
 
     /**
-     * 仅用于始##始，不会出现在分词结果中
+     * 仅用于终##终，不会出现在分词结果中
      */
     end,
 
     /**
-     * 仅用于终##终，不会出现在分词结果中
+     * 仅用于始##始，不会出现在分词结果中
      */
     begin,
 
@@ -782,5 +782,15 @@ public enum Nature
     public boolean startsWith(char prefix)
     {
         return toString().charAt(0) == prefix;
+    }
+
+    /**
+     * 词性的首字母<br>
+     *     词性根据开头的几个字母可以判断大的类别
+     * @return
+     */
+    public char firstChar()
+    {
+        return toString().charAt(0);
     }
 }

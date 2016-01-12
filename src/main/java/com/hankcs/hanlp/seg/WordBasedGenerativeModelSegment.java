@@ -511,7 +511,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
     }
 
     /**
-     * 将节点列表转为term列表
+     * 将节点转为term
      *
      * @param vertex
      * @return

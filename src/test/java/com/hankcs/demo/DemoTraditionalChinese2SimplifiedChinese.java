@@ -21,7 +21,7 @@ public class DemoTraditionalChinese2SimplifiedChinese
 {
     public static void main(String[] args)
     {
-        System.out.println(HanLP.convertToTraditionalChinese("“以后等你当上皇后，就能买草莓庆祝了”"));
+        System.out.println(HanLP.convertToTraditionalChinese("“以后等你当上皇后，就能买草莓庆祝了”。发现一根白头发"));
         System.out.println(HanLP.convertToSimplifiedChinese("用筆記簿型電腦寫程式HelloWorld"));
     }
 }
