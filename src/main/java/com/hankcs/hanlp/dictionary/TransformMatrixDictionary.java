@@ -137,7 +137,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
                 for (int to : states)
                 {
                     double frequency = matrix[from][to] + 1e-8;
-                    transititon_probability[from][to] = -Math.log(frequency / totalFrequency);
+                    transititon_probability[from][to] = -Math.log(frequency / start_probability[from]);
 //                    System.out.println("from" + NR.values()[from] + " to" + NR.values()[to] + " = " + transititon_probability[from][to]);
                 }
             }
