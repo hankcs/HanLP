@@ -74,32 +74,33 @@ public class PersonRecognition
         List<EnumItem<NR>> tagList = new LinkedList<EnumItem<NR>>();
         for (Vertex vertex : pWordSegResult)
         {
-            switch (vertex.guessNature())
-            {
-                case nr:
-                {
-                    // 有些双名实际上可以构成更长的三名
-                    if (vertex.getAttribute().totalFrequency <= 1000)
-                    {
-                        if (vertex.realWord.length() == 2)
-                        {
-                            tagList.add(new EnumItem<NR>(NR.X, NR.G));
-                            continue;
-                        }
-                    }
-                }break;
-                case nnt:
-                {
-                    // 姓+职位
-                    tagList.add(new EnumItem<NR>(NR.G, NR.K));
-                    continue;
-                }
-            }
-
             EnumItem<NR> nrEnumItem = PersonDictionary.dictionary.get(vertex.realWord);
             if (nrEnumItem == null)
             {
-                nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
+                switch (vertex.guessNature())
+                {
+                    case nr:
+                    {
+                        // 有些双名实际上可以构成更长的三名
+                        if (vertex.getAttribute().totalFrequency <= 1000)
+                        {
+                            if (vertex.realWord.length() == 2)
+                            {
+                                nrEnumItem = new EnumItem<NR>(NR.X, NR.G);
+                            }
+                            else nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
+                        }
+                    }break;
+                    case nnt:
+                    {
+                        // 姓+职位
+                        nrEnumItem = new EnumItem<NR>(NR.G, NR.K);
+                    }break;
+                    default:
+                    {
+                        nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
+                    }break;
+                }
             }
             tagList.add(nrEnumItem);
         }
