@@ -47,7 +47,7 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "并有望在那与1993年就结识的友人重聚。"
+                "我个人认为三个人的力量大于1个人，所以个人应该服从集体"
         ));
     }
 
