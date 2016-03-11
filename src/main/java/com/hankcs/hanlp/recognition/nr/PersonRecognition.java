@@ -82,14 +82,11 @@ public class PersonRecognition
                     case nr:
                     {
                         // 有些双名实际上可以构成更长的三名
-                        if (vertex.getAttribute().totalFrequency <= 1000)
+                        if (vertex.getAttribute().totalFrequency <= 1000 && vertex.realWord.length() == 2)
                         {
-                            if (vertex.realWord.length() == 2)
-                            {
-                                nrEnumItem = new EnumItem<NR>(NR.X, NR.G);
-                            }
-                            else nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
+                            nrEnumItem = new EnumItem<NR>(NR.X, NR.G);
                         }
+                        else nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
                     }break;
                     case nnt:
                     {
