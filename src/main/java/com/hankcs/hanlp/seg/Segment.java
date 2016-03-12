@@ -318,6 +318,7 @@ public abstract class Segment
                     pre.realWord = sbQuantifier.toString();
                     pre.word = Predefine.TAG_NUMBER;
                     pre.wordID = CoreDictionary.M_WORD_ID;
+                    cur.from = null;    // 在修改了节点之后,将后向节点清空
                     sbQuantifier.setLength(0);
                 }
             }
