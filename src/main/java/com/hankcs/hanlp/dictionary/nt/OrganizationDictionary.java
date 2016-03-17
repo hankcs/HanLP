@@ -354,7 +354,7 @@ public class OrganizationDictionary
         trie.addKeyword("DFD");
         trie.addKeyword("DGCCD");
         trie.addKeyword("DGCD");
-        trie.addKeyword("DGD");
+//        trie.addKeyword("DGD");
         trie.addKeyword("DGDCD");
         trie.addKeyword("DGDD");
         trie.addKeyword("DGDPD");
@@ -1887,7 +1887,7 @@ public class OrganizationDictionary
         trie.addKeyword("KGCCD");
         trie.addKeyword("KGCD");
         trie.addKeyword("KGCDCCD");
-        trie.addKeyword("KGD");
+//        trie.addKeyword("KGD");
         trie.addKeyword("KGDD");
         trie.addKeyword("KGGD");
         trie.addKeyword("KGJPD");

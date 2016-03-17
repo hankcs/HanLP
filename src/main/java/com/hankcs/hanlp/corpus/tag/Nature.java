@@ -793,4 +793,21 @@ public enum Nature
     {
         return toString().charAt(0);
     }
+
+    /**
+     * 安全地将字符串类型的词性转为Enum类型，如果未定义该词性，则返回null
+     * @param name 字符串词性
+     * @return Enum词性
+     */
+    public static Nature fromString(String name)
+    {
+        try
+        {
+            return Nature.valueOf(name);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
 }

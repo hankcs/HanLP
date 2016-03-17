@@ -15,7 +15,6 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
-import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.nr.PersonDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
@@ -32,7 +31,7 @@ public class PersonRecognition
 {
     public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
-        List<EnumItem<NR>> roleTagList = roleTag(pWordSegResult);
+        List<EnumItem<NR>> roleTagList = roleObserve(pWordSegResult);
         if (HanLP.Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
@@ -47,7 +46,7 @@ public class PersonRecognition
             }
             System.out.printf("人名角色观察：%s\n", sbLog.toString());
         }
-        List<NR> nrList = viterbiExCompute(roleTagList);
+        List<NR> nrList = viterbiComputeSimply(roleTagList);
         if (HanLP.Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
@@ -69,37 +68,40 @@ public class PersonRecognition
         return true;
     }
 
-    public static List<EnumItem<NR>> roleTag(List<Vertex> pWordSegResult)
+    /**
+     * 角色观察(从模型中加载所有词语对应的所有角色,允许进行一些规则补充)
+     * @param wordSegResult 粗分结果
+     * @return
+     */
+    public static List<EnumItem<NR>> roleObserve(List<Vertex> wordSegResult)
     {
         List<EnumItem<NR>> tagList = new LinkedList<EnumItem<NR>>();
-        for (Vertex vertex : pWordSegResult)
+        for (Vertex vertex : wordSegResult)
         {
-            switch (vertex.guessNature())
-            {
-                case nr:
-                {
-                    // 有些双名实际上可以构成更长的三名
-                    if (vertex.getAttribute().totalFrequency <= 1000)
-                    {
-                        if (vertex.realWord.length() == 2)
-                        {
-                            tagList.add(new EnumItem<NR>(NR.X, NR.G));
-                            continue;
-                        }
-                    }
-                }break;
-                case nnt:
-                {
-                    // 姓+职位
-                    tagList.add(new EnumItem<NR>(NR.G, NR.K));
-                    continue;
-                }
-            }
-
             EnumItem<NR> nrEnumItem = PersonDictionary.dictionary.get(vertex.realWord);
             if (nrEnumItem == null)
             {
-                nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
+                switch (vertex.guessNature())
+                {
+                    case nr:
+                    {
+                        // 有些双名实际上可以构成更长的三名
+                        if (vertex.getAttribute().totalFrequency <= 1000 && vertex.realWord.length() == 2)
+                        {
+                            nrEnumItem = new EnumItem<NR>(NR.X, NR.G);
+                        }
+                        else nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
+                    }break;
+                    case nnt:
+                    {
+                        // 姓+职位
+                        nrEnumItem = new EnumItem<NR>(NR.G, NR.K);
+                    }break;
+                    default:
+                    {
+                        nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
+                    }break;
+                }
             }
             tagList.add(nrEnumItem);
         }
@@ -113,59 +115,15 @@ public class PersonRecognition
      */
     public static List<NR> viterbiCompute(List<EnumItem<NR>> roleTagList)
     {
-        List<NR> resultList = new LinkedList<NR>();
-        // HMM五元组
-        int[] observations = new int[roleTagList.size()];
-        for (int i = 0; i < observations.length; ++i)
-        {
-            observations[i] = i;
-        }
-        double[][] emission_probability = new double[PersonDictionary.transformMatrixDictionary.ordinaryMax][observations.length];
-        for (int i = 0; i < emission_probability.length; ++i)
-        {
-            for (int j = 0; j < emission_probability[i].length; ++j)
-            {
-                emission_probability[i][j] = 1e8;
-            }
-        }
-        for (int s : PersonDictionary.transformMatrixDictionary.states)
-        {
-            Iterator<EnumItem<NR>> iterator = roleTagList.iterator();
-            for (int o : observations)
-            {
-                NR sNR = NR.values()[s];
-                EnumItem<NR> item = iterator.next();
-                double frequency = item.getFrequency(sNR);
-                if (frequency == 0)
-                {
-                    emission_probability[s][o] = 1e8;
-                }
-                else
-                {
-                    emission_probability[s][o] = -Math.log(frequency / PersonDictionary.transformMatrixDictionary.getTotalFrequency(sNR));
-                }
-
-            }
-        }
-        int[] result = Viterbi.compute(observations,
-                                        PersonDictionary.transformMatrixDictionary.states,
-                                        PersonDictionary.transformMatrixDictionary.start_probability,
-                                        PersonDictionary.transformMatrixDictionary.transititon_probability,
-                                        emission_probability
-        );
-        for (int r : result)
-        {
-            resultList.add(NR.values()[r]);
-        }
-        return resultList;
+        return Viterbi.computeEnum(roleTagList, PersonDictionary.transformMatrixDictionary);
     }
 
     /**
-     * 维特比算法求解最优标签
+     * 简化的"维特比算法"求解最优标签
      * @param roleTagList
      * @return
      */
-    public static List<NR> viterbiExCompute(List<EnumItem<NR>> roleTagList)
+    public static List<NR> viterbiComputeSimply(List<EnumItem<NR>> roleTagList)
     {
         return Viterbi.computeEnumSimply(roleTagList, PersonDictionary.transformMatrixDictionary);
     }
