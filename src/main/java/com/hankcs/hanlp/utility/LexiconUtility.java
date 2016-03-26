@@ -11,16 +11,21 @@
  */
 package com.hankcs.hanlp.utility;
 
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.corpus.util.CustomNatureUtility;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.common.Term;
+
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 
 /**
  * 跟词语与词性有关的工具类，可以全局动态修改HanLP内部词库
  *
  * @author hankcs
  */
-public class Lexicon
+public class LexiconUtility
 {
     /**
      * 从HanLP的词库中提取某个单词的属性（包括核心词典和用户词典）
@@ -77,6 +82,42 @@ public class Lexicon
     /**
      * 设置某个单词的属性
      * @param word
+     * @param natures
+     * @return
+     */
+    public static boolean setAttribute(String word, Nature... natures)
+    {
+        if (natures == null) return false;
+
+        CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natures, new int[natures.length]);
+        Arrays.fill(attribute.frequency, 1);
+
+        return setAttribute(word, attribute);
+    }
+
+    /**
+     * 设置某个单词的属性
+     * @param word
+     * @param natures
+     * @return
+     */
+    public static boolean setAttribute(String word, String... natures)
+    {
+        if (natures == null) return false;
+
+        Nature[] natureArray = new Nature[natures.length];
+        for (int i = 0; i < natureArray.length; i++)
+        {
+            natureArray[i] = Nature.create(natures[i]);
+        }
+
+        return setAttribute(word, natureArray);
+    }
+
+
+    /**
+     * 设置某个单词的属性
+     * @param word
      * @param natureWithFrequency
      * @return
      */
@@ -84,5 +125,25 @@ public class Lexicon
     {
         CoreDictionary.Attribute attribute = CoreDictionary.Attribute.create(natureWithFrequency);
         return setAttribute(word, attribute);
+    }
+
+    /**
+     * 将字符串词性转为Enum词性
+     * @param name 词性名称
+     * @param customNatureCollector 一个收集集合
+     * @return 转换结果
+     */
+    public static Nature convertStringToNature(String name, LinkedHashSet<Nature> customNatureCollector)
+    {
+        try
+        {
+            return Nature.valueOf(name);
+        }
+        catch (Exception e)
+        {
+            Nature nature = CustomNatureUtility.addNature(name);
+            if (customNatureCollector != null) customNatureCollector.add(nature);
+            return nature;
+        }
     }
 }

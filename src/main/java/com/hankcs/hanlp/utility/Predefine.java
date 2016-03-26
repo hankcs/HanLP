@@ -137,7 +137,7 @@ public class Predefine
     public static Logger logger = Logger.getLogger("HanLP");
     static
     {
-        logger.setLevel(Level.SEVERE);
+        logger.setLevel(Level.WARNING);
     }
 
     /**

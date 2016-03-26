@@ -477,4 +477,14 @@ public class IOUtil
         }
         br.close();
     }
+
+    public static void writeCustomNature(DataOutputStream out, LinkedHashSet<Nature> customNatureCollector) throws IOException
+    {
+        if (customNatureCollector.size() == 0) return;
+        out.writeInt(-customNatureCollector.size());
+        for (Nature nature : customNatureCollector)
+        {
+            TextUtility.writeString(nature.toString(), out);
+        }
+    }
 }
