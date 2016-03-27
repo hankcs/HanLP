@@ -6607,7 +6607,7 @@
 孤身只影=gu1,shen1,zhi1,ying3
 孥=nu2
 学=xue2
-学子=xue2,sheng1
+学子=xue2,zi3
 学长=xue2,zhang3
 孧=you4,niu1
 孨=zhuan3
