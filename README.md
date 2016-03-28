@@ -2,6 +2,9 @@ HanLP: Han Language Processing
 =====
 
 汉语言处理包
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.hankcs/hanlp/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.hankcs/hanlp/)
+[![GitHub release](https://img.shields.io/github/release/hankcs/HanLP.svg)](https://github.com/hankcs/hanlp/releases)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 ------
 
@@ -141,7 +144,7 @@ Web项目的话可以放在如下位置：
 
 *推荐用户始终通过工具类`HanLP`调用，这么做的好处是，将来**HanLP**升级后，用户无需修改调用代码。*
 
-所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下。
+所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下，比文档覆盖了更多细节，强烈建议运行一遍。
 
 ### 1. 第一个Demo
 
