@@ -16,6 +16,10 @@ import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
 import com.hankcs.hanlp.seg.common.Vertex;
+
+import java.util.Map;
+import java.util.TreeMap;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -30,6 +34,7 @@ public class CustomNatureUtility
         logger.warning("已激活自定义词性功能,由于采用了反射技术,用户需对本地环境的兼容性和稳定性负责!\n" +
                                "如果用户代码X.java中有switch(nature)语句,需要调用CustomNatureUtility.registerSwitchClass(X.class)注册X这个类");
     }
+    private static Map<String, Nature> extraValueMap = new TreeMap<String, Nature>();
 
     /**
      * 动态增加词性工具
@@ -47,8 +52,11 @@ public class CustomNatureUtility
      */
     public static Nature addNature(String name)
     {
-        Nature customNature = enumBuster.make(name);
+        Nature customNature = extraValueMap.get(name);
+        if (customNature != null) return customNature;
+        customNature = enumBuster.make(name);
         enumBuster.addByValue(customNature);
+        extraValueMap.put(name, customNature);
 
         return customNature;
     }
@@ -68,5 +76,6 @@ public class CustomNatureUtility
     public static void restore()
     {
         enumBuster.restore();
+        extraValueMap.clear();
     }
 }

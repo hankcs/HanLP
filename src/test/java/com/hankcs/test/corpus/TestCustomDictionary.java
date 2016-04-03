@@ -143,4 +143,11 @@ public class TestCustomDictionary extends TestCase
             }
         });
     }
+
+    public void testCustomNature() throws Exception
+    {
+        Nature pcNature1 = Nature.create("电脑品牌");
+        Nature pcNature2 = Nature.create("电脑品牌");
+        assertEquals(pcNature1, pcNature2);
+    }
 }

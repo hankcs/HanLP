@@ -45,6 +45,7 @@ HanLP: Han Language Processing
   * 拼音推荐
   * 字词推荐
 > * 依存句法分析
+  * 基于神经网络的高性能依存句法分析器
   * MaxEnt依存句法分析
   * CRF依存句法分析
 > * 语料库工具
@@ -121,8 +122,10 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 为data的**父目录**即可，比如data目录是`/Users/hankcs/Documents/data`，那么`root=/Users/hankcs/Documents/` 。
 
 - 如果选用mini词典的话，则需要修改配置文件：
+```
 CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
 BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
+```
 
 最后将HanLP.properties放入classpath即可，对于Eclipse，一般是：
 
@@ -351,7 +354,7 @@ for (String sentence : testCase)
 - 算法详解
   * [《实战HMM-Viterbi角色标注中国人名识别》](http://www.hankcs.com/nlp/chinese-name-recognition-in-actual-hmm-viterbi-role-labeling.html)
 
-### 9. 音译人名识别
+### 10. 音译人名识别
 
 ```java
 String[] testCase = new String[]{
