@@ -712,7 +712,7 @@ public class AhoCorasickDoubleArrayTrie<V>
      */
     public int size()
     {
-        return v.length;
+        return v == null ? 0 : v.length;
     }
 
     /**
