@@ -127,17 +127,7 @@ CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
 BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
 ```
 
-最后将HanLP.properties放入classpath即可，对于Eclipse，一般是：
-
-    $Project/bin
----
-
-Web项目的话可以放在如下位置：
-
-    $Project/WEB-INF/classes
----
-
-对于任何项目，都可以放到src或resource目录下，编译时IDE会自动将其复制到classpath中。
+最后将HanLP.properties放入classpath即可，对于任何项目，都可以放到src或resources目录下，编译时IDE会自动将其复制到classpath中。
 
 如果放置不当，HanLP会智能提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
 
