@@ -48,7 +48,7 @@ public class PersonDictionary
      */
     public static AhoCorasickDoubleArrayTrie<NRPattern> trie;
 
-    public static final CoreDictionary.Attribute ATTRIBUTE = new CoreDictionary.Attribute(Nature.nr, 1);
+    public static final CoreDictionary.Attribute ATTRIBUTE = new CoreDictionary.Attribute(Nature.nr, 100);
 
     static
     {
