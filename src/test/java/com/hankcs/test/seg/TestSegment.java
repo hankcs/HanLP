@@ -300,6 +300,19 @@ public class TestSegment extends TestCase
         System.out.println(segment.seg("曾幻想过，若干年后的我就是这个样子的吗"));
     }
 
+    public void testIssue193() throws Exception
+    {
+        String[] testCase = new String[] {
+                "以每台约200元的价格送到苹果售后维修中心换新机（苹果的保修基本是免费换新机）" ,
+                "可能以2500~2800元的价格回收"
+        };
+        Segment segment = HanLP.newSegment().enableOrganizationRecognize(true).enableNumberQuantifierRecognize(true);
+        for (String sentence : testCase) {
+            List<Term> termList = segment.seg(sentence);
+            System.out.println(termList);
+        }
+    }
+
     public void testTime() throws Exception
     {
         TraditionalChineseTokenizer.segment("认可程度");

@@ -299,6 +299,12 @@ public abstract class Segment
                 {
                     sbQuantifier.append(cur.realWord);
                     iterator.remove();
+                    // 将其从wordNet中删除
+                    for (Vertex vertex : wordNetAll.getVertexes()[line + sbQuantifier.length()])
+                    {
+                        if (vertex.from == cur)
+                            vertex.from = null;
+                    }
                 }
                 if (cur != null &&
                         (cur.hasNature(Nature.q) || cur.hasNature(Nature.qv) || cur.hasNature(Nature.qt))
@@ -313,7 +319,8 @@ public abstract class Segment
                     // 将其从wordNet中删除
                     for (Vertex vertex : wordNetAll.getVertexes()[line + sbQuantifier.length()])
                     {
-                        if (vertex.from == cur) vertex.from = null;
+                        if (vertex.from == cur)
+                            vertex.from = null;
                     }
                 }
                 if (sbQuantifier.length() != pre.realWord.length())
@@ -324,6 +331,8 @@ public abstract class Segment
                     pre.wordID = CoreDictionary.M_WORD_ID;
                     sbQuantifier.setLength(0);
                 }
+                else if (cur != null)
+                    line += cur.realWord.length();
             }
             sbQuantifier.setLength(0);
             line += pre.realWord.length();
