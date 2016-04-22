@@ -310,15 +310,19 @@ public abstract class Segment
                     }
                     sbQuantifier.append(cur.realWord);
                     pre.attribute = new CoreDictionary.Attribute(Nature.mq);
-                    pre.wordID = -1;    // -1代表NGram模型中的“万能词”，保证二次维特比得分一定更高
+                    pre.wordID = CoreDictionary.M_WORD_ID;
                     iterator.remove();
+                    // 将其从wordNet中删除
+                    for (Vertex vertex : wordNetAll.getVertexes()[line + sbQuantifier.length()])
+                    {
+                        if (vertex.from == cur) vertex.from = null;
+                    }
                 }
                 if (sbQuantifier.length() != pre.realWord.length())
                 {
                     pre.realWord = sbQuantifier.toString();
                     pre.word = Predefine.TAG_NUMBER;
                     pre.wordID = CoreDictionary.M_WORD_ID;
-                    cur.from = null;    // 在修改了节点之后,将后向节点清空
                     sbQuantifier.setLength(0);
                 }
             }
