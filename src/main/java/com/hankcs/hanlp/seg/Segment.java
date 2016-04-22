@@ -309,8 +309,6 @@ public abstract class Segment
                         wordNetAll.add(line, new Vertex(sbQuantifier.toString(), new CoreDictionary.Attribute(Nature.m)));
                     }
                     sbQuantifier.append(cur.realWord);
-                    pre.attribute = new CoreDictionary.Attribute(Nature.mq);
-                    pre.wordID = CoreDictionary.M_WORD_ID;
                     iterator.remove();
                     // 将其从wordNet中删除
                     for (Vertex vertex : wordNetAll.getVertexes()[line + sbQuantifier.length()])
@@ -322,6 +320,7 @@ public abstract class Segment
                 {
                     pre.realWord = sbQuantifier.toString();
                     pre.word = Predefine.TAG_NUMBER;
+                    pre.attribute = new CoreDictionary.Attribute(Nature.mq);
                     pre.wordID = CoreDictionary.M_WORD_ID;
                     sbQuantifier.setLength(0);
                 }
