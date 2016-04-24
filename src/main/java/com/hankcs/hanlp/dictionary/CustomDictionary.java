@@ -195,7 +195,8 @@ public class CustomDictionary
     }
 
     /**
-     * 往自定义词典中插入一个新词（非覆盖模式）
+     * 往自定义词典中插入一个新词（非覆盖模式）<br>
+     *     动态增删不会持久化到词典文件
      *
      * @param word                新词 如“裸婚”
      * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”
@@ -208,7 +209,8 @@ public class CustomDictionary
     }
 
     /**
-     * 往自定义词典中插入一个新词（非覆盖模式）
+     * 往自定义词典中插入一个新词（非覆盖模式）<br>
+     *     动态增删不会持久化到词典文件
      *
      * @param word                新词 如“裸婚”
      * @return 是否插入成功（失败的原因可能是不覆盖等，可以通过调试模式了解原因）
@@ -221,7 +223,8 @@ public class CustomDictionary
     }
 
     /**
-     * 往自定义词典中插入一个新词（覆盖模式）
+     * 往自定义词典中插入一个新词（覆盖模式）<br>
+     *     动态增删不会持久化到词典文件
      *
      * @param word                新词 如“裸婚”
      * @param natureWithFrequency 词性和其对应的频次，比如“nz 1 v 2”，null时表示“nz 1”。
@@ -240,7 +243,8 @@ public class CustomDictionary
     }
 
     /**
-     * 以覆盖模式增加新词
+     * 以覆盖模式增加新词<br>
+     *     动态增删不会持久化到词典文件
      *
      * @param word
      * @return
@@ -312,7 +316,8 @@ public class CustomDictionary
     }
 
     /**
-     * 删除单词
+     * 删除单词<br>
+     *     动态增删不会持久化到词典文件
      *
      * @param key
      */
