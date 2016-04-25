@@ -330,6 +330,13 @@ public abstract class Segment
 //        System.out.println(wordNetAll);
     }
 
+    /**
+     * 将一个词语从词网中彻底抹除
+     * @param cur 词语
+     * @param wordNetAll 词网
+     * @param line 当前扫描的行数
+     * @param length 当前缓冲区的长度
+     */
     private static void removeFromWordNet(Vertex cur, WordNet wordNetAll, int line, int length)
     {
         LinkedList<Vertex>[] vertexes = wordNetAll.getVertexes();
