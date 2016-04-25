@@ -299,12 +299,7 @@ public abstract class Segment
                 {
                     sbQuantifier.append(cur.realWord);
                     iterator.remove();
-                    // 将其从wordNet中删除
-                    for (Vertex vertex : wordNetAll.getVertexes()[line + sbQuantifier.length()])
-                    {
-                        if (vertex.from == cur)
-                            vertex.from = null;
-                    }
+                    removeFromWordNet(cur, wordNetAll, line, sbQuantifier.length());
                 }
                 if (cur != null &&
                         (cur.hasNature(Nature.q) || cur.hasNature(Nature.qv) || cur.hasNature(Nature.qt))
@@ -316,12 +311,7 @@ public abstract class Segment
                     }
                     sbQuantifier.append(cur.realWord);
                     iterator.remove();
-                    // 将其从wordNet中删除
-                    for (Vertex vertex : wordNetAll.getVertexes()[line + sbQuantifier.length()])
-                    {
-                        if (vertex.from == cur)
-                            vertex.from = null;
-                    }
+                    removeFromWordNet(cur, wordNetAll, line, sbQuantifier.length());
                 }
                 if (sbQuantifier.length() != pre.realWord.length())
                 {
@@ -338,6 +328,23 @@ public abstract class Segment
             line += pre.realWord.length();
         }
 //        System.out.println(wordNetAll);
+    }
+
+    private static void removeFromWordNet(Vertex cur, WordNet wordNetAll, int line, int length)
+    {
+        LinkedList<Vertex>[] vertexes = wordNetAll.getVertexes();
+        // 将其从wordNet中删除
+        for (Vertex vertex : vertexes[line + length])
+        {
+            if (vertex.from == cur)
+                vertex.from = null;
+        }
+        ListIterator<Vertex> iterator = vertexes[line + length - cur.realWord.length()].listIterator();
+        while (iterator.hasNext())
+        {
+            Vertex vertex = iterator.next();
+            if (vertex == cur) iterator.remove();
+        }
     }
 
     /**
