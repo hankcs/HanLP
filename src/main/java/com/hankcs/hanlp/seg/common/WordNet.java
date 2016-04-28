@@ -274,6 +274,7 @@ public class WordNet
                     id = CoreDictionary.M_WORD_ID;
                     break;
                 case Predefine.CT_DELIMITER:
+                case Predefine.CT_OTHER:
                     nature = Nature.w;
                     break;
                 case Predefine.CT_SINGLE://12021-2129-3121
