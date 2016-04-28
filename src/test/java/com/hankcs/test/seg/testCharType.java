@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author hankcs
  */
-public class testCharType extends TestCase
+public class TestCharType extends TestCase
 {
     /**
      * 制作字符类型表
@@ -110,5 +110,12 @@ public class testCharType extends TestCase
         }
         assertEquals(CharType.CT_NUM, CharType.get('1'));
 
+    }
+
+    public void testWhiteSpace() throws Exception
+    {
+//        CharType.type[' '] = CharType.CT_OTHER;
+        String text = "1 + 2 = 3; a+b= a + b";
+        System.out.println(HanLP.segment(text));
     }
 }
