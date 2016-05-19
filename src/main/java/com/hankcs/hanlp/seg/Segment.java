@@ -301,17 +301,22 @@ public abstract class Segment
                     iterator.remove();
                     removeFromWordNet(cur, wordNetAll, line, sbQuantifier.length());
                 }
-                if (cur != null &&
-                        (cur.hasNature(Nature.q) || cur.hasNature(Nature.qv) || cur.hasNature(Nature.qt))
-                        )
+                if (cur != null)
                 {
-                    if (config.indexMode)
+                    if ((cur.hasNature(Nature.q) || cur.hasNature(Nature.qv) || cur.hasNature(Nature.qt)))
                     {
-                        wordNetAll.add(line, new Vertex(sbQuantifier.toString(), new CoreDictionary.Attribute(Nature.m)));
+                        if (config.indexMode)
+                        {
+                            wordNetAll.add(line, new Vertex(sbQuantifier.toString(), new CoreDictionary.Attribute(Nature.m)));
+                        }
+                        sbQuantifier.append(cur.realWord);
+                        iterator.remove();
+                        removeFromWordNet(cur, wordNetAll, line, sbQuantifier.length());
                     }
-                    sbQuantifier.append(cur.realWord);
-                    iterator.remove();
-                    removeFromWordNet(cur, wordNetAll, line, sbQuantifier.length());
+                    else
+                    {
+                        line += cur.realWord.length();   // (cur = iterator.next()).hasNature(Nature.m) 最后一个next可能不含q词性
+                    }
                 }
                 if (sbQuantifier.length() != pre.realWord.length())
                 {
@@ -321,8 +326,6 @@ public abstract class Segment
                     pre.wordID = CoreDictionary.M_WORD_ID;
                     sbQuantifier.setLength(0);
                 }
-                else if (cur != null)
-                    line += cur.realWord.length();
             }
             sbQuantifier.setLength(0);
             line += pre.realWord.length();

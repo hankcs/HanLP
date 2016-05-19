@@ -327,7 +327,8 @@ public class TestSegment extends TestCase
                 "五和万科长阳天地5个普宅项目",
                 "以1974点低点和5178点高点作江恩角度线",
                 "纳入统计的18家京系基金公司",
-                "华夏基金与嘉实基金两家京系基金公司"
+                "华夏基金与嘉实基金两家京系基金公司",
+                "则应从排名第八的投标人开始依次递补三名投标人"
         };
         Segment segment = HanLP.newSegment().enableOrganizationRecognize(true).enableNumberQuantifierRecognize(true);
         for (String sentence : testCase) {
