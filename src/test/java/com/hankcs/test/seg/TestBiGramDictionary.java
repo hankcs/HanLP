@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * @author hankcs
  */
-public class testBiGramDictionary extends TestCase
+public class TestBiGramDictionary extends TestCase
 {
     public void testBiGramDictionary()
     {

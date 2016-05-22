@@ -17,7 +17,7 @@ import com.hankcs.hanlp.seg.NShort.NShortSegment;
  * 测试N-最短路径分词
  * @author hankcs
  */
-public class testNShortSegment
+public class TestNShortSegment
 {
     public static void main(String[] args)
     {
