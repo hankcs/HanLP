@@ -5,7 +5,7 @@ import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import junit.framework.TestCase;
 
-public class testCoreDictionary extends TestCase
+public class TestCoreDictionary extends TestCase
 {
     public static void main(String[] args)
     {

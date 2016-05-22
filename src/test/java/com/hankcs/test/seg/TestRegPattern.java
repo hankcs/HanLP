@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * 测试正则匹配数词
  * @author hankcs
  */
-public class testRegPattern extends TestCase
+public class TestRegPattern extends TestCase
 {
     public void testPattern()
     {
