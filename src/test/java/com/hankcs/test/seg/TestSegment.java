@@ -47,7 +47,7 @@ public class TestSegment extends TestCase
         HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
-                "张三是我哥哥"
+                "我遗忘我的密码了"
         ));
     }
 
