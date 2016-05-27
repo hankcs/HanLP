@@ -55,7 +55,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     protected int check[];
     protected int base[];
 
-    private boolean used[];
+    private BitSet used = new BitSet();
     /**
      * base 和 check 的大小
      */
@@ -95,7 +95,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         base = base2;
         check = check2;
-        used = used2;
+        //used = used2;
 
         return allocSize = newSize;
     }
@@ -200,8 +200,11 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
                 resize((int) (allocSize * l));
             }
 
-            if (used[begin])
-                continue;
+            //if (used[begin])
+             //   continue;
+            if(used.get(begin)){
+            	continue;
+            }
 
             for (int i = 1; i < siblings.size(); i++)
                 if (check[begin + siblings.get(i).code] != 0)
@@ -219,7 +222,9 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         if (1.0 * nonzero_num / (pos - nextCheckPos + 1) >= 0.95)
             nextCheckPos = pos; // 从位置 next_check_pos 开始到 pos 间，如果已占用的空间在95%以上，下次插入节点时，直接从 pos 位置处开始查找
 
-        used[begin] = true;
+        //used[begin] = true;
+        used.set(begin);
+        
         size = (size > begin + siblings.get(siblings.size() - 1).code + 1) ? size
                 : begin + siblings.get(siblings.size() - 1).code + 1;
 
