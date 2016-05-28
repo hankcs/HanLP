@@ -63,6 +63,10 @@ public class PairFrequency extends TermFrequency
         return pairFrequency;
     }
 
+    /**
+     * 该共现是否统计的是否是从左到右的顺序
+     * @return
+     */
     public boolean isRight()
     {
         return delimiter == Occurrence.RIGHT;

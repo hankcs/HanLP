@@ -369,6 +369,33 @@ public class Occurrence
         }
     }
 
+    /**
+     * 获取一阶共现,其实就是词频统计
+     * @return
+     */
+    public Set<Map.Entry<String, TermFrequency>> getUniGram()
+    {
+        return trieSingle.entrySet();
+    }
+
+    /**
+     * 获取二阶共现
+     * @return
+     */
+    public Set<Map.Entry<String, PairFrequency>> getBiGram()
+    {
+        return triePair.entrySet();
+    }
+
+    /**
+     * 获取三阶共现
+     * @return
+     */
+    public Set<Map.Entry<String, TriaFrequency>> getTriGram()
+    {
+        return trieTria.entrySet();
+    }
+
 
 //    public static void main(String[] args)
 //    {
