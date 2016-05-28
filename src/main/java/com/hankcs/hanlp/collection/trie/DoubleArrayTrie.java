@@ -528,6 +528,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             check[i] = byteArray.nextInt();
         }
         v = value;
+        used = null;    // 无用的对象,释放掉
         return true;
     }
 
