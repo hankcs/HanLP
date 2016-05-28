@@ -55,7 +55,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     protected int check[];
     protected int base[];
 
-    private BitSet used = new BitSet();
+    private BitSet used;
     /**
      * base 和 check 的大小
      */
@@ -85,17 +85,14 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     {
         int[] base2 = new int[newSize];
         int[] check2 = new int[newSize];
-        boolean used2[] = new boolean[newSize];
         if (allocSize > 0)
         {
             System.arraycopy(base, 0, base2, 0, allocSize);
             System.arraycopy(check, 0, check2, 0, allocSize);
-            System.arraycopy(used, 0, used2, 0, allocSize);
         }
 
         base = base2;
         check = check2;
-        //used = used2;
 
         return allocSize = newSize;
     }
@@ -268,7 +265,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     {
         check = null;
         base = null;
-        used = null;
+        used = new BitSet();
         size = 0;
         allocSize = 0;
         // no_delete_ = false;
