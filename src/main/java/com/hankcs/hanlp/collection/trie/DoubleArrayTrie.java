@@ -191,10 +191,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             begin = pos - siblings.get(0).code; // 当前位置离第一个兄弟节点的距离
             if (allocSize <= (begin + siblings.get(siblings.size() - 1).code))
             {
-                // progress can be zero // 防止progress产生除零错误
-                double l = (1.05 > 1.0 * keySize / (progress + 1)) ? 1.05 : 1.0
-                        * keySize / (progress + 1);
-                resize((int) (allocSize * l));
+                resize(begin + siblings.get(siblings.size() - 1).code + Character.MAX_VALUE);
             }
 
             //if (used[begin])
