@@ -59,6 +59,11 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
         boolean NERexists = false;
         for (List<Vertex> vertexList : coarseResult)
         {
+            if (config.useCustomDictionary)
+            {
+                combineByCustomDictionary(vertexList);
+            }
+
             if (HanLP.Config.DEBUG)
             {
                 System.out.println("粗分结果" + convert(vertexList, false));
