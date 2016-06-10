@@ -364,8 +364,7 @@ public class TestSegment extends TestCase
 
     public void testTraditionalSegment() throws Exception
     {
-        CustomDictionary.insert("义消人员");
-        String text = "基隆市長林右昌對義消人員長期協助消防救災工作";
+        String text = "吵架吵到快取消結婚了";
         System.out.println(TraditionalChineseTokenizer.segment(text));
     }
 }
