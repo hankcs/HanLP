@@ -150,4 +150,23 @@ public class TestCustomDictionary extends TestCase
         Nature pcNature2 = Nature.create("电脑品牌");
         assertEquals(pcNature1, pcNature2);
     }
+
+    public void testIssue234() throws Exception
+    {
+        String customTerm = "攻城狮";
+        String text = "攻城狮逆袭单身狗，迎娶白富美，走上人生巅峰";
+        System.out.println("原始分词结果");
+        System.out.println("CustomDictionary.get(customTerm)=" + CustomDictionary.get(customTerm));
+        System.out.println(HanLP.segment(text));
+        // 动态增加
+        CustomDictionary.add(customTerm);
+        System.out.println("添加自定义词组分词结果");
+        System.out.println("CustomDictionary.get(customTerm)=" + CustomDictionary.get(customTerm));
+        System.out.println(HanLP.segment(text));
+        // 删除词语
+        CustomDictionary.remove(customTerm);
+        System.out.println("删除自定义词组分词结果");
+        System.out.println("CustomDictionary.get(customTerm)=" + CustomDictionary.get(customTerm));
+        System.out.println(HanLP.segment(text));
+    }
 }
