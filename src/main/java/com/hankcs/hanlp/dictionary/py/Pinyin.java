@@ -836,7 +836,7 @@ public enum Pinyin
     nuo2(Shengmu.n, Yunmu.uo, 2, "nuó", "nuo", Head.n, 'n'),
     nuo3(Shengmu.n, Yunmu.uo, 3, "nuǒ", "nuo", Head.n, 'n'),
     nuo4(Shengmu.n, Yunmu.uo, 4, "nuò", "nuo", Head.n, 'n'),
-    nv3(Shengmu.n, Yunmu.u, 3, "nǚ", "nv", Head.n, 'n'),
+    nv3(Shengmu.n, Yunmu.v, 3, "nǚ", "nv", Head.n, 'n'),
     nv4(Shengmu.n, Yunmu.v, 4, "nǜ", "nv", Head.n, 'n'),
     nve4(Shengmu.n, Yunmu.ue, 4, "nüè", "nve", Head.n, 'n'),
     o1(Shengmu.none, Yunmu.o, 1, "ō", "o", Head.o, 'o'),

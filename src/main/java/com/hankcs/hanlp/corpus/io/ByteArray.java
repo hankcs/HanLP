@@ -105,13 +105,12 @@ public class ByteArray
      */
     public String nextString()
     {
-        StringBuilder sb = new StringBuilder();
-        int length = nextInt();
-        for (int i = 0; i < length; ++i)
+        char[] buffer = new char[nextInt()];
+        for (int i = 0; i < buffer.length; ++i)
         {
-            sb.append(nextChar());
+            buffer[i] = nextChar();
         }
-        return sb.toString();
+        return new String(buffer);
     }
 
     public float nextFloat()

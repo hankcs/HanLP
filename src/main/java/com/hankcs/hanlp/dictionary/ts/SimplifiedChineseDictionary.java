@@ -13,7 +13,6 @@ package com.hankcs.hanlp.dictionary.ts;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.utility.Predefine;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -48,5 +47,10 @@ public class SimplifiedChineseDictionary extends BaseChineseDictionary
     public static String convertToTraditionalChinese(char[] simplifiedChinese)
     {
         return segLongest(simplifiedChinese, trie);
+    }
+
+    public static String getTraditionalChinese(String simplifiedChinese)
+    {
+        return trie.get(simplifiedChinese);
     }
 }

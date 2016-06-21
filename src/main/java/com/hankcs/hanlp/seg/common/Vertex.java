@@ -128,7 +128,8 @@ public class Vertex
                 case nsf:
                 {
                     wordID = CoreDictionary.NS_WORD_ID;
-                    this.attribute = CoreDictionary.get(CoreDictionary.NS_WORD_ID);
+                    // 在地名识别的时候,希望类似"河镇"的词语保持自己的词性,而不是未##地的词性
+//                    this.attribute = CoreDictionary.get(CoreDictionary.NS_WORD_ID);
                     return Predefine.TAG_PLACE;
                 }
 //                case nz:

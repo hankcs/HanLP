@@ -13,7 +13,7 @@ package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.utility.Lexicon;
+import com.hankcs.hanlp.utility.LexiconUtility;
 
 /**
  * 一个单词，用户可以直接访问此单词的全部属性
@@ -70,6 +70,6 @@ public class Term
      */
     public int getFrequency()
     {
-        return Lexicon.getFrequency(word);
+        return LexiconUtility.getFrequency(word);
     }
 }

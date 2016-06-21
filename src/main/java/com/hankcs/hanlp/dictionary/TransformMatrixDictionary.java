@@ -115,11 +115,12 @@ public class TransformMatrixDictionary<E extends Enum<E>>
                 for (int i = 0; i < ordinaryMax; ++i)
                 {
                     total[j] += matrix[i][j];
+                    total[j] += matrix[j][i];
                 }
             }
             for (int j = 0; j < ordinaryMax; ++j)
             {
-                total[j] += matrix[j][j];
+                total[j] -= matrix[j][j];
             }
             for (int j = 0; j < ordinaryMax; ++j)
             {
@@ -139,7 +140,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
                 for (int to : states)
                 {
                     double frequency = matrix[from][to] + 1e-8;
-                    transititon_probability[from][to] = -Math.log(frequency / totalFrequency);
+                    transititon_probability[from][to] = -Math.log(frequency / total[from]);
 //                    System.out.println("from" + NR.values()[from] + " to" + NR.values()[to] + " = " + transititon_probability[from][to]);
                 }
             }

@@ -96,7 +96,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
             int i = 0;
             for (Term term : termList)
             {
-                if (term.nature != null) term.nature = vertexList.get(i + 1).getNature();
+                if (term.nature != null) term.nature = vertexList.get(i + 1).guessNature();
                 ++i;
             }
         }

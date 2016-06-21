@@ -2,6 +2,9 @@ HanLP: Han Language Processing
 =====
 
 汉语言处理包
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.hankcs/hanlp/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.hankcs/hanlp/)
+[![GitHub release](https://img.shields.io/github/release/hankcs/HanLP.svg)](https://github.com/hankcs/hanlp/releases)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 ------
 
@@ -42,6 +45,7 @@ HanLP: Han Language Processing
   * 拼音推荐
   * 字词推荐
 > * 依存句法分析
+  * 基于神经网络的高性能依存句法分析器
   * MaxEnt依存句法分析
   * CRF依存句法分析
 > * 语料库工具
@@ -75,7 +79,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.2.7</version>
+    <version>portable-1.2.9</version>
 </dependency>
 ```
 
@@ -99,7 +103,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 **HanLP**中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
 
     data
-    │  
+    │
     ├─dictionary
     └─model
 
@@ -118,20 +122,12 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 为data的**父目录**即可，比如data目录是`/Users/hankcs/Documents/data`，那么`root=/Users/hankcs/Documents/` 。
 
 - 如果选用mini词典的话，则需要修改配置文件：
+```
 CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
 BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
+```
 
-最后将HanLP.properties放入classpath即可，对于Eclipse，一般是：
-
-    $Project/bin
----
-
-Web项目的话可以放在如下位置：
-
-    $Project/WEB-INF/classes
----
-
-对于任何项目，都可以放到src或resource目录下，编译时IDE会自动将其复制到classpath中。
+最后将HanLP.properties放入classpath即可，对于任何项目，都可以放到src或resources目录下，编译时IDE会自动将其复制到classpath中。
 
 如果放置不当，HanLP会智能提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
 
@@ -141,7 +137,7 @@ Web项目的话可以放在如下位置：
 
 *推荐用户始终通过工具类`HanLP`调用，这么做的好处是，将来**HanLP**升级后，用户无需修改调用代码。*
 
-所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下。
+所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下，比文档覆盖了更多细节，强烈建议运行一遍。
 
 ### 1. 第一个Demo
 
@@ -151,7 +147,6 @@ System.out.println(HanLP.segment("你好，欢迎使用HanLP汉语处理包！")
 - 内存要求
   * **HanLP**对词典的数据结构进行了长期的优化，可以应对绝大多数场景。哪怕**HanLP**的词典上百兆也无需担心，因为在内存中被精心压缩过。
   * 如果内存非常有限，请使用小词典。**HanLP**默认使用大词典，同时提供小词典，请参考配置文件章节。
-  * 在一些句法分析场景中，需要加载几百兆的模型。如果发生java.lang.OutOfMemoryError，则建议使用JVM option `-Xms1g -Xmx1g -Xmn512m`。
 - 写给正在编译**HanLP**的开发者
   * 如果你正在编译运行从Github检出的**HanLP**代码，并且没有下载data缓存，那么首次加载词典/模型会发生一个*自动缓存*的过程。
   * *自动缓存*的目的是为了加速词典载入速度，在下次载入时，缓存的词典文件会带来毫秒级的加载速度。由于词典体积很大，*自动缓存*会耗费一些时间，请耐心等待。
@@ -349,7 +344,7 @@ for (String sentence : testCase)
 - 算法详解
   * [《实战HMM-Viterbi角色标注中国人名识别》](http://www.hankcs.com/nlp/chinese-name-recognition-in-actual-hmm-viterbi-role-labeling.html)
 
-### 9. 音译人名识别
+### 10. 音译人名识别
 
 ```java
 String[] testCase = new String[]{

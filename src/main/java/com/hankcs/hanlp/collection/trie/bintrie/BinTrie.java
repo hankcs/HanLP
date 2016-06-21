@@ -12,12 +12,12 @@
 package com.hankcs.hanlp.collection.trie.bintrie;
 
 import com.hankcs.hanlp.collection.trie.ITrie;
+import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.TextUtility;
 
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -27,7 +27,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
+public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable
 {
     private int size;
 
@@ -469,5 +469,38 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>
     public _ValueArray newValueArray()
     {
         return new _ValueArray();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeInt(size);
+        for (BaseNode node : child)
+        {
+            if (node == null)
+            {
+                out.writeInt(0);
+            }
+            else
+            {
+                out.writeInt(1);
+                node.walkToSave(out);
+            }
+        }
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+    {
+        size = in.readInt();
+        for (int i = 0; i < child.length; ++i)
+        {
+            int flag = in.readInt();
+            if (flag == 1)
+            {
+                child[i] = new Node<V>();
+                child[i].walkToLoad(in);
+            }
+        }
     }
 }

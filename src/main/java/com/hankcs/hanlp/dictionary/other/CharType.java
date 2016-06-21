@@ -56,7 +56,7 @@ public class CharType
      */
     public static final byte CT_OTHER = CT_SINGLE + 12;
     
-    static byte[] type;
+    public static byte[] type;
 
     static
     {
