@@ -186,6 +186,11 @@ public class HanLP
                     if (root == null)
                     {
                         root = getProperty("root");
+                        if (!root.endsWith("/")) root += "/";
+                        if (!IOUtil.isFileExists(root + "data"))
+                        {
+                            logger.warning("root=" + root + " 这个目录下没有data");
+                        }
                     }
                     if ("root".equals(key)) return root;
                     String property = getProperty(key);
@@ -211,8 +216,6 @@ public class HanLP
                         new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
                         , "UTF-8"));
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
-                if (!root.endsWith("/")) root += "/";
-                if (!IOUtil.isFileExists(root + "data")) throw new IllegalArgumentException("root=" + root + " 这个目录下没有data");
                 CoreDictionaryPath = p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
                 CoreDictionaryTransformMatrixDictionaryPath = p.getProperty("CoreDictionaryTransformMatrixDictionaryPath", CoreDictionaryTransformMatrixDictionaryPath);
                 BiGramDictionaryPath = p.getProperty("BiGramDictionaryPath", BiGramDictionaryPath);
@@ -280,7 +283,7 @@ public class HanLP
                                       "JRE/lib\n");
                 sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
                 sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
-                logger.info("hanlp.properties，进入portable模式。若需要自定义HanLP，请按下列提示操作：\n" + sbInfo);
+                logger.warning("hanlp.properties，进入portable模式。若需要自定义HanLP，请按下列提示操作：\n" + sbInfo);
             }
         }
 
