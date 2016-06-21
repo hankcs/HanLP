@@ -4,7 +4,7 @@
 
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.2.9</version>
+    <version>portable-1.2.10</version>
 
     <name>HanLP</name>
     <url>https://github.com/hankcs/HanLP</url>
@@ -152,4 +152,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <!--禁用Java8过于严格的javadoc警告-->
+    <profiles>
+        <profile>
+            <id>disable-java8-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <additionalparam>-Xdoclint:none</additionalparam>
+            </properties>
+        </profile>
+    </profiles>
 </project>
