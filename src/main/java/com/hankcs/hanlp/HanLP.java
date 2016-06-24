@@ -240,7 +240,7 @@ public class HanLP
                 String classPath = (String) System.getProperties().get("java.class.path");
                 if (classPath != null)
                 {
-                    for (String path : classPath.split(";"))
+                    for (String path : classPath.split(File.pathSeparator))
                     {
                         if (new File(path).isDirectory())
                         {
