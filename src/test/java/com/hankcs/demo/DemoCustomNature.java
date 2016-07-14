@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.corpus.util.CustomNatureUtility;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.LexiconUtility;
 
 import java.util.List;
@@ -53,6 +54,7 @@ public class DemoCustomNature
         }
         // 还可以直接插入到用户词典
         CustomDictionary.insert("阿尔法狗", "科技名词 1024");
+        StandardTokenizer.SEGMENT.enablePartOfSpeechTagging(true);  // 依然支持隐马词性标注
         termList = HanLP.segment("苹果电脑可以运行开源阿尔法狗代码吗");
         System.out.println(termList);
         // 如果使用了动态词性之后任何类使用了switch(nature)语句,必须注册每个类:
