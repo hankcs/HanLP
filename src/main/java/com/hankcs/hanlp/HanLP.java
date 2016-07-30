@@ -291,7 +291,7 @@ public class HanLP
     private HanLP() {}
 
     /**
-     * 简转繁
+     * 繁转简
      *
      * @param traditionalChineseString 繁体中文
      * @return 简体中文
@@ -302,7 +302,7 @@ public class HanLP
     }
 
     /**
-     * 繁转简
+     * 简转繁
      *
      * @param simplifiedChineseString 简体中文
      * @return 繁体中文
