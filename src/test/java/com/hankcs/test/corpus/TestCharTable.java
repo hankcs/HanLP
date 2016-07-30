@@ -12,11 +12,13 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import junit.framework.TestCase;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map;
 
 /**
  * @author hankcs
@@ -109,6 +111,30 @@ public class TestCharTable extends TestCase
                 else CONVERT[i] = ' ';
             }
         }
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(HanLP.Config.CharTablePath));
+        out.writeObject(CONVERT);
+        out.close();
+    }
+
+    public void testImportSingleCharFromTraditionalChineseDictionary() throws Exception
+    {
+        char[] CONVERT = CharTable.CONVERT;
+        StringDictionary dictionary = new StringDictionary("=");
+        dictionary.load(HanLP.Config.TraditionalChineseDictionaryPath);
+        for (Map.Entry<String, String> entry : dictionary.entrySet())
+        {
+            String key = entry.getKey();
+            if (key.length() != 1) continue;
+            String value = entry.getValue();
+            char t = key.charAt(0);
+            char s = value.charAt(0);
+//            if (CONVERT[t] != s)
+//            {
+//                System.out.printf("%s\t%c=%c\n", entry, t, CONVERT[t]);
+//            }
+            CONVERT[t] = s;
+        }
+
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(HanLP.Config.CharTablePath));
         out.writeObject(CONVERT);
         out.close();
