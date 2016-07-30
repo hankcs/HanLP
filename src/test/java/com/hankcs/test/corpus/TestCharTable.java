@@ -96,6 +96,11 @@ public class TestCharTable extends TestCase
         CONVERT['＇'] = '＇';
         CONVERT['；'] = '；';
         CONVERT['？'] = '？';
+        CONVERT['幣'] = '币';
+        CONVERT['繫'] = '系';
+        CONVERT['眾'] = '众';
+        CONVERT['龕'] = '龛';
+        CONVERT['製'] = '制';
         for (int i = 0; i < CONVERT.length; i++)
         {
             if (CONVERT[i] == '\u0000')
@@ -109,4 +114,15 @@ public class TestCharTable extends TestCase
         out.close();
     }
 
+    public void testDumpCharTable() throws Exception
+    {
+        char[] CONVERT = CharTable.CONVERT;
+        for (int i = 0; i < CONVERT.length; i++)
+        {
+            if (i != CONVERT[i])
+            {
+                System.out.printf("%c=%c\n", i, CONVERT[i]);
+            }
+        }
+    }
 }
