@@ -13,9 +13,11 @@ package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import junit.framework.TestCase;
 
+import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map;
@@ -142,13 +144,20 @@ public class TestCharTable extends TestCase
 
     public void testDumpCharTable() throws Exception
     {
+        BufferedWriter bw = IOUtil.newBufferedWriter(HanLP.Config.CharTablePath.replace(".bin.yes", ".txt"));
         char[] CONVERT = CharTable.CONVERT;
         for (int i = 0; i < CONVERT.length; i++)
         {
             if (i != CONVERT[i])
             {
-                System.out.printf("%c=%c\n", i, CONVERT[i]);
+                bw.write(String.format("%c=%c\n", i, CONVERT[i]));
             }
         }
+        bw.close();
+    }
+
+    public void testLoadCharTableFromTxt() throws Exception
+    {
+//        CharTable.load(HanLP.Config.CharTablePath.replace(".bin.yes", ".txt"));
     }
 }

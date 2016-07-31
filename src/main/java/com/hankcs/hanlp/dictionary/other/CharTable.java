@@ -12,6 +12,9 @@
 package com.hankcs.hanlp.dictionary.other;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -31,20 +34,52 @@ public class CharTable
     static
     {
         long start = System.currentTimeMillis();
+        if (!load(HanLP.Config.CharTablePath))
+        {
+            logger.severe("字符正规化表加载失败");
+            System.exit(-1);
+        }
+        logger.info("字符正规化表加载成功：" + (System.currentTimeMillis() - start) + " ms");
+    }
+
+    public static boolean load(String path)
+    {
+        String binPath = path + Predefine.BIN_EXT;
+        if (loadBin(binPath)) return true;
+        CONVERT = new char[Character.MAX_VALUE + 1];
+        for (int i = 0; i < CONVERT.length; i++)
+        {
+            CONVERT[i] = (char) i;
+        }
+        IOUtil.LineIterator iterator = new IOUtil.LineIterator(path);
+        while (iterator.hasNext())
+        {
+            String line = iterator.next();
+            if (line == null) return false;
+            if (line.length() != 3) continue;
+            CONVERT[line.charAt(0)] = CONVERT[line.charAt(2)];
+        }
+        logger.info("正在缓存字符正规化表到" + binPath);
+        IOUtil.saveObjectTo(CONVERT, binPath);
+
+        return true;
+    }
+
+    private static boolean loadBin(String path)
+    {
         try
         {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(HanLP.Config.CharTablePath));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(path));
             CONVERT = (char[]) in.readObject();
             in.close();
         }
         catch (Exception e)
         {
-            logger.severe("字符正规化表加载失败，原因如下：");
-            e.printStackTrace();
-            System.exit(-1);
+            logger.warning("字符正规化表缓存加载失败，原因如下：" + e);
+            return false;
         }
 
-        logger.info("字符正规化表加载成功：" + (System.currentTimeMillis() - start) + " ms");
+        return true;
     }
 
     /**

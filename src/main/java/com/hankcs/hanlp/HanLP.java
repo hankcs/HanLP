@@ -135,7 +135,7 @@ public class HanLP
         /**
          * 字符正规化表（全角转半角，繁体转简体）
          */
-        public static String CharTablePath = "data/dictionary/other/CharTable.bin.yes";
+        public static String CharTablePath = "data/dictionary/other/CharTable.txt";
 
         /**
          * 词-词性-依存关系模型
