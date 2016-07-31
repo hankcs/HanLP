@@ -13,6 +13,7 @@ package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import junit.framework.TestCase;
 
 import java.util.Map;
@@ -45,5 +46,11 @@ public class TestJianFanDictionaryMaker extends TestCase
     public void testConvertSingle() throws Exception
     {
         System.out.println(HanLP.convertToTraditionalChinese("一个劲"));
+    }
+
+    public void testIssue() throws Exception
+    {
+        System.out.println(HanLP.convertToSimplifiedChinese("缐"));
+        System.out.println(CharTable.convert("缐"));
     }
 }
