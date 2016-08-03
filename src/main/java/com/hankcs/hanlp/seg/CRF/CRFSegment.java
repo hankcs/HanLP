@@ -16,6 +16,7 @@ import com.hankcs.hanlp.algoritm.Viterbi;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.CRFSegmentModel;
 import com.hankcs.hanlp.model.crf.Table;
 import com.hankcs.hanlp.seg.CharacterBasedGenerativeModelSegment;
@@ -362,19 +363,9 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
 
         static
         {
-            long start = System.currentTimeMillis();
-            try
-            {
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream(HanLP.Config.CharTablePath));
-                CONVERT = (char[]) in.readObject();
-                in.close();
-            }
-            catch (Exception e)
-            {
-                logger.severe("字符正规化表加载失败，原因如下：");
-                e.printStackTrace();
-                System.exit(-1);
-            }
+            char[] defaultConvertArray = com.hankcs.hanlp.dictionary.other.CharTable.CONVERT;
+            CONVERT = new char[defaultConvertArray.length];
+            System.arraycopy(defaultConvertArray, 0, CONVERT, 0, defaultConvertArray.length);
             // see https://github.com/hankcs/HanLP/issues/13
             CONVERT['“'] = '“';
             CONVERT['”'] = '”';
@@ -389,8 +380,6 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
                 if (CONVERT[i] == '。')
                     CONVERT[i] = '，';
             }
-
-            logger.info("字符正规化表加载成功：" + (System.currentTimeMillis() - start) + " ms");
         }
 
         /**

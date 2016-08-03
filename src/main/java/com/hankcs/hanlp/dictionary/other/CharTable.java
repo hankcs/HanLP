@@ -14,7 +14,6 @@ package com.hankcs.hanlp.dictionary.other;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
-import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -42,7 +41,7 @@ public class CharTable
         logger.info("字符正规化表加载成功：" + (System.currentTimeMillis() - start) + " ms");
     }
 
-    public static boolean load(String path)
+    private static boolean load(String path)
     {
         String binPath = path + Predefine.BIN_EXT;
         if (loadBin(binPath)) return true;
