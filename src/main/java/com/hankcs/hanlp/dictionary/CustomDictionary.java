@@ -161,10 +161,7 @@ public class CustomDictionary
                 String[] param = line.split("\\s");
                 if (param[0].length() == 0) continue;   // 排除空行
                 if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
-//                if (CoreDictionary.contains(param[0]) || map.containsKey(param[0]))
-//                {
-//                    continue;
-//                }
+
                 int natureCount = (param.length - 1) / 2;
                 CoreDictionary.Attribute attribute;
                 if (natureCount == 0)
@@ -181,6 +178,7 @@ public class CustomDictionary
                         attribute.totalFrequency += attribute.frequency[i];
                     }
                 }
+                if (updateAttributeIfExist(param[0], attribute, map)) continue;
                 map.put(param[0], attribute);
             }
             br.close();
@@ -192,6 +190,36 @@ public class CustomDictionary
         }
 
         return true;
+    }
+
+    /**
+     * 如果已经存在该词条,直接更新该词条的属性
+     * @param key 词语
+     * @param attribute 词语的属性
+     * @param map 加载期间的map
+     * @return 是否更新了
+     */
+    private static boolean updateAttributeIfExist(String key, CoreDictionary.Attribute attribute, TreeMap<String, CoreDictionary.Attribute> map)
+    {
+        CoreDictionary.Attribute attributeExisted = CoreDictionary.get(key);
+        if (attributeExisted != null)
+        {
+            attributeExisted.nature = attribute.nature;
+            attributeExisted.frequency = attribute.frequency;
+            attributeExisted.totalFrequency = attribute.totalFrequency;
+            return true;
+        }
+
+        attributeExisted = map.get(key);
+        if (attributeExisted != null)
+        {
+            attributeExisted.nature = attribute.nature;
+            attributeExisted.frequency = attribute.frequency;
+            attributeExisted.totalFrequency = attribute.totalFrequency;
+            return true;
+        }
+
+        return false;
     }
 
     /**

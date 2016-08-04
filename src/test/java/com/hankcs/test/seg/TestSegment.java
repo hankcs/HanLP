@@ -367,4 +367,12 @@ public class TestSegment extends TestCase
         String text = "吵架吵到快取消結婚了";
         System.out.println(TraditionalChineseTokenizer.segment(text));
     }
+
+    public void testIssue290() throws Exception
+    {
+//        HanLP.Config.enableDebug();
+        String txt = "而其他肢解出去的七个贝尔公司如西南贝尔、太平洋贝尔、大西洋贝尔。";
+        Segment seg_viterbi = new ViterbiSegment().enablePartOfSpeechTagging(true).enableOffset(true).enableNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true).enableNumberQuantifierRecognize(true);
+        System.out.println(seg_viterbi.seg(txt));
+    }
 }
