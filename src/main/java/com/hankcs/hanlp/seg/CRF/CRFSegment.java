@@ -25,11 +25,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.CharacterHelper;
 
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.util.*;
-
-import static com.hankcs.hanlp.utility.Predefine.logger;
 
 
 /**
@@ -348,84 +344,5 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
         throw new UnsupportedOperationException("暂不支持");
 //        enablePartOfSpeechTagging(enable);
 //        return super.enableNumberQuantifierRecognize(enable);
-    }
-
-    /**
-     * 字符正规化表，相较于com/hankcs/hanlp/dictionary/other/CharTable.java,做了一些调整
-     * @author hankcs
-     */
-    static private class CharTable
-    {
-        /**
-         * 正规化使用的对应表
-         */
-        public static char[] CONVERT;
-
-        static
-        {
-            char[] defaultConvertArray = com.hankcs.hanlp.dictionary.other.CharTable.CONVERT;
-            CONVERT = new char[defaultConvertArray.length];
-            System.arraycopy(defaultConvertArray, 0, CONVERT, 0, defaultConvertArray.length);
-            // see https://github.com/hankcs/HanLP/issues/13
-            CONVERT['“'] = '“';
-            CONVERT['”'] = '”';
-            CONVERT['.'] = '.';
-            CONVERT['．'] = '.';
-            CONVERT['。'] = '，';
-            CONVERT['！'] = '，';
-            CONVERT['，'] = '，';
-            CONVERT['…'] = '，';
-            for (int i = 0; i < CONVERT.length; i++)
-            {
-                if (CONVERT[i] == '。')
-                    CONVERT[i] = '，';
-            }
-        }
-
-        /**
-         * 将一个字符正规化
-         * @param c 字符
-         * @return 正规化后的字符
-         */
-        public static char convert(char c)
-        {
-            return CONVERT[c];
-        }
-
-        public static char[] convert(char[] charArray)
-        {
-            char[] result = new char[charArray.length];
-            for (int i = 0; i < charArray.length; i++)
-            {
-                result[i] = CONVERT[charArray[i]];
-            }
-
-            return result;
-        }
-
-        public static String convert(String charArray)
-        {
-            assert charArray != null;
-            char[] result = new char[charArray.length()];
-            for (int i = 0; i < charArray.length(); i++)
-            {
-                result[i] = CONVERT[charArray.charAt(i)];
-            }
-
-            return new String(result);
-        }
-
-        /**
-         * 正规化一些字符（原地正规化）
-         * @param charArray 字符
-         */
-        public static void normalization(char[] charArray)
-        {
-            assert charArray != null;
-            for (int i = 0; i < charArray.length; i++)
-            {
-                charArray[i] = CONVERT[charArray[i]];
-            }
-        }
     }
 }
