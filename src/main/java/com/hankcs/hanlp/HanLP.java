@@ -12,7 +12,6 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
@@ -136,7 +135,7 @@ public class HanLP
         /**
          * 字符正规化表（全角转半角，繁体转简体）
          */
-        public static String CharTablePath = "data/dictionary/other/CharTable.bin.yes";
+        public static String CharTablePath = "data/dictionary/other/CharTable.txt";
 
         /**
          * 词-词性-依存关系模型
@@ -268,7 +267,7 @@ public class HanLP
                 String classPath = (String) System.getProperties().get("java.class.path");
                 if (classPath != null)
                 {
-                    for (String path : classPath.split(";"))
+                    for (String path : classPath.split(File.pathSeparator))
                     {
                         if (new File(path).isDirectory())
                         {
@@ -319,7 +318,7 @@ public class HanLP
     private HanLP() {}
 
     /**
-     * 简转繁
+     * 繁转简
      *
      * @param traditionalChineseString 繁体中文
      * @return 简体中文
@@ -330,7 +329,7 @@ public class HanLP
     }
 
     /**
-     * 繁转简
+     * 简转繁
      *
      * @param simplifiedChineseString 简体中文
      * @return 繁体中文

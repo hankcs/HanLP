@@ -62,7 +62,7 @@ public final class CRFSegmentModel extends CRFModel
      * 以指定的trie树结构储存内部特征函数
      * @param featureFunctionTrie
      */
-    public CRFSegmentModel(ITrie<FeatureFunction> featureFunctionTrie)
+    private CRFSegmentModel(ITrie<FeatureFunction> featureFunctionTrie)
     {
         super(featureFunctionTrie);
     }

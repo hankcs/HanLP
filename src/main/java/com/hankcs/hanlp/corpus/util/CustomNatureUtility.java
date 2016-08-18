@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.corpus.util;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
@@ -57,6 +58,8 @@ public class CustomNatureUtility
         customNature = enumBuster.make(name);
         enumBuster.addByValue(customNature);
         extraValueMap.put(name, customNature);
+        // 必须对词性标注HMM模型中的元组做出调整
+        CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary.extendSize();
 
         return customNature;
     }

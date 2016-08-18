@@ -346,8 +346,29 @@ public class EnumBuster<E extends Enum<E>>
     {
         // first we find the static final array that holds
         // the values in the enum class
-        Field valuesField = clazz.getDeclaredField(
-                VALUES_FIELD);
+        Field valuesField = null;
+        try
+        {
+            valuesField = clazz.getDeclaredField(
+                    VALUES_FIELD);
+        }
+        catch (NoSuchFieldException e)
+        {
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields)
+            {
+                if (field.getName().contains(VALUES_FIELD))
+                {
+                    valuesField = field;
+                    break;
+                }
+            }
+        }
+        if (valuesField == null)
+        {
+            throw new RuntimeException("本地JVM不支持自定义词性");
+        }
+
         // we mark it to be public
         valuesField.setAccessible(true);
         return valuesField;

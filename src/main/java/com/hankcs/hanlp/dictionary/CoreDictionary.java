@@ -287,6 +287,27 @@ public class CoreDictionary
         }
 
         /**
+         * 从字节流中加载
+         * @param byteArray
+         * @param natureIndexArray
+         * @return
+         */
+        public static Attribute create(ByteArray byteArray, Nature[] natureIndexArray)
+        {
+            int currentTotalFrequency = byteArray.nextInt();
+            int length = byteArray.nextInt();
+            Attribute attribute = new Attribute(length);
+            attribute.totalFrequency = currentTotalFrequency;
+            for (int j = 0; j < length; ++j)
+            {
+                attribute.nature[j] = natureIndexArray[byteArray.nextInt()];
+                attribute.frequency[j] = byteArray.nextInt();
+            }
+
+            return attribute;
+        }
+
+        /**
          * 获取词性的词频
          *
          * @param nature 字符串词性
@@ -346,12 +367,23 @@ public class CoreDictionary
             }
             return sb.toString();
         }
+
+        public void save(DataOutputStream out) throws IOException
+        {
+            out.writeInt(totalFrequency);
+            out.writeInt(nature.length);
+            for (int i = 0; i < nature.length; ++i)
+            {
+                out.writeInt(nature[i].ordinal());
+                out.writeInt(frequency[i]);
+            }
+        }
     }
 
     /**
      * 获取词语的ID
-     * @param a
-     * @return
+     * @param a 词语
+     * @return ID,如果不存在,则返回-1
      */
     public static int getWordID(String a)
     {
