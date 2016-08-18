@@ -33,6 +33,7 @@ public class CharTable
     static
     {
         long start = System.currentTimeMillis();
+        logger.info("字符正规化表开始加载" + HanLP.Config.CharTablePath);
         if (!load(HanLP.Config.CharTablePath))
         {
             logger.severe("字符正规化表加载失败");
