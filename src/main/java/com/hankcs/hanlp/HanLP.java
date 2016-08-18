@@ -12,6 +12,7 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
@@ -281,8 +282,8 @@ public class HanLP
                                       "Appserver/lib\n" +
                                       "JRE/lib\n");
                 sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
-                sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
-                logger.warning("hanlp.properties，进入portable模式。若需要自定义HanLP，请按下列提示操作：\n" + sbInfo);
+                sbInfo.append("现在HanLP将尝试从jar包内部resource读取data……");
+                logger.info("hanlp.properties，进入portable模式。若需要自定义HanLP，请按下列提示操作：\n" + sbInfo);
             }
         }
 
