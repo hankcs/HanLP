@@ -317,18 +317,23 @@ public class HanLP
      *
      * @param text 文本
      * @param separator 分隔符
-     * @param remainNone 有些字没有拼音（如标点），是否保留它们（用none表示）
+     * @param remainNone 有些字没有拼音（如标点），是否保留它们的拼音（true用none表示，false用原字符表示）
      * @return 一个字符串，由[拼音][分隔符][拼音]构成
      */
     public static String convertToPinyinString(String text, String separator, boolean remainNone)
     {
-        List<Pinyin> pinyinList = PinyinDictionary.convertToPinyin(text, remainNone);
+        List<Pinyin> pinyinList = PinyinDictionary.convertToPinyin(text, true);
         int length = pinyinList.size();
         StringBuilder sb = new StringBuilder(length * (5 + separator.length()));
         int i = 1;
         for (Pinyin pinyin : pinyinList)
         {
-            sb.append(pinyin.getPinyinWithoutTone());
+
+            if (pinyin == Pinyin.none5 && !remainNone)
+            {
+                sb.append(text.charAt(i - 1));
+            }
+            else sb.append(pinyin.getPinyinWithoutTone());
             if (i < length)
             {
                 sb.append(separator);
@@ -440,7 +445,7 @@ public class HanLP
     {
         return TextRankSentence.getTopSentenceList(document, size);
     }
-    
+
     /**
      * 自动摘要
      * @param document 目标文档

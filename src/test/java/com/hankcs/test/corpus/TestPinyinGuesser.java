@@ -11,6 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.py.PinyinUtil;
@@ -50,7 +51,8 @@ public class TestPinyinGuesser extends TestCase
 
     public void testPinyin() throws Exception
     {
-        System.out.println(PinyinUtil.convertPinyinList2TonePinyinList(PinyinDictionary.convertToPinyin("女王")));
+        System.out.println(HanLP.convertToPinyinString("截至2012年，", " ", true));
+        System.out.println(HanLP.convertToPinyinString("截至2012年，", " ", false));
     }
 
     private Pinyin convert(Pinyin p)
