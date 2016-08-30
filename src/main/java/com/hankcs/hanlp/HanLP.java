@@ -15,8 +15,7 @@ import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
-import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
-import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
+import com.hankcs.hanlp.dictionary.ts.*;
 import com.hankcs.hanlp.phrase.IPhraseExtractor;
 import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.seg.Segment;
@@ -104,9 +103,9 @@ public class HanLP
          */
         public static String OrganizationDictionaryTrPath = "data/dictionary/organization/nt.tr.txt";
         /**
-         * 繁简词典路径
+         * 简繁转换词典根目录
          */
-        public static String TraditionalChineseDictionaryPath = "data/dictionary/tc/TraditionalChinese.txt";
+        public static String tcDictionaryRoot = "data/dictionary/tc/";
         /**
          * 声母韵母语调词典
          */
@@ -214,7 +213,8 @@ public class HanLP
                     }
                 }
                 CustomDictionaryPath = pathArray;
-                TraditionalChineseDictionaryPath = root + p.getProperty("TraditionalChineseDictionaryPath", TraditionalChineseDictionaryPath);
+                tcDictionaryRoot = root + p.getProperty("tcDictionaryRoot", tcDictionaryRoot);
+                if (!tcDictionaryRoot.endsWith("/")) tcDictionaryRoot += '/';
                 SYTDictionaryPath = root + p.getProperty("SYTDictionaryPath", SYTDictionaryPath);
                 PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath", PinyinDictionaryPath);
                 TranslatedPersonDictionaryPath = root + p.getProperty("TranslatedPersonDictionaryPath", TranslatedPersonDictionaryPath);
@@ -310,6 +310,126 @@ public class HanLP
     public static String convertToTraditionalChinese(String simplifiedChineseString)
     {
         return SimplifiedChineseDictionary.convertToTraditionalChinese(simplifiedChineseString.toCharArray());
+    }
+
+    /**
+     * 简转繁,是{@link com.hankcs.hanlp.HanLP#convertToTraditionalChinese(java.lang.String)}的简称
+     * @param s 简体中文
+     * @return 繁体中文(大陆标准)
+     */
+    public static String s2t(String s)
+    {
+        return HanLP.convertToTraditionalChinese(s);
+    }
+
+    /**
+     * 繁转简,是{@link HanLP#convertToSimplifiedChinese(String)}的简称
+     * @param t 繁体中文(大陆标准)
+     * @return 简体中文
+     */
+    public static String t2s(String t)
+    {
+        return HanLP.convertToSimplifiedChinese(t);
+    }
+
+    /**
+     * 簡體到臺灣正體
+     * @param s 簡體
+     * @return 臺灣正體
+     */
+    public static String s2tw(String s)
+    {
+        return SimplifiedToTaiwanChineseDictionary.convertToTraditionalTaiwanChinese(s);
+    }
+
+    /**
+     * 臺灣正體到簡體
+     * @param tw 臺灣正體
+     * @return 簡體
+     */
+    public static String tw2s(String tw)
+    {
+        return TaiwanToSimplifiedChineseDictionary.convertToSimplifiedChinese(tw);
+    }
+
+    /**
+     * 簡體到香港繁體
+     * @param s 簡體
+     * @return 香港繁體
+     */
+    public static String s2hk(String s)
+    {
+        return SimplifiedToHongKongChineseDictionary.convertToTraditionalHongKongChinese(s);
+    }
+
+    /**
+     * 香港繁體到簡體
+     * @param hk 香港繁體
+     * @return 簡體
+     */
+    public static String hk2s(String hk)
+    {
+        return HongKongToSimplifiedChineseDictionary.convertToSimplifiedChinese(hk);
+    }
+
+    /**
+     * 繁體到臺灣正體
+     * @param t 繁體
+     * @return 臺灣正體
+     */
+    public static String t2tw(String t)
+    {
+        return TraditionalToTaiwanChineseDictionary.convertToTaiwanChinese(t);
+    }
+
+    /**
+     * 臺灣正體到繁體
+     * @param tw 臺灣正體
+     * @return 繁體
+     */
+    public static String tw2t(String tw)
+    {
+        return TaiwanToTraditionalChineseDictionary.convertToTraditionalChinese(tw);
+    }
+
+    /**
+     * 繁體到香港繁體
+     * @param t 繁體
+     * @return 香港繁體
+     */
+    public static String t2hk(String t)
+    {
+        return TraditionalToHongKongChineseDictionary.convertToHongKongTraditionalChinese(t);
+    }
+
+    /**
+     * 香港繁體到繁體
+     * @param hk 香港繁體
+     * @return 繁體
+     */
+    public static String hk2t(String hk)
+    {
+        return HongKongToTraditionalChineseDictionary.convertToTraditionalChinese(hk);
+    }
+
+    /**
+     * 香港繁體到臺灣正體
+     * @param hk 香港繁體
+     * @return 臺灣正體
+     */
+    public static String hk2tw(String hk)
+    {
+        return HongKongToTaiwanChineseDictionary.convertToTraditionalTaiwanChinese(hk);
+    }
+
+    /**
+     * 臺灣正體到香港繁體
+     * @param tw 臺灣正體
+     * @return 香港繁體
+     */
+    public static String tw2hk(String tw)
+    {
+        return TaiwanToHongKongChineseDictionary.convertToTraditionalHongKongChinese(tw);
     }
 
     /**
