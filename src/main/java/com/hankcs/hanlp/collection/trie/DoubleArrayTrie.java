@@ -653,14 +653,12 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         int result = -1;
 
-        char[] keyChars = key.toCharArray();
-
         int b = base[nodePos];
         int p;
 
         for (int i = pos; i < len; i++)
         {
-            p = b + (int) (keyChars[i]) + 1;
+            p = b + (int) (key.charAt(i)) + 1;
             if (b == check[p])
                 b = base[p];
             else

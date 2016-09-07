@@ -81,5 +81,9 @@ public class DemoPinyin
             System.out.printf("%s,", pinyin.getHead());
         }
         System.out.println();
+
+        // 拼音转换可选保留无拼音的原字符
+        System.out.println(HanLP.convertToPinyinString("截至2012年，", " ", true));
+        System.out.println(HanLP.convertToPinyinString("截至2012年，", " ", false));
     }
 }
