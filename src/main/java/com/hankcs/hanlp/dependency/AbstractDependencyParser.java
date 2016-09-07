@@ -17,6 +17,7 @@ import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
+import com.hankcs.hanlp.utility.GlobalObjectPool;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -88,6 +89,9 @@ public abstract class AbstractDependencyParser implements IDependencyParser
      */
     public IDependencyParser setDeprelTranslater(String deprelTranslatorPath)
     {
+        deprelTranslater = GlobalObjectPool.get(deprelTranslatorPath);
+        if (deprelTranslater != null) return this;
+
         IOUtil.LineIterator iterator = new IOUtil.LineIterator(deprelTranslatorPath);
         deprelTranslater = new TreeMap<String, String>();
         while (iterator.hasNext())
@@ -99,6 +103,7 @@ public abstract class AbstractDependencyParser implements IDependencyParser
         {
             deprelTranslater = null;
         }
+        GlobalObjectPool.put(deprelTranslatorPath, deprelTranslater);
 
         return this;
     }
