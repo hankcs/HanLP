@@ -51,5 +51,14 @@ public class DemoCRFSegment
             List<Term> termList = segment.seg(sentence);
             System.out.println(termList);
         }
+
+        /**
+         * 内存CookBook:
+         * HanLP内部有智能的内存池，对于同一个CRF模型（模型文件路径作为id区分），只要它没被释放或者内存充足，就不会重新加载。
+         */
+        for (int i = 0; i < 5; ++i)
+        {
+            segment = new CRFSegment();
+        }
     }
 }

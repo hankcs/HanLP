@@ -529,7 +529,7 @@ public class HanLP
      */
     public static CoNLLSentence parseDependency(String sentence)
     {
-        return NeuralNetworkDependencyParser.compute(sentence);
+        return new NeuralNetworkDependencyParser().compute(sentence);
     }
 
     /**

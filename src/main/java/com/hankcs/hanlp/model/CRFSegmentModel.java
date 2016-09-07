@@ -11,17 +11,13 @@
  */
 package com.hankcs.hanlp.model;
 
-import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.ITrie;
-import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.model.crf.CRFModel;
 import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.Table;
 
 import java.util.LinkedList;
-
-import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 静态CRF分词模型
@@ -30,29 +26,12 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public final class CRFSegmentModel extends CRFModel
 {
-    public static CRFModel crfModel;
-
-    static
-    {
-        logger.info("CRF分词模型正在加载 " + HanLP.Config.CRFSegmentModelPath);
-        long start = System.currentTimeMillis();
-        crfModel = CRFModel.loadTxt(HanLP.Config.CRFSegmentModelPath, new CRFSegmentModel(new BinTrie<FeatureFunction>()));
-        if (crfModel == null)
-        {
-            String error = "CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 失败，耗时 " + (System.currentTimeMillis() - start) + " ms";
-            logger.severe(error);
-            throw new IllegalArgumentException(error);
-        }
-        else
-            logger.info("CRF分词模型加载 " + HanLP.Config.CRFSegmentModelPath + " 成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
-    }
-
-    private final static int idM = crfModel.getTagId("M");
-    private final static int idE = crfModel.getTagId("E");
-    private final static int idS = crfModel.getTagId("S");
+    private int idM;
+    private int idE;
+    private int idS;
 
     /**
-     * 单例包装静态模型，不允许构造实例
+     * 不允许构造空白实例
      */
     private CRFSegmentModel()
     {
@@ -60,11 +39,41 @@ public final class CRFSegmentModel extends CRFModel
 
     /**
      * 以指定的trie树结构储存内部特征函数
+     *
      * @param featureFunctionTrie
      */
-    private CRFSegmentModel(ITrie<FeatureFunction> featureFunctionTrie)
+    public CRFSegmentModel(ITrie<FeatureFunction> featureFunctionTrie)
     {
         super(featureFunctionTrie);
+    }
+
+    /**
+     * 初始化几个常量
+     */
+    private void initTagSet()
+    {
+        idM = this.getTagId("M");
+        idE = this.getTagId("E");
+        idS = this.getTagId("S");
+    }
+
+    @Override
+    public boolean load(ByteArray byteArray)
+    {
+        boolean result = super.load(byteArray);
+        if (result)
+        {
+            initTagSet();
+        }
+
+        return result;
+    }
+
+    @Override
+    protected void onLoadTxtFinished()
+    {
+        super.onLoadTxtFinished();
+        initTagSet();
     }
 
     @Override

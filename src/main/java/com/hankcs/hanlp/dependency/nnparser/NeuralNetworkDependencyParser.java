@@ -32,12 +32,13 @@ import java.util.List;
  */
 public class NeuralNetworkDependencyParser extends AbstractDependencyParser
 {
-    /**
-     * 内置实例
-     */
-    public static final IDependencyParser INSTANCE = new NeuralNetworkDependencyParser()
-            .setDeprelTranslater(ConfigOption.DEPRL_DESCRIPTION_PATH)
-            .enableDeprelTranslator(true);
+    private parser_dll parser_dll;
+
+    public NeuralNetworkDependencyParser()
+    {
+        parser_dll = new parser_dll();
+        setDeprelTranslater(ConfigOption.DEPRL_DESCRIPTION_PATH).enableDeprelTranslator(true);
+    }
 
     @Override
     public CoNLLSentence parse(List<Term> termList)
@@ -77,9 +78,9 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
      * @param termList 句子，可以是任何具有词性标注功能的分词器的分词结果
      * @return CoNLL格式的依存句法树
      */
-    public static CoNLLSentence compute(List<Term> termList)
+    public CoNLLSentence compute(List<Term> termList)
     {
-        return INSTANCE.parse(termList);
+        return parse(termList);
     }
 
     /**
@@ -88,8 +89,8 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
      * @param sentence 句子
      * @return CoNLL格式的依存句法树
      */
-    public static CoNLLSentence compute(String sentence)
+    public CoNLLSentence compute(String sentence)
     {
-        return INSTANCE.parse(sentence);
+        return parse(sentence);
     }
 }
