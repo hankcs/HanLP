@@ -13,6 +13,7 @@ package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.*;
@@ -66,7 +67,7 @@ public class CoreBiGramTableDictionary
         TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<Integer, TreeMap<Integer, Integer>>();
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             int total = 0;
             int maxWordId = CoreDictionary.trie.size();
@@ -157,7 +158,7 @@ public class CoreBiGramTableDictionary
 //                out.writeInt(i);
 //            }
 //            out.close();
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path));
+            ObjectOutputStream out = new ObjectOutputStream(IOUtil.newOutputStream(path));
             out.writeObject(start);
             out.writeObject(pair);
             out.close();
@@ -192,7 +193,7 @@ public class CoreBiGramTableDictionary
 
         try
         {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(path));
+            ObjectInputStream in = new ObjectInputStream(IOUtil.newInputStream(path));
             start = (int[]) in.readObject();
             if (CoreDictionary.trie.size() != start.length - 1)     // 目前CoreNatureDictionary.ngram.txt的缓存依赖于CoreNatureDictionary.txt的缓存
             {                                                       // 所以这里校验一下二者的一致性，不然可能导致下标越界或者ngram错乱的情况

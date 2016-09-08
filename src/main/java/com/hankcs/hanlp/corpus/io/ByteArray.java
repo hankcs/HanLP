@@ -225,4 +225,12 @@ public class ByteArray
     {
         return bytes.length;
     }
+
+    /**
+     * 通知执行关闭/销毁操作
+     */
+    public void close()
+    {
+        bytes = null;
+    }
 }

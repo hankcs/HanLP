@@ -25,8 +25,7 @@ package com.hankcs.hanlp.collection.MDAG;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
-import com.hankcs.hanlp.corpus.io.IOUtil;
-
+import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
@@ -169,7 +168,10 @@ public class MDAG implements ICacheAble
      */
     public MDAG(File dataFile) throws IOException
     {
-        BufferedReader dataFileBufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), "UTF-8"));
+        BufferedReader dataFileBufferedReader = new BufferedReader(new InputStreamReader(IOAdapter == null ?
+                                                                                                 new FileInputStream(dataFile) :
+                IOAdapter.open(dataFile.getAbsolutePath())
+                , "UTF-8"));
         String currentString = "";
         String previousString = "";
 

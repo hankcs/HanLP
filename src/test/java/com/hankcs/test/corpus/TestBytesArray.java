@@ -13,7 +13,7 @@ package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.corpus.io.ByteArrayStream;
+import com.hankcs.hanlp.corpus.io.ByteArrayFileStream;
 import com.hankcs.hanlp.model.maxent.MaxEntModel;
 import com.hankcs.hanlp.utility.Predefine;
 import junit.framework.TestCase;
@@ -57,7 +57,7 @@ public class TestBytesArray extends TestCase
 
     public void testStream() throws Exception
     {
-        ByteArray byteArray = ByteArrayStream.createByteArrayStream(DATA_OUT_DAT);
+        ByteArray byteArray = ByteArrayFileStream.createByteArrayFileStream(DATA_OUT_DAT);
         while (byteArray.hasMore())
         {
             System.out.println(byteArray.nextInt());
@@ -81,7 +81,7 @@ public class TestBytesArray extends TestCase
      */
     public void testLoadByteArrayStream() throws Exception
     {
-        ByteArray byteArray = ByteArrayStream.createByteArrayStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        ByteArray byteArray = ByteArrayFileStream.createByteArrayFileStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
         MaxEntModel.create(byteArray);
     }
 
@@ -92,7 +92,7 @@ public class TestBytesArray extends TestCase
         ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
         MaxEntModel.create(byteArray);
 
-        byteArray = ByteArrayStream.createByteArrayStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        byteArray = ByteArrayFileStream.createByteArrayFileStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
         MaxEntModel.create(byteArray);
 
         start = System.currentTimeMillis();
@@ -101,7 +101,7 @@ public class TestBytesArray extends TestCase
         System.out.printf("ByteArray: %d ms\n", (System.currentTimeMillis() - start));
 
         start = System.currentTimeMillis();
-        byteArray = ByteArrayStream.createByteArrayStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        byteArray = ByteArrayFileStream.createByteArrayFileStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
         MaxEntModel.create(byteArray);
         System.out.printf("ByteArrayStream: %d ms\n", (System.currentTimeMillis() - start));
 

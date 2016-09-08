@@ -110,7 +110,7 @@ public class WordNatureDependencyModel
         // 缓存值文件
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
             out.writeInt(attributeList.size());
             for (Attribute attribute : attributeList)
             {

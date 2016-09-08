@@ -12,6 +12,8 @@
 package com.hankcs.hanlp.corpus.dictionary;
 
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -60,7 +62,7 @@ public class StringDictionary extends SimpleDictionary<String>
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path)));
             for (Map.Entry<String, String> entry : trie.entrySet())
             {
                 bw.write(entry.getKey());

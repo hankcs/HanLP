@@ -16,6 +16,7 @@ import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.seg.common.Term;
@@ -106,7 +107,7 @@ public class PinyinDictionary
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
             out.writeInt(entrySet.size());
             for (Map.Entry<String, Pinyin[]> entry : entrySet)
             {

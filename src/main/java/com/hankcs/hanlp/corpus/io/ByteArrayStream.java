@@ -1,63 +1,51 @@
 /*
  * <summary></summary>
- * <author>hankcs</author>
+ * <author>Hankcs</author>
  * <email>me@hankcs.com</email>
- * <create-date>2015/11/6 21:32</create-date>
+ * <create-date>2016-09-07 PM5:25</create-date>
  *
- * <copyright file="ByteArrayStream.java">
- * Copyright (c) 2003-2015, hankcs. All Right Reserved, http://www.hankcs.com/
+ * <copyright file="ByteArrayStream.java" company="码农场">
+ * Copyright (c) 2008-2016, 码农场. All Right Reserved, http://www.hankcs.com/
+ * This source is subject to Hankcs. Please contact Hankcs to get more information.
  * </copyright>
  */
 package com.hankcs.hanlp.corpus.io;
-
-import com.hankcs.hanlp.utility.TextUtility;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.io.InputStream;
+
+import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 流式的字节数组，降低读取时的内存峰值
  * @author hankcs
  */
-public class ByteArrayStream extends ByteArray
+public abstract class ByteArrayStream extends ByteArray
 {
     /**
      * 每次读取1mb
      */
-    private int bufferSize;
-    private FileChannel fileChannel;
+    protected int bufferSize;
 
-    public ByteArrayStream(byte[] bytes, int bufferSize, FileChannel fileChannel)
+    public ByteArrayStream(byte[] bytes, int bufferSize)
     {
         super(bytes);
         this.bufferSize = bufferSize;
-        this.fileChannel = fileChannel;
     }
 
     public static ByteArrayStream createByteArrayStream(String path)
     {
+        if (IOAdapter == null) return ByteArrayFileStream.createByteArrayFileStream(path);
+
         try
         {
-            FileInputStream fileInputStream = new FileInputStream(path);
-            FileChannel channel = fileInputStream.getChannel();
-            long size = channel.size();
-            int bufferSize = (int) Math.min(1048576, size);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
-            if (channel.read(byteBuffer) == size)
-            {
-                channel.close();
-                channel = null;
-            }
-            byteBuffer.flip();
-            byte[] bytes = byteBuffer.array();
-            return new ByteArrayStream(bytes, bufferSize, channel);
+            InputStream is = IOAdapter.open(path);
+            if (is instanceof FileInputStream) return ByteArrayFileStream.createByteArrayFileStream((FileInputStream) is);
+            return ByteArrayOtherStream.createByteArrayOtherStream(is);
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            logger.warning(TextUtility.exceptionToString(e));
+            logger.warning("打开失败：" + path);
             return null;
         }
     }
@@ -97,41 +85,5 @@ public class ByteArrayStream extends ByteArray
         return super.nextFloat();
     }
 
-    @Override
-    public boolean hasMore()
-    {
-        return offset < bufferSize || fileChannel != null;
-    }
-
-    /**
-     * 确保buffer数组余有size个字节
-     * @param size
-     */
-    private void ensureAvailableBytes(int size)
-    {
-        if (offset + size > bufferSize)
-        {
-            try
-            {
-                int availableBytes = (int) (fileChannel.size() - fileChannel.position());
-                ByteBuffer byteBuffer = ByteBuffer.allocate(Math.min(availableBytes, offset));
-                int readBytes = fileChannel.read(byteBuffer);
-                if (readBytes == availableBytes)
-                {
-                    fileChannel.close();
-                    fileChannel = null;
-                }
-                assert readBytes > 0 : "已到达文件尾部！";
-                byteBuffer.flip();
-                byte[] bytes = byteBuffer.array();
-                System.arraycopy(this.bytes, offset, this.bytes, offset - readBytes, bufferSize - offset);
-                System.arraycopy(bytes, 0, this.bytes, bufferSize - readBytes, readBytes);
-                offset -= readBytes;
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+    protected abstract void ensureAvailableBytes(int size);
 }

@@ -17,6 +17,7 @@ import com.hankcs.hanlp.collection.trie.ITrie;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dependency.common.POSUtil;
 import com.hankcs.hanlp.model.bigram.BigramDependencyModel;
 import com.hankcs.hanlp.model.crf.CRFModel;
@@ -95,7 +96,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path));
             crfModel.save(out);
             out.close();
         }

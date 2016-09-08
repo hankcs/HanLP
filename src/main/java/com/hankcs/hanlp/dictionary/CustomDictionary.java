@@ -108,7 +108,7 @@ public class CustomDictionary
             {
                 attributeList.add(entry.getValue());
             }
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(mainPath + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(mainPath + Predefine.BIN_EXT));
             // 缓存用户词性
             IOUtil.writeCustomNature(out, customNatureCollector);
             // 缓存正文
@@ -139,7 +139,7 @@ public class CustomDictionary
         }
         catch (Exception e)
         {
-            logger.warning("自定义词典" + mainPath + "缓存失败！" + e);
+            logger.warning("自定义词典" + mainPath + "缓存失败！\n" + TextUtility.exceptionToString(e));
         }
         return true;
     }
@@ -158,7 +158,7 @@ public class CustomDictionary
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -334,6 +334,10 @@ public class CustomDictionary
                 for (int i = 0; i < size; i++)
                 {
                     int id = byteArray.nextInt();
+                    if (id >= CoreDictionary.trie.size())
+                    {
+                        return false; // 两者不兼容
+                    }
                     CoreDictionary.Attribute attribute = CoreDictionary.trie.getValueAt(id);
                     attribute.totalFrequency = byteArray.nextInt();
                     int length = byteArray.nextInt();

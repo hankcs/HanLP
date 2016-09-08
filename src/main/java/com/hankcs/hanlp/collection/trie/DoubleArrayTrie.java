@@ -16,12 +16,16 @@
 package com.hankcs.hanlp.collection.trie;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ByteArrayOtherStream;
+import com.hankcs.hanlp.corpus.io.ByteArrayStream;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.ByteUtil;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.*;
+import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
 
 /**
  * 双数组Trie树
@@ -418,7 +422,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         try
         {
             is = new DataInputStream(new BufferedInputStream(
-                    new FileInputStream(file), BUF_SIZE));
+                    IOUtil.newInputStream(fileName), BUF_SIZE));
             for (int i = 0; i < size; i++)
             {
                 base[i] = is.readInt();
@@ -437,7 +441,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         DataOutputStream out;
         try
         {
-            out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)));
+            out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(fileName)));
             out.writeInt(size);
             for (int i = 0; i < size; i++)
             {
@@ -508,7 +512,9 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
      */
     public boolean load(String path, V[] value)
     {
-        if (!loadBaseAndCheckByFileChannel(path)) return false;
+        if (!(IOAdapter == null ? loadBaseAndCheckByFileChannel(path) :
+        load(ByteArrayStream.createByteArrayStream(path), value)
+        )) return false;
         v = value;
         return true;
     }
@@ -550,7 +556,10 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     {
         try
         {
-            DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(path)));
+            DataInputStream in = new DataInputStream(new BufferedInputStream(IOAdapter == null ?
+                                                                                     new FileInputStream(path) :
+                    IOAdapter.open(path)
+            ));
             size = in.readInt();
             base = new int[size + 65535];   // 多留一些，防止越界
             check = new int[size + 65535];
@@ -623,7 +632,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         ObjectOutputStream out = null;
         try
         {
-            out = new ObjectOutputStream(new FileOutputStream(path));
+            out = new ObjectOutputStream(IOUtil.newOutputStream(path));
             out.writeObject(this);
         }
         catch (Exception e)
@@ -639,7 +648,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         ObjectInputStream in;
         try
         {
-            in = new ObjectInputStream(new FileInputStream(path));
+            in = new ObjectInputStream(IOAdapter == null ? new FileInputStream(path) : IOAdapter.open(path));
             return (DoubleArrayTrie<T>) in.readObject();
         }
         catch (Exception e)
