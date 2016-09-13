@@ -77,6 +77,7 @@ public class TextUtility
             if (ub1 < 128)
             {
                 if (' ' == b1) return CT_OTHER;
+                if ('\n' == b1) return CT_DELIMITER;
                 if ("*\"!,.?()[]{}+=/\\;:|".indexOf((char) b1) != -1)
                     return CT_DELIMITER;
                 if ("0123456789".indexOf((char)b1) != -1)

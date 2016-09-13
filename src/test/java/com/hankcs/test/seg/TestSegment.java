@@ -146,6 +146,11 @@ public class TestSegment extends TestCase
         System.out.println(HanLP.segment("鱼300克*2/组"));
     }
 
+    public void testIssue313() throws Exception
+    {
+        System.out.println(HanLP.segment("hello\n" + "world"));
+    }
+
     public void testQuickAtomSegment() throws Exception
     {
         String text = "你好1234abc Good一二三四3.14";
