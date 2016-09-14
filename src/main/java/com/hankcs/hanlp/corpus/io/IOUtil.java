@@ -501,16 +501,28 @@ public class IOUtil
         return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, append), "UTF-8"));
     }
 
+    /**
+     * 创建输入流（经过IO适配器创建）
+     * @param path
+     * @return
+     * @throws IOException
+     */
     public static InputStream newInputStream(String path) throws IOException
     {
         if (IOAdapter == null) return new FileInputStream(path);
         return IOAdapter.open(path);
     }
 
+    /**
+     * 创建输出流（经过IO适配器创建）
+     * @param path
+     * @return
+     * @throws IOException
+     */
     public static OutputStream newOutputStream(String path) throws IOException
     {
         if (IOAdapter == null) return new FileOutputStream(path);
-        return IOAdapter.save(path);
+        return IOAdapter.create(path);
     }
 
     /**

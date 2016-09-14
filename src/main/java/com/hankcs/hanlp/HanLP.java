@@ -175,7 +175,8 @@ public class HanLP
          */
         public static boolean Normalization = false;
         /**
-         * IO适配器（默认null，表示从本地文件系统读取）
+         * IO适配器（默认null，表示从本地文件系统读取），实现com.hankcs.hanlp.corpus.io.IIOAdapter接口
+         * 以在不同的平台（Hadoop、Redis等）上运行HanLP
          */
         public static IIOAdapter IOAdapter;
 
