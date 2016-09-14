@@ -67,7 +67,6 @@ public class CustomDictionary
         dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         LinkedHashSet<Nature> customNatureCollector = new LinkedHashSet<Nature>();
-        TreeMap<Integer, CoreDictionary.Attribute> rewriteTable = new TreeMap<Integer, CoreDictionary.Attribute>();
         try
         {
             for (String p : path)
@@ -90,7 +89,7 @@ public class CustomDictionary
                     }
                 }
                 logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
-                boolean success = load(p, defaultNature, map, customNatureCollector, rewriteTable);
+                boolean success = load(p, defaultNature, map, customNatureCollector);
                 if (!success) logger.warning("失败：" + p);
             }
             if (map.size() == 0)
@@ -118,13 +117,6 @@ public class CustomDictionary
                 attribute.save(out);
             }
             dat.save(out);
-            // 缓存rewrite table
-            out.writeInt(rewriteTable.size());
-            for (Map.Entry<Integer, CoreDictionary.Attribute> entry : rewriteTable.entrySet())
-            {
-                out.writeInt(entry.getKey());
-                entry.getValue().save(out);
-            }
             out.close();
         }
         catch (FileNotFoundException e)
@@ -151,10 +143,9 @@ public class CustomDictionary
      * @param path          词典路径
      * @param defaultNature 默认词性
      * @param customNatureCollector 收集用户词性
-     * @param rewriteTable 收集用户覆盖的核心词典词条
      * @return
      */
-    public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map, LinkedHashSet<Nature> customNatureCollector, TreeMap<Integer, CoreDictionary.Attribute> rewriteTable)
+    public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map, LinkedHashSet<Nature> customNatureCollector)
     {
         try
         {
@@ -182,7 +173,7 @@ public class CustomDictionary
                         attribute.totalFrequency += attribute.frequency[i];
                     }
                 }
-                if (updateAttributeIfExist(param[0], attribute, map, rewriteTable)) continue;
+//                if (updateAttributeIfExist(param[0], attribute, map, rewriteTable)) continue;
                 map.put(param[0], attribute);
             }
             br.close();
@@ -328,28 +319,6 @@ public class CustomDictionary
                 }
             }
             if (!dat.load(byteArray, attributes)) return false;
-            if (byteArray.hasMore()) // 兼容措施,文件结尾表示要覆写的核心词典词条
-            {
-                size = byteArray.nextInt();
-                for (int i = 0; i < size; i++)
-                {
-                    int id = byteArray.nextInt();
-                    if (id >= CoreDictionary.trie.size())
-                    {
-                        return false; // 两者不兼容
-                    }
-                    CoreDictionary.Attribute attribute = CoreDictionary.trie.getValueAt(id);
-                    attribute.totalFrequency = byteArray.nextInt();
-                    int length = byteArray.nextInt();
-                    attribute.nature = new Nature[length];
-                    attribute.frequency = new int[length];
-                    for (int j = 0; j < length; ++j)
-                    {
-                        attribute.nature[j] = natureIndexArray[byteArray.nextInt()];
-                        attribute.frequency[j] = byteArray.nextInt();
-                    }
-                }
-            }
         }
         catch (Exception e)
         {
