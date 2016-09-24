@@ -112,19 +112,21 @@ public class BaseChineseDictionary
         {
             datPath += Predefine.REVERSE_EXT;
         }
-        if (loadDat(datPath, trie)) return true;
+        boolean notResource = !IOUtil.isResource(datPath);
+        if (notResource && loadDat(datPath, trie)) return true;
         // 从文本中载入并且尝试生成dat
         TreeMap<String, String> map = new TreeMap<String, String>();
         if (!load(map, reverse, path)) return false;
         logger.info("正在构建AhoCorasickDoubleArrayTrie，来源：" + path);
         trie.build(map);
         logger.info("正在缓存双数组" + datPath);
-        saveDat(datPath, trie, map.entrySet());
+        if (notResource) saveDat(datPath, trie, map.entrySet());
         return true;
     }
 
     static boolean loadDat(String path, AhoCorasickDoubleArrayTrie<String> trie)
     {
+        if (IOUtil.isResource(path)) return false;
         ByteArray byteArray = ByteArray.createByteArray(path + Predefine.BIN_EXT);
         if (byteArray == null) return false;
         int size = byteArray.nextInt();
@@ -139,6 +141,8 @@ public class BaseChineseDictionary
 
     static boolean saveDat(String path, AhoCorasickDoubleArrayTrie<String> trie, Set<Map.Entry<String, String>> entrySet)
     {
+        path = path + Predefine.BIN_EXT;
+        if (IOUtil.isResource(path)) return true; // 忽略掉
         if (trie.size() != entrySet.size())
         {
             logger.warning("键值对不匹配");
@@ -146,7 +150,7 @@ public class BaseChineseDictionary
         }
         try
         {
-            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path));
             out.writeInt(entrySet.size());
             for (Map.Entry<String, String> entry : entrySet)
             {

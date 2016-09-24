@@ -29,7 +29,7 @@ public class HongKongToTraditionalChineseDictionary extends BaseChineseDictionar
     {
         long start = System.currentTimeMillis();
         String datPath = HanLP.Config.tcDictionaryRoot + "hk2t";
-        if (!load(datPath, trie))
+        if (!loadDat(datPath, trie))
         {
             TreeMap<String, String> hk2t = new TreeMap<String, String>();
             if (!load(hk2t, true, HanLP.Config.tcDictionaryRoot + "t2hk.txt"))

@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -48,7 +49,7 @@ public abstract class SimpleDictionary<V>
         }
         catch (Exception e)
         {
-            logger.warning("读取" + path + "失败" + e);
+            logger.warning("读取" + path + "失败\n" + TextUtility.exceptionToString(e));
             return false;
         }
         return true;

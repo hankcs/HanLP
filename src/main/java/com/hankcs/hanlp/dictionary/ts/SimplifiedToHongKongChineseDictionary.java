@@ -31,7 +31,7 @@ public class SimplifiedToHongKongChineseDictionary extends BaseChineseDictionary
     {
         long start = System.currentTimeMillis();
         String datPath = HanLP.Config.tcDictionaryRoot + "s2hk";
-        if (!load(datPath, trie))
+        if (!loadDat(datPath, trie))
         {
             TreeMap<String, String> s2t = new TreeMap<String, String>();
             TreeMap<String, String> t2hk = new TreeMap<String, String>();

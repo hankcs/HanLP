@@ -10,9 +10,27 @@
  */
 package com.hankcs.hanlp.corpus.io;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /**
+ * 从jar包资源读取文件的适配器
  * @author hankcs
  */
-public class ResourceIOAdapter
+public class ResourceIOAdapter implements IIOAdapter
 {
+    @Override
+    public InputStream open(String path) throws IOException
+    {
+        return IOUtil.getInputStream(path);
+    }
+
+    @Override
+    public OutputStream create(String path) throws IOException
+    {
+        if (IOUtil.isResource(path)) throw new IllegalArgumentException("不支持写入jar包资源路径" + path);
+        return new FileOutputStream(path);
+    }
 }

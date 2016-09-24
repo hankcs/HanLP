@@ -12,6 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.seg.Other.AhoCorasickDoubleArrayTrieSegment;
 
 /**
@@ -23,9 +24,11 @@ public class DemoUseAhoCorasickDoubleArrayTrieSegment
 {
     public static void main(String[] args)
     {
+        String dictionaryPath = HanLP.Config.CustomDictionaryPath[0];
+        if (!IOUtil.isFileExists(dictionaryPath)) return;
         // AhoCorasickDoubleArrayTrieSegment要求用户必须提供自己的词典路径
         AhoCorasickDoubleArrayTrieSegment segment = new AhoCorasickDoubleArrayTrieSegment()
-                .loadDictionary(HanLP.Config.CustomDictionaryPath[0]);
+                .loadDictionary(dictionaryPath);
         System.out.println(segment.seg("微观经济学继续教育循环经济"));
     }
 }
