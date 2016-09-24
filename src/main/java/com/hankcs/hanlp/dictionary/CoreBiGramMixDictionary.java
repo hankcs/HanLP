@@ -14,6 +14,7 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.ByteUtil;
 import com.hankcs.hanlp.utility.Predefine;
@@ -59,7 +60,7 @@ public class CoreBiGramMixDictionary
         BufferedReader br;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = br.readLine()) != null)
@@ -99,7 +100,7 @@ public class CoreBiGramMixDictionary
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path)));
+            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(path)));
             Collection<Integer> freqList = map.values();
             out.writeInt(freqList.size());
             for (int freq : freqList)

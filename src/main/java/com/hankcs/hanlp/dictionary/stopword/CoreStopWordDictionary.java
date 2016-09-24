@@ -13,6 +13,7 @@ package com.hankcs.hanlp.dictionary.stopword;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
@@ -39,7 +40,7 @@ public class CoreStopWordDictionary
             try
             {
                 dictionary = new StopWordDictionary(new File(HanLP.Config.CoreStopWordDictionaryPath));
-                DataOutputStream out = new DataOutputStream(new FileOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT));
+                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT));
                 dictionary.save(out);
                 out.close();
             }

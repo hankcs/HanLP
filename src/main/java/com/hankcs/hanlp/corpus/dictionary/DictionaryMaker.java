@@ -15,10 +15,12 @@ import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 
 import java.io.*;
 import java.util.*;
 
+import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -90,7 +92,8 @@ public class DictionaryMaker implements ISaveAble
         List<Item> itemList = new LinkedList<Item>();
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOAdapter == null ? new FileInputStream(path) :
+                                                                                 IOAdapter.open(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -285,7 +288,7 @@ public class DictionaryMaker implements ISaveAble
         if (trie.size() == 0) return true;  // 如果没有词条，那也算成功了
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path), "UTF-8"));
             Set<Map.Entry<String, Item>> entries = trie.entrySet();
             for (Map.Entry<String, Item> entry : entries)
             {
@@ -330,7 +333,7 @@ public class DictionaryMaker implements ISaveAble
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path), "UTF-8"));
             Set<Map.Entry<String, Item>> entries = trie.entrySet();
             for (Map.Entry<String, Item> entry : entries)
             {

@@ -12,7 +12,8 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.corpus.io.FileIOAdapter;
+import com.hankcs.hanlp.corpus.io.IIOAdapter;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
@@ -26,10 +27,13 @@ import com.hankcs.hanlp.summary.TextRankKeyword;
 import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.utility.TextUtility;
+import sun.reflect.ReflectionFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -170,6 +174,11 @@ public class HanLP
          * 是否执行字符正规化（繁体->简体，全角->半角，大写->小写），切换配置后必须删CustomDictionary.txt.bin缓存
          */
         public static boolean Normalization = false;
+        /**
+         * IO适配器（默认null，表示从本地文件系统读取），实现com.hankcs.hanlp.corpus.io.IIOAdapter接口
+         * 以在不同的平台（Hadoop、Redis等）上运行HanLP
+         */
+        public static IIOAdapter IOAdapter;
 
         static
         {
@@ -261,6 +270,33 @@ public class HanLP
                 HMMSegmentModelPath = p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
                 Normalization = "true".equals(p.getProperty("Normalization", "false"));
+                String ioAdapterClassName = p.getProperty("IOAdapter");
+                if (ioAdapterClassName != null)
+                {
+                    try
+                    {
+                        Class<?> clazz = Class.forName(ioAdapterClassName);
+                        Constructor<?> ctor = clazz.getConstructor();
+                        Object instance  = ctor.newInstance();
+                        if (instance != null) IOAdapter = (IIOAdapter) instance;
+                    }
+                    catch (ClassNotFoundException e)
+                    {
+                        logger.warning(String.format("找不到IO适配器类： %s ，请检查第三方插件jar包", ioAdapterClassName));
+                    }
+                    catch (NoSuchMethodException e)
+                    {
+                        logger.warning(String.format("工厂类[%s]没有默认构造方法，不符合要求", ioAdapterClassName));
+                    }
+                    catch (SecurityException e)
+                    {
+                        logger.warning(String.format("工厂类[%s]默认构造方法无法访问，不符合要求", ioAdapterClassName));
+                    }
+                    catch (Exception e)
+                    {
+                        logger.warning(String.format("工厂类[%s]构造失败：%s\n", ioAdapterClassName, TextUtility.exceptionToString(e)));
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -557,7 +593,7 @@ public class HanLP
      */
     public static CoNLLSentence parseDependency(String sentence)
     {
-        return NeuralNetworkDependencyParser.compute(sentence);
+        return new NeuralNetworkDependencyParser().compute(sentence);
     }
 
     /**

@@ -86,7 +86,7 @@ public class BigramDependencyModel
         // 缓存值文件
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path +  ".bi" + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path +  ".bi" + Predefine.BIN_EXT));
             out.writeInt(dependencyList.size());
             for (String dependency : dependencyList)
             {

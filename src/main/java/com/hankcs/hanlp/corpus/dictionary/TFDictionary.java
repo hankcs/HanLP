@@ -91,7 +91,7 @@ public class TFDictionary extends SimpleDictionary<TermFrequency> implements ISa
         }
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path[0]), "UTF-8"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path[0]), "UTF-8"));
             for (Map.Entry<String, TermFrequency> entry : dictionaryMain.trie.entrySet())
             {
                 bw.write(entry.getKey());

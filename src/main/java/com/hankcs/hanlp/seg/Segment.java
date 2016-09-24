@@ -202,7 +202,6 @@ public abstract class Segment
             state = dat.transition(wordNet[i].realWord, state);
             if (state > 0)
             {
-                int start = i;
                 int to = i + 1;
                 int end = to;
                 CoreDictionary.Attribute value = dat.output(state);
@@ -219,13 +218,7 @@ public abstract class Segment
                 }
                 if (value != null)
                 {
-                    StringBuilder sbTerm = new StringBuilder();
-                    for (int j = start; j < end; ++j)
-                    {
-                        sbTerm.append(wordNet[j]);
-                        wordNet[j] = null;
-                    }
-                    wordNet[i] = new Vertex(sbTerm.toString(), value);
+                    combineWords(wordNet, i, end, value);
                     i = end - 1;
                 }
             }
@@ -239,7 +232,6 @@ public abstract class Segment
                 BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
                 if (state != null)
                 {
-                    int start = i;
                     int to = i + 1;
                     int end = to;
                     CoreDictionary.Attribute value = state.getValue();
@@ -256,14 +248,7 @@ public abstract class Segment
                     }
                     if (value != null)
                     {
-                        StringBuilder sbTerm = new StringBuilder();
-                        for (int j = start; j < end; ++j)
-                        {
-                            if (wordNet[j] == null) continue;
-                            sbTerm.append(wordNet[j]);
-                            wordNet[j] = null;
-                        }
-                        wordNet[i] = new Vertex(sbTerm.toString(), value);
+                        combineWords(wordNet, i, end, value);
                         i = end - 1;
                     }
                 }
@@ -275,6 +260,31 @@ public abstract class Segment
             if (vertex != null) vertexList.add(vertex);
         }
         return vertexList;
+    }
+
+    /**
+     * 将连续的词语合并为一个
+     * @param wordNet 词图
+     * @param start 起始下标（包含）
+     * @param end 结束下标（不包含）
+     * @param value 新的属性
+     */
+    private static void combineWords(Vertex[] wordNet, int start, int end, CoreDictionary.Attribute value)
+    {
+        if (start + 1 == end)   // 小优化，如果只有一个词，那就不需要合并，直接应用新属性
+        {
+            wordNet[start].attribute = value;
+        }
+        else
+        {
+            StringBuilder sbTerm = new StringBuilder();
+            for (int j = start; j < end; ++j)
+            {
+                sbTerm.append(wordNet[j]);
+                wordNet[j] = null;
+            }
+            wordNet[start] = new Vertex(sbTerm.toString(), value);
+        }
     }
 
     /**

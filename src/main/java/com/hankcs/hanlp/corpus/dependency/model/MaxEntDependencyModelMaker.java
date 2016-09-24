@@ -29,7 +29,7 @@ public class MaxEntDependencyModelMaker
 {
     public static boolean makeModel(String corpusLoadPath, String modelSavePath) throws IOException
     {
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelSavePath)));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(modelSavePath)));
         LinkedList<CoNLLSentence> sentenceList = CoNLLLoader.loadSentenceList(corpusLoadPath);
         int id = 1;
         for (CoNLLSentence sentence : sentenceList)

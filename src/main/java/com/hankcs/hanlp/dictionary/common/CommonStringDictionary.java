@@ -13,6 +13,7 @@ package com.hankcs.hanlp.dictionary.common;
 
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.BufferedReader;
@@ -38,7 +39,7 @@ public class CommonStringDictionary
         String line = null;
         try
         {
-            BufferedReader bw = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            BufferedReader bw = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path)));
             while ((line = bw.readLine()) != null)
             {
                 trie.put(line, null);

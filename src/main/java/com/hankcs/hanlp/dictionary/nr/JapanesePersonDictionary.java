@@ -14,6 +14,7 @@ package com.hankcs.hanlp.dictionary.nr;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.utility.Predefine;
@@ -62,7 +63,7 @@ public class JapanesePersonDictionary
         if (loadDat()) return true;
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             TreeMap<String, Character> map = new TreeMap<String, Character>();
             while ((line = br.readLine()) != null)
@@ -94,7 +95,7 @@ public class JapanesePersonDictionary
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.VALUE_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.VALUE_EXT));
             out.writeInt(map.size());
             for (Character character : map.values())
             {

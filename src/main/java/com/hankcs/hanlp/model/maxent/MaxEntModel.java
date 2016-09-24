@@ -14,6 +14,7 @@ package com.hankcs.hanlp.model.maxent;
 import com.hankcs.hanlp.collection.dartsclone.Pair;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
@@ -202,8 +203,8 @@ public class MaxEntModel
         MaxEntModel m = new MaxEntModel();
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
             br.readLine();  // type
             m.correctionConstant = Integer.parseInt(br.readLine());  // correctionConstant
             out.writeInt(m.correctionConstant);

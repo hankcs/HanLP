@@ -69,7 +69,7 @@ public class CharTable
     {
         try
         {
-            ObjectInputStream in = new ObjectInputStream(IOUtil.getInputStream(path));
+            ObjectInputStream in = new ObjectInputStream(IOUtil.newInputStream(path));
             CONVERT = (char[]) in.readObject();
             in.close();
         }

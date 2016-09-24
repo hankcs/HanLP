@@ -14,6 +14,7 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.LexiconUtility;
 import com.hankcs.hanlp.utility.Predefine;
@@ -66,7 +67,7 @@ public class CoreDictionary
         BufferedReader br = null;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             int MAX_FREQUENCY = 0;
             long start = System.currentTimeMillis();
@@ -90,7 +91,7 @@ public class CoreDictionary
             logger.info("核心词典加载成功:" + trie.size() + "个词条，下面将写入缓存……");
             try
             {
-                DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
+                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
                 Collection<CoreDictionary.Attribute> attributeList = map.values();
                 out.writeInt(attributeList.size());
                 for (CoreDictionary.Attribute attribute : attributeList)

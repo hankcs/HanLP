@@ -15,6 +15,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.model.trigram.CharacterBasedGenerativeModel;
 import com.hankcs.hanlp.seg.CharacterBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.utility.GlobalObjectPool;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.util.LinkedList;
@@ -28,18 +29,26 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class HMMSegment extends CharacterBasedGenerativeModelSegment
 {
-    static CharacterBasedGenerativeModel model;
-    static
+    CharacterBasedGenerativeModel model;
+
+    public HMMSegment()
     {
+        this(HanLP.Config.HMMSegmentModelPath);
+    }
+
+    public HMMSegment(String modelPath)
+    {
+        model = GlobalObjectPool.get(modelPath);
+        if (model != null) return;
         model = new CharacterBasedGenerativeModel();
         long start = System.currentTimeMillis();
-        logger.info("开始从[ " + HanLP.Config.HMMSegmentModelPath + " ]加载2阶HMM模型");
+        logger.info("开始从[ " + modelPath + " ]加载2阶HMM模型");
         try
         {
-            ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.HMMSegmentModelPath);
+            ByteArray byteArray = ByteArray.createByteArray(modelPath);
             if (byteArray == null)
             {
-                logger.severe("HMM分词模型[ " + HanLP.Config.HMMSegmentModelPath + " ]不存在" );
+                logger.severe("HMM分词模型[ " + modelPath + " ]不存在" );
                 System.exit(-1);
             }
             model.load(byteArray);
@@ -50,6 +59,7 @@ public class HMMSegment extends CharacterBasedGenerativeModelSegment
             System.exit(-1);
         }
         logger.info("加载成功，耗时：" + (System.currentTimeMillis() - start) + " ms");
+        GlobalObjectPool.put(modelPath, model);
     }
 
     @Override
