@@ -39,7 +39,7 @@ HanLP: Han Language Processing
   * 声调
 > * 简繁转换
   * 繁体中文分词
-  * 简繁分歧词
+  * 简繁分歧词（简体、繁体、臺灣正體、香港繁體）
 > * 文本推荐
   * 语义推荐
   * 拼音推荐
@@ -57,7 +57,7 @@ HanLP: Han Language Processing
   * CoNLL UA/LA/DA评测工具
 
 
-在提供丰富功能的同时，**HanLP**内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便，同时自带一些语料处理工具，帮助用户训练自己的语料。
+在提供丰富功能的同时，**HanLP**内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便，同时自带一些语料处理工具，帮助用户训练自己的模型。
 
 ------
 
@@ -79,7 +79,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.2.11</version>
+    <version>portable-1.3.0</version>
 </dependency>
 ```
 
