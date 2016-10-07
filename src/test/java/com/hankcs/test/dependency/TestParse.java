@@ -46,11 +46,6 @@ public class TestParse extends TestCase
         System.out.println(CRFDependencyParser.compute(termList));
     }
 
-    public void testSegAndParse() throws Exception
-    {
-        System.out.println(MaxEntDependencyParser.compute("我喜欢陈膺奥"));
-    }
-
     public void testMaxEntParser() throws Exception
     {
         HanLP.Config.enableDebug();
@@ -71,7 +66,7 @@ public class TestParse extends TestCase
 
     public void testNNParser() throws Exception
     {
-        System.out.println(new NeuralNetworkDependencyParser().compute("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。"));
+        System.out.println(NeuralNetworkDependencyParser.compute("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。"));
     }
 
     public void testNatureMap() throws Exception

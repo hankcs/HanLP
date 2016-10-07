@@ -26,11 +26,11 @@ public class TestWordNatureModel extends TestCase
     String PATH = "data/model/dependency/test.txt";
     public void testLoad() throws Exception
     {
-        System.out.println(WordNatureDependencyModel.get("鼓励@" + WordNatureWeightModelMaker.wrapTag("v")));
-        System.out.println(WordNatureDependencyModel.get("鼓励@也是"));
-        System.out.println(WordNatureDependencyModel.get("鼓励@##核心##"));
-        System.out.println(WordNatureDependencyModel.get("方法论@123"));
-        System.out.println(WordNatureDependencyModel.get("方略@" + WordNatureWeightModelMaker.wrapTag("vshi")));
+//        System.out.println(WordNatureDependencyModel.get("鼓励@" + WordNatureWeightModelMaker.wrapTag("v")));
+//        System.out.println(WordNatureDependencyModel.get("鼓励@也是"));
+//        System.out.println(WordNatureDependencyModel.get("鼓励@##核心##"));
+//        System.out.println(WordNatureDependencyModel.get("方法论@123"));
+//        System.out.println(WordNatureDependencyModel.get("方略@" + WordNatureWeightModelMaker.wrapTag("vshi")));
     }
 
     public void testMaxEntModel() throws Exception

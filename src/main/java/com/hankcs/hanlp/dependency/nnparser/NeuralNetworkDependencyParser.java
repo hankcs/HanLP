@@ -78,9 +78,9 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
      * @param termList 句子，可以是任何具有词性标注功能的分词器的分词结果
      * @return CoNLL格式的依存句法树
      */
-    public CoNLLSentence compute(List<Term> termList)
+    public static CoNLLSentence compute(List<Term> termList)
     {
-        return parse(termList);
+        return new NeuralNetworkDependencyParser().parse(termList);
     }
 
     /**
@@ -89,8 +89,8 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
      * @param sentence 句子
      * @return CoNLL格式的依存句法树
      */
-    public CoNLLSentence compute(String sentence)
+    public static CoNLLSentence compute(String sentence)
     {
-        return parse(sentence);
+        return new NeuralNetworkDependencyParser().parse(sentence);
     }
 }
