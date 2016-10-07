@@ -34,23 +34,23 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class WordNatureDependencyModel
 {
-    static DoubleArrayTrie<Attribute> trie;
+    DoubleArrayTrie<Attribute> trie;
 
-    static
+    public WordNatureDependencyModel(String path)
     {
         long start = System.currentTimeMillis();
-        if (load(HanLP.Config.WordNatureModelPath))
+        if (load(path))
         {
-            logger.info("加载依存句法生成模型" + HanLP.Config.WordNatureModelPath + "成功，耗时：" + (System.currentTimeMillis() - start) + " ms");
+            logger.info("加载依存句法生成模型" + path + "成功，耗时：" + (System.currentTimeMillis() - start) + " ms");
         }
         else
         {
-            logger.severe("加载依存句法生成模型" + HanLP.Config.WordNatureModelPath + "失败，耗时：" + (System.currentTimeMillis() - start) + " ms");
+            logger.severe("加载依存句法生成模型" + path + "失败，耗时：" + (System.currentTimeMillis() - start) + " ms");
             System.exit(-1);
         }
     }
 
-    static boolean load(String path)
+    boolean load(String path)
     {
         trie = new DoubleArrayTrie<Attribute>();
         if (loadDat(path)) return true;
@@ -104,7 +104,7 @@ public class WordNatureDependencyModel
         return true;
     }
 
-    static boolean saveDat(String path, TreeMap<String, Attribute> map)
+    boolean saveDat(String path, TreeMap<String, Attribute> map)
     {
         Collection<Attribute> attributeList = map.values();
         // 缓存值文件
@@ -137,7 +137,7 @@ public class WordNatureDependencyModel
         return true;
     }
 
-    static boolean loadDat(String path)
+    boolean loadDat(String path)
     {
         ByteArray byteArray = ByteArray.createByteArray(path + Predefine.BIN_EXT);
         if (byteArray == null) return false;
@@ -158,7 +158,7 @@ public class WordNatureDependencyModel
         return trie.load(byteArray, attributeArray);
     }
 
-    public static Attribute get(String key)
+    public Attribute get(String key)
     {
         return trie.get(key);
     }
@@ -169,7 +169,7 @@ public class WordNatureDependencyModel
      * @param to
      * @return
      */
-    public static Edge getEdge(Node from, Node to)
+    public Edge getEdge(Node from, Node to)
     {
         // 首先尝试词+词
         Attribute attribute = get(from.compiledWord, to.compiledWord);
@@ -187,7 +187,7 @@ public class WordNatureDependencyModel
         return new Edge(from.id, to.id, attribute.dependencyRelation[0], attribute.p[0]);
     }
 
-    public static Attribute get(String from, String to)
+    public Attribute get(String from, String to)
     {
         return get(from + "@" + to);
     }

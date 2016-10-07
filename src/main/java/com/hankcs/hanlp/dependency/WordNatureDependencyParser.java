@@ -11,12 +11,14 @@
  */
 package com.hankcs.hanlp.dependency;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
 import com.hankcs.hanlp.model.bigram.WordNatureDependencyModel;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
+import com.hankcs.hanlp.utility.GlobalObjectPool;
 
 import java.util.List;
 
@@ -27,7 +29,25 @@ import java.util.List;
  */
 public class WordNatureDependencyParser extends MinimumSpanningTreeParser
 {
-    static final WordNatureDependencyParser INSTANCE = new WordNatureDependencyParser();
+    private WordNatureDependencyModel model;
+
+    public WordNatureDependencyParser(WordNatureDependencyModel model)
+    {
+        this.model = model;
+    }
+
+    public WordNatureDependencyParser(String modelPath)
+    {
+        model = GlobalObjectPool.get(modelPath);
+        if (model != null) return;
+        model = new WordNatureDependencyModel(modelPath);
+        GlobalObjectPool.put(modelPath, model);
+    }
+
+    public WordNatureDependencyParser()
+    {
+        this(HanLP.Config.WordNatureModelPath);
+    }
 
     /**
      * 分析句子的依存句法
@@ -37,7 +57,7 @@ public class WordNatureDependencyParser extends MinimumSpanningTreeParser
      */
     public static CoNLLSentence compute(List<Term> termList)
     {
-        return INSTANCE.parse(termList);
+        return new WordNatureDependencyParser().parse(termList);
     }
 
     /**
@@ -48,12 +68,12 @@ public class WordNatureDependencyParser extends MinimumSpanningTreeParser
      */
     public static CoNLLSentence compute(String sentence)
     {
-        return INSTANCE.parse(sentence);
+        return new WordNatureDependencyParser().parse(sentence);
     }
 
     @Override
     protected Edge makeEdge(Node[] nodeArray, int from, int to)
     {
-        return WordNatureDependencyModel.getEdge(nodeArray[from], nodeArray[to]);
+        return model.getEdge(nodeArray[from], nodeArray[to]);
     }
 }

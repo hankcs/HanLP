@@ -278,12 +278,12 @@ public abstract class Segment
         else
         {
             StringBuilder sbTerm = new StringBuilder();
-            for (int j = start; j < end;)
+            for (int j = start; j < end; ++j)
             {
+                if (wordNet[j] == null) continue;
                 String realWord = wordNet[j].realWord;
                 sbTerm.append(realWord);
                 wordNet[j] = null;
-                j += realWord.length();
             }
             wordNet[start] = new Vertex(sbTerm.toString(), value);
         }

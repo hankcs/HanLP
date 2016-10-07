@@ -20,6 +20,7 @@ import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
 import com.hankcs.hanlp.model.maxent.MaxEntModel;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.utility.GlobalObjectPool;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.LinkedList;
@@ -33,12 +34,20 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class MaxEntDependencyParser extends MinimumSpanningTreeParser
 {
-    static final MaxEntDependencyParser INSTANCE = new MaxEntDependencyParser();
-    static MaxEntModel model;
-    static
+    private MaxEntModel model;
+
+    public MaxEntDependencyParser(MaxEntModel model)
     {
+        this.model = model;
+    }
+
+    public MaxEntDependencyParser()
+    {
+        String path = HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT;
+        model = GlobalObjectPool.get(path);
+        if (model != null) return;
         long start = System.currentTimeMillis();
-        ByteArray byteArray = ByteArrayFileStream.createByteArrayFileStream(HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT);
+        ByteArray byteArray = ByteArrayFileStream.createByteArrayFileStream(path);
         if (byteArray != null)
         {
             model = MaxEntModel.create(byteArray);
@@ -46,6 +55,10 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
         else
         {
             model = MaxEntModel.create(HanLP.Config.MaxEntModelPath);
+        }
+        if (model != null)
+        {
+            GlobalObjectPool.put(path, model);
         }
         String result = model == null ? "失败" : "成功";
         logger.info("最大熵依存句法模型载入" + result + "，耗时" + (System.currentTimeMillis() - start) + " ms");
@@ -59,7 +72,7 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
      */
     public static CoNLLSentence compute(List<Term> termList)
     {
-        return INSTANCE.parse(termList);
+        return new MaxEntDependencyParser().parse(termList);
     }
 
     /**
@@ -70,7 +83,7 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
      */
     public static CoNLLSentence compute(String sentence)
     {
-        return INSTANCE.parse(sentence);
+        return new MaxEntDependencyParser().parse(sentence);
     }
 
     @Override
