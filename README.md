@@ -67,6 +67,8 @@ HanLP下载地址：https://github.com/hankcs/HanLP/releases
 
 Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 
+更多细节：https://github.com/hankcs/HanLP/wiki
+
 ------
 
 ## 下载与配置
@@ -79,7 +81,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.3.0</version>
+    <version>portable-1.3.1</version>
 </dependency>
 ```
 
