@@ -25,3 +25,7 @@ hs_err_pid*
 *.bin
 # 我做实验用的目录
 /data/test
+data/dictionary
+data/.DS_Store
+.java-version
+hanlp.properties
