@@ -380,4 +380,12 @@ public class TestSegment extends TestCase
         Segment seg_viterbi = new ViterbiSegment().enablePartOfSpeechTagging(true).enableOffset(true).enableNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true).enableNumberQuantifierRecognize(true);
         System.out.println(seg_viterbi.seg(txt));
     }
+
+    public void testIssue343() throws Exception
+    {
+        CustomDictionary.insert("酷我");
+        CustomDictionary.insert("酷我音乐");
+        Segment segment = HanLP.newSegment().enableIndexMode(true);
+        System.out.println(segment.seg("1酷我音乐2酷我音乐3酷我4酷我音乐6酷7酷我音乐"));
+    }
 }
