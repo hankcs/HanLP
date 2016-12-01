@@ -2292,7 +2292,6 @@ public class OrganizationDictionary
         addKeyword(patternMap, "CPJGD");
         addKeyword(patternMap, "CPPCD");
         addKeyword(patternMap, "CPWGWDGD");
-        addKeyword(patternMap, "D");
         addKeyword(patternMap, "FCCCCCCCD");
         addKeyword(patternMap, "FCCCCGD");
         addKeyword(patternMap, "FCCCDGD");
