@@ -3756,7 +3756,7 @@ public class OrganizationDictionary
             public void hit(int begin, int end, String keyword)
             {
                 StringBuilder sbName = new StringBuilder();
-                for (int i = begin; i <= end; ++i)
+                for (int i = begin; i < end; ++i)
                 {
                     sbName.append(wordArray[i].realWord);
                 }
