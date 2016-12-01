@@ -41,9 +41,9 @@ public class DemoCustomNature
         pcNature = Nature.create("电脑品牌");
         System.out.println(pcNature);
         // 可以将它赋予到某个词语
-        LexiconUtility.setAttribute("苹果", pcNature);
+        LexiconUtility.setAttribute("苹果电脑", pcNature);
         // 或者
-        LexiconUtility.setAttribute("苹果", "电脑品牌 1000");
+        LexiconUtility.setAttribute("苹果电脑", "电脑品牌 1000");
         // 它们将在分词结果中生效
         List<Term> termList = HanLP.segment("苹果电脑可以运行开源阿尔法狗代码吗");
         System.out.println(termList);
