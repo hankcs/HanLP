@@ -45,6 +45,12 @@ public class CoreSynonymDictionary
         }
     }
 
+    /**
+     * 获取一个词的同义词（意义完全相同的，即{@link com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary.SynonymItem#type}
+     * == {@link com.hankcs.hanlp.corpus.synonym.Synonym.Type#EQUAL}的）列表
+     * @param key
+     * @return
+     */
     public static CommonSynonymDictionary.SynonymItem get(String key)
     {
         return dictionary.get(key);
