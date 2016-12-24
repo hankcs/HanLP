@@ -91,7 +91,7 @@ public class CoreStopWordDictionary
                 }
                 default:
                 {
-                    if (term.word.length() > 1 && !CoreStopWordDictionary.contains(term.word))
+                    if (!CoreStopWordDictionary.contains(term.word))
                     {
                         return true;
                     }
