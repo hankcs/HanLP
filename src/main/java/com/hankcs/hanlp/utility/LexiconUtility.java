@@ -75,6 +75,10 @@ public class LexiconUtility
 
         if (CoreDictionary.trie.set(word, attribute)) return true;
         if (CustomDictionary.dat.set(word, attribute)) return true;
+        if (CustomDictionary.trie == null)
+        {
+            CustomDictionary.add(word);
+        }
         CustomDictionary.trie.put(word, attribute);
         return true;
     }
