@@ -423,7 +423,7 @@ public class IOUtil
                 logger.warning("文件" + path + "不存在，接下来的调用会返回null\n" + TextUtility.exceptionToString(e));
                 bw = null;
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
                 bw = null;
