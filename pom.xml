@@ -121,6 +121,15 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--surefire插件，避免mvn test console乱码-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>once</forkMode>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <distributionManagement>
@@ -142,7 +151,7 @@
         <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
 
-        <junit.version>3.8.1</junit.version>
+        <junit.version>4.11</junit.version>
     </properties>
     <dependencies>
         <dependency>

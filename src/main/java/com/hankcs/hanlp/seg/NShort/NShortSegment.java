@@ -130,7 +130,9 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
 
         if (config.useCustomDictionary)
         {
-            combineByCustomDictionary(vertexList);
+            if (config.indexMode)
+                combineByCustomDictionary(vertexList, wordNetAll);
+            else combineByCustomDictionary(vertexList);
         }
 
         return convert(vertexList, config.offset);

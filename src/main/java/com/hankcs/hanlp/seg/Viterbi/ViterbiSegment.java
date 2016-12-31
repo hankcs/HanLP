@@ -52,7 +52,9 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
 
         if (config.useCustomDictionary)
         {
-            combineByCustomDictionary(vertexList);
+            if (config.indexMode)
+                combineByCustomDictionary(vertexList, wordNetAll);
+            else combineByCustomDictionary(vertexList);
         }
 
         if (HanLP.Config.DEBUG)

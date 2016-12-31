@@ -155,6 +155,7 @@ public class NeuralNetworkParser implements ICacheAble
     {
         IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(path);
         model_header = lineIterator.next();
+        if (model_header == null) return false;
         root = lineIterator.next();
         use_distance = "1".equals(lineIterator.next());
         use_valency = "1".equals(lineIterator.next());

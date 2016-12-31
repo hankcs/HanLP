@@ -25,5 +25,6 @@ hs_err_pid*
 *.bin
 # 我做实验用的目录
 /data/test
-# Portable版不维护data
-/data
+data/.DS_Store
+.java-version
+hanlp.properties

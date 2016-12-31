@@ -54,6 +54,7 @@ public class ByteArrayOtherStream extends ByteArrayStream
 
     public static ByteArrayOtherStream createByteArrayOtherStream(InputStream is) throws IOException
     {
+        if (is == null) return null;
         int size = is.available();
         int bufferSize = Math.min(1048576, size);
         byte[] bytes = new byte[bufferSize];

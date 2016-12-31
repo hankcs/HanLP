@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
- * 核心同义词词典
+ * 核心同义词词典(使用语义id作为value）
  *
  * @author hankcs
  */

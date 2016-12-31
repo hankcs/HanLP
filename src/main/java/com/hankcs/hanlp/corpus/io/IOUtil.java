@@ -420,7 +420,7 @@ public class IOUtil
             }
             catch (FileNotFoundException e)
             {
-                logger.warning("文件" + path + "不存在，接下来的调用会返回null" + TextUtility.exceptionToString(e));
+                logger.warning("文件" + path + "不存在，接下来的调用会返回null\n" + TextUtility.exceptionToString(e));
                 bw = null;
             }
             catch (IOException e)
