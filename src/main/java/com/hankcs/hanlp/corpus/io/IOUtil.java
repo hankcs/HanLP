@@ -530,18 +530,6 @@ public class IOUtil
     }
 
     /**
-     * 智能获取InputStream，如果是资源文件则返回相应的InputStream
-     *
-     * @param path
-     * @return
-     * @throws FileNotFoundException
-     */
-    public static InputStream getInputStream(String path) throws FileNotFoundException
-    {
-        return isResource(path) ? IOUtil.class.getResourceAsStream("/" + path) : new FileInputStream(path);
-    }
-
-    /**
      * 创建一个BufferedWriter
      *
      * @param path

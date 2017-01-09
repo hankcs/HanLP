@@ -10,10 +10,7 @@
  */
 package com.hankcs.hanlp.corpus.io;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * 从jar包资源读取文件的适配器
@@ -24,7 +21,7 @@ public class ResourceIOAdapter implements IIOAdapter
     @Override
     public InputStream open(String path) throws IOException
     {
-        return IOUtil.getInputStream(path);
+        return IOUtil.isResource(path) ? IOUtil.class.getResourceAsStream("/" + path) : new FileInputStream(path);
     }
 
     @Override

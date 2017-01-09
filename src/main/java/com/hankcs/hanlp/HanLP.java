@@ -12,9 +12,7 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.io.FileIOAdapter;
 import com.hankcs.hanlp.corpus.io.IIOAdapter;
-import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.io.ResourceIOAdapter;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
@@ -30,7 +28,6 @@ import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
-import sun.reflect.ReflectionFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -185,35 +182,7 @@ public class HanLP
         static
         {
             // 自动读取配置
-            Properties p = new Properties()
-            {
-                String root;
-
-                @Override
-                public String getProperty(String key, String defaultValue)
-                {
-                    // 自带文件是否存在的校验逻辑，如果value是路径则校验它
-                    if (root == null)
-                    {
-                        root = getProperty("root");
-                        if (!root.endsWith("/")) root += "/";
-                        if (!IOUtil.isFileExists(root + "data"))
-                        {
-                            logger.warning("root=" + root + " 这个目录下没有data");
-                        }
-                    }
-                    if ("root".equals(key)) return root;
-                    String property = getProperty(key);
-                    if (property == null) property = defaultValue;
-                    if (property.startsWith("data") && !"CustomDictionaryPath".equals(key))
-                    {
-                        String path = root + property;
-                        if (IOUtil.isFileExists(path) || IOUtil.isFileExists(path + Predefine.BIN_EXT)) return path;
-                        return defaultValue;
-                    }
-                    return property;
-                }
-            };
+            Properties p = new Properties();
             try
             {
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -222,17 +191,18 @@ public class HanLP
                     loader = HanLP.Config.class.getClassLoader();
                 }
                 p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
-                        loader.getResourceAsStream("hanlp.properties") :
-                        new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
+                                                     loader.getResourceAsStream("hanlp.properties") :
+                                                     new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
                         , "UTF-8"));
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
-                CoreDictionaryPath = p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
-                CoreDictionaryTransformMatrixDictionaryPath = p.getProperty("CoreDictionaryTransformMatrixDictionaryPath", CoreDictionaryTransformMatrixDictionaryPath);
-                BiGramDictionaryPath = p.getProperty("BiGramDictionaryPath", BiGramDictionaryPath);
-                CoreStopWordDictionaryPath = p.getProperty("CoreStopWordDictionaryPath", CoreStopWordDictionaryPath);
-                CoreSynonymDictionaryDictionaryPath = p.getProperty("CoreSynonymDictionaryDictionaryPath", CoreSynonymDictionaryDictionaryPath);
-                PersonDictionaryPath = p.getProperty("PersonDictionaryPath", PersonDictionaryPath);
-                PersonDictionaryTrPath = p.getProperty("PersonDictionaryTrPath", PersonDictionaryTrPath);
+                if (root.length() > 0 && !root.endsWith("/")) root += '/';
+                CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
+                CoreDictionaryTransformMatrixDictionaryPath = root + p.getProperty("CoreDictionaryTransformMatrixDictionaryPath", CoreDictionaryTransformMatrixDictionaryPath);
+                BiGramDictionaryPath = root + p.getProperty("BiGramDictionaryPath", BiGramDictionaryPath);
+                CoreStopWordDictionaryPath = root + p.getProperty("CoreStopWordDictionaryPath", CoreStopWordDictionaryPath);
+                CoreSynonymDictionaryDictionaryPath = root + p.getProperty("CoreSynonymDictionaryDictionaryPath", CoreSynonymDictionaryDictionaryPath);
+                PersonDictionaryPath = root + p.getProperty("PersonDictionaryPath", PersonDictionaryPath);
+                PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath", PersonDictionaryTrPath);
                 String[] pathArray = p.getProperty("CustomDictionaryPath", "dictionary/custom/CustomDictionary.txt").split(";");
                 String prePath = root;
                 for (int i = 0; i < pathArray.length; ++i)
@@ -252,24 +222,24 @@ public class HanLP
                     }
                 }
                 CustomDictionaryPath = pathArray;
-                tcDictionaryRoot = p.getProperty("tcDictionaryRoot", tcDictionaryRoot);
+                tcDictionaryRoot = root + p.getProperty("tcDictionaryRoot", tcDictionaryRoot);
                 if (!tcDictionaryRoot.endsWith("/")) tcDictionaryRoot += '/';
-                SYTDictionaryPath = p.getProperty("SYTDictionaryPath", SYTDictionaryPath);
-                PinyinDictionaryPath = p.getProperty("PinyinDictionaryPath", PinyinDictionaryPath);
-                TranslatedPersonDictionaryPath = p.getProperty("TranslatedPersonDictionaryPath", TranslatedPersonDictionaryPath);
-                JapanesePersonDictionaryPath = p.getProperty("JapanesePersonDictionaryPath", JapanesePersonDictionaryPath);
-                PlaceDictionaryPath = p.getProperty("PlaceDictionaryPath", PlaceDictionaryPath);
-                PlaceDictionaryTrPath = p.getProperty("PlaceDictionaryTrPath", PlaceDictionaryTrPath);
-                OrganizationDictionaryPath = p.getProperty("OrganizationDictionaryPath", OrganizationDictionaryPath);
-                OrganizationDictionaryTrPath = p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
-                CharTypePath = p.getProperty("CharTypePath", CharTypePath);
-                CharTablePath = p.getProperty("CharTablePath", CharTablePath);
-                WordNatureModelPath = p.getProperty("WordNatureModelPath", WordNatureModelPath);
-                MaxEntModelPath = p.getProperty("MaxEntModelPath", MaxEntModelPath);
-                NNParserModelPath = p.getProperty("NNParserModelPath", NNParserModelPath);
-                CRFSegmentModelPath = p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
-                CRFDependencyModelPath = p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
-                HMMSegmentModelPath = p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
+                SYTDictionaryPath = root + p.getProperty("SYTDictionaryPath", SYTDictionaryPath);
+                PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath", PinyinDictionaryPath);
+                TranslatedPersonDictionaryPath = root + p.getProperty("TranslatedPersonDictionaryPath", TranslatedPersonDictionaryPath);
+                JapanesePersonDictionaryPath = root + p.getProperty("JapanesePersonDictionaryPath", JapanesePersonDictionaryPath);
+                PlaceDictionaryPath = root + p.getProperty("PlaceDictionaryPath", PlaceDictionaryPath);
+                PlaceDictionaryTrPath = root + p.getProperty("PlaceDictionaryTrPath", PlaceDictionaryTrPath);
+                OrganizationDictionaryPath = root + p.getProperty("OrganizationDictionaryPath", OrganizationDictionaryPath);
+                OrganizationDictionaryTrPath = root + p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
+                CharTypePath = root + p.getProperty("CharTypePath", CharTypePath);
+                CharTablePath = root + p.getProperty("CharTablePath", CharTablePath);
+                WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
+                MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
+                NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
+                CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
+                CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
+                HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
                 Normalization = "true".equals(p.getProperty("Normalization", "false"));
                 String ioAdapterClassName = p.getProperty("IOAdapter");
@@ -279,7 +249,7 @@ public class HanLP
                     {
                         Class<?> clazz = Class.forName(ioAdapterClassName);
                         Constructor<?> ctor = clazz.getConstructor();
-                        Object instance  = ctor.newInstance();
+                        Object instance = ctor.newInstance();
                         if (instance != null) IOAdapter = (IIOAdapter) instance;
                     }
                     catch (ClassNotFoundException e)
@@ -335,6 +305,7 @@ public class HanLP
 
         /**
          * 开启调试模式(会降低性能)
+         *
          * @param enable
          */
         public static void enableDebug(boolean enable)
@@ -354,7 +325,9 @@ public class HanLP
     /**
      * 工具类，不需要生成实例
      */
-    private HanLP() {}
+    private HanLP()
+    {
+    }
 
     /**
      * 繁转简
@@ -380,6 +353,7 @@ public class HanLP
 
     /**
      * 简转繁,是{@link com.hankcs.hanlp.HanLP#convertToTraditionalChinese(java.lang.String)}的简称
+     *
      * @param s 简体中文
      * @return 繁体中文(大陆标准)
      */
@@ -390,6 +364,7 @@ public class HanLP
 
     /**
      * 繁转简,是{@link HanLP#convertToSimplifiedChinese(String)}的简称
+     *
      * @param t 繁体中文(大陆标准)
      * @return 简体中文
      */
@@ -400,6 +375,7 @@ public class HanLP
 
     /**
      * 簡體到臺灣正體
+     *
      * @param s 簡體
      * @return 臺灣正體
      */
@@ -410,6 +386,7 @@ public class HanLP
 
     /**
      * 臺灣正體到簡體
+     *
      * @param tw 臺灣正體
      * @return 簡體
      */
@@ -420,6 +397,7 @@ public class HanLP
 
     /**
      * 簡體到香港繁體
+     *
      * @param s 簡體
      * @return 香港繁體
      */
@@ -430,6 +408,7 @@ public class HanLP
 
     /**
      * 香港繁體到簡體
+     *
      * @param hk 香港繁體
      * @return 簡體
      */
@@ -440,6 +419,7 @@ public class HanLP
 
     /**
      * 繁體到臺灣正體
+     *
      * @param t 繁體
      * @return 臺灣正體
      */
@@ -450,6 +430,7 @@ public class HanLP
 
     /**
      * 臺灣正體到繁體
+     *
      * @param tw 臺灣正體
      * @return 繁體
      */
@@ -460,6 +441,7 @@ public class HanLP
 
     /**
      * 繁體到香港繁體
+     *
      * @param t 繁體
      * @return 香港繁體
      */
@@ -470,6 +452,7 @@ public class HanLP
 
     /**
      * 香港繁體到繁體
+     *
      * @param hk 香港繁體
      * @return 繁體
      */
@@ -480,6 +463,7 @@ public class HanLP
 
     /**
      * 香港繁體到臺灣正體
+     *
      * @param hk 香港繁體
      * @return 臺灣正體
      */
@@ -490,6 +474,7 @@ public class HanLP
 
     /**
      * 臺灣正體到香港繁體
+     *
      * @param tw 臺灣正體
      * @return 香港繁體
      */
@@ -501,8 +486,8 @@ public class HanLP
     /**
      * 转化为拼音
      *
-     * @param text 文本
-     * @param separator 分隔符
+     * @param text       文本
+     * @param separator  分隔符
      * @param remainNone 有些字没有拼音（如标点），是否保留它们的拼音（true用none表示，false用原字符表示）
      * @return 一个字符串，由[拼音][分隔符][拼音]构成
      */
@@ -581,6 +566,7 @@ public class HanLP
      * 创建一个分词器<br>
      * 这是一个工厂方法<br>
      * 与直接new一个分词器相比，使用本方法的好处是，以后HanLP升级了，总能用上最合适的分词器
+     *
      * @return 一个分词器
      */
     public static Segment newSegment()
@@ -590,6 +576,7 @@ public class HanLP
 
     /**
      * 依存文法分析
+     *
      * @param sentence 待分析的句子
      * @return CoNLL格式的依存关系树
      */
@@ -600,6 +587,7 @@ public class HanLP
 
     /**
      * 提取短语
+     *
      * @param text 文本
      * @param size 需要多少个短语
      * @return 一个短语列表，大小 <= size
@@ -612,8 +600,9 @@ public class HanLP
 
     /**
      * 提取关键词
+     *
      * @param document 文档内容
-     * @param size 希望提取几个关键词
+     * @param size     希望提取几个关键词
      * @return 一个列表
      */
     public static List<String> extractKeyword(String document, int size)
@@ -623,8 +612,9 @@ public class HanLP
 
     /**
      * 自动摘要
+     *
      * @param document 目标文档
-     * @param size 需要的关键句的个数
+     * @param size     需要的关键句的个数
      * @return 关键句列表
      */
     public static List<String> extractSummary(String document, int size)
@@ -634,7 +624,8 @@ public class HanLP
 
     /**
      * 自动摘要
-     * @param document 目标文档
+     *
+     * @param document   目标文档
      * @param max_length 需要摘要的长度
      * @return 摘要文本
      */
