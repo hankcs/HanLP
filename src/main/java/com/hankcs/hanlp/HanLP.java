@@ -272,7 +272,7 @@ public class HanLP
             }
             catch (Exception e)
             {
-                StringBuilder sbInfo = new StringBuilder("========Tips========\n请将HanLP.properties放在下列目录：\n"); // 打印一些友好的tips
+                StringBuilder sbInfo = new StringBuilder("========Tips========\n请将hanlp.properties放在下列目录：\n"); // 打印一些友好的tips
                 String classPath = (String) System.getProperties().get("java.class.path");
                 if (classPath != null)
                 {
