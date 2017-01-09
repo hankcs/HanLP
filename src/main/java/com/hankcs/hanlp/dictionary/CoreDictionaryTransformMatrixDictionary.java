@@ -28,7 +28,7 @@ public class CoreDictionaryTransformMatrixDictionary
         long start = System.currentTimeMillis();
         if (!transformMatrixDictionary.load(HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath))
         {
-            System.err.println("加载核心词典词性转移矩阵" + HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath + "失败");
+            logger.severe("加载核心词典词性转移矩阵" + HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath + "失败");
             System.exit(-1);
         }
         else

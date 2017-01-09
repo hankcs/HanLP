@@ -273,7 +273,7 @@ public class HanLP
             }
             catch (Exception e)
             {
-                StringBuilder sbInfo = new StringBuilder("========Tips========\n请将HanLP.properties放在下列目录：\n"); // 打印一些友好的tips
+                StringBuilder sbInfo = new StringBuilder("========Tips========\n请将hanlp.properties放在下列目录：\n"); // 打印一些友好的tips
                 String classPath = (String) System.getProperties().get("java.class.path");
                 if (classPath != null)
                 {
@@ -292,7 +292,7 @@ public class HanLP
                                       "JRE/lib\n");
                 sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
                 sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
-                logger.severe("没有找到HanLP.properties，可能会导致找不到data\n" + sbInfo);
+                logger.severe("没有找到hanlp.properties，可能会导致找不到data\n" + sbInfo);
             }
         }
 

@@ -66,7 +66,7 @@ public class CharType
         ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CharTypePath);
         if (byteArray == null)
         {
-            System.err.println("字符类型对应表加载失败：" + HanLP.Config.CharTypePath);
+            logger.severe("字符类型对应表加载失败：" + HanLP.Config.CharTypePath);
             System.exit(-1);
         }
         else

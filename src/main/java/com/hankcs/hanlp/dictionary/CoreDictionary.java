@@ -41,7 +41,7 @@ public class CoreDictionary
         long start = System.currentTimeMillis();
         if (!load(path))
         {
-            System.err.printf("核心词典%s加载失败\n", path);
+            logger.severe("核心词典" + path + "加载失败");
             System.exit(-1);
         }
         else
