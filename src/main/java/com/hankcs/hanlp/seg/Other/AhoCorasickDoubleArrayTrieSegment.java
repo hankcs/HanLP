@@ -40,7 +40,7 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
     {
         if (trie == null)
         {
-            System.err.println("还未加载任何词典");
+            logger.warning("还未加载任何词典");
             return Collections.emptyList();
         }
         final int[] wordNet = new int[sentence.length];
