@@ -10,13 +10,22 @@
  * </copyright>
  */
 package com.hankcs.hanlp.dictionary.other;
+
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.utility.TextUtility;
+
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 字符类型
+ *
  * @author hankcs
  */
 public class CharType
@@ -55,7 +64,7 @@ public class CharType
      * 其他
      */
     public static final byte CT_OTHER = CT_SINGLE + 12;
-    
+
     public static byte[] type;
 
     static
@@ -66,32 +75,80 @@ public class CharType
         ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CharTypePath);
         if (byteArray == null)
         {
-            logger.severe("字符类型对应表加载失败：" + HanLP.Config.CharTypePath);
-            System.exit(-1);
-        }
-        else
-        {
-            while (byteArray.hasMore())
+            try
             {
-                int b = byteArray.nextChar();
-                int e = byteArray.nextChar();
-                byte t = byteArray.nextByte();
-                for (int i = b; i <= e; ++i)
-                {
-                    type[i] = t;
-                }
+                byteArray = generate();
             }
-            logger.info("字符类型对应表加载成功，耗时" + (System.currentTimeMillis() - start) + " ms");
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                logger.severe("字符类型对应表 " + HanLP.Config.CharTypePath + " 加载失败： " + TextUtility.exceptionToString(e));
+                System.exit(-1);
+            }
         }
+        while (byteArray.hasMore())
+        {
+            int b = byteArray.nextChar();
+            int e = byteArray.nextChar();
+            byte t = byteArray.nextByte();
+            for (int i = b; i <= e; ++i)
+            {
+                type[i] = t;
+            }
+        }
+        logger.info("字符类型对应表加载成功，耗时" + (System.currentTimeMillis() - start) + " ms");
+    }
+
+    private static ByteArray generate() throws IOException
+    {
+        int preType = 5;
+        int preChar = 0;
+        List<int[]> typeList = new LinkedList<int[]>();
+        for (int i = 0; i <= Character.MAX_VALUE; ++i)
+        {
+            int type = TextUtility.charType((char) i);
+//            System.out.printf("%d %d\n", i, TextUtility.charType((char) i));
+            if (type != preType)
+            {
+                int[] array = new int[3];
+                array[0] = preChar;
+                array[1] = i - 1;
+                array[2] = preType;
+                typeList.add(array);
+//                System.out.printf("%d %d %d\n", array[0], array[1], array[2]);
+                preChar = i;
+            }
+            preType = type;
+        }
+        {
+            int[] array = new int[3];
+            array[0] = preChar;
+            array[1] = (int) Character.MAX_VALUE;
+            array[2] = preType;
+            typeList.add(array);
+        }
+//        System.out.print("int[" + typeList.size() + "][3] array = \n");
+        DataOutputStream out = new DataOutputStream(new FileOutputStream(HanLP.Config.CharTypePath));
+        for (int[] array : typeList)
+        {
+//            System.out.printf("%d %d %d\n", array[0], array[1], array[2]);
+            out.writeChar(array[0]);
+            out.writeChar(array[1]);
+            out.writeByte(array[2]);
+        }
+        out.close();
+        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CharTypePath);
+        return byteArray;
     }
 
     /**
      * 获取字符的类型
+     *
      * @param c
      * @return
      */
     public static byte get(char c)
     {
-        return type[(int)c];
+        return type[(int) c];
     }
 }
