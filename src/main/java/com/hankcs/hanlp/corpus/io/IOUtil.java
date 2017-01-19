@@ -662,4 +662,21 @@ public class IOUtil
             TextUtility.writeString(nature.toString(), out);
         }
     }
+
+    /**
+     * class.getResourceAsStream的wrapper，在资源不存在的情况下抛出IOException，
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     */
+    public static InputStream getResourceAsStream(String path) throws FileNotFoundException
+    {
+        InputStream is = IOUtil.class.getResourceAsStream(path);
+        if (is == null)
+        {
+            throw new FileNotFoundException("资源文件" + path + "不存在于jar中");
+        }
+
+        return is;
+    }
 }

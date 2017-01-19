@@ -21,7 +21,7 @@ public class ResourceIOAdapter implements IIOAdapter
     @Override
     public InputStream open(String path) throws IOException
     {
-        return IOUtil.isResource(path) ? IOUtil.class.getResourceAsStream("/" + path) : new FileInputStream(path);
+        return IOUtil.isResource(path) ? IOUtil.getResourceAsStream("/" + path) : new FileInputStream(path);
     }
 
     @Override
