@@ -77,10 +77,4 @@ public class NameDictionaryMaker
 
         return dictionaryMaker;
     }
-
-    public static void main(String[] args)
-    {
-        DictionaryMaker dictionaryMaker = NameDictionaryMaker.create("data/corpus/authornames.txt");
-        dictionaryMaker.saveTxtTo("data/dictionary/person/authornames.txt");
-    }
 }
