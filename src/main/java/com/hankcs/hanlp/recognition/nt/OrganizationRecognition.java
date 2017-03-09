@@ -81,7 +81,7 @@ public class OrganizationRecognition
             Nature nature = vertex.guessNature();
             switch (nature)
             {
-                case nz:
+                case nrf:
                 {
                     if (vertex.getAttribute().totalFrequency <= 1000)
                     {
