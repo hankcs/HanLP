@@ -358,6 +358,20 @@ public class CoreDictionary
             return getNatureFrequency(nature) > 0;
         }
 
+        /**
+         * 是否有以某个前缀开头的词性
+         * @param prefix 词性前缀，比如u会查询是否有ude, uzhe等等
+         * @return
+         */
+        public boolean hasNatureStartsWith(String prefix)
+        {
+            for (Nature n : nature)
+            {
+                if (n.startsWith(prefix)) return true;
+            }
+            return false;
+        }
+
         @Override
         public String toString()
         {

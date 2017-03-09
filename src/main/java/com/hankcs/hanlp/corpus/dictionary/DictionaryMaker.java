@@ -60,6 +60,15 @@ public class DictionaryMaker implements ISaveAble
         add(new Word(value, label));
     }
 
+    /**
+     * 删除一个词条
+     * @param value
+     */
+    public void remove(String value)
+    {
+        trie.remove(value);
+    }
+
     public Item get(String key)
     {
         return trie.get(key);
