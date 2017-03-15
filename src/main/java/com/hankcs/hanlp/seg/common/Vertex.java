@@ -151,7 +151,7 @@ public class Vertex
                 case nit:
                 {
                     wordID = CoreDictionary.NT_WORD_ID;
-                    this.attribute = CoreDictionary.get(CoreDictionary.NT_WORD_ID);
+//                    this.attribute = CoreDictionary.get(CoreDictionary.NT_WORD_ID);
                     return Predefine.TAG_GROUP;
                 }
                 case m:

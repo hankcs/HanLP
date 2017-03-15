@@ -38,9 +38,4 @@ public class CoNLLLoader
 
         return result;
     }
-    public static void main(String[] args)
-    {
-        LinkedList<CoNLLSentence> coNLLSentences = CoNLLLoader.loadSentenceList("D:\\Doc\\语料库\\依存分析训练数据\\THU\\dev.conll.fixed.txt");
-        System.out.println(coNLLSentences.getFirst());
-    }
 }

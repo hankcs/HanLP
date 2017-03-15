@@ -94,10 +94,4 @@ public class MaxEntDependencyModelMaker
         context.add(word[i].POSTAG + '→' + wordBeforeJ.POSTAG + '@' + word[j].POSTAG);
         return context;
     }
-
-    public static void main(String[] args) throws IOException
-    {
-        makeModel("D:\\Doc\\语料库\\依存分析训练数据\\THU\\train.conll.fixed.txt", "data/model/dependency/MaxEntTrain.txt");
-//        makeModel("D:\\Doc\\语料库\\依存分析训练数据\\THU\\out.txt", "data/model/dependency/MaxEntTrain.test.txt");
-    }
 }

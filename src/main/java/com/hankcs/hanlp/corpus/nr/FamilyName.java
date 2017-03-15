@@ -52,26 +52,4 @@ public class FamilyName
         if (c.length() != 1) return false;
         return fn[c.charAt(0)];
     }
-
-    public static void main(String[] args)
-    {
-        List<Item> itemList = DictionaryMaker.loadAsItemList("data/dictionary/person/nr.txt");
-        try
-        {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data/dictionary/person/familyname.txt")));
-            for (Item item : itemList)
-            {
-                if (item.labelMap.containsKey("B"))
-                {
-                    bw.write(item.key);
-                    bw.newLine();
-                }
-            }
-            bw.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 }

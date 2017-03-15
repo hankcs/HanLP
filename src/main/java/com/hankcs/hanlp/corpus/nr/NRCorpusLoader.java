@@ -84,12 +84,6 @@ public class NRCorpusLoader
         return true;
     }
 
-    public static void main(String[] args)
-    {
-//        NRCorpusLoader.load("data/corpus/name.txt");
-        combine();
-    }
-
     public static void combine()
     {
         DictionaryMaker dictionaryMaker = DictionaryMaker.combine(HanLP.Config.CoreDictionaryPath, "XXXDictionary.txt");

@@ -69,9 +69,4 @@ public class SynonymHelper
         long index = id % MAX_WORDS;
         return String.format("%s%0" + MAX_INDEX_LENGTH + "d", idString, index);
     }
-
-    public static void main(String[] args)
-    {
-        System.out.println(convertId2StringWithIndex(convertString2IdWithIndex("Zg83H75=", 0)));
-    }
 }
