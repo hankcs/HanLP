@@ -149,11 +149,15 @@ public class CustomDictionary
     {
         try
         {
+            String splitter = "\\s";
+            if (path.endsWith(".csv")) {
+                splitter = "\\,";
+            }
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
-                String[] param = line.split("\\s");
+                String[] param = line.split(splitter);
                 if (param[0].length() == 0) continue;   // 排除空行
                 if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
 
