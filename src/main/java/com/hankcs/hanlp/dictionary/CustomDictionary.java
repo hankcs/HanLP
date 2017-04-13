@@ -150,8 +150,9 @@ public class CustomDictionary
         try
         {
             String splitter = "\\s";
-            if (path.endsWith(".csv")) {
-                splitter = "\\,";
+            if (path.endsWith(".csv"))
+            {
+                splitter = ",";
             }
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
