@@ -13,9 +13,13 @@ package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.MDAG.MDAGSet;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
+import com.hankcs.hanlp.dictionary.stopword.StopWordDictionary;
 import junit.framework.TestCase;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,5 +50,17 @@ public class TestStopWordDictionary extends TestCase
         assertEquals(true, set.contains("bee"));
         set.remove("bee");
         assertEquals(false, set.contains("bee"));
+    }
+
+    public void testRemoveDuplicateEntries() throws Exception
+    {
+        StopWordDictionary dictionary = new StopWordDictionary(new File(HanLP.Config.CoreStopWordDictionaryPath));
+        BufferedWriter bw = IOUtil.newBufferedWriter(HanLP.Config.CoreStopWordDictionaryPath);
+        for (String word : dictionary)
+        {
+            bw.write(word);
+            bw.newLine();
+        }
+        bw.close();
     }
 }
