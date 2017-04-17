@@ -145,7 +145,13 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
                 }
             }
         }
-        Vertex from = nodes[nodes.length - 1].getFirst();
+        LinkedList<Vertex> node = null;
+        int index = 1;
+        while (node == null || node.size() <= 0){
+            node = nodes[nodes.length - index];
+            index++;
+        }
+        Vertex from = node.getFirst();
         while (from != null)
         {
             vertexList.addFirst(from);
