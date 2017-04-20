@@ -1859,7 +1859,7 @@
 假=jia3,jia4
 假分数=jia3,fen1,shu4
 假日=jia4,ri4
-假期=ja4,qi1
+假期=jia4,qi1
 假条=jia4,tiao2
 假洋鬼子=jia3,yang2,gui3,zi5
 偈=ji4,jie2
