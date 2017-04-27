@@ -252,14 +252,13 @@ public class TextRankSentence
         return TextUtility.join("。", resultList);
     }
 
-    private static List<String> permutation(List<String> resultList, List<String> sentenceList)
+    private static List<String> permutation(List<String> resultList, final List<String> sentenceList)
     {
-        final List<String> theSentenceList = sentenceList;
         Collections.sort(resultList, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
-                Integer num1 = theSentenceList.indexOf(o1);
-                Integer num2 = theSentenceList.indexOf(o2);
+                Integer num1 = sentenceList.indexOf(o1);
+                Integer num2 = sentenceList.indexOf(o2);
                 return num1.compareTo(num2);
             }
         });
