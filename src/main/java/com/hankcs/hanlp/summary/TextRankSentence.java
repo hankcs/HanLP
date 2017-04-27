@@ -252,20 +252,21 @@ public class TextRankSentence
         return TextUtility.join("。", resultList);
     }
 
-    public static List<String> permutation(List<String> resultList, List<String> sentenceList)
+    private static List<String> permutation(List<String> resultList, List<String> sentenceList)
     {
+        final List<String> theSentenceList = sentenceList;
         Collections.sort(resultList, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
-                Integer num1 = new Integer(sentenceList.indexOf(o1));
-                Integer num2 = new Integer(sentenceList.indexOf(o2));
+                Integer num1 = theSentenceList.indexOf(o1);
+                Integer num2 = theSentenceList.indexOf(o2);
                 return num1.compareTo(num2);
             }
         });
         return resultList;
     }
 
-    public static List<String> pick_sentences(List<String> resultList, int max_length)
+    private static List<String> pick_sentences(List<String> resultList, int max_length)
     {
         List<String> summary = new ArrayList<String>();
         int count = 0;
