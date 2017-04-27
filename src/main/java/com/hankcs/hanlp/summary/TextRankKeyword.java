@@ -134,7 +134,6 @@ public class TextRankKeyword extends KeywordExtractor
                     }
 
                     words.get(w1).add(w2);
-                    words.get(w2).add(w1);
                 }
             }
         }
