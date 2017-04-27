@@ -255,27 +255,27 @@ public class TextRankSentence
     public static List<String> permutation(List<String> resultList, List<String> sentenceList)
     {
         Collections.sort(resultList, new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				Integer num1 = new Integer(sentenceList.indexOf(o1));
-				Integer num2 = new Integer(sentenceList.indexOf(o2));
-				return num1.compareTo(num2);
-			}
-		});
+            @Override
+            public int compare(String o1, String o2) {
+                Integer num1 = new Integer(sentenceList.indexOf(o1));
+                Integer num2 = new Integer(sentenceList.indexOf(o2));
+                return num1.compareTo(num2);
+            }
+        });
         return resultList;
     }
 
     public static List<String> pick_sentences(List<String> resultList, int max_length)
     {
         List<String> summary = new ArrayList<String>();
-    	int count = 0;
-    	for (String result : resultList) {
-    		if (count + result.length() <= max_Length) {
-    			summary.add(result);
-    			count += result.length();
-    		}
-    	}
-    	return summary;
+        int count = 0;
+        for (String result : resultList) {
+            if (count + result.length() <= max_Length) {
+                summary.add(result);
+                count += result.length();
+            }
+        }
+        return summary;
     }
 
 }
