@@ -254,56 +254,28 @@ public class TextRankSentence
 
     public static List<String> permutation(List<String> resultList, List<String> sentenceList)
     {
-        int index_buffer_x;
-        int index_buffer_y;
-        String sen_x;
-        String sen_y;
-        int length = resultList.size();
-        // bubble sort derivative
-        for (int i = 0; i < length; i++)
-            for (int offset = 0; offset < length - i; offset++)
-            {
-                sen_x = resultList.get(i);
-                sen_y = resultList.get(i + offset);
-                index_buffer_x = sentenceList.indexOf(sen_x);
-                index_buffer_y = sentenceList.indexOf(sen_y);
-                // if the sentence order in sentenceList does not conform that is in resultList, reverse it
-                if (index_buffer_x > index_buffer_y)
-                {
-                    resultList.set(i, sen_y);
-                    resultList.set(i + offset, sen_x);
-                }
+        Collections.sort(resultList, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                Integer num1 = new Integer(sentenceList.indexOf(o1));
+                Integer num2 = new Integer(sentenceList.indexOf(o2));
+                return num1.compareTo(num2);
             }
-
+        });
         return resultList;
     }
 
     public static List<String> pick_sentences(List<String> resultList, int max_length)
     {
-        int length_counter = 0;
-        int length_buffer;
-        int length_jump;
-        List<String> resultBuffer = new LinkedList<String>();
-        for (int i = 0; i < resultList.size(); i++)
-        {
-            length_buffer = length_counter + resultList.get(i).length();
-            if (length_buffer <= max_length)
-            {
-                resultBuffer.add(resultList.get(i));
-                length_counter += resultList.get(i).length();
-            }
-            else if (i < (resultList.size() - 1))
-            {
-                length_jump = length_counter + resultList.get(i + 1).length();
-                if (length_jump <= max_length)
-                {
-                    resultBuffer.add(resultList.get(i + 1));
-                    length_counter += resultList.get(i + 1).length();
-                    i++;
-                }
+        List<String> summary = new ArrayList<String>();
+        int count = 0;
+        for (String result : resultList) {
+            if (count + result.length() <= max_Length) {
+                summary.add(result);
+                count += result.length();
             }
         }
-        return resultBuffer;
+        return summary;
     }
 
 }
