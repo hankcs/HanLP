@@ -270,7 +270,7 @@ public class TextRankSentence
         List<String> summary = new ArrayList<String>();
         int count = 0;
         for (String result : resultList) {
-            if (count + result.length() <= max_Length) {
+            if (count + result.length() <= max_length) {
                 summary.add(result);
                 count += result.length();
             }
