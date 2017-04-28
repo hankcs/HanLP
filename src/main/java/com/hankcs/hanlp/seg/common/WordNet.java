@@ -215,6 +215,16 @@ public class WordNet
     }
 
     /**
+     * 获取某一行的逆序迭代器
+     * @param line 行号
+     * @return 逆序迭代器
+     */
+    public Iterator<Vertex> descendingIterator(int line)
+    {
+        return vertexes[line].descendingIterator();
+    }
+
+    /**
      * 获取某一行的第一个节点
      *
      * @param line

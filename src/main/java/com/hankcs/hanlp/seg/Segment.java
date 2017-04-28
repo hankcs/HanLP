@@ -273,7 +273,6 @@ public abstract class Segment
         Vertex[] wordNet = new Vertex[vertexList.size()];
         vertexList.toArray(wordNet);
         // DAT合并
-        int line = 1;
         DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
         for (int i = 0; i < wordNet.length; ++i)
         {
@@ -293,25 +292,19 @@ public abstract class Segment
                     {
                         value = output;
                         end = to + 1;
-                        combineWords(wordNet, i, end, value);
-                        wordNetAll.add(line, wordNet[i]);
                     }
                 }
                 if (value != null)
                 {
-                    line += wordNet[i].realWord.length();
+                    combineWords(wordNet, i, end, value);
+                    wordNetAll.add(i, wordNet[i]);
                     i = end - 1;
                 }
-            }
-            else
-            {
-                line += wordNet[i].realWord.length();
             }
         }
         // BinTrie合并
         if (CustomDictionary.trie != null)
         {
-            line = 1;
             for (int i = 0; i < wordNet.length; ++i)
             {
                 if (wordNet[i] == null) continue;
@@ -330,19 +323,14 @@ public abstract class Segment
                         {
                             value = state.getValue();
                             end = to + 1;
-                            combineWords(wordNet, i, end, value);
-                            wordNetAll.add(line, wordNet[i]);
                         }
                     }
                     if (value != null)
                     {
-                        line += wordNet[i].realWord.length();
+                        combineWords(wordNet, i, end, value);
+                        wordNetAll.add(i, wordNet[i]);
                         i = end - 1;
                     }
-                }
-                else
-                {
-                    line += wordNet[i].realWord.length();
                 }
             }
         }

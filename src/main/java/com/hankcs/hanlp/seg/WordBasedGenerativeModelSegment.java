@@ -487,9 +487,10 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                 int currentLine = line;
                 while (currentLine < line + vertex.realWord.length())
                 {
-                    List<Vertex> vertexListCurrentLine = wordNetAll.get(currentLine);    // 这一行的词
-                    for (Vertex smallVertex : vertexListCurrentLine) // 这一行的短词
+                    Iterator<Vertex> iterator = wordNetAll.descendingIterator(currentLine);// 这一行的词，逆序遍历保证字典序稳定地由大到小
+                    while (iterator.hasNext())// 这一行的短词
                     {
+                        Vertex smallVertex = iterator.next();
                         if (
                                 ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
                                         smallVertex.realWord.length() > 1)

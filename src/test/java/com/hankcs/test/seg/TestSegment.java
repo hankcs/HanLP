@@ -399,4 +399,11 @@ public class TestSegment extends TestCase
 
         System.out.println(segment.seg(text));
     }
+
+    public void testIssue496() throws Exception
+    {
+        Segment segment = HanLP.newSegment().enableIndexMode(true);
+        System.out.println(segment.seg("中医药"));
+        System.out.println(segment.seg("中医药大学"));
+    }
 }
