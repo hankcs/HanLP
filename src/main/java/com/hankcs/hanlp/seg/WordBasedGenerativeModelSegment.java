@@ -494,7 +494,9 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                         if (
                                 ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
                                         smallVertex.realWord.length() > 1)
-                                        && smallVertex != vertex)
+                                        && smallVertex != vertex // 防止重复添加
+                                        && currentLine + smallVertex.realWord.length() <= line + vertex.realWord.length() // 防止超出边界
+                            )
                         {
                             listIterator.add(smallVertex);
                             Term termSub = convert(smallVertex);

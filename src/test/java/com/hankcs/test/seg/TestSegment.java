@@ -406,4 +406,13 @@ public class TestSegment extends TestCase
         System.out.println(segment.seg("中医药"));
         System.out.println(segment.seg("中医药大学"));
     }
+
+    public void testIssue513() throws Exception
+    {
+        List<Term> termList = IndexTokenizer.segment("南京市长江大桥");
+        for (Term term : termList)
+        {
+            System.out.println(term + " [" + term.offset + ":" + (term.offset + term.word.length()) + "]");
+        }
+    }
 }

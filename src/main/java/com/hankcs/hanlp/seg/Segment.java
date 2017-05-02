@@ -274,7 +274,7 @@ public abstract class Segment
         vertexList.toArray(wordNet);
         // DAT合并
         DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
-        for (int i = 0; i < wordNet.length; ++i)
+        for (int i = 0, line = 0; i < wordNet.length; ++i)
         {
             int state = 1;
             state = dat.transition(wordNet[i].realWord, state);
@@ -297,15 +297,24 @@ public abstract class Segment
                 if (value != null)
                 {
                     combineWords(wordNet, i, end, value);
-                    wordNetAll.add(i, wordNet[i]);
+                    wordNetAll.add(line, wordNet[i]);
+                    line += wordNet[i].realWord.length();
                     i = end - 1;
                 }
+                else
+                {
+                    line += wordNet[i].realWord.length();
+                }
+            }
+            else
+            {
+                line += wordNet[i].realWord.length();
             }
         }
         // BinTrie合并
         if (CustomDictionary.trie != null)
         {
-            for (int i = 0; i < wordNet.length; ++i)
+            for (int i = 0, line = 0; i < wordNet.length; ++i)
             {
                 if (wordNet[i] == null) continue;
                 BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
@@ -328,9 +337,18 @@ public abstract class Segment
                     if (value != null)
                     {
                         combineWords(wordNet, i, end, value);
-                        wordNetAll.add(i, wordNet[i]);
+                        wordNetAll.add(line, wordNet[i]);
+                        line += wordNet[i].realWord.length();
                         i = end - 1;
                     }
+                    else
+                    {
+                        line += wordNet[i].realWord.length();
+                    }
+                }
+                else
+                {
+                    line += wordNet[i].realWord.length();
                 }
             }
         }
