@@ -1,9 +1,8 @@
 package com.hankcs.test.algorithm;
 
-import com.hankcs.hanlp.algoritm.MaxHeap;
+import com.hankcs.hanlp.algorithm.MaxHeap;
 import junit.framework.TestCase;
 
-import java.util.Collections;
 import java.util.Comparator;
 
 public class MaxHeapTest extends TestCase

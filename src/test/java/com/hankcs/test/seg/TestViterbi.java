@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.algoritm.Viterbi;
+import com.hankcs.hanlp.algorithm.Viterbi;
 import junit.framework.TestCase;
 import static com.hankcs.test.seg.TestViterbi.Weather.*;
 import static com.hankcs.test.seg.TestViterbi.Activity.*;

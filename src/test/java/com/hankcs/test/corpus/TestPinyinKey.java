@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.algoritm.LongestCommonSubstring;
+import com.hankcs.hanlp.algorithm.LongestCommonSubstring;
 import com.hankcs.hanlp.suggest.scorer.pinyin.PinyinKey;
 import junit.framework.TestCase;
 

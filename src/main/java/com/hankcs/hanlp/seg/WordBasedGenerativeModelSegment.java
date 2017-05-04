@@ -11,8 +11,7 @@
  */
 package com.hankcs.hanlp.seg;
 
-import com.hankcs.hanlp.algoritm.Viterbi;
-import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.*;
