@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -268,96 +269,29 @@ public abstract class Segment
      * @param wordNetAll 收集用户词语到全词图中
      * @return 合并后的结果
      */
-    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, WordNet wordNetAll)
+    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, final WordNet wordNetAll)
     {
-        Vertex[] wordNet = new Vertex[vertexList.size()];
-        vertexList.toArray(wordNet);
-        // DAT合并
-        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
-        for (int i = 0, line = 0; i < wordNet.length; ++i)
+        List<Vertex> outputList = combineByCustomDictionary(vertexList);
+        int line = 0;
+        for (final Vertex vertex : outputList)
         {
-            int state = 1;
-            state = dat.transition(wordNet[i].realWord, state);
-            if (state > 0)
+            final int parentLength = vertex.realWord.length();
+            final int currentLine = line;
+            if (parentLength >= 3)
             {
-                int to = i + 1;
-                int end = to;
-                CoreDictionary.Attribute value = dat.output(state);
-                for (; to < wordNet.length; ++to)
+                CustomDictionary.parseText(vertex.realWord, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
                 {
-                    state = dat.transition(wordNet[to].realWord, state);
-                    if (state < 0) break;
-                    CoreDictionary.Attribute output = dat.output(state);
-                    if (output != null)
+                    @Override
+                    public void hit(int begin, int end, CoreDictionary.Attribute value)
                     {
-                        value = output;
-                        end = to + 1;
+                        if (end - begin == parentLength) return;
+                        wordNetAll.add(currentLine + begin, new Vertex(vertex.realWord.substring(begin, end), value));
                     }
-                }
-                if (value != null)
-                {
-                    combineWords(wordNet, i, end, value);
-                    wordNetAll.add(line, wordNet[i]);
-                    line += wordNet[i].realWord.length();
-                    i = end - 1;
-                }
-                else
-                {
-                    line += wordNet[i].realWord.length();
-                }
+                });
             }
-            else
-            {
-                line += wordNet[i].realWord.length();
-            }
+            line += parentLength;
         }
-        // BinTrie合并
-        if (CustomDictionary.trie != null)
-        {
-            for (int i = 0, line = 0; i < wordNet.length; ++i)
-            {
-                if (wordNet[i] == null) continue;
-                BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
-                if (state != null)
-                {
-                    int to = i + 1;
-                    int end = to;
-                    CoreDictionary.Attribute value = state.getValue();
-                    for (; to < wordNet.length; ++to)
-                    {
-                        if (wordNet[to] == null) continue;
-                        state = state.transition(wordNet[to].realWord.toCharArray(), 0);
-                        if (state == null) break;
-                        if (state.getValue() != null)
-                        {
-                            value = state.getValue();
-                            end = to + 1;
-                        }
-                    }
-                    if (value != null)
-                    {
-                        combineWords(wordNet, i, end, value);
-                        wordNetAll.add(line, wordNet[i]);
-                        line += wordNet[i].realWord.length();
-                        i = end - 1;
-                    }
-                    else
-                    {
-                        line += wordNet[i].realWord.length();
-                    }
-                }
-                else
-                {
-                    line += wordNet[i].realWord.length();
-                }
-            }
-        }
-        vertexList.clear();
-        for (Vertex vertex : wordNet)
-        {
-            if (vertex != null) vertexList.add(vertex);
-        }
-        return vertexList;
+        return outputList;
     }
 
     /**

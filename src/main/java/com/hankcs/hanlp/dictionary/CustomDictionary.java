@@ -500,4 +500,29 @@ public class CustomDictionary
             processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
         }
     }
+
+    /**
+     * 解析一段文本（目前采用了BinTrie+DAT的混合储存形式，此方法可以统一两个数据结构）
+     * @param text         文本
+     * @param processor    处理器
+     */
+    public static void parseText(String text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
+    {
+        if (trie != null)
+        {
+            BaseSearcher searcher = CustomDictionary.getSearcher(text);
+            int offset;
+            Map.Entry<String, CoreDictionary.Attribute> entry;
+            while ((entry = searcher.next()) != null)
+            {
+                offset = searcher.getOffset();
+                processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
+            }
+        }
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
+        while (searcher.next())
+        {
+            processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
+        }
+    }
 }

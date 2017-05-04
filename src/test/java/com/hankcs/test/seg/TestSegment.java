@@ -415,4 +415,24 @@ public class TestSegment extends TestCase
             System.out.println(term + " [" + term.offset + ":" + (term.offset + term.word.length()) + "]");
         }
     }
+
+    public void testIssue519() throws Exception
+    {
+        String[] testCase = new String[]{
+            "评审委员会",
+            "商标评审委员会",
+            "铁道部运输局",
+            "铁道部运输局营运部货运营销计划处",
+        };
+        for (String sentence : testCase)
+        {
+            System.out.println(sentence);
+            List<Term> termList = IndexTokenizer.segment(sentence);
+            for (Term term : termList)
+            {
+                System.out.println(term + " [" + term.offset + ":" + (term.offset + term.word.length()) + "]");
+            }
+            System.out.println();
+        }
+    }
 }
