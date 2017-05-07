@@ -1,9 +1,8 @@
 package com.hankcs.hanlp.summary;
 
 
-import com.hankcs.hanlp.algoritm.MaxHeap;
+import com.hankcs.hanlp.algorithm.MaxHeap;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.*;
 
@@ -134,7 +133,6 @@ public class TextRankKeyword extends KeywordExtractor
                     }
 
                     words.get(w1).add(w2);
-                    words.get(w2).add(w1);
                 }
             }
         }

@@ -78,9 +78,4 @@ public class WordNatureWeightModelMaker
     {
         return "<" + tag + ">";
     }
-
-    public static void main(String[] args)
-    {
-        makeModel("D:\\Doc\\语料库\\依存分析训练数据\\THU\\train.conll.fixed.txt", "data/model/dependency/WordNature.txt");
-    }
 }

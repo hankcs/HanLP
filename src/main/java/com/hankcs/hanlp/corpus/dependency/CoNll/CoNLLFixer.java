@@ -40,9 +40,4 @@ public class CoNLLFixer
         }
         return IOUtil.saveTxt(path + ".fixed.txt", sbOut.toString());
     }
-
-    public static void main(String[] args)
-    {
-        CoNLLFixer.fix("D:\\Doc\\语料库\\依存分析训练数据\\THU\\test.conll");
-    }
 }

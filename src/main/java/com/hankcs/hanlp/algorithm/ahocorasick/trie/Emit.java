@@ -1,7 +1,7 @@
-package com.hankcs.hanlp.algoritm.ahocorasick.trie;
+package com.hankcs.hanlp.algorithm.ahocorasick.trie;
 
-import com.hankcs.hanlp.algoritm.ahocorasick.interval.Interval;
-import com.hankcs.hanlp.algoritm.ahocorasick.interval.Intervalable;
+import com.hankcs.hanlp.algorithm.ahocorasick.interval.Interval;
+import com.hankcs.hanlp.algorithm.ahocorasick.interval.Intervalable;
 
 /**
  * 一个模式串匹配结果

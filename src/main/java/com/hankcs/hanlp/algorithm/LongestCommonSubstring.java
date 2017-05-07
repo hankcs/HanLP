@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.algoritm;
+package com.hankcs.hanlp.algorithm;
 
 /**
  * 求最长公共字串的长度<br>

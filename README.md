@@ -65,7 +65,7 @@ HanLP: Han Language Processing
 
 HanLP下载地址：https://github.com/hankcs/HanLP/releases
 
-Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
+Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 
 更多细节：https://github.com/hankcs/HanLP/wiki
 
@@ -73,7 +73,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 
 ## 下载与配置
 
-###方式一、Maven
+### 方式一、Maven
 
 为了方便用户，特提供内置了数据包的Portable版，只需在pom.xml加入：
 
@@ -87,7 +87,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 
 零配置，即可使用基本功能（除CRF分词、依存句法分析外的全部功能）。如果用户有自定义的需求，可以参考方式二，使用hanlp.properties进行配置。
 
-###方式二、下载jar、data、hanlp.properties
+### 方式二、下载jar、data、hanlp.properties
 
 **HanLP**将数据与程序分离，给予用户自定义的自由。
 
@@ -100,6 +100,7 @@ Solr5.x、Lucene5.x插件：https://github.com/hankcs/hanlp-solr-plugin
 | 数据包        | 功能   |  体积（MB）  |
 | --------   | -----:  | :----:  |
 | [data.zip](https://github.com/hankcs/HanLP/releases)     | 全部 |   255     |
+
 下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
 
 **HanLP**中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
@@ -314,7 +315,7 @@ public class DemoCustomDictionary
 - 词典格式
   * 每一行代表一个单词，格式遵从`[单词] [词性A] [A的频次] [词性B] [B的频次] ...` 如果不填词性则表示采用词典的默认词性。
   * 词典的默认词性默认是名词n，可以通过配置文件修改：`全国地名大全.txt ns;`如果词典路径后面空格紧接着词性，则该词典默认是该词性。
-  * 在基于层叠隐马模型的最短路分词中，并不保证自定义词典中的词一定被切分出来。如果你认为这个词绝对应该切分出来，那么请将词频设大一些
+  * 在基于层叠隐马模型的最短路分词中，并不保证自定义词典中的词一定被切分出来。
   * 关于用户词典的更多信息请参考**词典说明**一章。
 - 算法详解
   * [《Trie树分词》](http://www.hankcs.com/program/java/tire-tree-participle.html)
@@ -718,9 +719,11 @@ public class DemoDependencyParser
 
 - 词频词性词典
    * 每一行代表一个单词，格式遵从`[单词] [词性A] [A的频次] [词性B] [B的频次] ...`。
+   * 支持省略词性和频次，直接一行一个单词。
+   * `.txt`词典文件的分隔符为空格或制表符，所以不支持含有空格的词语。如果需要支持空格，请使用英文逗号`,`分割的**纯文本**`.csv`文件。在使用Excel等富文本编辑器时，则请注意保存为**纯文本**形式。
 - 词频词典
   * 每一行代表一个单词，格式遵从`[单词] [单词的频次]`。
-  * 每一行的分隔符为空格符或制表符
+  * 每一行的分隔符为空格或制表符。
 
 少数词典有自己的专用格式，比如同义词词典兼容《同义词词林扩展版》的文本格式，而转移矩阵词典则是一个csv表格。
 
@@ -792,3 +795,4 @@ HanLP.Config.enableDebug();
 作者 [@hankcs](http://weibo.com/hankcs/)
 
 2014年12月16日
+

@@ -133,7 +133,7 @@ public class HanLP
         /**
          * 字符类型对应表
          */
-        public static String CharTypePath = "data/dictionary/other/CharType.dat.yes";
+        public static String CharTypePath = "data/dictionary/other/CharType.bin";
 
         /**
          * 字符正规化表（全角转半角，繁体转简体）

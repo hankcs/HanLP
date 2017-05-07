@@ -1,4 +1,4 @@
-package com.hankcs.hanlp.algoritm.ahocorasick.interval;
+package com.hankcs.hanlp.algorithm.ahocorasick.interval;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -199,7 +199,7 @@ public class IntervalNode
 
     /**
      * 是对IntervalNode.findOverlaps(Intervalable)的一个包装，防止NPE
-     * @see com.hankcs.hanlp.algoritm.ahocorasick.interval.IntervalNode#findOverlaps(Intervalable)
+     * @see com.hankcs.hanlp.algorithm.ahocorasick.interval.IntervalNode#findOverlaps(Intervalable)
      * @param node
      * @param interval
      * @return

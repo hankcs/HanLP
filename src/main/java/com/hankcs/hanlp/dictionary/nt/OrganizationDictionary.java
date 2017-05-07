@@ -992,6 +992,7 @@ public class OrganizationDictionary
         addKeyword(patternMap, "GGFCCCD");
         addKeyword(patternMap, "GGFCCD");
         addKeyword(patternMap, "GGFCD");
+        addKeyword(patternMap, "GGFCDD");
         addKeyword(patternMap, "GGFD");
         addKeyword(patternMap, "GGFDD");
         addKeyword(patternMap, "GGFFCD");

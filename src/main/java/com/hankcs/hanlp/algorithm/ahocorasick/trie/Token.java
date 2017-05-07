@@ -1,4 +1,4 @@
-package com.hankcs.hanlp.algoritm.ahocorasick.trie;
+package com.hankcs.hanlp.algorithm.ahocorasick.trie;
 
 /**
  * 一个片段

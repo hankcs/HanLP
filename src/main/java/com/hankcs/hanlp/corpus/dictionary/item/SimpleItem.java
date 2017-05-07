@@ -63,6 +63,15 @@ public class SimpleItem
         labelMap.put(label, innerFrequency);
     }
 
+    /**
+     * 删除一个标签
+     * @param label 标签
+     */
+    public void removeLabel(String label)
+    {
+        labelMap.remove(label);
+    }
+
     public boolean containsLabel(String label)
     {
         return labelMap.containsKey(label);

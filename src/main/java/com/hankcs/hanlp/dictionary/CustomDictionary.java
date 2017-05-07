@@ -149,11 +149,16 @@ public class CustomDictionary
     {
         try
         {
+            String splitter = "\\s";
+            if (path.endsWith(".csv"))
+            {
+                splitter = ",";
+            }
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
-                String[] param = line.split("\\s");
+                String[] param = line.split(splitter);
                 if (param[0].length() == 0) continue;   // 排除空行
                 if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
 
@@ -478,6 +483,31 @@ public class CustomDictionary
      * @param processor    处理器
      */
     public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
+    {
+        if (trie != null)
+        {
+            BaseSearcher searcher = CustomDictionary.getSearcher(text);
+            int offset;
+            Map.Entry<String, CoreDictionary.Attribute> entry;
+            while ((entry = searcher.next()) != null)
+            {
+                offset = searcher.getOffset();
+                processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
+            }
+        }
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
+        while (searcher.next())
+        {
+            processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
+        }
+    }
+
+    /**
+     * 解析一段文本（目前采用了BinTrie+DAT的混合储存形式，此方法可以统一两个数据结构）
+     * @param text         文本
+     * @param processor    处理器
+     */
+    public static void parseText(String text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
     {
         if (trie != null)
         {
