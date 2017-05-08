@@ -76,8 +76,12 @@ public class PersonRecognition
     public static List<EnumItem<NR>> roleObserve(List<Vertex> wordSegResult)
     {
         List<EnumItem<NR>> tagList = new LinkedList<EnumItem<NR>>();
-        for (Vertex vertex : wordSegResult)
+        Iterator<Vertex> iterator = wordSegResult.iterator();
+        iterator.next();
+        tagList.add(new EnumItem<NR>(NR.A, NR.K)); //  始##始 A K
+        while (iterator.hasNext())
         {
+            Vertex vertex = iterator.next();
             EnumItem<NR> nrEnumItem = PersonDictionary.dictionary.get(vertex.realWord);
             if (nrEnumItem == null)
             {
