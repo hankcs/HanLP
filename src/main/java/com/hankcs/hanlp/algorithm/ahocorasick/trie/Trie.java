@@ -1,7 +1,7 @@
-package com.hankcs.hanlp.algoritm.ahocorasick.trie;
+package com.hankcs.hanlp.algorithm.ahocorasick.trie;
 
-import com.hankcs.hanlp.algoritm.ahocorasick.interval.IntervalTree;
-import com.hankcs.hanlp.algoritm.ahocorasick.interval.Intervalable;
+import com.hankcs.hanlp.algorithm.ahocorasick.interval.IntervalTree;
+import com.hankcs.hanlp.algorithm.ahocorasick.interval.Intervalable;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;

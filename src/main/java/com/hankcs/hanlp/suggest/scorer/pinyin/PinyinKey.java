@@ -11,8 +11,8 @@
  */
 package com.hankcs.hanlp.suggest.scorer.pinyin;
 
-import com.hankcs.hanlp.algoritm.EditDistance;
-import com.hankcs.hanlp.algoritm.LongestCommonSubstring;
+import com.hankcs.hanlp.algorithm.EditDistance;
+import com.hankcs.hanlp.algorithm.LongestCommonSubstring;
 import com.hankcs.hanlp.collection.dartsclone.Pair;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinUtil;

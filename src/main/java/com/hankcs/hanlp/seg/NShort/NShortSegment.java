@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.seg.NShort;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.algoritm.Dijkstra;
+import com.hankcs.hanlp.algorithm.Dijkstra;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;

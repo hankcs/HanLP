@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.suggest.scorer.editdistance;
 
-import com.hankcs.hanlp.algoritm.EditDistance;
+import com.hankcs.hanlp.algorithm.EditDistance;
 import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
 
 /**

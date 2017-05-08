@@ -11,9 +11,8 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
-import com.hankcs.hanlp.algoritm.ahocorasick.trie.Token;
-import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
-import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
+import com.hankcs.hanlp.algorithm.ahocorasick.trie.Token;
+import com.hankcs.hanlp.algorithm.ahocorasick.trie.Trie;
 
 import java.util.*;
 

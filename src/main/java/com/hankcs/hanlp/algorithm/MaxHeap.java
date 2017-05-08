@@ -9,7 +9,7 @@
  * This source is subject to Hankcs. Please contact Hankcs to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.algoritm;
+package com.hankcs.hanlp.algorithm;
 
 import java.util.*;
 

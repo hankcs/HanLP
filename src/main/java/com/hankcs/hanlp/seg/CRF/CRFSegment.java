@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.seg.CRF;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.algoritm.Viterbi;
+import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;

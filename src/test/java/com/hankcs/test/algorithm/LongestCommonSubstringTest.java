@@ -1,6 +1,6 @@
 package com.hankcs.test.algorithm;
 
-import com.hankcs.hanlp.algoritm.LongestCommonSubstring;
+import com.hankcs.hanlp.algorithm.LongestCommonSubstring;
 import junit.framework.TestCase;
 
 public class LongestCommonSubstringTest extends TestCase

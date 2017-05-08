@@ -1,4 +1,4 @@
-package com.hankcs.hanlp.algoritm.ahocorasick.interval;
+package com.hankcs.hanlp.algorithm.ahocorasick.interval;
 
 import java.util.Collections;
 import java.util.List;

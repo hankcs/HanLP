@@ -1,6 +1,6 @@
 package com.hankcs.test.algorithm;
 
-import com.hankcs.hanlp.algoritm.LongestCommonSubsequence;
+import com.hankcs.hanlp.algorithm.LongestCommonSubsequence;
 import junit.framework.TestCase;
 
 public class LongestCommonSubsequenceTest extends TestCase

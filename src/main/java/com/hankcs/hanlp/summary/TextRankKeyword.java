@@ -1,9 +1,8 @@
 package com.hankcs.hanlp.summary;
 
 
-import com.hankcs.hanlp.algoritm.MaxHeap;
+import com.hankcs.hanlp.algorithm.MaxHeap;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.*;
 

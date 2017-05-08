@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.recognition.nr;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.algoritm.Viterbi;
+import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.dictionary.nr.PersonDictionary;
