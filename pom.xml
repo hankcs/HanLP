@@ -4,7 +4,7 @@
 
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>1.3.3</version>
+    <version>1.4</version>
 
     <name>HanLP</name>
     <url>http://www.hankcs.com/</url>
@@ -15,7 +15,7 @@
         <name>码农场</name>
         <url>http://www.hankcs.com/</url>
     </organization>
-    <licenses>
+    <licenses> 
         <license>
             <name>Apache License Version 2.0</name>
             <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
@@ -107,7 +107,9 @@
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
         <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
-
+        <stanford-parser.version>3.3.1</stanford-parser.version>
+         <slf4j-api.version>1.6.4</slf4j-api.version>
+        <logback-classic.version>0.9.28</logback-classic.version>
         <junit.version>4.11</junit.version>
     </properties>
     <dependencies>
@@ -117,5 +119,30 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+         <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-parser</artifactId>
+            <version>${stanford-parser.version}</version>
+        </dependency> 
+        
+          <!-- SLF4J日志框架API -->
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j-api.version}</version>
+    </dependency>
+    <!-- LOGBACK日志实现提供者 -->
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback-classic.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+            </exclusion>
+        </exclusions>
+        <scope>runtime</scope>
+    </dependency>
     </dependencies>
 </project>
