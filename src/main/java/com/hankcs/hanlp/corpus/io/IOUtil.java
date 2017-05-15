@@ -273,16 +273,20 @@ public class IOUtil
      * 从InputStream读取指定长度的字节出来
      * @param is 流
      * @param targetArray output
+     * @return 实际读取了多少字节，返回0表示遇到了文件尾部
      * @throws IOException
      */
-    public static void readBytesFromOtherInputStream(InputStream is, byte[] targetArray) throws IOException
+    public static int readBytesFromOtherInputStream(InputStream is, byte[] targetArray) throws IOException
     {
+        assert targetArray != null;
+        assert targetArray.length > 0;
         int len;
         int off = 0;
-        while ((len = is.read(targetArray, off, targetArray.length - off)) != -1 && off < targetArray.length)
+        while (off < targetArray.length && (len = is.read(targetArray, off, targetArray.length - off)) != -1)
         {
             off += len;
         }
+        return off;
     }
 
     public static LinkedList<String> readLineList(String path)
