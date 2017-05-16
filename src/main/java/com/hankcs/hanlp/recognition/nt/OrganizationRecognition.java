@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.recognition.nt;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.algoritm.Viterbi;
+import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NT;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -23,7 +23,6 @@ import com.hankcs.hanlp.seg.common.WordNet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * 地址识别

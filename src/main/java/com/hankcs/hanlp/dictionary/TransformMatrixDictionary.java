@@ -114,13 +114,18 @@ public class TransformMatrixDictionary<E extends Enum<E>>
                 total[j] = 0;
                 for (int i = 0; i < ordinaryMax; ++i)
                 {
-                    total[j] += matrix[i][j];
-                    total[j] += matrix[j][i];
+                    total[j] += matrix[j][i]; // 按行累加
                 }
             }
             for (int j = 0; j < ordinaryMax; ++j)
             {
-                total[j] -= matrix[j][j];
+                if (total[j] == 0)
+                {
+                    for (int i = 0; i < ordinaryMax; ++i)
+                    {
+                        total[j] += matrix[i][j]; // 按列累加
+                    }
+                }
             }
             for (int j = 0; j < ordinaryMax; ++j)
             {

@@ -196,7 +196,7 @@ public class HanLP
                         new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
                         , "UTF-8"));
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
-                if (!root.endsWith("/")) root += "/";
+                if (root.length() > 0 && !root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
                 CoreDictionaryTransformMatrixDictionaryPath = root + p.getProperty("CoreDictionaryTransformMatrixDictionaryPath", CoreDictionaryTransformMatrixDictionaryPath);
                 BiGramDictionaryPath = root + p.getProperty("BiGramDictionaryPath", BiGramDictionaryPath);

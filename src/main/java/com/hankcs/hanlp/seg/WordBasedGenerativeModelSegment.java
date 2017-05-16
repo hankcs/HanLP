@@ -11,8 +11,7 @@
  */
 package com.hankcs.hanlp.seg;
 
-import com.hankcs.hanlp.algoritm.Viterbi;
-import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.*;
@@ -487,13 +486,16 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                 int currentLine = line;
                 while (currentLine < line + vertex.realWord.length())
                 {
-                    List<Vertex> vertexListCurrentLine = wordNetAll.get(currentLine);    // 这一行的词
-                    for (Vertex smallVertex : vertexListCurrentLine) // 这一行的短词
+                    Iterator<Vertex> iterator = wordNetAll.descendingIterator(currentLine);// 这一行的词，逆序遍历保证字典序稳定地由大到小
+                    while (iterator.hasNext())// 这一行的短词
                     {
+                        Vertex smallVertex = iterator.next();
                         if (
                                 ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
                                         smallVertex.realWord.length() > 1)
-                                        && smallVertex != vertex)
+                                        && smallVertex != vertex // 防止重复添加
+                                        && currentLine + smallVertex.realWord.length() <= line + vertex.realWord.length() // 防止超出边界
+                            )
                         {
                             listIterator.add(smallVertex);
                             Term termSub = convert(smallVertex);

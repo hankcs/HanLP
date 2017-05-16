@@ -139,29 +139,15 @@ public class TextUtility
      */
     public static boolean isAllSingleByte(String str)
     {
-        if (str != null)
+        assert str != null;
+        for (int i = 0; i < str.length(); i++)
         {
-            int len = str.length();
-            int i = 0;
-            byte[] b;
-            try
+            if (str.charAt(i) >128)
             {
-                b = str.getBytes("GBK");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-                b = str.getBytes();
-            }
-            while (i < len && b[i] < 128)
-            {
-                i++;
-            }
-            if (i < len)
                 return false;
-            return true;
+            }
         }
-        return false;
+        return true;
     }
 
     /**

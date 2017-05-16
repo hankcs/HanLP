@@ -39,7 +39,7 @@ public class CoreStopWordDictionary
         {
             try
             {
-                dictionary = new StopWordDictionary(new File(HanLP.Config.CoreStopWordDictionaryPath));
+                dictionary = new StopWordDictionary(HanLP.Config.CoreStopWordDictionaryPath);
                 DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT));
                 dictionary.save(out);
                 out.close();

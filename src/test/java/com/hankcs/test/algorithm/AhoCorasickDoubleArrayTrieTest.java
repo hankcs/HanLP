@@ -1,11 +1,10 @@
 package com.hankcs.test.algorithm;
 
-import com.hankcs.hanlp.algoritm.ahocorasick.trie.Emit;
-import com.hankcs.hanlp.algoritm.ahocorasick.trie.Trie;
+import com.hankcs.hanlp.algorithm.ahocorasick.trie.Emit;
+import com.hankcs.hanlp.algorithm.ahocorasick.trie.Trie;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.dictionary.CoreDictionary;
 import junit.framework.TestCase;
 
 import java.util.*;

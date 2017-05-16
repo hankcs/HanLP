@@ -27,7 +27,8 @@ hs_err_pid*
 # 我做实验用的目录
 /data/test
 # 大模型
-data/model
+data/model/*
+!data/model/README.txt
 # 系统文件
 **/.DS_Store
 .java-version
