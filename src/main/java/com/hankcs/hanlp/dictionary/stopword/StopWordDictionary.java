@@ -39,6 +39,11 @@ public class StopWordDictionary extends MDAGSet implements Filter
     {
     }
 
+    public StopWordDictionary(String stopWordDictionaryPath) throws IOException
+    {
+        super(stopWordDictionaryPath);
+    }
+
     @Override
     public boolean shouldInclude(Term term)
     {
