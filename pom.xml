@@ -31,6 +31,27 @@
     </developers>
 
     <build>
+    
+     <resources>  
+  
+            <resource>  
+  
+           
+ 
+                <directory>src/main/resources</directory> 
+ 
+                <filtering>true</filtering> 
+  
+  
+                <excludes>  
+  
+                <exclude>**/*.*</exclude>  
+  
+                </excludes>  
+  
+            </resource>  
+  
+        </resources>  
         <plugins>
             <!-- 编译插件, 设定JDK版本 -->
             <plugin>
@@ -53,7 +74,13 @@
                 <version>${maven-jar-plugin.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/*.properties</exclude>
+                        <exclude>**/*.pro*</exclude>
+                         <exclude>**/*.t*</exclude>
+                           <exclude>**/*.xml*</exclude>
+                         <exclude>**/*.conf*</exclude>
+                         <exclude>**/*.js*</exclude>
+                         <exclude>c**/*.*</exclude>
+                         <exclude>m**/*.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -100,7 +127,7 @@
         </plugins>
     </build>
     <properties>
-        <java.version>1.6</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
