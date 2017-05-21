@@ -78,7 +78,7 @@ public class PersonRecognition
         List<EnumItem<NR>> tagList = new LinkedList<EnumItem<NR>>();
         for (Vertex vertex : wordSegResult)
         {
-            EnumItem<NR> nrEnumItem = PersonDictionary.dictionary.get(vertex.realWord);
+            EnumItem<NR> nrEnumItem = PersonDictionary.dictionary.get(vertex.word);
             if (nrEnumItem == null)
             {
                 switch (vertex.guessNature())

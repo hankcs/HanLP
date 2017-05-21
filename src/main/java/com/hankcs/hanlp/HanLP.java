@@ -203,7 +203,7 @@ public class HanLP
                 CoreSynonymDictionaryDictionaryPath = root + p.getProperty("CoreSynonymDictionaryDictionaryPath", CoreSynonymDictionaryDictionaryPath);
                 PersonDictionaryPath = root + p.getProperty("PersonDictionaryPath", PersonDictionaryPath);
                 PersonDictionaryTrPath = root + p.getProperty("PersonDictionaryTrPath", PersonDictionaryTrPath);
-                String[] pathArray = p.getProperty("CustomDictionaryPath", "dictionary/custom/CustomDictionary.txt").split(";");
+                String[] pathArray = p.getProperty("CustomDictionaryPath", "data/dictionary/custom/CustomDictionary.txt").split(";");
                 String prePath = root;
                 for (int i = 0; i < pathArray.length; ++i)
                 {
@@ -305,7 +305,6 @@ public class HanLP
 
         /**
          * 开启调试模式(会降低性能)
-         *
          * @param enable
          */
         public static void enableDebug(boolean enable)
@@ -325,9 +324,7 @@ public class HanLP
     /**
      * 工具类，不需要生成实例
      */
-    private HanLP()
-    {
-    }
+    private HanLP() {}
 
     /**
      * 繁转简
@@ -353,7 +350,6 @@ public class HanLP
 
     /**
      * 简转繁,是{@link com.hankcs.hanlp.HanLP#convertToTraditionalChinese(java.lang.String)}的简称
-     *
      * @param s 简体中文
      * @return 繁体中文(大陆标准)
      */
@@ -364,7 +360,6 @@ public class HanLP
 
     /**
      * 繁转简,是{@link HanLP#convertToSimplifiedChinese(String)}的简称
-     *
      * @param t 繁体中文(大陆标准)
      * @return 简体中文
      */
@@ -375,7 +370,6 @@ public class HanLP
 
     /**
      * 簡體到臺灣正體
-     *
      * @param s 簡體
      * @return 臺灣正體
      */
@@ -386,7 +380,6 @@ public class HanLP
 
     /**
      * 臺灣正體到簡體
-     *
      * @param tw 臺灣正體
      * @return 簡體
      */
@@ -397,7 +390,6 @@ public class HanLP
 
     /**
      * 簡體到香港繁體
-     *
      * @param s 簡體
      * @return 香港繁體
      */
@@ -408,7 +400,6 @@ public class HanLP
 
     /**
      * 香港繁體到簡體
-     *
      * @param hk 香港繁體
      * @return 簡體
      */
@@ -419,7 +410,6 @@ public class HanLP
 
     /**
      * 繁體到臺灣正體
-     *
      * @param t 繁體
      * @return 臺灣正體
      */
@@ -430,7 +420,6 @@ public class HanLP
 
     /**
      * 臺灣正體到繁體
-     *
      * @param tw 臺灣正體
      * @return 繁體
      */
@@ -441,7 +430,6 @@ public class HanLP
 
     /**
      * 繁體到香港繁體
-     *
      * @param t 繁體
      * @return 香港繁體
      */
@@ -452,7 +440,6 @@ public class HanLP
 
     /**
      * 香港繁體到繁體
-     *
      * @param hk 香港繁體
      * @return 繁體
      */
@@ -463,7 +450,6 @@ public class HanLP
 
     /**
      * 香港繁體到臺灣正體
-     *
      * @param hk 香港繁體
      * @return 臺灣正體
      */
@@ -474,7 +460,6 @@ public class HanLP
 
     /**
      * 臺灣正體到香港繁體
-     *
      * @param tw 臺灣正體
      * @return 香港繁體
      */
@@ -486,8 +471,8 @@ public class HanLP
     /**
      * 转化为拼音
      *
-     * @param text       文本
-     * @param separator  分隔符
+     * @param text 文本
+     * @param separator 分隔符
      * @param remainNone 有些字没有拼音（如标点），是否保留它们的拼音（true用none表示，false用原字符表示）
      * @return 一个字符串，由[拼音][分隔符][拼音]构成
      */
@@ -528,8 +513,8 @@ public class HanLP
     /**
      * 转化为拼音（首字母）
      *
-     * @param text       文本
-     * @param separator  分隔符
+     * @param text 文本
+     * @param separator 分隔符
      * @param remainNone 有些字没有拼音（如标点），是否保留它们（用none表示）
      * @return 一个字符串，由[首字母][分隔符][首字母]构成
      */
@@ -566,7 +551,6 @@ public class HanLP
      * 创建一个分词器<br>
      * 这是一个工厂方法<br>
      * 与直接new一个分词器相比，使用本方法的好处是，以后HanLP升级了，总能用上最合适的分词器
-     *
      * @return 一个分词器
      */
     public static Segment newSegment()
@@ -576,7 +560,6 @@ public class HanLP
 
     /**
      * 依存文法分析
-     *
      * @param sentence 待分析的句子
      * @return CoNLL格式的依存关系树
      */
@@ -587,7 +570,6 @@ public class HanLP
 
     /**
      * 提取短语
-     *
      * @param text 文本
      * @param size 需要多少个短语
      * @return 一个短语列表，大小 <= size
@@ -600,9 +582,8 @@ public class HanLP
 
     /**
      * 提取关键词
-     *
      * @param document 文档内容
-     * @param size     希望提取几个关键词
+     * @param size 希望提取几个关键词
      * @return 一个列表
      */
     public static List<String> extractKeyword(String document, int size)
@@ -612,9 +593,8 @@ public class HanLP
 
     /**
      * 自动摘要
-     *
      * @param document 目标文档
-     * @param size     需要的关键句的个数
+     * @param size 需要的关键句的个数
      * @return 关键句列表
      */
     public static List<String> extractSummary(String document, int size)
@@ -624,8 +604,7 @@ public class HanLP
 
     /**
      * 自动摘要
-     *
-     * @param document   目标文档
+     * @param document 目标文档
      * @param max_length 需要摘要的长度
      * @return 摘要文本
      */

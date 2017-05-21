@@ -255,7 +255,7 @@ public class IOUtil
     }
 
     /**
-     * 将InputStream中的数据读入到字节数组中
+     * 将非FileInputStream的某InputStream中的全部数据读入到字节数组中
      *
      * @param is
      * @return
@@ -263,26 +263,39 @@ public class IOUtil
      */
     public static byte[] readBytesFromOtherInputStream(InputStream is) throws IOException
     {
-        byte[] targetArray = new byte[is.available()];
-        readBytesFromOtherInputStream(is, targetArray);
-        is.close();
-        return targetArray;
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+
+        int readBytes;
+        byte[] buffer = new byte[Math.max(is.available(), 4096)]; // 最低4KB的缓冲区
+
+        while ((readBytes = is.read(buffer, 0, buffer.length)) != -1)
+        {
+            data.write(buffer, 0, readBytes);
+        }
+
+        data.flush();
+
+        return data.toByteArray();
     }
 
     /**
      * 从InputStream读取指定长度的字节出来
      * @param is 流
      * @param targetArray output
+     * @return 实际读取了多少字节，返回0表示遇到了文件尾部
      * @throws IOException
      */
-    public static void readBytesFromOtherInputStream(InputStream is, byte[] targetArray) throws IOException
+    public static int readBytesFromOtherInputStream(InputStream is, byte[] targetArray) throws IOException
     {
+        assert targetArray != null;
+        assert targetArray.length > 0;
         int len;
         int off = 0;
-        while ((len = is.read(targetArray, off, targetArray.length - off)) != -1 && off < targetArray.length)
+        while (off < targetArray.length && (len = is.read(targetArray, off, targetArray.length - off)) != -1)
         {
             off += len;
         }
+        return off;
     }
 
     /**
