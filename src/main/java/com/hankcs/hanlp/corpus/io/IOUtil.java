@@ -255,7 +255,7 @@ public class IOUtil
     }
 
     /**
-     * 将InputStream中的数据读入到字节数组中
+     * 将非FileInputStream的某InputStream中的全部数据读入到字节数组中
      *
      * @param is
      * @return
@@ -263,10 +263,19 @@ public class IOUtil
      */
     public static byte[] readBytesFromOtherInputStream(InputStream is) throws IOException
     {
-        byte[] targetArray = new byte[is.available()];
-        readBytesFromOtherInputStream(is, targetArray);
-        is.close();
-        return targetArray;
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+
+        int readBytes;
+        byte[] buffer = new byte[Math.max(is.available(), 4096)]; // 最低4KB的缓冲区
+
+        while ((readBytes = is.read(buffer, 0, buffer.length)) != -1)
+        {
+            data.write(buffer, 0, readBytes);
+        }
+
+        data.flush();
+
+        return data.toByteArray();
     }
 
     /**
