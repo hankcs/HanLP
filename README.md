@@ -81,7 +81,7 @@ Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.3.3</version>
+    <version>portable-1.3.4</version>
 </dependency>
 ```
 
@@ -717,12 +717,12 @@ public class DemoDependencyParser
 ### 基本格式
 词典分为词频词性词典和词频词典。
 
-- 词频词性词典
+- 词频词性词典（如`CoreNatureDictionary.txt`）
    * 每一行代表一个单词，格式遵从`[单词] [词性A] [A的频次] [词性B] [B的频次] ...`。
    * 支持省略词性和频次，直接一行一个单词。
    * `.txt`词典文件的分隔符为空格或制表符，所以不支持含有空格的词语。如果需要支持空格，请使用英文逗号`,`分割的**纯文本**`.csv`文件。在使用Excel等富文本编辑器时，则请注意保存为**纯文本**形式。
-- 词频词典
-  * 每一行代表一个单词，格式遵从`[单词] [单词的频次]`。
+- 词频词典（如`CoreNatureDictionary.ngram.txt`）
+  * 每一行代表一个单词或条目，格式遵从`[单词] [单词的频次]`。
   * 每一行的分隔符为空格或制表符。
 
 少数词典有自己的专用格式，比如同义词词典兼容《同义词词林扩展版》的文本格式，而转移矩阵词典则是一个csv表格。
