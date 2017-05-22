@@ -169,4 +169,12 @@ public class TestCustomDictionary extends TestCase
         System.out.println("CustomDictionary.get(customTerm)=" + CustomDictionary.get(customTerm));
         System.out.println(HanLP.segment(text));
     }
+
+    public void testIssue540() throws Exception
+    {
+        CustomDictionary.add("123");
+        CustomDictionary.add("摩根");
+        CustomDictionary.remove("123");
+        CustomDictionary.remove("摩根");
+    }
 }
