@@ -52,25 +52,45 @@ public class CustomDictionary
         long start = System.currentTimeMillis();
         if (!loadMainDictionary(path[0]))
         {
+        	
+        	
             logger.warning("自定义词典" + Arrays.toString(path) + "加载失败");
         }
         else
         {
-            logger.info("自定义词典加载成功:" + dat.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
+           
         }
+      /*  //修复bug，原版加载用户自定义不生效。
+        int count=0;
+        for (String p : path)
+        {
+        	count++;
+        	if(count==1){
+        		continue;
+        	}
+        	loadMainDictionary(p);
+        }*/
+        logger.info("自定义词典加载成功:" + dat.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
 
     private static boolean loadMainDictionary(String mainPath)
     {
-        logger.info("自定义词典开始加载:" + mainPath);
-        if (loadDat(mainPath)) return true;
+    	   logger.info("自定义词典开始加载:" + mainPath);
+        if (loadDat(mainPath)) 
+        	//return true;
         dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         LinkedHashSet<Nature> customNatureCollector = new LinkedHashSet<Nature>();
         try
-        {
+        { int count=0;
             for (String p : path)
             {
+            	
+            	   logger.info(count+",自定义词典开始加载:" + p);
+            	count++;
+        	if(count==1){
+        		continue;
+        	}
                 Nature defaultNature = Nature.n;
                 int cut = p.indexOf(' ');
                 if (cut > 0)
@@ -91,6 +111,8 @@ public class CustomDictionary
                 logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
                 boolean success = load(p, defaultNature, map, customNatureCollector);
                 if (!success) logger.warning("失败：" + p);
+                
+                
             }
             if (map.size() == 0)
             {
