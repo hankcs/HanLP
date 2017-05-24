@@ -435,4 +435,12 @@ public class TestSegment extends TestCase
             System.out.println();
         }
     }
+
+    public void testIssue542() throws Exception
+    {
+        Segment seg = HanLP.newSegment();
+        seg.enableAllNamedEntityRecognize(true);
+        seg.enableNumberQuantifierRecognize(true);
+        System.out.println(seg.seg("一分钟就累了"));
+    }
 }

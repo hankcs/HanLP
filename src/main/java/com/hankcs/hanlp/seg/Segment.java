@@ -364,6 +364,10 @@ public abstract class Segment
                 }
                 if (sbQuantifier.length() != pre.realWord.length())
                 {
+                    for (Vertex vertex : wordNetAll.get(line + pre.realWord.length()))
+                    {
+                        vertex.from = null;
+                    }
                     pre.realWord = sbQuantifier.toString();
                     pre.word = Predefine.TAG_NUMBER;
                     pre.attribute = new CoreDictionary.Attribute(Nature.mq);
