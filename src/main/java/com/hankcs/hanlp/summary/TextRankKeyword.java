@@ -117,24 +117,37 @@ public class TextRankKeyword extends KeywordExtractor
             {
                 words.put(w, new TreeSet<String>());
             }
-            que.offer(w);
-            if (que.size() > 5)
-            {
+//            que.offer(w);
+//            if (que.size() > 5)
+//            {
+//                que.poll();
+//            }
+//
+//            for (String w1 : que)
+//            {
+//                for (String w2 : que)
+//                {
+//                    if (w1.equals(w2))
+//                    {
+//                        continue;
+//                    }
+//
+//                    words.get(w1).add(w2);
+//                }
+//            }
+            // 复杂度O(n-1)
+            if (que.size() >= 5) {
                 que.poll();
             }
-
-            for (String w1 : que)
-            {
-                for (String w2 : que)
-                {
-                    if (w1.equals(w2))
-                    {
-                        continue;
-                    }
-
-                    words.get(w1).add(w2);
+            for (String qWord : que) {
+                if (w.equals(qWord)) {
+                    continue;
                 }
+                //既然是邻居,那么关系是相互的,遍历一遍即可
+                words.get(w).add(qWord);
+                words.get(qWord).add(w);
             }
+            que.offer(w);
         }
 //        System.out.println(words);
         Map<String, Float> score = new HashMap<String, Float>();
