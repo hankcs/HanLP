@@ -319,7 +319,7 @@ public class Trie
         for (int i = 0; i < text.length(); ++i)
         {
         	State nextState = getState(currentState, text.charAt(i));
-            if(nextState != null && nextState != currentState) {
+            if (nextState != null && nextState != currentState && nextState.emit().size() != 0) {
                 return true;
             }
             currentState = nextState;
