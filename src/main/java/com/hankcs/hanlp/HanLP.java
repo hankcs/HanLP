@@ -174,7 +174,7 @@ public class HanLP
          */
         public static boolean Normalization = false;
         /**
-         * IO适配器（默认null，表示从本地文件系统读取），实现com.hankcs.hanlp.corpus.io.IIOAdapter接口
+         * IO适配器（默认ResourceIOAdapter，表示从jar包中读取），实现com.hankcs.hanlp.corpus.io.IIOAdapter接口
          * 以在不同的平台（Hadoop、Redis等）上运行HanLP
          */
         public static IIOAdapter IOAdapter = new ResourceIOAdapter();
@@ -242,6 +242,7 @@ public class HanLP
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
                 Normalization = "true".equals(p.getProperty("Normalization", "false"));
+                IOAdapter = null; // 在有配置文件的情况下，无论有无IOAdapter配置项，都先将IOAdapter置为null
                 String ioAdapterClassName = p.getProperty("IOAdapter");
                 if (ioAdapterClassName != null)
                 {
