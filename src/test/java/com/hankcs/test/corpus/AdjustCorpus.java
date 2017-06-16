@@ -24,12 +24,16 @@ import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.occurrence.TermFrequency;
+import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.utility.Predefine;
 import junit.framework.TestCase;
 
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * 部分标注有问题，比如逗号缺少标注等等，尝试修复它
@@ -137,5 +141,39 @@ public class AdjustCorpus extends TestCase
             bw.newLine();
         }
         bw.close();
+    }
+
+    public void testRemoveLabelD() throws Exception
+    {
+        Set<String> nameFollowers = new TreeSet<String>();
+        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(HanLP.Config.BiGramDictionaryPath);
+        while (lineIterator.hasNext())
+        {
+            String line = lineIterator.next();
+            String[] words = line.split("\\s")[0].split("@");
+            if (words[0].equals(Predefine.TAG_PEOPLE))
+            {
+                nameFollowers.add(words[1]);
+            }
+        }
+        DictionaryMaker dictionary = DictionaryMaker.load(HanLP.Config.PersonDictionaryPath);
+        for (Map.Entry<String, Item> entry : dictionary.entrySet())
+        {
+            String key = entry.getKey();
+            int dF = entry.getValue().getFrequency("D");
+            if (key.length() == 1 && 0 < dF && dF < 100)
+            {
+                CoreDictionary.Attribute attribute = CoreDictionary.get(key);
+                if (nameFollowers.contains(key)
+                    || (attribute != null && attribute.hasNatureStartsWith("v") && attribute.totalFrequency > 1000)
+                    )
+                {
+                    System.out.println(key);
+                    entry.getValue().removeLabel("D");
+                }
+            }
+        }
+
+        dictionary.saveTxtTo(HanLP.Config.PersonDictionaryPath);
     }
 }
