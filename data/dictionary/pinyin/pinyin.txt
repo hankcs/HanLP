@@ -30724,3 +30724,4 @@
 龤=xie2
 龥=yue4
 重启=chong2,qi3
+还款=huan2,kuan3
