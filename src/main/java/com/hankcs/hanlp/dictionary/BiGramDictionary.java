@@ -64,7 +64,7 @@ public class BiGramDictionary
         BufferedReader br;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -95,7 +95,7 @@ public class BiGramDictionary
         {
             try
             {
-                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path + Predefine.BIN_EXT)));
+                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT)));
                 Collection<Integer> freqList = map.values();
                 out.writeInt(freqList.size());
                 for (int freq : freqList)
@@ -155,7 +155,7 @@ public class BiGramDictionary
         BufferedReader br;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -245,7 +245,7 @@ public class BiGramDictionary
         Collections.sort(wordList);
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path)));
 //            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + "_sort.txt")));
             for (String w : wordList)
             {

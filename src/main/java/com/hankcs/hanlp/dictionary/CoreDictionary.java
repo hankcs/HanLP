@@ -14,6 +14,7 @@ package com.hankcs.hanlp.dictionary;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.LexiconUtility;
 import com.hankcs.hanlp.utility.Predefine;
@@ -40,7 +41,7 @@ public class CoreDictionary
         long start = System.currentTimeMillis();
         if (!load(path))
         {
-            System.err.printf("核心词典%s加载失败\n", path);
+            logger.severe("核心词典" + path + "加载失败");
             System.exit(-1);
         }
         else
@@ -66,7 +67,7 @@ public class CoreDictionary
         BufferedReader br = null;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             int MAX_FREQUENCY = 0;
             long start = System.currentTimeMillis();
@@ -90,7 +91,7 @@ public class CoreDictionary
             logger.info("核心词典加载成功:" + trie.size() + "个词条，下面将写入缓存……");
             try
             {
-                DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
+                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
                 Collection<CoreDictionary.Attribute> attributeList = map.values();
                 out.writeInt(attributeList.size());
                 for (CoreDictionary.Attribute attribute : attributeList)
@@ -355,6 +356,20 @@ public class CoreDictionary
         public boolean hasNature(Nature nature)
         {
             return getNatureFrequency(nature) > 0;
+        }
+
+        /**
+         * 是否有以某个前缀开头的词性
+         * @param prefix 词性前缀，比如u会查询是否有ude, uzhe等等
+         * @return
+         */
+        public boolean hasNatureStartsWith(String prefix)
+        {
+            for (Nature n : nature)
+            {
+                if (n.startsWith(prefix)) return true;
+            }
+            return false;
         }
 
         @Override

@@ -167,19 +167,4 @@ public class NSDictionaryMaker extends CommonDictionaryMaker
             if (verbose) System.out.println("处理整个 " + wordList);
         }
     }
-
-    public static void main(String[] args)
-    {
-        EasyDictionary dictionary = EasyDictionary.create("data/dictionary/2014_dictionary.txt");
-        final NSDictionaryMaker nsDictionaryMaker = new NSDictionaryMaker(dictionary);
-        CorpusLoader.walk("D:\\JavaProjects\\CorpusToolBox\\data\\2014\\", new CorpusLoader.Handler()
-        {
-            @Override
-            public void handle(Document document)
-            {
-                nsDictionaryMaker.compute(document.getComplexSentenceList());
-            }
-        });
-        nsDictionaryMaker.saveTxtTo("D:\\JavaProjects\\HanLP\\data\\dictionary\\place\\ns");
-    }
 }

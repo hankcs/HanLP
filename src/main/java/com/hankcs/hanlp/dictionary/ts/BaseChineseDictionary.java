@@ -15,7 +15,9 @@ import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.utility.Predefine;
 
@@ -30,6 +32,61 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class BaseChineseDictionary
 {
+    static void combineChain(TreeMap<String, String> s2t, TreeMap<String, String> t2x)
+    {
+        for (Map.Entry<String, String> entry : s2t.entrySet())
+        {
+            String x = t2x.get(entry.getValue());
+            if (x != null)
+            {
+                entry.setValue(x);
+            }
+        }
+        for (Map.Entry<String, String> entry : t2x.entrySet())
+        {
+            String s = CharTable.convert(entry.getKey());
+            if (!s2t.containsKey(s))
+            {
+                s2t.put(s, entry.getValue());
+            }
+        }
+    }
+
+    static void combineReverseChain(TreeMap<String, String> t2s, TreeMap<String, String> tw2t, boolean convert)
+    {
+        for (Map.Entry<String, String> entry : tw2t.entrySet())
+        {
+            String tw = entry.getKey();
+            String s = t2s.get(entry.getValue());
+            if (s == null)
+                s = convert ? CharTable.convert(entry.getValue()) : entry.getValue();
+            t2s.put(tw, s);
+        }
+    }
+
+    /**
+     * 读取词典
+     * @param storage 储存空间
+     * @param reverse 是否翻转键值对
+     * @param pathArray 路径
+     * @return 是否加载成功
+     */
+    static boolean load(Map<String, String> storage, boolean reverse, String... pathArray)
+    {
+        StringDictionary dictionary = new StringDictionary("=");
+        for (String path : pathArray)
+        {
+            if (!dictionary.load(path)) return false;
+        }
+        if (reverse) dictionary = dictionary.reverse();
+        Set<Map.Entry<String, String>> entrySet = dictionary.entrySet();
+        for (Map.Entry<String, String> entry : entrySet)
+        {
+            storage.put(entry.getKey(), entry.getValue());
+        }
+
+        return true;
+    }
     /**
      * 将path的内容载入trie中
      * @param path
@@ -57,19 +114,12 @@ public class BaseChineseDictionary
         }
         if (loadDat(datPath, trie)) return true;
         // 从文本中载入并且尝试生成dat
-        StringDictionary dictionary = new StringDictionary("=");
-        if (!dictionary.load(path)) return false;
-        if (reverse) dictionary = dictionary.reverse();
-        Set<Map.Entry<String, String>> entrySet = dictionary.entrySet();
         TreeMap<String, String> map = new TreeMap<String, String>();
-        for (Map.Entry<String, String> entry : entrySet)
-        {
-            map.put(entry.getKey(), entry.getValue());
-        }
+        if (!load(map, reverse, path)) return false;
         logger.info("正在构建AhoCorasickDoubleArrayTrie，来源：" + path);
         trie.build(map);
         logger.info("正在缓存双数组" + datPath);
-        saveDat(datPath, trie, entrySet);
+        saveDat(datPath, trie, map.entrySet());
         return true;
     }
 
@@ -89,9 +139,14 @@ public class BaseChineseDictionary
 
     static boolean saveDat(String path, AhoCorasickDoubleArrayTrie<String> trie, Set<Map.Entry<String, String>> entrySet)
     {
+        if (trie.size() != entrySet.size())
+        {
+            logger.warning("键值对不匹配");
+            return false;
+        }
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
             out.writeInt(entrySet.size());
             for (Map.Entry<String, String> entry : entrySet)
             {

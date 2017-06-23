@@ -11,10 +11,7 @@
  */
 package com.hankcs.hanlp.dependency.nnparser;
 
-import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.corpus.io.ByteArrayStream;
-import com.hankcs.hanlp.corpus.io.ICacheAble;
-import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.corpus.io.*;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 import com.hankcs.hanlp.dependency.nnparser.action.Action;
@@ -137,7 +134,7 @@ public class NeuralNetworkParser implements ICacheAble
         try
         {
             logger.info("正在缓存" + binPath);
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(binPath));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(binPath));
             save(out);
             out.close();
         }
@@ -158,6 +155,7 @@ public class NeuralNetworkParser implements ICacheAble
     {
         IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(path);
         model_header = lineIterator.next();
+        if (model_header == null) return false;
         root = lineIterator.next();
         use_distance = "1".equals(lineIterator.next());
         use_valency = "1".equals(lineIterator.next());

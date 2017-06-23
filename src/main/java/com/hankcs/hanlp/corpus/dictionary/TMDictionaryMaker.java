@@ -12,6 +12,8 @@
 package com.hankcs.hanlp.corpus.dictionary;
 
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -90,7 +92,7 @@ public class TMDictionaryMaker implements ISaveAble
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path)));
             bw.write(toString());
             bw.close();
         }

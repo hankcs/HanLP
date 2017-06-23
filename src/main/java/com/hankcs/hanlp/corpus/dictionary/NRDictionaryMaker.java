@@ -241,25 +241,4 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
             if (verbose) System.out.println("添加首尾 " + wordList);
         }
     }
-
-    public static void main(String[] args)
-    {
-        EasyDictionary dictionary = EasyDictionary.create("data/dictionary/2014_dictionary.txt");
-        final NRDictionaryMaker nrDictionaryMaker = new NRDictionaryMaker(dictionary);
-        CorpusLoader.walk("data/corpus/2014/", new CorpusLoader.Handler()
-        {
-            @Override
-            public void handle(Document document)
-            {
-                List<List<Word>> simpleSentenceList = document.getSimpleSentenceList();
-                List<List<IWord>> compatibleList = new LinkedList<List<IWord>>();
-                for (List<Word> wordList : simpleSentenceList)
-                {
-                    compatibleList.add(new LinkedList<IWord>(wordList));
-                }
-                nrDictionaryMaker.compute(compatibleList);
-            }
-        });
-        nrDictionaryMaker.saveTxtTo("D:\\JavaProjects\\HanLP\\data\\dictionary\\person\\nr1");
-    }
 }

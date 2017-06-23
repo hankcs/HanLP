@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -202,7 +203,6 @@ public abstract class Segment
             state = dat.transition(wordNet[i].realWord, state);
             if (state > 0)
             {
-                int start = i;
                 int to = i + 1;
                 int end = to;
                 CoreDictionary.Attribute value = dat.output(state);
@@ -219,13 +219,7 @@ public abstract class Segment
                 }
                 if (value != null)
                 {
-                    StringBuilder sbTerm = new StringBuilder();
-                    for (int j = start; j < end; ++j)
-                    {
-                        sbTerm.append(wordNet[j]);
-                        wordNet[j] = null;
-                    }
-                    wordNet[i] = new Vertex(sbTerm.toString(), value);
+                    combineWords(wordNet, i, end, value);
                     i = end - 1;
                 }
             }
@@ -239,7 +233,6 @@ public abstract class Segment
                 BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
                 if (state != null)
                 {
-                    int start = i;
                     int to = i + 1;
                     int end = to;
                     CoreDictionary.Attribute value = state.getValue();
@@ -256,14 +249,7 @@ public abstract class Segment
                     }
                     if (value != null)
                     {
-                        StringBuilder sbTerm = new StringBuilder();
-                        for (int j = start; j < end; ++j)
-                        {
-                            if (wordNet[j] == null) continue;
-                            sbTerm.append(wordNet[j]);
-                            wordNet[j] = null;
-                        }
-                        wordNet[i] = new Vertex(sbTerm.toString(), value);
+                        combineWords(wordNet, i, end, value);
                         i = end - 1;
                     }
                 }
@@ -275,6 +261,64 @@ public abstract class Segment
             if (vertex != null) vertexList.add(vertex);
         }
         return vertexList;
+    }
+
+    /**
+     * 使用用户词典合并粗分结果，并将用户词语收集到全词图中
+     * @param vertexList 粗分结果
+     * @param wordNetAll 收集用户词语到全词图中
+     * @return 合并后的结果
+     */
+    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, final WordNet wordNetAll)
+    {
+        List<Vertex> outputList = combineByCustomDictionary(vertexList);
+        int line = 0;
+        for (final Vertex vertex : outputList)
+        {
+            final int parentLength = vertex.realWord.length();
+            final int currentLine = line;
+            if (parentLength >= 3)
+            {
+                CustomDictionary.parseText(vertex.realWord, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+                {
+                    @Override
+                    public void hit(int begin, int end, CoreDictionary.Attribute value)
+                    {
+                        if (end - begin == parentLength) return;
+                        wordNetAll.add(currentLine + begin, new Vertex(vertex.realWord.substring(begin, end), value));
+                    }
+                });
+            }
+            line += parentLength;
+        }
+        return outputList;
+    }
+
+    /**
+     * 将连续的词语合并为一个
+     * @param wordNet 词图
+     * @param start 起始下标（包含）
+     * @param end 结束下标（不包含）
+     * @param value 新的属性
+     */
+    private static void combineWords(Vertex[] wordNet, int start, int end, CoreDictionary.Attribute value)
+    {
+        if (start + 1 == end)   // 小优化，如果只有一个词，那就不需要合并，直接应用新属性
+        {
+            wordNet[start].attribute = value;
+        }
+        else
+        {
+            StringBuilder sbTerm = new StringBuilder();
+            for (int j = start; j < end; ++j)
+            {
+                if (wordNet[j] == null) continue;
+                String realWord = wordNet[j].realWord;
+                sbTerm.append(realWord);
+                wordNet[j] = null;
+            }
+            wordNet[start] = new Vertex(sbTerm.toString(), value);
+        }
     }
 
     /**

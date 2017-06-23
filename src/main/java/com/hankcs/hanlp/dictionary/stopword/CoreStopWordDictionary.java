@@ -13,15 +13,16 @@ package com.hankcs.hanlp.dictionary.stopword;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.ListIterator;
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 
 /**
@@ -38,14 +39,14 @@ public class CoreStopWordDictionary
         {
             try
             {
-                dictionary = new StopWordDictionary(new File(HanLP.Config.CoreStopWordDictionaryPath));
-                DataOutputStream out = new DataOutputStream(new FileOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT));
+                dictionary = new StopWordDictionary(HanLP.Config.CoreStopWordDictionaryPath);
+                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT));
                 dictionary.save(out);
                 out.close();
             }
             catch (Exception e)
             {
-                System.err.println("载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败"  + TextUtility.exceptionToString(e));
+                logger.severe("载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败"  + TextUtility.exceptionToString(e));
             }
         }
         else
@@ -90,7 +91,7 @@ public class CoreStopWordDictionary
                 }
                 default:
                 {
-                    if (term.word.length() > 1 && !CoreStopWordDictionary.contains(term.word))
+                    if (!CoreStopWordDictionary.contains(term.word))
                     {
                         return true;
                     }

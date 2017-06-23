@@ -26,8 +26,10 @@ package com.hankcs.hanlp.collection.MDAG;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -158,6 +160,16 @@ public class MDAG implements ICacheAble
     }
     /////
 
+    /**
+     * 从文件路径构造
+     * @param path
+     * @throws IOException
+     */
+    public MDAG(String path) throws IOException
+    {
+        this(IOUtil.newBufferedReader(path));
+    }
+
 
     /**
      * 从一个文件建立MDAG<br>
@@ -169,7 +181,16 @@ public class MDAG implements ICacheAble
      */
     public MDAG(File dataFile) throws IOException
     {
-        BufferedReader dataFileBufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), "UTF-8"));
+        this(IOUtil.newBufferedReader(dataFile.getPath()));
+    }
+
+    /**
+     * 从一个打开的BufferedReader构造
+     * @param dataFileBufferedReader
+     * @throws IOException
+     */
+    public MDAG(BufferedReader dataFileBufferedReader) throws IOException
+    {
         String currentString = "";
         String previousString = "";
 

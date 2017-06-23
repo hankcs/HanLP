@@ -13,6 +13,7 @@ package com.hankcs.hanlp.dependency.nnparser;
 
 import com.hankcs.hanlp.dependency.nnparser.option.ConfigOption;
 import com.hankcs.hanlp.dependency.nnparser.option.SpecialOption;
+import com.hankcs.hanlp.utility.GlobalObjectPool;
 
 import java.util.List;
 
@@ -24,21 +25,29 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class parser_dll
 {
-    static NeuralNetworkParser parser;
+    private NeuralNetworkParser parser;
 
-    static
+    public parser_dll()
     {
+        this(ConfigOption.PATH);
+    }
+
+    public parser_dll(String modelPath)
+    {
+        parser = GlobalObjectPool.get(modelPath);
+        if (parser != null) return;
         parser = new NeuralNetworkParser();
         long start = System.currentTimeMillis();
-        logger.info("开始加载神经网络依存句法模型：" + ConfigOption.PATH);
-        if (!parser.load(ConfigOption.PATH))
+        logger.info("开始加载神经网络依存句法模型：" + modelPath);
+        if (!parser.load(modelPath))
         {
-            logger.severe("加载神经网络依存句法模型[" + ConfigOption.PATH + "]失败！");
+            logger.severe("加载神经网络依存句法模型[" + modelPath + "]失败！");
             System.exit(-1);
         }
-        logger.info("加载神经网络依存句法模型[" + ConfigOption.PATH + "]成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
+        logger.info("加载神经网络依存句法模型[" + modelPath + "]成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
         parser.setup_system();
         parser.build_feature_space();
+        GlobalObjectPool.put(modelPath, parser);
     }
 
     /**
@@ -50,7 +59,7 @@ public class parser_dll
      * @param deprels 输出依存名称列表
      * @return 节点的个数
      */
-    public static int parse(List<String> words, List<String> postags, List<Integer> heads, List<String> deprels)
+    public int parse(List<String> words, List<String> postags, List<Integer> heads, List<String> deprels)
     {
         Instance inst = new Instance();
         inst.forms.add(SpecialOption.ROOT);

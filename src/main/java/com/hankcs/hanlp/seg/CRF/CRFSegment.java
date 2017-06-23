@@ -12,20 +12,26 @@
 package com.hankcs.hanlp.seg.CRF;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.algoritm.Viterbi;
+import com.hankcs.hanlp.algorithm.Viterbi;
+import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionaryTransformMatrixDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.CRFSegmentModel;
+import com.hankcs.hanlp.model.crf.CRFModel;
+import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.Table;
 import com.hankcs.hanlp.seg.CharacterBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.CharacterHelper;
+import com.hankcs.hanlp.utility.GlobalObjectPool;
 
 import java.util.*;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 
 /**
@@ -35,6 +41,38 @@ import java.util.*;
  */
 public class CRFSegment extends CharacterBasedGenerativeModelSegment
 {
+    private CRFModel crfModel;
+
+    public CRFSegment(CRFSegmentModel crfModel)
+    {
+        this.crfModel = crfModel;
+    }
+
+    public CRFSegment(String modelPath)
+    {
+        crfModel = GlobalObjectPool.get(modelPath);
+        if (crfModel != null)
+        {
+            return;
+        }
+        logger.info("CRF分词模型正在加载 " + modelPath);
+        long start = System.currentTimeMillis();
+        crfModel = CRFModel.loadTxt(modelPath, new CRFSegmentModel(new BinTrie<FeatureFunction>()));
+        if (crfModel == null)
+        {
+            String error = "CRF分词模型加载 " + modelPath + " 失败，耗时 " + (System.currentTimeMillis() - start) + " ms";
+            logger.severe(error);
+            throw new IllegalArgumentException(error);
+        }
+        else
+            logger.info("CRF分词模型加载 " + modelPath + " 成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
+        GlobalObjectPool.put(modelPath, crfModel);
+    }
+
+    public CRFSegment()
+    {
+        this(HanLP.Config.CRFSegmentModelPath);
+    }
 
     @Override
     protected List<Term> segSentence(char[] sentence)
@@ -43,7 +81,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
         char[] sentenceConverted = CharTable.convert(sentence);
         Table table = new Table();
         table.v = atomSegmentToTable(sentenceConverted);
-        CRFSegmentModel.crfModel.tag(table);
+        crfModel.tag(table);
         List<Term> termList = new LinkedList<Term>();
         if (HanLP.Config.DEBUG)
         {

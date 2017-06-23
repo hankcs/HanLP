@@ -73,7 +73,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.getInputStream(path)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             // 第一行是矩阵的各个类型
             String line = br.readLine();
             String[] _param = line.split(",");
@@ -114,13 +114,18 @@ public class TransformMatrixDictionary<E extends Enum<E>>
                 total[j] = 0;
                 for (int i = 0; i < ordinaryMax; ++i)
                 {
-                    total[j] += matrix[i][j];
-                    total[j] += matrix[j][i];
+                    total[j] += matrix[j][i]; // 按行累加
                 }
             }
             for (int j = 0; j < ordinaryMax; ++j)
             {
-                total[j] -= matrix[j][j];
+                if (total[j] == 0)
+                {
+                    for (int i = 0; i < ordinaryMax; ++i)
+                    {
+                        total[j] += matrix[i][j]; // 按列累加
+                    }
+                }
             }
             for (int j = 0; j < ordinaryMax; ++j)
             {

@@ -18,6 +18,7 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import java.io.*;
 import java.util.*;
 
+import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -52,7 +53,7 @@ public class EasyDictionary
         BufferedReader br = null;
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(IOAdapter == null ? new FileInputStream(path) : IOAdapter.open(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {

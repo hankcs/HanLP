@@ -64,9 +64,9 @@ public class CustomDictionary
     {
         logger.info("自定义词典开始加载:" + mainPath);
         if (loadDat(mainPath)) return true;
+        dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         LinkedHashSet<Nature> customNatureCollector = new LinkedHashSet<Nature>();
-        TreeMap<Integer, CoreDictionary.Attribute> rewriteTable = new TreeMap<Integer, CoreDictionary.Attribute>();
         try
         {
             for (String p : path)
@@ -89,7 +89,7 @@ public class CustomDictionary
                     }
                 }
                 logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
-                boolean success = load(p, defaultNature, map, customNatureCollector, rewriteTable);
+                boolean success = load(p, defaultNature, map, customNatureCollector);
                 if (!success) logger.warning("失败：" + p);
             }
             if (map.size() == 0)
@@ -107,7 +107,7 @@ public class CustomDictionary
             {
                 attributeList.add(entry.getValue());
             }
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(mainPath + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(mainPath + Predefine.BIN_EXT));
             // 缓存用户词性
             IOUtil.writeCustomNature(out, customNatureCollector);
             // 缓存正文
@@ -117,13 +117,6 @@ public class CustomDictionary
                 attribute.save(out);
             }
             dat.save(out);
-            // 缓存rewrite table
-            out.writeInt(rewriteTable.size());
-            for (Map.Entry<Integer, CoreDictionary.Attribute> entry : rewriteTable.entrySet())
-            {
-                out.writeInt(entry.getKey());
-                entry.getValue().save(out);
-            }
             out.close();
         }
         catch (FileNotFoundException e)
@@ -138,7 +131,7 @@ public class CustomDictionary
         }
         catch (Exception e)
         {
-            logger.warning("自定义词典" + mainPath + "缓存失败！" + e);
+            logger.warning("自定义词典" + mainPath + "缓存失败！\n" + TextUtility.exceptionToString(e));
         }
         return true;
     }
@@ -150,18 +143,22 @@ public class CustomDictionary
      * @param path          词典路径
      * @param defaultNature 默认词性
      * @param customNatureCollector 收集用户词性
-     * @param rewriteTable 收集用户覆盖的核心词典词条
      * @return
      */
-    public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map, LinkedHashSet<Nature> customNatureCollector, TreeMap<Integer, CoreDictionary.Attribute> rewriteTable)
+    public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map, LinkedHashSet<Nature> customNatureCollector)
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            String splitter = "\\s";
+            if (path.endsWith(".csv"))
+            {
+                splitter = ",";
+            }
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
-                String[] param = line.split("\\s");
+                String[] param = line.split(splitter);
                 if (param[0].length() == 0) continue;   // 排除空行
                 if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
 
@@ -181,15 +178,14 @@ public class CustomDictionary
                         attribute.totalFrequency += attribute.frequency[i];
                     }
                 }
-                if (updateAttributeIfExist(param[0], attribute, map, rewriteTable)) continue;
+//                if (updateAttributeIfExist(param[0], attribute, map, rewriteTable)) continue;
                 map.put(param[0], attribute);
             }
             br.close();
         }
         catch (Exception e)
         {
-            if (!path.startsWith("."))
-                logger.severe("自定义词典" + path + "读取错误！" + e);
+            logger.severe("自定义词典" + path + "读取错误！" + e);
             return false;
         }
 
@@ -273,7 +269,7 @@ public class CustomDictionary
         if (HanLP.Config.Normalization) word = CharTable.convert(word);
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
-        if (dat != null && dat.set(word, att)) return true;
+        if (dat.set(word, att)) return true;
         if (trie == null) trie = new BinTrie<CoreDictionary.Attribute>();
         trie.put(word, att);
         return true;
@@ -328,24 +324,6 @@ public class CustomDictionary
                 }
             }
             if (!dat.load(byteArray, attributes)) return false;
-            if (byteArray.hasMore()) // 兼容措施,文件结尾表示要覆写的核心词典词条
-            {
-                size = byteArray.nextInt();
-                for (int i = 0; i < size; i++)
-                {
-                    int id = byteArray.nextInt();
-                    CoreDictionary.Attribute attribute = CoreDictionary.trie.getValueAt(id);
-                    attribute.totalFrequency = byteArray.nextInt();
-                    int length = byteArray.nextInt();
-                    attribute.nature = new Nature[length];
-                    attribute.frequency = new int[length];
-                    for (int j = 0; j < length; ++j)
-                    {
-                        attribute.nature[j] = natureIndexArray[byteArray.nextInt()];
-                        attribute.frequency[j] = byteArray.nextInt();
-                    }
-                }
-            }
         }
         catch (Exception e)
         {
@@ -364,7 +342,7 @@ public class CustomDictionary
     public static CoreDictionary.Attribute get(String key)
     {
         if (HanLP.Config.Normalization) key = CharTable.convert(key);
-        CoreDictionary.Attribute attribute = dat == null ? null : dat.get(key);
+        CoreDictionary.Attribute attribute = dat.get(key);
         if (attribute != null) return attribute;
         if (trie == null) return null;
         return trie.get(key);
@@ -426,7 +404,7 @@ public class CustomDictionary
      */
     public static boolean contains(String key)
     {
-        if (dat != null && dat.exactMatchSearch(key) >= 0) return true;
+        if (dat.exactMatchSearch(key) >= 0) return true;
         return trie != null && trie.containsKey(key);
     }
 
@@ -504,6 +482,31 @@ public class CustomDictionary
      * @param processor    处理器
      */
     public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
+    {
+        if (trie != null)
+        {
+            BaseSearcher searcher = CustomDictionary.getSearcher(text);
+            int offset;
+            Map.Entry<String, CoreDictionary.Attribute> entry;
+            while ((entry = searcher.next()) != null)
+            {
+                offset = searcher.getOffset();
+                processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
+            }
+        }
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
+        while (searcher.next())
+        {
+            processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
+        }
+    }
+
+    /**
+     * 解析一段文本（目前采用了BinTrie+DAT的混合储存形式，此方法可以统一两个数据结构）
+     * @param text         文本
+     * @param processor    处理器
+     */
+    public static void parseText(String text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
     {
         if (trie != null)
         {

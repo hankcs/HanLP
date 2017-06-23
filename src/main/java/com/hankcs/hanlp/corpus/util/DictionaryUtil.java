@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.corpus.util;
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
+
 import java.io.*;
 import java.util.Map;
 import java.util.TreeMap;
@@ -29,7 +31,7 @@ public class DictionaryUtil
     {
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             TreeMap<String, String> map = new TreeMap<String, String>();
             String line;
 
@@ -40,7 +42,7 @@ public class DictionaryUtil
             }
             br.close();
 
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path)));
             for (Map.Entry<String, String> entry : map.entrySet())
             {
                 bw.write(entry.getValue());

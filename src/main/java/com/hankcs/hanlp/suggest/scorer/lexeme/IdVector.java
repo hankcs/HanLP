@@ -11,8 +11,8 @@
  */
 package com.hankcs.hanlp.suggest.scorer.lexeme;
 
-import com.hankcs.hanlp.algoritm.ArrayCompare;
-import com.hankcs.hanlp.algoritm.ArrayDistance;
+import com.hankcs.hanlp.algorithm.ArrayCompare;
+import com.hankcs.hanlp.algorithm.ArrayDistance;
 import com.hankcs.hanlp.dictionary.CoreSynonymDictionaryEx;
 import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;

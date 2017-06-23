@@ -16,14 +16,16 @@
 package com.hankcs.hanlp.collection.trie;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ByteArrayOtherStream;
+import com.hankcs.hanlp.corpus.io.ByteArrayStream;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.ByteUtil;
-import sun.misc.IOUtils;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.*;
+import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
 
 /**
  * 双数组Trie树
@@ -420,7 +422,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         try
         {
             is = new DataInputStream(new BufferedInputStream(
-                    new FileInputStream(file), BUF_SIZE));
+                    IOUtil.newInputStream(fileName), BUF_SIZE));
             for (int i = 0; i < size; i++)
             {
                 base[i] = is.readInt();
@@ -439,7 +441,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         DataOutputStream out;
         try
         {
-            out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)));
+            out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(fileName)));
             out.writeInt(size);
             for (int i = 0; i < size; i++)
             {
@@ -510,7 +512,9 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
      */
     public boolean load(String path, V[] value)
     {
-        if (!loadBaseAndCheckByFileChannel(path)) return false;
+        if (!(IOAdapter == null ? loadBaseAndCheckByFileChannel(path) :
+        load(ByteArrayStream.createByteArrayStream(path), value)
+        )) return false;
         v = value;
         return true;
     }
@@ -552,7 +556,10 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     {
         try
         {
-            DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(path)));
+            DataInputStream in = new DataInputStream(new BufferedInputStream(IOAdapter == null ?
+                                                                                     new FileInputStream(path) :
+                    IOAdapter.open(path)
+            ));
             size = in.readInt();
             base = new int[size + 65535];   // 多留一些，防止越界
             check = new int[size + 65535];
@@ -573,8 +580,26 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     {
         try
         {
-            byte[] bytes = IOUtil.readBytes(path);
-            if (bytes == null) return false;
+            FileInputStream fis = new FileInputStream(path);
+            // 1.从FileInputStream对象获取文件通道FileChannel
+            FileChannel channel = fis.getChannel();
+            int fileSize = (int) channel.size();
+
+            // 2.从通道读取文件内容
+            ByteBuffer byteBuffer = ByteBuffer.allocate(fileSize);
+
+            // channel.read(ByteBuffer) 方法就类似于 inputstream.read(byte)
+            // 每次read都将读取 allocate 个字节到ByteBuffer
+            channel.read(byteBuffer);
+            // 注意先调用flip方法反转Buffer,再从Buffer读取数据
+            byteBuffer.flip();
+            // 有几种方式可以操作ByteBuffer
+            // 可以将当前Buffer包含的字节数组全部读取出来
+            byte[] bytes = byteBuffer.array();
+            byteBuffer.clear();
+            // 关闭通道和文件流
+            channel.close();
+            fis.close();
 
             int index = 0;
             size = ByteUtil.bytesHighFirstToInt(bytes, index);
@@ -607,7 +632,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         ObjectOutputStream out = null;
         try
         {
-            out = new ObjectOutputStream(new FileOutputStream(path));
+            out = new ObjectOutputStream(IOUtil.newOutputStream(path));
             out.writeObject(this);
         }
         catch (Exception e)
@@ -623,7 +648,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         ObjectInputStream in;
         try
         {
-            in = new ObjectInputStream(new FileInputStream(path));
+            in = new ObjectInputStream(IOAdapter == null ? new FileInputStream(path) : IOAdapter.open(path));
             return (DoubleArrayTrie<T>) in.readObject();
         }
         catch (Exception e)
@@ -653,14 +678,12 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         int result = -1;
 
-        char[] keyChars = key.toCharArray();
-
         int b = base[nodePos];
         int p;
 
         for (int i = pos; i < len; i++)
         {
-            p = b + (int) (keyChars[i]) + 1;
+            p = b + (int) (key.charAt(i)) + 1;
             if (b == check[p])
                 b = base[p];
             else

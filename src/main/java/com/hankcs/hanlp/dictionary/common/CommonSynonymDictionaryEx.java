@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.common;
 
-import com.hankcs.hanlp.algoritm.ArrayDistance;
+import com.hankcs.hanlp.algorithm.ArrayDistance;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.synonym.Synonym;
 
