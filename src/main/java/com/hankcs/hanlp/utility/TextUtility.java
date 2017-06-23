@@ -77,6 +77,7 @@ public class TextUtility
             if (ub1 < 128)
             {
                 if (' ' == b1) return CT_OTHER;
+                if ('\n' == b1) return CT_DELIMITER;
                 if ("*\"!,.?()[]{}+=/\\;:|".indexOf((char) b1) != -1)
                     return CT_DELIMITER;
                 if ("0123456789".indexOf((char)b1) != -1)
@@ -138,33 +139,19 @@ public class TextUtility
      */
     public static boolean isAllSingleByte(String str)
     {
-        if (str != null)
+        assert str != null;
+        for (int i = 0; i < str.length(); i++)
         {
-            int len = str.length();
-            int i = 0;
-            byte[] b;
-            try
+            if (str.charAt(i) >128)
             {
-                b = str.getBytes("GBK");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-                b = str.getBytes();
-            }
-            while (i < len && b[i] < 128)
-            {
-                i++;
-            }
-            if (i < len)
                 return false;
-            return true;
+            }
         }
-        return false;
+        return true;
     }
 
     /**
-     * 把表示数字含义的字符串转你成整形
+     * 把表示数字含义的字符串转成整形
      *
      * @param str 要转换的字符串
      * @return 如果是有意义的整数，则返回此整数值。否则，返回-1。

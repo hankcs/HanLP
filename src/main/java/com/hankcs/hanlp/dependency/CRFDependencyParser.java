@@ -17,6 +17,7 @@ import com.hankcs.hanlp.collection.trie.ITrie;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dependency.common.POSUtil;
 import com.hankcs.hanlp.model.bigram.BigramDependencyModel;
 import com.hankcs.hanlp.model.crf.CRFModel;
@@ -24,6 +25,7 @@ import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.Table;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
+import com.hankcs.hanlp.utility.GlobalObjectPool;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
@@ -32,6 +34,7 @@ import java.io.FileOutputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -41,20 +44,28 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CRFDependencyParser extends AbstractDependencyParser
 {
-    static CRFModel crfModel;
-    static
+    CRFModel crfModel;
+
+    public CRFDependencyParser(String modelPath)
     {
+        crfModel = GlobalObjectPool.get(modelPath);
+        if (crfModel != null) return;
         long start = System.currentTimeMillis();
-        if (load(HanLP.Config.CRFDependencyModelPath))
+        if (load(modelPath))
         {
-            logger.info("加载随机条件场依存句法分析器模型" + HanLP.Config.CRFDependencyModelPath + "成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
+            logger.info("加载随机条件场依存句法分析器模型" + modelPath + "成功，耗时 " + (System.currentTimeMillis() - start) + " ms");
+            GlobalObjectPool.put(modelPath, crfModel);
         }
         else
         {
-            logger.info("加载随机条件场依存句法分析器模型" + HanLP.Config.CRFDependencyModelPath + "失败，耗时 " + (System.currentTimeMillis() - start) + " ms");
+            logger.info("加载随机条件场依存句法分析器模型" + modelPath + "失败，耗时 " + (System.currentTimeMillis() - start) + " ms");
         }
     }
-    static final CRFDependencyParser INSTANCE = new CRFDependencyParser();
+
+    public CRFDependencyParser()
+    {
+        this(HanLP.Config.CRFDependencyModelPath);
+    }
 
     /**
      * 分析句子的依存句法
@@ -64,7 +75,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
      */
     public static CoNLLSentence compute(List<Term> termList)
     {
-        return INSTANCE.parse(termList);
+        return new CRFDependencyParser().parse(termList);
     }
 
     /**
@@ -75,27 +86,29 @@ public class CRFDependencyParser extends AbstractDependencyParser
      */
     public static CoNLLSentence compute(String sentence)
     {
-        return INSTANCE.parse(sentence);
+        return new CRFDependencyParser().parse(sentence);
     }
 
-    static boolean load(String path)
+    boolean load(String path)
     {
         if (loadDat(path + Predefine.BIN_EXT)) return true;
         crfModel = CRFModel.loadTxt(path, new CRFModelForDependency(new DoubleArrayTrie<FeatureFunction>())); // 使用特化版的CRF
         return crfModel != null;
     }
-    static boolean loadDat(String path)
+
+    boolean loadDat(String path)
     {
         ByteArray byteArray = ByteArray.createByteArray(path);
         if (byteArray == null) return false;
         crfModel = new CRFModelForDependency(new DoubleArrayTrie<FeatureFunction>());
         return crfModel.load(byteArray);
     }
-    static boolean saveDat(String path)
+
+    boolean saveDat(String path)
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path));
             crfModel.save(out);
             out.close();
         }
@@ -107,6 +120,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
 
         return true;
     }
+
     @Override
     public CoNLLSentence parse(List<Term> termList)
     {
@@ -308,7 +322,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
                 for (int j = 0; j < tagSize; ++j)   // i位置的标签遍历
                 {
                     if (!isLegal(j, i, table)) continue;
-                    double curScore =  computeScore(scoreList, j);
+                    double curScore = computeScore(scoreList, j);
                     if (matrix != null)
                     {
                         curScore += matrix[preTag][j];

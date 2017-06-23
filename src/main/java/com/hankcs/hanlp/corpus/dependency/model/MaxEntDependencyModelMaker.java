@@ -29,7 +29,7 @@ public class MaxEntDependencyModelMaker
 {
     public static boolean makeModel(String corpusLoadPath, String modelSavePath) throws IOException
     {
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelSavePath)));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(modelSavePath)));
         LinkedList<CoNLLSentence> sentenceList = CoNLLLoader.loadSentenceList(corpusLoadPath);
         int id = 1;
         for (CoNLLSentence sentence : sentenceList)
@@ -93,11 +93,5 @@ public class MaxEntDependencyModelMaker
         context.add(wordBeforeI.POSTAG + '@' + word[i].POSTAG + '→' + word[j].POSTAG);
         context.add(word[i].POSTAG + '→' + wordBeforeJ.POSTAG + '@' + word[j].POSTAG);
         return context;
-    }
-
-    public static void main(String[] args) throws IOException
-    {
-        makeModel("D:\\Doc\\语料库\\依存分析训练数据\\THU\\train.conll.fixed.txt", "data/model/dependency/MaxEntTrain.txt");
-//        makeModel("D:\\Doc\\语料库\\依存分析训练数据\\THU\\out.txt", "data/model/dependency/MaxEntTrain.test.txt");
     }
 }

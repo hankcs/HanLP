@@ -43,7 +43,7 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
         List<EnumItem<NS>> valueList = new LinkedList<EnumItem<NS>>();
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -102,7 +102,7 @@ public class NSDictionary extends CommonDictionary<EnumItem<NS>>
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path));
             out.writeInt(valueArray.length);
             for (EnumItem<NS> item : valueArray)
             {

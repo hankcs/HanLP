@@ -33,7 +33,6 @@ public class CharTable
     static
     {
         long start = System.currentTimeMillis();
-        logger.info("字符正规化表开始加载" + HanLP.Config.CharTablePath);
         if (!load(HanLP.Config.CharTablePath))
         {
             logger.severe("字符正规化表加载失败");
@@ -69,7 +68,7 @@ public class CharTable
     {
         try
         {
-            ObjectInputStream in = new ObjectInputStream(IOUtil.getInputStream(path));
+            ObjectInputStream in = new ObjectInputStream(IOUtil.newInputStream(path));
             CONVERT = (char[]) in.readObject();
             in.close();
         }

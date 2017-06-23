@@ -13,6 +13,7 @@ package com.hankcs.hanlp.dictionary.nr;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.BufferedReader;
@@ -49,7 +50,7 @@ public class TranslatedPersonDictionary
         if (loadDat()) return true;
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             TreeMap<String, Boolean> map = new TreeMap<String, Boolean>();
             TreeMap<Character, Integer> charFrequencyMap = new TreeMap<Character, Integer>();

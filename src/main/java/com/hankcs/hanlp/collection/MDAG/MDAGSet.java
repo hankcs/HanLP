@@ -37,6 +37,11 @@ public class MDAGSet extends MDAG implements Set<String>
     {
     }
 
+    public MDAGSet(String dictionaryPath) throws IOException
+    {
+        super(dictionaryPath);
+    }
+
     @Override
     public int size()
     {

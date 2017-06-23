@@ -162,7 +162,7 @@ public class CRFModel implements ICacheAble
         try
         {
             logger.info("开始缓存" + path + Predefine.BIN_EXT);
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
             CRFModel.save(out);
             out.close();
         }

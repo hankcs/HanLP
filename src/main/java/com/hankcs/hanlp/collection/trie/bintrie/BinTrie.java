@@ -326,7 +326,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
+            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path));
             for (BaseNode node : child)
             {
                 if (node == null)

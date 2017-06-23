@@ -6,13 +6,13 @@ import java.util.*;
  * <p>
  * 一个状态有如下几个功能
  * </p>
- * <br>
+ * <p/>
  * <ul>
  * <li>success; 成功转移到另一个状态</li>
  * <li>failure; 不可顺着字符串跳转的话，则跳转到一个浅一点的节点</li>
  * <li>emits; 命中一个模式串</li>
  * </ul>
- * <br>
+ * <p/>
  * <p>
  * 根节点稍有不同，根节点没有 failure 功能，它的“failure”指的是按照字符串路径转移到下一个状态。其他节点则都有failure状态。
  * </p>
