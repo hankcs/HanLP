@@ -110,9 +110,15 @@ public class CoNLLWord
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
-        sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(CPOSTAG).append('\t')
+        if (HEAD.ID!=0 && HEAD.ID!=-1){
+            sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(CPOSTAG).append('\t')
                 .append(POSTAG).append('\t').append('_').append('\t').append(HEAD.ID).append('\t').append(DEPREL).append('\t')
-                .append('_').append('\t').append('_');
+                .append('_').append('\t').append('_');  
+        } else {
+            sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(CPOSTAG).append('\t')
+                .append(POSTAG).append('\t').append('_').append('\t').append('_').append('\t').append(DEPREL).append('\t')
+                .append('_').append('\t').append('_');  
+        }
         return sb.toString();
     }
 }
