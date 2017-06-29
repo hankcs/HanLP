@@ -110,7 +110,8 @@ public class CoNLLWord
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
-        if (HEAD.ID!=0 && HEAD.ID!=-1){
+        // ID为0时为根节点，ID为-1时为空白节点
+        if (ID!=0 && ID!=-1){
             sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(CPOSTAG).append('\t')
                 .append(POSTAG).append('\t').append('_').append('\t').append(HEAD.ID).append('\t').append(DEPREL).append('\t')
                 .append('_').append('\t').append('_');  
