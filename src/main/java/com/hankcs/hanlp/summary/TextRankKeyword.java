@@ -24,7 +24,7 @@ public class TextRankKeyword extends KeywordExtractor
     /**
      * 最大迭代次数
      */
-    final static int max_iter = 200;
+    public static int max_iter = 200;
     final static float min_diff = 0.001f;
 
     /**
