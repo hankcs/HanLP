@@ -414,7 +414,7 @@ public class TextUtility
             if (isAllSingleByte(snum)
                     && (len == 4 || len == 2 && (cint(first) > 4 || cint(first) == 0)))
                 return true;
-            if (isAllNum(snum) && (len >= 6 || len == 4 && "０５６７８９".indexOf(first) != -1))
+            if (isAllNum(snum) && (len >= 3 || len == 2 && "０５６７８９".indexOf(first) != -1))
                 return true;
             if (getCharCount("零○一二三四五六七八九壹贰叁肆伍陆柒捌玖", snum) == len && len >= 2)
                 return true;
