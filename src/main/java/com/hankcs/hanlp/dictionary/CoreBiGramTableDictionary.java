@@ -42,11 +42,9 @@ public class CoreBiGramTableDictionary
      */
     static int pair[];
 
-    public final static String path = HanLP.Config.BiGramDictionaryPath;
-    final static String datPath = HanLP.Config.BiGramDictionaryPath + ".table" + Predefine.BIN_EXT;
-
     static
     {
+        String path = HanLP.Config.BiGramDictionaryPath;
         logger.info("开始加载二元词典" + path + ".table");
         long start = System.currentTimeMillis();
         if (!load(path))
@@ -62,6 +60,7 @@ public class CoreBiGramTableDictionary
 
     static boolean load(String path)
     {
+        String datPath = HanLP.Config.BiGramDictionaryPath + ".table" + Predefine.BIN_EXT;
         if (loadDat(datPath)) return true;
         BufferedReader br;
         TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<Integer, TreeMap<Integer, Integer>>();
@@ -291,5 +290,18 @@ public class CoreBiGramTableDictionary
     public static int getWordID(String a)
     {
         return CoreDictionary.trie.exactMatchSearch(a);
+    }
+
+    /**
+     * 热更新二元接续词典<br>
+     *     集群环境（或其他IOAdapter）需要自行删除缓存文件
+     * @return 是否成功
+     */
+    public static boolean reload()
+    {
+        String biGramDictionaryPath = HanLP.Config.BiGramDictionaryPath;
+        IOUtil.deleteFile(biGramDictionaryPath + ".table" + Predefine.BIN_EXT);
+
+        return load(biGramDictionaryPath);
     }
 }

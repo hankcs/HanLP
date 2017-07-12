@@ -381,6 +381,16 @@ public class IOUtil
     }
 
     /**
+     * 删除本地文件
+     * @param path
+     * @return
+     */
+    public static boolean deleteFile(String path)
+    {
+        return new File(path).delete();
+    }
+
+    /**
      * 方便读取按行读取大文件
      */
     public static class LineIterator implements Iterator<String>
