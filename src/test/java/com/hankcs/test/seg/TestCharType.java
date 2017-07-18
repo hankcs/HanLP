@@ -61,4 +61,13 @@ public class TestCharType extends TestCase
         String text = "1 + 2 = 3; a+b= a + b";
         System.out.println(HanLP.segment(text));
     }
+
+    public void testTab() throws Exception
+    {
+        assertTrue(TextUtility.charType('\t') == CharType.CT_DELIMITER);
+        assertTrue(TextUtility.charType('\r') == CharType.CT_DELIMITER);
+        assertTrue(TextUtility.charType('\0') == CharType.CT_DELIMITER);
+
+        System.out.println(HanLP.segment("\t"));
+    }
 }
