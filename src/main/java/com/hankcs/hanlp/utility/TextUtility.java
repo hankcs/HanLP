@@ -179,61 +179,56 @@ public class TextUtility
      */
     public static boolean isAllNum(String str)
     {
+        if (str == null)
+            return false;
 
-        if (str != null)
+        int i = 0;
+        /** 判断开头是否是+-之类的符号 */
+        if ("±+-＋－—".indexOf(str.charAt(0)) != -1)
+            i++;
+        /** 如果是全角的０１２３４５６７８９ 字符* */
+        while (i < str.length() && "０１２３４５６７８９".indexOf(str.charAt(i)) != -1)
+            i++;
+        // Get middle delimiter such as .
+        if (i < str.length())
         {
-            int i = 0;
-            String temp = str + " ";
-            // 判断开头是否是+-之类的符号
-            if ("±+—-＋".indexOf(temp.substring(0, 1)) != -1)
+            char ch = str.charAt(i);
+            if ("·∶:，,．.／/".indexOf(ch) != -1)
+            {// 98．1％
                 i++;
-            /** 如果是全角的０１２３４５６７８９ 字符* */
-            while (i < str.length() && "０１２３４５６７８９".indexOf(str.substring(i, i + 1)) != -1)
-                i++;
-
-            // Get middle delimiter such as .
-            if (i < str.length())
-            {
-                String s = str.substring(i, i + 1);
-                if ("∶·．／".indexOf(s) != -1 || ".".equals(s) || "/".equals(s))
-                {// 98．1％
+                while (i < str.length() && "０１２３４５６７８９".indexOf(str.charAt(i)) != -1)
                     i++;
-                    while (i + 1 < str.length() && "０１２３４５６７８９".indexOf(str.substring(i + 1, i + 2)) != -1)
-
-                        i++;
-                }
             }
-
-            if (i >= str.length())
-                return true;
-
-            while (i < str.length() && cint(str.substring(i, i + 1)) >= 0
-                    && cint(str.substring(i, i + 1)) <= 9)
-                i++;
-            // Get middle delimiter such as .
-            if (i < str.length())
-            {
-                String s = str.substring(i, i + 1);
-                if ("∶·．／".indexOf(s) != -1 || ".".equals(s) || "/".equals(s))
-                {// 98．1％
-                    i++;
-                    while (i + 1 < str.length() && "0123456789".indexOf(str.substring(i + 1, i + 2)) != -1)
-                        i++;
-                }
-            }
-
-            if (i < str.length())
-            {
-
-                if ("百千万亿佰仟％‰".indexOf(str.substring(i, i + 1)) == -1
-                        && !"%".equals(str.substring(i, i + 1)))
-                    i--;
-            }
-            if (i >= str.length())
-                return true;
         }
+        if (i >= str.length())
+            return true;
+
+        /** 如果是半角的0123456789字符* */
+        while (i < str.length() && "0123456789".indexOf(str.charAt(i)) != -1)
+            i++;
+        // Get middle delimiter such as .
+        if (i < str.length())
+        {
+            char ch = str.charAt(i);
+            if (',' == ch || '.' == ch || '/' == ch  || ':' == ch || "∶·，．／".indexOf(ch) != -1)
+            {// 98．1％
+                i++;
+                while (i < str.length() && "0123456789".indexOf(str.charAt(i)) != -1)
+                    i++;
+            }
+        }
+
+        if (i < str.length())
+        {
+            if ("百千万亿佰仟%％‰".indexOf(str.charAt(i)) != -1)
+                i++;
+        }
+        if (i >= str.length())
+            return true;
+
         return false;
     }
+
     /**
      * 是否全是序号
      * @param sString
@@ -333,28 +328,34 @@ public class TextUtility
     {// 百分之五点六的人早上八点十八分起床
 
         String chineseNum = "零○一二两三四五六七八九十廿百千万亿壹贰叁肆伍陆柒捌玖拾佰仟∶·．／点";//
-        String prefix = "几数第上成";
+        String prefix = "几数上第";
+        String surfix = "几多余来成倍";
+        boolean round = false;
 
-        if (word != null)
+        if (word == null)
+            return false;
+
+        char[] temp = word.toCharArray();
+        for (int i = 0; i < temp.length; i++)
         {
-            String temp = word + " ";
-            for (int i = 0; i < word.length(); i++)
+            if (word.startsWith("分之", i))// 百分之五
             {
-
-                if (temp.indexOf("分之", i) != -1)// 百分之五
-                {
-                    i += 2;
-                    continue;
-                }
-
-                String tchar = temp.substring(i, i + 1);
-                if (chineseNum.indexOf(tchar) == -1 && (i != 0 || prefix.indexOf(tchar) == -1))
-                    return false;
+                i += 1;
+                continue;
             }
-            return true;
+            char tchar = temp[i];
+            if (i == 0 && prefix.indexOf(tchar) != -1)
+            {
+            	round = true;
+            }
+            else if (i == temp.length-1 && !round && surfix.indexOf(tchar) != -1)
+            {
+            	round = true;
+            }
+            else if (chineseNum.indexOf(tchar) == -1)
+                return false;
         }
-
-        return false;
+        return true;
     }
 
 
