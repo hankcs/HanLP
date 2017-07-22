@@ -76,6 +76,7 @@ public class TextUtility
             int ub2 = getUnsigned(b2);
             if (ub1 < 128)
             {
+                if (ub1 < 32) return CT_DELIMITER; // NON PRINTABLE CHARACTERS
                 if (' ' == b1) return CT_OTHER;
                 if ('\n' == b1) return CT_DELIMITER;
                 if ("*\"!,.?()[]{}+=/\\;:|".indexOf((char) b1) != -1)

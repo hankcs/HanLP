@@ -533,7 +533,7 @@ public class CustomDictionary
     {
         String path[] = HanLP.Config.CustomDictionaryPath;
         if (path == null || path.length == 0) return false;
-        new File(path[0] + Predefine.BIN_EXT).delete(); // 删掉缓存
+        IOUtil.deleteFile(path[0] + Predefine.BIN_EXT); // 删掉缓存
         return loadMainDictionary(path[0]);
     }
 }
