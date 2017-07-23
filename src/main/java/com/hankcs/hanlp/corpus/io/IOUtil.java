@@ -96,6 +96,9 @@ public class IOUtil
             byte[] fileContent = new byte[in.available()];
             readBytesFromOtherInputStream(in, fileContent);
             in.close();
+            // 处理 UTF-8 BOM
+            if (fileContent[0] == -17 && fileContent[1] == -69 && fileContent[2] == -65)
+                return new String(fileContent, 3, fileContent.length - 3, Charset.forName("UTF-8"));
             return new String(fileContent, Charset.forName("UTF-8"));
         }
         catch (FileNotFoundException e)
@@ -322,11 +325,19 @@ public class IOUtil
     {
         LinkedList<String> result = new LinkedList<String>();
         String line = null;
+        boolean first = false;
         try
         {
             BufferedReader bw = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             while ((line = bw.readLine()) != null)
             {
+                if (first)
+                {
+                    first = false;
+                    char ch = line.charAt(0);
+                    if (ch == '\uFEFF')
+                        line = line.substring(1);
+                }
                 result.add(line);
             }
             bw.close();
