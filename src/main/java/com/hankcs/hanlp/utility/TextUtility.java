@@ -346,11 +346,11 @@ public class TextUtility
             char tchar = temp[i];
             if (i == 0 && prefix.indexOf(tchar) != -1)
             {
-            	round = true;
+                round = true;
             }
             else if (i == temp.length-1 && !round && surfix.indexOf(tchar) != -1)
             {
-            	round = true;
+                round = true;
             }
             else if (chineseNum.indexOf(tchar) == -1)
                 return false;
