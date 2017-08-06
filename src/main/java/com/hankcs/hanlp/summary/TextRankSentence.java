@@ -35,6 +35,8 @@ public class TextRankSentence
      */
     final static int max_iter = 200;
     final static double min_diff = 0.001;
+    
+    final static String default_sentence_separator = "[，,。:：“”？?！!；;]";
     /**
      * 文档句子的个数
      */
@@ -155,18 +157,31 @@ public class TextRankSentence
 
     /**
      * 将文章分割为句子
+     * 默认句子分隔符为：[，,。:：“”？?！!；;]
      *
      * @param document
      * @return
      */
-    static List<String> spiltSentence(String document)
+    static List<String> splitSentence(String document)
+    {
+    	return splitSentence(document, default_sentence_separator);
+    }
+
+    /**
+     * 将文章分割为句子
+     *	 
+     * @param document 待分割的文档
+     * @param sentence_separator 句子分隔符，正则表达式，如：   [。:？?！!；;]
+     * @return
+     */
+    static List<String> splitSentence(String document, String sentence_separator)
     {
         List<String> sentences = new ArrayList<String>();
         for (String line : document.split("[\r\n]"))
         {
             line = line.trim();
             if (line.length() == 0) continue;
-            for (String sent : line.split("[，,。:：“”？?！!；;]"))
+            for (String sent : line.split(sentence_separator))		// [，,。:：“”？?！!；;]
             {
                 sent = sent.trim();
                 if (sent.length() == 0) continue;
@@ -211,7 +226,20 @@ public class TextRankSentence
      */
     public static List<String> getTopSentenceList(String document, int size)
     {
-        List<String> sentenceList = spiltSentence(document);
+    	return getTopSentenceList(document, size, default_sentence_separator);
+    }
+
+    /**
+     * 一句话调用接口
+     *
+     * @param document 目标文档
+     * @param size     需要的关键句的个数
+     * @param sentence_separator 句子分隔符，正则格式， 如：[。？?！!；;]
+     * @return 关键句列表
+     */
+    public static List<String> getTopSentenceList(String document, int size, String sentence_separator)
+    {
+        List<String> sentenceList = splitSentence(document, sentence_separator);
         List<List<String>> docs = convertSentenceListToDocument(sentenceList);
         TextRankSentence textRank = new TextRankSentence(docs);
         int[] topSentence = textRank.getTopSentence(size);
@@ -232,7 +260,20 @@ public class TextRankSentence
      */
     public static String getSummary(String document, int max_length)
     {
-        List<String> sentenceList = spiltSentence(document);
+    	return getSummary(document, max_length, default_sentence_separator);
+    }
+
+    /**
+     * 一句话调用接口
+     *
+     * @param document   目标文档
+     * @param max_length 需要摘要的长度
+     * @param sentence_separator 句子分隔符，正则格式， 如：[。？?！!；;]
+     * @return 摘要文本
+     */
+    public static String getSummary(String document, int max_length, String sentence_separator)
+    {
+        List<String> sentenceList = splitSentence(document, sentence_separator);
 
         int sentence_count = sentenceList.size();
         int document_length = document.length();
