@@ -12,6 +12,7 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
 import com.hankcs.hanlp.dictionary.ts.TraditionalChineseDictionary;
 import junit.framework.TestCase;
@@ -23,19 +24,19 @@ public class TestChineseDictionary extends TestCase
 {
     public void testF2J() throws Exception
     {
-        HanLP.Config.enableDebug(true);
+        Config.enableDebug(true);
         System.out.println(TraditionalChineseDictionary.convertToSimplifiedChinese("士多啤梨是紅色的"));
     }
 
     public void testJ2F() throws Exception
     {
-        HanLP.Config.enableDebug(true);
+        Config.enableDebug(true);
         System.out.println(SimplifiedChineseDictionary.convertToTraditionalChinese("草莓是红色的"));
     }
 
     public void testInterface() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(HanLP.convertToSimplifiedChinese("「以後等妳當上皇后，就能買士多啤梨慶祝了」"));
         System.out.println(HanLP.convertToTraditionalChinese("“以后等你当上皇后，就能买草莓庆祝了”"));
     }

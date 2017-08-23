@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
+import java.io.Serializable;
+
 /**
  * 声母
  * @author hankcs
  */
-public enum Shengmu
+public enum Shengmu implements Serializable
 {
     b,
     c,

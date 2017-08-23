@@ -17,6 +17,7 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -26,7 +27,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * 转移矩阵词典制作工具
  * @author hankcs
  */
-public class TMDictionaryMaker implements ISaveAble
+public class TMDictionaryMaker implements ISaveAble, Serializable
 {
     Map<String, Map<String, Integer>> transferMatrix;
 

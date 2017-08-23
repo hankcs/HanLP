@@ -11,10 +11,12 @@
  */
 package com.hankcs.hanlp.dependency.nnparser.action;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public class ActionFactory implements ActionType
+public class ActionFactory implements ActionType, Serializable
 {
     /**
      * 不建立依存关系，只转移句法分析的焦点，即新的左焦点词是原来的右焦点词，依此类推。

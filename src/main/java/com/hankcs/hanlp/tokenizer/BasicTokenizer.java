@@ -14,13 +14,14 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 基础分词器，只做基本NGram分词，不识别命名实体，不使用用户词典
  * @author hankcs
  */
-public class BasicTokenizer
+public class BasicTokenizer implements Serializable
 {
     /**
      * 预置分词器

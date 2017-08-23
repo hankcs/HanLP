@@ -4,11 +4,13 @@
  */
 package com.hankcs.hanlp.collection.dartsclone.details;
 
+import java.io.Serializable;
+
 /**
  * Bit向量，类似于C++中的bitset
  * @author
  */
-class BitVector
+class BitVector implements Serializable
 {
     /**
      * 获取某一位的比特

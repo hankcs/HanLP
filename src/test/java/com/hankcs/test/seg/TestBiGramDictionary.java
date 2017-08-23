@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
@@ -56,7 +56,7 @@ public class TestBiGramDictionary extends TestCase
 //
 //        // 测试不存在的键
 //        assertEquals(0, BiGramDictionary.getBiFrequency("不存在"));
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         BiGramDictionary.getBiFrequency("团结@奋斗");
     }
 
@@ -71,7 +71,7 @@ public class TestBiGramDictionary extends TestCase
      */
     public void testFastBiGram() throws Exception
     {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(HanLP.Config.BiGramDictionaryPath)));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(Config.BiGramDictionaryPath)));
         String line;
         DictionaryMaker dictionaryMaker = new DictionaryMaker();
         double total = 0;
@@ -110,13 +110,13 @@ public class TestBiGramDictionary extends TestCase
 
     public void testSingle() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(CoreBiGramTableDictionary.getBiFrequency("团结", "奋斗"));
     }
 
     public void testBenchmark() throws Exception
     {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(HanLP.Config.BiGramDictionaryPath)));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(Config.BiGramDictionaryPath)));
         String line;
         List<String[]> twoWordList = new LinkedList<String[]>();
         while ((line = br.readLine()) != null)

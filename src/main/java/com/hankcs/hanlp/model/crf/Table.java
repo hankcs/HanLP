@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.model.crf;
 
+import java.io.Serializable;
+
 /**
  * 给一个实例生成一个元素表
  * @author hankcs
  */
-public class Table
+public class Table implements Serializable
 {
     /**
      * 真实值，请不要直接读取

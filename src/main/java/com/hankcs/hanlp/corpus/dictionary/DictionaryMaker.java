@@ -20,14 +20,14 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import java.io.*;
 import java.util.*;
 
-import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
+import static com.hankcs.hanlp.Config.IOAdapter;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 一个通用的词典制作工具，词条格式：词 标签 频次
  * @author hankcs
  */
-public class DictionaryMaker implements ISaveAble
+public class DictionaryMaker implements ISaveAble, Serializable
 {
     BinTrie<Item> trie;
 

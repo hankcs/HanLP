@@ -15,6 +15,7 @@ package com.hankcs.hanlp.seg.Other;
 import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 
+import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.Map;
  * 最长分词玩具
  * @author hankcs
  */
-public class LongestBinSegmentToy<V>
+public class LongestBinSegmentToy<V> implements Serializable
 {
     private BinTrie<V> trie;
     /**

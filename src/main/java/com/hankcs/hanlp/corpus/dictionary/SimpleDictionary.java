@@ -16,11 +16,12 @@ import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
+import static com.hankcs.hanlp.Config.IOAdapter;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -28,7 +29,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public abstract class SimpleDictionary<V>
+public abstract class SimpleDictionary<V> implements Serializable
 {
     BinTrie<V> trie = new BinTrie<V>();
 

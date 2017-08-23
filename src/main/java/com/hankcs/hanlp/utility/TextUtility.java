@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * 文本工具类
  */
-public class TextUtility
+public class TextUtility implements Serializable
 {
 
     /**

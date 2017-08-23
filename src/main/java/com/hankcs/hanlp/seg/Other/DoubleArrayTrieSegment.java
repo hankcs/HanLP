@@ -20,7 +20,9 @@ import com.hankcs.hanlp.seg.DictionaryBasedSegment;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
         final int[] wordNet = new int[charArray.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
-        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(sentence, 0);
+        DoubleArrayTrie<Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(sentence, 0);
         while (searcher.next())
         {
             int length = searcher.length;
@@ -54,10 +56,10 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
         }
         if (config.useCustomDictionary)
         {
-            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<Attribute>()
             {
                 @Override
-                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                public void hit(int begin, int end, Attribute value)
                 {
                     int length = end - begin;
                     if (length > wordNet[begin])

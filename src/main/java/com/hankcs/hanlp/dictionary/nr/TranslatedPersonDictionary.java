@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.nr;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
@@ -19,6 +19,7 @@ import com.hankcs.hanlp.utility.Predefine;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,9 +29,9 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * 翻译人名词典，储存和识别翻译人名
  * @author hankcs
  */
-public class TranslatedPersonDictionary
+public class TranslatedPersonDictionary implements Serializable
 {
-    static String path = HanLP.Config.TranslatedPersonDictionaryPath;
+    static String path = Config.TranslatedPersonDictionaryPath;
     static DoubleArrayTrie<Boolean> trie;
 
     static

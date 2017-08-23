@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.model;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.model.bigram.BigramDependencyModel;
 import junit.framework.TestCase;
 
@@ -22,7 +22,7 @@ public class TestBigramModel extends TestCase
 {
     public void testLoad() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(BigramDependencyModel.get("传", "v", "角落", "n"));
     }
 }

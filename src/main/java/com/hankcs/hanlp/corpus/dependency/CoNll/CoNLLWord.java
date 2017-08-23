@@ -11,10 +11,12 @@
  */
 package com.hankcs.hanlp.corpus.dependency.CoNll;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public class CoNLLWord
+public class CoNLLWord implements Serializable
 {
     /**
      * ID	当前词在句子中的序号，１开始.

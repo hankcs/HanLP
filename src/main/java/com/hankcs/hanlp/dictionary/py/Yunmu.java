@@ -11,10 +11,12 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public enum Yunmu
+public enum Yunmu implements Serializable
 {
     a,
     ai,

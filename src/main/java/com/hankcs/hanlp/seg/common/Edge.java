@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import java.io.Serializable;
+
 /**
  * 基础边，不允许构造
  * @author hankcs
  */
-public class Edge
+public class Edge implements Serializable
 {
     /**
      * 花费

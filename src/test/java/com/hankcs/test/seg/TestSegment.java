@@ -11,6 +11,7 @@
  */
 package com.hankcs.test.seg;
 
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
@@ -28,6 +29,7 @@ import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.*;
+import com.hankcs.hanlp.dictionary.Attribute;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
@@ -44,7 +46,7 @@ public class TestSegment extends TestCase
 {
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg(
                 "我遗忘我的密码了"
@@ -53,7 +55,7 @@ public class TestSegment extends TestCase
 
     public void testViterbi() throws Exception
     {
-        HanLP.Config.enableDebug(true);
+        Config.enableDebug(true);
         CustomDictionary.add("网剧");
         Segment seg = new DijkstraSegment();
         List<Term> termList = seg.seg("优酷总裁魏明介绍了优酷2015年的内容战略，表示要以“大电影、大网剧、大综艺”为关键词");
@@ -72,7 +74,7 @@ public class TestSegment extends TestCase
 
     public void testShortest() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(true);
         System.out.println(segment.seg("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
     }
@@ -94,7 +96,7 @@ public class TestSegment extends TestCase
 
     public void testSpeechTagging() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         String text = "教授正在教授自然语言处理课程";
         DijkstraSegment segment = new DijkstraSegment();
 
@@ -117,7 +119,7 @@ public class TestSegment extends TestCase
 
     public void testNT() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         Segment segment = new DijkstraSegment().enableOrganizationRecognize(true);
         System.out.println(segment.seg("张克智与潍坊地铁建设工程公司"));
     }
@@ -273,7 +275,7 @@ public class TestSegment extends TestCase
 
     public void testCRFSegment() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
 //        HanLP.Config.ShowTermNature = false;
         Segment segment = new CRFSegment();
         System.out.println(segment.seg("有句谚语叫做一个萝卜一个坑儿"));
@@ -296,13 +298,13 @@ public class TestSegment extends TestCase
         System.out.println(CharType.get(' '));
         assertEquals(CharTable.convert(' '), ' ');
         System.out.println(CharTable.convert('﹗'));
-        HanLP.Config.Normalization = true;
+        Config.Normalization = true;
         System.out.println(StandardTokenizer.segment("号 "));
     }
 
     public void testIssue22() throws Exception
     {
-        CoreDictionary.Attribute attribute = CoreDictionary.get("年");
+        Attribute attribute = CoreDictionary.get("年");
         System.out.println(attribute);
         List<Term> termList = StandardTokenizer.segment("三年");
         System.out.println(termList);
@@ -391,7 +393,7 @@ public class TestSegment extends TestCase
 
     public void testIssue358() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         String text = "受约束，需要遵守心理学会所定的道德原则，所需要时须说明该实验与所能得到的知识的关系";
 
         Segment segment = StandardTokenizer.SEGMENT.enableAllNamedEntityRecognize(false).enableCustomDictionary(false)

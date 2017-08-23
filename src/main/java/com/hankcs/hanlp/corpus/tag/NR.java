@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.corpus.tag;
 
+import java.io.Serializable;
+
 /**
  * 人名标签
  * @author hankcs
  */
-public enum NR
+public enum NR implements Serializable
 {
     /**
      * 	Pf	姓氏	【张】华平先生

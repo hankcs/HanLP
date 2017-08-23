@@ -13,12 +13,13 @@ package com.hankcs.hanlp.corpus.io;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.Serializable;
 
 /**
  * 文本读取工具
  * @author hankcs
  */
-public class EasyReader
+public class EasyReader implements Serializable
 {
     /**
      * 根目录

@@ -1,6 +1,6 @@
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import junit.framework.TestCase;
@@ -22,7 +22,7 @@ public class TestCoreDictionary extends TestCase
 
     public void testLoad() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         CoreDictionary.get("速度");
     }
 }

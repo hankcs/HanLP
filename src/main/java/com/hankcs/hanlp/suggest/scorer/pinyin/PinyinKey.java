@@ -19,6 +19,7 @@ import com.hankcs.hanlp.dictionary.py.PinyinUtil;
 import com.hankcs.hanlp.dictionary.py.String2PinyinConverter;
 import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
 /**
  * @author hankcs
  */
-public class PinyinKey implements Comparable<PinyinKey>, ISentenceKey<PinyinKey>
+public class PinyinKey implements Comparable<PinyinKey>, ISentenceKey<PinyinKey>, Serializable
 {
     /**
      * 句子的拼音

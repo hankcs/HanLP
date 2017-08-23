@@ -18,7 +18,7 @@ import java.io.*;
  *
  * @author hankcs
  */
-public class FileIOAdapter implements IIOAdapter
+public class FileIOAdapter implements IIOAdapter, Serializable
 {
     @Override
     public InputStream open(String path) throws FileNotFoundException

@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Arrays;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -26,7 +27,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * @param <E> 标签的枚举类型
  * @author hankcs
  */
-public class TransformMatrixDictionary<E extends Enum<E>>
+public class TransformMatrixDictionary<E extends Enum<E>> implements Serializable
 {
     Class<E> enumType;
     /**

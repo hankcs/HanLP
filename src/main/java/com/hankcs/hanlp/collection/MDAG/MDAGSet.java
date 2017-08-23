@@ -13,6 +13,7 @@ package com.hankcs.hanlp.collection.MDAG;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -20,7 +21,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class MDAGSet extends MDAG implements Set<String>
+public class MDAGSet extends MDAG implements Set<String>, Serializable
 {
 
     public MDAGSet(File dataFile) throws IOException

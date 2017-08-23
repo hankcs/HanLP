@@ -13,6 +13,7 @@ package com.hankcs.hanlp.corpus.io;
 
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -20,7 +21,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * 遍历目录工具类
  * @author hankcs
  */
-public class FolderWalker
+public class FolderWalker implements Serializable
 {
     /**
      * 打开一个目录，获取全部的文件名

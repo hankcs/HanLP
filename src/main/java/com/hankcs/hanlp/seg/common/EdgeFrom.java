@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import java.io.Serializable;
+
 /**
  * 记录了起点的边
  * @author hankcs
  */
-public class EdgeFrom extends Edge
+public class EdgeFrom extends Edge implements Serializable
 {
     public int from;
 

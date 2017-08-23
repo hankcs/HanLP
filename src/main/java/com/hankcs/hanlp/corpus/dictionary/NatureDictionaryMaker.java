@@ -21,6 +21,7 @@ import com.hankcs.hanlp.corpus.util.Precompiler;
 import com.hankcs.hanlp.utility.TextUtility;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;

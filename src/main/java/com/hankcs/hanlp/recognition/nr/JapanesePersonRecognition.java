@@ -18,7 +18,9 @@ import com.hankcs.hanlp.dictionary.nr.JapanesePersonDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ import static com.hankcs.hanlp.dictionary.nr.NRConstant.WORD_ID;
  *
  * @author hankcs
  */
-public class JapanesePersonRecognition
+public class JapanesePersonRecognition implements Serializable
 {
     /**
      * 执行识别
@@ -121,6 +123,6 @@ public class JapanesePersonRecognition
     private static void insertName(String name, int activeLine, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         if (isBadCase(name)) return;
-        wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, name, new CoreDictionary.Attribute(Nature.nrj), WORD_ID), wordNetAll);
+        wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, name, new Attribute(Nature.nrj), WORD_ID), wordNetAll);
     }
 }

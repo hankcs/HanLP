@@ -11,12 +11,14 @@
  */
 package com.hankcs.hanlp.dictionary.nr;
 
+import java.io.Serializable;
+
 /**
  * 人名识别模式串
  *
  * @author hankcs
  */
-public enum NRPattern
+public enum NRPattern implements Serializable
 {
     BBCD,
     BBE,

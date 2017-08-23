@@ -11,11 +11,15 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
+import org.omg.PortableServer.ServantRetentionPolicy;
+
+import java.io.Serializable;
+
 /**
  * 拼音，组成部分=声母+韵母+声调12345
  * @author hankcs
  */
-public enum Pinyin
+public enum Pinyin implements Serializable
 {
     a1(Shengmu.none, Yunmu.a, 1, "ā", "a", Head.a, 'a'),
     a2(Shengmu.none, Yunmu.a, 2, "á", "a", Head.a, 'a'),

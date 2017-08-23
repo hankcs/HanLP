@@ -13,13 +13,14 @@ package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 后缀树词典
  * @author hankcs
  */
-public class SuffixDictionary
+public class SuffixDictionary implements Serializable
 {
     BinTrie<Integer> trie;
 

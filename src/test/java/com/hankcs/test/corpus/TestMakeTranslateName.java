@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
@@ -75,7 +75,7 @@ public class TestMakeTranslateName extends TestCase
 
     public void testQuery() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(TranslatedPersonDictionary.containsKey("汤姆"));
         System.out.println(TranslatedPersonDictionary.containsKey("汤"));
         System.out.println(TranslatedPersonDictionary.containsKey("姆"));
@@ -85,13 +85,13 @@ public class TestMakeTranslateName extends TestCase
 
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(StandardTokenizer.segment("齐格林斯基"));
     }
 
     public void testNonRec() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         DijkstraSegment segment = new DijkstraSegment();
         segment.enableTranslatedNameRecognize(true);
         System.out.println(segment.seg("汤姆和杰克逊"));

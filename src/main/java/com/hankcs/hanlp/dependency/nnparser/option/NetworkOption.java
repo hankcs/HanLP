@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.dependency.nnparser.option;
 
+
 /**
  * @author hankcs
  */

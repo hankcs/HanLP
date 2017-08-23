@@ -23,7 +23,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public class StopWordDictionary extends MDAGSet implements Filter
+public class StopWordDictionary extends MDAGSet implements Filter, Serializable
 {
     public StopWordDictionary(File file) throws IOException
     {

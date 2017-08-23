@@ -16,6 +16,7 @@ import com.hankcs.hanlp.dictionary.BiGramDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import junit.framework.TestCase;
+import com.hankcs.hanlp.dictionary.Attribute;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,7 +34,7 @@ public class TestDAT extends TestCase
 
     public void testTransmit() throws Exception
     {
-        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
+        DoubleArrayTrie<Attribute> dat = CustomDictionary.dat;
         int index = dat.transition("龙", 1);
         System.out.println(dat.output(index));
         index = dat.transition("窝", index);
@@ -42,7 +43,7 @@ public class TestDAT extends TestCase
 
     public void testCombine() throws Exception
     {
-        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
+        DoubleArrayTrie<Attribute> dat = CustomDictionary.dat;
         String[] wordNet = new String[]
                 {
                         "他",
@@ -63,12 +64,12 @@ public class TestDAT extends TestCase
                 int start = i;
                 int to = i + 1;
                 int end = - 1;
-                CoreDictionary.Attribute value = null;
+                Attribute value = null;
                 for (; to < wordNet.length; ++to)
                 {
                     state = dat.transition(wordNet[to], state);
                     if (state < 0) break;
-                    CoreDictionary.Attribute output = dat.output(state);
+                    Attribute output = dat.output(state);
                     if (output != null)
                     {
                         value = output;

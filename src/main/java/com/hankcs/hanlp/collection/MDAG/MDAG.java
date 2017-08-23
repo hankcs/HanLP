@@ -26,10 +26,8 @@ package com.hankcs.hanlp.collection.MDAG;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -40,7 +38,7 @@ import java.util.Map.Entry;
  *
  * @author Kevin
  */
-public class MDAG implements ICacheAble
+public class MDAG implements ICacheAble, Serializable
 {
     //MDAGNode from which all others in the structure are reachable (all manipulation and non-simplified MDAG search operations begin from this).
     /**

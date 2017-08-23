@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.recognition.nr;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
@@ -19,6 +19,7 @@ import com.hankcs.hanlp.dictionary.nr.PersonDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,12 +28,12 @@ import java.util.List;
  * 人名识别
  * @author hankcs
  */
-public class PersonRecognition
+public class PersonRecognition implements Serializable
 {
     public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NR>> roleTagList = roleObserve(pWordSegResult);
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
             Iterator<Vertex> iterator = pWordSegResult.iterator();
@@ -47,7 +48,7 @@ public class PersonRecognition
             System.out.printf("人名角色观察：%s\n", sbLog.toString());
         }
         List<NR> nrList = viterbiComputeSimply(roleTagList);
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
             Iterator<Vertex> iterator = pWordSegResult.iterator();

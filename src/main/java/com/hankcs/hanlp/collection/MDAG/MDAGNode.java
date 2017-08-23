@@ -22,6 +22,7 @@
 
 package com.hankcs.hanlp.collection.MDAG;
 
+import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -33,7 +34,7 @@ import java.util.TreeMap;
 
  * @author Kevin
  */
-public class MDAGNode
+public class MDAGNode implements Serializable
 {
     //The boolean denoting the accept state status of this node
     /**

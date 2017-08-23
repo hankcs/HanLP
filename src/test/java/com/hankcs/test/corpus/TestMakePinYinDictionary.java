@@ -12,6 +12,7 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.SimpleDictionary;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionaryMaker;
@@ -29,7 +30,7 @@ public class TestMakePinYinDictionary extends TestCase
 {
     public void testCombine() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         StringDictionary dictionaryPY = new StringDictionary();
         dictionaryPY.load("D:\\JavaProjects\\jpinyin\\data\\pinyinTable.standard.txt");
 
@@ -56,7 +57,7 @@ public class TestMakePinYinDictionary extends TestCase
 
     public void testCombineSingle() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         StringDictionary main = StringDictionaryMaker.combine("data/dictionary/pinyin/pinyin.txt", "data/dictionary/pinyin/single.txt");
         main.save("data/dictionary/pinyin/pinyin.txt");
     }
@@ -251,13 +252,13 @@ public class TestMakePinYinDictionary extends TestCase
 
     public void testDumpSMT() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         SYTDictionary.dumpEnum("data/dictionary/pinyin/");
     }
 
     public void testPinyinDictionary() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         Pinyin[] pinyins = PinyinDictionary.get("中");
         System.out.println(Arrays.toString(pinyins));
     }

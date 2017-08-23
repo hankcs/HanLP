@@ -13,13 +13,14 @@ package com.hankcs.hanlp.corpus.dependency.CoNll;
 
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  * CoNLL格式依存语料加载
  * @author hankcs
  */
-public class CoNLLLoader
+public class CoNLLLoader implements Serializable
 {
     public static LinkedList<CoNLLSentence> loadSentenceList(String path)
     {

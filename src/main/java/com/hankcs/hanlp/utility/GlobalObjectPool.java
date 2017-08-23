@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.utility;
 
+import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,7 @@ import java.util.Map;
  * @author hankcs
  */
 @SuppressWarnings("unchecked")
-public class GlobalObjectPool
+public class GlobalObjectPool implements Serializable
 {
     /**
      * 缓存池

@@ -11,13 +11,14 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author hankcs
  */
-public class PinyinUtil
+public class PinyinUtil implements Serializable
 {
     /**
      * Convert tone numbers to tone marks using Unicode <br/><br/>

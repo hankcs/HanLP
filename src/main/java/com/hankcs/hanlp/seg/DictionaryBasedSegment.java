@@ -10,6 +10,8 @@
  */
 package com.hankcs.hanlp.seg;
 
+import java.io.Serializable;
+
 /**
  * 基于词典的机械分词器基类
  * @author hankcs

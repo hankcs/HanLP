@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.dictionary.item;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -18,7 +19,7 @@ import java.util.*;
  * 对标签-频次的封装
  * @author hankcs
  */
-public class EnumItem<E extends Enum<E>>
+public class EnumItem<E extends Enum<E>> implements Serializable
 {
     public Map<E, Integer> labelMap;
 

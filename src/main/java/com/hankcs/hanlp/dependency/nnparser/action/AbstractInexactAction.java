@@ -11,10 +11,12 @@
  */
 package com.hankcs.hanlp.dependency.nnparser.action;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public class AbstractInexactAction implements Comparable<AbstractInexactAction>
+public class AbstractInexactAction implements Comparable<AbstractInexactAction>, Serializable
 {
     int seed;
 

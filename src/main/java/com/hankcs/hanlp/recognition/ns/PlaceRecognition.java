@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.recognition.ns;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NS;
@@ -20,6 +20,7 @@ import com.hankcs.hanlp.dictionary.ns.PlaceDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,12 +30,12 @@ import java.util.ListIterator;
  * 地址识别
  * @author hankcs
  */
-public class PlaceRecognition
+public class PlaceRecognition implements Serializable
 {
     public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NS>> roleTagList = roleTag(pWordSegResult, wordNetAll);
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
             Iterator<Vertex> iterator = pWordSegResult.iterator();
@@ -49,7 +50,7 @@ public class PlaceRecognition
             System.out.printf("地名角色观察：%s\n", sbLog.toString());
         }
         List<NS> NSList = viterbiExCompute(roleTagList);
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
             Iterator<Vertex> iterator = pWordSegResult.iterator();

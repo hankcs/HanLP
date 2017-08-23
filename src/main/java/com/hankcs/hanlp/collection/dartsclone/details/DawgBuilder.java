@@ -4,13 +4,14 @@
  */
 package com.hankcs.hanlp.collection.dartsclone.details;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * 有向无环字图
  * @author
  */
-class DawgBuilder
+class DawgBuilder implements Serializable
 {
     /**
      * 根节点id

@@ -19,11 +19,13 @@ import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.TextUtility;
-
+import com.hankcs.hanlp.dictionary.Attribute;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
+
 
 /**
  * 使用AhoCorasickDoubleArrayTrie实现的最长分词器<br>
@@ -33,7 +35,7 @@ import java.util.*;
  */
 public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
 {
-    AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie;
+    AhoCorasickDoubleArrayTrie<Attribute> trie;
 
     @Override
     protected List<Term> segSentence(char[] sentence)
@@ -46,10 +48,10 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
         final int[] wordNet = new int[sentence.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[sentence.length] : null;
-        trie.parseText(sentence, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        trie.parseText(sentence, new AhoCorasickDoubleArrayTrie.IHit<Attribute>()
         {
             @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute value)
+            public void hit(int begin, int end, Attribute value)
             {
                 int length = end - begin;
                 if (length > wordNet[begin])
@@ -115,20 +117,20 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
         throw new UnsupportedOperationException("AhoCorasickDoubleArrayTrieSegment暂时不支持用户词典。");
     }
 
-    public AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> getTrie()
+    public AhoCorasickDoubleArrayTrie<Attribute> getTrie()
     {
         return trie;
     }
 
-    public void setTrie(AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie)
+    public void setTrie(AhoCorasickDoubleArrayTrie<Attribute> trie)
     {
         this.trie = trie;
     }
 
     public AhoCorasickDoubleArrayTrieSegment loadDictionary(String... pathArray)
     {
-        trie = new AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute>();
-        TreeMap<String, CoreDictionary.Attribute> map = null;
+        trie = new AhoCorasickDoubleArrayTrie<Attribute>();
+        TreeMap<String, Attribute> map = null;
         try
         {
             map = IOUtil.loadDictionary(pathArray);

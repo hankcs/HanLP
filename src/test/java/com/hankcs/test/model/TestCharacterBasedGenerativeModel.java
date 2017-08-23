@@ -10,7 +10,7 @@
  */
 package com.hankcs.test.model;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
@@ -60,7 +60,7 @@ public class TestCharacterBasedGenerativeModel extends TestCase
     public void testLoad() throws Exception
     {
         CharacterBasedGenerativeModel model = new CharacterBasedGenerativeModel();
-        model.load(ByteArray.createByteArray(HanLP.Config.HMMSegmentModelPath));
+        model.load(ByteArray.createByteArray(Config.HMMSegmentModelPath));
         String text = "我实现了一个基于Character Based TriGram的分词器";
         char[] sentence = text.toCharArray();
         char[] tag = model.tag(sentence);
@@ -104,7 +104,7 @@ public class TestCharacterBasedGenerativeModel extends TestCase
 
     public void testSegment() throws Exception
     {
-        HanLP.Config.ShowTermNature = false;
+        Config.ShowTermNature = false;
         String text = "我实现了一个基于Character Based TriGram的分词器";
         Segment segment = new HMMSegment();
         List<Term> termList = segment.seg(text);

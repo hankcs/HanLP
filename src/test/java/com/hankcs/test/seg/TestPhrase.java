@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
@@ -59,7 +59,7 @@ public class TestPhrase extends TestCase
 
     public void testSingle() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(MutualInformationEntropyPhraseExtractor.extract(IOUtil.readTxt("D:\\Doc\\语料库\\上海静安\\静安区全市首推“情诗表白”结婚颁证.txt"), 3));
     }
 

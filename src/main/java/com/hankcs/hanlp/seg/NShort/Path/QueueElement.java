@@ -11,10 +11,12 @@
  */
 package com.hankcs.hanlp.seg.NShort.Path;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public class QueueElement implements Comparable<QueueElement>
+public class QueueElement implements Comparable<QueueElement>, Serializable
 {
     /**
      * 边的起点

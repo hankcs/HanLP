@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
@@ -34,14 +34,14 @@ public class TestDijkstra extends TestCase
     public void testNameRecognize() throws Exception
     {
         DijkstraSegment segment = new DijkstraSegment();
-        HanLP.Config.enableDebug(true);
+        Config.enableDebug(true);
         System.out.println(segment.seg("妈蛋，你认识波多野结衣老师吗？"));
     }
 
     public void testFixResult() throws Exception
     {
         DijkstraSegment segment = new DijkstraSegment();
-        HanLP.Config.enableDebug(true);
+        Config.enableDebug(true);
         System.out.println(segment.seg("2014年"));
     }
 }

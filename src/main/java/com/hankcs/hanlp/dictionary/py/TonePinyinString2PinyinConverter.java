@@ -14,13 +14,14 @@ package com.hankcs.hanlp.dictionary.py;
 import com.hankcs.hanlp.algorithm.ahocorasick.trie.Token;
 import com.hankcs.hanlp.algorithm.ahocorasick.trie.Trie;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 将类似āiyā的词语转为拼音的转换器
  * @author hankcs
  */
-public class TonePinyinString2PinyinConverter
+public class TonePinyinString2PinyinConverter implements Serializable
 {
     /**
      * 带音调的字母到Pinyin的map

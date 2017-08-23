@@ -17,6 +17,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.DataOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ import java.util.Set;
  *
  * @author hankcs
  */
-public class Probability implements ICacheAble
+public class Probability implements ICacheAble, Serializable
 {
     public BinTrie<Integer> d;
     int total;

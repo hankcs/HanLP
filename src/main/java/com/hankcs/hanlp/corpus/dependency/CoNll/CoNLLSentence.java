@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.dependency.CoNll;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * CoNLL中的一个句子
  * @author hankcs
  */
-public class CoNLLSentence implements Iterable<CoNLLWord>
+public class CoNLLSentence implements Iterable<CoNLLWord>, Serializable
 {
     /**
      * 有许多行，每行是一个单词

@@ -16,11 +16,13 @@ import com.hankcs.hanlp.corpus.dependency.CoNll.PosTagCompiler;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
+
 /**
  * 节点
  * @author hankcs
  */
-public class Node
+public class Node implements Serializable
 {
     public final static Node NULL = new Node(new Term(CoNLLWord.NULL.NAME, Nature.n), -1);
     static

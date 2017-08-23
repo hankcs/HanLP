@@ -10,7 +10,7 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.seg.HMM.HMMSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -28,7 +28,7 @@ public class DemoHMMSegment
 {
     public static void main(String[] args)
     {
-        HanLP.Config.ShowTermNature = false;    // 关闭词性显示
+        Config.ShowTermNature = false;    // 关闭词性显示
         Segment segment = new HMMSegment();
         String[] sentenceArray = new String[]
                 {

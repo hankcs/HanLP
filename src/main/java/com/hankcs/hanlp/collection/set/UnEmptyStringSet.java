@@ -11,13 +11,14 @@
  */
 package com.hankcs.hanlp.collection.set;
 
+import java.io.Serializable;
 import java.util.TreeSet;
 
 /**
  * 一个不接受空白的字符串set
  * @author hankcs
  */
-public class UnEmptyStringSet extends TreeSet<String>
+public class UnEmptyStringSet extends TreeSet<String> implements Serializable
 {
     @Override
     public boolean add(String s)

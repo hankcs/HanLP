@@ -18,6 +18,8 @@ import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
 import java.io.File;
+import java.io.Serializable;
+import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public class CorpusLoader
+public class CorpusLoader implements Serializable
 {
     public static void walk(String folderPath, Handler handler)
     {

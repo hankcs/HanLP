@@ -4,12 +4,14 @@
  */
 package com.hankcs.hanlp.collection.dartsclone.details;
 
+import java.io.Serializable;
+
 /**
  * 双数组构建者
  *
  * @author
  */
-public class DoubleArrayBuilder
+public class DoubleArrayBuilder implements Serializable
 {
     /**
      * 构建

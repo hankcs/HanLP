@@ -16,11 +16,13 @@ import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
+import java.io.Serializable;
+
 /**
  * 提取关键词的基类
  * @author hankcs
  */
-public class KeywordExtractor
+public class KeywordExtractor implements Serializable
 {
     /**
      * 默认分词器

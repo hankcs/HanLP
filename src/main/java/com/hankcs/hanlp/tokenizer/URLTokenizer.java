@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
  * 可以识别URL的分词器
  * @author hankcs
  */
-public class URLTokenizer
+public class URLTokenizer implements Serializable
 {
     /**
      * 预置分词器

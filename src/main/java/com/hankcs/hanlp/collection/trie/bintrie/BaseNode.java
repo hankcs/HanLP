@@ -13,10 +13,7 @@ package com.hankcs.hanlp.collection.trie.bintrie;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.*;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +24,7 @@ import java.util.Set;
  * @param <V> 值
  * @author He Han
  */
-public abstract class BaseNode<V> implements Comparable<BaseNode>
+public abstract class BaseNode<V> implements Comparable<BaseNode>, Serializable
 {
     /**
      * 状态数组，方便读取的时候用

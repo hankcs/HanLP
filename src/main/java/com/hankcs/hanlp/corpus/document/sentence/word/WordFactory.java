@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.corpus.document.sentence.word;
 
+import java.io.Serializable;
+
 /**
  * 一个很方便的工厂类，能够自动生成不同类型的词语
  * @author hankcs
  */
-public class WordFactory
+public class WordFactory implements Serializable
 {
     /**
      * 根据参数字符串产生对应的词语

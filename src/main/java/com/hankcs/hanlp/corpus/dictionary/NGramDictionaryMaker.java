@@ -18,6 +18,7 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.util.Map;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -27,7 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class NGramDictionaryMaker
+public class NGramDictionaryMaker implements Serializable
 {
     BinTrie<Integer> trie;
     /**

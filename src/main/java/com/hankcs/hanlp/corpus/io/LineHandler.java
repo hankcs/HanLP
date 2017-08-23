@@ -12,13 +12,14 @@
 package com.hankcs.hanlp.corpus.io;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author hankcs
  */
-public abstract class LineHandler
+public abstract class LineHandler implements Serializable
 {
     String delimiter = "\t";
 

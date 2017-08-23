@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.MDAG.MDAGSet;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
@@ -30,7 +30,7 @@ public class TestStopWordDictionary extends TestCase
 {
     public void testContains() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(CoreStopWordDictionary.contains("这就是说"));
     }
 
@@ -54,8 +54,8 @@ public class TestStopWordDictionary extends TestCase
 
     public void testRemoveDuplicateEntries() throws Exception
     {
-        StopWordDictionary dictionary = new StopWordDictionary(new File(HanLP.Config.CoreStopWordDictionaryPath));
-        BufferedWriter bw = IOUtil.newBufferedWriter(HanLP.Config.CoreStopWordDictionaryPath);
+        StopWordDictionary dictionary = new StopWordDictionary(new File(Config.CoreStopWordDictionaryPath));
+        BufferedWriter bw = IOUtil.newBufferedWriter(Config.CoreStopWordDictionaryPath);
         for (String word : dictionary)
         {
             bw.write(word);

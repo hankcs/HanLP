@@ -16,7 +16,9 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public class WordNet
+public class WordNet implements Serializable
 {
     /**
      * 节点，每一行都是前缀词，跟图的表示方式不同
@@ -50,6 +52,8 @@ public class WordNet
      */
     public char[] charArray;
 
+    public LinkedList<String> myStr[];
+
     /**
      * 为一个句子生成空白词网
      *
@@ -69,8 +73,21 @@ public class WordNet
             vertexes[i] = new LinkedList<Vertex>();
         }
         vertexes[0].add(Vertex.newB());
-        vertexes[vertexes.length - 1].add(Vertex.newE());
+        System.out.println("vertexes length: " + vertexes.length);
+        vertexes[vertexes.length - 1].add(Vertex.newB());
+        vertexes[0].add(Vertex.newB());
         size = 2;
+
+//        myStr = new LinkedList[charArray.length + 2];
+//        for (int i = 0; i < myStr.length; ++i)
+//        {
+//            myStr[0] = new LinkedList<String>();
+//        }
+//        myStr[0].add(myVertex.newB());
+//        System.out.println(myStr.length);
+////        myStr[myStr.length - 1].add(myVertex.newE());
+//        System.out.println("my test");
+
     }
 
     public WordNet(char[] charArray, List<Vertex> vertexList)
@@ -296,7 +313,7 @@ public class WordNet
                     break;
             }
             // 这些通用符的量级都在10万左右
-            add(line + offset, new Vertex(sWord, atomNode.sWord, new CoreDictionary.Attribute(nature, 10000), id));
+            add(line + offset, new Vertex(sWord, atomNode.sWord, new Attribute(nature, 10000), id));
             offset += atomNode.sWord.length();
         }
     }

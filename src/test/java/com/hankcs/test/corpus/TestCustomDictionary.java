@@ -21,6 +21,7 @@ import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
 import junit.framework.TestCase;
 
 import java.io.*;
@@ -89,7 +90,7 @@ public class TestCustomDictionary extends TestCase
     public void testNext() throws Exception
     {
         BaseSearcher searcher = CustomDictionary.getSearcher("都要亲口");
-        Map.Entry<String, CoreDictionary.Attribute> entry;
+        Map.Entry<String, Attribute> entry;
         while ((entry = searcher.next()) != null)
         {
             int offset = searcher.getOffset();

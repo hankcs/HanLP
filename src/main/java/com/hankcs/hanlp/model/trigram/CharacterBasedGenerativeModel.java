@@ -17,6 +17,7 @@ import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.model.trigram.frequency.Probability;
 
 import java.io.DataOutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class CharacterBasedGenerativeModel implements ICacheAble
+public class CharacterBasedGenerativeModel implements ICacheAble, Serializable
 {
     /**
      * 2阶隐马的三个参数

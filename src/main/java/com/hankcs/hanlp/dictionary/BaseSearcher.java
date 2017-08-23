@@ -10,13 +10,14 @@
  * </copyright>
  */
 package com.hankcs.hanlp.dictionary;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * 查询字典者
  * @author He Han
  */
-public abstract class BaseSearcher<V>
+public abstract class BaseSearcher<V> implements Serializable
 {
     /**
      * 待分词文本的char

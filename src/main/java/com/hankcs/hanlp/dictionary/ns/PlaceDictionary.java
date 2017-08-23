@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.ns;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NS;
@@ -20,7 +20,9 @@ import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -30,7 +32,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class PlaceDictionary
+public class PlaceDictionary implements Serializable
 {
     /**
      * 地名词典
@@ -52,16 +54,16 @@ public class PlaceDictionary
     /**
      * 本词典专注的词的属性
      */
-    static final CoreDictionary.Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
+    static final Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
 
     static
     {
         long start = System.currentTimeMillis();
         dictionary = new NSDictionary();
-        dictionary.load(HanLP.Config.PlaceDictionaryPath);
-        logger.info(HanLP.Config.PlaceDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+        dictionary.load(Config.PlaceDictionaryPath);
+        logger.info(Config.PlaceDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<NS>(NS.class);
-        transformMatrixDictionary.load(HanLP.Config.PlaceDictionaryTrPath);
+        transformMatrixDictionary.load(Config.PlaceDictionaryTrPath);
         trie = new AhoCorasickDoubleArrayTrie<String>();
         TreeMap<String, String> patternMap = new TreeMap<String, String>();
         patternMap.put("CH", "CH");
@@ -104,7 +106,7 @@ public class PlaceDictionary
                 if (isBadCase(name)) return;
 
                 // 正式算它是一个名字
-                if (HanLP.Config.DEBUG)
+                if (Config.DEBUG)
                 {
                     System.out.printf("识别出地名：%s %s\n", name, value);
                 }

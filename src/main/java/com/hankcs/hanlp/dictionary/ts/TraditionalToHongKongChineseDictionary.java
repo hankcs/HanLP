@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.ts;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 
 import java.util.TreeMap;
@@ -28,11 +28,11 @@ public class TraditionalToHongKongChineseDictionary extends BaseChineseDictionar
     static
     {
         long start = System.currentTimeMillis();
-        String datPath = HanLP.Config.tcDictionaryRoot + "t2hk";
+        String datPath = Config.tcDictionaryRoot + "t2hk";
         if (!loadDat(datPath, trie))
         {
             TreeMap<String, String> t2hk = new TreeMap<String, String>();
-            if (!load(t2hk, false, HanLP.Config.tcDictionaryRoot + "t2hk.txt"))
+            if (!load(t2hk, false, Config.tcDictionaryRoot + "t2hk.txt"))
             {
                 throw new IllegalArgumentException("繁体转香港繁体加载失败");
             }

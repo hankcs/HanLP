@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import java.io.Serializable;
+
 /**
  * 一个通用的Term
 * @author hankcs
 */
-public class ResultTerm<V>
+public class ResultTerm<V> implements Serializable
 {
     public String word;
     public V label;

@@ -14,11 +14,13 @@ package com.hankcs.hanlp.corpus.dictionary;
 import com.hankcs.hanlp.corpus.dictionary.SuffixDictionary;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
+
 /**
  * 做一个简单的封装
  * @author hankcs
  */
-public class PlaceSuffixDictionary
+public class PlaceSuffixDictionary implements Serializable
 {
     public static SuffixDictionary dictionary = new SuffixDictionary();
     static

@@ -25,7 +25,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class MaxEntDependencyModelMaker
+public class MaxEntDependencyModelMaker implements Serializable
 {
     public static boolean makeModel(String corpusLoadPath, String modelSavePath) throws IOException
     {

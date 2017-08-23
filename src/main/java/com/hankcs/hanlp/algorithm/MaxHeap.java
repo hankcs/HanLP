@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.algorithm;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -18,7 +19,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class MaxHeap<E>
+public class MaxHeap<E> implements Serializable
 {
     /**
      * 优先队列

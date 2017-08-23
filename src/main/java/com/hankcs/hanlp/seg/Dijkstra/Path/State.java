@@ -13,10 +13,12 @@ package com.hankcs.hanlp.seg.Dijkstra.Path;
 
 import com.hankcs.hanlp.seg.common.Vertex;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public class State implements Comparable<State>
+public class State implements Comparable<State>, Serializable
 {
     /**
      * 路径花费

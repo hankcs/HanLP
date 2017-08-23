@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.util.DictionaryUtil;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
@@ -51,12 +51,12 @@ public class TestBinTrieSaveLoad extends TestCase
 
     public void testCustomDictionary() throws Exception
     {
-        HanLP.Config.enableDebug(true);
+        Config.enableDebug(true);
         System.out.println(CustomDictionary.get("龟兔赛跑"));
     }
 
     public void testSortCustomDictionary() throws Exception
     {
-        DictionaryUtil.sortDictionary(HanLP.Config.CustomDictionaryPath[0]);
+        DictionaryUtil.sortDictionary(Config.CustomDictionaryPath[0]);
     }
 }

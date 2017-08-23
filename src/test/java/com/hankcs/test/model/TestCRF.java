@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.model;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
@@ -84,7 +84,7 @@ public class TestCRF extends TestCase
 
     public void testSegment() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         CRFSegment segment = new CRFSegment();
 //        segment.enablePartOfSpeechTagging(true);
         System.out.println(segment.seg("乐视超级手机能否承载贾布斯的生态梦"));
@@ -163,7 +163,7 @@ public class TestCRF extends TestCase
     {
         String text = "2.34米";
 //        System.out.println(CRFSegment.atomSegment(text.toCharArray()));
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         CRFSegment segment = new CRFSegment();
         System.out.println(segment.seg(text));
     }
@@ -178,7 +178,7 @@ public class TestCRF extends TestCase
 
     public void testLoadModelWithBiGramFeature() throws Exception
     {
-        String path = HanLP.Config.CRFSegmentModelPath + Predefine.BIN_EXT;
+        String path = Config.CRFSegmentModelPath + Predefine.BIN_EXT;
         CRFModel model = new CRFModel(new BinTrie<FeatureFunction>());
         model.load(ByteArray.createByteArray(path));
 

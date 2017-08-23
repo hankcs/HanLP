@@ -11,7 +11,7 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -27,7 +27,7 @@ public class DemoCRFSegment
 {
     public static void main(String[] args)
     {
-        HanLP.Config.ShowTermNature = false;    // 关闭词性显示
+        Config.ShowTermNature = false;    // 关闭词性显示
         Segment segment = new CRFSegment().enableCustomDictionary(false);
         String[] sentenceArray = new String[]
                 {

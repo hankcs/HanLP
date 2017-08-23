@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * @author hankcs
  */
-public class Graph
+public class Graph implements Serializable
 {
     /**
      * 顶点

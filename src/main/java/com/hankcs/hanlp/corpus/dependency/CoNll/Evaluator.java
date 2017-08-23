@@ -11,13 +11,14 @@
  */
 package com.hankcs.hanlp.corpus.dependency.CoNll;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 
 /**
  * 测试工具
  * @author hankcs
  */
-public class Evaluator
+public class Evaluator implements Serializable
 {
     float U, L, D, A;
     int sentenceCount;

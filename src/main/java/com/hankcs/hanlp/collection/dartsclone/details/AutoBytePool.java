@@ -4,13 +4,15 @@
  */
 package com.hankcs.hanlp.collection.dartsclone.details;
 
+import java.io.Serializable;
+
 /**
  * 动态数组<br>
  * Memory management of resizable array.
  *
  * @author
  */
-class AutoBytePool
+class AutoBytePool implements Serializable
 {
     /**
      * 获取缓冲区

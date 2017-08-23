@@ -11,13 +11,14 @@
  */
 package com.hankcs.hanlp.corpus.dictionary.item;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 词典中的一个条目，比如“希望 v 7685 vn 616”
  * @author hankcs
  */
-public class Item extends SimpleItem
+public class Item extends SimpleItem implements Serializable
 {
     /**
      * 该条目的索引，比如“啊”

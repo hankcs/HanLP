@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.algorithm;
 
+import java.io.Serializable;
+
 /**
  * 比较两个数组
  * @author hankcs
  */
-public class ArrayCompare
+public class ArrayCompare implements Serializable
 {
     /**
      * 比较数组A与B的大小关系

@@ -13,11 +13,13 @@ package com.hankcs.hanlp.suggest.scorer.pinyin;
 
 import com.hankcs.hanlp.suggest.scorer.BaseScorer;
 
+import java.io.Serializable;
+
 /**
  * 拼音打分器
  * @author hankcs
  */
-public class PinyinScorer extends BaseScorer<PinyinKey>
+public class PinyinScorer extends BaseScorer<PinyinKey> implements Serializable
 {
     @Override
     protected PinyinKey generateKey(String sentence)

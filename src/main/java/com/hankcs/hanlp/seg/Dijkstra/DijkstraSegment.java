@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.seg.Dijkstra;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
@@ -21,13 +21,14 @@ import com.hankcs.hanlp.seg.Dijkstra.Path.State;
 import com.hankcs.hanlp.seg.WordBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.common.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 最短路径分词
  * @author hankcs
  */
-public class DijkstraSegment extends WordBasedGenerativeModelSegment
+public class DijkstraSegment extends WordBasedGenerativeModelSegment implements Serializable
 {
     @Override
     public List<Term> segSentence(char[] sentence)
@@ -38,7 +39,7 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
         GenerateWordNet(wordNetAll);
         ///////////////生成词图////////////////////
         Graph graph = GenerateBiGraph(wordNetAll);
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.printf("粗分词图：%s\n", graph.printByTo());
         }
@@ -52,7 +53,7 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
             else combineByCustomDictionary(vertexList);
         }
 
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.println("粗分结果" + convert(vertexList, false));
         }
@@ -98,7 +99,7 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
             {
                 graph = GenerateBiGraph(wordNetOptimum);
                 vertexList = dijkstra(graph);
-                if (HanLP.Config.DEBUG)
+                if (Config.DEBUG)
                 {
                     System.out.printf("细分词网：\n%s\n", wordNetOptimum);
                     System.out.printf("细分词图：%s\n", graph.printByTo());

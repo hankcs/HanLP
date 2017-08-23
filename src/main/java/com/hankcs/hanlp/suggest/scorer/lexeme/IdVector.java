@@ -17,6 +17,7 @@ import com.hankcs.hanlp.dictionary.CoreSynonymDictionaryEx;
 import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class IdVector implements Comparable<IdVector>, ISentenceKey<IdVector>
+public class IdVector implements Comparable<IdVector>, ISentenceKey<IdVector>, Serializable
 {
     public List<Long[]> idArrayList;
 

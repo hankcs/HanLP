@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
 import com.hankcs.hanlp.corpus.dictionary.TFDictionary;
@@ -34,7 +34,7 @@ import java.util.Map;
 public class TestAdjustCoreDictionary extends TestCase
 {
 
-    public static final String DATA_DICTIONARY_CORE_NATURE_DICTIONARY_TXT = HanLP.Config.CoreDictionaryPath;
+    public static final String DATA_DICTIONARY_CORE_NATURE_DICTIONARY_TXT = Config.CoreDictionaryPath;
 
     public void testGetCompiledWordFromDictionary() throws Exception
     {

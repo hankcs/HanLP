@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author manabe
  */
-public class DoubleArray
+public class DoubleArray implements Serializable
 {
     static Charset utf8 = Charset.forName("UTF-8");
 

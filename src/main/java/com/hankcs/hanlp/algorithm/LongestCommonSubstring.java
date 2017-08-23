@@ -11,13 +11,15 @@
  */
 package com.hankcs.hanlp.algorithm;
 
+import java.io.Serializable;
+
 /**
  * 求最长公共字串的长度<br>
  *     最长公共子串（Longest Common Substring）指的是两个字符串中的最长公共子串，要求子串一定连续
  *
  * @author hankcs
  */
-public class LongestCommonSubstring
+public class LongestCommonSubstring implements Serializable
 {
     public static int compute(char[] str1, char[] str2)
     {

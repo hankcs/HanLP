@@ -11,12 +11,14 @@
  */
 package com.hankcs.hanlp.corpus.document.sentence.word;
 
+import java.io.Serializable;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 一个单词
  * @author hankcs
  */
-public class Word implements IWord
+public class Word implements IWord, Serializable
 {
     /**
      * 单词的真实值，比如“程序”

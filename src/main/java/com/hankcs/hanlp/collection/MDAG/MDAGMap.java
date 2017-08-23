@@ -13,13 +13,14 @@ package com.hankcs.hanlp.collection.MDAG;
 
 import com.hankcs.hanlp.utility.ByteUtil;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 最好不要把MDAG当map用，现在的实现在key后面放一个int，导致右语言全部不同，退化为bintrie
  * @author hankcs
  */
-public class MDAGMap<V> extends AbstractMap<String, V>
+public class MDAGMap<V> extends AbstractMap<String, V> implements Serializable
 {
     ArrayList<V> valueList = new ArrayList<V>();
     MDAGForMap mdag = new MDAGForMap();

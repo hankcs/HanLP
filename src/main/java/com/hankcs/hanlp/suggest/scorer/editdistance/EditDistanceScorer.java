@@ -13,11 +13,13 @@ package com.hankcs.hanlp.suggest.scorer.editdistance;
 
 import com.hankcs.hanlp.suggest.scorer.BaseScorer;
 
+import java.io.Serializable;
+
 /**
  * 编辑距离打分器
  * @author hankcs
  */
-public class EditDistanceScorer extends BaseScorer<CharArray>
+public class EditDistanceScorer extends BaseScorer<CharArray> implements Serializable
 {
     @Override
     protected CharArray generateKey(String sentence)

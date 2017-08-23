@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.TFDictionary;
 import junit.framework.TestCase;
 
@@ -23,6 +23,6 @@ public class TestCombineNGramDictionary extends TestCase
 {
     public void testCombine() throws Exception
     {
-        System.out.println(TFDictionary.combine(HanLP.Config.BiGramDictionaryPath, "XXXDictionary.ngram.txt"));
+        System.out.println(TFDictionary.combine(Config.BiGramDictionaryPath, "XXXDictionary.ngram.txt"));
     }
 }

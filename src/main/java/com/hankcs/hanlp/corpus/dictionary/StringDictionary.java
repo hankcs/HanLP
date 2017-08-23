@@ -17,6 +17,7 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Map;
 import static com.hankcs.hanlp.utility.Predefine.logger;

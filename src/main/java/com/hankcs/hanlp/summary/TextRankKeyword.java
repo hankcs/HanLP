@@ -4,6 +4,7 @@ package com.hankcs.hanlp.summary;
 import com.hankcs.hanlp.algorithm.MaxHeap;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**

@@ -11,7 +11,7 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 
@@ -25,7 +25,7 @@ public class DemoNLPSegment
 {
     public static void main(String[] args)
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         List<Term> termList = NLPTokenizer.segment("上外日本文化经济学院的陆晚霞教授正在教授泛读课程");
         System.out.println(termList);
     }

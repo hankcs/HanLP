@@ -15,6 +15,7 @@ package com.hankcs.hanlp.corpus.io;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.utility.TextUtility;
+import com.hankcs.hanlp.dictionary.Attribute;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -23,14 +24,14 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
-import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
+import static com.hankcs.hanlp.Config.IOAdapter;
 
 /**
  * 一些常用的IO操作
  *
  * @author hankcs
  */
-public class IOUtil
+public class IOUtil implements Serializable
 {
     /**
      * 序列化对象
@@ -581,9 +582,9 @@ public class IOUtil
      * @return 一个储存了词条的map
      * @throws IOException 异常表示加载失败
      */
-    public static TreeMap<String, CoreDictionary.Attribute> loadDictionary(String... pathArray) throws IOException
+    public static TreeMap<String, Attribute> loadDictionary(String... pathArray) throws IOException
     {
-        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
+        TreeMap<String, Attribute> map = new TreeMap<String, Attribute>();
         for (String path : pathArray)
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
@@ -599,14 +600,14 @@ public class IOUtil
      * @param storage 储存位置
      * @throws IOException 异常表示加载失败
      */
-    public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage) throws IOException
+    public static void loadDictionary(BufferedReader br, TreeMap<String, Attribute> storage) throws IOException
     {
         String line;
         while ((line = br.readLine()) != null)
         {
             String param[] = line.split("\\s");
             int natureCount = (param.length - 1) / 2;
-            CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natureCount);
+            Attribute attribute = new Attribute(natureCount);
             for (int i = 0; i < natureCount; ++i)
             {
                 attribute.nature[i] = Enum.valueOf(Nature.class, param[1 + 2 * i]);

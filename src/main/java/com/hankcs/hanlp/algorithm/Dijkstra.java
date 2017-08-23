@@ -16,6 +16,7 @@ import com.hankcs.hanlp.seg.common.EdgeFrom;
 import com.hankcs.hanlp.seg.common.Graph;
 import com.hankcs.hanlp.seg.common.Vertex;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.PriorityQueue;
  * 最短路径
  * @author hankcs
  */
-public class Dijkstra
+public class Dijkstra implements Serializable
 {
     public static List<Vertex> compute(Graph graph)
     {

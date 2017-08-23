@@ -11,29 +11,32 @@
  */
 package com.hankcs.hanlp.dictionary;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.tag.Nature;
+
+import java.io.Serializable;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 核心词典词性转移矩阵
  * @author hankcs
  */
-public class CoreDictionaryTransformMatrixDictionary
+public class CoreDictionaryTransformMatrixDictionary implements Serializable
 {
     public static TransformMatrixDictionary<Nature> transformMatrixDictionary;
     static
     {
         transformMatrixDictionary = new TransformMatrixDictionary<Nature>(Nature.class);
         long start = System.currentTimeMillis();
-        if (!transformMatrixDictionary.load(HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath))
+        if (!transformMatrixDictionary.load(Config.CoreDictionaryTransformMatrixDictionaryPath))
         {
-            logger.severe("加载核心词典词性转移矩阵" + HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath + "失败");
+            logger.severe("加载核心词典词性转移矩阵" + Config.CoreDictionaryTransformMatrixDictionaryPath + "失败");
             System.exit(-1);
         }
         else
         {
-            logger.info("加载核心词典词性转移矩阵" + HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath + "成功，耗时：" + (System.currentTimeMillis() - start) + " ms");
+            logger.info("加载核心词典词性转移矩阵" + Config.CoreDictionaryTransformMatrixDictionaryPath + "成功，耗时：" + (System.currentTimeMillis() - start) + " ms");
         }
     }
 }

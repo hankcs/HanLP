@@ -1,5 +1,6 @@
 package com.hankcs.hanlp.collection.AhoCorasick;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -19,7 +20,7 @@ import java.util.*;
  *
  * @author Robert Bor
  */
-public class State
+public class State implements Serializable
 {
 
     /**

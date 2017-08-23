@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.nt;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NT;
@@ -20,7 +20,9 @@ import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -31,7 +33,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class OrganizationDictionary
+public class OrganizationDictionary implements Serializable
 {
     /**
      * 机构名词典
@@ -52,7 +54,7 @@ public class OrganizationDictionary
     /**
      * 本词典专注的词的属性
      */
-    static final CoreDictionary.Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
+    static final Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
 
     private static void addKeyword(TreeMap<String, String> patternMap, String keyword)
     {
@@ -62,10 +64,10 @@ public class OrganizationDictionary
     {
         long start = System.currentTimeMillis();
         dictionary = new NTDictionary();
-        dictionary.load(HanLP.Config.OrganizationDictionaryPath);
-        logger.info(HanLP.Config.OrganizationDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+        dictionary.load(Config.OrganizationDictionaryPath);
+        logger.info(Config.OrganizationDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
         transformMatrixDictionary = new TransformMatrixDictionary<NT>(NT.class);
-        transformMatrixDictionary.load(HanLP.Config.OrganizationDictionaryTrPath);
+        transformMatrixDictionary.load(Config.OrganizationDictionaryTrPath);
         trie = new AhoCorasickDoubleArrayTrie<String>();
         TreeMap<String, String> patternMap = new TreeMap<String, String>();
         addKeyword(patternMap, "CCCCCCCCD");
@@ -3765,7 +3767,7 @@ public class OrganizationDictionary
                 if (isBadCase(name)) return;
 
                 // 正式算它是一个名字
-                if (HanLP.Config.DEBUG)
+                if (Config.DEBUG)
                 {
                     System.out.printf("识别出机构名：%s %s\n", name, keyword);
                 }

@@ -10,7 +10,7 @@
  */
 package com.hankcs.hanlp.seg.HMM;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.model.trigram.CharacterBasedGenerativeModel;
 import com.hankcs.hanlp.seg.CharacterBasedGenerativeModelSegment;
@@ -18,6 +18,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
 import com.hankcs.hanlp.utility.TextUtility;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -27,13 +28,13 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class HMMSegment extends CharacterBasedGenerativeModelSegment
+public class HMMSegment extends CharacterBasedGenerativeModelSegment implements Serializable
 {
     CharacterBasedGenerativeModel model;
 
     public HMMSegment()
     {
-        this(HanLP.Config.HMMSegmentModelPath);
+        this(Config.HMMSegmentModelPath);
     }
 
     public HMMSegment(String modelPath)

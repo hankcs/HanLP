@@ -1,6 +1,6 @@
 package com.hankcs.hanlp.corpus.io;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.utility.Predefine;
 import junit.framework.TestCase;
@@ -18,7 +18,7 @@ public class IIOAdapterTest extends TestCase
      */
     public void testReturnNullInIOAdapter() throws Exception
     {
-        HanLP.Config.IOAdapter = new FileIOAdapter()
+        Config.IOAdapter = new FileIOAdapter()
         {
             @Override
             public InputStream open(String path) throws FileNotFoundException
@@ -35,7 +35,7 @@ public class IIOAdapterTest extends TestCase
             }
         };
 
-        HanLP.Config.enableDebug(false);
+        Config.enableDebug(false);
         assertEquals(true, CoreStopWordDictionary.contains("的"));
     }
 }

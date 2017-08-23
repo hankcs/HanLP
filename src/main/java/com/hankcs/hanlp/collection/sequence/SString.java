@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.collection.sequence;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Arrays;
  *
  * @author hankcs
  */
-public class SString implements Comparable<SString>, CharSequence
+public class SString implements Comparable<SString>, CharSequence, Serializable
 {
     public char[] value;
     /**

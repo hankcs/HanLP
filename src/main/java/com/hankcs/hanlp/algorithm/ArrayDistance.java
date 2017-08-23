@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.algorithm;
 
+import java.io.Serializable;
 import java.util.TreeSet;
 
 /**
@@ -18,7 +19,7 @@ import java.util.TreeSet;
  *
  * @author hankcs
  */
-public class ArrayDistance
+public class ArrayDistance implements Serializable
 {
     public static Long computeMinimumDistance(TreeSet<Long> setA, TreeSet<Long> setB)
     {

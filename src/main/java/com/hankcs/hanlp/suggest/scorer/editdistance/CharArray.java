@@ -14,11 +14,13 @@ package com.hankcs.hanlp.suggest.scorer.editdistance;
 import com.hankcs.hanlp.algorithm.EditDistance;
 import com.hankcs.hanlp.suggest.scorer.ISentenceKey;
 
+import java.io.Serializable;
+
 /**
  * 对字符数组的封装，可以代替String
  * @author hankcs
  */
-public class CharArray implements Comparable<CharArray>, ISentenceKey<CharArray>
+public class CharArray implements Comparable<CharArray>, ISentenceKey<CharArray>, Serializable
 {
     char[] value;
 

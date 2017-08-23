@@ -13,13 +13,14 @@ package com.hankcs.hanlp.seg.Viterbi.Path;
 
 import com.hankcs.hanlp.seg.common.Vertex;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author hankcs
  */
-public class SimpleGraph
+public class SimpleGraph implements Serializable
 {
     LinkedList<Vertex> nodes[];
     public SimpleGraph(LinkedList<Vertex> vertexes[])

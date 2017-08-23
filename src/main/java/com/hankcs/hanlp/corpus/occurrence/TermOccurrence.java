@@ -13,13 +13,14 @@ package com.hankcs.hanlp.corpus.occurrence;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 词频统计
  * @author hankcs
  */
-public class TermOccurrence
+public class TermOccurrence implements Serializable
 {
     /**
      * 词频统计用的储存结构

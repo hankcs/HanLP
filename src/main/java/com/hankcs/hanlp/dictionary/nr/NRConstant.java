@@ -13,12 +13,15 @@ package com.hankcs.hanlp.dictionary.nr;
 
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
+
+import java.io.Serializable;
 
 /**
  * 人名识别中常用的一些常量
  * @author hankcs
  */
-public class NRConstant
+public class NRConstant implements Serializable
 {
     /**
      * 本词典专注的词的ID
@@ -27,5 +30,5 @@ public class NRConstant
     /**
      * 本词典专注的词的属性
      */
-    public static final CoreDictionary.Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
+    public static final Attribute ATTRIBUTE = CoreDictionary.get(WORD_ID);
 }

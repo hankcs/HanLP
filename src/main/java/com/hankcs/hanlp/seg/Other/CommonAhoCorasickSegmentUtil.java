@@ -16,6 +16,7 @@ import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.common.ResultTerm;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -23,7 +24,7 @@ import java.util.LinkedList;
  *
  * @author hankcs
  */
-public class CommonAhoCorasickSegmentUtil
+public class CommonAhoCorasickSegmentUtil implements Serializable
 {
     /**
      * 最长分词，合并未知语素

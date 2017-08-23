@@ -15,13 +15,14 @@ import com.hankcs.hanlp.collection.trie.ITrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 
 import java.io.DataOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 双数组trie树map，更省内存，原本希望代替DoubleArrayTrie，后来发现效率不够
  * @author hankcs
  */
-public class DartMap<V> extends DoubleArray implements Map<String, V>, ITrie<V>
+public class DartMap<V> extends DoubleArray implements Map<String, V>, ITrie<V>, Serializable
 {
     V[] valueArray;
 

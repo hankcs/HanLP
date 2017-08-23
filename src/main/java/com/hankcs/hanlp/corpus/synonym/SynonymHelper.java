@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.corpus.synonym;
 
+import java.io.Serializable;
+
 /**
  * 一个Util
  * @author hankcs
  */
-public class SynonymHelper
+public class SynonymHelper implements Serializable
 {
     /**
      * 同一行最多支持编码这么多个单词

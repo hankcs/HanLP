@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.algorithm.EditDistance;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary;
@@ -20,6 +20,7 @@ import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.TextUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -28,7 +29,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CoreSynonymDictionaryEx
+public class CoreSynonymDictionaryEx implements Serializable
 {
     static CommonSynonymDictionaryEx dictionary;
 
@@ -36,7 +37,7 @@ public class CoreSynonymDictionaryEx
     {
         try
         {
-            dictionary = CommonSynonymDictionaryEx.create(IOUtil.newInputStream(HanLP.Config.CoreSynonymDictionaryDictionaryPath));
+            dictionary = CommonSynonymDictionaryEx.create(IOUtil.newInputStream(Config.CoreSynonymDictionaryDictionaryPath));
         }
         catch (Exception e)
         {

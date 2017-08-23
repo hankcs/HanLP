@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.SimpleDictionary;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
@@ -112,9 +112,9 @@ public class TestXianDaiHanYu extends TestCase
         });
 
         StringDictionary dictionaryLocal = new StringDictionary();
-        dictionaryLocal.load(HanLP.Config.PinyinDictionaryPath);
+        dictionaryLocal.load(Config.PinyinDictionaryPath);
         dictionaryLocal.combine(dictionary);
-        dictionaryLocal.save(HanLP.Config.PinyinDictionaryPath);
+        dictionaryLocal.save(Config.PinyinDictionaryPath);
     }
 
     public void testMakeKaiFangDictionary() throws Exception
@@ -146,9 +146,9 @@ public class TestXianDaiHanYu extends TestCase
         }
 
         StringDictionary dictionaryLocal = new StringDictionary();
-        dictionaryLocal.load(HanLP.Config.PinyinDictionaryPath);
+        dictionaryLocal.load(Config.PinyinDictionaryPath);
         dictionaryLocal.combine(dictionaryKFTC);
-        dictionaryLocal.save(HanLP.Config.PinyinDictionaryPath);
+        dictionaryLocal.save(Config.PinyinDictionaryPath);
     }
 
     public void testPinyin() throws Exception
@@ -319,7 +319,7 @@ public class TestXianDaiHanYu extends TestCase
     public void testSeg() throws Exception
     {
         Segment segment = new NShortSegment().enableNameRecognize(true);
-        HanLP.Config.enableDebug(true);
+        Config.enableDebug(true);
         System.out.println(segment.seg("我在区人保工作"));
     }
 

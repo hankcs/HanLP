@@ -13,12 +13,14 @@ package com.hankcs.hanlp.corpus.tag;
 
 import com.hankcs.hanlp.corpus.util.CustomNatureUtility;
 
+import java.io.Serializable;
+
 /**
  * 词性
  *
  * @author hankcs
  */
-public enum Nature
+public enum Nature implements Serializable
 {
     /**
      * 区别语素

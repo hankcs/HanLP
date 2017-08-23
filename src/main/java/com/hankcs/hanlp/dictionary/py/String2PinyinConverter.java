@@ -15,13 +15,14 @@ import com.hankcs.hanlp.algorithm.ahocorasick.trie.Token;
 import com.hankcs.hanlp.algorithm.ahocorasick.trie.Trie;
 import com.hankcs.hanlp.collection.dartsclone.Pair;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 汉字转拼音，提供拼音字符串转拼音，支持汉英混合的杂乱文本
  * @author hankcs
  */
-public class String2PinyinConverter
+public class String2PinyinConverter implements Serializable
 {
     static Trie trie;
     /**

@@ -11,14 +11,16 @@
  */
 package com.hankcs.hanlp.recognition.nr;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.nr.TranslatedPersonDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -28,7 +30,7 @@ import static com.hankcs.hanlp.dictionary.nr.NRConstant.WORD_ID;
  * 音译人名识别
  * @author hankcs
  */
-public class TranslatedPersonRecognition
+public class TranslatedPersonRecognition implements Serializable
 {
     /**
      * 执行识别
@@ -59,11 +61,11 @@ public class TranslatedPersonRecognition
                     // 识别结束
                     if (appendTimes > 1)
                     {
-                        if (HanLP.Config.DEBUG)
+                        if (Config.DEBUG)
                         {
                             System.out.println("音译人名识别出：" + sbName.toString());
                         }
-                        wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new CoreDictionary.Attribute(Nature.nrf), WORD_ID), wordNetAll);
+                        wordNetOptimum.insert(activeLine, new Vertex(Predefine.TAG_PEOPLE, sbName.toString(), new Attribute(Nature.nrf), WORD_ID), wordNetAll);
                     }
                     sbName.setLength(0);
                     appendTimes = 0;

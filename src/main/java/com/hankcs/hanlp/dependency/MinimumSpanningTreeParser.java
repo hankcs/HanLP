@@ -19,6 +19,7 @@ import com.hankcs.hanlp.dependency.common.Node;
 import com.hankcs.hanlp.dependency.common.State;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;

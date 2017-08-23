@@ -14,13 +14,14 @@ package com.hankcs.hanlp.algorithm;
 import com.hankcs.hanlp.corpus.synonym.Synonym;
 import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 词向量距离计算
  * @author hankcs
  */
-public class VectorDistance
+public class VectorDistance implements Serializable
 {
     public static long compute(long[] arrayA, long[] arrayB)
     {

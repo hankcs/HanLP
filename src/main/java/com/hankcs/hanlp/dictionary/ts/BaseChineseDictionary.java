@@ -23,6 +23,7 @@ import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -30,7 +31,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public class BaseChineseDictionary
+public class BaseChineseDictionary implements Serializable
 {
     static void combineChain(TreeMap<String, String> s2t, TreeMap<String, String> t2x)
     {

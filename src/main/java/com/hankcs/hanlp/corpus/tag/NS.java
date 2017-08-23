@@ -11,12 +11,14 @@
  */
 package com.hankcs.hanlp.corpus.tag;
 
+import java.io.Serializable;
+
 /**
  * 地名角色标签
  *
  * @author hankcs
  */
-public enum NS
+public enum NS implements Serializable
 {
     /**
      * 地名的上文 我【来到】中关园

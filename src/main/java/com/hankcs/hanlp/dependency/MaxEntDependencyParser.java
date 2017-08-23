@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dependency;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.dartsclone.Pair;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.io.ByteArray;
@@ -23,6 +23,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -43,7 +44,7 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
 
     public MaxEntDependencyParser()
     {
-        String path = HanLP.Config.MaxEntModelPath + Predefine.BIN_EXT;
+        String path = Config.MaxEntModelPath + Predefine.BIN_EXT;
         model = GlobalObjectPool.get(path);
         if (model != null) return;
         long start = System.currentTimeMillis();
@@ -54,7 +55,7 @@ public class MaxEntDependencyParser extends MinimumSpanningTreeParser
         }
         else
         {
-            model = MaxEntModel.create(HanLP.Config.MaxEntModelPath);
+            model = MaxEntModel.create(Config.MaxEntModelPath);
         }
         if (model != null)
         {

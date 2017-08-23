@@ -13,11 +13,13 @@ package com.hankcs.hanlp.suggest.scorer.lexeme;
 
 import com.hankcs.hanlp.suggest.scorer.BaseScorer;
 
+import java.io.Serializable;
+
 /**
  * 单词语义向量打分器
  * @author hankcs
  */
-public class IdVectorScorer extends BaseScorer<IdVector>
+public class IdVectorScorer extends BaseScorer<IdVector> implements Serializable
 {
     @Override
     protected IdVector generateKey(String sentence)

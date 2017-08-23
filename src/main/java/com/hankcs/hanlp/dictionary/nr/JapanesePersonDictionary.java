@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.nr;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -29,9 +29,9 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public class JapanesePersonDictionary
+public class JapanesePersonDictionary implements Serializable
 {
-    static String path = HanLP.Config.JapanesePersonDictionaryPath;
+    static String path = Config.JapanesePersonDictionaryPath;
     static DoubleArrayTrie<Character> trie;
     /**
      * 姓
@@ -54,7 +54,7 @@ public class JapanesePersonDictionary
             throw new IllegalArgumentException("日本人名词典" + path + "加载失败");
         }
 
-        logger.info("日本人名词典" + HanLP.Config.PinyinDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+        logger.info("日本人名词典" + Config.PinyinDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
 
     static boolean load()

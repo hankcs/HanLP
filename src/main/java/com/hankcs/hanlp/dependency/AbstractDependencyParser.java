@@ -19,13 +19,14 @@ import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * @author hankcs
  */
-public abstract class AbstractDependencyParser implements IDependencyParser
+public abstract class AbstractDependencyParser implements IDependencyParser, Serializable
 {
     /**
      * 本Parser使用的分词器，可以自由替换

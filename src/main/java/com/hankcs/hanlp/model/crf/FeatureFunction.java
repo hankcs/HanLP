@@ -15,12 +15,13 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.DataOutputStream;
+import java.io.Serializable;
 
 /**
  * 特征函数，其实是tag.size个特征函数的集合
  * @author hankcs
  */
-public class FeatureFunction implements ICacheAble
+public class FeatureFunction implements ICacheAble, Serializable
 {
     /**
      * 环境参数

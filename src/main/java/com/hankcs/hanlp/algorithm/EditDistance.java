@@ -13,13 +13,14 @@ package com.hankcs.hanlp.algorithm;
 
 import com.hankcs.hanlp.dictionary.common.CommonSynonymDictionary;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 基于语义距离的编辑距离实现
  * @author hankcs
  */
-public class EditDistance
+public class EditDistance implements Serializable
 {
     public static long compute(List<CommonSynonymDictionary.SynonymItem> synonymItemListA, List<CommonSynonymDictionary.SynonymItem> synonymItemListB)
     {

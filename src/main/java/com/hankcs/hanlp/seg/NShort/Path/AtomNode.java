@@ -15,12 +15,15 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
+
+import java.io.Serializable;
 
 /**
  * 原子分词节点
  * @author hankcs
  */
-public class AtomNode
+public class AtomNode implements Serializable
 {
     public String sWord;
     public int nPOS;
@@ -122,6 +125,6 @@ public class AtomNode
                 break;
         }
 
-        return new Vertex(word, name, new CoreDictionary.Attribute(nature, dValue));
+        return new Vertex(word, name, new Attribute(nature, dValue));
     }
 }

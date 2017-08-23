@@ -17,6 +17,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.TextUtility;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -24,7 +25,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class TextRankSentence
+public class TextRankSentence implements Serializable
 {
     /**
      * 阻尼系数（ＤａｍｐｉｎｇＦａｃｔｏｒ），一般取值为0.85

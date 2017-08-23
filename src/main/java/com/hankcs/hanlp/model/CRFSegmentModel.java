@@ -17,6 +17,7 @@ import com.hankcs.hanlp.model.crf.CRFModel;
 import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.Table;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**

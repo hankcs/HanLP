@@ -11,11 +11,12 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.set.UnEmptyStringSet;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -25,7 +26,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class SYTDictionary
+public class SYTDictionary implements Serializable
 {
     static Set<String> smSet = new UnEmptyStringSet();
     static Set<String> ymSet = new UnEmptyStringSet();
@@ -35,9 +36,9 @@ public class SYTDictionary
     static
     {
         StringDictionary dictionary = new StringDictionary();
-        if (dictionary.load(HanLP.Config.SYTDictionaryPath))
+        if (dictionary.load(Config.SYTDictionaryPath))
         {
-            logger.info("载入声母韵母音调词典" + HanLP.Config.SYTDictionaryPath + "成功");
+            logger.info("载入声母韵母音调词典" + Config.SYTDictionaryPath + "成功");
             for (Map.Entry<String, String> entry : dictionary.entrySet())
             {
                 //      0  1 2
@@ -55,7 +56,7 @@ public class SYTDictionary
         }
         else
         {
-            logger.warning("载入声母韵母音调词典" + HanLP.Config.SYTDictionaryPath + "失败");
+            logger.warning("载入声母韵母音调词典" + Config.SYTDictionaryPath + "失败");
         }
     }
 

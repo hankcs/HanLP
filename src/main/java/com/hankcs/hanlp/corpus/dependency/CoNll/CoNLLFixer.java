@@ -13,11 +13,13 @@ package com.hankcs.hanlp.corpus.dependency.CoNll;
 
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
+import java.io.Serializable;
+
 /**
  * 修正一些非10行的依存语料
  * @author hankcs
  */
-public class CoNLLFixer
+public class CoNLLFixer implements Serializable
 {
     public static boolean fix(String path)
     {

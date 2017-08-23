@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
+import java.io.Serializable;
+
 /**
  * 将整型转为拼音
  * @author hankcs
  */
-public class Integer2PinyinConverter
+public class Integer2PinyinConverter implements Serializable
 {
     public static final Pinyin[] pinyins = Pinyin.values();
 

@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.py;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
@@ -24,6 +24,7 @@ import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -31,7 +32,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public class PinyinDictionary
+public class PinyinDictionary implements Serializable
 {
     static AhoCorasickDoubleArrayTrie<Pinyin[]> trie = new AhoCorasickDoubleArrayTrie<Pinyin[]>();
     public static final Pinyin[] pinyins = Integer2PinyinConverter.pinyins;
@@ -39,12 +40,12 @@ public class PinyinDictionary
     static
     {
         long start = System.currentTimeMillis();
-        if (!load(HanLP.Config.PinyinDictionaryPath))
+        if (!load(Config.PinyinDictionaryPath))
         {
-            throw new IllegalArgumentException("拼音词典" + HanLP.Config.PinyinDictionaryPath + "加载失败");
+            throw new IllegalArgumentException("拼音词典" + Config.PinyinDictionaryPath + "加载失败");
         }
 
-        logger.info("拼音词典" + HanLP.Config.PinyinDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+        logger.info("拼音词典" + Config.PinyinDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
 
     /**

@@ -26,6 +26,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.DataOutputStream;
+import java.io.Serializable;
 
 /**
  * The class capable of representing a MDAG node, its _transition set, and one of its incoming transitions;
@@ -33,7 +34,7 @@ import java.io.DataOutputStream;
  *
  * @author Kevin
  */
-public class SimpleMDAGNode implements ICacheAble
+public class SimpleMDAGNode implements ICacheAble, Serializable
 {
     //The character labeling an incoming _transition to this node
     private char letter;

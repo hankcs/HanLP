@@ -4,11 +4,13 @@
  */
 package com.hankcs.hanlp.collection.dartsclone.details;
 
+import java.io.Serializable;
+
 /**
  * key set，其实也包含值（每个key都有一个整型数）
  * @author manabe
  */
-public class Keyset
+public class Keyset implements Serializable
 {
     /**
      * 构造一个KeySet

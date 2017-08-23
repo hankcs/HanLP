@@ -20,7 +20,7 @@ import java.util.TreeMap;
 /**
  * @author hankcs
  */
-public class DictionaryUtil
+public class DictionaryUtil implements Serializable
 {
     /**
      * 给某个字典排序

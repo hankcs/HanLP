@@ -21,6 +21,7 @@ import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.BIN_EXT;
@@ -29,7 +30,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public class CRFModel implements ICacheAble
+public class CRFModel implements ICacheAble, Serializable
 {
     /**
      * 标签和id的相互转换

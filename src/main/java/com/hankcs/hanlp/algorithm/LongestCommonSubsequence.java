@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.algorithm;
 
+import java.io.Serializable;
+
 /**
  * 最长公共子序列（Longest Common Subsequence）指的是两个字符串中的最长公共子序列，不要求子序列连续。
  * @author hankcs
  */
-public class LongestCommonSubsequence
+public class LongestCommonSubsequence implements Serializable
 {
     public static int compute(char[] str1, char[] str2)
     {

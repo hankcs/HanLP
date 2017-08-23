@@ -13,6 +13,7 @@ package com.hankcs.hanlp.utility;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * 对数字和字节进行转换。<br>
@@ -27,7 +28,7 @@ import java.io.IOException;
  * double: 双精度浮点数(小数) 占8个字节 64位二进制 byte[0] byte[1] byte[2] byte[3] byte[4]
  * byte[5] byte[6] byte[7]<br>
  */
-public class ByteUtil
+public class ByteUtil implements Serializable
 {
 
     /**

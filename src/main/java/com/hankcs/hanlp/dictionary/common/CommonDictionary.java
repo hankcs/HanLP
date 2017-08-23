@@ -25,7 +25,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public abstract class CommonDictionary<V>
+public abstract class CommonDictionary<V> implements Serializable
 {
     DoubleArrayTrie<V> trie;
 

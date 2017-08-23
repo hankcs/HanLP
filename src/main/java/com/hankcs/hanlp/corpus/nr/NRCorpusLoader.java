@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.nr;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
@@ -20,12 +20,14 @@ import com.hankcs.hanlp.corpus.tag.NR;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 对人名语料的解析，并且生成词典
  * @author hankcs
  */
-public class NRCorpusLoader
+public class NRCorpusLoader implements Serializable
 {
     public static boolean load(String path)
     {
@@ -86,7 +88,7 @@ public class NRCorpusLoader
 
     public static void combine()
     {
-        DictionaryMaker dictionaryMaker = DictionaryMaker.combine(HanLP.Config.CoreDictionaryPath, "XXXDictionary.txt");
-        dictionaryMaker.saveTxtTo(HanLP.Config.CoreDictionaryPath);
+        DictionaryMaker dictionaryMaker = DictionaryMaker.combine(Config.CoreDictionaryPath, "XXXDictionary.txt");
+        dictionaryMaker.saveTxtTo(Config.CoreDictionaryPath);
     }
 }

@@ -11,10 +11,12 @@
  */
 package com.hankcs.hanlp.corpus.tag;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public enum NT
+public enum NT implements Serializable
 {
     /**
      * 上文	[参与]亚太经合组织的活动

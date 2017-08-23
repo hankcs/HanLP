@@ -4,13 +4,16 @@
  */
 package com.hankcs.hanlp.collection.dartsclone.details;
 
+import java.io.Serializable;
+import java.security.SecureRandom;
+
 /**
  * 整型动态数组<br>
  * Memory management of resizable array.
  *
  * @author
  */
-class AutoIntPool
+class AutoIntPool implements Serializable
 {
     int[] getBuffer()
     {

@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class Precompiler
+public class Precompiler implements Serializable
 {
     /**
      * 将一个单词编译为等效字串

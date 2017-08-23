@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.seg.NShort;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.algorithm.Dijkstra;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
@@ -25,6 +25,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -38,7 +39,7 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
     {
 //        logger.trace("细分词网：\n{}", wordNetOptimum);
         Graph graph = GenerateBiGraph(wordNetOptimum);
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.printf("细分词图：%s\n", graph.printByTo());
         }
@@ -59,7 +60,7 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
         boolean NERexists = false;
         for (List<Vertex> vertexList : coarseResult)
         {
-            if (HanLP.Config.DEBUG)
+            if (Config.DEBUG)
             {
                 System.out.println("粗分结果" + convert(vertexList, false));
             }
@@ -103,7 +104,7 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
         {
             Graph graph = GenerateBiGraph(wordNetOptimum);
             vertexList = Dijkstra.compute(graph);
-            if (HanLP.Config.DEBUG)
+            if (Config.DEBUG)
             {
                 System.out.printf("细分词网：\n%s\n", wordNetOptimum);
                 System.out.printf("细分词图：%s\n", graph.printByTo());
@@ -156,7 +157,7 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
         ///////////////生成词图////////////////////
         Graph graph = GenerateBiGraph(wordNetAll);
 //        logger.trace(graph.toString());
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.printf("打印词图：%s\n", graph.printByTo());
         }

@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dependency;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
@@ -20,6 +20,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class WordNatureDependencyParser extends MinimumSpanningTreeParser
 
     public WordNatureDependencyParser()
     {
-        this(HanLP.Config.WordNatureModelPath);
+        this(Config.WordNatureModelPath);
     }
 
     /**

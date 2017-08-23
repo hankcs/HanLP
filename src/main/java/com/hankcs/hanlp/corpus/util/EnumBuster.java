@@ -13,6 +13,7 @@ package com.hankcs.hanlp.corpus.util;
 
 import sun.reflect.*;
 
+import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -20,7 +21,7 @@ import java.util.*;
  * 动态修改Enum的对象
  * @param <E>
  */
-public class EnumBuster<E extends Enum<E>>
+public class EnumBuster<E extends Enum<E>> implements Serializable
 {
     private static final Class[] EMPTY_CLASS_ARRAY =
             new Class[0];

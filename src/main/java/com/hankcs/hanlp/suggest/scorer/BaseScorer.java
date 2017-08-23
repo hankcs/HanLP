@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.suggest.scorer;
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -19,7 +20,7 @@ import java.util.*;
  * @param <T> 这是储存器map中key的类型，具有相同key的句子会存入同一个entry
  * @author hankcs
  */
-public abstract class BaseScorer<T extends ISentenceKey> implements IScorer
+public abstract class BaseScorer<T extends ISentenceKey> implements IScorer, Serializable
 {
     public BaseScorer()
     {

@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
@@ -30,7 +30,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CoreBiGramTableDictionary
+public class CoreBiGramTableDictionary implements Serializable
 {
     /**
      * 描述了词在pair中的范围，具体说来<br>
@@ -44,7 +44,7 @@ public class CoreBiGramTableDictionary
 
     static
     {
-        String path = HanLP.Config.BiGramDictionaryPath;
+        String path = Config.BiGramDictionaryPath;
         logger.info("开始加载二元词典" + path + ".table");
         long start = System.currentTimeMillis();
         if (!load(path))
@@ -60,7 +60,7 @@ public class CoreBiGramTableDictionary
 
     static boolean load(String path)
     {
-        String datPath = HanLP.Config.BiGramDictionaryPath + ".table" + Predefine.BIN_EXT;
+        String datPath = Config.BiGramDictionaryPath + ".table" + Predefine.BIN_EXT;
         if (loadDat(datPath)) return true;
         BufferedReader br;
         TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<Integer, TreeMap<Integer, Integer>>();
@@ -299,7 +299,7 @@ public class CoreBiGramTableDictionary
      */
     public static boolean reload()
     {
-        String biGramDictionaryPath = HanLP.Config.BiGramDictionaryPath;
+        String biGramDictionaryPath = Config.BiGramDictionaryPath;
         IOUtil.deleteFile(biGramDictionaryPath + ".table" + Predefine.BIN_EXT);
 
         return load(biGramDictionaryPath);

@@ -13,6 +13,8 @@ package com.hankcs.hanlp.corpus.io;
 
 import com.hankcs.hanlp.utility.ByteUtil;
 
+import java.io.Serializable;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -20,7 +22,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class ByteArray
+public class ByteArray implements Serializable
 {
     /**
      * 当前字节数组，不一定是全部字节，可能只是一个片段

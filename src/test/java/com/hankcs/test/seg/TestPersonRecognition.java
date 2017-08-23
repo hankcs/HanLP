@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.seg;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -55,21 +55,21 @@ public class TestPersonRecognition extends TestCase
 
     public void testNameRecognition() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         NShortSegment segment = new NShortSegment();
         System.out.println(segment.seg("世界上最长的姓名是简森·乔伊·亚历山大·比基·卡利斯勒·达夫·埃利奥特·福克斯·伊维鲁莫·马尔尼·梅尔斯·帕特森·汤普森·华莱士·普雷斯顿。"));
     }
 
     public void testJPName() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         Segment segment = new DijkstraSegment().enableJapaneseNameRecognize(true);
         System.out.println(segment.seg("北川景子参演了林诣彬导演"));
     }
 
     public void testChineseNameRecognition() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         Segment segment = new DijkstraSegment();
         System.out.println(segment.seg("编剧邵钧林和稽道青说"));
 

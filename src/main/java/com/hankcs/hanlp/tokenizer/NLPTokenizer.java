@@ -16,6 +16,7 @@ import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class NLPTokenizer
+public class NLPTokenizer implements Serializable
 {
     /**
      * 预置分词器

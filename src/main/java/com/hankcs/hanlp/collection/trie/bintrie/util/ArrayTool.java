@@ -14,10 +14,12 @@ package com.hankcs.hanlp.collection.trie.bintrie.util;
 
 import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 
+import java.io.Serializable;
+
 /**
  * @author He Han
  */
-public class ArrayTool
+public class ArrayTool implements Serializable
 {
     /**
      * 二分查找

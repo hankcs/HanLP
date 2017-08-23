@@ -14,10 +14,7 @@ package com.hankcs.hanlp.collection.AhoCorasick;
 
 import com.hankcs.hanlp.corpus.io.ByteArray;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -26,7 +23,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  *
  * @author hankcs
  */
-public class AhoCorasickDoubleArrayTrie<V>
+public class AhoCorasickDoubleArrayTrie<V> implements Serializable
 {
     /**
      * 双数组值check

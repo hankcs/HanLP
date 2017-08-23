@@ -14,12 +14,14 @@ package com.hankcs.hanlp.utility;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 
+import java.io.Serializable;
+
 import static com.hankcs.hanlp.utility.Predefine.*;
 
 /**
  * @author hankcs
  */
-public class MathTools
+public class MathTools implements Serializable
 {
     /**
      * 从一个词到另一个词的词的花费

@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import junit.framework.TestCase;
 
@@ -22,7 +22,7 @@ public class TestNSRecognition extends TestCase
 {
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         DijkstraSegment segment = new DijkstraSegment();
         segment.enableJapaneseNameRecognize(false);
         segment.enableTranslatedNameRecognize(false);

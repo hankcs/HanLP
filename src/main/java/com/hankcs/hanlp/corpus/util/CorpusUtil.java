@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -23,7 +24,7 @@ import java.util.ListIterator;
 /**
  * @author hankcs
  */
-public class CorpusUtil
+public class CorpusUtil implements Serializable
 {
     public final static String TAG_PLACE = "未##地";
     public final static String TAG_BIGIN = "始##始";

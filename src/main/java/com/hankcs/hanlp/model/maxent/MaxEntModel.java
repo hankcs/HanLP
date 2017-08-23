@@ -28,7 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class MaxEntModel
+public class MaxEntModel implements Serializable
 {
     /**
      * 常数C，训练的时候用到

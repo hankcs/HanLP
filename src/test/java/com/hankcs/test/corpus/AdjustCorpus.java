@@ -12,7 +12,7 @@
 package com.hankcs.test.corpus;
 
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
 import com.hankcs.hanlp.corpus.dictionary.TFDictionary;
@@ -27,6 +27,7 @@ import com.hankcs.hanlp.corpus.occurrence.TermFrequency;
 import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
 import junit.framework.TestCase;
 
 import java.io.*;
@@ -120,8 +121,8 @@ public class AdjustCorpus extends TestCase
 
     public void testAdjustNGram() throws Exception
     {
-        IOUtil.LineIterator iterator = new IOUtil.LineIterator(HanLP.Config.BiGramDictionaryPath);
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(HanLP.Config.BiGramDictionaryPath + "adjust.txt"), "UTF-8"));
+        IOUtil.LineIterator iterator = new IOUtil.LineIterator(Config.BiGramDictionaryPath);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Config.BiGramDictionaryPath + "adjust.txt"), "UTF-8"));
         while (iterator.hasNext())
         {
             String line = iterator.next();
@@ -131,7 +132,7 @@ public class AdjustCorpus extends TestCase
 //            if (params.length != 2)
 //                System.err.println(line);
             int biFrequency = Integer.parseInt(params[1]);
-            CoreDictionary.Attribute attribute = CoreDictionary.get(first + second);
+            Attribute attribute = CoreDictionary.get(first + second);
             if (attribute != null && (first.length() == 1 || second.length() == 1))
             {
                 System.out.println(line);
@@ -146,7 +147,7 @@ public class AdjustCorpus extends TestCase
     public void testRemoveLabelD() throws Exception
     {
         Set<String> nameFollowers = new TreeSet<String>();
-        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(HanLP.Config.BiGramDictionaryPath);
+        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(Config.BiGramDictionaryPath);
         while (lineIterator.hasNext())
         {
             String line = lineIterator.next();
@@ -156,14 +157,14 @@ public class AdjustCorpus extends TestCase
                 nameFollowers.add(words[1]);
             }
         }
-        DictionaryMaker dictionary = DictionaryMaker.load(HanLP.Config.PersonDictionaryPath);
+        DictionaryMaker dictionary = DictionaryMaker.load(Config.PersonDictionaryPath);
         for (Map.Entry<String, Item> entry : dictionary.entrySet())
         {
             String key = entry.getKey();
             int dF = entry.getValue().getFrequency("D");
             if (key.length() == 1 && 0 < dF && dF < 100)
             {
-                CoreDictionary.Attribute attribute = CoreDictionary.get(key);
+                Attribute attribute = CoreDictionary.get(key);
                 if (nameFollowers.contains(key)
                     || (attribute != null && attribute.hasNatureStartsWith("v") && attribute.totalFrequency > 1000)
                     )
@@ -174,6 +175,6 @@ public class AdjustCorpus extends TestCase
             }
         }
 
-        dictionary.saveTxtTo(HanLP.Config.PersonDictionaryPath);
+        dictionary.saveTxtTo(Config.PersonDictionaryPath);
     }
 }

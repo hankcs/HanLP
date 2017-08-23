@@ -12,6 +12,7 @@
 package com.hankcs.test.corpus;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.BiGramDictionary;
@@ -90,7 +91,7 @@ public class TestMakeJapaneseName extends TestCase
 
     public void testRecognize() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         DijkstraSegment segment = new DijkstraSegment();
         System.out.println(segment.seg("我叫大杉亚依里"));
     }
@@ -132,7 +133,7 @@ public class TestMakeJapaneseName extends TestCase
 
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         DijkstraSegment segment = new DijkstraSegment();
         segment.enableJapaneseNameRecognize(true);
         System.out.println(segment.seg("林志玲亮相网友:确定不是波多野结衣？"));
@@ -140,10 +141,10 @@ public class TestMakeJapaneseName extends TestCase
 
     public void testCountBadCase() throws Exception
     {
-        BufferedWriter bw = IOUtil.newBufferedWriter(HanLP.Config.JapanesePersonDictionaryPath + ".badcase.txt");
+        BufferedWriter bw = IOUtil.newBufferedWriter(Config.JapanesePersonDictionaryPath + ".badcase.txt");
         List<String> xList = new LinkedList<String>();
         List<String> mList = new LinkedList<String>();
-        IOUtil.LineIterator iterator = new IOUtil.LineIterator(HanLP.Config.JapanesePersonDictionaryPath);
+        IOUtil.LineIterator iterator = new IOUtil.LineIterator(Config.JapanesePersonDictionaryPath);
         while (iterator.hasNext())
         {
             String line = iterator.next();

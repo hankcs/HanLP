@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.seg.NShort.Path;
 
+import java.io.Serializable;
+
 /**
  * 路径上的节点
  * @author hankcs
  */
-public class PathNode
+public class PathNode implements Serializable
 {
     /**
      * 节点前驱

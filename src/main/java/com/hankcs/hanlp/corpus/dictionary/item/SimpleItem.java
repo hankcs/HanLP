@@ -11,12 +11,13 @@
  */
 package com.hankcs.hanlp.corpus.dictionary.item;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * @author hankcs
  */
-public class SimpleItem
+public class SimpleItem implements Serializable
 {
     /**
      * 该条目的标签

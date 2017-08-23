@@ -18,6 +18,7 @@ import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -26,7 +27,7 @@ import java.util.TreeSet;
  *
  * @author hankcs
  */
-public class WordNatureWeightModelMaker
+public class WordNatureWeightModelMaker implements Serializable
 {
     public static boolean makeModel(String corpusLoadPath, String modelSavePath)
     {

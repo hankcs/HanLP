@@ -13,12 +13,14 @@ package com.hankcs.hanlp.corpus.dictionary;
 
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+
+import java.io.Serializable;
 import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
-public abstract class CommonDictionaryMaker implements ISaveAble
+public abstract class CommonDictionaryMaker implements ISaveAble, Serializable
 {
     static boolean verbose = false;
     /**

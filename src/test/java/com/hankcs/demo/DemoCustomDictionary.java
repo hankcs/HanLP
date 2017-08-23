@@ -16,6 +16,7 @@ import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.Attribute;
 
 import java.util.Map;
 
@@ -41,10 +42,10 @@ public class DemoCustomDictionary
 
         // DoubleArrayTrie分词
         final char[] charArray = text.toCharArray();
-        CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+        CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<Attribute>()
         {
             @Override
-            public void hit(int begin, int end, CoreDictionary.Attribute value)
+            public void hit(int begin, int end, Attribute value)
             {
                 System.out.printf("[%d:%d]=%s %s\n", begin, end, new String(charArray, begin, end - begin), value);
             }

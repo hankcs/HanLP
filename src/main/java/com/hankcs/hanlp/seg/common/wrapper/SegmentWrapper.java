@@ -17,6 +17,7 @@ import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class SegmentWrapper
+public class SegmentWrapper implements Serializable
 {
     BufferedReader br;
     Segment segment;

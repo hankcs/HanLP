@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.seg.Viterbi;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
@@ -22,6 +22,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,11 +39,11 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
     {
 //        long start = System.currentTimeMillis();
         WordNet wordNetAll = new WordNet(sentence);
-        ////////////////生成词网////////////////////
+        //////////////生成词网////////////////////
         GenerateWordNet(wordNetAll);
-        ///////////////生成词图////////////////////
+        /////////////生成词图////////////////////
 //        System.out.println("构图：" + (System.currentTimeMillis() - start));
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.printf("粗分词网：\n%s\n", wordNetAll);
         }
@@ -57,7 +58,7 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
             else combineByCustomDictionary(vertexList);
         }
 
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.println("粗分结果" + convert(vertexList, false));
         }
@@ -101,7 +102,7 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
             if (wordNetOptimum.size() != preSize)
             {
                 vertexList = viterbi(wordNetOptimum);
-                if (HanLP.Config.DEBUG)
+                if (Config.DEBUG)
                 {
                     System.out.printf("细分词网：\n%s\n", wordNetOptimum);
                 }

@@ -19,13 +19,14 @@ import com.hankcs.hanlp.suggest.scorer.lexeme.IdVector;
 import com.hankcs.hanlp.suggest.scorer.lexeme.IdVectorScorer;
 import com.hankcs.hanlp.suggest.scorer.pinyin.PinyinScorer;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 文本推荐器
  * @author hankcs
  */
-public class Suggester implements ISuggester
+public class Suggester implements ISuggester, Serializable
 {
     List<BaseScorer> scorerList;
 

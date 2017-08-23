@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.nr;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
@@ -21,7 +21,9 @@ import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static com.hankcs.hanlp.corpus.tag.NR.*;
@@ -33,7 +35,7 @@ import static com.hankcs.hanlp.dictionary.nr.NRConstant.*;
  *
  * @author hankcs
  */
-public class PersonDictionary
+public class PersonDictionary implements Serializable
 {
     /**
      * 人名词典
@@ -48,19 +50,19 @@ public class PersonDictionary
      */
     public static AhoCorasickDoubleArrayTrie<NRPattern> trie;
 
-    public static final CoreDictionary.Attribute ATTRIBUTE = new CoreDictionary.Attribute(Nature.nr, 100);
+    public static final Attribute ATTRIBUTE = new Attribute(Nature.nr, 100);
 
     static
     {
         long start = System.currentTimeMillis();
         dictionary = new NRDictionary();
-        if (!dictionary.load(HanLP.Config.PersonDictionaryPath))
+        if (!dictionary.load(Config.PersonDictionaryPath))
         {
-            logger.severe("人名词典加载失败：" + HanLP.Config.PersonDictionaryPath);
+            logger.severe("人名词典加载失败：" + Config.PersonDictionaryPath);
             System.exit(-1);
         }
         transformMatrixDictionary = new TransformMatrixDictionary<NR>(NR.class);
-        transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);
+        transformMatrixDictionary.load(Config.PersonDictionaryTrPath);
         trie = new AhoCorasickDoubleArrayTrie<NRPattern>();
         TreeMap<String, NRPattern> map = new TreeMap<String, NRPattern>();
         for (NRPattern pattern : NRPattern.values())
@@ -68,7 +70,7 @@ public class PersonDictionary
             map.put(pattern.toString(), pattern);
         }
         trie.build(map);
-        logger.info(HanLP.Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+        logger.info(Config.PersonDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
 
     /**
@@ -185,7 +187,7 @@ public class PersonDictionary
                 if (isBadCase(name)) return;
 
                 // 正式算它是一个名字
-                if (HanLP.Config.DEBUG)
+                if (Config.DEBUG)
                 {
                     System.out.printf("识别出人名：%s %s\n", name, value);
                 }

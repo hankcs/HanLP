@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dependency;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.ITrie;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
@@ -31,6 +31,7 @@ import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
 
     public CRFDependencyParser()
     {
-        this(HanLP.Config.CRFDependencyModelPath);
+        this(Config.CRFDependencyModelPath);
     }
 
     /**
@@ -135,7 +136,7 @@ public class CRFDependencyParser extends AbstractDependencyParser
             line[1] = line[2].substring(0, 1);
         }
         crfModel.tag(table);
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.println(table);
         }

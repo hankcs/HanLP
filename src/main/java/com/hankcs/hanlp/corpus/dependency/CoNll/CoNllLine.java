@@ -11,11 +11,13 @@
  */
 package com.hankcs.hanlp.corpus.dependency.CoNll;
 
+import java.io.Serializable;
+
 /**
  * CoNLL语料中的一行
  * @author hankcs
  */
-public class CoNllLine
+public class CoNllLine implements Serializable
 {
     /**
      * 十个值

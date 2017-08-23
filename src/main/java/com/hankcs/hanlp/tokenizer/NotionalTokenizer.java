@@ -17,6 +17,7 @@ import com.hankcs.hanlp.dictionary.stopword.Filter;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -25,7 +26,7 @@ import java.util.ListIterator;
  *
  * @author hankcs
  */
-public class NotionalTokenizer
+public class NotionalTokenizer implements Serializable
 {
     /**
      * 预置分词器

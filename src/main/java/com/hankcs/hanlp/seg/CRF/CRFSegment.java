@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.seg.CRF;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -28,7 +28,9 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.CharacterHelper;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -39,7 +41,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CRFSegment extends CharacterBasedGenerativeModelSegment
+public class CRFSegment extends CharacterBasedGenerativeModelSegment implements Serializable
 {
     private CRFModel crfModel;
 
@@ -71,7 +73,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
 
     public CRFSegment()
     {
-        this(HanLP.Config.CRFSegmentModelPath);
+        this(Config.CRFSegmentModelPath);
     }
 
     @Override
@@ -83,7 +85,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
         table.v = atomSegmentToTable(sentenceConverted);
         crfModel.tag(table);
         List<Term> termList = new LinkedList<Term>();
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.println("CRF标注结果");
             System.out.println(table);
@@ -152,11 +154,11 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
         if (appendStart) vertexList.add(Vertex.B);
         for (Term term : termList)
         {
-            CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
+            Attribute attribute = CoreDictionary.get(term.word);
             if (attribute == null)
             {
-                if (term.word.trim().length() == 0) attribute = new CoreDictionary.Attribute(Nature.x);
-                else attribute = new CoreDictionary.Attribute(Nature.nz);
+                if (term.word.trim().length() == 0) attribute = new Attribute(Nature.x);
+                else attribute = new Attribute(Nature.nz);
             }
             else term.nature = attribute.nature[0];
             Vertex vertex = new Vertex(term.word, attribute);

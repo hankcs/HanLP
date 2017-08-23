@@ -11,13 +11,14 @@
  */
 package com.hankcs.hanlp.dependency.nnparser.option;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
+
 
 /**
  * @author hankcs
  */
 public class ConfigOption
 {
-    public static String PATH = HanLP.Config.NNParserModelPath;
+    public static String PATH = Config.NNParserModelPath;
     public static String DEPRL_DESCRIPTION_PATH = PATH + ".description.txt";
 }

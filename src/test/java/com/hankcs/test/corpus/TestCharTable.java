@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.StringDictionary;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.other.CharTable;
@@ -113,7 +113,7 @@ public class TestCharTable extends TestCase
                 else CONVERT[i] = ' ';
             }
         }
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(HanLP.Config.CharTablePath));
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(Config.CharTablePath));
         out.writeObject(CONVERT);
         out.close();
     }
@@ -144,7 +144,7 @@ public class TestCharTable extends TestCase
 
     public void testDumpCharTable() throws Exception
     {
-        BufferedWriter bw = IOUtil.newBufferedWriter(HanLP.Config.CharTablePath.replace(".bin.yes", ".txt"));
+        BufferedWriter bw = IOUtil.newBufferedWriter(Config.CharTablePath.replace(".bin.yes", ".txt"));
         char[] CONVERT = CharTable.CONVERT;
         for (int i = 0; i < CONVERT.length; i++)
         {

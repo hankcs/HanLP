@@ -10,10 +10,12 @@
  */
 package com.hankcs.hanlp.collection.trie.bintrie;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public class _EmptyValueArray<V> extends _ValueArray<V>
+public class _EmptyValueArray<V> extends _ValueArray<V> implements Serializable
 {
     public _EmptyValueArray()
     {

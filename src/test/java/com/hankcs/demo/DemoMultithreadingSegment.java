@@ -10,7 +10,7 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.Segment;
 
@@ -29,7 +29,7 @@ public class DemoMultithreadingSegment
         String text = "举办纪念活动铭记二战历史，不忘战争带给人类的深重灾难，是为了防止悲剧重演，确保和平永驻；" +
                 "铭记二战历史，更是为了提醒国际社会，需要共同捍卫二战胜利成果和国际公平正义，" +
                 "必须警惕和抵制在历史认知和维护战后国际秩序问题上的倒行逆施。";
-        HanLP.Config.ShowTermNature = false;
+        Config.ShowTermNature = false;
         System.out.println(segment.seg(text));
         int pressure = 10000;
         StringBuilder sbBigText = new StringBuilder(text.length() * pressure);

@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.regex.Pattern;
  * 特征模板
  * @author hankcs
  */
-public class FeatureTemplate implements ICacheAble
+public class FeatureTemplate implements ICacheAble, Serializable
 {
     /**
      * 用来解析模板的正则表达式

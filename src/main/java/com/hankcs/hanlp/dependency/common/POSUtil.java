@@ -13,11 +13,13 @@ package com.hankcs.hanlp.dependency.common;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
 
+import java.io.Serializable;
+
 /**
  * 词性操作工具类
  * @author hankcs
  */
-public class POSUtil
+public class POSUtil implements Serializable
 {
     /**
      *

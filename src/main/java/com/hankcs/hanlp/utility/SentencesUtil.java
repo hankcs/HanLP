@@ -3,6 +3,7 @@ package com.hankcs.hanlp.utility;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * 文本断句
  *
  */
-public class SentencesUtil
+public class SentencesUtil implements Serializable
 {
     /**
      * 将文本切割为句子

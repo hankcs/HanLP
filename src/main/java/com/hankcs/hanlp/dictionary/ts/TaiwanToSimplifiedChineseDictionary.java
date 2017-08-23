@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary.ts;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 
 import java.util.TreeMap;
@@ -28,13 +28,13 @@ public class TaiwanToSimplifiedChineseDictionary extends BaseChineseDictionary
     static
     {
         long start = System.currentTimeMillis();
-        String datPath = HanLP.Config.tcDictionaryRoot + "tw2s";
+        String datPath = Config.tcDictionaryRoot + "tw2s";
         if (!loadDat(datPath, trie))
         {
             TreeMap<String, String> t2s = new TreeMap<String, String>();
             TreeMap<String, String> tw2t = new TreeMap<String, String>();
-            if (!load(t2s, false, HanLP.Config.tcDictionaryRoot + "t2s.txt") ||
-                    !load(tw2t, true, HanLP.Config.tcDictionaryRoot + "t2tw.txt"))
+            if (!load(t2s, false, Config.tcDictionaryRoot + "t2s.txt") ||
+                    !load(tw2t, true, Config.tcDictionaryRoot + "t2tw.txt"))
             {
                 throw new IllegalArgumentException("台湾繁体转简体词典加载失败");
             }

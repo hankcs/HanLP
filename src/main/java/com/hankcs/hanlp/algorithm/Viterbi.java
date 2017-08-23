@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -23,7 +24,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class Viterbi
+public class Viterbi implements Serializable
 {
     /**
      * 求解HMM模型，所有概率请提前取对数

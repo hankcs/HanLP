@@ -14,6 +14,7 @@ package com.hankcs.hanlp.corpus.util;
 import sun.reflect.FieldAccessor;
 import sun.reflect.ReflectionFactory;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -21,7 +22,7 @@ import java.lang.reflect.Modifier;
  * 修改final static域的反射工具
  * @author hankcs
  */
-public class ReflectionHelper
+public class ReflectionHelper implements Serializable
 {
     private static final String MODIFIERS_FIELD = "modifiers";
 

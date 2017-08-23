@@ -19,6 +19,7 @@ import com.hankcs.hanlp.corpus.synonym.SynonymHelper;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -37,7 +38,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CommonSynonymDictionary
+public class CommonSynonymDictionary implements Serializable
 {
     DoubleArrayTrie<SynonymItem> trie;
 

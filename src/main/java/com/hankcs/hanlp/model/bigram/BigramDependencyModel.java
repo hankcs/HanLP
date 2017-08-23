@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.model.bigram;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dependency.model.WordNatureWeightModelMaker;
 import com.hankcs.hanlp.corpus.io.ByteArray;
@@ -20,6 +20,7 @@ import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.TreeMap;
 
@@ -29,20 +30,20 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * 2-gram依存模型，根据两个词的词和词性猜测它们最可能的依存关系
  * @author hankcs
  */
-public class BigramDependencyModel
+public class BigramDependencyModel implements Serializable
 {
     static DoubleArrayTrie<String> trie;
 
     static
     {
         long start = System.currentTimeMillis();
-        if (load(HanLP.Config.WordNatureModelPath))
+        if (load(Config.WordNatureModelPath))
         {
-            logger.info("加载依存句法二元模型" + HanLP.Config.WordNatureModelPath + "成功，耗时：" + (System.currentTimeMillis() - start) + " ms");
+            logger.info("加载依存句法二元模型" + Config.WordNatureModelPath + "成功，耗时：" + (System.currentTimeMillis() - start) + " ms");
         }
         else
         {
-            logger.warning("加载依存句法二元模型" + HanLP.Config.WordNatureModelPath + "失败，耗时：" + (System.currentTimeMillis() - start) + " ms");
+            logger.warning("加载依存句法二元模型" + Config.WordNatureModelPath + "失败，耗时：" + (System.currentTimeMillis() - start) + " ms");
         }
     }
 

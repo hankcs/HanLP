@@ -11,13 +11,14 @@
  */
 package com.hankcs.hanlp.corpus.occurrence;
 
+import java.io.Serializable;
 import java.util.AbstractMap;
 
 /**
  * 词与词频的简单封装
  * @author hankcs
  */
-public class TermFrequency extends AbstractMap.SimpleEntry<String, Integer> implements Comparable<TermFrequency>
+public class TermFrequency extends AbstractMap.SimpleEntry<String, Integer> implements Comparable<TermFrequency>, Serializable
 {
     public TermFrequency(String term, Integer frequency)
     {

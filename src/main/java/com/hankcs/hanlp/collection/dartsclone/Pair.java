@@ -4,11 +4,13 @@
  */
 package com.hankcs.hanlp.collection.dartsclone;
 
+import java.io.Serializable;
+
 /**
  * 模拟C++中的pair，也兼容JavaFX中的Pair
  * @author manabe
  */
-public class Pair<T, U>
+public class Pair<T, U> implements Serializable
 {
     public final T first;
     public final U second;

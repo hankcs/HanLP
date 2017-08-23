@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.phrase;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.occurrence.Occurrence;
 import com.hankcs.hanlp.corpus.occurrence.PairFrequency;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
@@ -19,6 +19,7 @@ import com.hankcs.hanlp.dictionary.stopword.Filter;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * 利用互信息和左右熵的短语提取器
  * @author hankcs
  */
-public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
+public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor, Serializable
 {
     @Override
     public List<String> extractPhrase(String text, int size)
@@ -53,14 +54,14 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
                 };
         for (List<Term> sentence : NotionalTokenizer.seg2sentence(text, filterChain))
         {
-            if (HanLP.Config.DEBUG)
+            if (Config.DEBUG)
             {
                 System.out.println(sentence);
             }
             occurrence.addAll(sentence);
         }
         occurrence.compute();
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.println(occurrence);
             for (PairFrequency phrase : occurrence.getPhraseByMi())

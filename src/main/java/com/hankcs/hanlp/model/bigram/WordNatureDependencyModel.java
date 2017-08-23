@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.model.bigram;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dependency.model.WordNatureWeightModelMaker;
 import com.hankcs.hanlp.corpus.io.ByteArray;
@@ -22,6 +22,7 @@ import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -32,7 +33,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * 词、词性相互构成依存关系的统计句法分析模型
  * @author hankcs
  */
-public class WordNatureDependencyModel
+public class WordNatureDependencyModel implements Serializable
 {
     DoubleArrayTrie<Attribute> trie;
 
@@ -180,7 +181,7 @@ public class WordNatureDependencyModel
         {
             attribute = Attribute.NULL;
         }
-        if (HanLP.Config.DEBUG)
+        if (Config.DEBUG)
         {
             System.out.println(from + " 到 " + to + " : " + attribute);
         }

@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -31,11 +31,11 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CoreBiGramMixDictionary
+public class CoreBiGramMixDictionary implements Serializable
 {
     static DoubleArrayTrie<Integer> trie;
-    public final static String path = HanLP.Config.BiGramDictionaryPath;
-    final static String datPath = HanLP.Config.BiGramDictionaryPath + ".mix" + Predefine.BIN_EXT;
+    public final static String path = Config.BiGramDictionaryPath;
+    final static String datPath = Config.BiGramDictionaryPath + ".mix" + Predefine.BIN_EXT;
 
     static
     {

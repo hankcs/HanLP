@@ -15,6 +15,7 @@ import com.hankcs.hanlp.seg.common.EdgeFrom;
 import com.hankcs.hanlp.seg.common.Graph;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -22,7 +23,7 @@ import java.util.Stack;
 /**
  * @author hankcs
  */
-public class NShortPath
+public class NShortPath implements Serializable
 {
     /**
      * 图

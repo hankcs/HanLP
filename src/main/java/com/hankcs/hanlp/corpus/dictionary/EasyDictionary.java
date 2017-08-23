@@ -18,7 +18,7 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import java.io.*;
 import java.util.*;
 
-import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
+import static com.hankcs.hanlp.Config.IOAdapter;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -26,7 +26,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class EasyDictionary
+public class EasyDictionary implements Serializable
 {
     DoubleArrayTrie<Attribute> trie = new DoubleArrayTrie<Attribute>();
 

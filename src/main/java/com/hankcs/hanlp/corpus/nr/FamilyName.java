@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author hankcs
  */
-public class FamilyName
+public class FamilyName implements Serializable
 {
     static boolean fn[];
     static

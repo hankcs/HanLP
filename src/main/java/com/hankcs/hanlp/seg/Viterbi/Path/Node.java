@@ -14,10 +14,12 @@ package com.hankcs.hanlp.seg.Viterbi.Path;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.MathTools;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public class Node
+public class Node implements Serializable
 {
     /**
      * 到该节点的最短路径的前驱节点

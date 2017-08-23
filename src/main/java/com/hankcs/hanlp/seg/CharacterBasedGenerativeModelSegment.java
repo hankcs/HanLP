@@ -10,6 +10,8 @@
  */
 package com.hankcs.hanlp.seg;
 
+import java.io.Serializable;
+
 /**
  * 基于字构词的生成式模型分词器基类
  * @author hankcs

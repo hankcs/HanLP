@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.corpus.occurrence;
 
+import java.io.Serializable;
+
 /**
  * 一个二元的词串的频度
  *

@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.summary;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -19,7 +20,7 @@ import java.util.TreeMap;
  * 搜索相关性评分算法
  * @author hankcs
  */
-public class BM25
+public class BM25 implements Serializable
 {
     /**
      * 文档句子的个数

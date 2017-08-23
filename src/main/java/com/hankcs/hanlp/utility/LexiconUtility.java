@@ -16,7 +16,9 @@ import com.hankcs.hanlp.corpus.util.CustomNatureUtility;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.dictionary.Attribute;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
@@ -25,7 +27,7 @@ import java.util.LinkedHashSet;
  *
  * @author hankcs
  */
-public class LexiconUtility
+public class LexiconUtility implements Serializable
 {
     /**
      * 从HanLP的词库中提取某个单词的属性（包括核心词典和用户词典）
@@ -33,9 +35,9 @@ public class LexiconUtility
      * @param word 单词
      * @return 包含词性与频次的信息
      */
-    public static CoreDictionary.Attribute getAttribute(String word)
+    public static Attribute getAttribute(String word)
     {
-        CoreDictionary.Attribute attribute = CoreDictionary.get(word);
+        Attribute attribute = CoreDictionary.get(word);
         if (attribute != null) return attribute;
         return CustomDictionary.get(word);
     }
@@ -46,7 +48,7 @@ public class LexiconUtility
      * @param term 单词
      * @return 包含词性与频次的信息
      */
-    public static CoreDictionary.Attribute getAttribute(Term term)
+    public static Attribute getAttribute(Term term)
     {
         return getAttribute(term.word);
     }
@@ -58,7 +60,7 @@ public class LexiconUtility
      */
     public static int getFrequency(String word)
     {
-        CoreDictionary.Attribute attribute = getAttribute(word);
+        Attribute attribute = getAttribute(word);
         if (attribute == null) return 0;
         return attribute.totalFrequency;
     }
@@ -69,7 +71,7 @@ public class LexiconUtility
      * @param attribute
      * @return
      */
-    public static boolean setAttribute(String word, CoreDictionary.Attribute attribute)
+    public static boolean setAttribute(String word, Attribute attribute)
     {
         if (attribute == null) return false;
 
@@ -93,7 +95,7 @@ public class LexiconUtility
     {
         if (natures == null) return false;
 
-        CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natures, new int[natures.length]);
+        Attribute attribute = new Attribute(natures, new int[natures.length]);
         Arrays.fill(attribute.frequency, 1);
 
         return setAttribute(word, attribute);
@@ -127,7 +129,7 @@ public class LexiconUtility
      */
     public static boolean setAttribute(String word, String natureWithFrequency)
     {
-        CoreDictionary.Attribute attribute = CoreDictionary.Attribute.create(natureWithFrequency);
+        Attribute attribute = Attribute.create(natureWithFrequency);
         return setAttribute(word, attribute);
     }
 

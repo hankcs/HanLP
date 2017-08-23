@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.dictionary;
 
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
@@ -34,18 +34,18 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author He Han
  */
-public class CustomDictionary
+public class CustomDictionary implements Serializable
 {
     /**
      * 用于储存用户动态插入词条的二分trie树
      */
-    public static BinTrie<CoreDictionary.Attribute> trie;
-    public static DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
+    public static BinTrie<Attribute> trie;
+    public static DoubleArrayTrie<Attribute> dat = new DoubleArrayTrie<Attribute>();
 
     // 自动加载词典
     static
     {
-        String path[] = HanLP.Config.CustomDictionaryPath;
+        String path[] = Config.CustomDictionaryPath;
         long start = System.currentTimeMillis();
         if (!loadMainDictionary(path[0]))
         {
@@ -61,12 +61,12 @@ public class CustomDictionary
     {
         logger.info("自定义词典开始加载:" + mainPath);
         if (loadDat(mainPath)) return true;
-        dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
-        TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
+        dat = new DoubleArrayTrie<Attribute>();
+        TreeMap<String, Attribute> map = new TreeMap<String, Attribute>();
         LinkedHashSet<Nature> customNatureCollector = new LinkedHashSet<Nature>();
         try
         {
-            String path[] = HanLP.Config.CustomDictionaryPath;
+            String path[] = Config.CustomDictionaryPath;
             for (String p : path)
             {
                 Nature defaultNature = Nature.n;
@@ -100,8 +100,8 @@ public class CustomDictionary
             // 缓存成dat文件，下次加载会快很多
             logger.info("正在缓存词典为dat文件……");
             // 缓存值文件
-            List<CoreDictionary.Attribute> attributeList = new LinkedList<CoreDictionary.Attribute>();
-            for (Map.Entry<String, CoreDictionary.Attribute> entry : map.entrySet())
+            List<Attribute> attributeList = new LinkedList<Attribute>();
+            for (Map.Entry<String, Attribute> entry : map.entrySet())
             {
                 attributeList.add(entry.getValue());
             }
@@ -110,7 +110,7 @@ public class CustomDictionary
             IOUtil.writeCustomNature(out, customNatureCollector);
             // 缓存正文
             out.writeInt(attributeList.size());
-            for (CoreDictionary.Attribute attribute : attributeList)
+            for (Attribute attribute : attributeList)
             {
                 attribute.save(out);
             }
@@ -143,7 +143,7 @@ public class CustomDictionary
      * @param customNatureCollector 收集用户词性
      * @return
      */
-    public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map, LinkedHashSet<Nature> customNatureCollector)
+    public static boolean load(String path, Nature defaultNature, TreeMap<String, Attribute> map, LinkedHashSet<Nature> customNatureCollector)
     {
         try
         {
@@ -158,17 +158,17 @@ public class CustomDictionary
             {
                 String[] param = line.split(splitter);
                 if (param[0].length() == 0) continue;   // 排除空行
-                if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
+                if (Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
 
                 int natureCount = (param.length - 1) / 2;
-                CoreDictionary.Attribute attribute;
+                Attribute attribute;
                 if (natureCount == 0)
                 {
-                    attribute = new CoreDictionary.Attribute(defaultNature);
+                    attribute = new Attribute(defaultNature);
                 }
                 else
                 {
-                    attribute = new CoreDictionary.Attribute(natureCount);
+                    attribute = new Attribute(natureCount);
                     for (int i = 0; i < natureCount; ++i)
                     {
                         attribute.nature[i] = LexiconUtility.convertStringToNature(param[1 + 2 * i], customNatureCollector);
@@ -198,10 +198,10 @@ public class CustomDictionary
      * @param rewriteTable
      * @return 是否更新了
      */
-    private static boolean updateAttributeIfExist(String key, CoreDictionary.Attribute attribute, TreeMap<String, CoreDictionary.Attribute> map, TreeMap<Integer, CoreDictionary.Attribute> rewriteTable)
+    private static boolean updateAttributeIfExist(String key, Attribute attribute, TreeMap<String, Attribute> map, TreeMap<Integer, Attribute> rewriteTable)
     {
         int wordID = CoreDictionary.getWordID(key);
-        CoreDictionary.Attribute attributeExisted;
+        Attribute attributeExisted;
         if (wordID != -1)
         {
             attributeExisted = CoreDictionary.get(wordID);
@@ -248,7 +248,7 @@ public class CustomDictionary
      */
     public static boolean add(String word)
     {
-        if (HanLP.Config.Normalization) word = CharTable.convert(word);
+        if (Config.Normalization) word = CharTable.convert(word);
         if (contains(word)) return false;
         return insert(word, null);
     }
@@ -264,11 +264,11 @@ public class CustomDictionary
     public static boolean insert(String word, String natureWithFrequency)
     {
         if (word == null) return false;
-        if (HanLP.Config.Normalization) word = CharTable.convert(word);
-        CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
+        if (Config.Normalization) word = CharTable.convert(word);
+        Attribute att = natureWithFrequency == null ? new Attribute(Nature.nz, 1) : Attribute.create(natureWithFrequency);
         if (att == null) return false;
         if (dat.set(word, att)) return true;
-        if (trie == null) trie = new BinTrie<CoreDictionary.Attribute>();
+        if (trie == null) trie = new BinTrie<Attribute>();
         trie.put(word, att);
         return true;
     }
@@ -306,14 +306,14 @@ public class CustomDictionary
                 }
                 size = byteArray.nextInt();
             }
-            CoreDictionary.Attribute[] attributes = new CoreDictionary.Attribute[size];
+            Attribute[] attributes = new Attribute[size];
             final Nature[] natureIndexArray = Nature.values();
             for (int i = 0; i < size; ++i)
             {
                 // 第一个是全部频次，第二个是词性个数
                 int currentTotalFrequency = byteArray.nextInt();
                 int length = byteArray.nextInt();
-                attributes[i] = new CoreDictionary.Attribute(length);
+                attributes[i] = new Attribute(length);
                 attributes[i].totalFrequency = currentTotalFrequency;
                 for (int j = 0; j < length; ++j)
                 {
@@ -337,10 +337,10 @@ public class CustomDictionary
      * @param key
      * @return
      */
-    public static CoreDictionary.Attribute get(String key)
+    public static Attribute get(String key)
     {
-        if (HanLP.Config.Normalization) key = CharTable.convert(key);
-        CoreDictionary.Attribute attribute = dat.get(key);
+        if (Config.Normalization) key = CharTable.convert(key);
+        Attribute attribute = dat.get(key);
         if (attribute != null) return attribute;
         if (trie == null) return null;
         return trie.get(key);
@@ -354,7 +354,7 @@ public class CustomDictionary
      */
     public static void remove(String key)
     {
-        if (HanLP.Config.Normalization) key = CharTable.convert(key);
+        if (Config.Normalization) key = CharTable.convert(key);
         if (trie == null) return;
         trie.remove(key);
     }
@@ -365,7 +365,7 @@ public class CustomDictionary
      * @param key
      * @return
      */
-    public static LinkedList<Map.Entry<String, CoreDictionary.Attribute>> commonPrefixSearch(String key)
+    public static LinkedList<Map.Entry<String, Attribute>> commonPrefixSearch(String key)
     {
         return trie.commonPrefixSearchWithValue(key);
     }
@@ -377,7 +377,7 @@ public class CustomDictionary
      * @param begin
      * @return
      */
-    public static LinkedList<Map.Entry<String, CoreDictionary.Attribute>> commonPrefixSearch(char[] chars, int begin)
+    public static LinkedList<Map.Entry<String, Attribute>> commonPrefixSearch(char[] chars, int begin)
     {
         return trie.commonPrefixSearchWithValue(chars, begin);
     }
@@ -416,29 +416,29 @@ public class CustomDictionary
         return new Searcher(charArray);
     }
 
-    static class Searcher extends BaseSearcher<CoreDictionary.Attribute>
+    static class Searcher extends BaseSearcher<Attribute>
     {
         /**
          * 分词从何处开始，这是一个状态
          */
         int begin;
 
-        private LinkedList<Map.Entry<String, CoreDictionary.Attribute>> entryList;
+        private LinkedList<Map.Entry<String, Attribute>> entryList;
 
         protected Searcher(char[] c)
         {
             super(c);
-            entryList = new LinkedList<Map.Entry<String, CoreDictionary.Attribute>>();
+            entryList = new LinkedList<Map.Entry<String, Attribute>>();
         }
 
         protected Searcher(String text)
         {
             super(text);
-            entryList = new LinkedList<Map.Entry<String, CoreDictionary.Attribute>>();
+            entryList = new LinkedList<Map.Entry<String, Attribute>>();
         }
 
         @Override
-        public Map.Entry<String, CoreDictionary.Attribute> next()
+        public Map.Entry<String, Attribute> next()
         {
             // 保证首次调用找到一个词语
             while (entryList.size() == 0 && begin < c.length)
@@ -456,7 +456,7 @@ public class CustomDictionary
             {
                 return null;
             }
-            Map.Entry<String, CoreDictionary.Attribute> result = entryList.getFirst();
+            Map.Entry<String, Attribute> result = entryList.getFirst();
             entryList.removeFirst();
             offset = begin - 1;
             return result;
@@ -469,7 +469,7 @@ public class CustomDictionary
      * @return
      * @deprecated 谨慎操作，有可能废弃此接口
      */
-    public static BinTrie<CoreDictionary.Attribute> getTrie()
+    public static BinTrie<Attribute> getTrie()
     {
         return trie;
     }
@@ -479,20 +479,20 @@ public class CustomDictionary
      * @param text         文本
      * @param processor    处理器
      */
-    public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
+    public static void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<Attribute> processor)
     {
         if (trie != null)
         {
             BaseSearcher searcher = CustomDictionary.getSearcher(text);
             int offset;
-            Map.Entry<String, CoreDictionary.Attribute> entry;
+            Map.Entry<String, Attribute> entry;
             while ((entry = searcher.next()) != null)
             {
                 offset = searcher.getOffset();
                 processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
             }
         }
-        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
+        DoubleArrayTrie<Attribute>.Searcher searcher = dat.getSearcher(text, 0);
         while (searcher.next())
         {
             processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
@@ -504,20 +504,20 @@ public class CustomDictionary
      * @param text         文本
      * @param processor    处理器
      */
-    public static void parseText(String text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
+    public static void parseText(String text, AhoCorasickDoubleArrayTrie.IHit<Attribute> processor)
     {
         if (trie != null)
         {
             BaseSearcher searcher = CustomDictionary.getSearcher(text);
             int offset;
-            Map.Entry<String, CoreDictionary.Attribute> entry;
+            Map.Entry<String, Attribute> entry;
             while ((entry = searcher.next()) != null)
             {
                 offset = searcher.getOffset();
                 processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
             }
         }
-        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
+        DoubleArrayTrie<Attribute>.Searcher searcher = dat.getSearcher(text, 0);
         while (searcher.next())
         {
             processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
@@ -531,7 +531,7 @@ public class CustomDictionary
      */
     public static boolean reload()
     {
-        String path[] = HanLP.Config.CustomDictionaryPath;
+        String path[] = Config.CustomDictionaryPath;
         if (path == null || path.length == 0) return false;
         IOUtil.deleteFile(path[0] + Predefine.BIN_EXT); // 删掉缓存
         return loadMainDictionary(path[0]);

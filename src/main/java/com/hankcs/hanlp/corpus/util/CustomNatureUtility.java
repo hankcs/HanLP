@@ -18,6 +18,7 @@ import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
 import com.hankcs.hanlp.seg.common.Vertex;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,7 +29,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CustomNatureUtility
+public class CustomNatureUtility implements Serializable
 {
     static
     {

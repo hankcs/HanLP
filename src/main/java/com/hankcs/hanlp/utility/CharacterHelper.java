@@ -1,9 +1,11 @@
 package com.hankcs.hanlp.utility;
 
+import java.io.Serializable;
+
 /**
  * 字符集识别辅助工具类
  */
-public class CharacterHelper
+public class CharacterHelper implements Serializable
 {
 
     public static boolean isSpaceLetter(char input)

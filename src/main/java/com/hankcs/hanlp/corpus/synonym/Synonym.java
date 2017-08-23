@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.synonym;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * 同义词
  * @author hankcs
  */
-public class Synonym implements ISynonym
+public class Synonym implements ISynonym, Serializable
 {
     public String realWord;
     public long id;

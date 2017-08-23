@@ -20,6 +20,7 @@ import com.hankcs.hanlp.corpus.tag.NT;
 import com.hankcs.hanlp.corpus.util.Precompiler;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

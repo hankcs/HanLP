@@ -19,12 +19,14 @@
 
 package com.hankcs.hanlp.model.maxent;
 
+import java.io.Serializable;
+
 /**
  * 封装了模型用来计算概率的一些参数
  *
  * @author open-nlp
  */
-public class EvalParameters
+public class EvalParameters implements Serializable
 {
 
     /**

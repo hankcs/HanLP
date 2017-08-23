@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.seg;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
@@ -28,7 +28,9 @@ import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.SentencesUtil;
 import com.hankcs.hanlp.utility.TextUtility;
 
+import java.io.Serializable;
 import java.util.*;
+import com.hankcs.hanlp.dictionary.Attribute;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
@@ -39,19 +41,19 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public abstract class Segment
+public abstract class Segment implements Serializable
 {
     /**
      * 分词器配置
      */
-    protected Config config;
+    protected SegConfig config;
 
     /**
      * 构造一个分词器
      */
     public Segment()
     {
-        config = new Config();
+        config = new SegConfig();
     }
 
     /**
@@ -196,7 +198,7 @@ public abstract class Segment
         Vertex[] wordNet = new Vertex[vertexList.size()];
         vertexList.toArray(wordNet);
         // DAT合并
-        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
+        DoubleArrayTrie<Attribute> dat = CustomDictionary.dat;
         for (int i = 0; i < wordNet.length; ++i)
         {
             int state = 1;
@@ -205,12 +207,12 @@ public abstract class Segment
             {
                 int to = i + 1;
                 int end = to;
-                CoreDictionary.Attribute value = dat.output(state);
+                Attribute value = dat.output(state);
                 for (; to < wordNet.length; ++to)
                 {
                     state = dat.transition(wordNet[to].realWord, state);
                     if (state < 0) break;
-                    CoreDictionary.Attribute output = dat.output(state);
+                    Attribute output = dat.output(state);
                     if (output != null)
                     {
                         value = output;
@@ -230,12 +232,12 @@ public abstract class Segment
             for (int i = 0; i < wordNet.length; ++i)
             {
                 if (wordNet[i] == null) continue;
-                BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
+                BaseNode<Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
                 if (state != null)
                 {
                     int to = i + 1;
                     int end = to;
-                    CoreDictionary.Attribute value = state.getValue();
+                    Attribute value = state.getValue();
                     for (; to < wordNet.length; ++to)
                     {
                         if (wordNet[to] == null) continue;
@@ -279,10 +281,10 @@ public abstract class Segment
             final int currentLine = line;
             if (parentLength >= 3)
             {
-                CustomDictionary.parseText(vertex.realWord, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+                CustomDictionary.parseText(vertex.realWord, new AhoCorasickDoubleArrayTrie.IHit<Attribute>()
                 {
                     @Override
-                    public void hit(int begin, int end, CoreDictionary.Attribute value)
+                    public void hit(int begin, int end, Attribute value)
                     {
                         if (end - begin == parentLength) return;
                         wordNetAll.add(currentLine + begin, new Vertex(vertex.realWord.substring(begin, end), value));
@@ -301,7 +303,7 @@ public abstract class Segment
      * @param end 结束下标（不包含）
      * @param value 新的属性
      */
-    private static void combineWords(Vertex[] wordNet, int start, int end, CoreDictionary.Attribute value)
+    private static void combineWords(Vertex[] wordNet, int start, int end, Attribute value)
     {
         if (start + 1 == end)   // 小优化，如果只有一个词，那就不需要合并，直接应用新属性
         {
@@ -325,7 +327,7 @@ public abstract class Segment
      * 合并数字
      * @param termList
      */
-    protected void mergeNumberQuantifier(List<Vertex> termList, WordNet wordNetAll, Config config)
+    protected void mergeNumberQuantifier(List<Vertex> termList, WordNet wordNetAll, SegConfig config)
     {
         if (termList.size() < 4) return;
         StringBuilder sbQuantifier = new StringBuilder();
@@ -351,7 +353,7 @@ public abstract class Segment
                     {
                         if (config.indexMode)
                         {
-                            wordNetAll.add(line, new Vertex(sbQuantifier.toString(), new CoreDictionary.Attribute(Nature.m)));
+                            wordNetAll.add(line, new Vertex(sbQuantifier.toString(), new Attribute(Nature.m)));
                         }
                         sbQuantifier.append(cur.realWord);
                         iterator.remove();
@@ -370,7 +372,7 @@ public abstract class Segment
                     }
                     pre.realWord = sbQuantifier.toString();
                     pre.word = Predefine.TAG_NUMBER;
-                    pre.attribute = new CoreDictionary.Attribute(Nature.mq);
+                    pre.attribute = new Attribute(Nature.mq);
                     pre.wordID = CoreDictionary.M_WORD_ID;
                     sbQuantifier.setLength(0);
                 }
@@ -415,7 +417,7 @@ public abstract class Segment
     public List<Term> seg(String text)
     {
         char[] charArray = text.toCharArray();
-        if (HanLP.Config.Normalization)
+        if (Config.Normalization)
         {
             CharTable.normalization(charArray);
         }
@@ -500,6 +502,7 @@ public abstract class Segment
 //            return termList;
 //        }
         return segSentence(charArray);
+//        return new LinkedList<Term>();
     }
 
     /**
@@ -511,7 +514,7 @@ public abstract class Segment
     public List<Term> seg(char[] text)
     {
         assert text != null;
-        if (HanLP.Config.Normalization)
+        if (Config.Normalization)
         {
             CharTable.normalization(text);
         }
@@ -683,7 +686,7 @@ public abstract class Segment
         return this;
     }
 
-    class WorkThread extends Thread
+    class WorkThread extends Thread implements Serializable
     {
         String[] sentenceArray;
         List<Term>[] termListArray;

@@ -11,7 +11,7 @@
  */
 package com.hankcs.hanlp.dictionary;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
@@ -32,11 +32,11 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * @deprecated 现在基于DoubleArrayTrie的BiGramDictionary已经由CoreBiGramTableDictionary替代，可以显著降低内存
  * @author hankcs
  */
-public class BiGramDictionary
+public class BiGramDictionary implements Serializable
 {
     static DoubleArrayTrie<Integer> trie;
 
-    public final static String path = HanLP.Config.BiGramDictionaryPath;
+    public final static String path = Config.BiGramDictionaryPath;
     public static final int totalFrequency = 37545990;
 
     // 自动加载词典

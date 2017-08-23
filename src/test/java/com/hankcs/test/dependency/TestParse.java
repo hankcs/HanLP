@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.dependency;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLLoader;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
@@ -48,19 +48,19 @@ public class TestParse extends TestCase
 
     public void testMaxEntParser() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(MaxEntDependencyParser.compute("我每天骑车上学"));
     }
 
     public void testCRFParser() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(CRFDependencyParser.compute("我每天骑车上学"));
     }
 
     public void testWordNatureParser() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         System.out.println(WordNatureDependencyParser.compute("我每天骑车上学"));
     }
 
@@ -80,7 +80,7 @@ public class TestParse extends TestCase
 
     public void testCrfParser() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         List<Term> termList = new LinkedList<Term>();
         termList.add(new Term("坚决", Nature.ad));
         termList.add(new Term("惩治", Nature.v));

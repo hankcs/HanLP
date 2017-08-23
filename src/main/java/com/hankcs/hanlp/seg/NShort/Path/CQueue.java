@@ -11,12 +11,14 @@
  */
 package com.hankcs.hanlp.seg.NShort.Path;
 
+import java.io.Serializable;
+
 /**
  * 一个维护了上次访问位置的优先级队列（最小堆）
  *
  * @author hankcs
  */
-public class CQueue
+public class CQueue implements Serializable
 {
     private QueueElement pHead = null;
     private QueueElement pLastAccess = null;

@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.utility;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
 /**
  * 一些预定义的静态全局变量
  */
-public class Predefine
+public class Predefine implements Serializable
 {
     /**
      * hanlp.properties的路径，一般情况下位于classpath目录中。

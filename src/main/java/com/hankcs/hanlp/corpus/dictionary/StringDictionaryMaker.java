@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.dictionary;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * 方便的工厂类
  * @author hankcs
  */
-public class StringDictionaryMaker
+public class StringDictionaryMaker implements Serializable
 {
     /**
      * 加载词典

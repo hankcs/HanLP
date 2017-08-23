@@ -10,11 +10,13 @@
  */
 package com.hankcs.hanlp.collection.trie.bintrie;
 
+import java.io.Serializable;
+
 /**
  * 对值数组的包装，可以方便地取下一个
  * @author hankcs
  */
-public class _ValueArray<V>
+public class _ValueArray<V> implements Serializable
 {
     V[] value;
     int offset;

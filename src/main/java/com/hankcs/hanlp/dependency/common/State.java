@@ -11,10 +11,12 @@
  */
 package com.hankcs.hanlp.dependency.common;
 
+import java.io.Serializable;
+
 /**
  * @author hankcs
  */
-public class State implements Comparable<State>
+public class State implements Comparable<State>, Serializable
 {
     public float cost;
     public int id;

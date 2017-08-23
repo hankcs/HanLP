@@ -11,15 +11,17 @@
  */
 package com.hankcs.hanlp.seg.common;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.LexiconUtility;
+
+import java.io.Serializable;
 
 /**
  * 一个单词，用户可以直接访问此单词的全部属性
  * @author hankcs
  */
-public class Term
+public class Term implements Serializable
 {
     /**
      * 词语
@@ -50,7 +52,7 @@ public class Term
     @Override
     public String toString()
     {
-        if (HanLP.Config.ShowTermNature)
+        if (Config.ShowTermNature)
             return word + "/" + nature;
         return word;
     }

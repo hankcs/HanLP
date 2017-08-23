@@ -16,13 +16,14 @@ import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 索引分词器
  * @author hankcs
  */
-public class IndexTokenizer
+public class IndexTokenizer implements Serializable
 {
     /**
      * 预置分词器

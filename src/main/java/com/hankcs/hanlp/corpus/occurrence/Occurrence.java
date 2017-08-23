@@ -17,6 +17,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -24,7 +25,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class Occurrence
+public class Occurrence implements Serializable
 {
     /**
      * 两个词的正向连接符 中国 RIGHT 人民

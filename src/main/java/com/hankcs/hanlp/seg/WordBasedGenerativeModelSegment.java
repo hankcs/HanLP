@@ -24,6 +24,7 @@ import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.TextUtility;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -429,7 +430,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
         final char[] charArray = wordNetStorage.charArray;
 
         // 核心词典查询
-        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(charArray, 0);
+        DoubleArrayTrie<Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(charArray, 0);
         while (searcher.next())
         {
             wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value, searcher.index));
@@ -443,7 +444,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
 //                wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value));
 //            }
 //        }
-        // 原子分词，保证图连通
+//        // 原子分词，保证图连通
         LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
         for (int i = 1; i < vertexes.length; )
         {

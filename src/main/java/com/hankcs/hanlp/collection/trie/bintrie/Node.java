@@ -14,12 +14,14 @@ package com.hankcs.hanlp.collection.trie.bintrie;
 
 import com.hankcs.hanlp.collection.trie.bintrie.util.ArrayTool;
 
+import java.io.Serializable;
+
 /**
  * 深度大于等于2的子节点
  *
  * @author He Han
  */
-public class Node<V> extends BaseNode
+public class Node<V> extends BaseNode implements Serializable
 {
     @Override
     protected boolean addChild(BaseNode node)

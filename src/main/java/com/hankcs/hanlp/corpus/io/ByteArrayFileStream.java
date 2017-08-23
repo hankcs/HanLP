@@ -14,6 +14,7 @@ import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import static com.hankcs.hanlp.utility.Predefine.logger;

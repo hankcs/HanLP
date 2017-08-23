@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.EasyDictionary;
 import com.hankcs.hanlp.corpus.dictionary.NTDictionaryMaker;
@@ -105,7 +105,7 @@ public class TestMakeCompanyCorpus extends TestCase
 
     public void testCase() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         DijkstraSegment segment = new DijkstraSegment();
         segment.enableOrganizationRecognize(true);
         System.out.println(segment.seg("黑龙江建筑职业技术学院近百学生发生冲突"));

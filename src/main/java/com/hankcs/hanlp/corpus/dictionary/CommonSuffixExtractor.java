@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.occurrence.TermFrequency;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.TreeSet;
  * 公共后缀提取工具
  * @author hankcs
  */
-public class CommonSuffixExtractor
+public class CommonSuffixExtractor implements Serializable
 {
     TFDictionary tfDictionary;
 

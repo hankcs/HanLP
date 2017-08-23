@@ -13,13 +13,14 @@ package com.hankcs.hanlp.dependency.nnparser.action;
 
 import com.hankcs.hanlp.dependency.nnparser.Dependency;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author hankcs
  */
-public class ActionUtils implements ActionType
+public class ActionUtils implements ActionType, Serializable
 {
     public static boolean is_shift(final Action act)
     {

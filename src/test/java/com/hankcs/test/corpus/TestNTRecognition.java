@@ -11,7 +11,7 @@
  */
 package com.hankcs.test.corpus;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
 import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -20,6 +20,7 @@ import com.hankcs.hanlp.dictionary.common.CommonStringDictionary;
 import com.hankcs.hanlp.dictionary.nt.OrganizationDictionary;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.utility.LexiconUtility;
+import com.hankcs.hanlp.dictionary.Attribute;
 import junit.framework.TestCase;
 
 import java.util.Map;
@@ -32,7 +33,7 @@ public class TestNTRecognition extends TestCase
 {
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
+        Config.enableDebug();
         DijkstraSegment segment = new DijkstraSegment();
         segment.enableCustomDictionary(false);
 
@@ -58,12 +59,12 @@ public class TestNTRecognition extends TestCase
 
     public void testRemoveP() throws Exception
     {
-        DictionaryMaker maker = DictionaryMaker.load(HanLP.Config.OrganizationDictionaryPath);
+        DictionaryMaker maker = DictionaryMaker.load(Config.OrganizationDictionaryPath);
         for (Map.Entry<String, Item> entry : maker.entrySet())
         {
             String word = entry.getKey();
             Item item = entry.getValue();
-            CoreDictionary.Attribute attribute = LexiconUtility.getAttribute(word);
+            Attribute attribute = LexiconUtility.getAttribute(word);
             if (attribute == null) continue;
             if (item.containsLabel("P") && attribute.hasNatureStartsWith("u"))
             {
@@ -71,6 +72,6 @@ public class TestNTRecognition extends TestCase
                 item.removeLabel("P");
             }
         }
-        maker.saveTxtTo(HanLP.Config.OrganizationDictionaryPath);
+        maker.saveTxtTo(Config.OrganizationDictionaryPath);
     }
 }

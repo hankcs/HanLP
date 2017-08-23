@@ -19,10 +19,12 @@
 
 package com.hankcs.hanlp.model.maxent;
 
+import java.io.Serializable;
+
 /**
  * 先验概率计算工具
  */
-public class UniformPrior
+public class UniformPrior implements Serializable
 {
     private int numOutcomes;
     private double r;

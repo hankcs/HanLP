@@ -13,11 +13,13 @@ package com.hankcs.hanlp.corpus.dependency.CoNll;
 
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
+
 /**
  * 等效词编译器
  * @author hankcs
  */
-public class PosTagCompiler
+public class PosTagCompiler implements Serializable
 {
     /**
      * 编译，比如将词性为数词的转为##数##

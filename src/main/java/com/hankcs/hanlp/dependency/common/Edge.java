@@ -11,12 +11,14 @@
  */
 package com.hankcs.hanlp.dependency.common;
 
+import java.io.Serializable;
+
 /**
  * 一条边
  *
  * @author hankcs
  */
-public class Edge
+public class Edge implements Serializable
 {
     public int from;
     public int to;

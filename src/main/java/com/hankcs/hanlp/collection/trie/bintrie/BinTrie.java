@@ -27,7 +27,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable
+public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable, Serializable
 {
     private int size;
 

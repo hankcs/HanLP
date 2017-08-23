@@ -19,10 +19,12 @@
 
 package com.hankcs.hanlp.model.maxent;
 
+import java.io.Serializable;
+
 /**
  * 将参数与特征关联起来的类，用来储存最大熵的参数，也用来储存模型和经验分布
  */
-public class Context
+public class Context implements Serializable
 {
 
     /**

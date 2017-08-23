@@ -16,16 +16,18 @@ import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
+import com.hankcs.hanlp.dictionary.Attribute;
 
 /**
  * 顶点
  *
  * @author hankcs
  */
-public class Vertex
+public class Vertex implements Serializable
 {
     /**
      * 节点对应的词或等效词（如未##数）
@@ -39,7 +41,7 @@ public class Vertex
      * 词的属性，谨慎修改属性内部的数据，因为会影响到字典<br>
      * 如果要修改，应当new一个Attribute
      */
-    public CoreDictionary.Attribute attribute;
+    public Attribute attribute;
     /**
      * 等效词ID,也是Attribute的下标
      */
@@ -53,11 +55,11 @@ public class Vertex
     /**
      * 始##始
      */
-    public static Vertex B = new Vertex(Predefine.TAG_BIGIN, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
+    public static Vertex B = new Vertex(Predefine.TAG_BIGIN, " ", new Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
     /**
      * 末##末
      */
-    public static Vertex E = new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
+    public static Vertex E = new Vertex(Predefine.TAG_END, " ", new Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
 
     ////////在最短路相关计算中用到的几个变量，之所以放在这里，是为了避免再去生成对象，浪费时间////////
     /**
@@ -86,14 +88,14 @@ public class Vertex
      * @param realWord  真实词
      * @param attribute 属性
      */
-    public Vertex(String word, String realWord, CoreDictionary.Attribute attribute)
+    public Vertex(String word, String realWord, Attribute attribute)
     {
         this(word, realWord, attribute, -1);
     }
 
-    public Vertex(String word, String realWord, CoreDictionary.Attribute attribute, int wordID)
+    public Vertex(String word, String realWord, Attribute attribute, int wordID)
     {
-        if (attribute == null) attribute = new CoreDictionary.Attribute(Nature.n, 1);   // 安全起见
+        if (attribute == null) attribute = new Attribute(Nature.n, 1);   // 安全起见
         this.wordID = wordID;
         this.attribute = attribute;
         if (word == null) word = compileRealWord(realWord, attribute);
@@ -108,7 +110,7 @@ public class Vertex
      * @param attribute 等效词串
      * @return
      */
-    private String compileRealWord(String realWord, CoreDictionary.Attribute attribute)
+    private String compileRealWord(String realWord, Attribute attribute)
     {
         if (attribute.nature.length == 1)
         {
@@ -191,12 +193,12 @@ public class Vertex
      * @param realWord
      * @param attribute
      */
-    public Vertex(String realWord, CoreDictionary.Attribute attribute)
+    public Vertex(String realWord, Attribute attribute)
     {
         this(null, realWord, attribute);
     }
 
-    public Vertex(String realWord, CoreDictionary.Attribute attribute, int wordID)
+    public Vertex(String realWord, Attribute attribute, int wordID)
     {
         this(null, realWord, attribute, wordID);
     }
@@ -206,7 +208,7 @@ public class Vertex
      *
      * @param entry
      */
-    public Vertex(Map.Entry<String, CoreDictionary.Attribute> entry)
+    public Vertex(Map.Entry<String, Attribute> entry)
     {
         this(entry.getKey(), entry.getValue());
     }
@@ -221,7 +223,7 @@ public class Vertex
         this(null, realWord, CoreDictionary.get(realWord));
     }
 
-    public Vertex(char realWord, CoreDictionary.Attribute attribute)
+    public Vertex(char realWord, Attribute attribute)
     {
         this(String.valueOf(realWord), attribute);
     }
@@ -241,7 +243,7 @@ public class Vertex
      *
      * @return
      */
-    public CoreDictionary.Attribute getAttribute()
+    public Attribute getAttribute()
     {
         return attribute;
     }
@@ -265,7 +267,7 @@ public class Vertex
             frequency = 1000;
             result = false;
         }
-        attribute = new CoreDictionary.Attribute(nature, frequency);
+        attribute = new Attribute(nature, frequency);
         return result;
     }
 
@@ -355,7 +357,7 @@ public class Vertex
      */
     public static Vertex newNumberInstance(String realWord)
     {
-        return new Vertex(Predefine.TAG_NUMBER, realWord, new CoreDictionary.Attribute(Nature.m, 1000));
+        return new Vertex(Predefine.TAG_NUMBER, realWord, new Attribute(Nature.m, 1000));
     }
 
     /**
@@ -366,7 +368,7 @@ public class Vertex
      */
     public static Vertex newAddressInstance(String realWord)
     {
-        return new Vertex(Predefine.TAG_PLACE, realWord, new CoreDictionary.Attribute(Nature.ns, 1000));
+        return new Vertex(Predefine.TAG_PLACE, realWord, new Attribute(Nature.ns, 1000));
     }
 
     /**
@@ -377,7 +379,7 @@ public class Vertex
      */
     public static Vertex newPunctuationInstance(String realWord)
     {
-        return new Vertex(realWord, new CoreDictionary.Attribute(Nature.w, 1000));
+        return new Vertex(realWord, new Attribute(Nature.w, 1000));
     }
 
     /**
@@ -399,7 +401,7 @@ public class Vertex
      */
     public static Vertex newTranslatedPersonInstance(String realWord, int frequency)
     {
-        return new Vertex(Predefine.TAG_PEOPLE, realWord, new CoreDictionary.Attribute(Nature.nrf, frequency));
+        return new Vertex(Predefine.TAG_PEOPLE, realWord, new Attribute(Nature.nrf, frequency));
     }
 
     /**
@@ -410,7 +412,7 @@ public class Vertex
      */
     public static Vertex newJapanesePersonInstance(String realWord, int frequency)
     {
-        return new Vertex(Predefine.TAG_PEOPLE, realWord, new CoreDictionary.Attribute(Nature.nrj, frequency));
+        return new Vertex(Predefine.TAG_PEOPLE, realWord, new Attribute(Nature.nrj, frequency));
     }
 
     /**
@@ -422,7 +424,7 @@ public class Vertex
      */
     public static Vertex newPersonInstance(String realWord, int frequency)
     {
-        return new Vertex(Predefine.TAG_PEOPLE, realWord, new CoreDictionary.Attribute(Nature.nr, frequency));
+        return new Vertex(Predefine.TAG_PEOPLE, realWord, new Attribute(Nature.nr, frequency));
     }
 
     /**
@@ -434,7 +436,7 @@ public class Vertex
      */
     public static Vertex newPlaceInstance(String realWord, int frequency)
     {
-        return new Vertex(Predefine.TAG_PLACE, realWord, new CoreDictionary.Attribute(Nature.ns, frequency));
+        return new Vertex(Predefine.TAG_PLACE, realWord, new Attribute(Nature.ns, frequency));
     }
 
     /**
@@ -446,7 +448,7 @@ public class Vertex
      */
     public static Vertex newOrganizationInstance(String realWord, int frequency)
     {
-        return new Vertex(Predefine.TAG_GROUP, realWord, new CoreDictionary.Attribute(Nature.nt, frequency));
+        return new Vertex(Predefine.TAG_GROUP, realWord, new Attribute(Nature.nt, frequency));
     }
 
     /**
@@ -457,7 +459,7 @@ public class Vertex
      */
     public static Vertex newTimeInstance(String realWord)
     {
-        return new Vertex(Predefine.TAG_TIME, realWord, new CoreDictionary.Attribute(Nature.t, 1000));
+        return new Vertex(Predefine.TAG_TIME, realWord, new Attribute(Nature.t, 1000));
     }
 
     /**
@@ -466,7 +468,7 @@ public class Vertex
      */
     public static Vertex newB()
     {
-        return new Vertex(Predefine.TAG_BIGIN, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
+        return new Vertex(Predefine.TAG_BIGIN, " ", new Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
     }
 
     /**
@@ -475,7 +477,7 @@ public class Vertex
      */
     public static Vertex newE()
     {
-        return new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.end, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
+        return new Vertex(Predefine.TAG_END, " ", new Attribute(Nature.end, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
     }
 
     @Override

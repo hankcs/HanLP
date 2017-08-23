@@ -25,36 +25,15 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.*;
-import static com.hankcs.hanlp.HanLP.Config.IOAdapter;
+import static com.hankcs.hanlp.Config.IOAdapter;
 
 /**
  * 双数组Trie树
  */
-public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
+public class DoubleArrayTrie<V> implements ITrie<V>, Serializable
 {
     private final static int BUF_SIZE = 16384;
     private final static int UNIT_SIZE = 8; // size of int + int
-
-    private static class Node
-    {
-        int code;
-        int depth;
-        int left;
-        int right;
-
-        @Override
-        public String toString()
-        {
-            return "Node{" +
-                    "code=" + code +
-                    ", depth=" + depth +
-                    ", left=" + left +
-                    ", right=" + right +
-                    '}';
-        }
-    }
-
-    ;
 
     protected int check[];
     protected int base[];
@@ -1089,7 +1068,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     /**
      * 一个搜索工具（注意，当调用next()返回false后不应该继续调用next()，除非reset状态）
      */
-    public class Searcher
+    public class Searcher implements Serializable
     {
         /**
          * key的起点

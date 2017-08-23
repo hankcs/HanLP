@@ -11,13 +11,14 @@
  */
 package com.hankcs.hanlp.dictionary.other;
 
-import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.Config;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CharType
+public class CharType implements Serializable
 {
     /**
      * 单字节
@@ -70,9 +71,9 @@ public class CharType
     static
     {
         type = new byte[65536];
-        logger.info("字符类型对应表开始加载 " + HanLP.Config.CharTypePath);
+        logger.info("字符类型对应表开始加载 " + Config.CharTypePath);
         long start = System.currentTimeMillis();
-        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CharTypePath);
+        ByteArray byteArray = ByteArray.createByteArray(Config.CharTypePath);
         if (byteArray == null)
         {
             try
@@ -82,7 +83,7 @@ public class CharType
             catch (IOException e)
             {
                 e.printStackTrace();
-                logger.severe("字符类型对应表 " + HanLP.Config.CharTypePath + " 加载失败： " + TextUtility.exceptionToString(e));
+                logger.severe("字符类型对应表 " + Config.CharTypePath + " 加载失败： " + TextUtility.exceptionToString(e));
                 System.exit(-1);
             }
         }
@@ -128,7 +129,7 @@ public class CharType
             typeList.add(array);
         }
 //        System.out.print("int[" + typeList.size() + "][3] array = \n");
-        DataOutputStream out = new DataOutputStream(new FileOutputStream(HanLP.Config.CharTypePath));
+        DataOutputStream out = new DataOutputStream(new FileOutputStream(Config.CharTypePath));
         for (int[] array : typeList)
         {
 //            System.out.printf("%d %d %d\n", array[0], array[1], array[2]);
@@ -137,7 +138,7 @@ public class CharType
             out.writeByte(array[2]);
         }
         out.close();
-        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CharTypePath);
+        ByteArray byteArray = ByteArray.createByteArray(Config.CharTypePath);
         return byteArray;
     }
 
