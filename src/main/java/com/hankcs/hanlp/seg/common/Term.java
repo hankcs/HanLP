@@ -72,4 +72,21 @@ public class Term
     {
         return LexiconUtility.getFrequency(word);
     }
+
+
+    /**
+     * 判断Term是否相等
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Term)
+        {
+            Term term = (Term)obj;
+            if (this.nature == term.nature && this.word.equals(term.word))
+            {
+                return true;
+            }
+        }
+        return super.equals(obj);
+    }
 }
