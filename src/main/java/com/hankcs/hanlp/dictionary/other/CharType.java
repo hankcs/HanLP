@@ -61,6 +61,11 @@ public class CharType
     public static final byte CT_INDEX = CT_SINGLE + 5;
 
     /**
+     * 中文数字
+     */
+    public static final byte CT_CNUM = CT_SINGLE + 6;
+
+    /**
      * 其他
      */
     public static final byte CT_OTHER = CT_SINGLE + 12;
