@@ -150,4 +150,14 @@ public class LexiconUtility
             return nature;
         }
     }
+
+    /**
+     * 将字符串词性转为Enum词性
+     * @param name 词性名称
+     * @return 转换结果
+     */
+    public static Nature convertStringToNature(String name)
+    {
+        return convertStringToNature(name, null);
+    }
 }

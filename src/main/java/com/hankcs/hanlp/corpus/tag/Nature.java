@@ -809,8 +809,17 @@ public enum Nature
         }
         catch (Exception e)
         {
-            return null;
+            // 动态添加的词语有可能无法通过valueOf获取，所以遍历搜索
+            for (Nature nature : Nature.values())
+            {
+                if (nature.toString().equals(name))
+                {
+                    return nature;
+                }
+            }
         }
+
+        return null;
     }
 
     /**

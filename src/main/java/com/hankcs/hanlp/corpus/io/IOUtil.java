@@ -14,6 +14,7 @@ package com.hankcs.hanlp.corpus.io;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.utility.LexiconUtility;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.*;
@@ -620,7 +621,7 @@ public class IOUtil
             CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natureCount);
             for (int i = 0; i < natureCount; ++i)
             {
-                attribute.nature[i] = Enum.valueOf(Nature.class, param[1 + 2 * i]);
+                attribute.nature[i] = LexiconUtility.convertStringToNature(param[1 + 2 * i]);
                 attribute.frequency[i] = Integer.parseInt(param[2 + 2 * i]);
                 attribute.totalFrequency += attribute.frequency[i];
             }
