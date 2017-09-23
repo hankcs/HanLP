@@ -45,6 +45,10 @@ public class Config
      */
     public boolean useCustomDictionary = true;
     /**
+     * 用户词典高优先级
+     */
+    public boolean forceCustomDictionary = false;
+    /**
      * 词性标注
      */
     public boolean speechTagging = false;

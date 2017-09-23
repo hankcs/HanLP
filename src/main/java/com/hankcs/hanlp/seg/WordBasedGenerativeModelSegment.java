@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.algorithm.Viterbi;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.*;
@@ -434,15 +435,18 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
         {
             wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value, searcher.index));
         }
-        // 用户词典查询
-//        if (config.useCustomDictionary)
-//        {
-//            searcher = CustomDictionary.dat.getSearcher(charArray, 0);
-//            while (searcher.next())
-//            {
-//                wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value));
-//            }
-//        }
+        // 强制用户词典查询
+        if (config.forceCustomDictionary)
+        {
+            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            {
+                @Override
+                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                {
+                    wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
+                }
+            });
+        }
         // 原子分词，保证图连通
         LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
         for (int i = 1; i < vertexes.length; )

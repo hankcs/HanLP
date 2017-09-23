@@ -88,7 +88,7 @@ public class Vertex
      */
     public Vertex(String word, String realWord, CoreDictionary.Attribute attribute)
     {
-        this(word, realWord, attribute, -1);
+        this(word, realWord, attribute, -attribute.totalFrequency);
     }
 
     public Vertex(String word, String realWord, CoreDictionary.Attribute attribute, int wordID)

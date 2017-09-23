@@ -443,4 +443,11 @@ public class TestSegment extends TestCase
         seg.enableNumberQuantifierRecognize(true);
         System.out.println(seg.seg("一分钟就累了"));
     }
+
+    public void testIssue633() throws Exception
+    {
+        CustomDictionary.add("钱管家");
+        StandardTokenizer.SEGMENT.enableCustomDictionaryForcing(true);
+        System.out.println(HanLP.segment("钱管家中怎么绑定网银"));
+    }
 }
