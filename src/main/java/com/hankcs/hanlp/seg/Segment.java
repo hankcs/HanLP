@@ -629,7 +629,10 @@ public abstract class Segment
      */
     public Segment enableCustomDictionaryForcing(boolean enable)
     {
-        enableCustomDictionary(true);
+        if (enable)
+        {
+            enableCustomDictionary(true);
+        }
         config.forceCustomDictionary = enable;
         return this;
     }
