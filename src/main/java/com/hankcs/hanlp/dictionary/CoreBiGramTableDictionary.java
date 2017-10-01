@@ -12,14 +12,12 @@
 package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
@@ -271,9 +269,14 @@ public class CoreBiGramTableDictionary
      */
     public static int getBiFrequency(int idA, int idB)
     {
-        if (idA == -1 || idB == -1)
+        // 负数id表示来自用户词典的词语的词频（用户自定义词语没有id），返回正值增加其亲和度
+        if (idA < 0)
         {
-            return 1000;   // -1表示用户词典，返回正值增加其亲和度
+            return -idA;
+        }
+        if (idB < 0)
+        {
+            return -idB;
         }
         int index = binarySearch(pair, start[idA], start[idA + 1] - start[idA], idB);
         if (index < 0) return 0;

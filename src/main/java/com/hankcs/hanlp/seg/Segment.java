@@ -619,6 +619,22 @@ public abstract class Segment
     }
 
     /**
+     * 是否尽可能强制使用用户词典（使用户词典的优先级尽可能高）<br>
+     *     警告：具体实现由各子类决定，可能会破坏分词器的统计特性（例如，如果用户词典
+     *     含有“和服”，则“商品和服务”的分词结果可能会被用户词典的高优先级影响）。
+     * @param enable
+     * @return 分词器本身
+     *
+     * @since 1.3.5
+     */
+    public Segment enableCustomDictionaryForcing(boolean enable)
+    {
+        enableCustomDictionary(true);
+        config.forceCustomDictionary = enable;
+        return this;
+    }
+
+    /**
      * 是否启用音译人名识别
      *
      * @param enable
