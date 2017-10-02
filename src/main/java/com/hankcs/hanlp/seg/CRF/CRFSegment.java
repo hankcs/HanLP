@@ -123,10 +123,10 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
         return termList;
     }
     
-    protected static Nature toDefaultNature(String originalChar) {
-    	if (originalChar.equals("M"))
+    protected static Nature toDefaultNature(String compiledChar) {
+    	if (compiledChar.equals("M"))
     		return Nature.m;
-    	if (originalChar.equals("W"))
+    	if (compiledChar.equals("W"))
     		return Nature.nx;
     	return null;
     }

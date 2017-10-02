@@ -37,15 +37,23 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
      * @param word
      * @return
      */
-    public static CoreDictionary.Attribute guessAttribute(String word)  
+    public static CoreDictionary.Attribute guessAttribute(Term word)  
     {
-        CoreDictionary.Attribute attribute = CoreDictionary.get(word);
-        if (attribute == null) {
-            attribute = CustomDictionary.get(word);
+        CoreDictionary.Attribute attribute = CoreDictionary.get(word.word);
+        if (attribute == null)
+        {
+            attribute = CustomDictionary.get(word.word);
         }
         if (attribute == null)
         {
-            if (word.trim().length() == 0)
+            if (word.nature != null)
+            {
+                if (Nature.nx == word.nature)
+                    attribute = new CoreDictionary.Attribute(Nature.nx);
+                else if (Nature.m == word.nature)
+                    attribute = CoreDictionary.get(CoreDictionary.M_WORD_ID);
+            }
+            else if (word.word.trim().length() == 0)
                 attribute = new CoreDictionary.Attribute(Nature.x);
             else attribute = new CoreDictionary.Attribute(Nature.nz);
         }
@@ -104,7 +112,7 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
         if (appendStart) vertexList.add(Vertex.newB());
         for (Term word : wordList)
         {
-            CoreDictionary.Attribute attribute = guessAttribute(word.word);
+            CoreDictionary.Attribute attribute = guessAttribute(word);
             Vertex vertex = new Vertex(word.word, attribute);
             vertexList.add(vertex);
         }

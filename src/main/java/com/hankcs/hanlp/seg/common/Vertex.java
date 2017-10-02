@@ -136,7 +136,9 @@ public class Vertex
                 case nx:
                 {
                     wordID = CoreDictionary.NX_WORD_ID;
-                    this.attribute = CoreDictionary.get(CoreDictionary.NX_WORD_ID);
+                    if (wordID == -1)
+                        wordID = CoreDictionary.X_WORD_ID;
+//                    this.attribute = CoreDictionary.get(wordID);
                     return Predefine.TAG_PROPER;
                 }
                 case nt:
