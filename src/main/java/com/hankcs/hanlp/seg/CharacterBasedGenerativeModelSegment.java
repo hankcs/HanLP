@@ -34,29 +34,30 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
     /**
      * 查询或猜测一个词语的属性，
      * 先查词典，然后对字母、数字串的属性进行判断，最后猜测未登录词
-     * @param word
+     * @param term
      * @return
      */
-    public static CoreDictionary.Attribute guessAttribute(Term word)  
+    public static CoreDictionary.Attribute guessAttribute(Term term)  
     {
-        CoreDictionary.Attribute attribute = CoreDictionary.get(word.word);
+        CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
         if (attribute == null)
         {
-            attribute = CustomDictionary.get(word.word);
+            attribute = CustomDictionary.get(term.word);
         }
         if (attribute == null)
         {
-            if (word.nature != null)
+            if (term.nature != null)
             {
-                if (Nature.nx == word.nature)
+                if (Nature.nx == term.nature)
                     attribute = new CoreDictionary.Attribute(Nature.nx);
-                else if (Nature.m == word.nature)
+                else if (Nature.m == term.nature)
                     attribute = CoreDictionary.get(CoreDictionary.M_WORD_ID);
             }
-            else if (word.word.trim().length() == 0)
+            else if (term.word.trim().length() == 0)
                 attribute = new CoreDictionary.Attribute(Nature.x);
             else attribute = new CoreDictionary.Attribute(Nature.nz);
         }
+        else term.nature = attribute.nature[0];
         return attribute;
     }
     
@@ -88,8 +89,9 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
         if (config.useCustomDictionary)
         {
             combineByCustomDictionary(vertexList);
+            termList = convert(vertexList, config.offset);
         }
-        return convert(vertexList, config.offset);
+        return termList;
     }
 
     /**
