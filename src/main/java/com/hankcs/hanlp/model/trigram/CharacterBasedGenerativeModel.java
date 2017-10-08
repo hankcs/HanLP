@@ -36,9 +36,13 @@ public class CharacterBasedGenerativeModel implements ICacheAble
      */
     Probability tf;
     /**
+     * BMES标签转移矩阵, 用于限定输出结果
+     */
+    int[][][] transMatrix;
+    /**
      * 用到的标签
      */
-    static final char[] id2tag = new char[]{'b', 'm', 'e', 's'};
+    static final char[] id2tag = new char[]{'b', 'm', 'e', 's', 'x'};
     /**
      * 视野范围外的事件
      */
@@ -47,11 +51,25 @@ public class CharacterBasedGenerativeModel implements ICacheAble
      * 无穷小
      */
     static final double inf = -1e10;
+    /**
+     * 最后两个字的状态
+     * 只可能是 "be" "me" "es" "ss"
+     */
+    static final int[][] probableTail = {{0,2},{1,2},{2,3},{3,3}};
 
     public CharacterBasedGenerativeModel()
     {
         tf = new Probability();
-    }
+        // 构建有限转移矩阵
+        // 矩阵的数值根据《人民日报》语料估算 
+        final int [] nullArray = {0, 0, 0, 0, 0};
+        transMatrix = new int[5][][];
+        transMatrix[0] = new int[][]{nullArray, {0, 150, 330, 0, 0}, {160, 0, 0, 168, 20}, nullArray, nullArray};
+        transMatrix[1] = new int[][]{nullArray, {0, 35, 150, 0, 0}, {210, 0, 0, 263, 3}, nullArray, nullArray};
+        transMatrix[2] = new int[][]{{0, 200, 1600, 0, 0}, nullArray, nullArray, {1080, 0, 0, 650, 205}, nullArray};
+        transMatrix[3] = new int[][]{{0, 200, 1600, 0, 0}, nullArray, nullArray, {640, 0, 0, 700, 63}, nullArray};
+        transMatrix[4] = new int[][]{{0, 30, 150, 0, 0}, nullArray, nullArray, {60, 0, 0, 50, 3}, {180, 0, 0, 120, 0}};
+   }
 
     /**
      * 让模型观测一个句子
@@ -114,11 +132,11 @@ public class CharacterBasedGenerativeModel implements ICacheAble
             double c2 = div(tf.get(now[1], now[2]) - 1, tf.get(now[1]) - 1);
             double c1 = div(tf.get(now[2]) - 1, tf.getsum() - 1);
             if (c3 >= c1 && c3 >= c2)
-                tl3 += tf.get(now);
+                tl3 += tf.get(key.toCharArray());
             else if (c2 >= c1 && c2 >= c3)
-                tl2 += tf.get(now);
+                tl2 += tf.get(key.toCharArray());
             else if (c1 >= c2 && c1 >= c3)
-                tl1 += tf.get(now);
+                tl1 += tf.get(key.toCharArray());
         }
 
         l1 = div(tl1, tl1 + tl2 + tl3);
@@ -128,16 +146,24 @@ public class CharacterBasedGenerativeModel implements ICacheAble
 
     /**
      * 求概率
-     * @param s1 前2个状态
-     * @param s2 前1个状态
-     * @param s3 当前状态
+     * @param s1 前2个字
+     * @param s1 前2个状态的下标
+     * @param s2 前1个字
+     * @param s2 前1个状态的下标
+     * @param s3 当前字
+     * @param s3 当前状态的下标
      * @return 序列的概率
      */
-    double log_prob(char[] s1, char[] s2, char[] s3)
+    double log_prob(char s1, int i1, char s2, int i2, char s3, int i3)
     {
-        double uni = l1 * tf.freq(s3);
-        double bi = div(l2 * tf.get(s2, s3), tf.get(s2));
-        double tri = div(l3 * tf.get(s1, s2, s3), tf.get(s1, s2));
+        if (transMatrix[i1][i2][i3] == 0)
+            return inf;
+        char t1 = id2tag[i1];
+        char t2 = id2tag[i2];
+        char t3 = id2tag[i3];
+        double uni = l1 * tf.freq(s3,t3);
+        double bi = div(l2 * tf.get(s2,t2, s3,t3), tf.get(s2,t2));
+        double tri = div(l3 * tf.get(s1,t1, s2,t2, s3,t3), tf.get(s1,t1, s2,t2));
         if (uni + bi + tri == 0)
             return inf;
         return Math.log(uni + bi + tri);
@@ -161,7 +187,7 @@ public class CharacterBasedGenerativeModel implements ICacheAble
         // 第一个字，只可能是bs
         for (int s = 0; s < 4; ++s)
         {
-            double p = (s == 1 || s == 2) ? inf : log_prob(bos, bos, new char[]{charArray[0], id2tag[s]});
+            double p = (s == 1 || s == 2) ? inf : log_prob(bos[0], 4, bos[0], 4, charArray[0],s);
             first[s] = p;
         }
 
@@ -170,7 +196,7 @@ public class CharacterBasedGenerativeModel implements ICacheAble
         {
             for (int s = 0; s < 4; ++s)
             {
-                double p = first[f] + log_prob(bos, new char[]{charArray[0], id2tag[f]}, new char[]{charArray[1], id2tag[s]});
+                double p = first[f] + log_prob(bos[0],4, charArray[0],f, charArray[1],s);
                 now[f][s] = p;
                 link[1][f][s] = f;
             }
@@ -192,9 +218,9 @@ public class CharacterBasedGenerativeModel implements ICacheAble
                     now[s][t] = -1e20;
                     for (int f = 0; f < 4; ++f)
                     {
-                        double p = pre[f][s] + log_prob(new char[]{charArray[i - 2], id2tag[f]},
-                                                        new char[]{charArray[i - 1], id2tag[s]},
-                                                        new char[]{charArray[i],     id2tag[t]});
+                        double p = pre[f][s] + log_prob(charArray[i - 2], f,
+                                                        charArray[i - 1], s,
+                                                        charArray[i],     t);
                         if (p > now[s][t])
                         {
                             now[s][t] = p;
@@ -204,19 +230,18 @@ public class CharacterBasedGenerativeModel implements ICacheAble
                 }
             }
         }
-        double score = inf;
+        // 无法保证最优路径每个状态的概率都是非最小值, 所以回溯路径得分最小值必须小于inf
+        double score = charArray.length*inf;
         int s = 0;
         int t = 0;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < probableTail.length; i++)
         {
-            for (int j = 0; j < 4; j++)
+            int [] state = probableTail[i];
+            if (now[state[0]][state[1]] > score)
             {
-                if (now[i][j] > score)
-                {
-                    score = now[i][j];
-                    s = i;
-                    t = j;
-                }
+                score = now[state[0]][state[1]];
+                s = state[0];
+                t = state[1];
             }
         }
         for (int i = link.length - 1; i >= 0; --i)

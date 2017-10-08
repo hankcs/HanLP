@@ -326,7 +326,7 @@ public class IOUtil
     {
         LinkedList<String> result = new LinkedList<String>();
         String line = null;
-        boolean first = false;
+        boolean first = true;
         try
         {
             BufferedReader bw = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
@@ -335,8 +335,7 @@ public class IOUtil
                 if (first)
                 {
                     first = false;
-                    char ch = line.charAt(0);
-                    if (ch == '\uFEFF')
+                    if (!line.isEmpty() && line.charAt(0) == '\uFEFF')
                         line = line.substring(1);
                 }
                 result.add(line);
