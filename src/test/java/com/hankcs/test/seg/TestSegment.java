@@ -302,6 +302,7 @@ public class TestSegment extends TestCase
 
     public void testIssue22() throws Exception
     {
+        StandardTokenizer.SEGMENT.enableNumberQuantifierRecognize(false);
         CoreDictionary.Attribute attribute = CoreDictionary.get("年");
         System.out.println(attribute);
         List<Term> termList = StandardTokenizer.segment("三年");
@@ -442,6 +443,13 @@ public class TestSegment extends TestCase
         seg.enableAllNamedEntityRecognize(true);
         seg.enableNumberQuantifierRecognize(true);
         System.out.println(seg.seg("一分钟就累了"));
+    }
+    
+    public void testIssue623() throws Exception
+    {
+        StandardTokenizer.SEGMENT.enableCustomDictionary(false);
+        System.out.println(HanLP.segment("赵四158开头的号码"));
+        System.out.println(HanLP.segment("上周四18:00召开股东大会"));
     }
 
     public void testIssue633() throws Exception
