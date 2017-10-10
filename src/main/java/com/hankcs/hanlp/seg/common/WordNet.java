@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.utility.MathTools;
@@ -21,6 +22,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
@@ -275,21 +277,22 @@ public class WordNet
             int id = -1;
             switch (atomNode.nPOS)
             {
-                case Predefine.CT_CHINESE:
+                case CharType.CT_CHINESE:
                     break;
-                case Predefine.CT_INDEX:
-                case Predefine.CT_NUM:
+                case CharType.CT_NUM:
+                case CharType.CT_INDEX:
+                case CharType.CT_CNUM:
                     nature = Nature.m;
-                    sWord = "未##数";
+                    sWord = Predefine.TAG_NUMBER;
                     id = CoreDictionary.M_WORD_ID;
                     break;
-                case Predefine.CT_DELIMITER:
-                case Predefine.CT_OTHER:
+                case CharType.CT_DELIMITER:
+                case CharType.CT_OTHER:
                     nature = Nature.w;
                     break;
-                case Predefine.CT_SINGLE://12021-2129-3121
+                case CharType.CT_SINGLE://12021-2129-3121
                     nature = Nature.nx;
-                    sWord = "未##串";
+                    sWord = Predefine.TAG_CLUSTER;
                     id = CoreDictionary.X_WORD_ID;
                     break;
                 default:

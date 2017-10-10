@@ -28,12 +28,19 @@ public class Predefine
     public final static double MIN_PROBABILITY = 1e-10;
     public final static int CT_SENTENCE_BEGIN = 1;        //Sentence begin
     public final static int CT_SENTENCE_END = 4;          //Sentence ending
+    /** @deprecated 使用CharType中的相应常量 */
     public final static int CT_SINGLE = 5;                //SINGLE byte
+    /** @deprecated 使用CharType中的相应常量 */
     public final static int CT_DELIMITER = CT_SINGLE + 1; //delimiter
+    /** @deprecated 使用CharType中的相应常量 */
     public final static int CT_CHINESE = CT_SINGLE + 2;   //Chinese Char
+    /** @deprecated 使用CharType中的相应常量 */
     public final static int CT_LETTER = CT_SINGLE + 3;    //HanYu Pinyin
+    /** @deprecated 使用CharType中的相应常量 */
     public final static int CT_NUM = CT_SINGLE + 4;       //HanYu Pinyin
+    /** @deprecated 使用CharType中的相应常量 */
     public final static int CT_INDEX = CT_SINGLE + 5;     //HanYu Pinyin
+    /** @deprecated  */
     public final static int CT_OTHER = CT_SINGLE + 12;    //Other
     /**
      * 浮点数正则
@@ -43,7 +50,7 @@ public class Predefine
     public static String POSTFIX_SINGLE =
         "坝邦堡城池村单岛道堤店洞渡队峰府冈港阁宫沟国海号河湖环集江礁角街井郡坑口矿里岭楼路门盟庙弄牌派坡铺旗桥区渠泉山省市水寺塔台滩坛堂厅亭屯湾屋溪峡县线乡巷洋窑营屿园苑院闸寨站镇州庄族陂庵町";
 
-    public final static String[] POSTFIX_MUTIPLE = {"半岛","草原","城市","大堤","大公国","大桥","地区",
+    public final static String[] POSTFIX_MUTIPLE = {"半岛","草原","城区","大堤","大公国","大桥","地区",
         "帝国","渡槽","港口","高速公路","高原","公路","公园","共和国","谷地","广场",
         "国道","海峡","胡同","机场","集镇","教区","街道","口岸","码头","煤矿",
         "牧场","农场","盆地","平原","丘陵","群岛","沙漠","沙洲","山脉","山丘",

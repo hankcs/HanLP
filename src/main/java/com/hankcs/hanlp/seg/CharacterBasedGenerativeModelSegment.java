@@ -110,7 +110,7 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
      */
     protected List<Vertex> toVertexList(List<Term> wordList, boolean appendStart)
     {
-        ArrayList<Vertex> vertexList = new ArrayList<Vertex>(wordList.size() + 1);
+        ArrayList<Vertex> vertexList = new ArrayList<Vertex>(wordList.size() + 2);
         if (appendStart) vertexList.add(Vertex.newB());
         for (Term word : wordList)
         {
