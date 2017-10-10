@@ -143,7 +143,7 @@ public abstract class Segment
     protected static List<AtomNode> simpleAtomSegment(char[] charArray, int start, int end)
     {
         List<AtomNode> atomNodeList = new LinkedList<AtomNode>();
-        atomNodeList.add(new AtomNode(new String(charArray, start, end - start), Predefine.CT_LETTER));
+        atomNodeList.add(new AtomNode(new String(charArray, start, end - start), CharType.CT_LETTER));
         return atomNodeList;
     }
 
@@ -167,12 +167,15 @@ public abstract class Segment
             if (curType != preType)
             {
                 // 浮点数识别
-                if (charArray[offsetAtom] == '.' && preType == CharType.CT_NUM)
+                if ((charArray[offsetAtom] == '.' || charArray[offsetAtom] == '．') && preType == CharType.CT_NUM)
                 {
-                    while (++offsetAtom < end)
+                    if (offsetAtom+1 < end)
                     {
-                        curType = CharType.get(charArray[offsetAtom]);
-                        if (curType != CharType.CT_NUM) break;
+                        int nextType = CharType.get(charArray[offsetAtom+1]);
+                        if (nextType == CharType.CT_NUM) 
+                        {
+                            continue;
+                        }
                     }
                 }
                 atomNodeList.add(new AtomNode(new String(charArray, start, offsetAtom - start), preType));
