@@ -96,11 +96,11 @@ public class CompoundWord implements IWord
     public static CompoundWord create(String param)
     {
         if (param == null) return null;
-        int cutIndex = param.lastIndexOf('/');
+        int cutIndex = param.lastIndexOf(']');
         if (cutIndex <= 2 || cutIndex == param.length() - 1) return null;
-        String wordParam  = param.substring(1, cutIndex - 1);
+        String wordParam  = param.substring(1, cutIndex);
         List<Word> wordList = new LinkedList<Word>();
-        for (String single : wordParam.split(" "))
+        for (String single : wordParam.split("\\s+"))
         {
             if (single.length() == 0) continue;
             Word word = Word.create(single);
@@ -112,6 +112,10 @@ public class CompoundWord implements IWord
             wordList.add(word);
         }
         String labelParam = param.substring(cutIndex + 1);
+        if (labelParam.startsWith("/"))
+        {
+            labelParam = labelParam.substring(1);
+        }
         return new CompoundWord(wordList, labelParam);
     }
 }
