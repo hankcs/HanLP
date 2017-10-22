@@ -83,7 +83,7 @@ Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.3.4</version>
+    <version>portable-1.3.5</version>
 </dependency>
 ```
 
