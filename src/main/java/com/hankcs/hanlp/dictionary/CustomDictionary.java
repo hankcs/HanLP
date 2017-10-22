@@ -41,14 +41,11 @@ public class CustomDictionary
      */
     public static BinTrie<CoreDictionary.Attribute> trie;
     public static DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
-    /**
-     * 第一个是主词典，其他是副词典
-     */
-    public final static String path[] = HanLP.Config.CustomDictionaryPath;
 
     // 自动加载词典
     static
     {
+        String path[] = HanLP.Config.CustomDictionaryPath;
         long start = System.currentTimeMillis();
         if (!loadMainDictionary(path[0]))
         {
@@ -69,6 +66,7 @@ public class CustomDictionary
         LinkedHashSet<Nature> customNatureCollector = new LinkedHashSet<Nature>();
         try
         {
+            String path[] = HanLP.Config.CustomDictionaryPath;
             for (String p : path)
             {
                 Nature defaultNature = Nature.n;
@@ -525,5 +523,18 @@ public class CustomDictionary
         {
             processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
         }
+    }
+
+    /**
+     * 热更新（重新加载）<br>
+     * 集群环境（或其他IOAdapter）需要自行删除缓存文件（路径 = HanLP.Config.CustomDictionaryPath[0] + Predefine.BIN_EXT）
+     * @return 是否加载成功
+     */
+    public static boolean reload()
+    {
+        String path[] = HanLP.Config.CustomDictionaryPath;
+        if (path == null || path.length == 0) return false;
+        IOUtil.deleteFile(path[0] + Predefine.BIN_EXT); // 删掉缓存
+        return loadMainDictionary(path[0]);
     }
 }

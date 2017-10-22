@@ -8,6 +8,7 @@ import java.util.*;
 
 /**
  * 基于TextRank算法的关键字提取，适用于单文档
+ *
  * @author hankcs
  */
 public class TextRankKeyword extends KeywordExtractor
@@ -17,19 +18,20 @@ public class TextRankKeyword extends KeywordExtractor
      */
     int nKeyword = 10;
     /**
-     * 阻尼系数（ＤａｍｐｉｎｇＦａｃｔｏｒ），一般取值为0.85
+     * 阻尼系数（ＤａｍｐｉｎｇＦａｃｔｏｒ），一般取值为0.85
      */
     final static float d = 0.85f;
     /**
      * 最大迭代次数
      */
-    final static int max_iter = 200;
+    public static int max_iter = 200;
     final static float min_diff = 0.001f;
 
     /**
      * 提取关键词
+     *
      * @param document 文档内容
-     * @param size 希望提取几个关键词
+     * @param size     希望提取几个关键词
      * @return 一个列表
      */
     public static List<String> getKeywordList(String document, int size)
@@ -42,6 +44,7 @@ public class TextRankKeyword extends KeywordExtractor
 
     /**
      * 提取关键词
+     *
      * @param content
      * @return
      */
@@ -58,10 +61,11 @@ public class TextRankKeyword extends KeywordExtractor
 
     /**
      * 返回全部分词结果和对应的rank
+     *
      * @param content
      * @return
      */
-    public Map<String,Float> getTermAndRank(String content)
+    public Map<String, Float> getTermAndRank(String content)
     {
         assert content != null;
         List<Term> termList = defaultSegment.seg(content);
@@ -70,11 +74,12 @@ public class TextRankKeyword extends KeywordExtractor
 
     /**
      * 返回分数最高的前size个分词结果和对应的rank
+     *
      * @param content
      * @param size
      * @return
      */
-    public Map<String,Float> getTermAndRank(String content, Integer size)
+    public Map<String, Float> getTermAndRank(String content, Integer size)
     {
         Map<String, Float> map = getTermAndRank(content);
         Map<String, Float> result = new LinkedHashMap<String, Float>();
@@ -95,10 +100,11 @@ public class TextRankKeyword extends KeywordExtractor
 
     /**
      * 使用已经分好的词来计算rank
+     *
      * @param termList
      * @return
      */
-    public Map<String,Float> getRank(List<Term> termList)
+    public Map<String, Float> getRank(List<Term> termList)
     {
         List<String> wordList = new ArrayList<String>(termList.size());
         for (Term t : termList)
@@ -117,24 +123,22 @@ public class TextRankKeyword extends KeywordExtractor
             {
                 words.put(w, new TreeSet<String>());
             }
-            que.offer(w);
-            if (que.size() > 5)
+            // 复杂度O(n-1)
+            if (que.size() >= 5)
             {
                 que.poll();
             }
-
-            for (String w1 : que)
+            for (String qWord : que)
             {
-                for (String w2 : que)
+                if (w.equals(qWord))
                 {
-                    if (w1.equals(w2))
-                    {
-                        continue;
-                    }
-
-                    words.get(w1).add(w2);
+                    continue;
                 }
+                //既然是邻居,那么关系是相互的,遍历一遍即可
+                words.get(w).add(qWord);
+                words.get(qWord).add(w);
             }
+            que.offer(w);
         }
 //        System.out.println(words);
         Map<String, Float> score = new HashMap<String, Float>();

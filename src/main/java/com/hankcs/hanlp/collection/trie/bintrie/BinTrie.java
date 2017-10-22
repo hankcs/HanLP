@@ -102,6 +102,7 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable
             if (branch == null) return;
             branch = branch.getChild(chars[i]);
         }
+        if (branch == null) return;
         // 最后一个字设为undefined
         if (branch.addChild(new Node(chars[chars.length - 1], Status.UNDEFINED_0, value)))
         {

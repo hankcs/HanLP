@@ -81,4 +81,18 @@ public class CustomNatureUtility
         enumBuster.restore();
         extraValueMap.clear();
     }
+
+    public static Nature getNature(String name)
+    {
+
+        try
+        {
+            return Nature.valueOf(name);
+        }
+        catch (Exception e)
+        {
+            // 动态添加的词语有可能无法通过valueOf获取
+            return extraValueMap.get(name);
+        }
+    }
 }

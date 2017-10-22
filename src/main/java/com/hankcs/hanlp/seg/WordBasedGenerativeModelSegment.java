@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.algorithm.Viterbi;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.*;
@@ -322,12 +323,12 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
             c = charArray[i];
             charTypeArray[i] = CharType.get(c);
 
-            if (c == '.' && i < (charArray.length - 1) && CharType.get(charArray[i + 1]) == Predefine.CT_NUM)
-                charTypeArray[i] = Predefine.CT_NUM;
+            if (c == '.' && i < (charArray.length - 1) && CharType.get(charArray[i + 1]) == CharType.CT_NUM)
+                charTypeArray[i] = CharType.CT_NUM;
             else if (c == '.' && i < (charArray.length - 1) && charArray[i + 1] >= '0' && charArray[i + 1] <= '9')
-                charTypeArray[i] = Predefine.CT_SINGLE;
-            else if (charTypeArray[i] == Predefine.CT_LETTER)
-                charTypeArray[i] = Predefine.CT_SINGLE;
+                charTypeArray[i] = CharType.CT_SINGLE;
+            else if (charTypeArray[i] == CharType.CT_LETTER)
+                charTypeArray[i] = CharType.CT_SINGLE;
         }
 
         // 根据字符类型数组中的内容完成原子切割
@@ -335,8 +336,8 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
         {
             nCurType = charTypeArray[pCur];
 
-            if (nCurType == Predefine.CT_CHINESE || nCurType == Predefine.CT_INDEX ||
-                    nCurType == Predefine.CT_DELIMITER || nCurType == Predefine.CT_OTHER)
+            if (nCurType == CharType.CT_CHINESE || nCurType == CharType.CT_INDEX ||
+                    nCurType == CharType.CT_DELIMITER || nCurType == CharType.CT_OTHER)
             {
                 String single = String.valueOf(charArray[pCur]);
                 if (single.length() != 0)
@@ -344,7 +345,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                 pCur++;
             }
             //如果是字符、数字或者后面跟随了数字的小数点“.”则一直取下去。
-            else if (pCur < charArray.length - 1 && ((nCurType == Predefine.CT_SINGLE) || nCurType == Predefine.CT_NUM))
+            else if (pCur < charArray.length - 1 && ((nCurType == CharType.CT_SINGLE) || nCurType == CharType.CT_NUM))
             {
                 sb.delete(0, sb.length());
                 sb.append(charArray[pCur]);
@@ -434,15 +435,18 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
         {
             wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value, searcher.index));
         }
-        // 用户词典查询
-//        if (config.useCustomDictionary)
-//        {
-//            searcher = CustomDictionary.dat.getSearcher(charArray, 0);
-//            while (searcher.next())
-//            {
-//                wordNetStorage.add(searcher.begin + 1, new Vertex(new String(charArray, searcher.begin, searcher.length), searcher.value));
-//            }
-//        }
+        // 强制用户词典查询
+        if (config.forceCustomDictionary)
+        {
+            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            {
+                @Override
+                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                {
+                    wordNetStorage.add(begin + 1, new Vertex(new String(charArray, begin, end - begin), value));
+                }
+            });
+        }
         // 原子分词，保证图连通
         LinkedList<Vertex>[] vertexes = wordNetStorage.getVertexes();
         for (int i = 1; i < vertexes.length; )

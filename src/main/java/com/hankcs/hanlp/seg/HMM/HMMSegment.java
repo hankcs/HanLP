@@ -63,7 +63,7 @@ public class HMMSegment extends CharacterBasedGenerativeModelSegment
     }
 
     @Override
-    protected List<Term> segSentence(char[] sentence)
+    protected List<Term> roughSegSentence(char[] sentence)
     {
         char[] tag = model.tag(sentence);
         List<Term> termList = new LinkedList<Term>();

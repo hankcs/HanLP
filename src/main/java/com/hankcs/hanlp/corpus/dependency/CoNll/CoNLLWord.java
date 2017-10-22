@@ -110,9 +110,16 @@ public class CoNLLWord
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
-        sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(CPOSTAG).append('\t')
+        // ID为0时为根节点，ID为-1时为空白节点
+        if (ID!=0 && ID!=-1){
+            sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(CPOSTAG).append('\t')
                 .append(POSTAG).append('\t').append('_').append('\t').append(HEAD.ID).append('\t').append(DEPREL).append('\t')
-                .append('_').append('\t').append('_');
+                .append('_').append('\t').append('_');  
+        } else {
+            sb.append(ID).append('\t').append(LEMMA).append('\t').append(LEMMA).append('\t').append(CPOSTAG).append('\t')
+                .append(POSTAG).append('\t').append('_').append('\t').append('_').append('\t').append(DEPREL).append('\t')
+                .append('_').append('\t').append('_');  
+        }
         return sb.toString();
     }
 }

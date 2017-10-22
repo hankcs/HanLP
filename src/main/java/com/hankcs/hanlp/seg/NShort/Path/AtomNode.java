@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg.NShort.Path;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.Predefine;
@@ -46,29 +47,30 @@ public class AtomNode
         Nature nature = Nature.nz;
         switch (nPOS)
         {
-            case Predefine.CT_CHINESE:
+            case CharType.CT_CHINESE:
                 break;
-            case Predefine.CT_INDEX:
-            case Predefine.CT_NUM:
+            case CharType.CT_NUM:
+            case CharType.CT_INDEX:
+            case CharType.CT_CNUM:
                 nature = Nature.m;
-                sWord = "未##数";
+                sWord = Predefine.TAG_NUMBER;
                 break;
-            case Predefine.CT_DELIMITER:
+            case CharType.CT_DELIMITER:
                 nature = Nature.w;
                 break;
-            case Predefine.CT_LETTER:
+            case CharType.CT_LETTER:
                 nature = Nature.nx;
-                sWord = "未##串";
+                sWord = Predefine.TAG_CLUSTER;
                 break;
-            case Predefine.CT_SINGLE://12021-2129-3121
+            case CharType.CT_SINGLE://12021-2129-3121
                 if (Predefine.PATTERN_FLOAT_NUMBER.matcher(sWord).matches())//匹配浮点数
                 {
                     nature = Nature.m;
-                    sWord = "未##数";
+                    sWord = Predefine.TAG_NUMBER;
                 } else
                 {
                     nature = Nature.nx;
-                    sWord = "未##串";
+                    sWord = Predefine.TAG_CLUSTER;
                 }
                 break;
             default:
@@ -93,29 +95,30 @@ public class AtomNode
         int dValue = 1;
         switch (type)
         {
-            case Predefine.CT_CHINESE:
+            case CharType.CT_CHINESE:
                 break;
-            case Predefine.CT_INDEX:
-            case Predefine.CT_NUM:
+            case CharType.CT_NUM:
+            case CharType.CT_INDEX:
+            case CharType.CT_CNUM:
                 nature = Nature.m;
-                word = "未##数";
+                word = Predefine.TAG_NUMBER;
                 break;
-            case Predefine.CT_DELIMITER:
+            case CharType.CT_DELIMITER:
                 nature = Nature.w;
                 break;
-            case Predefine.CT_LETTER:
+            case CharType.CT_LETTER:
                 nature = Nature.nx;
-                word = "未##串";
+                word = Predefine.TAG_CLUSTER;
                 break;
-            case Predefine.CT_SINGLE://12021-2129-3121
+            case CharType.CT_SINGLE://12021-2129-3121
 //                if (Pattern.compile("^(-?\\d+)(\\.\\d+)?$").matcher(word).matches())//匹配浮点数
 //                {
 //                    nature = Nature.m;
-//                    word = "未##数";
+//                    word = Predefine.TAG_NUMBER;
 //                } else
 //                {
                     nature = Nature.nx;
-                    word = "未##串";
+                    word = Predefine.TAG_CLUSTER;
 //                }
                 break;
             default:
