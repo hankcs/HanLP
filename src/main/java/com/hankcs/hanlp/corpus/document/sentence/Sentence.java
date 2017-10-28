@@ -78,6 +78,21 @@ public class Sentence implements Serializable, Iterable<IWord>
     }
 
     /**
+     * 句子文本长度
+     * @return
+     */
+    public int length()
+    {
+        int length = 0;
+        for (IWord word : this)
+        {
+            length += word.getValue().length();
+        }
+
+        return length;
+    }
+
+    /**
      * 原始文本形式
      * @return
      */

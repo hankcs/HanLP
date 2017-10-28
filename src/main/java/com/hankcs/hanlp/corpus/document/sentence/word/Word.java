@@ -80,4 +80,10 @@ public class Word implements IWord
     {
         this.value = value;
     }
+
+    @Override
+    public int length()
+    {
+        return value.length();
+    }
 }
