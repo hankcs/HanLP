@@ -42,7 +42,7 @@ public class FolderWalker
         {
             for (File file : fileArray)
             {
-                if (file.isFile())
+                if (file.isFile() && !file.getName().startsWith(".")) // 过滤隐藏文件
                 {
                     fileList.add(file);
                 }

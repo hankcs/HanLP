@@ -15,6 +15,7 @@ import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.WordFactory;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -24,7 +25,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * 句子，指的是以。，：！结尾的句子
  * @author hankcs
  */
-public class Sentence implements Serializable
+public class Sentence implements Serializable, Iterable<IWord>
 {
     public List<IWord> wordList;
 
@@ -65,5 +66,50 @@ public class Sentence implements Serializable
         }
 
         return new Sentence(wordList);
+    }
+
+    /**
+     * 句子中单词（复合词）的数量
+     * @return
+     */
+    public int size()
+    {
+        return wordList.size();
+    }
+
+    /**
+     * 句子文本长度
+     * @return
+     */
+    public int length()
+    {
+        int length = 0;
+        for (IWord word : this)
+        {
+            length += word.getValue().length();
+        }
+
+        return length;
+    }
+
+    /**
+     * 原始文本形式
+     * @return
+     */
+    public String text()
+    {
+        StringBuilder sb = new StringBuilder(size() * 3);
+        for (IWord word : this)
+        {
+            sb.append(word.getValue());
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public Iterator<IWord> iterator()
+    {
+        return wordList.iterator();
     }
 }
