@@ -638,4 +638,15 @@ public class IOUtil
             TextUtility.writeString(nature.toString(), out);
         }
     }
+
+    /**
+     * 本地文件是否存在
+     * @param path
+     * @return
+     */
+    public static boolean isFileExisted(String path)
+    {
+        File file = new File(path);
+        return file.isFile() && file.exists();
+    }
 }
