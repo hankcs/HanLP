@@ -50,6 +50,7 @@ HanLP: Han Language Processing
   * 基于神经网络的高性能依存句法分析器
   * MaxEnt依存句法分析
   * CRF依存句法分析
+> * 文本分类
 > * 语料库工具
   * 分词语料预处理
   * 词频词性词典制作
