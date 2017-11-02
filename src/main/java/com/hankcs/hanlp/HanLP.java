@@ -12,14 +12,15 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.io.FileIOAdapter;
 import com.hankcs.hanlp.corpus.io.IIOAdapter;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.*;
-import com.hankcs.hanlp.phrase.IPhraseExtractor;
-import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
+import com.hankcs.hanlp.mining.phrase.IPhraseExtractor;
+import com.hankcs.hanlp.mining.phrase.MutualInformationEntropyPhraseExtractor;
+import com.hankcs.hanlp.mining.word.NewWordDiscover;
+import com.hankcs.hanlp.mining.word.WordInfo;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -28,7 +29,6 @@ import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
-import sun.reflect.ReflectionFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -579,6 +579,32 @@ public class HanLP
     {
         IPhraseExtractor extractor = new MutualInformationEntropyPhraseExtractor();
         return extractor.extractPhrase(text, size);
+    }
+
+    /**
+     * 提取词语
+     *
+     * @param text 大文本
+     * @param size 需要提取词语的数量
+     * @return 一个词语列表
+     */
+    public static List<WordInfo> extractWords(String text, int size)
+    {
+        return extractWords(text, size, false);
+    }
+
+    /**
+     * 提取词语（新词发现）
+     *
+     * @param text         大文本
+     * @param size         需要提取词语的数量
+     * @param newWordsOnly 是否只提取词典中没有的词语
+     * @return 一个词语列表
+     */
+    public static List<WordInfo> extractWords(String text, int size, boolean newWordsOnly)
+    {
+        NewWordDiscover discover = new NewWordDiscover(4, 0.0f, .5f, 100f, newWordsOnly);
+        return discover.discovery(text, size);
     }
 
     /**
