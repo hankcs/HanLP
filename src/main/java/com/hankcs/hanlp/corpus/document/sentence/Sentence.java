@@ -93,7 +93,7 @@ public class Sentence implements Serializable, Iterable<IWord>
     }
 
     /**
-     * 原始文本形式
+     * 原始文本形式（无标注，raw text）
      * @return
      */
     public String text()
