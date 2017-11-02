@@ -68,17 +68,23 @@ public class DocVectorModel extends AbstractVectorModel<Integer>
     {
         if (content == null || content.length() == 0) return null;
         List<Term> termList = NotionalTokenizer.segment(content);
-        if (termList.isEmpty())
-        {
-            return null;
-        }
         Vector result = new Vector(dimension());
+        int n = 0;
         for (Term term : termList)
         {
             Vector vector = wordVectorModel.vector(term.word);
+            if (vector == null)
+            {
+                continue;
+            }
+            ++n;
             result.addToSelf(vector);
         }
-        result.divideToSelf(termList.size());
+        if (n == 0)
+        {
+            return null;
+        }
+        result.divideToSelf(n);
         return result;
     }
 
