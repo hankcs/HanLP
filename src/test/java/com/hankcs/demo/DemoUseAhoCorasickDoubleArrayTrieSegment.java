@@ -25,7 +25,7 @@ public class DemoUseAhoCorasickDoubleArrayTrieSegment
     public static void main(String[] args)
     {
         String dictionaryPath = HanLP.Config.CustomDictionaryPath[0];
-        if (!IOUtil.isFileExists(dictionaryPath)) return;
+        if (!IOUtil.isFileExisted(dictionaryPath)) return;
         // AhoCorasickDoubleArrayTrieSegment要求用户必须提供自己的词典路径
         AhoCorasickDoubleArrayTrieSegment segment = new AhoCorasickDoubleArrayTrieSegment()
                 .loadDictionary(dictionaryPath);

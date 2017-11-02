@@ -547,9 +547,10 @@ public class IOUtil
      * @param path
      * @return
      */
-    public static boolean isFileExists(String path)
+    public static boolean isFileExisted(String path)
     {
-        return new File(path).exists();
+        File file = new File(path);
+        return file.isFile() && file.exists();
     }
 
     /**
