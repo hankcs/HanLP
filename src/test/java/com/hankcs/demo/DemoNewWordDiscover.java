@@ -14,18 +14,20 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.mining.word.WordInfo;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
  * 词语提取、新词发现
+ *
  * @author hankcs
  */
 public class DemoNewWordDiscover
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
-        String bigText = IOUtil.readTxt("data/test/红楼梦.txt"); // 文本长度越大越好，试试红楼梦？
-        List<WordInfo> wordInfoList = HanLP.extractWords(bigText, 100);
+        // 文本长度越大越好，试试红楼梦？
+        List<WordInfo> wordInfoList = HanLP.extractWords(IOUtil.newBufferedReader("data/test/红楼梦.txt"), 100);
         System.out.println(wordInfoList);
     }
 }

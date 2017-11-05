@@ -3,7 +3,11 @@ package com.hankcs.hanlp.mining.word;
 import com.hankcs.hanlp.algorithm.MaxHeap;
 import com.hankcs.hanlp.utility.LexiconUtility;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 新词发现工具<br>
@@ -45,33 +49,41 @@ public class NewWordDiscover
     /**
      * 提取词语
      *
-     * @param doc  大文本
-     * @param size 需要提取词语的数量
+     * @param reader 大文本
+     * @param size   需要提取词语的数量
      * @return 一个词语列表
      */
-    public List<WordInfo> discovery(String doc, int size)
+    public List<WordInfo> discover(BufferedReader reader, int size) throws IOException
     {
-        doc = doc.replaceAll("[\\s\\d,.<>/?:;'\"\\[\\]{}()\\|~!@#$%^&*\\-_=+a-zA-Z，。《》、？：；“”‘’｛｝【】（）…￥！—┄－]+", "\0");
+        String doc;
         Map<String, WordInfo> word_cands = new TreeMap<String, WordInfo>();
-        int docLength = doc.length();
-        for (int i = 0; i < docLength; ++i)
+        int totalLength = 0;
+        Pattern delimiter = Pattern.compile("[\\s\\d,.<>/?:;'\"\\[\\]{}()\\|~!@#$%^&*\\-_=+a-zA-Z，。《》、？：；“”‘’｛｝【】（）…￥！—┄－]+");
+        while ((doc = reader.readLine()) != null)
         {
-            int end = Math.min(i + 1 + max_word_len, docLength + 1);
-            for (int j = i + 1; j < end; ++j)
+            doc = delimiter.matcher(doc).replaceAll("\0");
+            int docLength = doc.length();
+            for (int i = 0; i < docLength; ++i)
             {
-                String word = doc.substring(i, j);
-                WordInfo info = word_cands.get(word);
-                if (info == null)
+                int end = Math.min(i + 1 + max_word_len, docLength + 1);
+                for (int j = i + 1; j < end; ++j)
                 {
-                    info = new WordInfo(word);
-                    word_cands.put(word, info);
+                    String word = doc.substring(i, j);
+                    WordInfo info = word_cands.get(word);
+                    if (info == null)
+                    {
+                        info = new WordInfo(word);
+                        word_cands.put(word, info);
+                    }
+                    info.update(i == 0 ? '\0' : doc.charAt(i - 1), j < docLength ? doc.charAt(j) : '\0');
                 }
-                info.update(i == 0 ? '\0' : doc.charAt(i - 1), j < docLength ? doc.charAt(j) : '\0');
             }
+            totalLength += docLength;
         }
+
         for (WordInfo info : word_cands.values())
         {
-            info.computeProbabilityEntropy(docLength);
+            info.computeProbabilityEntropy(totalLength);
         }
         for (WordInfo info : word_cands.values())
         {
@@ -84,8 +96,8 @@ public class NewWordDiscover
         {
             WordInfo info = listIterator.next();
             if (info.text.trim().length() < 2 || info.p < min_freq || info.entropy < min_entropy || info.aggregation < min_aggregation
-                    || (filter && LexiconUtility.getFrequency(info.text) > 0)
-                    )
+                || (filter && LexiconUtility.getFrequency(info.text) > 0)
+                )
             {
                 listIterator.remove();
             }
@@ -101,5 +113,24 @@ public class NewWordDiscover
         topN.addAll(wordInfoList);
 
         return topN.toList();
+    }
+
+    /**
+     * 提取词语
+     *
+     * @param doc  大文本
+     * @param size 需要提取词语的数量
+     * @return 一个词语列表
+     */
+    public List<WordInfo> discover(String doc, int size)
+    {
+        try
+        {
+            return discover(new BufferedReader(new StringReader(doc)), size);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }
