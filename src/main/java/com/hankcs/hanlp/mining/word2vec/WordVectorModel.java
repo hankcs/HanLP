@@ -11,7 +11,6 @@
  */
 package com.hankcs.hanlp.mining.word2vec;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,9 +23,9 @@ public class WordVectorModel extends AbstractVectorModel<String>
 {
     /**
      * 加载模型<br>
-     * 如果发生加载错误，内部会抛出IllegalArgumentException，用户请注意捕获。
      *
      * @param modelFileName 模型路径
+     * @throws IOException 加载错误
      */
     public WordVectorModel(String modelFileName) throws IOException
     {
@@ -35,8 +34,6 @@ public class WordVectorModel extends AbstractVectorModel<String>
 
     private static TreeMap<String, Vector> loadVectorMap(String modelFileName) throws IOException
     {
-        File path = new File(modelFileName);
-        if (!path.exists()) throw new IllegalArgumentException(String.format("%s不存在", modelFileName));
         VectorsReader reader = new VectorsReader(modelFileName);
         reader.readVectorFile();
         TreeMap<String, Vector> map = new TreeMap<String, Vector>();
