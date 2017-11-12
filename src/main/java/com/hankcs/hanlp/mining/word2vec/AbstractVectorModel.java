@@ -63,7 +63,7 @@ public abstract class AbstractVectorModel<K>
         {
             return -1f;
         }
-        return vectorWhat.cosine(vectorWith);
+        return vectorWhat.cosineForUnitVector(vectorWith);
     }
 
     /**
@@ -108,7 +108,7 @@ public abstract class AbstractVectorModel<K>
             {
                 continue;
             }
-            maxHeap.add(new AbstractMap.SimpleEntry<K, Float>(entry.getKey(), entry.getValue().cosine(vector)));
+            maxHeap.add(new AbstractMap.SimpleEntry<K, Float>(entry.getKey(), entry.getValue().cosineForUnitVector(vector)));
         }
         return maxHeap.toList();
     }
@@ -133,7 +133,7 @@ public abstract class AbstractVectorModel<K>
 
         for (Map.Entry<K, Vector> entry : storage.entrySet())
         {
-            maxHeap.add(new AbstractMap.SimpleEntry<K, Float>(entry.getKey(), entry.getValue().cosine(vector)));
+            maxHeap.add(new AbstractMap.SimpleEntry<K, Float>(entry.getKey(), entry.getValue().cosineForUnitVector(vector)));
         }
         return maxHeap.toList();
     }
@@ -161,10 +161,10 @@ public abstract class AbstractVectorModel<K>
     }
 
     /**
-     * 查询最相似的文档
+     * 查询最相似的对象
      *
-     * @param query 查询语句（或者说一个文档的内容）
-     * @param size  需要返回前多少个文档
+     * @param query 查询语句（或者说一个对象的内容）
+     * @param size  需要返回前多少个对象
      * @return
      */
     public List<Map.Entry<K, Float>> queryNearest(String query, int size)
@@ -183,6 +183,12 @@ public abstract class AbstractVectorModel<K>
         }
     }
 
+    /**
+     * 查询抽象文本对应的向量。此方法应当保证返回单位向量。
+     *
+     * @param query
+     * @return
+     */
     public abstract Vector query(String query);
 
     /**

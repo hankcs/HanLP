@@ -84,7 +84,7 @@ public class DocVectorModel extends AbstractVectorModel<Integer>
         {
             return null;
         }
-        result.divideToSelf(n);
+        result.normalize();
         return result;
     }
 
@@ -106,6 +106,6 @@ public class DocVectorModel extends AbstractVectorModel<Integer>
         if (A == null) return -1f;
         Vector B = query(with);
         if (B == null) return -1f;
-        return A.cosine(B);
+        return A.cosineForUnitVector(B);
     }
 }
