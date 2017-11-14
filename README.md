@@ -5,8 +5,7 @@ HanLP: Han Language Processing
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.hankcs/hanlp/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.hankcs/hanlp/)
 [![GitHub release](https://img.shields.io/github/release/hankcs/HanLP.svg)](https://github.com/hankcs/hanlp/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Docker Pulls](https://img.shields.io/docker/pulls/samurais/hanlp-api.svg?maxAge=2592000)](https://hub.docker.com/r/samurais/hanlp-api/) [![Docker Stars](https://img.shields.io/docker/stars/samurais/hanlp-api.svg?maxAge=2592000)](https://hub.docker.com/r/samurais/hanlp-api/) [![Docker Layers](https://images.microbadger.com/badges/image/samurais/hanlp-api.svg)](https://microbadger.com/#/images/samurais/hanlp-api)
-
+[![Docker Stars](https://img.shields.io/docker/stars/samurais/hanlp-api.svg?maxAge=2592000)](https://hub.docker.com/r/samurais/hanlp-api/)
 
 ------
 
@@ -14,50 +13,54 @@ HanLP: Han Language Processing
 
 **HanLP**提供下列功能：
 
-> * 中文分词
-  * 最短路分词
-  * N-最短路分词
-  * CRF分词
-  * 索引分词
-  * 极速词典分词
-  * 用户自定义词典
-> * 词性标注
-> * 命名实体识别
-  * 中国人名识别
-  * 音译人名识别
-  * 日本人名识别
-  * 地名识别
-  * 实体机构名识别
-> * 关键词提取
-  * TextRank关键词提取
-> * 自动摘要
-  * TextRank自动摘要
-> * 短语提取
-  * 基于互信息和左右信息熵的短语提取
-> * 拼音转换
-  * 多音字
-  * 声母
-  * 韵母
-  * 声调
-> * 简繁转换
-  * 繁体中文分词
-  * 简繁分歧词（简体、繁体、臺灣正體、香港繁體）
-> * 文本推荐
-  * 语义推荐
-  * 拼音推荐
-  * 字词推荐
-> * 依存句法分析
-  * 基于神经网络的高性能依存句法分析器
-  * MaxEnt依存句法分析
-  * CRF依存句法分析
-> * 语料库工具
-  * 分词语料预处理
-  * 词频词性词典制作
-  * BiGram统计
-  * 词共现统计
-  * CoNLL语料预处理
-  * CoNLL UA/LA/DA评测工具
-
+* 中文分词
+    * 最短路分词
+    * N-最短路分词
+    * CRF分词
+    * 索引分词
+    * 极速词典分词
+    * 用户自定义词典
+* 词性标注
+* 命名实体识别
+    * 中国人名识别
+    * 音译人名识别
+    * 日本人名识别
+    * 地名识别
+    * 实体机构名识别
+* 关键词提取
+    * TextRank关键词提取
+* 自动摘要
+    * TextRank自动摘要
+* 短语提取
+    * 基于互信息和左右信息熵的短语提取
+* 拼音转换
+    * 多音字
+    * 声母
+    * 韵母
+    * 声调
+* 简繁转换
+    * 繁体中文分词
+    * 简繁分歧词（简体、繁体、臺灣正體、香港繁體）
+* 文本推荐
+    * 语义推荐
+    * 拼音推荐
+    * 字词推荐
+* 依存句法分析
+    * 基于神经网络的高性能依存句法分析器
+    * MaxEnt依存句法分析
+    * CRF依存句法分析
+* 文本分类
+    * 情感分析
+* word2vec
+    * 词向量训练、加载、词语相似度计算、语义运算、查询、KMeans聚类
+    * 文档语义相似度计算
+* 语料库工具
+    * 分词语料预处理
+    * 词频词性词典制作
+    * BiGram统计
+    * 词共现统计
+    * CoNLL语料预处理
+    * CoNLL UA/LA/DA评测工具
 
 在提供丰富功能的同时，**HanLP**内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便，同时自带一些语料处理工具，帮助用户训练自己的模型。
 
@@ -66,6 +69,8 @@ HanLP: Han Language Processing
 ## 项目主页
 
 HanLP下载地址：https://github.com/hankcs/HanLP/releases
+
+国内下载地址：http://hanlp.dksou.com/HanLP.html
 
 Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 
@@ -83,7 +88,7 @@ Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.3.5</version>
+    <version>portable-1.5.0</version>
 </dependency>
 ```
 
@@ -132,9 +137,9 @@ CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
 BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
 ```
 
-最后将HanLP.properties放入classpath即可，对于任何项目，都可以放到src或resources目录下，编译时IDE会自动将其复制到classpath中。
+最后将`hanlp.properties`放入classpath即可，对于任何项目，都可以放到src或resources目录下，编译时IDE会自动将其复制到classpath中。
 
-如果放置不当，HanLP会智能提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
+如果放置不当，HanLP会提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
 
 ## 调用方法
 
@@ -624,52 +629,47 @@ public class DemoSuggester
 
 ```java
 /**
- * 语义距离
+ * 演示词向量的训练与应用
+ *
  * @author hankcs
  */
-public class DemoWordDistance
+public class DemoWord2Vec
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
-        String[] wordArray = new String[]
-                {
-                        "香蕉",
-                        "苹果",
-                        "白菜",
-                        "水果",
-                        "蔬菜",
-                        "自行车",
-                        "公交车",
-                        "飞机",
-                        "买",
-                        "卖",
-                        "购入",
-                        "新年",
-                        "春节",
-                        "丢失",
-                        "补办",
-                        "办理",
-                        "送给",
-                        "寻找",
-                        "孩子",
-                        "教室",
-                        "教师",
-                        "会计",
-                };
-        for (String a : wordArray)
+        WordVectorModel wordVectorModel = trainOrLoadModel();
+        printNearest("中国", wordVectorModel);
+        printNearest("美丽", wordVectorModel);
+        printNearest("购买", wordVectorModel);
+
+        // 文档向量
+        DocVectorModel docVectorModel = new DocVectorModel(wordVectorModel);
+        String[] documents = new String[]{
+            "山东苹果丰收",
+            "农民在江苏种水稻",
+            "奥运会女排夺冠",
+            "世界锦标赛胜出",
+            "中国足球失败",
+        };
+        
+        System.out.println(docVectorModel.similarity(documents[0], documents[1]));
+        System.out.println(docVectorModel.similarity(documents[0], documents[4]));
+
+        for (int i = 0; i < documents.length; i++)
         {
-            for (String b : wordArray)
-            {
-                System.out.println(a + "\t" + b + "\t之间的距离是\t" + CoreSynonymDictionary.distance(a, b));
-            }
+            docVectorModel.addDocument(i, documents[i]);
         }
+
+        printNearestDocment("体育", documents, docVectorModel);
+        printNearestDocment("农业", documents, docVectorModel);
+        printNearestDocment("我要看比赛", documents, docVectorModel);
+        printNearestDocment("要不做饭吧", documents, docVectorModel);
     }
 }
 ```
 - 说明
-  * 设想的应用场景是搜索引擎对词义的理解，词与词并不只存在“同义词”与“非同义词”的关系，就算是同义词，它们之间的意义也是有微妙的差别的。
-- 算法
-  * 为每个词分配一个语义ID，词与词的距离通过语义ID的差得到。语义ID通过《同义词词林扩展版》计算而来。
+  * [word2vec文档](https://github.com/hankcs/HanLP/wiki/word2vec)
+  * [《word2vec原理推导与代码分析》](http://www.hankcs.com/nlp/word2vec.html)
 
 ### 21. 依存句法分析
 
@@ -769,10 +769,17 @@ HanLP.Config.enableDebug();
 
 ## 版权
 
+### Apache License Version 2.0
+
+如不特殊注明，所有模块都以此协议授权使用。
+
 ### 上海林原信息科技有限公司
-- Apache License Version 2.0
 - HanLP产品初始知识产权归上海林原信息科技有限公司所有，任何人和企业可以无偿使用，可以对产品、源代码进行任何形式的修改，可以打包在其他产品中进行销售。
 - 任何使用了HanLP的全部或部分功能、词典、模型的项目、产品或文章等形式的成果必须显式注明HanLP及此项目主页。
+
+### 其他版权方
+- 自`1.2.4`后是个人维护，还会接受任何人与任何公司向本项目开源的模块。
+- 充分尊重所有版权方的贡献，本项目不占有这些新模块的版权。
 
 ### 鸣谢
 感谢下列优秀开源项目：
