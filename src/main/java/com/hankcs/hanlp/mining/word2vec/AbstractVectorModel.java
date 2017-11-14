@@ -15,6 +15,8 @@ import com.hankcs.hanlp.algorithm.MaxHeap;
 import java.util.*;
 
 /**
+ * 抽象的向量模型，将抽象的对象映射为向量
+ *
  * @author hankcs
  */
 public abstract class AbstractVectorModel<K>
@@ -32,12 +34,12 @@ public abstract class AbstractVectorModel<K>
     }
 
     /**
-     * 获取一个词的词向量
+     * 获取一个键的向量（键不会被预处理）
      *
-     * @param key 词
-     * @return 词向量
+     * @param key 键
+     * @return 向量
      */
-    public Vector vector(K key)
+    final public Vector vector(K key)
     {
         Vector vector = storage.get(key);
         if (vector == null) return null;
@@ -161,13 +163,13 @@ public abstract class AbstractVectorModel<K>
     }
 
     /**
-     * 查询最相似的对象
+     * 执行查询最相似的对象（子类通过query方法决定如何解析query，然后通过此方法执行查询）
      *
      * @param query 查询语句（或者说一个对象的内容）
      * @param size  需要返回前多少个对象
      * @return
      */
-    public List<Map.Entry<K, Float>> queryNearest(String query, int size)
+    final List<Map.Entry<K, Float>> queryNearest(String query, int size)
     {
         if (query == null || query.length() == 0)
         {
