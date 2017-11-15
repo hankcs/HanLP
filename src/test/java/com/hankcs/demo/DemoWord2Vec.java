@@ -53,10 +53,10 @@ public class DemoWord2Vec
             docVectorModel.addDocument(i, documents[i]);
         }
 
-        printNearestDocment("体育", documents, docVectorModel);
-        printNearestDocment("农业", documents, docVectorModel);
-        printNearestDocment("我要看比赛", documents, docVectorModel);
-        printNearestDocment("要不做饭吧", documents, docVectorModel);
+        printNearestDocument("体育", documents, docVectorModel);
+        printNearestDocument("农业", documents, docVectorModel);
+        printNearestDocument("我要看比赛", documents, docVectorModel);
+        printNearestDocument("要不做饭吧", documents, docVectorModel);
     }
 
     static void printNearest(String word, WordVectorModel model)
@@ -68,7 +68,7 @@ public class DemoWord2Vec
         }
     }
 
-    static void printNearestDocment(String document, String[] documents, DocVectorModel model)
+    static void printNearestDocument(String document, String[] documents, DocVectorModel model)
     {
         printHeader(document);
         for (Map.Entry<Integer, Float> entry : model.nearest(document))
