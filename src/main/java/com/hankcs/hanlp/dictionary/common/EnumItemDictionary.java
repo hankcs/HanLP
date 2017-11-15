@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * 枚举条目的通用词典（类似C++的模板，然而Java并没有模板机制，所以有几个方法需要子类啰嗦一下）
+ *
  * @author hankcs
  */
 public abstract class EnumItemDictionary<E extends Enum<E>> extends CommonDictionary<EnumItem<E>>
@@ -34,10 +36,26 @@ public abstract class EnumItemDictionary<E extends Enum<E>> extends CommonDictio
         return nrEnumItem;
     }
 
+    /**
+     * 代理E.valueOf
+     *
+     * @param name
+     * @return
+     */
     protected abstract E valueOf(String name);
 
+    /**
+     * 代理E.values
+     *
+     * @return
+     */
     protected abstract E[] values();
 
+    /**
+     * 代理new EnumItem<E>
+     *
+     * @return
+     */
     protected abstract EnumItem<E> newItem();
 
     @Override

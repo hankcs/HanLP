@@ -16,6 +16,8 @@ import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.dictionary.common.EnumItemDictionary;
 
+import java.util.TreeMap;
+
 /**
  * 一个好用的人名词典
  *
@@ -40,5 +42,11 @@ public class NRDictionary extends EnumItemDictionary<NR>
     protected EnumItem<NR> newItem()
     {
         return new EnumItem<NR>();
+    }
+
+    @Override
+    protected void onLoaded(TreeMap<String, EnumItem<NR>> map)
+    {
+        map.put(" ", new EnumItem<NR>(NR.K, NR.A)); // txt中不允许出现空格词条，这里补上
     }
 }

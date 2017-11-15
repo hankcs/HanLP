@@ -34,8 +34,20 @@ public abstract class CommonDictionary<V>
 {
     DoubleArrayTrie<V> trie;
 
+    /**
+     * 从字节中加载值数组
+     *
+     * @param byteArray
+     * @return
+     */
     protected abstract V[] loadValueArray(ByteArray byteArray);
 
+    /**
+     * 从txt路径加载
+     *
+     * @param path
+     * @return
+     */
     public boolean load(String path)
     {
         trie = new DoubleArrayTrie<V>();
@@ -60,6 +72,7 @@ public abstract class CommonDictionary<V>
         {
             logger.warning("读取" + path + "失败" + e);
         }
+        onLoaded(map);
         Set<Map.Entry<String, V>> entrySet = map.entrySet();
         List<String> keyList = new ArrayList<String>(entrySet.size());
         List<V> valueList = new ArrayList<V>(entrySet.size());
@@ -79,6 +92,12 @@ public abstract class CommonDictionary<V>
         return true;
     }
 
+    /**
+     * 从dat路径加载
+     *
+     * @param byteArray
+     * @return
+     */
     protected boolean loadDat(ByteArray byteArray)
     {
         V[] valueArray = loadValueArray(byteArray);
@@ -89,6 +108,13 @@ public abstract class CommonDictionary<V>
         return trie.load(byteArray, valueArray);
     }
 
+    /**
+     * 保存dat到路径
+     *
+     * @param path
+     * @param valueArray
+     * @return
+     */
     protected boolean saveDat(String path, List<V> valueArray)
     {
         try
@@ -110,6 +136,13 @@ public abstract class CommonDictionary<V>
         return true;
     }
 
+    /**
+     * 保存单个值到流中
+     *
+     * @param value
+     * @param out
+     * @throws IOException
+     */
     protected abstract void saveValue(V value, DataOutputStream out) throws IOException;
 
     /**
@@ -144,5 +177,20 @@ public abstract class CommonDictionary<V>
         return trie.size();
     }
 
+    /**
+     * 从一行词典条目创建值
+     *
+     * @param params 第一个元素为键，请注意跳过
+     * @return
+     */
     protected abstract V createValue(String[] params);
+
+    /**
+     * 文本词典加载完毕的回调函数
+     *
+     * @param map
+     */
+    protected void onLoaded(TreeMap<String, V> map)
+    {
+    }
 }
