@@ -14,7 +14,7 @@ public abstract class AbstractTrainer
 
     protected void usage()
     {
-        System.err.printf("WORD VECTOR estimation toolkit v 0.1c\n\n");
+        System.err.printf("word2vec Java toolkit v 0.1c\n\n");
         System.err.printf("Options:\n");
         System.err.printf("Parameters for training:\n");
         paramDesc("-output <file>", "Use <file> to save the resulting word vectors / word clusters");

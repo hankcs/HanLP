@@ -445,6 +445,11 @@ public class IOUtil
         BufferedReader bw;
         String line;
 
+        public LineIterator(BufferedReader bw)
+        {
+            this.bw = bw;
+        }
+
         public LineIterator(String path)
         {
             try

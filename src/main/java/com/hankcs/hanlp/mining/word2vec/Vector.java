@@ -45,14 +45,37 @@ public class Vector
         return ret;
     }
 
+    public float norm()
+    {
+        float ret = 0.0f;
+        for (int i = 0; i < size(); ++i)
+        {
+            ret += elementArray[i] * elementArray[i];
+        }
+        return (float) Math.sqrt(ret);
+    }
+
+    /**
+     * 夹角的余弦<br>
+     * 认为this和other都是单位向量，所以方法内部没有除以两者的模。
+     *
+     * @param other
+     * @return
+     */
+    public float cosineForUnitVector(Vector other)
+    {
+        return dot(other);
+    }
+
+    /**
+     * 夹角的余弦<br>
+     *
+     * @param other
+     * @return
+     */
     public float cosine(Vector other)
     {
-        float ret = dot(other);
-        if (ret > 0.0f)
-        {
-            ret = (float) Math.sqrt(ret);
-        }
-        return ret;
+        return dot(other) / this.norm() / other.norm();
     }
 
     public Vector minus(Vector other)
@@ -90,6 +113,26 @@ public class Vector
         {
             elementArray[i] = elementArray[i] / n;
         }
+        return this;
+    }
+
+    public Vector divideToSelf(float f)
+    {
+        for (int i = 0; i < elementArray.length; i++)
+        {
+            elementArray[i] = elementArray[i] / f;
+        }
+        return this;
+    }
+
+    /**
+     * 自身归一化
+     *
+     * @return
+     */
+    public Vector normalize()
+    {
+        divideToSelf(norm());
         return this;
     }
 }

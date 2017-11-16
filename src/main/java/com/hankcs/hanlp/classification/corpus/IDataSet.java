@@ -64,7 +64,7 @@ public interface IDataSet extends Iterable<Document>
      * @throws IOException
      */
     IDataSet load(String folderPath, String charsetName) throws IllegalArgumentException, IOException;
-    IDataSet load(String folderPath, String charsetName, double rate) throws IllegalArgumentException, IOException;
+    IDataSet load(String folderPath, String charsetName, double percentage) throws IllegalArgumentException, IOException;
 
     /**
      * 往训练集中加入一个文档
