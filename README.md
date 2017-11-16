@@ -88,7 +88,7 @@ Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.5.0</version>
+    <version>portable-1.5.1</version>
 </dependency>
 ```
 
@@ -651,7 +651,7 @@ public class DemoWord2Vec
             "世界锦标赛胜出",
             "中国足球失败",
         };
-        
+
         System.out.println(docVectorModel.similarity(documents[0], documents[1]));
         System.out.println(docVectorModel.similarity(documents[0], documents[4]));
 
@@ -660,10 +660,10 @@ public class DemoWord2Vec
             docVectorModel.addDocument(i, documents[i]);
         }
 
-        printNearestDocment("体育", documents, docVectorModel);
-        printNearestDocment("农业", documents, docVectorModel);
-        printNearestDocment("我要看比赛", documents, docVectorModel);
-        printNearestDocment("要不做饭吧", documents, docVectorModel);
+        printNearestDocument("体育", documents, docVectorModel);
+        printNearestDocument("农业", documents, docVectorModel);
+        printNearestDocument("我要看比赛", documents, docVectorModel);
+        printNearestDocument("要不做饭吧", documents, docVectorModel);
     }
 }
 ```
