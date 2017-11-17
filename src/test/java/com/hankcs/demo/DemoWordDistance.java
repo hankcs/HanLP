@@ -16,6 +16,7 @@ import com.hankcs.hanlp.dictionary.CoreSynonymDictionary;
 /**
  * 语义距离
  * @author hankcs
+ * @deprecated 请使用word2vec
  */
 public class DemoWordDistance
 {

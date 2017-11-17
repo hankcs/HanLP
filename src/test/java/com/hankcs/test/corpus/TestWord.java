@@ -24,6 +24,7 @@ public class TestWord extends TestCase
     {
         assertEquals("人民网/nz", Word.create("人民网/nz").toString());
         assertEquals("[纽约/nsf 时报/n]/nz", CompoundWord.create("[纽约/nsf 时报/n]/nz").toString());
+        assertEquals("[中央/n 人民/n 广播/vn 电台/n]/nt", CompoundWord.create("[中央/n 人民/n 广播/vn 电台/n]nt").toString());
     }
 
     public void testSpace() throws Exception

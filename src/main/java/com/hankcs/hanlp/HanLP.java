@@ -12,14 +12,15 @@
 package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.corpus.io.FileIOAdapter;
 import com.hankcs.hanlp.corpus.io.IIOAdapter;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.*;
-import com.hankcs.hanlp.phrase.IPhraseExtractor;
-import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
+import com.hankcs.hanlp.mining.phrase.IPhraseExtractor;
+import com.hankcs.hanlp.mining.phrase.MutualInformationEntropyPhraseExtractor;
+import com.hankcs.hanlp.mining.word.NewWordDiscover;
+import com.hankcs.hanlp.mining.word.WordInfo;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -28,11 +29,8 @@ import com.hankcs.hanlp.summary.TextRankSentence;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
-import sun.reflect.ReflectionFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Properties;
@@ -192,9 +190,9 @@ public class HanLP
                     loader = HanLP.Config.class.getClassLoader();
                 }
                 p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
-                        loader.getResourceAsStream("hanlp.properties") :
-                        new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
-                        , "UTF-8"));
+                                                 loader.getResourceAsStream("hanlp.properties") :
+                                                 new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
+                    , "UTF-8"));
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (root.length() > 0 && !root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
@@ -250,7 +248,7 @@ public class HanLP
                     {
                         Class<?> clazz = Class.forName(ioAdapterClassName);
                         Constructor<?> ctor = clazz.getConstructor();
-                        Object instance  = ctor.newInstance();
+                        Object instance = ctor.newInstance();
                         if (instance != null) IOAdapter = (IIOAdapter) instance;
                     }
                     catch (ClassNotFoundException e)
@@ -286,10 +284,10 @@ public class HanLP
                     }
                 }
                 sbInfo.append("Web项目则请放到下列目录：\n" +
-                                      "Webapp/WEB-INF/lib\n" +
-                                      "Webapp/WEB-INF/classes\n" +
-                                      "Appserver/lib\n" +
-                                      "JRE/lib\n");
+                                  "Webapp/WEB-INF/lib\n" +
+                                  "Webapp/WEB-INF/classes\n" +
+                                  "Appserver/lib\n" +
+                                  "JRE/lib\n");
                 sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
                 sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
                 logger.severe("没有找到hanlp.properties，可能会导致找不到data\n" + sbInfo);
@@ -306,6 +304,7 @@ public class HanLP
 
         /**
          * 开启调试模式(会降低性能)
+         *
          * @param enable
          */
         public static void enableDebug(boolean enable)
@@ -325,7 +324,9 @@ public class HanLP
     /**
      * 工具类，不需要生成实例
      */
-    private HanLP() {}
+    private HanLP()
+    {
+    }
 
     /**
      * 繁转简
@@ -351,6 +352,7 @@ public class HanLP
 
     /**
      * 简转繁,是{@link com.hankcs.hanlp.HanLP#convertToTraditionalChinese(java.lang.String)}的简称
+     *
      * @param s 简体中文
      * @return 繁体中文(大陆标准)
      */
@@ -361,6 +363,7 @@ public class HanLP
 
     /**
      * 繁转简,是{@link HanLP#convertToSimplifiedChinese(String)}的简称
+     *
      * @param t 繁体中文(大陆标准)
      * @return 简体中文
      */
@@ -371,6 +374,7 @@ public class HanLP
 
     /**
      * 簡體到臺灣正體
+     *
      * @param s 簡體
      * @return 臺灣正體
      */
@@ -381,6 +385,7 @@ public class HanLP
 
     /**
      * 臺灣正體到簡體
+     *
      * @param tw 臺灣正體
      * @return 簡體
      */
@@ -391,6 +396,7 @@ public class HanLP
 
     /**
      * 簡體到香港繁體
+     *
      * @param s 簡體
      * @return 香港繁體
      */
@@ -401,6 +407,7 @@ public class HanLP
 
     /**
      * 香港繁體到簡體
+     *
      * @param hk 香港繁體
      * @return 簡體
      */
@@ -411,6 +418,7 @@ public class HanLP
 
     /**
      * 繁體到臺灣正體
+     *
      * @param t 繁體
      * @return 臺灣正體
      */
@@ -421,6 +429,7 @@ public class HanLP
 
     /**
      * 臺灣正體到繁體
+     *
      * @param tw 臺灣正體
      * @return 繁體
      */
@@ -431,6 +440,7 @@ public class HanLP
 
     /**
      * 繁體到香港繁體
+     *
      * @param t 繁體
      * @return 香港繁體
      */
@@ -441,6 +451,7 @@ public class HanLP
 
     /**
      * 香港繁體到繁體
+     *
      * @param hk 香港繁體
      * @return 繁體
      */
@@ -451,6 +462,7 @@ public class HanLP
 
     /**
      * 香港繁體到臺灣正體
+     *
      * @param hk 香港繁體
      * @return 臺灣正體
      */
@@ -461,6 +473,7 @@ public class HanLP
 
     /**
      * 臺灣正體到香港繁體
+     *
      * @param tw 臺灣正體
      * @return 香港繁體
      */
@@ -472,8 +485,8 @@ public class HanLP
     /**
      * 转化为拼音
      *
-     * @param text 文本
-     * @param separator 分隔符
+     * @param text       文本
+     * @param separator  分隔符
      * @param remainNone 有些字没有拼音（如标点），是否保留它们的拼音（true用none表示，false用原字符表示）
      * @return 一个字符串，由[拼音][分隔符][拼音]构成
      */
@@ -514,8 +527,8 @@ public class HanLP
     /**
      * 转化为拼音（首字母）
      *
-     * @param text 文本
-     * @param separator 分隔符
+     * @param text       文本
+     * @param separator  分隔符
      * @param remainNone 有些字没有拼音（如标点），是否保留它们（用none表示）
      * @return 一个字符串，由[首字母][分隔符][首字母]构成
      */
@@ -552,6 +565,7 @@ public class HanLP
      * 创建一个分词器<br>
      * 这是一个工厂方法<br>
      * 与直接new一个分词器相比，使用本方法的好处是，以后HanLP升级了，总能用上最合适的分词器
+     *
      * @return 一个分词器
      */
     public static Segment newSegment()
@@ -561,6 +575,7 @@ public class HanLP
 
     /**
      * 依存文法分析
+     *
      * @param sentence 待分析的句子
      * @return CoNLL格式的依存关系树
      */
@@ -571,6 +586,7 @@ public class HanLP
 
     /**
      * 提取短语
+     *
      * @param text 文本
      * @param size 需要多少个短语
      * @return 一个短语列表，大小 <= size
@@ -582,9 +598,62 @@ public class HanLP
     }
 
     /**
+     * 提取词语
+     *
+     * @param text 大文本
+     * @param size 需要提取词语的数量
+     * @return 一个词语列表
+     */
+    public static List<WordInfo> extractWords(String text, int size)
+    {
+        return extractWords(text, size, false);
+    }
+
+    /**
+     * 提取词语
+     *
+     * @param reader 从reader获取文本
+     * @param size   需要提取词语的数量
+     * @return 一个词语列表
+     */
+    public static List<WordInfo> extractWords(BufferedReader reader, int size) throws IOException
+    {
+        return extractWords(reader, size, false);
+    }
+
+    /**
+     * 提取词语（新词发现）
+     *
+     * @param text         大文本
+     * @param size         需要提取词语的数量
+     * @param newWordsOnly 是否只提取词典中没有的词语
+     * @return 一个词语列表
+     */
+    public static List<WordInfo> extractWords(String text, int size, boolean newWordsOnly)
+    {
+        NewWordDiscover discover = new NewWordDiscover(4, 0.0f, .5f, 100f, newWordsOnly);
+        return discover.discover(text, size);
+    }
+
+    /**
+     * 提取词语（新词发现）
+     *
+     * @param reader       从reader获取文本
+     * @param size         需要提取词语的数量
+     * @param newWordsOnly 是否只提取词典中没有的词语
+     * @return 一个词语列表
+     */
+    public static List<WordInfo> extractWords(BufferedReader reader, int size, boolean newWordsOnly) throws IOException
+    {
+        NewWordDiscover discover = new NewWordDiscover(4, 0.0f, .5f, 100f, newWordsOnly);
+        return discover.discover(reader, size);
+    }
+
+    /**
      * 提取关键词
+     *
      * @param document 文档内容
-     * @param size 希望提取几个关键词
+     * @param size     希望提取几个关键词
      * @return 一个列表
      */
     public static List<String> extractKeyword(String document, int size)
@@ -595,8 +664,9 @@ public class HanLP
     /**
      * 自动摘要
      * 分割目标文档时的默认句子分割符为，,。:：“”？?！!；;
+     *
      * @param document 目标文档
-     * @param size 需要的关键句的个数
+     * @param size     需要的关键句的个数
      * @return 关键句列表
      */
     public static List<String> extractSummary(String document, int size)
@@ -607,7 +677,8 @@ public class HanLP
     /**
      * 自动摘要
      * 分割目标文档时的默认句子分割符为，,。:：“”？?！!；;
-     * @param document 目标文档
+     *
+     * @param document   目标文档
      * @param max_length 需要摘要的长度
      * @return 摘要文本
      */
@@ -620,8 +691,9 @@ public class HanLP
 
     /**
      * 自动摘要
-     * @param document 目标文档
-     * @param size 需要的关键句的个数
+     *
+     * @param document           目标文档
+     * @param size               需要的关键句的个数
      * @param sentence_separator 分割目标文档时的句子分割符，正则格式， 如：[。？?！!；;]
      * @return 关键句列表
      */
@@ -632,8 +704,9 @@ public class HanLP
 
     /**
      * 自动摘要
-     * @param document 目标文档
-     * @param max_length 需要摘要的长度
+     *
+     * @param document           目标文档
+     * @param max_length         需要摘要的长度
      * @param sentence_separator 分割目标文档时的句子分割符，正则格式， 如：[。？?！!；;]
      * @return 摘要文本
      */
@@ -643,5 +716,5 @@ public class HanLP
         // The actual length of the summary generated may be short than the required length, but never longer;
         return TextRankSentence.getSummary(document, max_length, sentence_separator);
     }
-    
+
 }

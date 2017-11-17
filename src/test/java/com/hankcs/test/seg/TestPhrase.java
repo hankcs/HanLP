@@ -14,7 +14,7 @@ package com.hankcs.test.seg;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.phrase.MutualInformationEntropyPhraseExtractor;
+import com.hankcs.hanlp.mining.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import junit.framework.TestCase;
 

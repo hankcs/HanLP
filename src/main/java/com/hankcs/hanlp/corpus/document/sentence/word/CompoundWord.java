@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.corpus.document.sentence.word;
 
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -19,7 +20,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * 复合词，由两个或以上的word构成
  * @author hankcs
  */
-public class CompoundWord implements IWord
+public class CompoundWord implements IWord, Iterable<Word>
 {
     /**
      * 由这些词复合而来
@@ -56,6 +57,12 @@ public class CompoundWord implements IWord
     {
         innerList.clear();
         innerList.add(new Word(value, label));
+    }
+
+    @Override
+    public int length()
+    {
+        return getValue().length();
     }
 
     @Override
@@ -96,11 +103,11 @@ public class CompoundWord implements IWord
     public static CompoundWord create(String param)
     {
         if (param == null) return null;
-        int cutIndex = param.lastIndexOf('/');
+        int cutIndex = param.lastIndexOf(']');
         if (cutIndex <= 2 || cutIndex == param.length() - 1) return null;
-        String wordParam  = param.substring(1, cutIndex - 1);
+        String wordParam  = param.substring(1, cutIndex);
         List<Word> wordList = new LinkedList<Word>();
-        for (String single : wordParam.split(" "))
+        for (String single : wordParam.split("\\s+"))
         {
             if (single.length() == 0) continue;
             Word word = Word.create(single);
@@ -112,6 +119,16 @@ public class CompoundWord implements IWord
             wordList.add(word);
         }
         String labelParam = param.substring(cutIndex + 1);
+        if (labelParam.startsWith("/"))
+        {
+            labelParam = labelParam.substring(1);
+        }
         return new CompoundWord(wordList, labelParam);
+    }
+
+    @Override
+    public Iterator<Word> iterator()
+    {
+        return innerList.iterator();
     }
 }
