@@ -734,12 +734,12 @@ public abstract class Segment
 
     /**
      * 开启多线程
-     * @param enable true表示开启4个线程，false表示单线程
+     * @param enable true表示开启[系统CPU核心数]个线程，false表示单线程
      * @return
      */
     public Segment enableMultithreading(boolean enable)
     {
-        if (enable) config.threadNumber = 4;
+        if (enable) config.threadNumber = Runtime.getRuntime().availableProcessors();
         else config.threadNumber = 1;
         return this;
     }
