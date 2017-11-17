@@ -536,6 +536,32 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     }
 
     /**
+     * 从字节数组加载（发现在MacOS上，此方法比ByteArray更快）
+     * @param bytes
+     * @param offset
+     * @param value
+     * @return
+     */
+    public boolean load(byte[] bytes, int offset, V[] value)
+    {
+        if (bytes == null) return false;
+        size = ByteUtil.bytesHighFirstToInt(bytes, offset);
+        offset += 4;
+        base = new int[size + 65535];   // 多留一些，防止越界
+        check = new int[size + 65535];
+        for (int i = 0; i < size; i++)
+        {
+            base[i] = ByteUtil.bytesHighFirstToInt(bytes, offset);
+            offset += 4;
+            check[i] = ByteUtil.bytesHighFirstToInt(bytes, offset);
+            offset += 4;
+        }
+        v = value;
+        used = null;    // 无用的对象,释放掉
+        return true;
+    }
+
+    /**
      * 载入双数组，但是不提供值，此时本trie相当于一个set
      *
      * @param path
