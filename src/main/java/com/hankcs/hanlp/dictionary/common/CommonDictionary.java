@@ -105,7 +105,7 @@ public abstract class CommonDictionary<V>
         {
             return false;
         }
-        return trie.load(byteArray, valueArray);
+        return trie.load(byteArray.getBytes(), byteArray.getOffset(), valueArray);
     }
 
     /**

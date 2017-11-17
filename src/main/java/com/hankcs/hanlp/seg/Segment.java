@@ -196,11 +196,13 @@ public abstract class Segment
      */
     protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList)
     {
+        assert vertexList.size() > 2 : "vertexList至少包含 始##始 和 末##末";
         Vertex[] wordNet = new Vertex[vertexList.size()];
         vertexList.toArray(wordNet);
         // DAT合并
         DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
-        for (int i = 0; i < wordNet.length; ++i)
+        int length = wordNet.length - 1; // 跳过首尾
+        for (int i = 1; i < length; ++i)
         {
             int state = 1;
             state = dat.transition(wordNet[i].realWord, state);
@@ -209,7 +211,7 @@ public abstract class Segment
                 int to = i + 1;
                 int end = to;
                 CoreDictionary.Attribute value = dat.output(state);
-                for (; to < wordNet.length; ++to)
+                for (; to < length; ++to)
                 {
                     state = dat.transition(wordNet[to].realWord, state);
                     if (state < 0) break;
@@ -230,7 +232,7 @@ public abstract class Segment
         // BinTrie合并
         if (CustomDictionary.trie != null)
         {
-            for (int i = 0; i < wordNet.length; ++i)
+            for (int i = 1; i < length; ++i)
             {
                 if (wordNet[i] == null) continue;
                 BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
@@ -239,7 +241,7 @@ public abstract class Segment
                     int to = i + 1;
                     int end = to;
                     CoreDictionary.Attribute value = state.getValue();
-                    for (; to < wordNet.length; ++to)
+                    for (; to < length; ++to)
                     {
                         if (wordNet[to] == null) continue;
                         state = state.transition(wordNet[to].realWord.toCharArray(), 0);
