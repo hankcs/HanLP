@@ -22,11 +22,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
- * 句子，指的是以。，：！结尾的句子
+ * 句子，指的是以。！等标点结尾的句子
  * @author hankcs
  */
 public class Sentence implements Serializable, Iterable<IWord>
 {
+    /**
+     * 词语列表（复合或简单单词的列表）
+     */
     public List<IWord> wordList;
 
     public Sentence(List<IWord> wordList)
@@ -37,7 +40,7 @@ public class Sentence implements Serializable, Iterable<IWord>
     @Override
     public String toString()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(size() * 4);
         int i = 1;
         for (IWord word : wordList)
         {
@@ -48,6 +51,11 @@ public class Sentence implements Serializable, Iterable<IWord>
         return sb.toString();
     }
 
+    /**
+     * 以人民日报2014语料格式的字符串创建一个结构化句子
+     * @param param
+     * @return
+     */
     public static Sentence create(String param)
     {
         Pattern pattern = Pattern.compile("(\\[(([^\\s]+/[0-9a-zA-Z]+)\\s+)+?([^\\s]+/[0-9a-zA-Z]+)]/?[0-9a-zA-Z]+)|([^\\s]+/[0-9a-zA-Z]+)");
@@ -69,7 +77,7 @@ public class Sentence implements Serializable, Iterable<IWord>
     }
 
     /**
-     * 句子中单词（复合词）的数量
+     * 句子中单词（复合词或简单词）的数量
      * @return
      */
     public int size()
