@@ -29,5 +29,13 @@ public class DemoIndexSegment
         {
             System.out.println(term + " [" + term.offset + ":" + (term.offset + term.word.length()) + "]");
         }
+
+        System.out.println("\n最细颗粒度切分：");
+        IndexTokenizer.SEGMENT.enableIndexMode(1);
+        termList = IndexTokenizer.segment("主副食品");
+        for (Term term : termList)
+        {
+            System.out.println(term + " [" + term.offset + ":" + (term.offset + term.word.length()) + "]");
+        }
     }
 }
