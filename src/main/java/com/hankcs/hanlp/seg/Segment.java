@@ -172,7 +172,7 @@ public abstract class Segment
                     if (offsetAtom+1 < end)
                     {
                         int nextType = CharType.get(charArray[offsetAtom+1]);
-                        if (nextType == CharType.CT_NUM) 
+                        if (nextType == CharType.CT_NUM)
                         {
                             continue;
                         }
@@ -354,7 +354,7 @@ public abstract class Segment
                 {
                     if ((cur.hasNature(Nature.q) || cur.hasNature(Nature.qv) || cur.hasNature(Nature.qt)))
                     {
-                        if (config.indexMode)
+                        if (config.indexMode > 0)
                         {
                             wordNetAll.add(line, new Vertex(sbQuantifier.toString(), new CoreDictionary.Attribute(Nature.m)));
                         }
@@ -454,7 +454,7 @@ public abstract class Segment
                 return Collections.emptyList();
             }
             List<Term> termList = new LinkedList<Term>();
-            if (config.offset || config.indexMode)  // 由于分割了句子，所以需要重新校正offset
+            if (config.offset || config.indexMode > 0)  // 由于分割了句子，所以需要重新校正offset
             {
                 int sentenceOffset = 0;
                 for (int i = 0; i < sentenceArray.length; ++i)
@@ -557,7 +557,21 @@ public abstract class Segment
      */
     public Segment enableIndexMode(boolean enable)
     {
-        config.indexMode = enable;
+        config.indexMode = enable ? 2 : 0;
+        return this;
+    }
+
+    /**
+     * 索引模式下的最小切分颗粒度（设为1可以最小切分为单字）
+     *
+     * @param minimalLength 三字词及以上的词语将会被切分为大于等于此长度的子词语。默认取2。
+     * @return
+     */
+    public Segment enableIndexMode(int minimalLength)
+    {
+        if (minimalLength < 1) throw new IllegalArgumentException("最小长度应当大于等于1");
+        config.indexMode = minimalLength;
+
         return this;
     }
 
