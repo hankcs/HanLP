@@ -50,15 +50,6 @@ public class Vertex
      */
     public int index;
 
-    /**
-     * 始##始
-     */
-    public static Vertex B = new Vertex(Predefine.TAG_BIGIN, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
-    /**
-     * 末##末
-     */
-    public static Vertex E = new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
-
     ////////在最短路相关计算中用到的几个变量，之所以放在这里，是为了避免再去生成对象，浪费时间////////
     /**
      * 到该节点的最短路径的前驱节点
