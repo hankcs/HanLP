@@ -28,6 +28,7 @@ public class DemoSegment
     {
         String[] testCase = new String[]{
                 "商品和服务",
+                "当下雨天地面积水分外严重",
                 "结婚的和尚未结婚的确实在干扰分词啊",
                 "买水果然后来世博园最后去世博会",
                 "中国的首都是北京",
