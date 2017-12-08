@@ -35,12 +35,12 @@ public class DemoPinyinToChinese
         TreeMap<String, Set<String>> map = new TreeMap<String, Set<String>>();
         for (Map.Entry<String, String> entry : dictionary.entrySet())
         {
-            String pinyinList = entry.getValue().replaceAll("[\\d,]", "");
-            Set<String> words = map.get(pinyinList);
+            String pinyins = entry.getValue().replaceAll("[\\d,]", "");
+            Set<String> words = map.get(pinyins);
             if (words == null)
             {
                 words = new TreeSet<String>();
-                map.put(pinyinList, words);
+                map.put(pinyins, words);
             }
             words.add(entry.getKey());
         }
