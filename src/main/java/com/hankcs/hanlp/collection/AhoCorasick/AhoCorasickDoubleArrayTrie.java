@@ -59,6 +59,20 @@ public class AhoCorasickDoubleArrayTrie<V>
      */
     protected int size;
 
+    public AhoCorasickDoubleArrayTrie()
+    {
+    }
+
+    /**
+     * 由一个词典创建
+     *
+     * @param dictionary 词典
+     */
+    public AhoCorasickDoubleArrayTrie(TreeMap<String, V> dictionary)
+    {
+        build(dictionary);
+    }
+
     /**
      * 匹配母文本
      *
