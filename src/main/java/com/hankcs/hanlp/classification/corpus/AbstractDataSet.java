@@ -135,11 +135,14 @@ public abstract class AbstractDataSet implements IDataSet
                 e = files.length;
             }
 
+            int logEvery = (int) Math.ceil((e - b) / 10000f);
             for (int i = b; i < e; i++)
             {
                 add(folder.getName(), TextProcessUtility.readTxt(files[i], charsetName));
-                if (i % 100 == 0)
-                    logger.out("%.2f%%...", MathUtility.percentage(i - b, e - b));
+                if (i % logEvery == 0)
+                {
+                    logger.out("%c[%s]...%.2f%%", 13, category, MathUtility.percentage(i - b + 1, e - b));
+                }
             }
             logger.out(" %d 篇文档\n", e - b);
         }
