@@ -30,7 +30,7 @@ public class NotionalTokenizer
     /**
      * 预置分词器
      */
-    static final Segment SEGMENT = HanLP.newSegment();
+    public static final Segment SEGMENT = HanLP.newSegment();
 
     public static List<Term> segment(String text)
     {
