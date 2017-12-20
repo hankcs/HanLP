@@ -216,4 +216,15 @@ public abstract class AbstractVectorModel<K>
         }
         return storage.values().iterator().next().size();
     }
+
+    /**
+     * 删除元素
+     *
+     * @param key
+     * @return
+     */
+    public Vector remove(K key)
+    {
+        return storage.remove(key);
+    }
 }
