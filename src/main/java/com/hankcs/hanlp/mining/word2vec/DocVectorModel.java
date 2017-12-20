@@ -41,6 +41,7 @@ public class DocVectorModel extends AbstractVectorModel<Integer>
     public Vector addDocument(int id, String content)
     {
         Vector result = query(content);
+        if (result == null) return null;
         storage.put(id, result);
         return result;
     }
