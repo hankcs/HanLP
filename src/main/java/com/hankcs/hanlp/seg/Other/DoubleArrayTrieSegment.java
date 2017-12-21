@@ -32,6 +32,30 @@ import java.util.List;
  */
 public class DoubleArrayTrieSegment extends DictionaryBasedSegment
 {
+    /**
+     * 分词用到的trie树，可以直接赋值为自己的trie树（赋值操作不保证线程安全）
+     */
+    public DoubleArrayTrie<CoreDictionary.Attribute> trie;
+
+    /**
+     * 使用核心词库的trie树构造分词器
+     */
+    public DoubleArrayTrieSegment()
+    {
+        this(CoreDictionary.trie);
+    }
+
+    /**
+     * 根据自己的trie树构造分词器
+     * @param trie
+     */
+    public DoubleArrayTrieSegment(DoubleArrayTrie<CoreDictionary.Attribute> trie)
+    {
+        super();
+        this.trie = trie;
+        config.useCustomDictionary = false;
+    }
+
     @Override
     protected List<Term> segSentence(char[] sentence)
     {
@@ -39,7 +63,7 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
         final int[] wordNet = new int[charArray.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
-        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = CoreDictionary.trie.getSearcher(sentence, 0);
+        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = trie.getSearcher(sentence, 0);
         while (searcher.next())
         {
             int length = searcher.length;
@@ -109,11 +133,5 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
             i += wordNet[i];
         }
         return termList;
-    }
-
-    public DoubleArrayTrieSegment()
-    {
-        super();
-        config.useCustomDictionary = false;
     }
 }
