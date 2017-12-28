@@ -144,14 +144,14 @@ public class CorpusLoader
             }
             else
             {
-                System.exit(-1);
+                throw new IllegalArgumentException(file.getPath() + "读取失败");
             }
 //        }
 //        catch (IOException e)
 //        {
 //            e.printStackTrace();
 //        }
-        return null;
+//        return null;
     }
 
     public static interface Handler
