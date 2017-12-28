@@ -45,8 +45,7 @@ public class WordNatureDependencyModel
         }
         else
         {
-            logger.severe("加载依存句法生成模型" + path + "失败，耗时：" + (System.currentTimeMillis() - start) + " ms");
-            System.exit(-1);
+            throw new IllegalArgumentException("加载依存句法生成模型" + path + "失败，耗时：" + (System.currentTimeMillis() - start) + " ms");
         }
     }
 
