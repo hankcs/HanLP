@@ -195,7 +195,7 @@ public class TextUtility
         while (i < str.length() && "０１２３４５６７８９".indexOf(str.charAt(i)) != -1)
             i++;
         // Get middle delimiter such as .
-        if (i < str.length())
+        if (i > 0 && i < str.length())
         {
             char ch = str.charAt(i);
             if ("·∶:，,．.／/".indexOf(ch) != -1)
@@ -212,7 +212,7 @@ public class TextUtility
         while (i < str.length() && "0123456789".indexOf(str.charAt(i)) != -1)
             i++;
         // Get middle delimiter such as .
-        if (i < str.length())
+        if (i > 0 && i < str.length())
         {
             char ch = str.charAt(i);
             if (',' == ch || '.' == ch || '/' == ch  || ':' == ch || "∶·，．／".indexOf(ch) != -1)
