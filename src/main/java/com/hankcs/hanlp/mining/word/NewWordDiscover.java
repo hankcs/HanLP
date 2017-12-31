@@ -90,7 +90,7 @@ public class NewWordDiscover
             info.computeAggregation(word_cands);
         }
         // 过滤
-        ArrayList<WordInfo> wordInfoList = new ArrayList<WordInfo>(word_cands.values());
+        List<WordInfo> wordInfoList = new LinkedList<WordInfo>(word_cands.values());
         ListIterator<WordInfo> listIterator = wordInfoList.listIterator();
         while (listIterator.hasNext())
         {

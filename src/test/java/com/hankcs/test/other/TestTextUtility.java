@@ -29,6 +29,7 @@ public class TestTextUtility
         assertEquals(Boolean.TRUE, TextUtility.isAllNum("５５０"));
         assertEquals(Boolean.TRUE, TextUtility.isAllNum("１０％"));
         assertEquals(Boolean.TRUE, TextUtility.isAllNum("98．1％"));
+        assertEquals(Boolean.FALSE, TextUtility.isAllNum("，"));
     }
     
 }

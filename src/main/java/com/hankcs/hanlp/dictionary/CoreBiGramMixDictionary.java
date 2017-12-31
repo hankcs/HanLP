@@ -43,8 +43,7 @@ public class CoreBiGramMixDictionary
         long start = System.currentTimeMillis();
         if (!load(path))
         {
-            logger.severe("二元词典加载失败");
-            System.exit(-1);
+            throw new IllegalArgumentException("二元词典加载失败");
         }
         else
         {

@@ -97,25 +97,30 @@ public final class CRFSegmentModel extends CRFModel
         net[0][idM] = -1000.0;  // 第一个字不可能是M或E
         net[0][idE] = -1000.0;
         int[][] from = new int[size][4];
+        double[][] maxScoreAt = new double[2][4]; // 滚动数组
+        int curI = 0;
         for (int i = 1; i < size; ++i)
         {
+            curI = i & 1;
+            int preI = 1 - curI;
             for (int now = 0; now < 4; ++now)
             {
                 double maxScore = -1e10;
                 for (int pre = 0; pre < 4; ++pre)
                 {
-                    double score = net[i - 1][pre] + matrix[pre][now] + net[i][now];
+                    double score = maxScoreAt[preI][pre] + matrix[pre][now] + net[i][now];
                     if (score > maxScore)
                     {
                         maxScore = score;
                         from[i][now] = pre;
+                        maxScoreAt[curI][now] = maxScore;
                     }
                 }
                 net[i][now] = maxScore;
             }
         }
         // 反向回溯最佳路径
-        int maxTag = net[size - 1][idS] > net[size - 1][idE] ? idS : idE;
+        int maxTag = maxScoreAt[curI][idS] > maxScoreAt[curI][idE] ? idS : idE;
         table.setLast(size - 1, id2tag[maxTag]);
         maxTag = from[size - 1][maxTag];
         for (int i = size - 2; i > 0; --i)

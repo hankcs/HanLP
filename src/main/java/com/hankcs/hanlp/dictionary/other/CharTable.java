@@ -36,8 +36,7 @@ public class CharTable
         logger.info("字符正规化表开始加载" + HanLP.Config.CharTablePath);
         if (!load(HanLP.Config.CharTablePath))
         {
-            logger.severe("字符正规化表加载失败");
-            System.exit(-1);
+            throw new IllegalArgumentException("字符正规化表加载失败");
         }
         logger.info("字符正规化表加载成功：" + (System.currentTimeMillis() - start) + " ms");
     }

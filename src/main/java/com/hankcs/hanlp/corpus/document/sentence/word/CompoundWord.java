@@ -27,6 +27,9 @@ public class CompoundWord implements IWord, Iterable<Word>
      */
     public List<Word> innerList;
 
+    /**
+     * 标签，通常是词性
+     */
     public String label;
 
     @Override

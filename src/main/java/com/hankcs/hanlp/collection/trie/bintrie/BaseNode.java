@@ -262,6 +262,14 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
     @Override
     public String toString()
     {
+        if (child == null)
+        {
+            return "BaseNode{" + 
+                     "status=" + status +
+                     ", c=" + c +
+                     ", value=" + value +
+                    '}';
+        }
         return "BaseNode{" +
                 "child=" + child.length +
                 ", status=" + status +

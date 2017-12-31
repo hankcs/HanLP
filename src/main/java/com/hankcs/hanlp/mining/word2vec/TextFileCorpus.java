@@ -66,7 +66,13 @@ public class TextFileCorpus extends Corpus
             DataInputStream oldCache = new DataInputStream(new FileInputStream(cacheFile));
             while (oldCache.available() >= 4)
             {
-                int id = table[oldCache.readInt()];
+                int oldId = oldCache.readInt();
+                if (oldId < 0)
+                {
+                    cache.writeInt(oldId);
+                    continue;
+                }
+                int id = table[oldId];
                 if (id == -4) continue;
                 cache.writeInt(id);
             }
