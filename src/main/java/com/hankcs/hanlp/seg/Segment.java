@@ -167,7 +167,7 @@ public abstract class Segment
             if (curType != preType)
             {
                 // 浮点数识别
-                if ((charArray[offsetAtom] == '.' || charArray[offsetAtom] == '．') && preType == CharType.CT_NUM)
+                if (preType == CharType.CT_NUM && "，,．.".indexOf(charArray[offsetAtom]) != -1)
                 {
                     if (offsetAtom+1 < end)
                     {

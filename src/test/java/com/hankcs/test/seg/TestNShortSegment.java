@@ -11,16 +11,31 @@
  */
 package com.hankcs.test.seg;
 
+import junit.framework.TestCase;
+
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 /**
  * 测试N-最短路径分词
  * @author hankcs
  */
-public class TestNShortSegment
+public class TestNShortSegment extends TestCase
 {
-    public static void main(String[] args)
+    public void test()
     {
         System.out.println(NShortSegment.parse("商品和服务"));
     }
+    
+    public void testIssue691() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        StandardTokenizer.SEGMENT.enableCustomDictionary(false);
+        Segment nShortSegment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
+        System.out.println(nShortSegment.seg("今天，刘志军案的关键人物,山西女商人丁书苗在市二中院出庭受审。"));
+        System.out.println(nShortSegment.seg("今日消费5,513.58元"));
+    }
+    
 }
