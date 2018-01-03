@@ -40,6 +40,12 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 基于随机条件场的依存句法分析器
  *
+ * @deprecated 关于将线性CRF序列标注应用于句法分析，我持反对意见。CRF的链式结构决定它的视野只有当前位置的前后n个单词构成的特征，
+ * 如果依存节点恰好落在这n个范围内还好理解，如果超出该范围，利用这个n个单词的特征推测它是不合理的。
+ * 也就是说，我认为利用链式CRF预测长依存是不科学的。线性链CRF做句法分析的理论基础非常薄弱，一阶CRF这个标注模型根本无法阻止环的产生，
+ * 这份实现也没有复现论文的结果，所以不再维护，其模型文件也不再打包到新data里面。请使用在理论和工程上更稳定的
+ * {@link com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser}。
+ *
  * @author hankcs
  */
 public class CRFDependencyParser extends AbstractDependencyParser
