@@ -212,7 +212,7 @@ public class CRFModel implements ICacheAble
 
         int[][] from = new int[size][tagSize];
         double[][] maxScoreAt = new double[2][tagSize]; // 滚动数组
-        System.arraycopy(net[0], 0, maxScoreAt[0], 0, 4); // 初始preI=0,  maxScoreAt[preI][pre] = net[0][pre]
+        System.arraycopy(net[0], 0, maxScoreAt[0], 0, tagSize); // 初始preI=0,  maxScoreAt[preI][pre] = net[0][pre]
         int curI = 0;
         for (int i = 1; i < size; ++i)
         {
@@ -221,7 +221,7 @@ public class CRFModel implements ICacheAble
             for (int now = 0; now < tagSize; ++now)
             {
                 double maxScore = -1e10;
-                for (int pre = 0; pre < 4; ++pre)
+                for (int pre = 0; pre < tagSize; ++pre)
                 {
                     double score = maxScoreAt[preI][pre] + matrix[pre][now] + net[i][now];
                     if (score > maxScore)
