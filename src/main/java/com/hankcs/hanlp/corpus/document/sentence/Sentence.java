@@ -44,7 +44,12 @@ public class Sentence implements Serializable, Iterable<IWord>
         int i = 1;
         for (IWord word : wordList)
         {
-            sb.append(word);
+            sb.append(word.getValue());
+            String label = word.getLabel();
+            if (label != null)
+            {
+                sb.append('/').append(label);
+            }
             if (i != wordList.size()) sb.append(' ');
             ++i;
         }
