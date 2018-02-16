@@ -484,14 +484,7 @@ public class CustomDictionary
     {
         if (trie != null)
         {
-            BaseSearcher searcher = CustomDictionary.getSearcher(text);
-            int offset;
-            Map.Entry<String, CoreDictionary.Attribute> entry;
-            while ((entry = searcher.next()) != null)
-            {
-                offset = searcher.getOffset();
-                processor.hit(offset, offset + entry.getKey().length(), entry.getValue());
-            }
+            trie.parseText(text, processor);
         }
         DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = dat.getSearcher(text, 0);
         while (searcher.next())
