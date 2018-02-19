@@ -76,7 +76,12 @@ public class CompoundWord implements IWord, Iterable<Word>
         int i = 1;
         for (Word word : innerList)
         {
-            sb.append(word.toString());
+            sb.append(word.getValue());
+            String label = word.getLabel();
+            if (label != null)
+            {
+                sb.append('/').append(label);
+            }
             if (i != innerList.size())
             {
                 sb.append(' ');
