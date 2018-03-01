@@ -30,6 +30,8 @@ public class Word implements IWord
     @Override
     public String toString()
     {
+        if (label == null)
+            return value;
         return value + '/' + label;
     }
 
