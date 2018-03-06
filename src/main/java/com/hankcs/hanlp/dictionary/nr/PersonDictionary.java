@@ -56,8 +56,7 @@ public class PersonDictionary
         dictionary = new NRDictionary();
         if (!dictionary.load(HanLP.Config.PersonDictionaryPath))
         {
-            logger.severe("人名词典加载失败：" + HanLP.Config.PersonDictionaryPath);
-            System.exit(-1);
+            throw new IllegalArgumentException("人名词典加载失败：" + HanLP.Config.PersonDictionaryPath);
         }
         transformMatrixDictionary = new TransformMatrixDictionary<NR>(NR.class);
         transformMatrixDictionary.load(HanLP.Config.PersonDictionaryTrPath);

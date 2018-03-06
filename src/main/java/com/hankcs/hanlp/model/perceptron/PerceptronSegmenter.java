@@ -1,0 +1,122 @@
+/*
+ * <summary></summary>
+ * <author>Hankcs</author>
+ * <email>me@hankcs.com</email>
+ * <create-date>2016-09-05 PM7:56</create-date>
+ *
+ * <copyright file="AveragedPerceptronSegment.java" company="码农场">
+ * Copyright (c) 2008-2016, 码农场. All Right Reserved, http://www.hankcs.com/
+ * This source is subject to Hankcs. Please contact Hankcs to get more information.
+ * </copyright>
+ */
+package com.hankcs.hanlp.model.perceptron;
+
+import com.hankcs.hanlp.model.perceptron.instance.CWSInstance;
+import com.hankcs.hanlp.model.perceptron.model.LinearModel;
+import com.hankcs.hanlp.model.perceptron.common.TaskType;
+import com.hankcs.hanlp.model.perceptron.instance.Instance;
+import com.hankcs.hanlp.model.perceptron.tagset.CWSTagSet;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * 中文分词
+ *
+ * @author hankcs
+ */
+public class PerceptronSegmenter extends PerceptronTagger
+{
+    private final CWSTagSet CWSTagSet;
+
+    public PerceptronSegmenter(LinearModel cwsModel)
+    {
+        super(cwsModel);
+        if (cwsModel.featureMap.tagSet.type != TaskType.CWS)
+        {
+            throw new IllegalArgumentException(String.format("错误的模型类型: 传入的不是分词模型，而是 %s 模型", cwsModel.featureMap.tagSet.type));
+        }
+        CWSTagSet = (CWSTagSet) cwsModel.featureMap.tagSet;
+    }
+
+    public PerceptronSegmenter(String cwsModelFile) throws IOException
+    {
+        this(new LinearModel(cwsModelFile));
+    }
+
+    public void segment(String text, List<String> output)
+    {
+        String normalized = Utility.normalize(text);
+        segment(text, normalized, output);
+    }
+
+    void segment(String text, String normalized, List<String> output)
+    {
+        Instance instance = new CWSInstance(normalized, model.featureMap);
+        int[] tagArray = instance.tagArray;
+        model.viterbiDecode(instance, tagArray);
+
+        StringBuilder result = new StringBuilder();
+        result.append(text.charAt(0));
+
+        for (int i = 1; i < tagArray.length; i++)
+        {
+            if (tagArray[i] == CWSTagSet.B || tagArray[i] == CWSTagSet.S)
+            {
+                output.add(result.toString());
+                result.setLength(0);
+            }
+            result.append(text.charAt(i));
+        }
+        if (result.length() != 0)
+        {
+            output.add(result.toString());
+        }
+    }
+
+    public List<String> segment(String sentence)
+    {
+        List<String> result = new LinkedList<String>();
+        segment(sentence, result);
+        return result;
+    }
+
+    /**
+     * 在线学习
+     *
+     * @param segmentedSentence 分好词的句子，空格或tab分割，不含词性
+     * @return 是否学习成功（失败的原因是参数错误）
+     */
+    public boolean learn(String segmentedSentence)
+    {
+        return learn(segmentedSentence.split("\\s+"));
+    }
+
+    /**
+     * 在线学习
+     *
+     * @param words 分好词的句子
+     * @return 是否学习成功（失败的原因是参数错误）
+     */
+    public boolean learn(String... words)
+    {
+//        for (int i = 0; i < words.length; i++) // 防止传入带词性的词语
+//        {
+//            int index = words[i].indexOf('/');
+//            if (index > 0)
+//            {
+//                words[i] = words[i].substring(0, index);
+//            }
+//        }
+        return learn(new CWSInstance(words, model.featureMap));
+    }
+
+    @Override
+    public boolean learn(Sentence sentence)
+    {
+        return learn(CWSInstance.create(sentence, model.featureMap));
+    }
+}

@@ -62,6 +62,19 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
     }
 
     /**
+     * 转移状态
+     * @param path
+     * @return
+     */
+    public BaseNode<V> transition(char path)
+    {
+        BaseNode<V> cur = this;
+        cur = cur.getChild(path);
+        if (cur == null || cur.status == Status.UNDEFINED_0) return null;
+        return cur;
+    }
+
+    /**
      * 添加子节点
      *
      * @return true-新增了节点 false-修改了现有节点
@@ -262,6 +275,14 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
     @Override
     public String toString()
     {
+        if (child == null)
+        {
+            return "BaseNode{" + 
+                     "status=" + status +
+                     ", c=" + c +
+                     ", value=" + value +
+                    '}';
+        }
         return "BaseNode{" +
                 "child=" + child.length +
                 ", status=" + status +

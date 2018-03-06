@@ -39,8 +39,7 @@ public class CoreSynonymDictionary
         }
         catch (Exception e)
         {
-            logger.severe("载入核心同义词词典失败" + e);
-            System.exit(-1);
+            throw new IllegalArgumentException("载入核心同义词词典失败" + e);
         }
     }
 
