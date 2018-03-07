@@ -291,6 +291,11 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
         return null;
     }
 
+    /**
+     * 在线学习
+     * @param segmentedTaggedSentence 已分词、标好词性和命名实体的人民日报2014格式的句子
+     * @return 是否学习成果（失败的原因是句子格式不合法）
+     */
     public boolean learn(String segmentedTaggedSentence)
     {
         Sentence sentence = Sentence.create(segmentedTaggedSentence);
