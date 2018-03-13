@@ -209,7 +209,7 @@ public abstract class PerceptronTrainer
             accuracy = trainingFile.equals(developFile) ? evaluate(instances, model) : evaluate(developFile, model);
             out.print("AP - ");
             printAccuracy(accuracy);
-            model.save(modelFile, immutableFeatureMap.featureIdMap, compressRatio);
+            model.save(modelFile, immutableFeatureMap.featureIdMap.entrySet(), compressRatio);
             if (compressRatio == 0) return new Result(model, accuracy);
         }
         else
@@ -262,7 +262,7 @@ public abstract class PerceptronTrainer
                     return null;
                 }
             }
-            models[0].save(modelFile, immutableFeatureMap.featureIdMap, compressRatio);
+            models[0].save(modelFile, immutableFeatureMap.featureIdMap.entrySet(), compressRatio);
             if (compressRatio == 0) return new Result(models[0], accuracy);
         }
 

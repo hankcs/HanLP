@@ -14,9 +14,9 @@ public class DemoTrainCWS
                 Config.CWS_MODEL_FILE
         );
         System.out.printf("准确率F1:%.2f\n", result.getAccuracy());
-        Segment segment = new PerceptronLexicalAnalyzer(result.getModel());
+        PerceptronLexicalAnalyzer segment = new PerceptronLexicalAnalyzer(result.getModel());
         // 也可以用
 //        Segment segment = new AveragedPerceptronSegment(POS_MODEL_FILE);
-        System.out.println(segment.seg("商品与服务"));
+        System.out.println(segment.segment("商品与服务"));
     }
 }

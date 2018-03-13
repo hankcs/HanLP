@@ -14,6 +14,8 @@ package com.hankcs.hanlp.model.perceptron.feature;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -34,5 +36,11 @@ public class ImmutableFeatureDatMap extends ImmutableFeatureMap
     public int idOf(String string)
     {
         return dat.exactMatchSearch(string);
+    }
+
+    @Override
+    public Set<Map.Entry<String, Integer>> entrySet()
+    {
+        throw new UnsupportedOperationException("这份DAT实现不自持遍历");
     }
 }

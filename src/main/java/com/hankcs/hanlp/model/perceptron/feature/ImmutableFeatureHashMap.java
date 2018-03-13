@@ -47,4 +47,10 @@ public class ImmutableFeatureHashMap extends ImmutableFeatureMap
         if (id == null) return -1;
         return id;
     }
+
+    @Override
+    public Set<Map.Entry<String, Integer>> entrySet()
+    {
+        return featureIdMap.entrySet();
+    }
 }

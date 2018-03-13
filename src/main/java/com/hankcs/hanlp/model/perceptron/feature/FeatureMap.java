@@ -14,6 +14,9 @@ package com.hankcs.hanlp.model.perceptron.feature;
 import com.hankcs.hanlp.model.perceptron.common.IStringIdMap;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author hankcs
  */
@@ -37,4 +40,6 @@ public abstract class FeatureMap implements IStringIdMap
     {
         this.tagSet = tagSet;
     }
+
+    public abstract Set<Map.Entry<String, Integer>> entrySet();
 }

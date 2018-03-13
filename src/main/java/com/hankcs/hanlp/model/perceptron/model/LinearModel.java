@@ -23,10 +23,7 @@ import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
 import com.hankcs.hanlp.algorithm.MaxHeap;
 
 import java.io.*;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.System.out;
 
@@ -64,12 +61,35 @@ public class LinearModel
         load(modelFile);
     }
 
-    public void save(String modelFile, Map<String, Integer> featureIdMap, final double ratio) throws IOException
+    /**
+     * 保存到路径
+     *
+     * @param modelFile
+     * @throws IOException
+     */
+    public void save(String modelFile) throws IOException
     {
-        save(modelFile, featureIdMap, ratio, false);
+        save(modelFile, featureMap.entrySet(), 0.0);
     }
 
-    public void save(String modelFile, Map<String, Integer> featureIdMap, final double ratio, boolean text) throws IOException
+    /**
+     * 压缩并保存
+     *
+     * @param modelFile 路径
+     * @param ratio     压缩比c（压缩掉的体积，压缩后体积变为1-c）
+     * @throws IOException
+     */
+    public void save(String modelFile, final double ratio) throws IOException
+    {
+        save(modelFile, featureMap.entrySet(), ratio);
+    }
+
+    public void save(String modelFile, Set<Map.Entry<String, Integer>> featureIdSet, final double ratio) throws IOException
+    {
+        save(modelFile, featureIdSet, ratio, false);
+    }
+
+    public void save(String modelFile, Set<Map.Entry<String, Integer>> featureIdSet, final double ratio, boolean text) throws IOException
     {
         out.printf("Saving model to %s at compress ratio %.2f...\n", modelFile, ratio);
         if (ratio < 0 || ratio >= 1)
@@ -87,7 +107,7 @@ public class LinearModel
 
         if (ratio > 0)
         {
-            MaxHeap<FeatureSortItem> heap = new MaxHeap<FeatureSortItem>((int) ((featureIdMap.size() - tagSet.sizeIncludingBos()) * (1.0f - ratio)), new Comparator<FeatureSortItem>()
+            MaxHeap<FeatureSortItem> heap = new MaxHeap<FeatureSortItem>((int) ((featureIdSet.size() - tagSet.sizeIncludingBos()) * (1.0f - ratio)), new Comparator<FeatureSortItem>()
             {
                 @Override
                 public int compare(FeatureSortItem o1, FeatureSortItem o2)
@@ -96,7 +116,7 @@ public class LinearModel
                 }
             });
 
-            for (Map.Entry<String, Integer> entry : featureIdMap.entrySet())
+            for (Map.Entry<String, Integer> entry : featureIdSet)
             {
                 if (entry.getValue() < tagSet.sizeIncludingBos())
                 {
@@ -130,8 +150,8 @@ public class LinearModel
         }
         else
         {
-            out.writeInt(featureIdMap.size() - tagSet.sizeIncludingBos());
-            for (Map.Entry<String, Integer> entry : featureIdMap.entrySet())
+            out.writeInt(featureIdSet.size() - tagSet.sizeIncludingBos());
+            for (Map.Entry<String, Integer> entry : featureIdSet)
             {
                 if (entry.getValue() < tagSet.sizeIncludingBos()) continue;
                 out.writeUTF(entry.getKey());
@@ -143,7 +163,7 @@ public class LinearModel
 
             if (text)
             {
-                for (Map.Entry<String, Integer> entry : featureIdMap.entrySet())
+                for (Map.Entry<String, Integer> entry : featureIdSet)
                 {
                     bw.write(entry.getKey());
                     bw.newLine();

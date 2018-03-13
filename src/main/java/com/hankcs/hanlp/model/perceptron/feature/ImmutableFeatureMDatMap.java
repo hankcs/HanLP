@@ -14,6 +14,7 @@ import com.hankcs.hanlp.collection.trie.datrie.MutableDoubleArrayTrieInteger;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 用MutableDoubleArrayTrie实现的ImmutableFeatureMap
@@ -39,5 +40,11 @@ public class ImmutableFeatureMDatMap extends ImmutableFeatureMap
     public int idOf(String string)
     {
         return dat.get(string);
+    }
+
+    @Override
+    public Set<Map.Entry<String, Integer>> entrySet()
+    {
+        return dat.entrySet();
     }
 }
