@@ -4,6 +4,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -441,6 +442,16 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
     public boolean add(String key, int value)
     {
         return insert(key, value, false);
+    }
+
+    /**
+     * 非覆盖模式添加，值默认为当前集合大小
+     * @param key
+     * @return
+     */
+    public boolean add(String key)
+    {
+        return add(key, size);
     }
 
     /**
@@ -1152,7 +1163,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
     }
 
     @Override
-    public void save(DataOutputStream out) throws Exception
+    public void save(DataOutputStream out) throws IOException
     {
         if (!(charMap instanceof Utf8CharacterMapping))
         {
@@ -1169,7 +1180,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
         size = byteArray.nextInt();
         if (!base.load(byteArray)) return false;
         if (!check.load(byteArray)) return false;
-        return false;
+        return true;
     }
 
 //    /**

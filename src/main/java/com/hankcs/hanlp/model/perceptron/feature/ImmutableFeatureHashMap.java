@@ -26,13 +26,13 @@ public class ImmutableFeatureHashMap extends ImmutableFeatureMap
 
     public ImmutableFeatureHashMap(Map<String, Integer> featureIdMap, TagSet tagSet)
     {
-        super(featureIdMap.size(), tagSet);
+        super(tagSet);
         this.featureIdMap = featureIdMap;
     }
 
     public ImmutableFeatureHashMap(Set<Map.Entry<String, Integer>> entrySet, TagSet tagSet)
     {
-        super(entrySet.size(), tagSet);
+        super(tagSet);
         this.featureIdMap = new HashMap<String, Integer>();
         for (Map.Entry<String, Integer> entry : entrySet)
         {
@@ -46,6 +46,12 @@ public class ImmutableFeatureHashMap extends ImmutableFeatureMap
         Integer id = featureIdMap.get(string);
         if (id == null) return -1;
         return id;
+    }
+
+    @Override
+    public int size()
+    {
+        return featureIdMap.size();
     }
 
     @Override

@@ -27,7 +27,7 @@ public class ImmutableFeatureDatMap extends ImmutableFeatureMap
 
     public ImmutableFeatureDatMap(TreeMap<String, Integer> featureIdMap, TagSet tagSet)
     {
-        super(featureIdMap.size(), tagSet);
+        super(tagSet);
         dat = new DoubleArrayTrie<Integer>();
         dat.build(featureIdMap);
     }
@@ -36,6 +36,12 @@ public class ImmutableFeatureDatMap extends ImmutableFeatureMap
     public int idOf(String string)
     {
         return dat.exactMatchSearch(string);
+    }
+
+    @Override
+    public int size()
+    {
+        return dat.size();
     }
 
     @Override

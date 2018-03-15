@@ -1,5 +1,6 @@
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
@@ -28,6 +29,7 @@ public class CWSTrainerTest extends TestCase
 
     public void testCWS() throws Exception
     {
+        HanLP.Config.enableDebug();
         PerceptronSegmenter segmenter = new PerceptronSegmenter(Config.CWS_MODEL_FILE);
         segmenter.learn("下雨天 地面 积水");
         System.out.println(segmenter.segment("下雨天地面积水分外严重"));

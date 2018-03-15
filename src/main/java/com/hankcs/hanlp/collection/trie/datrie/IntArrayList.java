@@ -4,6 +4,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -152,7 +153,7 @@ public class IntArrayList implements Serializable, ICacheAble
     }
 
     @Override
-    public void save(DataOutputStream out) throws Exception
+    public void save(DataOutputStream out) throws IOException
     {
         out.writeInt(size);
         for (int i = 0; i < size; i++)

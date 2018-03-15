@@ -30,6 +30,7 @@ import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.hankcs.hanlp.classification.utilities.Predefine.logger;
 import static java.lang.System.err;
 import static java.lang.System.out;
 
@@ -210,7 +211,9 @@ public abstract class PerceptronTrainer
             accuracy = trainingFile.equals(developFile) ? evaluate(instances, model) : evaluate(developFile, model);
             out.print("AP - ");
             printAccuracy(accuracy);
+            logger.start("以压缩比 %.2f 保存模型到 %s ... ", compressRatio, modelFile);
             model.save(modelFile, immutableFeatureMap.featureIdMap.entrySet(), compressRatio);
+            logger.finish(" 保存完毕\n");
             if (compressRatio == 0) return new Result(model, accuracy);
         }
         else
@@ -263,7 +266,9 @@ public abstract class PerceptronTrainer
                     return null;
                 }
             }
+            logger.start("以压缩比 %.2f 保存模型到 %s ... ", compressRatio, modelFile);
             models[0].save(modelFile, immutableFeatureMap.featureIdMap.entrySet(), compressRatio, HanLP.Config.DEBUG);
+            logger.finish(" 保存完毕\n");
             if (compressRatio == 0) return new Result(models[0], accuracy);
         }
 
@@ -362,7 +367,7 @@ public abstract class PerceptronTrainer
 
     public Result train(String trainingFile, String developFile, String modelFile) throws IOException
     {
-        return train(trainingFile, developFile, modelFile, 0.1, 5, Runtime.getRuntime().availableProcessors());
+        return train(trainingFile, developFile, modelFile, 0.1, 1, Runtime.getRuntime().availableProcessors());
     }
 
     protected interface InstanceHandler

@@ -13,14 +13,14 @@ package com.hankcs.hanlp.model.perceptron.model;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algorithm.MaxHeap;
-import com.hankcs.hanlp.model.perceptron.common.TaskType;
+import com.hankcs.hanlp.collection.trie.datrie.MutableDoubleArrayTrieInteger;
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ByteArrayStream;
+import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureSortItem;
-import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureHashMap;
+import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureMDatMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
-import com.hankcs.hanlp.model.perceptron.tagset.CWSTagSet;
-import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
-import com.hankcs.hanlp.model.perceptron.tagset.POSTagSet;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
 
 import java.io.*;
@@ -33,7 +33,7 @@ import static com.hankcs.hanlp.classification.utilities.Predefine.logger;
  *
  * @author hankcs
  */
-public class LinearModel
+public class LinearModel implements ICacheAble
 {
     /**
      * 特征全集
@@ -60,6 +60,66 @@ public class LinearModel
     public LinearModel(String modelFile) throws IOException
     {
         load(modelFile);
+    }
+
+    /**
+     * @param ratio 压缩比c（压缩掉的体积，压缩后体积变为1-c）
+     * @return
+     */
+    public LinearModel compress(final double ratio)
+    {
+        if (ratio < 0 || ratio >= 1)
+        {
+            throw new IllegalArgumentException("压缩比必须介于 0 和 1 之间");
+        }
+        if (ratio == 0) return this;
+        Set<Map.Entry<String, Integer>> featureIdSet = featureMap.entrySet();
+        TagSet tagSet = featureMap.tagSet;
+        MaxHeap<FeatureSortItem> heap = new MaxHeap<FeatureSortItem>((int) ((featureIdSet.size() - tagSet.sizeIncludingBos()) * (1.0f - ratio)), new Comparator<FeatureSortItem>()
+        {
+            @Override
+            public int compare(FeatureSortItem o1, FeatureSortItem o2)
+            {
+                return Float.compare(o1.total, o2.total);
+            }
+        });
+
+        for (Map.Entry<String, Integer> entry : featureIdSet)
+        {
+            if (entry.getValue() < tagSet.sizeIncludingBos())
+            {
+                continue;
+            }
+            FeatureSortItem item = new FeatureSortItem(entry, this.parameter, tagSet.size());
+            if (item.total < 1e-3f) continue;
+            heap.add(item);
+        }
+
+        List<FeatureSortItem> items = heap.toList();
+        int size = items.size() + tagSet.sizeIncludingBos();
+        float[] parameter = new float[size * tagSet.size()];
+        MutableDoubleArrayTrieInteger mdat = new MutableDoubleArrayTrieInteger();
+        for (Map.Entry<String, Integer> tag : tagSet)
+        {
+            mdat.add("BL=" + tag.getKey());
+        }
+        mdat.add("BL=_BL_");
+        for (int i = 0; i < tagSet.size() * tagSet.sizeIncludingBos(); i++)
+        {
+            parameter[i] = this.parameter[i];
+        }
+        for (FeatureSortItem item : items)
+        {
+            int id = mdat.size();
+            mdat.put(item.key, id);
+            for (int i = 0; i < tagSet.size(); ++i)
+            {
+                parameter[id * tagSet.size() + i] = this.parameter[item.id * tagSet.size() + i];
+            }
+        }
+        this.featureMap = new ImmutableFeatureMDatMap(mdat, tagSet);
+        this.parameter = parameter;
+        return this;
     }
 
     /**
@@ -101,99 +161,29 @@ public class LinearModel
      */
     public void save(String modelFile, Set<Map.Entry<String, Integer>> featureIdSet, final double ratio, boolean text) throws IOException
     {
-        logger.start("以压缩比 %.2f 保存模型到 %s ... ", ratio, modelFile);
-        if (ratio < 0 || ratio >= 1)
-        {
-            throw new IllegalArgumentException("压缩比必须介于 0 和 1 之间");
-        }
+        float[] parameter = this.parameter;
+        this.compress(ratio);
 
         DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(modelFile)));
-        BufferedWriter bw = null;
-        if (text) bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFile + ".txt"), "UTF-8"));
-
-        // 保存标注集
-        TagSet tagSet = featureMap.tagSet;
-        tagSet.save(out);
-
-        if (ratio > 0)
-        {
-            MaxHeap<FeatureSortItem> heap = new MaxHeap<FeatureSortItem>((int) ((featureIdSet.size() - tagSet.sizeIncludingBos()) * (1.0f - ratio)), new Comparator<FeatureSortItem>()
-            {
-                @Override
-                public int compare(FeatureSortItem o1, FeatureSortItem o2)
-                {
-                    return Float.compare(o1.total, o2.total);
-                }
-            });
-
-            for (Map.Entry<String, Integer> entry : featureIdSet)
-            {
-                if (entry.getValue() < tagSet.sizeIncludingBos())
-                {
-                    continue;
-                }
-                FeatureSortItem item = new FeatureSortItem(entry, this.parameter, tagSet.size());
-                if (item.total < 1e-3f) continue;
-                heap.add(item);
-            }
-
-            List<FeatureSortItem> items = heap.toList();
-            out.writeInt(items.size());
-            for (FeatureSortItem item : items)
-            {
-                out.writeUTF(item.key);
-                if (text)
-                {
-                    bw.write(item.key);
-                    bw.newLine();
-                }
-                for (int i = 0; i < tagSet.size(); ++i)
-                {
-                    out.writeFloat(this.parameter[item.id * tagSet.size() + i]);
-                    if (text)
-                    {
-                        bw.write(String.valueOf(this.parameter[item.id * tagSet.size() + i]));
-                        bw.newLine();
-                    }
-                }
-            }
-        }
-        else
-        {
-            out.writeInt(featureIdSet.size() - tagSet.sizeIncludingBos());
-            for (Map.Entry<String, Integer> entry : featureIdSet)
-            {
-                if (entry.getValue() < tagSet.sizeIncludingBos()) continue;
-                out.writeUTF(entry.getKey());
-                for (int i = 0; i < tagSet.size(); ++i)
-                {
-                    out.writeFloat(this.parameter[entry.getValue() * tagSet.size() + i]);
-                }
-            }
-
-            if (text)
-            {
-                for (Map.Entry<String, Integer> entry : featureIdSet)
-                {
-                    bw.write(entry.getKey());
-                    bw.newLine();
-                    for (int i = 0; i < tagSet.size(); ++i)
-                    {
-                        bw.write(String.valueOf(parameter[entry.getValue() * tagSet.size() + i]));
-                        bw.newLine();
-                    }
-                }
-            }
-        }
-
-        for (int i = 0; i < tagSet.size() * tagSet.sizeIncludingBos(); i++)
-        {
-            out.writeFloat(this.parameter[i]);
-        }
-
-        if (text) bw.close();
+        save(out);
         out.close();
-        logger.finish(" 保存完毕\n");
+
+        if (text)
+        {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFile + ".txt"), "UTF-8"));
+            TagSet tagSet = featureMap.tagSet;
+            for (Map.Entry<String, Integer> entry : featureIdSet)
+            {
+                bw.write(entry.getKey());
+                for (int i = 0; i < tagSet.size(); ++i)
+                {
+                    bw.write("\t");
+                    bw.write(String.valueOf(parameter[entry.getValue() * tagSet.size() + i]));
+                }
+                bw.newLine();
+            }
+            bw.close();
+        }
     }
 
     /**
@@ -328,48 +318,11 @@ public class LinearModel
     {
         if (HanLP.Config.DEBUG)
             logger.start("加载 %s ... ", modelFile);
-        DataInputStream in = new DataInputStream(new FileInputStream(modelFile));
-        TaskType type = TaskType.values()[in.readInt()];
-        TagSet tagSet = null;
-        switch (type)
+        ByteArrayStream byteArray = ByteArrayStream.createByteArrayStream(modelFile);
+        if (!load(byteArray))
         {
-            case CWS:
-                tagSet = new CWSTagSet();
-                break;
-            case POS:
-                tagSet = new POSTagSet();
-                break;
-            case NER:
-                tagSet = new NERTagSet();
-                break;
+            throw new IOException(String.format("%s 加载失败", modelFile));
         }
-        tagSet.load(in);
-        int size = in.readInt();
-        parameter = new float[size * tagSet.size() + tagSet.size() * (tagSet.size() + 1)];
-        int id = 0;
-        Map<String, Integer> featureIdMap = new HashMap<String, Integer>();
-        for (Map.Entry<String, Integer> tag : tagSet)
-        {
-            featureIdMap.put("BL=" + tag.getKey(), id++);
-        }
-        featureIdMap.put("BL=_BL_", id++);
-        for (int i = 0; i < size; i++)
-        {
-            String key = in.readUTF();
-            featureIdMap.put(key, id);
-            for (int j = 0; j < tagSet.size(); ++j)
-            {
-                parameter[id * tagSet.size() + j] = in.readFloat();
-            }
-            ++id;
-        }
-        this.featureMap = new ImmutableFeatureHashMap(featureIdMap, tagSet);
-        for (int i = 0; i < tagSet.size() * tagSet.sizeIncludingBos(); ++i)
-        {
-            parameter[i] = in.readFloat();
-        }
-        assert in.available() == 0;
-        in.close();
         if (HanLP.Config.DEBUG)
             logger.finish(" 加载完毕");
     }
@@ -377,5 +330,41 @@ public class LinearModel
     public TagSet tagSet()
     {
         return featureMap.tagSet;
+    }
+
+    @Override
+    public void save(DataOutputStream out) throws IOException
+    {
+        if (!(featureMap instanceof ImmutableFeatureMDatMap))
+        {
+            featureMap = new ImmutableFeatureMDatMap(featureMap.entrySet(), tagSet());
+        }
+        featureMap.save(out);
+        for (float aParameter : this.parameter)
+        {
+            out.writeFloat(aParameter);
+        }
+    }
+
+    @Override
+    public boolean load(ByteArray byteArray)
+    {
+        if (byteArray == null)
+            return false;
+        featureMap = new ImmutableFeatureMDatMap();
+        featureMap.load(byteArray);
+        int size = featureMap.size();
+        TagSet tagSet = featureMap.tagSet;
+        parameter = new float[size * tagSet.size()];
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < tagSet.size(); ++j)
+            {
+                parameter[i * tagSet.size() + j] = byteArray.nextFloat();
+            }
+        }
+        assert !byteArray.hasMore();
+        byteArray.close();
+        return true;
     }
 }
