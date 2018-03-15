@@ -47,6 +47,6 @@ public class ImmutableFeatureDatMap extends ImmutableFeatureMap
     @Override
     public Set<Map.Entry<String, Integer>> entrySet()
     {
-        throw new UnsupportedOperationException("这份DAT实现不自持遍历");
+        throw new UnsupportedOperationException("这份DAT实现不支持遍历");
     }
 }
