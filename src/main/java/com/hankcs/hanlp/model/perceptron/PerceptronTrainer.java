@@ -10,6 +10,7 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.common.FrequencyMap;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureHashMap;
@@ -262,7 +263,7 @@ public abstract class PerceptronTrainer
                     return null;
                 }
             }
-            models[0].save(modelFile, immutableFeatureMap.featureIdMap.entrySet(), compressRatio);
+            models[0].save(modelFile, immutableFeatureMap.featureIdMap.entrySet(), compressRatio, HanLP.Config.DEBUG);
             if (compressRatio == 0) return new Result(models[0], accuracy);
         }
 
