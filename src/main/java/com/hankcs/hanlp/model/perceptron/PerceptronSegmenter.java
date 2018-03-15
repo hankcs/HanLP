@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.instance.CWSInstance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
@@ -45,6 +46,15 @@ public class PerceptronSegmenter extends PerceptronTagger
     public PerceptronSegmenter(String cwsModelFile) throws IOException
     {
         this(new LinearModel(cwsModelFile));
+    }
+
+    /**
+     * 加载配置文件指定的模型
+     * @throws IOException
+     */
+    public PerceptronSegmenter() throws IOException
+    {
+        this(HanLP.Config.PerceptronCWSModelPath);
     }
 
     public void segment(String text, List<String> output)

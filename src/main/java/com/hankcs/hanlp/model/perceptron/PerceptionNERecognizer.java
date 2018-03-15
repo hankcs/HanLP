@@ -10,6 +10,7 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
@@ -40,6 +41,15 @@ public class PerceptionNERecognizer extends PerceptronTagger
     public PerceptionNERecognizer(String nerModelPath) throws IOException
     {
         this(new LinearModel(nerModelPath));
+    }
+
+    /**
+     * 加载配置文件指定的模型
+     * @throws IOException
+     */
+    public PerceptionNERecognizer() throws IOException
+    {
+        this(HanLP.Config.PerceptronNERModelPath);
     }
 
     public String[] recognize(String[] wordArray, String[] posArray)
