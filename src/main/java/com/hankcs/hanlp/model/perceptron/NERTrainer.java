@@ -25,7 +25,11 @@ public class NERTrainer extends PerceptronTrainer
     @Override
     protected TagSet createTagSet()
     {
-        return new NERTagSet();
+        NERTagSet tagSet = new NERTagSet();
+        tagSet.nerLabels.add("nr");
+        tagSet.nerLabels.add("ns");
+        tagSet.nerLabels.add("nt");
+        return tagSet;
     }
 
     @Override

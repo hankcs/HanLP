@@ -21,6 +21,7 @@ import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author hankcs
@@ -104,6 +105,7 @@ public class NERInstance extends Instance
 
         NERTagSet tagSet = (NERTagSet) featureMap.tagSet;
         List<String[]> collector = new LinkedList<String[]>();
+        Set<String> nerLabels = tagSet.nerLabels;
         for (IWord word : sentence.wordList)
         {
             if (word instanceof CompoundWord)
@@ -111,10 +113,7 @@ public class NERInstance extends Instance
                 List<Word> wordList = ((CompoundWord) word).innerList;
                 Word[] words = wordList.toArray(new Word[0]);
 
-                // 此处可以写得更加通用一些，以支持更灵活的NER类型
-                if (word.getLabel().equals("nr") ||
-                        word.getLabel().equals("nt") ||
-                        word.getLabel().equals("ns"))
+                if (nerLabels.contains(word.getLabel()))
                 {
                     collector.add(new String[]{words[0].value, words[0].label, tagSet.B_TAG_PREFIX + word.getLabel()});
                     for (int i = 1; i < words.length - 1; i++)
@@ -122,7 +121,7 @@ public class NERInstance extends Instance
                         collector.add(new String[]{words[i].value, words[i].label, tagSet.M_TAG_PREFIX + word.getLabel()});
                     }
                     collector.add(new String[]{words[words.length - 1].value, words[words.length - 1].label,
-                            tagSet.E_TAG_PREFIX + word.getLabel()});
+                        tagSet.E_TAG_PREFIX + word.getLabel()});
                 }
                 else
                 {
@@ -135,8 +134,8 @@ public class NERInstance extends Instance
             else
             {
                 if (word.getLabel().equals("nr") ||
-                        word.getLabel().equals("nt") ||
-                        word.getLabel().equals("ns"))
+                    word.getLabel().equals("nt") ||
+                    word.getLabel().equals("ns"))
                 {
                     // 单个实体
                     collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.S_TAG});

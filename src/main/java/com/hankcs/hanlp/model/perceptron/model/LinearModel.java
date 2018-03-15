@@ -17,6 +17,7 @@ import com.hankcs.hanlp.collection.trie.datrie.MutableDoubleArrayTrieInteger;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ByteArrayStream;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureSortItem;
 import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureMDatMap;
@@ -130,7 +131,9 @@ public class LinearModel implements ICacheAble
      */
     public void save(String modelFile) throws IOException
     {
-        save(modelFile, featureMap.entrySet(), 0.0);
+        DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(modelFile)));
+        save(out);
+        out.close();
     }
 
     /**
@@ -164,13 +167,13 @@ public class LinearModel implements ICacheAble
         float[] parameter = this.parameter;
         this.compress(ratio);
 
-        DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(modelFile)));
+        DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(modelFile)));
         save(out);
         out.close();
 
         if (text)
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFile + ".txt"), "UTF-8"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(modelFile + ".txt"), "UTF-8"));
             TagSet tagSet = featureMap.tagSet;
             for (Map.Entry<String, Integer> entry : featureIdSet)
             {
@@ -324,7 +327,7 @@ public class LinearModel implements ICacheAble
             throw new IOException(String.format("%s 加载失败", modelFile));
         }
         if (HanLP.Config.DEBUG)
-            logger.finish(" 加载完毕");
+            logger.finish(" 加载完毕\n");
     }
 
     public TagSet tagSet()

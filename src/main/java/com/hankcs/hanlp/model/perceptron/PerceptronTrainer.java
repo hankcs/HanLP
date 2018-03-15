@@ -148,6 +148,18 @@ public abstract class PerceptronTrainer
         }
     }
 
+    /**
+     * 训练
+     *
+     * @param trainingFile  训练集
+     * @param developFile   开发集
+     * @param modelFile     模型保存路径
+     * @param compressRatio 压缩比
+     * @param maxIteration  最大迭代次数
+     * @param threadNum     线程数
+     * @return 一个包含模型和精度的结构
+     * @throws IOException
+     */
     public Result train(String trainingFile, String developFile,
                         String modelFile, final double compressRatio,
                         final int maxIteration, final int threadNum) throws IOException
@@ -276,7 +288,7 @@ public abstract class PerceptronTrainer
         if (compressRatio > 0)
         {
             accuracy = evaluate(developFile, model);
-            out.printf("%.2f compressed model - ", compressRatio);
+            out.printf("\n%.2f compressed model - ", compressRatio);
             printAccuracy(accuracy);
         }
 
@@ -367,7 +379,7 @@ public abstract class PerceptronTrainer
 
     public Result train(String trainingFile, String developFile, String modelFile) throws IOException
     {
-        return train(trainingFile, developFile, modelFile, 0.1, 1, Runtime.getRuntime().availableProcessors());
+        return train(trainingFile, developFile, modelFile, 0.1, 10, Runtime.getRuntime().availableProcessors());
     }
 
     protected interface InstanceHandler
