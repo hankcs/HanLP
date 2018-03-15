@@ -9357,7 +9357,7 @@
 才薄智浅=cai1,bo2,zhi4,qian3
 才轻德薄=cai2,qing1,de2,bo2
 才高八斗=cai2,gao1,ba1,dou3
-扎=za1,zha1,zha2
+扎=zha1,za1,zha2
 扎堆=zha1,dui1
 扎实=zha1,shi2
 扎手=zha1,shou3
