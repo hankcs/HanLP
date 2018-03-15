@@ -1,12 +1,18 @@
 package com.hankcs.hanlp.collection.trie.datrie;
 
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ICacheAble;
+
+import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.util.*;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 可变双数组trie树，重构自：https://github.com/fancyerii/DoubleArrayTrie
  */
-public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<MutableDoubleArrayTrieInteger.KeyValuePair>
+public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<MutableDoubleArrayTrieInteger.KeyValuePair>, ICacheAble
 {
     private static final long serialVersionUID = 5586394930559218802L;
     /**
@@ -32,8 +38,13 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
 
     public MutableDoubleArrayTrieInteger(Map<String, Integer> stringIntegerMap)
     {
+        this(stringIntegerMap.entrySet());
+    }
+
+    public MutableDoubleArrayTrieInteger(Set<Map.Entry<String, Integer>> entrySet)
+    {
         this();
-        for (Map.Entry<String, Integer> entry : stringIntegerMap.entrySet())
+        for (Map.Entry<String, Integer> entry : entrySet)
         {
             put(entry.getKey(), entry.getValue());
         }
@@ -462,7 +473,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
             {
                 int c = ids[j];
                 if ((getBase(curState) + c < getBaseArraySize())
-                        && (getCheck(getBase(curState) + c) == curState))
+                    && (getCheck(getBase(curState) + c) == curState))
                 {
                     bytes.append(c);
                     curState = getBase(curState) + c;
@@ -652,7 +663,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
         {
             int c = ids[i];
             if ((getBase(state) + c < getBaseArraySize())
-                    && (getCheck(getBase(state) + c) == state))
+                && (getCheck(getBase(state) + c) == state))
             {
                 state = getBase(state) + c;
             }
@@ -664,7 +675,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
         if (getCheck(getBase(state) + UNUSED_CHAR_VALUE) == state)
         {
             int value = getLeafValue(getBase(getBase(state)
-                                                     + UNUSED_CHAR_VALUE));
+                                                 + UNUSED_CHAR_VALUE));
             return new int[]{state, value};
         }
         return new int[]{state, -1};
@@ -707,7 +718,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
         for (int c : ids)
         {
             if ((getBase(state) + c < getBaseArraySize())
-                    && (getCheck(getBase(state) + c) == state))
+                && (getCheck(getBase(state) + c) == state))
             {
                 state = getBase(state) + c;
             }
@@ -847,7 +858,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
         {
             int c = ids[i];
             if ((getBase(curState) + c >= getBaseArraySize())
-                    || (getCheck(getBase(curState) + c) != curState))
+                || (getCheck(getBase(curState) + c) != curState))
             {
                 break;
             }
@@ -873,7 +884,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
                             break;
                         }
                         if ((getBase(state) + k < getBaseArraySize())
-                                && (getCheck(getBase(state) + k) == state))
+                            && (getCheck(getBase(state) + k) == state))
                         {
                             isLeaf = false;
                             break;
@@ -1140,6 +1151,27 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
         };
     }
 
+    @Override
+    public void save(DataOutputStream out) throws Exception
+    {
+        if (!(charMap instanceof Utf8CharacterMapping))
+        {
+            logger.warning("将来需要在构造的时候传入 " + charMap.getClass());
+        }
+        out.writeInt(size);
+        base.save(out);
+        check.save(out);
+    }
+
+    @Override
+    public boolean load(ByteArray byteArray)
+    {
+        size = byteArray.nextInt();
+        if (!base.load(byteArray)) return false;
+        if (!check.load(byteArray)) return false;
+        return false;
+    }
+
 //    /**
 //     * 遍历时无法删除
 //     *
@@ -1308,4 +1340,5 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
             return key + '=' + value;
         }
     }
+
 }
