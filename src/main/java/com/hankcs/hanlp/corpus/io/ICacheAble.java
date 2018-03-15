@@ -31,5 +31,5 @@ public interface ICacheAble
      * @param byteArray
      * @return
      */
-    boolean load(ByteArray byteArray);
+    boolean load(ByteArray byteArray); // 目前的设计并不好，应该抛异常而不是返回布尔值
 }

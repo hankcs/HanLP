@@ -106,29 +106,30 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
                     }
                     if (i == table.v.length)
                     {
-                        termList.add(new Term(new String(sentence, begin, offset - begin), toDefaultNature(table.v[i][0]) ));
+                        termList.add(new Term(new String(sentence, begin, offset - begin), toDefaultNature(table.v[i][0])));
                         break OUTER;
                     }
                     else
-                        termList.add(new Term(new String(sentence, begin, offset - begin + table.v[i][1].length()), toDefaultNature(table.v[i][0]) ));
+                        termList.add(new Term(new String(sentence, begin, offset - begin + table.v[i][1].length()), toDefaultNature(table.v[i][0])));
                 }
                 break;
                 default:
                 {
-                    termList.add(new Term(new String(sentence, offset, table.v[i][1].length()), toDefaultNature(table.v[i][0]) ));
+                    termList.add(new Term(new String(sentence, offset, table.v[i][1].length()), toDefaultNature(table.v[i][0])));
                 }
                 break;
             }
         }
         return termList;
     }
-    
-    protected static Nature toDefaultNature(String compiledChar) {
-    	if (compiledChar.equals("M"))
-    		return Nature.m;
-    	if (compiledChar.equals("W"))
-    		return Nature.nx;
-    	return null;
+
+    protected static Nature toDefaultNature(String compiledChar)
+    {
+        if (compiledChar.equals("M"))
+            return Nature.m;
+        if (compiledChar.equals("W"))
+            return Nature.nx;
+        return null;
     }
 
     public static List<String> atomSegment(char[] sentence)
@@ -288,6 +289,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
      */
     private static String[][] resizeArray(String[][] array, int size)
     {
+        if (array.length == size) return array;
         String[][] nArray = new String[size][];
         System.arraycopy(array, 0, nArray, 0, size);
         return nArray;

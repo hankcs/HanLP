@@ -99,6 +99,15 @@ public class ByteArray
         return bytes[offset++];
     }
 
+    /**
+     * 读取一个布尔值
+     * @return
+     */
+    public boolean nextBoolean()
+    {
+        return nextByte() == 1;
+    }
+
     public boolean hasMore()
     {
         return offset < bytes.length;

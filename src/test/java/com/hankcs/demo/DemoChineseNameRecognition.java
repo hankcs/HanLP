@@ -27,6 +27,7 @@ public class DemoChineseNameRecognition
     {
         String[] testCase = new String[]{
                 "签约仪式前，秦光荣、李纪恒、仇和等一同会见了参加签约的企业家。",
+                "武大靖创世界纪录夺冠，中国代表团平昌首金",
                 "区长庄木弟新年致辞",
                 "朱立伦：两岸都希望共创双赢 习朱历史会晤在即",
                 "陕西首富吴一坚被带走 与令计划妻子有交集",

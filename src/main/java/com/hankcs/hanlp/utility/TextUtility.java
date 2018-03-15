@@ -1,8 +1,14 @@
 package com.hankcs.hanlp.utility;
 
 
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+
 import java.io.*;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 文本工具类
@@ -699,6 +705,47 @@ public class TextUtility
         for (String str : stringCollection)
         {
             sb.append(str).append(delimiter);
+        }
+
+        return sb.toString();
+    }
+
+    public static String combine(String... termArray)
+    {
+        StringBuilder sbSentence = new StringBuilder();
+        for (String word : termArray)
+        {
+            sbSentence.append(word);
+        }
+        return sbSentence.toString();
+    }
+
+    public static String join(Iterable<? extends CharSequence> s, String delimiter)
+    {
+        Iterator<? extends CharSequence> iter = s.iterator();
+        if (!iter.hasNext()) return "";
+        StringBuilder buffer = new StringBuilder(iter.next());
+        while (iter.hasNext()) buffer.append(delimiter).append(iter.next());
+        return buffer.toString();
+    }
+
+    public static String combine(Sentence sentence)
+    {
+        StringBuilder sb = new StringBuilder(sentence.wordList.size() * 3);
+        for (IWord word : sentence.wordList)
+        {
+            sb.append(word.getValue());
+        }
+
+        return sb.toString();
+    }
+
+    public static String combine(List<Word> wordList)
+    {
+        StringBuilder sb = new StringBuilder(wordList.size() * 3);
+        for (IWord word : wordList)
+        {
+            sb.append(word.getValue());
         }
 
         return sb.toString();
