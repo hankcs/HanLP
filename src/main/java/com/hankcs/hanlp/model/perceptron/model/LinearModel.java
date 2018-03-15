@@ -11,8 +11,10 @@
  */
 package com.hankcs.hanlp.model.perceptron.model;
 
-import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.algorithm.MaxHeap;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureSortItem;
 import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureHashMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
@@ -20,12 +22,11 @@ import com.hankcs.hanlp.model.perceptron.tagset.CWSTagSet;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.model.perceptron.tagset.POSTagSet;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
-import com.hankcs.hanlp.algorithm.MaxHeap;
 
 import java.io.*;
 import java.util.*;
 
-import static java.lang.System.out;
+import static com.hankcs.hanlp.classification.utilities.Predefine.logger;
 
 /**
  * 在线学习标注模型
@@ -89,12 +90,21 @@ public class LinearModel
         save(modelFile, featureIdSet, ratio, false);
     }
 
+    /**
+     * 保存
+     *
+     * @param modelFile    路径
+     * @param featureIdSet 特征集（有些数据结构不支持遍历，可以提供构造时用到的特征集来规避这个缺陷）
+     * @param ratio        压缩比
+     * @param text         是否输出文本以供调试
+     * @throws IOException
+     */
     public void save(String modelFile, Set<Map.Entry<String, Integer>> featureIdSet, final double ratio, boolean text) throws IOException
     {
-        out.printf("Saving model to %s at compress ratio %.2f...\n", modelFile, ratio);
+        logger.start("以压缩比 %.2f 保存模型到 %s ... ", ratio, modelFile);
         if (ratio < 0 || ratio >= 1)
         {
-            throw new IllegalArgumentException("the compression ratio must be between 0 and 1");
+            throw new IllegalArgumentException("压缩比必须介于 0 和 1 之间");
         }
 
         DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(modelFile)));
@@ -183,6 +193,7 @@ public class LinearModel
 
         if (text) bw.close();
         out.close();
+        logger.finish(" 保存完毕\n");
     }
 
     /**
@@ -315,6 +326,8 @@ public class LinearModel
      */
     public void load(String modelFile) throws IOException
     {
+        if (HanLP.Config.DEBUG)
+            logger.start("加载 %s ... ", modelFile);
         DataInputStream in = new DataInputStream(new FileInputStream(modelFile));
         TaskType type = TaskType.values()[in.readInt()];
         TagSet tagSet = null;
@@ -357,6 +370,8 @@ public class LinearModel
         }
         assert in.available() == 0;
         in.close();
+        if (HanLP.Config.DEBUG)
+            logger.finish(" 加载完毕");
     }
 
     public TagSet tagSet()

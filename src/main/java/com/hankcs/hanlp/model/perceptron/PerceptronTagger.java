@@ -39,6 +39,11 @@ public abstract class PerceptronTagger
         this.model = model;
     }
 
+    public LinearModel getModel()
+    {
+        return model;
+    }
+
     /**
      * 在线学习
      *
