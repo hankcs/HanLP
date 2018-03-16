@@ -38,7 +38,7 @@ public class DemoPerceptronLexicalAnalyzer
         // 知识的泛化不是死板的规则，而是比较灵活的统计信息
         System.out.println(analyzer.analyze("我在浙江金华出生"));
         analyzer.learn("在/p 浙江/ns 金华/ns 出生/v");
-        System.out.println(analyzer.analyze("我在浙江金华出生"));
+        System.out.println(analyzer.analyze("我在四川金华出生"));
         System.out.println(analyzer.analyze("我的名字叫金华"));
     }
 }
