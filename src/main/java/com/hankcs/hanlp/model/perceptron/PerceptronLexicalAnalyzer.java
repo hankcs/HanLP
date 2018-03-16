@@ -101,6 +101,10 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
      */
     public Sentence analyze(String sentence)
     {
+        if (sentence.isEmpty())
+        {
+            return new Sentence(Collections.<IWord>emptyList());
+        }
         List<String> wordList = segmenter.segment(sentence);
         String[] wordArray = new String[wordList.size()];
         wordList.toArray(wordArray);
