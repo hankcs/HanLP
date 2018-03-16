@@ -316,4 +316,34 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
         if (neRecognizer != null && !neRecognizer.learn(sentence)) return false;
         return true;
     }
+
+    /**
+     * 获取分词器
+     *
+     * @return
+     */
+    public PerceptronSegmenter getSegmenter()
+    {
+        return segmenter;
+    }
+
+    /**
+     * 获取词性标注器
+     *
+     * @return
+     */
+    public PerceptronPOSTagger getPOSTagger()
+    {
+        return posTagger;
+    }
+
+    /**
+     * 获取命名实体识别器
+     *
+     * @return
+     */
+    public PerceptionNERecognizer getNERecognizer()
+    {
+        return neRecognizer;
+    }
 }
