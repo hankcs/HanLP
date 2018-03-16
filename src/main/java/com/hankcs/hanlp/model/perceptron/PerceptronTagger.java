@@ -15,12 +15,14 @@ import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.model.StructuredPerceptron;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 
+import java.io.IOException;
+
 /**
  * 抽象的感知机标注器
  *
  * @author hankcs
  */
-public abstract class PerceptronTagger
+public abstract class PerceptronTagger extends InstanceConsumer
 {
     /**
      * 用StructurePerceptron实现在线学习
@@ -63,5 +65,20 @@ public abstract class PerceptronTagger
      * @param sentence
      * @return
      */
-    public abstract boolean learn(Sentence sentence);
+    public boolean learn(Sentence sentence)
+    {
+        return learn(createInstance(sentence, model.featureMap));
+    }
+
+    /**
+     * 性能测试
+     *
+     * @param corpora 数据集
+     * @return 默认返回accuracy，有些子类可能返回P,R,F1
+     * @throws IOException
+     */
+    public double[] evaluate(String corpora) throws IOException
+    {
+        return evaluate(corpora, this.getModel());
+    }
 }

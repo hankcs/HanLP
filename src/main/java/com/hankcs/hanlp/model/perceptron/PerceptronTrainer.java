@@ -12,7 +12,6 @@ package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.common.FrequencyMap;
-import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureHashMap;
 import com.hankcs.hanlp.model.perceptron.feature.MutableFeatureMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
@@ -21,6 +20,7 @@ import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.model.StructuredPerceptron;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
 import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
+import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
 import com.hankcs.hanlp.classification.utilities.io.ConsoleLogger;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
@@ -30,7 +30,6 @@ import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.hankcs.hanlp.classification.utilities.Predefine.logger;
 import static java.lang.System.err;
 import static java.lang.System.out;
 
@@ -39,7 +38,7 @@ import static java.lang.System.out;
  *
  * @author hankcs
  */
-public abstract class PerceptronTrainer
+public abstract class PerceptronTrainer extends InstanceConsumer
 {
 
     /**
@@ -88,65 +87,12 @@ public abstract class PerceptronTrainer
         }
     }
 
-    public double[] evaluate(String developFile, String modelFile) throws IOException
-    {
-        return evaluate(developFile, new LinearModel(modelFile));
-    }
-
     /**
      * 创建标注集
      *
      * @return
      */
     protected abstract TagSet createTagSet();
-
-    protected abstract Instance createInstance(Sentence termArray, final FeatureMap featureMap);
-
-    public double[] evaluate(String developFile, final LinearModel model) throws IOException
-    {
-        final int[] stat = new int[2];
-        loadInstance(developFile, new InstanceHandler()
-        {
-            @Override
-            public boolean process(Sentence termArray)
-            {
-                Instance instance = createInstance(termArray, model.featureMap);
-                PerceptronTrainer.this.evaluate(instance, model, stat);
-                return false;
-            }
-        });
-
-        return new double[]{stat[1] / (double) stat[0] * 100};
-    }
-
-    public double[] evaluate(Instance[] instances, LinearModel model)
-    {
-        int[] stat = new int[2];
-        for (int i = 0; i < instances.length; i++)
-        {
-            evaluate(instances[i], model, stat);
-            if (i % 100 == 0 || i == instances.length - 1)
-            {
-                System.err.printf("%c进度: %.2f%%", 13, (i + 1) / (float) instances.length * 100);
-                System.err.flush();
-            }
-        }
-        return new double[]{stat[1] / (double) stat[0] * 100};
-    }
-
-    private void evaluate(Instance instance, LinearModel model, int[] stat)
-    {
-        int[] predLabel = new int[instance.length()];
-        model.viterbiDecode(instance, predLabel);
-        stat[0] += instance.tagArray.length;
-        for (int i = 0; i < predLabel.length; i++)
-        {
-            if (predLabel[i] == instance.tagArray[i])
-            {
-                ++stat[1];
-            }
-        }
-    }
 
     /**
      * 训练
@@ -214,13 +160,13 @@ public abstract class PerceptronTrainer
                 }
 
                 // 在开发集上校验
-                accuracy = trainingFile.equals(developFile) ? evaluate(instances, model) : evaluate(developFile, model);
+                accuracy = trainingFile.equals(developFile) ? IOUtility.evaluate(instances, model) : evaluate(developFile, model);
                 out.printf("Iter#%d - ", iter);
                 printAccuracy(accuracy);
             }
             // 平均
             model.average(total, timestamp, current);
-            accuracy = trainingFile.equals(developFile) ? evaluate(instances, model) : evaluate(developFile, model);
+            accuracy = trainingFile.equals(developFile) ? IOUtility.evaluate(instances, model) : evaluate(developFile, model);
             out.print("AP - ");
             printAccuracy(accuracy);
             logger.start("以压缩比 %.2f 保存模型到 %s ... ", compressRatio, modelFile);
@@ -267,7 +213,7 @@ public abstract class PerceptronTrainer
                     {
                         System.arraycopy(models[0].parameter, 0, models[i].parameter, 0, models[0].parameter.length);
                     }
-                    accuracy = trainingFile.equals(developFile) ? evaluate(instances, models[0]) : evaluate(developFile, models[0]);
+                    accuracy = trainingFile.equals(developFile) ? IOUtility.evaluate(instances, models[0]) : evaluate(developFile, models[0]);
                     out.printf("Iter#%d - ", iter);
                     printAccuracy(accuracy);
                 }
@@ -337,7 +283,7 @@ public abstract class PerceptronTrainer
     protected Instance[] loadTrainInstances(String trainingFile, final MutableFeatureMap mutableFeatureMap) throws IOException
     {
         final List<Instance> instanceList = new LinkedList<Instance>();
-        loadInstance(trainingFile, new InstanceHandler()
+        IOUtility.loadInstance(trainingFile, new InstanceHandler()
         {
             @Override
             public boolean process(Sentence sentence)
@@ -380,59 +326,6 @@ public abstract class PerceptronTrainer
     public Result train(String trainingFile, String developFile, String modelFile) throws IOException
     {
         return train(trainingFile, developFile, modelFile, 0.1, 10, Runtime.getRuntime().availableProcessors());
-    }
-
-    protected interface InstanceHandler
-    {
-        boolean process(Sentence instance);
-    }
-
-    protected static int loadInstance(final String path, InstanceHandler handler) throws IOException
-    {
-        int size = 0;
-        File root = new File(path);
-        File allFiles[];
-        if (root.isDirectory())
-        {
-            allFiles = root.listFiles(new FileFilter()
-            {
-                @Override
-                public boolean accept(File pathname)
-                {
-                    return pathname.isFile() && pathname.getName().endsWith(".txt");
-                }
-            });
-        }
-        else
-        {
-            allFiles = new File[]{root};
-        }
-
-        for (File file : allFiles)
-        {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-            String line;
-            while ((line = br.readLine()) != null)
-            {
-                line = line.trim();
-                if (line.length() == 0)
-                {
-                    continue;
-                }
-                Sentence sentence = Sentence.create(line);
-                if (sentence.wordList.size() == 0) continue;
-                ++size;
-                if (size % 1000 == 0)
-                {
-                    out.printf("%dk...", size / 1000);
-                }
-                // debug
-//                if (size == 100) break;
-                if (handler.process(sentence)) break;
-            }
-        }
-
-        return size;
     }
 
     private static void loadWordFromFile(String path, FrequencyMap storage, boolean segmented) throws IOException
