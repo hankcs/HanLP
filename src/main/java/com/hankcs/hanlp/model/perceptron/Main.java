@@ -142,7 +142,7 @@ public class Main
                 }
                 String line;
                 String lineSeparator = System.getProperty("line.separator");
-                while ((line = scanner.nextLine()) != null)
+                while (scanner.hasNext() && (line = scanner.nextLine()) != null)
                 {
                     line = line.trim();
                     if (line.length() == 0) continue;
