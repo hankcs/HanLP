@@ -162,6 +162,7 @@ public class HanLP
         public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
          * CRF依存模型
+         * @deprecated 已废弃，请使用{@link NeuralNetworkDependencyParser}
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
         /**
