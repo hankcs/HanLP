@@ -1,5 +1,6 @@
 package com.hankcs.hanlp.seg.Dijkstra;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.SegmentTestCase;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.Segment;
@@ -15,5 +16,14 @@ public class DijkstraSegmentTest extends SegmentTestCase
         List<Term> termList = segment.seg("好像向你借钱的人跑了");
         assertNoNature(termList, Nature.nr);
 //        System.out.println(termList);
+    }
+
+    public void testIssue770() throws Exception
+    {
+//        HanLP.Config.enableDebug();
+        Segment segment = new DijkstraSegment();
+        List<Term> termList = segment.seg("为什么我扔出的瓶子没有人回复？");
+//        System.out.println(termList);
+        assertSegmentationHas(termList, "瓶子 没有");
     }
 }

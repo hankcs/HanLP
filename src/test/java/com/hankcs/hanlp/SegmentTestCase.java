@@ -31,4 +31,15 @@ public class SegmentTestCase extends TestCase
         }
     }
 
+    @SuppressWarnings("deprecation")
+    public static void assertSegmentationHas(List<Term> termList, String part)
+    {
+        StringBuilder sbSentence = new StringBuilder();
+        for (Term term : termList)
+        {
+            sbSentence.append(term.word);
+        }
+        assertFalse(sbSentence.toString().contains(part));
+    }
+
 }
