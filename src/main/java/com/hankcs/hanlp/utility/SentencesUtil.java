@@ -8,21 +8,38 @@ import java.util.List;
 
 /**
  * 文本断句
- *
  */
 public class SentencesUtil
 {
     /**
-     * 将文本切割为句子
+     * 将文本切割为最细小的句子（逗号也视作分隔符）
+     *
      * @param content
      * @return
      */
     public static List<String> toSentenceList(String content)
     {
-        return toSentenceList(content.toCharArray());
+        return toSentenceList(content.toCharArray(), true);
+    }
+
+    /**
+     * 文本分句
+     *
+     * @param content  文本
+     * @param shortest 是否切割为最细的单位（将逗号也视作分隔符）
+     * @return
+     */
+    public static List<String> toSentenceList(String content, boolean shortest)
+    {
+        return toSentenceList(content.toCharArray(), shortest);
     }
 
     public static List<String> toSentenceList(char[] chars)
+    {
+        return toSentenceList(chars, true);
+    }
+
+    public static List<String> toSentenceList(char[] chars, boolean shortest)
     {
 
         StringBuilder sb = new StringBuilder();
@@ -55,31 +72,24 @@ public class SentencesUtil
                         insertIntoList(sb, sentences);
                         sb = new StringBuilder();
                     }
-                }break;
+                }
+                break;
+                case '，':
+                case ',':
+                case ';':
+                case '；':
+                    if (!shortest)
+                    {
+                        continue;
+                    }
                 case ' ':
                 case '	':
                 case ' ':
                 case '。':
-                case '，':
-                case ',':
-                    insertIntoList(sb, sentences);
-                    sb = new StringBuilder();
-                    break;
-                case ';':
-                case '；':
-                    insertIntoList(sb, sentences);
-                    sb = new StringBuilder();
-                    break;
                 case '!':
                 case '！':
-                    insertIntoList(sb, sentences);
-                    sb = new StringBuilder();
-                    break;
                 case '?':
                 case '？':
-                    insertIntoList(sb, sentences);
-                    sb = new StringBuilder();
-                    break;
                 case '\n':
                 case '\r':
                     insertIntoList(sb, sentences);
@@ -107,6 +117,7 @@ public class SentencesUtil
 
     /**
      * 句子中是否含有词性
+     *
      * @param sentence
      * @param nature
      * @return
