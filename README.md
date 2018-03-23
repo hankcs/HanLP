@@ -14,48 +14,47 @@ HanLP: Han Language Processing
 **HanLP**提供下列功能：
 
 * 中文分词
-    * 最短路分词
-    * N-最短路分词
-    * CRF分词
-    * 感知机中文分词
-    * 索引分词
-    * 极速词典分词
-    * 用户自定义词典
+    * [最短路分词](https://github.com/hankcs/HanLP#1-%E7%AC%AC%E4%B8%80%E4%B8%AAdemo)
+    * [N-最短路分词](https://github.com/hankcs/HanLP#5-n-%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E5%88%86%E8%AF%8D)
+    * [CRF分词](https://github.com/hankcs/HanLP#6-crf%E5%88%86%E8%AF%8D)
+    * [感知机中文分词](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)
+    * [索引分词](https://github.com/hankcs/HanLP#4-%E7%B4%A2%E5%BC%95%E5%88%86%E8%AF%8D)
+    * [极速词典分词](https://github.com/hankcs/HanLP#7-%E6%9E%81%E9%80%9F%E8%AF%8D%E5%85%B8%E5%88%86%E8%AF%8D)
+    * [用户自定义词典](https://github.com/hankcs/HanLP#8-%E7%94%A8%E6%88%B7%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%8D%E5%85%B8)
 * 词性标注
-    * HMM词性标注
-    * 感知机词性标注
+    * [HMM词性标注](https://github.com/hankcs/HanLP#3-nlp%E5%88%86%E8%AF%8D)
+    * [感知机词性标注](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)
 * 命名实体识别
-    * 中国人名识别
-    * 音译人名识别
-    * 日本人名识别
-    * 地名识别
-    * 实体机构名识别
-    * 感知机命名实体识别
+    * [中国人名识别](https://github.com/hankcs/HanLP#9-%E4%B8%AD%E5%9B%BD%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)
+    * [音译人名识别](https://github.com/hankcs/HanLP#10-%E9%9F%B3%E8%AF%91%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)
+    * [日本人名识别](https://github.com/hankcs/HanLP#11-%E6%97%A5%E6%9C%AC%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)
+    * [地名识别](https://github.com/hankcs/HanLP#12-%E5%9C%B0%E5%90%8D%E8%AF%86%E5%88%AB)
+    * [实体机构名识别](https://github.com/hankcs/HanLP#13-%E6%9C%BA%E6%9E%84%E5%90%8D%E8%AF%86%E5%88%AB)
+    * [感知机命名实体识别](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)
 * 关键词提取
-    * TextRank关键词提取
+    * [TextRank关键词提取](https://github.com/hankcs/HanLP#14-%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96)
 * 自动摘要
-    * TextRank自动摘要
+    * [TextRank自动摘要](https://github.com/hankcs/HanLP#15-%E8%87%AA%E5%8A%A8%E6%91%98%E8%A6%81)
 * 短语提取
-    * 基于互信息和左右信息熵的短语提取
-* 拼音转换
+    * [基于互信息和左右信息熵的短语提取](https://github.com/hankcs/HanLP#16-%E7%9F%AD%E8%AF%AD%E6%8F%90%E5%8F%96)
+* [拼音转换](https://github.com/hankcs/HanLP#17-%E6%8B%BC%E9%9F%B3%E8%BD%AC%E6%8D%A2)
     * 多音字
     * 声母
     * 韵母
     * 声调
-* 简繁转换
+* [简繁转换](https://github.com/hankcs/HanLP#18-%E7%AE%80%E7%B9%81%E8%BD%AC%E6%8D%A2)
     * 繁体中文分词
     * 简繁分歧词（简体、繁体、臺灣正體、香港繁體）
-* 文本推荐
+* [文本推荐](https://github.com/hankcs/HanLP#19-%E6%96%87%E6%9C%AC%E6%8E%A8%E8%8D%90)
     * 语义推荐
     * 拼音推荐
     * 字词推荐
 * 依存句法分析
-    * 基于神经网络的高性能依存句法分析器
-    * MaxEnt依存句法分析
-    * CRF依存句法分析
-* 文本分类
-    * 情感分析
-* word2vec
+    * [基于神经网络的高性能依存句法分析器](https://github.com/hankcs/HanLP#21-%E4%BE%9D%E5%AD%98%E5%8F%A5%E6%B3%95%E5%88%86%E6%9E%90)
+    * [MaxEnt依存句法分析](https://github.com/hankcs/HanLP/blob/master/src/main/java/com/hankcs/hanlp/dependency/MaxEntDependencyParser.java)
+* [文本分类](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%8E%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90)
+    * [情感分析](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%8E%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90#%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90)
+* [word2vec](https://github.com/hankcs/HanLP/wiki/word2vec)
     * 词向量训练、加载、词语相似度计算、语义运算、查询、KMeans聚类
     * 文档语义相似度计算
 * 语料库工具
@@ -72,13 +71,7 @@ HanLP: Han Language Processing
 
 ## 项目主页
 
-HanLP下载地址：https://github.com/hankcs/HanLP/releases
-
-国内下载地址：http://hanlp.dksou.com/HanLP.html
-
-Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
-
-更多细节：https://github.com/hankcs/HanLP/wiki
+[在线演示](http://hanlp.hankcs.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[国内下载](http://hanlp.dksou.com/HanLP.html)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[更多细节](https://github.com/hankcs/HanLP/wiki)。
 
 ------
 
@@ -92,7 +85,7 @@ Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.6.0</version>
+    <version>portable-1.6.1</version>
 </dependency>
 ```
 
@@ -108,9 +101,7 @@ Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 
 #### 2、下载data
 
-| 数据包        | 功能   |  体积（MB）  |
-| --------   | -----:  | :----:  |
-| [data.zip](https://github.com/hankcs/HanLP/releases)     | 全部 |   255     |
+[data.zip](https://github.com/hankcs/HanLP/releases) 
 
 下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
 
@@ -122,12 +113,12 @@ Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
     └─model
 
 用户可以自行增删替换，如果不需要句法分析功能的话，随时可以删除model文件夹。
+
 - 模型跟词典没有绝对的区别，隐马模型被做成人人都可以编辑的词典形式，不代表它不是模型。
 - GitHub代码库中已经包含了data.zip中的词典，直接编译运行自动缓存即可；模型则需要额外下载。
 
 #### 3、配置文件
-示例配置文件:[hanlp.properties](https://github.com/hankcs/HanLP/releases)
-在GitHub的发布页中，```hanlp.properties```一般和```jar```打包在同一个```zip```包中。
+示例配置文件在[hanlp.properties](https://github.com/hankcs/HanLP/releases)，一般和```jar```打包在同一个```zip```包中。
 
 配置文件的作用是告诉HanLP数据包的位置，只需修改第一行
 
@@ -679,7 +670,7 @@ public class DemoWord2Vec
 
 ```java
 /**
- * 依存句法分析（CRF句法模型需要-Xms512m -Xmx512m -Xmn256m，MaxEnt和神经网络句法模型需要-Xms1g -Xmx1g -Xmn512m）
+ * 依存句法分析（MaxEnt和神经网络句法模型需要-Xms1g -Xmx1g -Xmn512m）
  * @author hankcs
  */
 public class DemoDependencyParser
@@ -716,7 +707,6 @@ public class DemoDependencyParser
 - 算法详解
   * [《基于神经网络分类模型与转移系统的判决式依存句法分析器》](http://www.hankcs.com/nlp/parsing/neural-network-based-dependency-parser.html)
   * [《最大熵依存句法分析器的实现》](http://www.hankcs.com/nlp/parsing/to-achieve-the-maximum-entropy-of-the-dependency-parser.html)
-  * [《基于CRF序列标注的中文依存句法分析器的Java实现》](http://www.hankcs.com/nlp/parsing/crf-sequence-annotation-chinese-dependency-parser-implementation-based-on-java.html)
 
 ## 词典说明
 本章详细介绍**HanLP**中的词典格式，满足用户自定义的需要。**HanLP**中有许多词典，它们的格式都是相似的，形式都是文本文档，随时可以修改。

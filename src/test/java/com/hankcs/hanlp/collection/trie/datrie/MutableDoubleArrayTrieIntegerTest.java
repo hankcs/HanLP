@@ -30,7 +30,7 @@ public class MutableDoubleArrayTrieIntegerTest extends TestCase
         mdat = new MutableDoubleArrayTrieInteger();
         mdat.load(ByteArray.createByteArray(tempFile.getAbsolutePath()));
         assertEquals(size, mdat.size());
-        for (int i = 0; i < 64; ++i)
+        for (int i = 0; i < size; ++i)
         {
             assertEquals(i, mdat.get(String.valueOf(i)));
         }

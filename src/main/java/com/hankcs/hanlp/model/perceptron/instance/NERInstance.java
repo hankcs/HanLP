@@ -133,9 +133,7 @@ public class NERInstance extends Instance
             }
             else
             {
-                if (word.getLabel().equals("nr") ||
-                    word.getLabel().equals("nt") ||
-                    word.getLabel().equals("ns"))
+                if (nerLabels.contains(word.getLabel()))
                 {
                     // 单个实体
                     collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.S_TAG});

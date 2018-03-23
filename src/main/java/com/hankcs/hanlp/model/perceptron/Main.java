@@ -10,6 +10,7 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.cli.Args;
 import com.hankcs.hanlp.model.perceptron.cli.Argument;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
@@ -42,8 +43,8 @@ public class Main
         @Argument(description = "执行评估任务")
         boolean evaluate;
 
-        @Argument(description = "模型文件路径", required = true)
-        String model;
+        @Argument(description = "模型文件路径")
+        String[] model = new String[]{HanLP.Config.PerceptronCWSModelPath, HanLP.Config.PerceptronPOSModelPath, HanLP.Config.PerceptronNERModelPath};
 
         @Argument(description = "输入文本路径")
         String input;
@@ -92,22 +93,22 @@ public class Main
             }
             if (option.train)
             {
-                trainer.train(option.reference, option.development, option.model, option.compressRatio,
-                                               option.iter, option.thread);
+                trainer.train(option.reference, option.development, option.model[0], option.compressRatio,
+                              option.iter, option.thread);
             }
             else if (option.evaluate)
             {
-                double[] prf = trainer.evaluate(option.gold, option.model);
+                double[] prf = trainer.evaluate(option.gold, option.model[0]);
                 out.printf("Performance - P:%.2f R:%.2f F:%.2f\n", prf[0], prf[1], prf[2]);
             }
             else
             {
                 PerceptronLexicalAnalyzer analyzer;
-                String[] models = option.model.split("[;:]");
+                String[] models = option.model;
                 switch (models.length)
                 {
                     case 1:
-                        analyzer = new PerceptronLexicalAnalyzer(option.model);
+                        analyzer = new PerceptronLexicalAnalyzer(models[0]);
                         break;
                     case 2:
                         analyzer = new PerceptronLexicalAnalyzer(models[0], models[1]);
@@ -141,7 +142,7 @@ public class Main
                 }
                 String line;
                 String lineSeparator = System.getProperty("line.separator");
-                while ((line = scanner.nextLine()) != null)
+                while (scanner.hasNext() && (line = scanner.nextLine()) != null)
                 {
                     line = line.trim();
                     if (line.length() == 0) continue;

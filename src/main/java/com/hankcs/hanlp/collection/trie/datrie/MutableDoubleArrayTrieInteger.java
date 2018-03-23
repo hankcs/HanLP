@@ -1317,7 +1317,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
             for (int i = startChar; i < charMap.getCharsetSize(); i++)
             {
                 int to = baseParent + i;
-                if (check.get(to) == from)
+                if (check.size() > to && check.get(to) == from)
                 {
                     path.append(i);
                     from = to;
