@@ -1,5 +1,8 @@
 package com.hankcs.hanlp.classification.tokenizers;
 
+import com.hankcs.hanlp.dictionary.other.CharTable;
+import com.hankcs.hanlp.dictionary.other.CharType;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
