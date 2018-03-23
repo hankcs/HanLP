@@ -11,8 +11,8 @@
  */
 package com.hankcs.hanlp.collection.trie.bintrie;
 
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.ITrie;
-import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.TextUtility;
@@ -501,6 +501,142 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable
             {
                 child[i] = new Node<V>();
                 child[i].walkToLoad(in);
+            }
+        }
+    }
+
+    /**
+     * 最长匹配
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public void parseLongestText(String text, AhoCorasickDoubleArrayTrie.IHit<V> processor)
+    {
+        int length = text.length();
+        for (int i = 0; i < length; ++i)
+        {
+            BaseNode<V> state = transition(text.charAt(i));
+            if (state != null)
+            {
+                int to = i + 1;
+                int end = to;
+                V value = state.getValue();
+                for (; to < length; ++to)
+                {
+                    state = state.transition(text.charAt(to));
+                    if (state == null) break;
+                    if (state.getValue() != null)
+                    {
+                        value = state.getValue();
+                        end = to + 1;
+                    }
+                }
+                if (value != null)
+                {
+                    processor.hit(i, end, value);
+                    i = end - 1;
+                }
+            }
+        }
+    }
+
+    /**
+     * 最长匹配
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public void parseLongestText(char[] text, AhoCorasickDoubleArrayTrie.IHit<V> processor)
+    {
+        int length = text.length;
+        for (int i = 0; i < length; ++i)
+        {
+            BaseNode<V> state = transition(text[i]);
+            if (state != null)
+            {
+                int to = i + 1;
+                int end = to;
+                V value = state.getValue();
+                for (; to < length; ++to)
+                {
+                    state = state.transition(text[to]);
+                    if (state == null) break;
+                    if (state.getValue() != null)
+                    {
+                        value = state.getValue();
+                        end = to + 1;
+                    }
+                }
+                if (value != null)
+                {
+                    processor.hit(i, end, value);
+                    i = end - 1;
+                }
+            }
+        }
+    }
+
+    /**
+     * 匹配文本
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public void parseText(String text, AhoCorasickDoubleArrayTrie.IHit<V> processor)
+    {
+        int length = text.length();
+        int begin = 0;
+        BaseNode<V> state = this;
+
+        for (int i = begin; i < length; ++i)
+        {
+            state = state.transition(text.charAt(i));
+            if (state != null)
+            {
+                V value = state.getValue();
+                if (value != null)
+                {
+                    processor.hit(begin, i + 1, value);
+                }
+            }
+            else
+            {
+                i = begin;
+                ++begin;
+                state = this;
+            }
+        }
+    }
+
+    /**
+     * 匹配文本
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public void parseText(char[] text, AhoCorasickDoubleArrayTrie.IHit<V> processor)
+    {
+        int length = text.length;
+        int begin = 0;
+        BaseNode<V> state = this;
+
+        for (int i = begin; i < length; ++i)
+        {
+            state = state.transition(text[i]);
+            if (state != null)
+            {
+                V value = state.getValue();
+                if (value != null)
+                {
+                    processor.hit(begin, i + 1, value);
+                }
+            }
+            else
+            {
+                i = begin;
+                ++begin;
+                state = this;
             }
         }
     }

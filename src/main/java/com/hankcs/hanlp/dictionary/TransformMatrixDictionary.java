@@ -153,6 +153,7 @@ public class TransformMatrixDictionary<E extends Enum<E>>
         catch (Exception e)
         {
             logger.warning("读取" + path + "失败" + e);
+            return false;
         }
 
         return true;

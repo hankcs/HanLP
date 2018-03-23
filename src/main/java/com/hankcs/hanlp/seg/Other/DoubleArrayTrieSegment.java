@@ -18,7 +18,6 @@ import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.DictionaryBasedSegment;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
-import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.Arrays;
@@ -47,6 +46,7 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
 
     /**
      * 根据自己的trie树构造分词器
+     *
      * @param trie
      */
     public DoubleArrayTrieSegment(DoubleArrayTrie<CoreDictionary.Attribute> trie)
@@ -63,37 +63,29 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
         final int[] wordNet = new int[charArray.length];
         Arrays.fill(wordNet, 1);
         final Nature[] natureArray = config.speechTagging ? new Nature[charArray.length] : null;
-        DoubleArrayTrie<CoreDictionary.Attribute>.Searcher searcher = trie.getSearcher(sentence, 0);
-        while (searcher.next())
-        {
-            int length = searcher.length;
-            if (length > wordNet[searcher.begin])
-            {
-                wordNet[searcher.begin] = length;
-                if (config.speechTagging)
-                {
-                    natureArray[searcher.begin] = searcher.value.nature[0];
-                }
-            }
-        }
+        matchLongest(sentence, wordNet, natureArray, trie);
         if (config.useCustomDictionary)
         {
-            CustomDictionary.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            matchLongest(sentence, wordNet, natureArray, CustomDictionary.dat);
+            if (CustomDictionary.trie != null)
             {
-                @Override
-                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                CustomDictionary.trie.parseLongestText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
                 {
-                    int length = end - begin;
-                    if (length > wordNet[begin])
+                    @Override
+                    public void hit(int begin, int end, CoreDictionary.Attribute value)
                     {
-                        wordNet[begin] = length;
-                        if (config.speechTagging)
+                        int length = end - begin;
+                        if (length > wordNet[begin])
                         {
-                            natureArray[begin] = value.nature[0];
+                            wordNet[begin] = length;
+                            if (config.speechTagging)
+                            {
+                                natureArray[begin] = value.nature[0];
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
         LinkedList<Term> termList = new LinkedList<Term>();
         if (config.speechTagging)
@@ -133,5 +125,18 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
             i += wordNet[i];
         }
         return termList;
+    }
+
+    private void matchLongest(char[] sentence, int[] wordNet, Nature[] natureArray, DoubleArrayTrie<CoreDictionary.Attribute> trie)
+    {
+        DoubleArrayTrie<CoreDictionary.Attribute>.LongestSearcher searcher = trie.getLongestSearcher(sentence, 0);
+        while (searcher.next())
+        {
+            wordNet[searcher.begin] = searcher.length;
+            if (config.speechTagging)
+            {
+                natureArray[searcher.begin] = searcher.value.nature[0];
+            }
+        }
     }
 }

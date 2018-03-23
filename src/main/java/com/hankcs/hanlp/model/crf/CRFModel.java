@@ -211,18 +211,24 @@ public class CRFModel implements ICacheAble
         }
 
         int[][] from = new int[size][tagSize];
+        double[][] maxScoreAt = new double[2][tagSize]; // 滚动数组
+        System.arraycopy(net[0], 0, maxScoreAt[0], 0, tagSize); // 初始preI=0,  maxScoreAt[preI][pre] = net[0][pre]
+        int curI = 0;
         for (int i = 1; i < size; ++i)
         {
+            curI = i & 1;
+            int preI = 1 - curI;
             for (int now = 0; now < tagSize; ++now)
             {
                 double maxScore = -1e10;
                 for (int pre = 0; pre < tagSize; ++pre)
                 {
-                    double score = net[i - 1][pre] + matrix[pre][now] + net[i][now];
+                    double score = maxScoreAt[preI][pre] + matrix[pre][now] + net[i][now];
                     if (score > maxScore)
                     {
                         maxScore = score;
                         from[i][now] = pre;
+                        maxScoreAt[curI][now] = maxScore;
                     }
                 }
                 net[i][now] = maxScore;
@@ -231,11 +237,11 @@ public class CRFModel implements ICacheAble
         // 反向回溯最佳路径
         double maxScore = -1e10;
         int maxTag = 0;
-        for (int tag = 0; tag < net[size - 1].length; ++tag)
+        for (int tag = 0; tag < tagSize; ++tag)
         {
-            if (net[size - 1][tag] > maxScore)
+            if (maxScoreAt[curI][tag] > maxScore)
             {
-                maxScore = net[size - 1][tag];
+                maxScore = maxScoreAt[curI][tag];
                 maxTag = tag;
             }
         }

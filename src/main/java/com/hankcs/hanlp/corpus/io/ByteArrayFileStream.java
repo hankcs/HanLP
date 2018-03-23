@@ -107,6 +107,7 @@ public class ByteArrayFileStream extends ByteArrayStream
         super.close();
         try
         {
+            if (fileChannel == null) return;
             fileChannel.close();
         }
         catch (IOException e)

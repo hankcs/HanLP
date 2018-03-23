@@ -17,16 +17,20 @@ HanLP: Han Language Processing
     * 最短路分词
     * N-最短路分词
     * CRF分词
+    * 感知机中文分词
     * 索引分词
     * 极速词典分词
     * 用户自定义词典
 * 词性标注
+    * HMM词性标注
+    * 感知机词性标注
 * 命名实体识别
     * 中国人名识别
     * 音译人名识别
     * 日本人名识别
     * 地名识别
     * 实体机构名识别
+    * 感知机命名实体识别
 * 关键词提取
     * TextRank关键词提取
 * 自动摘要
@@ -88,7 +92,7 @@ Solr、Lucene插件：https://github.com/hankcs/hanlp-solr-plugin
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.5.3</version>
+    <version>portable-1.6.0</version>
 </dependency>
 ```
 

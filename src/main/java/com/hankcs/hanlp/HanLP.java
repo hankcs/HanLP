@@ -165,6 +165,18 @@ public class HanLP
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
         /**
+         * 感知机分词模型
+         */
+        public static String PerceptronCWSModelPath = "data/model/perceptron/pku199801/cws.bin";
+        /**
+         * 感知机词性标注模型
+         */
+        public static String PerceptronPOSModelPath = "data/model/perceptron/pku199801/pos.bin";
+        /**
+         * 感知机命名实体识别模型
+         */
+        public static String PerceptronNERModelPath = "data/model/perceptron/pku199801/ner.bin";
+        /**
          * 分词结果是否展示词性
          */
         public static boolean ShowTermNature = true;
@@ -239,6 +251,9 @@ public class HanLP
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
+                PerceptronCWSModelPath = root + p.getProperty("PerceptronCWSModelPath", PerceptronCWSModelPath);
+                PerceptronPOSModelPath = root + p.getProperty("PerceptronPOSModelPath", PerceptronPOSModelPath);
+                PerceptronNERModelPath = root + p.getProperty("PerceptronNERModelPath", PerceptronNERModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
                 Normalization = "true".equals(p.getProperty("Normalization", "false"));
                 String ioAdapterClassName = p.getProperty("IOAdapter");
