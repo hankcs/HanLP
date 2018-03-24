@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.corpus.document.sentence;
 
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.document.sentence.word.WordFactory;
@@ -50,6 +51,46 @@ public class Sentence implements Serializable, Iterable<IWord>
             ++i;
         }
         return sb.toString();
+    }
+
+    /**
+     * brat standoff format<br>
+     *     http://brat.nlplab.org/standoff.html
+     * @return
+     */
+    public String toAnnotation()
+    {
+        StringBuilder sb = new StringBuilder(size() * 4);
+        sb.append(text()).append('\n');
+        int i = 1;
+        int offset = 0;
+        for (IWord word : wordList)
+        {
+            printWord(word, sb, i, offset);
+            ++i;
+            if (word instanceof CompoundWord)
+            {
+                int offsetChild = offset;
+                for (Word child : ((CompoundWord) word).innerList)
+                {
+                    printWord(child, sb, i, offsetChild);
+                    offsetChild += child.length();
+                    ++i;
+                }
+            }
+            offset += word.length();
+        }
+        return sb.toString();
+    }
+
+    private void printWord(IWord word, StringBuilder sb, int id, int offset)
+    {
+        char delimiter = '\t';
+        char endLine = '\n';
+        sb.append('T').append(id).append(delimiter);
+        sb.append(word.getLabel()).append(delimiter);
+        sb.append(offset).append(delimiter).append(offset + word.length()).append(delimiter);
+        sb.append(word.getValue()).append(endLine);
     }
 
     /**

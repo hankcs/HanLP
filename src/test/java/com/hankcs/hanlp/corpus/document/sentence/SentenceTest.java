@@ -8,6 +8,12 @@ import java.util.regex.Pattern;
 
 public class SentenceTest extends TestCase
 {
+    public void testToAnnotation() throws Exception
+    {
+        Sentence sentence = Sentence.create("人民网/nz [纽约/nsf 时报/n]/nz 报道/v");
+        System.out.println(sentence.toAnnotation());
+    }
+
     public void testText() throws Exception
     {
         assertEquals("人民网纽约时报", Sentence.create("人民网/nz [纽约/nsf 时报/n]/nz").text());
