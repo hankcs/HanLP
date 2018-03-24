@@ -140,6 +140,11 @@ public class HanLP
         public static String CharTablePath = "data/dictionary/other/CharTable.txt";
 
         /**
+         * 词性标注集描述表，用来进行中英映射（对于Nature词性，可直接参考Nature.java中的注释）
+         */
+        public static String PartOfSpeechTagDictionary = "data/dictionary/other/TagPKU98.csv";
+
+        /**
          * 词-词性-依存关系模型
          */
         public static String WordNatureModelPath = "data/model/dependency/WordNature.txt";
@@ -246,6 +251,7 @@ public class HanLP
                 OrganizationDictionaryTrPath = root + p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
                 CharTypePath = root + p.getProperty("CharTypePath", CharTypePath);
                 CharTablePath = root + p.getProperty("CharTablePath", CharTablePath);
+                PartOfSpeechTagDictionary = root + p.getProperty("PartOfSpeechTagDictionary", PartOfSpeechTagDictionary);
                 WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
