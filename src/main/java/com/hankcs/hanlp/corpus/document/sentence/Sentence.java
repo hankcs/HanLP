@@ -151,7 +151,7 @@ public class Sentence implements Serializable, Iterable<IWord>
             IWord word = WordFactory.create(single);
             if (word == null)
             {
-                logger.warning("在用" + single + "构造单词时失败");
+                logger.warning("在用 " + single + " 构造单词时失败，句子构造参数为 " + param);
                 return null;
             }
             wordList.add(word);
