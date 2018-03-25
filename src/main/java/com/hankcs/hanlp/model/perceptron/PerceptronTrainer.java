@@ -118,7 +118,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
         TagSet tagSet = createTagSet();
         MutableFeatureMap mutableFeatureMap = new MutableFeatureMap(tagSet);
         ConsoleLogger logger = new ConsoleLogger();
-        logger.start("开始加载训练集...");
+        logger.start("开始加载训练集...\n");
         Instance[] instances = loadTrainInstances(trainingFile, mutableFeatureMap);
         tagSet.lock();
         logger.finish("\n加载完毕，实例一共%d句，特征总数%d\n", instances.length, mutableFeatureMap.size() * tagSet.size());
