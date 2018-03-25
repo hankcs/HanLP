@@ -1,14 +1,32 @@
 package com.hankcs.hanlp.corpus.document.sentence;
 
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.WordFactory;
 import junit.framework.TestCase;
 
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SentenceTest extends TestCase
 {
-    public void testToAnnotation() throws Exception
+    public void testFindFirstWordIteratorByLabel() throws Exception
+    {
+        Sentence sentence = Sentence.create("[上海/ns 华安/nz 工业/n （/w 集团/n ）/w 公司/n]/nt 董事长/n 谭旭光/nr 和/c 秘书/n 胡花蕊/nr 来到/v [美国/ns 纽约/ns 现代/t 艺术/n 博物馆/n]/ns 参观/v");
+        ListIterator<IWord> nt = sentence.findFirstWordIteratorByLabel("nt");
+        assertNotNull(nt);
+        assertEquals("[上海/ns 华安/nz 工业/n （/w 集团/n ）/w 公司/n]/nt", nt.previous().toString());
+        CompoundWord apple = CompoundWord.create("[苹果/n 公司/n]/nt");
+        nt.set(apple);
+        assertEquals(sentence.findFirstWordByLabel("nt"), apple);
+        nt.remove();
+        assertEquals("董事长/n 谭旭光/nr 和/c 秘书/n 胡花蕊/nr 来到/v [美国/ns 纽约/ns 现代/t 艺术/n 博物馆/n]/ns 参观/v", sentence.toString());
+        ListIterator<IWord> ns = sentence.findFirstWordIteratorByLabel("ns");
+        assertEquals("参观/v", ns.next().toString());
+    }
+
+    public void testToStandoff() throws Exception
     {
         Sentence sentence = Sentence.create("[上海/ns 华安/nz 工业/n （/w 集团/n ）/w 公司/n]/nt 董事长/n 谭旭光/nr 和/c 秘书/n 胡花蕊/nr 来到/v [美国/ns 纽约/ns 现代/t 艺术/n 博物馆/n]/ns 参观/v");
         System.out.println(sentence.toStandoff());

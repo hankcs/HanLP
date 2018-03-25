@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -235,5 +236,75 @@ public class Sentence implements Serializable, Iterable<IWord>
     public Iterator<IWord> iterator()
     {
         return wordList.iterator();
+    }
+
+    /**
+     * 找出所有词性为label的单词（不检查复合词内部的简单词）
+     *
+     * @param label
+     * @return
+     */
+    public List<IWord> findWordsByLabel(String label)
+    {
+        List<IWord> wordList = new LinkedList<IWord>();
+        for (IWord word : this)
+        {
+            if (label.equals(word.getLabel()))
+            {
+                wordList.add(word);
+            }
+        }
+        return wordList;
+    }
+
+    /**
+     * 找出第一个词性为label的单词（不检查复合词内部的简单词）
+     *
+     * @param label
+     * @return
+     */
+    public IWord findFirstWordByLabel(String label)
+    {
+        for (IWord word : this)
+        {
+            if (label.equals(word.getLabel()))
+            {
+                return word;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 找出第一个词性为label的单词的指针（不检查复合词内部的简单词）<br>
+     * 若要查看该单词，请调用 previous<br>
+     * 若要删除该单词，请调用 remove<br>
+     *
+     * @param label
+     * @return
+     */
+    public ListIterator<IWord> findFirstWordIteratorByLabel(String label)
+    {
+        ListIterator<IWord> listIterator = this.wordList.listIterator();
+        while (listIterator.hasNext())
+        {
+            IWord word = listIterator.next();
+            if (label.equals(word.getLabel()))
+            {
+                return listIterator;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 是否含有词性为label的单词
+     *
+     * @param label
+     * @return
+     */
+    public boolean containsWordWithLabel(String label)
+    {
+        return findFirstWordByLabel(label) != null;
     }
 }
