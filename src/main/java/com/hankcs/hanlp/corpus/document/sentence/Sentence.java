@@ -67,11 +67,13 @@ public class Sentence implements Serializable, Iterable<IWord>
     {
         StringBuilder sb = new StringBuilder(size() * 4);
         String delimiter = " ";
-        sb.append(text(delimiter)).append('\n');
+        String text = text(delimiter);
+        sb.append(text).append('\n');
         int i = 1;
         int offset = 0;
         for (IWord word : wordList)
         {
+            assert text.charAt(offset) == word.getValue().charAt(0);
             printWord(word, sb, i, offset);
             ++i;
             if (word instanceof CompoundWord)
@@ -84,9 +86,13 @@ public class Sentence implements Serializable, Iterable<IWord>
                     offsetChild += delimiter.length();
                     ++i;
                 }
+                offset += delimiter.length() * ((CompoundWord) word).innerList.size();
+            }
+            else
+            {
+                offset += delimiter.length();
             }
             offset += word.length();
-            offset += delimiter.length();
         }
         return sb.toString();
     }
@@ -118,7 +124,12 @@ public class Sentence implements Serializable, Iterable<IWord>
         char endLine = '\n';
         sb.append('T').append(id).append(delimiter);
         sb.append(word.getLabel()).append(delimiter);
-        sb.append(offset).append(delimiter).append(offset + word.length()).append(delimiter);
+        int length = word.length();
+        if (word instanceof CompoundWord)
+        {
+            length += ((CompoundWord) word).innerList.size() - 1;
+        }
+        sb.append(offset).append(delimiter).append(offset + length).append(delimiter);
         sb.append(word.getValue()).append(endLine);
     }
 
