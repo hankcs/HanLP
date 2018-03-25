@@ -44,7 +44,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
     /**
      * 训练结果
      */
-    static class Result
+    public static class Result
     {
         /**
          * 模型
