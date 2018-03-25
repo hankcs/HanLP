@@ -10,8 +10,8 @@ public class SentenceTest extends TestCase
 {
     public void testToAnnotation() throws Exception
     {
-        Sentence sentence = Sentence.create("人民网/nz [纽约/nsf 时报/n]/nz 报道/v");
-        System.out.println(sentence.toAnnotation());
+        Sentence sentence = Sentence.create("人民网/nz [纽约/ns 时报/n]/nz 报道/v news/nx").translateLabels();
+        System.out.println(sentence.toStandoff());
     }
 
     public void testText() throws Exception

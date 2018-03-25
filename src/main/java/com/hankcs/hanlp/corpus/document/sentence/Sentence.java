@@ -15,6 +15,7 @@ import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.document.sentence.word.WordFactory;
+import com.hankcs.hanlp.dictionary.other.PartOfSpeechTagDictionary;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -22,9 +23,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * 句子，指的是以。！等标点结尾的句子
+ *
  * @author hankcs
  */
 public class Sentence implements Serializable, Iterable<IWord>
@@ -55,13 +59,15 @@ public class Sentence implements Serializable, Iterable<IWord>
 
     /**
      * brat standoff format<br>
-     *     http://brat.nlplab.org/standoff.html
+     * http://brat.nlplab.org/standoff.html
+     *
      * @return
      */
-    public String toAnnotation()
+    public String toStandoff()
     {
         StringBuilder sb = new StringBuilder(size() * 4);
-        sb.append(text()).append('\n');
+        String delimiter = " ";
+        sb.append(text(delimiter)).append('\n');
         int i = 1;
         int offset = 0;
         for (IWord word : wordList)
@@ -75,12 +81,35 @@ public class Sentence implements Serializable, Iterable<IWord>
                 {
                     printWord(child, sb, i, offsetChild);
                     offsetChild += child.length();
+                    offsetChild += delimiter.length();
                     ++i;
                 }
             }
             offset += word.length();
+            offset += delimiter.length();
         }
         return sb.toString();
+    }
+
+    /**
+     * 按照 PartOfSpeechTagDictionary 指定的映射表将词语词性翻译过去
+     *
+     * @return
+     */
+    public Sentence translateLabels()
+    {
+        for (IWord word : wordList)
+        {
+            word.setLabel(PartOfSpeechTagDictionary.translate(word.getLabel()));
+            if (word instanceof CompoundWord)
+            {
+                for (Word child : ((CompoundWord) word).innerList)
+                {
+                    child.setLabel(PartOfSpeechTagDictionary.translate(child.getLabel()));
+                }
+            }
+        }
+        return this;
     }
 
     private void printWord(IWord word, StringBuilder sb, int id, int offset)
@@ -95,6 +124,7 @@ public class Sentence implements Serializable, Iterable<IWord>
 
     /**
      * 以人民日报2014语料格式的字符串创建一个结构化句子
+     *
      * @param param
      * @return
      */
@@ -127,6 +157,7 @@ public class Sentence implements Serializable, Iterable<IWord>
 
     /**
      * 句子中单词（复合词或简单词）的数量
+     *
      * @return
      */
     public int size()
@@ -136,6 +167,7 @@ public class Sentence implements Serializable, Iterable<IWord>
 
     /**
      * 句子文本长度
+     *
      * @return
      */
     public int length()
@@ -151,15 +183,39 @@ public class Sentence implements Serializable, Iterable<IWord>
 
     /**
      * 原始文本形式（无标注，raw text）
+     *
      * @return
      */
     public String text()
     {
+        return text(null);
+    }
+
+    /**
+     * 原始文本形式（无标注，raw text）
+     *
+     * @param delimiter 词语之间的分隔符
+     * @return
+     */
+    public String text(String delimiter)
+    {
+        if (delimiter == null) delimiter = "";
         StringBuilder sb = new StringBuilder(size() * 3);
         for (IWord word : this)
         {
-            sb.append(word.getValue());
+            if (word instanceof CompoundWord)
+            {
+                for (Word child : ((CompoundWord) word).innerList)
+                {
+                    sb.append(child.getValue()).append(delimiter);
+                }
+            }
+            else
+            {
+                sb.append(word.getValue()).append(delimiter);
+            }
         }
+        sb.setLength(sb.length() - delimiter.length());
 
         return sb.toString();
     }
