@@ -105,12 +105,17 @@ public class CharTable
     {
         assert charArray != null;
         char[] result = new char[charArray.length()];
+        convert(charArray, result);
+
+        return new String(result);
+    }
+
+    public static void convert(String charArray, char[] result)
+    {
         for (int i = 0; i < charArray.length(); i++)
         {
             result[i] = CONVERT[charArray.charAt(i)];
         }
-
-        return new String(result);
     }
 
     /**

@@ -68,7 +68,7 @@ public class Main
         Double compressRatio = 0.0;
 
         @Argument(description = "线程数")
-        int thread = Runtime.getRuntime().availableProcessors();
+        Integer thread = Runtime.getRuntime().availableProcessors();
     }
 
     public static void main(String[] args)

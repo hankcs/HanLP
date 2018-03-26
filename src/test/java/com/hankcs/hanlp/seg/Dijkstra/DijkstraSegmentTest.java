@@ -1,7 +1,6 @@
 package com.hankcs.hanlp.seg.Dijkstra;
 
-import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.SegmentTestCase;
+import com.hankcs.hanlp.seg.SegmentTestCase;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
