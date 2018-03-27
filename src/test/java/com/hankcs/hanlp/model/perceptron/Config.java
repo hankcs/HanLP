@@ -10,12 +10,14 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
+
 /**
  * @author hankcs
  */
 public class Config
 {
-    public static final String CWS_MODEL_FILE = "data/test/perceptron/cws.bin";
-    public static final String POS_MODEL_FILE = "data/test/perceptron/pos.bin";
-    public static final String NER_MODEL_FILE = "data/test/perceptron/ner.bin";
+    public static final String CWS_MODEL_FILE = HanLP.Config.PerceptronCWSModelPath;
+    public static final String POS_MODEL_FILE = HanLP.Config.PerceptronPOSModelPath;
+    public static final String NER_MODEL_FILE = HanLP.Config.PerceptronNERModelPath;
 }

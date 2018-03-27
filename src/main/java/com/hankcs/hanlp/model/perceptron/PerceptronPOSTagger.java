@@ -10,6 +10,9 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
+import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.instance.POSInstance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
@@ -37,6 +40,15 @@ public class PerceptronPOSTagger extends PerceptronTagger
     public PerceptronPOSTagger(String modelPath) throws IOException
     {
         this(new LinearModel(modelPath));
+    }
+
+    /**
+     * 加载配置文件指定的模型
+     * @throws IOException
+     */
+    public PerceptronPOSTagger() throws IOException
+    {
+        this(HanLP.Config.PerceptronPOSModelPath);
     }
 
     /**
@@ -98,8 +110,8 @@ public class PerceptronPOSTagger extends PerceptronTagger
     }
 
     @Override
-    public boolean learn(Sentence sentence)
+    protected Instance createInstance(Sentence sentence, FeatureMap featureMap)
     {
-        return learn(POSInstance.create(sentence, model.featureMap));
+        return POSInstance.create(sentence, featureMap);
     }
 }

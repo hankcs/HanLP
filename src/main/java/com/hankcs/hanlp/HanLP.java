@@ -140,6 +140,11 @@ public class HanLP
         public static String CharTablePath = "data/dictionary/other/CharTable.txt";
 
         /**
+         * 词性标注集描述表，用来进行中英映射（对于Nature词性，可直接参考Nature.java中的注释）
+         */
+        public static String PartOfSpeechTagDictionary = "data/dictionary/other/TagPKU98.csv";
+
+        /**
          * 词-词性-依存关系模型
          */
         public static String WordNatureModelPath = "data/model/dependency/WordNature.txt";
@@ -162,8 +167,21 @@ public class HanLP
         public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
          * CRF依存模型
+         * @deprecated 已废弃，请使用{@link NeuralNetworkDependencyParser}
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
+        /**
+         * 感知机分词模型
+         */
+        public static String PerceptronCWSModelPath = "data/model/perceptron/pku199801/cws.bin";
+        /**
+         * 感知机词性标注模型
+         */
+        public static String PerceptronPOSModelPath = "data/model/perceptron/pku199801/pos.bin";
+        /**
+         * 感知机命名实体识别模型
+         */
+        public static String PerceptronNERModelPath = "data/model/perceptron/pku199801/ner.bin";
         /**
          * 分词结果是否展示词性
          */
@@ -233,12 +251,16 @@ public class HanLP
                 OrganizationDictionaryTrPath = root + p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
                 CharTypePath = root + p.getProperty("CharTypePath", CharTypePath);
                 CharTablePath = root + p.getProperty("CharTablePath", CharTablePath);
+                PartOfSpeechTagDictionary = root + p.getProperty("PartOfSpeechTagDictionary", PartOfSpeechTagDictionary);
                 WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
+                PerceptronCWSModelPath = root + p.getProperty("PerceptronCWSModelPath", PerceptronCWSModelPath);
+                PerceptronPOSModelPath = root + p.getProperty("PerceptronPOSModelPath", PerceptronPOSModelPath);
+                PerceptronNERModelPath = root + p.getProperty("PerceptronNERModelPath", PerceptronNERModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
                 Normalization = "true".equals(p.getProperty("Normalization", "false"));
                 String ioAdapterClassName = p.getProperty("IOAdapter");

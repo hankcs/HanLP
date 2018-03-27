@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.instance.CWSInstance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
@@ -47,6 +49,15 @@ public class PerceptronSegmenter extends PerceptronTagger
         this(new LinearModel(cwsModelFile));
     }
 
+    /**
+     * 加载配置文件指定的模型
+     * @throws IOException
+     */
+    public PerceptronSegmenter() throws IOException
+    {
+        this(HanLP.Config.PerceptronCWSModelPath);
+    }
+
     public void segment(String text, List<String> output)
     {
         String normalized = Utility.normalize(text);
@@ -55,6 +66,7 @@ public class PerceptronSegmenter extends PerceptronTagger
 
     void segment(String text, String normalized, List<String> output)
     {
+        if (text.isEmpty()) return;
         Instance instance = new CWSInstance(normalized, model.featureMap);
         int[] tagArray = instance.tagArray;
         model.viterbiDecode(instance, tagArray);
@@ -115,8 +127,16 @@ public class PerceptronSegmenter extends PerceptronTagger
     }
 
     @Override
-    public boolean learn(Sentence sentence)
+    protected Instance createInstance(Sentence sentence, FeatureMap featureMap)
     {
-        return learn(CWSInstance.create(sentence, model.featureMap));
+        return CWSInstance.create(sentence, featureMap);
+    }
+
+    @Override
+    public double[] evaluate(String corpora) throws IOException
+    {
+        // 这里用CWS的F1
+        double[] prf = Utility.prf(Utility.evaluateCWS(corpora, this));
+        return prf;
     }
 }

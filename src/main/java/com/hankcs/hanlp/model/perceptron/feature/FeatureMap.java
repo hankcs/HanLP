@@ -11,13 +11,24 @@
  */
 package com.hankcs.hanlp.model.perceptron.feature;
 
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.model.perceptron.common.IStringIdMap;
+import com.hankcs.hanlp.model.perceptron.common.TaskType;
+import com.hankcs.hanlp.model.perceptron.tagset.CWSTagSet;
+import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
+import com.hankcs.hanlp.model.perceptron.tagset.POSTagSet;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author hankcs
  */
-public abstract class FeatureMap implements IStringIdMap
+public abstract class FeatureMap implements IStringIdMap, ICacheAble
 {
     public abstract int size();
 
@@ -31,10 +42,57 @@ public abstract class FeatureMap implements IStringIdMap
         return tagSet.size();
     }
 
-    public final TagSet tagSet;
+    public TagSet tagSet;
 
     public FeatureMap(TagSet tagSet)
     {
         this.tagSet = tagSet;
+    }
+
+    public abstract Set<Map.Entry<String, Integer>> entrySet();
+
+    public FeatureMap()
+    {
+    }
+
+    @Override
+    public void save(DataOutputStream out) throws IOException
+    {
+        tagSet.save(out);
+        out.writeInt(size());
+        for (Map.Entry<String, Integer> entry : entrySet())
+        {
+            out.writeUTF(entry.getKey());
+        }
+    }
+
+    @Override
+    public boolean load(ByteArray byteArray)
+    {
+        loadTagSet(byteArray);
+        int size = byteArray.nextInt();
+        for (int i = 0; i < size; i++)
+        {
+            idOf(byteArray.nextUTF());
+        }
+        return true;
+    }
+
+    protected final void loadTagSet(ByteArray byteArray)
+    {
+        TaskType type = TaskType.values()[byteArray.nextInt()];
+        switch (type)
+        {
+            case CWS:
+                tagSet = new CWSTagSet();
+                break;
+            case POS:
+                tagSet = new POSTagSet();
+                break;
+            case NER:
+                tagSet = new NERTagSet();
+                break;
+        }
+        tagSet.load(byteArray);
     }
 }

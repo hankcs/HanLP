@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.model.perceptron.utility.PosTagUtility;
@@ -83,6 +84,16 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
     }
 
     /**
+     * 加载配置文件指定的模型构造词法分析器
+     *
+     * @throws IOException
+     */
+    public PerceptronLexicalAnalyzer() throws IOException
+    {
+        this(HanLP.Config.PerceptronCWSModelPath, HanLP.Config.PerceptronPOSModelPath, HanLP.Config.PerceptronNERModelPath);
+    }
+
+    /**
      * 对句子进行词法分析
      *
      * @param sentence 纯文本句子
@@ -90,6 +101,10 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
      */
     public Sentence analyze(String sentence)
     {
+        if (sentence.isEmpty())
+        {
+            return new Sentence(Collections.<IWord>emptyList());
+        }
         List<String> wordList = segmenter.segment(sentence);
         String[] wordArray = new String[wordList.size()];
         wordList.toArray(wordArray);
@@ -181,7 +196,7 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
      * @param wordList
      * @return
      */
-    public String[] partOfSpeechTagging(List<String> wordList)
+    public String[] partOfSpeechTag(List<String> wordList)
     {
         if (posTagger == null)
         {
@@ -291,6 +306,12 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
         return null;
     }
 
+    /**
+     * 在线学习
+     *
+     * @param segmentedTaggedSentence 已分词、标好词性和命名实体的人民日报2014格式的句子
+     * @return 是否学习成果（失败的原因是句子格式不合法）
+     */
     public boolean learn(String segmentedTaggedSentence)
     {
         Sentence sentence = Sentence.create(segmentedTaggedSentence);
@@ -298,5 +319,35 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
         if (posTagger != null && !posTagger.learn(sentence)) return false;
         if (neRecognizer != null && !neRecognizer.learn(sentence)) return false;
         return true;
+    }
+
+    /**
+     * 获取分词器
+     *
+     * @return
+     */
+    public PerceptronSegmenter getSegmenter()
+    {
+        return segmenter;
+    }
+
+    /**
+     * 获取词性标注器
+     *
+     * @return
+     */
+    public PerceptronPOSTagger getPOSTagger()
+    {
+        return posTagger;
+    }
+
+    /**
+     * 获取命名实体识别器
+     *
+     * @return
+     */
+    public PerceptionNERecognizer getNERecognizer()
+    {
+        return neRecognizer;
     }
 }
