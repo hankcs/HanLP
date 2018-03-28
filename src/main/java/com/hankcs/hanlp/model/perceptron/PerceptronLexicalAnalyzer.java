@@ -117,7 +117,7 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
                 @Override
                 public void hit(int begin, int end, CoreDictionary.Attribute value)
                 {
-                    if (end - begin >= 3)
+                    if (end - begin >= 4 && !value.hasNatureStartsWith("nr") && !value.hasNatureStartsWith("ns") && !value.hasNatureStartsWith("nt")) // 将命名实体识别交给下面去做
                     {
                         if (begin != offset[0])
                         {
