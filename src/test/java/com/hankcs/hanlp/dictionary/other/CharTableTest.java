@@ -10,6 +10,10 @@ import java.io.ObjectOutputStream;
 
 public class CharTableTest extends TestCase
 {
+    public void testNormalization() throws Exception
+    {
+        assertEquals('(', CharTable.convert('（'));
+    }
 //    public void testConvert() throws Exception
 //    {
 //        System.out.println(CharTable.CONVERT['關']);
