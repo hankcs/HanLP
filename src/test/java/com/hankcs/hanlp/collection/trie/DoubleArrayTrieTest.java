@@ -39,7 +39,7 @@ public class DoubleArrayTrieTest extends TestCase
             buildFrom.put(key, key);
         }
         DoubleArrayTrie<String> trie = new DoubleArrayTrie<String>(buildFrom);
-        String text = "her3he6his! ";
+        String text = "her3he6his-hers! ";
         DoubleArrayTrie<String>.LongestSearcher searcher = trie.getLongestSearcher(text.toCharArray(), 0);
         while (searcher.next())
         {
