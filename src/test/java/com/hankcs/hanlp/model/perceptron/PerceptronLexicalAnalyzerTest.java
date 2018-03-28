@@ -1,5 +1,6 @@
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import junit.framework.TestCase;
 
 public class PerceptronLexicalAnalyzerTest extends TestCase
@@ -23,5 +24,14 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
     {
         analyzer.segment("");
         analyzer.seg("");
+    }
+
+    public void testCustomDictionary() throws Exception
+    {
+        analyzer.enableCustomDictionary(true);
+        assertTrue(CustomDictionary.contains("一字长蛇阵"));
+        final String text = "张飞摆出一字长蛇阵如入无人之境，孙权惊呆了";
+//        System.out.println(analyzer.analyze(text));
+        assertTrue(analyzer.analyze(text).toString().contains(" 一字长蛇阵/"));
     }
 }

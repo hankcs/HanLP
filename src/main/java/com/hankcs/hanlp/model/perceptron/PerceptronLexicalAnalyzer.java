@@ -12,6 +12,8 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.model.perceptron.utility.PosTagUtility;
@@ -99,13 +101,42 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
      * @param sentence 纯文本句子
      * @return HanLP定义的结构化句子
      */
-    public Sentence analyze(String sentence)
+    public Sentence analyze(final String sentence)
     {
         if (sentence.isEmpty())
         {
             return new Sentence(Collections.<IWord>emptyList());
         }
-        List<String> wordList = segmenter.segment(sentence);
+        // 查询词典中的长词
+        final List<String> wordList = new LinkedList<String>();
+        final int[] offset = new int[]{0};
+        if (config.useCustomDictionary)
+        {
+            CustomDictionary.parseLongestText(sentence, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            {
+                @Override
+                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                {
+                    if (end - begin >= 3)
+                    {
+                        if (begin != offset[0])
+                        {
+                            segmenter.segment(sentence.substring(offset[0], begin), wordList);
+                        }
+                        wordList.add(sentence.substring(begin, end));
+                        offset[0] = end;
+                    }
+                }
+            });
+            if (offset[0] != sentence.length())
+            {
+                segmenter.segment(sentence.substring(offset[0]), wordList);
+            }
+        }
+        else
+        {
+            segmenter.segment(sentence, wordList);
+        }
         String[] wordArray = new String[wordList.size()];
         wordList.toArray(wordArray);
         List<IWord> termList = new ArrayList<IWord>(wordList.size());
