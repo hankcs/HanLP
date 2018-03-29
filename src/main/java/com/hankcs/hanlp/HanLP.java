@@ -114,10 +114,6 @@ public class HanLP
          * 简繁转换词典根目录
          */
         public static String tcDictionaryRoot = "data/dictionary/tc/";
-        /**
-         * 声母韵母语调词典
-         */
-        public static String SYTDictionaryPath = "data/dictionary/pinyin/SYTDictionary.txt";
 
         /**
          * 拼音词典路径
@@ -247,7 +243,6 @@ public class HanLP
                 CustomDictionaryPath = pathArray;
                 tcDictionaryRoot = root + p.getProperty("tcDictionaryRoot", tcDictionaryRoot);
                 if (!tcDictionaryRoot.endsWith("/")) tcDictionaryRoot += '/';
-                SYTDictionaryPath = root + p.getProperty("SYTDictionaryPath", SYTDictionaryPath);
                 PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath", PinyinDictionaryPath);
                 TranslatedPersonDictionaryPath = root + p.getProperty("TranslatedPersonDictionaryPath", TranslatedPersonDictionaryPath);
                 JapanesePersonDictionaryPath = root + p.getProperty("JapanesePersonDictionaryPath", JapanesePersonDictionaryPath);
