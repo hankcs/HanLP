@@ -21,6 +21,11 @@ import com.hankcs.hanlp.mining.phrase.IPhraseExtractor;
 import com.hankcs.hanlp.mining.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.mining.word.NewWordDiscover;
 import com.hankcs.hanlp.mining.word.WordInfo;
+import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
+import com.hankcs.hanlp.seg.CRF.CRFSegment;
+import com.hankcs.hanlp.seg.HMM.HMMSegment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
+import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -167,6 +172,7 @@ public class HanLP
         public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
          * CRF依存模型
+         *
          * @deprecated 已废弃，请使用{@link NeuralNetworkDependencyParser}
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
@@ -593,6 +599,53 @@ public class HanLP
     public static Segment newSegment()
     {
         return new ViterbiSegment();   // Viterbi分词器是目前效率和效果的最佳平衡
+    }
+
+    /**
+     * 创建一个分词器，
+     * 这是一个工厂方法<br>
+     *
+     * @param algorithm 分词算法，传入算法的中英文名都可以，可选列表：<br>
+     *                  <ul>
+     *                  <li>维特比 (viterbi)：效率和效果的最佳平衡</li>
+     *                  <li>双数组trie树 (dat)：极速词典分词，千万字符每秒</li>
+     *                  <li>条件随机场 (crf)：对陌生领域的适应性稍微强一些</li>
+     *                  <li>感知机 (perceptron)：分词、词性标注与命名实体识别精度都较高，适合要求较高的NLP任务</li>
+     *                  <li>N最短路 (nshort)：命名实体识别稍微好一些，牺牲了速度</li>
+     *                  <li>2阶隐马 (hmm2)：训练速度较CRF快</li>
+     *                  </ul>
+     * @return 一个分词器
+     */
+    public static Segment newSegment(String algorithm)
+    {
+        if (algorithm == null)
+        {
+            throw new IllegalArgumentException(String.format("非法参数 algorithm == %s", algorithm));
+        }
+        algorithm = algorithm.toLowerCase();
+        if ("viterbi".equals(algorithm) || "维特比".equals(algorithm))
+            return new ViterbiSegment();   // Viterbi分词器是目前效率和效果的最佳平衡
+        else if ("dat".equals(algorithm) || "双数组trie树".equals(algorithm))
+            return new DoubleArrayTrieSegment();
+        else if ("nshort".equals(algorithm) || "n最短路".equals(algorithm))
+            return new NShortSegment();
+        else if ("crf".equals(algorithm) || "条件随机场".equals(algorithm))
+            return new CRFSegment();
+        else if ("hmm2".equals(algorithm) || "二阶隐马".equals(algorithm))
+            return new HMMSegment();
+        else if ("perceptron".equals(algorithm) || "感知机".equals(algorithm))
+        {
+            try
+            {
+                return new PerceptronLexicalAnalyzer();
+            }
+            catch (IOException e)
+            {
+                logger.warning("感知机模型加载失败");
+                throw new RuntimeException(e);
+            }
+        }
+        throw new IllegalArgumentException(String.format("非法参数 algorithm == %s", algorithm));
     }
 
     /**
