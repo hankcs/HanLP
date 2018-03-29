@@ -259,14 +259,19 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
         {
             return Collections.emptyList();
         }
+        String original = new String(sentence);
         CharTable.normalization(sentence);
         String normalized = new String(sentence);
         List<String> wordList = new LinkedList<String>();
-        segment(new String(sentence), normalized, wordList);
+        segment(original, normalized, wordList);
         List<Term> termList = new ArrayList<Term>(wordList.size());
+        int offset = 0;
         for (String word : wordList)
         {
-            termList.add(new Term(word, null));
+            Term term = new Term(word, null);
+            term.offset = offset;
+            offset += term.length();
+            termList.add(term);
         }
         if (config.speechTagging)
         {
@@ -283,20 +288,52 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
 
                 if (config.ner && neRecognizer != null)
                 {
+                    List<Term> childrenList = null;
+                    if (config.isIndexMode())
+                    {
+                        childrenList = new LinkedList<Term>();
+                        iterator = termList.iterator();
+                    }
                     termList = new ArrayList<Term>(termList.size());
                     String[] nerArray = neRecognizer.recognize(wordArray, posArray);
                     StringBuilder result = new StringBuilder();
                     result.append(wordArray[0]);
+                    if (childrenList != null)
+                    {
+                        childrenList.add(iterator.next());
+                    }
                     String prePos = posArray[0];
+                    offset = 0;
 
                     for (int i = 1; i < nerArray.length; i++)
                     {
                         if (nerArray[i].charAt(0) == neRecognizer.tagSet.B_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.S_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.O_TAG_CHAR)
                         {
-                            termList.add(new Term(result.toString(), Nature.create(prePos)));
+                            Term term = new Term(result.toString(), Nature.create(prePos));
+                            term.offset = offset;
+                            offset += term.length();
+                            termList.add(term);
+                            if (childrenList != null)
+                            {
+                                if (childrenList.size() > 1)
+                                {
+                                    for (Term shortTerm : childrenList)
+                                    {
+                                        if (shortTerm.length() >= config.indexMode)
+                                        {
+                                            termList.add(shortTerm);
+                                        }
+                                    }
+                                }
+                                childrenList.clear();
+                            }
                             result.setLength(0);
                         }
                         result.append(wordArray[i]);
+                        if (childrenList != null)
+                        {
+                            childrenList.add(iterator.next());
+                        }
                         if (nerArray[i].charAt(0) == neRecognizer.tagSet.O_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.S_TAG_CHAR)
                         {
                             prePos = posArray[i];
@@ -308,7 +345,22 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
                     }
                     if (result.length() != 0)
                     {
-                        termList.add(new Term(result.toString(), Nature.create(posArray[posArray.length - 1])));
+                        Term term = new Term(result.toString(), Nature.create(posArray[posArray.length - 1]));
+                        term.offset = offset;
+                        termList.add(term);
+                        if (childrenList != null)
+                        {
+                            if (childrenList.size() > 1)
+                            {
+                                for (Term shortTerm : childrenList)
+                                {
+                                    if (shortTerm.length() >= config.indexMode)
+                                    {
+                                        termList.add(shortTerm);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

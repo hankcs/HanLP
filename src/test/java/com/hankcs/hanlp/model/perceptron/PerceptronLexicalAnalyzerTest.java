@@ -1,7 +1,10 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
+
+import java.util.List;
 
 public class PerceptronLexicalAnalyzerTest extends TestCase
 {
@@ -10,7 +13,7 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
     @Override
     public void setUp() throws Exception
     {
-        analyzer = new PerceptronLexicalAnalyzer(Config.CWS_MODEL_FILE, Config.POS_MODEL_FILE);
+        analyzer = new PerceptronLexicalAnalyzer(Config.CWS_MODEL_FILE, Config.POS_MODEL_FILE, Config.NER_MODEL_FILE);
     }
 
     public void testLearn() throws Exception
@@ -33,5 +36,29 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
         final String text = "张飞摆出一字长蛇阵如入无人之境，孙权惊呆了";
 //        System.out.println(analyzer.analyze(text));
         assertTrue(analyzer.analyze(text).toString().contains(" 一字长蛇阵/"));
+    }
+
+    public void testIndexMode() throws Exception
+    {
+        analyzer.enableIndexMode(true);
+        String text = "来到美国纽约现代艺术博物馆参观";
+        List<Term> termList = analyzer.seg(text);
+        assertEquals("[来到/v, 美国纽约现代艺术博物馆/ns, 美国/ns, 纽约/ns, 现代/t, 艺术/n, 博物馆/n, 参观/v]", termList.toString());
+        for (Term term : termList)
+        {
+            assertEquals(term.word, text.substring(term.offset, term.offset + term.length()));
+        }
+        analyzer.enableIndexMode(false);
+    }
+
+    public void testOffset() throws Exception
+    {
+        analyzer.enableIndexMode(false);
+        String text = "来到美国纽约现代艺术博物馆参观";
+        List<Term> termList = analyzer.seg(text);
+        for (Term term : termList)
+        {
+            assertEquals(term.word, text.substring(term.offset, term.offset + term.length()));
+        }
     }
 }
