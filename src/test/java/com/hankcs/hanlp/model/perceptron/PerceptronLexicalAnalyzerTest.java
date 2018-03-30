@@ -1,5 +1,6 @@
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
@@ -60,5 +61,17 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
         {
             assertEquals(term.word, text.substring(term.offset, term.offset + term.length()));
         }
+    }
+
+    public void testNormalization() throws Exception
+    {
+        analyzer.enableCustomDictionary(false);
+        String text = "來到美國紐約現代藝術博物館參觀?";
+        Sentence sentence = analyzer.analyze(text);
+//        System.out.println(sentence);
+        assertEquals("來到/v [美國/ns 紐約/ns 現代/t 藝術/n 博物館/n]/ns 參觀/v ?/w", sentence.toString());
+        List<Term> termList = analyzer.seg(text);
+//        System.out.println(termList);
+        assertEquals("[來到/v, 美國紐約現代藝術博物館/ns, 參觀/v, ?/w]", termList.toString());
     }
 }

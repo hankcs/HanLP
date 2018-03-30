@@ -340,7 +340,7 @@ public class Sentence implements Serializable, Iterable<IWord>
     public List<Word> toSimpleWordList()
     {
         List<Word> wordList = new LinkedList<Word>();
-        for (IWord word : wordList)
+        for (IWord word : this.wordList)
         {
             if (word instanceof CompoundWord)
             {
