@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * 词法分析器
+ * 感知机词法分析器，支持简繁全半角和大小写
  *
  * @author hankcs
  */
@@ -107,6 +107,7 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
         {
             return new Sentence(Collections.<IWord>emptyList());
         }
+        final String normalized = CharTable.convert(sentence);
         // 查询词典中的长词
         final List<String> wordList = new LinkedList<String>();
         final int[] offset = new int[]{0};
@@ -121,7 +122,7 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
                     {
                         if (begin != offset[0])
                         {
-                            segmenter.segment(sentence.substring(offset[0], begin), wordList);
+                            segmenter.segment(sentence.substring(offset[0], begin), normalized.substring(offset[0], begin), wordList);
                         }
                         wordList.add(sentence.substring(begin, end));
                         offset[0] = end;
@@ -130,22 +131,31 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
             });
             if (offset[0] != sentence.length())
             {
-                segmenter.segment(sentence.substring(offset[0]), wordList);
+                segmenter.segment(sentence.substring(offset[0]), normalized.substring(offset[0]), wordList);
             }
         }
         else
         {
-            segmenter.segment(sentence, wordList);
+            segmenter.segment(sentence, normalized, wordList);
         }
         String[] wordArray = new String[wordList.size()];
-        wordList.toArray(wordArray);
+        offset[0] = 0;
+        int id = 0;
+        for (String word : wordList)
+        {
+            wordArray[id] = normalized.substring(offset[0], offset[0] + word.length());
+            ++id;
+            offset[0] += word.length();
+        }
+
         List<IWord> termList = new ArrayList<IWord>(wordList.size());
         if (posTagger != null)
         {
-            String[] posArray = posTagger.tag(wordList);
+            String[] posArray = posTagger.tag(wordArray);
             if (neRecognizer != null)
             {
                 String[] nerArray = neRecognizer.recognize(wordArray, posArray);
+                wordList.toArray(wordArray);
 
                 List<Word> result = new LinkedList<Word>();
                 result.add(new Word(wordArray[0], posArray[0]));
@@ -278,7 +288,14 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
             if (posTagger != null)
             {
                 String[] wordArray = new String[wordList.size()];
-                wordList.toArray(wordArray);
+                offset = 0;
+                int id = 0;
+                for (String word : wordList)
+                {
+                    wordArray[id] = normalized.substring(offset, offset + word.length());
+                    ++id;
+                    offset += word.length();
+                }
                 String[] posArray = posTagger.tag(wordArray);
                 Iterator<Term> iterator = termList.iterator();
                 for (String pos : posArray)
@@ -296,6 +313,7 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
                     }
                     termList = new ArrayList<Term>(termList.size());
                     String[] nerArray = neRecognizer.recognize(wordArray, posArray);
+                    wordList.toArray(wordArray);
                     StringBuilder result = new StringBuilder();
                     result.append(wordArray[0]);
                     if (childrenList != null)

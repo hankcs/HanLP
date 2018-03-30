@@ -239,24 +239,6 @@ public class Utility
         return false;
     }
 
-    public static List<Word> toSimpleWordList(Sentence sentence)
-    {
-        List<Word> wordList = new LinkedList<Word>();
-        for (IWord word : sentence.wordList)
-        {
-            if (word instanceof CompoundWord)
-            {
-                wordList.addAll(((CompoundWord) word).innerList);
-            }
-            else
-            {
-                wordList.add((Word) word);
-            }
-        }
-
-        return wordList;
-    }
-
     public static String[] toWordArray(List<Word> wordList)
     {
         String[] wordArray = new String[wordList.size()];
@@ -279,7 +261,7 @@ public class Utility
             @Override
             public boolean process(Sentence sentence)
             {
-                List<Word> wordList = toSimpleWordList(sentence);
+                List<Word> wordList = sentence.toSimpleWordList();
                 String[] wordArray = toWordArray(wordList);
                 stat[0] += wordArray.length;
                 String text = com.hankcs.hanlp.utility.TextUtility.combine(wordArray);

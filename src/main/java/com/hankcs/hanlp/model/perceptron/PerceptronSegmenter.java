@@ -60,7 +60,7 @@ public class PerceptronSegmenter extends PerceptronTagger
 
     public void segment(String text, List<String> output)
     {
-        String normalized = Utility.normalize(text);
+        String normalized = normalize(text);
         segment(text, normalized, output);
     }
 

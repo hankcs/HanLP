@@ -16,6 +16,7 @@ import java.io.IOException;
 
 /**
  * 基于感知机序列标注的词法分析器，默认模型训练自1998人民日报语料1月份。欢迎在更大的语料库上训练，以得到更好的效果。
+ * 无论在何种语料上训练，都完全支持简繁全半角和大小写。
  *
  * @author hankcs
  */
@@ -25,6 +26,7 @@ public class DemoPerceptronLexicalAnalyzer
     {
         PerceptronLexicalAnalyzer analyzer = new PerceptronLexicalAnalyzer();
         System.out.println(analyzer.analyze("上海华安工业（集团）公司董事长谭旭光和秘书胡花蕊来到美国纽约现代艺术博物馆参观"));
+        System.out.println(analyzer.analyze("微软公司於1975年由比爾·蓋茲和保羅·艾倫創立，18年啟動以智慧雲端、前端為導向的大改組。"));
 
         // 任何模型总会有失误，特别是98年这种陈旧的语料库
         System.out.println(analyzer.analyze("总统普京与特朗普通电话讨论太空探索技术公司"));
