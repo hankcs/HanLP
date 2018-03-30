@@ -11,9 +11,6 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.model.perceptron.common.FrequencyMap;
 import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureHashMap;
 import com.hankcs.hanlp.model.perceptron.feature.MutableFeatureMap;
@@ -291,20 +288,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
             @Override
             public boolean process(Sentence sentence)
             {
-                for (IWord word : sentence.wordList)
-                {
-                    if (word instanceof CompoundWord)
-                    {
-                        for (Word child : ((CompoundWord) word).innerList)
-                        {
-                            child.setValue(PerceptronTrainer.this.normalize(child.getValue()));
-                        }
-                    }
-                    else
-                    {
-                        word.setValue(PerceptronTrainer.this.normalize(word.getValue()));
-                    }
-                }
+                Utility.normalize(sentence);
                 instanceList.add(PerceptronTrainer.this.createInstance(sentence, mutableFeatureMap));
                 return false;
             }

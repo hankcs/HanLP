@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.model.perceptron.utility;
 
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.perceptron.PerceptronSegmenter;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
@@ -307,5 +308,23 @@ public class Utility
             }
         });
         return stat;
+    }
+
+    public static void normalize(Sentence sentence)
+    {
+        for (IWord word : sentence.wordList)
+        {
+            if (word instanceof CompoundWord)
+            {
+                for (Word child : ((CompoundWord) word).innerList)
+                {
+                    child.setValue(CharTable.convert(child.getValue()));
+                }
+            }
+            else
+            {
+                word.setValue(CharTable.convert(word.getValue()));
+            }
+        }
     }
 }
