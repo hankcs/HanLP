@@ -217,7 +217,7 @@ public class CWSInstance extends Instance
         {
             return null;
         }
-        List<Word> wordList = Utility.toSimpleWordList(sentence);
+        List<Word> wordList = sentence.toSimpleWordList();
         String[] termArray = new String[wordList.size()];
         int i = 0;
         for (Word word : wordList)

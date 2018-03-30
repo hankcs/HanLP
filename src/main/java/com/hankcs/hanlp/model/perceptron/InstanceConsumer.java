@@ -11,6 +11,7 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
@@ -49,5 +50,10 @@ public abstract class InstanceConsumer
         });
 
         return new double[]{stat[1] / (double) stat[0] * 100};
+    }
+
+    protected String normalize(String text)
+    {
+        return CharTable.convert(text);
     }
 }
