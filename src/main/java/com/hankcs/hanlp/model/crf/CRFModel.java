@@ -16,6 +16,7 @@ import com.hankcs.hanlp.collection.trie.ITrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.model.crf.crfpp.Model;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
@@ -27,6 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.BIN_EXT;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
+ * @deprecated 这份早期代码没有做到与CRF++一致。请使用移植版的CRF++ {@link Model}
  * @author hankcs
  */
 public class CRFModel implements ICacheAble
