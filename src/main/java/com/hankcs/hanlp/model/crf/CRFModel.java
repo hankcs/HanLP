@@ -28,8 +28,8 @@ import static com.hankcs.hanlp.utility.Predefine.BIN_EXT;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * @deprecated 这份早期代码没有做到与CRF++一致。请使用移植版的CRF++ {@link Model}
  * @author hankcs
+ * @deprecated 这份早期代码没有做到与CRF++一致。请使用移植版的CRF++ {@link Model}
  */
 public class CRFModel implements ICacheAble
 {
@@ -61,6 +61,7 @@ public class CRFModel implements ICacheAble
 
     /**
      * 以指定的trie树结构储存内部特征函数
+     *
      * @param featureFunctionTrie
      */
     public CRFModel(ITrie<FeatureFunction> featureFunctionTrie)
@@ -75,7 +76,8 @@ public class CRFModel implements ICacheAble
 
     /**
      * 加载Txt形式的CRF++模型
-     * @param path 模型路径
+     *
+     * @param path     模型路径
      * @param instance 模型的实例（这里允许用户构造不同的CRFModel来储存最终读取的结果）
      * @return 该模型
      */
@@ -106,7 +108,7 @@ public class CRFModel implements ICacheAble
             CRFModel.id2tag[entry.getValue()] = entry.getKey();
         }
         TreeMap<String, FeatureFunction> featureFunctionMap = new TreeMap<String, FeatureFunction>();  // 构建trie树的时候用
-        List<FeatureFunction> featureFunctionList = new LinkedList<FeatureFunction>(); // 读取权值的时候用
+        TreeMap<Integer, FeatureFunction> featureFunctionList = new TreeMap<Integer, FeatureFunction>(); // 读取权值的时候用
         CRFModel.featureTemplateList = new LinkedList<FeatureTemplate>();
         while ((line = lineIterator.next()).length() != 0)
         {
@@ -121,9 +123,12 @@ public class CRFModel implements ICacheAble
             }
         }
 
+        int b = -1;// 转换矩阵的权重位置
         if (CRFModel.matrix != null)
         {
-            lineIterator.next();    // 0 B
+            String[] args = lineIterator.next().split(" ", 2);    // 0 B
+            b = Integer.valueOf(args[0]);
+            featureFunctionList.put(b, null);
         }
 
         while ((line = lineIterator.next()).length() != 0)
@@ -132,25 +137,29 @@ public class CRFModel implements ICacheAble
             char[] charArray = args[1].toCharArray();
             FeatureFunction featureFunction = new FeatureFunction(charArray, size);
             featureFunctionMap.put(args[1], featureFunction);
-            featureFunctionList.add(featureFunction);
+            featureFunctionList.put(Integer.parseInt(args[0]), featureFunction);
         }
 
-        if (CRFModel.matrix != null)
+        for (Map.Entry<Integer, FeatureFunction> entry : featureFunctionList.entrySet())
         {
-            for (int i = 0; i < size; i++)
+            int fid = entry.getKey();
+            FeatureFunction featureFunction = entry.getValue();
+            if (fid == b)
             {
-                for (int j = 0; j < size; j++)
+                for (int i = 0; i < size; i++)
                 {
-                    CRFModel.matrix[i][j] = Double.parseDouble(lineIterator.next());
+                    for (int j = 0; j < size; j++)
+                    {
+                        CRFModel.matrix[i][j] = Double.parseDouble(lineIterator.next());
+                    }
                 }
             }
-        }
-
-        for (FeatureFunction featureFunction : featureFunctionList)
-        {
-            for (int i = 0; i < size; i++)
+            else
             {
-                featureFunction.w[i] = Double.parseDouble(lineIterator.next());
+                for (int i = 0; i < size; i++)
+                {
+                    featureFunction.w[i] = Double.parseDouble(lineIterator.next());
+                }
             }
         }
         if (lineIterator.hasNext())
@@ -260,6 +269,7 @@ public class CRFModel implements ICacheAble
 
     /**
      * 根据特征函数计算输出
+     *
      * @param table
      * @param current
      * @return
@@ -383,7 +393,8 @@ public class CRFModel implements ICacheAble
 
     /**
      * 加载Txt形式的CRF++模型<br>
-     *     同时生成path.bin模型缓存
+     * 同时生成path.bin模型缓存
+     *
      * @param path 模型路径
      * @return 该模型
      */
@@ -394,7 +405,8 @@ public class CRFModel implements ICacheAble
 
     /**
      * 加载CRF++模型<br>
-     *     如果存在缓存的话，优先读取缓存，否则读取txt，并且建立缓存
+     * 如果存在缓存的话，优先读取缓存，否则读取txt，并且建立缓存
+     *
      * @param path txt的路径，即使不存在.txt，只存在.bin，也应传入txt的路径，方法内部会自动加.bin后缀
      * @return
      */
@@ -407,7 +419,8 @@ public class CRFModel implements ICacheAble
 
     /**
      * 加载Bin形式的CRF++模型<br>
-     *     注意该Bin形式不是CRF++的二进制模型,而是HanLP由CRF++的文本模型转换过来的私有格式
+     * 注意该Bin形式不是CRF++的二进制模型,而是HanLP由CRF++的文本模型转换过来的私有格式
+     *
      * @param path
      * @return
      */
@@ -422,6 +435,7 @@ public class CRFModel implements ICacheAble
 
     /**
      * 获取某个tag的ID
+     *
      * @param tag
      * @return
      */
