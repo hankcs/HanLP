@@ -1,5 +1,8 @@
 package com.hankcs.hanlp.model.crf.crfpp;
 
+import com.hankcs.hanlp.collection.dartsclone.DoubleArray;
+import com.hankcs.hanlp.collection.trie.datrie.MutableDoubleArrayTrieInteger;
+
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -10,16 +13,16 @@ import java.util.List;
  */
 public class DecoderFeatureIndex extends FeatureIndex
 {
-    private DoubleArrayTrieInteger dat;
+    private MutableDoubleArrayTrieInteger dat;
 
     public DecoderFeatureIndex()
     {
-        dat = new DoubleArrayTrieInteger();
+        dat = new MutableDoubleArrayTrieInteger();
     }
 
     public int getID(String key)
     {
-        return dat.exactMatchSearch(key);
+        return dat.get(key);
     }
 
     public boolean open(InputStream stream)
@@ -34,12 +37,7 @@ public class DecoderFeatureIndex extends FeatureIndex
             y_ = (List<String>) ois.readObject();
             unigramTempls_ = (List<String>) ois.readObject();
             bigramTempls_ = (List<String>) ois.readObject();
-            int[] datBase = (int[]) ois.readObject();
-            int[] datCheck = (int[]) ois.readObject();
-            dat = new DoubleArrayTrieInteger();
-            dat.setBase(datBase);
-            dat.setCheck(datCheck);
-            dat.setSize(datBase.length);
+            dat = (MutableDoubleArrayTrieInteger) ois.readObject();
             alpha_ = (double[]) ois.readObject();
             ois.close();
             return true;
@@ -84,17 +82,11 @@ public class DecoderFeatureIndex extends FeatureIndex
                 }
                 osw.write("\n");
 
-                dat.recoverKeyValue();
-                if (dat.getKey().size() != dat.getValue().length || dat.getKey().isEmpty())
+                for (MutableDoubleArrayTrieInteger.KeyValuePair pair : dat)
                 {
-                    System.err.println("fail to recover key values for DoubleArrayTrie");
-                    return false;
+                    osw.write(pair.getValue() + " " + pair.getKey() + "\n");
                 }
 
-                for (int i = 0; i < dat.getKey().size(); i++)
-                {
-                    osw.write(dat.getValue()[i] + " " + dat.getKey().get(i) + "\n");
-                }
                 osw.write("\n");
 
                 for (int k = 0; k < maxid_; k++)
@@ -158,22 +150,11 @@ public class DecoderFeatureIndex extends FeatureIndex
                 }
             }
             System.out.println("Done reading templates");
-            List<String> keys = new ArrayList<String>();
-            List<Integer> values = new ArrayList<Integer>();
             while ((line = br.readLine()) != null && line.length() > 0)
             {
                 String[] content = line.trim().split(" ");
-                keys.add(content[1]);
-                values.add(Integer.valueOf(content[0]));
+                dat.put(content[1], Integer.valueOf(content[0]));
             }
-            System.out.println("Done reading feature indices");
-            int[] valueIntArr = new int[values.size()];
-            for (int i = 0; i < values.size(); i++)
-            {
-                valueIntArr[i] = values.get(i);
-            }
-            dat.build(keys, null, valueIntArr, keys.size());
-            System.out.println("Done building trie");
             List<Double> alpha = new ArrayList<Double>();
             while ((line = br.readLine()) != null && line.length() > 0)
             {
@@ -197,8 +178,7 @@ public class DecoderFeatureIndex extends FeatureIndex
                 oos.writeObject(y_);
                 oos.writeObject(unigramTempls_);
                 oos.writeObject(bigramTempls_);
-                oos.writeObject(dat.getBase());
-                oos.writeObject(dat.getCheck());
+                oos.writeObject(dat);
                 oos.writeObject(alpha_);
                 oos.close();
                 System.out.println("Writing binary model to " + binFileName);

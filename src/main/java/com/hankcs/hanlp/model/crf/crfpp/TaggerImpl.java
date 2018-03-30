@@ -523,17 +523,21 @@ public class TaggerImpl extends Tagger
 
     public boolean add(String line)
     {
-        int xsize = feature_index_.getXsize_();
         String[] cols = line.split("[\t ]", -1);
-        int size = cols.length;
+        return add(cols);
+    }
+
+    @Override
+    public boolean add(String[] cols)
+    {
+        int xsize = feature_index_.getXsize_();
         if ((mode_ == Mode.LEARN && cols.length < xsize + 1) ||
             (mode_ == Mode.TEST && cols.length < xsize))
         {
             System.err.println("# x is small: size=" + cols.length + " xsize=" + xsize);
             return false;
         }
-        List<String> tmpX = Arrays.asList(cols);
-        x_.add(tmpX);
+        x_.add(Arrays.asList(cols));
         result_.add(0);
         int tmpAnswer = 0;
         if (mode_ == Mode.LEARN)

@@ -64,7 +64,6 @@ public class CRFPOSTagger extends CRFTagger
             writeCell(iterator.next().label, sbLine, false);
             bw.write(sbLine.toString());
             bw.newLine();
-            bw.newLine();
         }
     }
 

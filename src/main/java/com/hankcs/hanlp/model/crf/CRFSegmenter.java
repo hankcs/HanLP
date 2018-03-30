@@ -67,7 +67,6 @@ public class CRFSegmenter extends CRFTagger
                 bw.write('\n');
             }
         }
-        bw.newLine();
     }
 
     public List<String> segment(String text)
@@ -78,7 +77,7 @@ public class CRFSegmenter extends CRFTagger
         tagger.setModel(this.model);
         for (int i = 0; i < text.length(); i++)
         {
-            tagger.add(String.valueOf(CharTable.convert(text.charAt(i))));
+            tagger.add(new String[]{String.valueOf(CharTable.convert(text.charAt(i)))});
         }
         if (!tagger.parse()) return wordList;
 

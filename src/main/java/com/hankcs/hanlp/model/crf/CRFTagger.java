@@ -15,7 +15,6 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.model.crf.crfpp.CrfLearn;
 import com.hankcs.hanlp.model.crf.crfpp.Encoder;
 import com.hankcs.hanlp.model.crf.crfpp.ModelImpl;
-import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
 import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
 import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
 
@@ -94,24 +93,7 @@ public abstract class CRFTagger
 
         File tmpTrain = File.createTempFile("crfpp-train-" + new Date().getTime(), ".txt");
         tmpTrain.deleteOnExit();
-        final BufferedWriter bw = IOUtil.newBufferedWriter(tmpTrain.getAbsolutePath());
-        IOUtility.loadInstance(trainFile, new InstanceHandler()
-        {
-            @Override
-            public boolean process(Sentence sentence)
-            {
-                try
-                {
-                    convertCorpus(sentence, bw);
-                }
-                catch (IOException e)
-                {
-                    throw new RuntimeException(e);
-                }
-                return false;
-            }
-        });
-        bw.close();
+        convertCorpus(trainFile, tmpTrain.getAbsolutePath());
         trainFile = tmpTrain.getAbsolutePath();
         Encoder encoder = new Encoder();
         if (!encoder.learn(templFile, trainFile, modelFile,
@@ -124,4 +106,34 @@ public abstract class CRFTagger
     protected abstract void convertCorpus(Sentence sentence, BufferedWriter bw) throws IOException;
 
     protected abstract String getFeatureTemplate();
+
+    public void convertCorpus(String pkuPath, String tsvPath) throws IOException
+    {
+        final BufferedWriter bw = IOUtil.newBufferedWriter(tsvPath);
+        IOUtility.loadInstance(pkuPath, new InstanceHandler()
+        {
+            @Override
+            public boolean process(Sentence sentence)
+            {
+                try
+                {
+                    convertCorpus(sentence, bw);
+                    bw.newLine();
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
+                return false;
+            }
+        });
+        bw.close();
+    }
+
+    public void dumpTemplate(String templatePath) throws IOException
+    {
+        BufferedWriter bw = IOUtil.newBufferedWriter(templatePath);
+        bw.write(getFeatureTemplate());
+        bw.close();
+    }
 }

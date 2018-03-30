@@ -1,5 +1,9 @@
 package com.hankcs.hanlp.model.crf.crfpp;
 
+import com.hankcs.hanlp.collection.dartsclone.DoubleArray;
+import com.hankcs.hanlp.collection.trie.datrie.IntArrayList;
+import com.hankcs.hanlp.collection.trie.datrie.MutableDoubleArrayTrieInteger;
+
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -9,35 +13,60 @@ import java.util.*;
  */
 public class EncoderFeatureIndex extends FeatureIndex
 {
-    private HashMap<String, Pair<Integer, Integer>> dic_;
+    private MutableDoubleArrayTrieInteger dic_;
+    private IntArrayList frequency;
+    private int bId = Integer.MAX_VALUE;
 
     public EncoderFeatureIndex(int n)
     {
         threadNum_ = n;
-        dic_ = new HashMap<String, Pair<Integer, Integer>>();
+        dic_ = new MutableDoubleArrayTrieInteger();
+        frequency = new IntArrayList();
     }
 
     public int getID(String key)
     {
-        if (!dic_.containsKey(key))
+        int k = dic_.get(key);
+        if (k == -1)
         {
-            dic_.put(key, new Pair<Integer, Integer>(maxid_, 1));
+            dic_.put(key, maxid_);
+            frequency.append(1);
             int n = maxid_;
-            maxid_ += (key.charAt(0) == 'U' ? y_.size() : y_.size() * y_.size());
+            if (key.charAt(0) == 'U')
+            {
+                maxid_ += y_.size();
+            }
+            else
+            {
+                bId = n;
+                maxid_ += y_.size() * y_.size();
+            }
             return n;
         }
         else
         {
-            Pair<Integer, Integer> pair = dic_.get(key);
-            int k = pair.getKey();
-            int oldVal = pair.getValue();
-            dic_.put(key, new Pair<Integer, Integer>(k, oldVal + 1));
+            int cid = continuousId(k);
+            int oldVal = frequency.get(cid);
+            frequency.set(cid, oldVal + 1);
             return k;
+        }
+    }
+
+    private int continuousId(int id)
+    {
+        if (id <= bId)
+        {
+            return id / y_.size();
+        }
+        else
+        {
+            return id / y_.size() - y_.size() + 1;
         }
     }
 
     /**
      * 读取特征模板文件
+     *
      * @param filename
      * @return
      */
@@ -92,6 +121,7 @@ public class EncoderFeatureIndex extends FeatureIndex
 
     /**
      * 读取训练文件中的标注集
+     *
      * @param filename
      * @return
      */
@@ -124,7 +154,7 @@ public class EncoderFeatureIndex extends FeatureIndex
                 if (max_size != cols.length)
                 {
                     String msg = "inconsistent column size: " + max_size +
-                            " " + cols.length + " " + filename;
+                        " " + cols.length + " " + filename;
                     throw new RuntimeException(msg);
                 }
                 xsize_ = cols.length - 1;
@@ -177,35 +207,18 @@ public class EncoderFeatureIndex extends FeatureIndex
             oos.writeObject(y_);
             oos.writeObject(unigramTempls_);
             oos.writeObject(bigramTempls_);
-            List<Pair<String, Integer>> pairList = new ArrayList<Pair<String, Integer>>();
-            for (String key : dic_.keySet())
-            {
-                pairList.add(new Pair<String, Integer>(key, dic_.get(key).getKey()));
-            }
-
-            Collections.sort(pairList, new Comparator<Pair<String, Integer>>()
-            {
-                public int compare(Pair<String, Integer> one,
-                                   Pair<String, Integer> another)
-                {
-                    return one.getKey().compareTo(another.getKey());
-                }
-            });
-            List<String> keys = new ArrayList<String>();
-            int[] values = new int[pairList.size()];
-            int i = 0;
-            for (Pair<String, Integer> pair : pairList)
-            {
-                keys.add(pair.getKey());
-                values[i++] = pair.getValue();
-            }
-            DoubleArrayTrieInteger dat = new DoubleArrayTrieInteger();
-            System.out.println("Building Trie");
-            dat.build(keys, null, values, keys.size());
-            System.out.println("Trie built.");
-
-            oos.writeObject(dat.getBase());
-            oos.writeObject(dat.getCheck());
+            oos.writeObject(dic_);
+//            List<String> keyList = new ArrayList<String>(dic_.size());
+//            int[] values = new int[dic_.size()];
+//            int i = 0;
+//            for (MutableDoubleArrayTrieInteger.KeyValuePair pair : dic_)
+//            {
+//                keyList.add(pair.key());
+//                values[i++] = pair.value();
+//            }
+//            DoubleArray doubleArray = new DoubleArray();
+//            doubleArray.build(keyList, values);
+//            oos.writeObject(doubleArray);
             oos.writeObject(alpha_);
             oos.close();
 
@@ -231,7 +244,7 @@ public class EncoderFeatureIndex extends FeatureIndex
                     osw.write(bitempl + "\n");
                 }
                 osw.write("\n");
-                for (Pair<String, Integer> pair : pairList)
+                for (MutableDoubleArrayTrieInteger.KeyValuePair pair : dic_)
                 {
                     osw.write(pair.getValue() + " " + pair.getKey() + "\n");
                 }
@@ -266,20 +279,30 @@ public class EncoderFeatureIndex extends FeatureIndex
             return;
         }
         int newMaxId = 0;
-        HashMap<Integer, Integer> old2new = new HashMap<Integer, Integer>();
-        HashMap<String, Pair<Integer, Integer>> newDic_ = new HashMap<String, Pair<Integer, Integer>>();
-        List<String> ordKeys = new ArrayList<String>(dic_.keySet());
+        int[] old2new = new int[dic_.size()];
+        List<String> deletedKeys = new ArrayList<String>(dic_.size() / 8);
         // update dictionary in key order, to make result compatible with crfpp
-        Collections.sort(ordKeys);
-        for (String key : ordKeys)
+        for (MutableDoubleArrayTrieInteger.KeyValuePair pair : dic_)
         {
-            Pair<Integer, Integer> featFreq = dic_.get(key);
-            if (featFreq.getValue() >= freq)
+            String key = pair.key();
+            int id = pair.value();
+            int cid = continuousId(id);
+            int f = frequency.get(cid);
+            if (f >= freq)
             {
-                old2new.put(featFreq.getKey(), newMaxId);
-                newDic_.put(key, new Pair<Integer, Integer>(newMaxId, featFreq.getValue()));
+                old2new[cid] = newMaxId;
+                pair.setValue(newMaxId);
                 newMaxId += (key.charAt(0) == 'U' ? y_.size() : y_.size() * y_.size());
+                deletedKeys.add(key);
             }
+            else
+            {
+                old2new[cid] = -1;
+            }
+        }
+        for (String key : deletedKeys)
+        {
+            dic_.remove(key);
         }
 
         for (TaggerImpl tagger : taggers)
@@ -291,9 +314,10 @@ public class EncoderFeatureIndex extends FeatureIndex
                 List<Integer> newCache = new ArrayList<Integer>();
                 for (Integer it : featureCacheItem)
                 {
-                    if (old2new.containsKey(it))
+                    int nid = old2new[it];
+                    if (nid != -1)
                     {
-                        newCache.add(old2new.get(it));
+                        newCache.add(nid);
                     }
                 }
                 newCache.add(-1);
@@ -301,7 +325,6 @@ public class EncoderFeatureIndex extends FeatureIndex
             }
         }
         maxid_ = newMaxId;
-        dic_ = newDic_;
     }
 
     public boolean convert(String textmodel, String binarymodel)
@@ -336,7 +359,7 @@ public class EncoderFeatureIndex extends FeatureIndex
                 }
             }
             System.out.println("Done reading templates");
-            dic_ = new HashMap<String, Pair<Integer, Integer>>();
+            dic_ = new MutableDoubleArrayTrieInteger();
             while ((line = br.readLine()) != null && line.length() > 0)
             {
                 String[] content = line.trim().split(" ");
@@ -345,7 +368,7 @@ public class EncoderFeatureIndex extends FeatureIndex
                     System.err.println("feature indices format error");
                     return false;
                 }
-                dic_.put(content[1], new Pair<Integer, Integer>(Integer.valueOf(content[0]), 1));
+                dic_.put(content[1], Integer.valueOf(content[0]));
             }
             System.out.println("Done reading feature indices");
             List<Double> alpha = new ArrayList<Double>();

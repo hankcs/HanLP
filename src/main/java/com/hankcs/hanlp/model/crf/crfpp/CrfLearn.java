@@ -39,6 +39,11 @@ public class CrfLearn
         public  Integer thread = Runtime.getRuntime().availableProcessors();
     }
 
+    public static boolean run(String args)
+    {
+        return run(args.split("\\s"));
+    }
+
     public static boolean run(String[] args)
     {
         Option option = new Option();
