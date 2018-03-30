@@ -71,7 +71,7 @@ public class ModelImpl extends Model
         return open(model, nbest, vlevel, costFactor);
     }
 
-    public boolean open(String model, int nbest, int vlevel, double costFactor)
+    public boolean open(InputStream stream, int nbest, int vlevel, double costFactor)
     {
         featureIndex_ = new DecoderFeatureIndex();
         nbest_ = nbest;
@@ -80,14 +80,18 @@ public class ModelImpl extends Model
         {
             featureIndex_.setCostFactor_(costFactor);
         }
+        return featureIndex_.open(stream);
+    }
 
+    public boolean open(String model, int nbest, int vlevel, double costFactor)
+    {
         File f = new File(model);
         if (f.exists())
         {
             try
             {
-                FileInputStream stream = new FileInputStream(f);
-                return featureIndex_.open(stream);
+                InputStream stream = new FileInputStream(f);
+                return open(stream, nbest, vlevel, costFactor);
             }
             catch (FileNotFoundException e)
             {
@@ -100,7 +104,7 @@ public class ModelImpl extends Model
             InputStream stream = this.getClass().getClassLoader().getResourceAsStream(model);
             if (stream != null)
             {
-                return featureIndex_.open(stream);
+                return open(stream, nbest, vlevel, costFactor);
             }
             else
             {

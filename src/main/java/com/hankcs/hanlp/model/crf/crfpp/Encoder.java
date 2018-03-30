@@ -23,7 +23,25 @@ public class Encoder
 
     public enum Algorithm
     {
-        CRF_L2, CRF_L1, MIRA
+        CRF_L2, CRF_L1, MIRA;
+
+        public static Algorithm fromString(String algorithm)
+        {
+            algorithm = algorithm.toLowerCase();
+            if (algorithm.equals("crf") || algorithm.equals("crf-l2"))
+            {
+                return Encoder.Algorithm.CRF_L2;
+            }
+            else if (algorithm.equals("crf-l1"))
+            {
+                return Encoder.Algorithm.CRF_L1;
+            }
+            else if (algorithm.equals("mira"))
+            {
+                return Encoder.Algorithm.MIRA;
+            }
+            throw new IllegalArgumentException("invalid algorithm: " + algorithm);
+        }
     }
 
     public Encoder()

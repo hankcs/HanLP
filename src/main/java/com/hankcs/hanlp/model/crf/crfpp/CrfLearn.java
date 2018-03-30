@@ -13,32 +13,30 @@ import java.util.List;
  */
 public class CrfLearn
 {
-    private static class Option
+    public static class Option
     {
         @Argument(description = "use features that occuer no less than INT(default 1)", alias = "f")
-        Integer freq = 1;
+        public Integer freq = 1;
         @Argument(description = "set INT for max iterations in LBFGS routine(default 10k)", alias = "f")
-        Integer maxiter = 10000;
+        public  Integer maxiter = 10000;
         @Argument(description = "set FLOAT for cost parameter(default 1.0)", alias = "c")
-        Double cost = 1.0;
+        public  Double cost = 1.0;
         @Argument(description = "set FLOAT for termination criterion(default 0.0001)", alias = "e")
-        Double eta = 0.0001;
+        public  Double eta = 0.0001;
         @Argument(description = "convert text model to binary model", alias = "C")
-        Boolean convert = false;
+        public  Boolean convert = false;
         @Argument(description = "convert binary model to text model", alias = "T")
-        Boolean convert_to_text = false;
+        public  Boolean convert_to_text = false;
         @Argument(description = "build also text model file for debugging", alias = "t")
-        Boolean textmodel = false;
+        public  Boolean textmodel = false;
         @Argument(description = "(CRF|CRF-L1|CRF-L2|MIRA)\", \"select training algorithm", alias = "a")
-        String algorithm = "CRF-L2";
+        public  String algorithm = "CRF-L2";
         @Argument(description = "set INT for number of iterations variable needs to be optimal before considered for shrinking. (default 20)", alias = "H")
-        Integer shrinking_size = 20;
+        public  Integer shrinking_size = 20;
         @Argument(description = "show this help and exit", alias = "h")
-        Boolean help = false;
-
-
+        public  Boolean help = false;
         @Argument(description = "number of threads(default auto detect)")
-        Integer thread = Runtime.getRuntime().availableProcessors();
+        public  Integer thread = Runtime.getRuntime().availableProcessors();
     }
 
     public static boolean run(String[] args)
