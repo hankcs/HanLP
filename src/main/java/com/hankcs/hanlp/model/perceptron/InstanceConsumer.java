@@ -18,6 +18,7 @@ import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.model.StructuredPerceptron;
 import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
 import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
 
 import java.io.IOException;
 
@@ -42,9 +43,10 @@ public abstract class InstanceConsumer
         IOUtility.loadInstance(developFile, new InstanceHandler()
         {
             @Override
-            public boolean process(Sentence termArray)
+            public boolean process(Sentence sentence)
             {
-                Instance instance = createInstance(termArray, model.featureMap);
+                Utility.normalize(sentence);
+                Instance instance = createInstance(sentence, model.featureMap);
                 IOUtility.evaluate(instance, model, stat);
                 return false;
             }
