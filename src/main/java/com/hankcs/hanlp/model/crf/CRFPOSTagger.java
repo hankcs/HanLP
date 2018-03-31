@@ -51,36 +51,34 @@ public class CRFPOSTagger extends CRFTagger implements POSTagger
         for (int i = 0; i < words.length; i++)
         {
             String curWord = words[i];
-            StringBuilder line = extractFeature(curWord);
-            writeCell(iterator.next().label, line, false);
-            bw.write(line.toString());
+            String[] cells = createCells(true);
+            extractFeature(curWord, cells);
+            cells[5] = iterator.next().label;
+            for (int j = 0; j < cells.length; j++)
+            {
+                bw.write(cells[j]);
+                if (j != cells.length - 1)
+                    bw.write('\t');
+            }
             bw.newLine();
         }
     }
 
-    private StringBuilder extractFeature(String curWord)
+    private String[] createCells(boolean withTag)
     {
-        StringBuilder sbLine = new StringBuilder();
-        writeCell(curWord, sbLine, true);  // 0
-
-        int length = curWord.length();
-        // prefix
-        writeCell(curWord.substring(0, 1), sbLine, true); // 1
-        writeCell(length > 1 ? curWord.substring(0, 2) : "<>", sbLine, true); // 2
-//            writeCell(length > 2 ? curWord.substring(0, 3) : "<>", sbLine, true); // 3
-
-
-        // sufﬁx(w0, i)(i = 1, 2, 3)
-        writeCell(curWord.substring(length - 1), sbLine, true); // 4
-        writeCell(length > 1 ? curWord.substring(length - 2) : "<>", sbLine, true); // 5
-//            writeCell(length > 2 ? curWord.substring(length - 3) : "<>", sbLine, true); // 6
-        return sbLine;
+        return withTag ? new String[6] : new String[5];
     }
 
-    private void writeCell(String cell, StringBuilder sb, boolean tab)
+    private void extractFeature(String curWord, String[] cells)
     {
-        sb.append(cell);
-        if (tab) sb.append("\t");
+        int length = curWord.length();
+        cells[0] = curWord;
+        cells[1] = curWord.substring(0, 1);
+        cells[2] = length > 1 ? curWord.substring(0, 2) : "<>";
+        // length > 2 ? curWord.substring(0, 3) : "<>"
+        cells[3] = curWord.substring(length - 1);
+        cells[4] = length > 1 ? curWord.substring(length - 2) : "<>";
+        // length > 2 ? curWord.substring(length - 3) : "<>"
     }
 
     @Override
@@ -107,7 +105,9 @@ public class CRFPOSTagger extends CRFTagger implements POSTagger
         TaggerImpl tagger = createTagger();
         for (String word : wordList)
         {
-            tagger.add(extractFeature(word).toString());
+            String[] cells = createCells(false);
+            extractFeature(word, cells);
+            tagger.add(cells);
         }
         tagger.parse();
         for (int i = 0; i < tagger.ysize(); i++)
@@ -124,7 +124,9 @@ public class CRFPOSTagger extends CRFTagger implements POSTagger
         TaggerImpl tagger = createTagger();
         for (String word : words)
         {
-            tagger.add(extractFeature(word).toString());
+            String[] cells = createCells(false);
+            extractFeature(word, cells);
+            tagger.add(cells);
         }
         tagger.parse();
         for (int i = 0; i < tagger.size(); i++)
