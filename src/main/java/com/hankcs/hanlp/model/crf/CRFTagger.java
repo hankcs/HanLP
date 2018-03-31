@@ -12,7 +12,7 @@ package com.hankcs.hanlp.model.crf;
 
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.model.crf.crfpp.CrfLearn;
+import com.hankcs.hanlp.model.crf.crfpp.crf_learn;
 import com.hankcs.hanlp.model.crf.crfpp.Encoder;
 import com.hankcs.hanlp.model.crf.crfpp.ModelImpl;
 import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
@@ -77,7 +77,7 @@ public abstract class CRFTagger
 
     public void train(String trainCorpusPath, String modelPath) throws IOException
     {
-        CrfLearn.Option option = new CrfLearn.Option();
+        crf_learn.Option option = new crf_learn.Option();
         train(trainCorpusPath, modelPath, option.textmodel, option.maxiter, option.freq, option.eta, option.cost,
               option.thread, option.shrinking_size, Encoder.Algorithm.fromString(option.algorithm));
     }

@@ -1,15 +1,9 @@
 package com.hankcs.hanlp.model.crf;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.corpus.document.sentence.Sentence;
-import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.model.crf.crfpp.CrfLearn;
-import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
-import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
+import com.hankcs.hanlp.model.crf.crfpp.crf_learn;
 import junit.framework.TestCase;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.List;
 
 public class CRFSegmenterTest extends TestCase
@@ -25,7 +19,7 @@ public class CRFSegmenterTest extends TestCase
 
     public void testConvert() throws Exception
     {
-        CrfLearn.run("-T " + CWS_MODEL_PATH + " " + CWS_MODEL_PATH + ".txt");
+        crf_learn.run("-T " + CWS_MODEL_PATH + " " + CWS_MODEL_PATH + ".txt");
     }
 
     public void testConvertCorpus() throws Exception

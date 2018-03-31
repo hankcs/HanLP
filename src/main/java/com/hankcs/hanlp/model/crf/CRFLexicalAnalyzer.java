@@ -18,6 +18,7 @@ import java.io.IOException;
  * CRF词法分析器（中文分词、词性标注和命名实体识别）
  *
  * @author hankcs
+ * @since 1.6.2
  */
 public class CRFLexicalAnalyzer extends AbstractLexicalAnalyzer
 {

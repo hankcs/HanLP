@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author zhifac
  */
-public class CrfTest
+public class crf_test
 {
     private static class Option
     {
@@ -127,6 +127,6 @@ public class CrfTest
 
     public static void main(String[] args)
     {
-        CrfTest.run(args);
+        crf_test.run(args);
     }
 }

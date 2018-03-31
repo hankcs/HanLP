@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author zhifac
  */
-public class CrfLearn
+public class crf_learn
 {
     public static class Option
     {
@@ -133,6 +133,6 @@ public class CrfLearn
 
     public static void main(String[] args)
     {
-        CrfLearn.run(args);
+        crf_learn.run(args);
     }
 }
