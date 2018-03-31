@@ -10,8 +10,11 @@
  */
 package com.hankcs.hanlp.model.crf;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
+import com.hankcs.hanlp.tokenizer.lexical.POSTagger;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -22,10 +25,11 @@ import java.util.List;
 /**
  * @author hankcs
  */
-public class CRFPOSTagger extends CRFTagger
+public class CRFPOSTagger extends CRFTagger implements POSTagger
 {
-    public CRFPOSTagger()
+    public CRFPOSTagger() throws IOException
     {
+        this(HanLP.Config.CRFPOSModelPath);
     }
 
     public CRFPOSTagger(String modelPath) throws IOException
@@ -46,35 +50,41 @@ public class CRFPOSTagger extends CRFTagger
         Iterator<Word> iterator = simpleWordList.iterator();
         for (int i = 0; i < words.length; i++)
         {
-            StringBuilder sbLine = new StringBuilder();
             String curWord = words[i];
-            writeCell(curWord, sbLine, true);  // 0
-
-            int length = curWord.length();
-            // prefix
-            writeCell(curWord.substring(0, 1), sbLine, true); // 1
-            writeCell(length > 1 ? curWord.substring(0, 2) : "<>", sbLine, true); // 2
-//            writeCell(length > 2 ? curWord.substring(0, 3) : "<>", sbLine, true); // 3
-
-
-            // sufﬁx(w0, i)(i = 1, 2, 3)
-            writeCell(curWord.substring(length - 1), sbLine, true); // 4
-            writeCell(length > 1 ? curWord.substring(length - 2) : "<>", sbLine, true); // 5
-//            writeCell(length > 2 ? curWord.substring(length - 3) : "<>", sbLine, true); // 6
-            writeCell(iterator.next().label, sbLine, false);
-            bw.write(sbLine.toString());
+            StringBuilder line = extractFeature(curWord);
+            writeCell(iterator.next().label, line, false);
+            bw.write(line.toString());
             bw.newLine();
         }
     }
 
-    private void writeCell(String cell, StringBuilder sb, boolean tab) throws IOException
+    private StringBuilder extractFeature(String curWord)
+    {
+        StringBuilder sbLine = new StringBuilder();
+        writeCell(curWord, sbLine, true);  // 0
+
+        int length = curWord.length();
+        // prefix
+        writeCell(curWord.substring(0, 1), sbLine, true); // 1
+        writeCell(length > 1 ? curWord.substring(0, 2) : "<>", sbLine, true); // 2
+//            writeCell(length > 2 ? curWord.substring(0, 3) : "<>", sbLine, true); // 3
+
+
+        // sufﬁx(w0, i)(i = 1, 2, 3)
+        writeCell(curWord.substring(length - 1), sbLine, true); // 4
+        writeCell(length > 1 ? curWord.substring(length - 2) : "<>", sbLine, true); // 5
+//            writeCell(length > 2 ? curWord.substring(length - 3) : "<>", sbLine, true); // 6
+        return sbLine;
+    }
+
+    private void writeCell(String cell, StringBuilder sb, boolean tab)
     {
         sb.append(cell);
         if (tab) sb.append("\t");
     }
 
     @Override
-    protected String getFeatureTemplate()
+    protected String getDefaultFeatureTemplate()
     {
         return "# Unigram\n" +
             "U0:%x[-1,0]\n" +
@@ -91,8 +101,36 @@ public class CRFPOSTagger extends CRFTagger
             "B";
     }
 
-    public void tag(List<String> wordList)
+    public String[] tag(List<String> wordList)
     {
+        String[] tagArray = new String[wordList.size()];
+        TaggerImpl tagger = createTagger();
+        for (String word : wordList)
+        {
+            tagger.add(extractFeature(word).toString());
+        }
+        tagger.parse();
+        for (int i = 0; i < tagger.ysize(); i++)
+        {
+            tagArray[i] = tagger.yname(tagger.y(i));
+        }
+        return tagArray;
+    }
 
+    @Override
+    public String[] tag(String... words)
+    {
+        String[] tagArray = new String[words.length];
+        TaggerImpl tagger = createTagger();
+        for (String word : words)
+        {
+            tagger.add(extractFeature(word).toString());
+        }
+        tagger.parse();
+        for (int i = 0; i < tagger.size(); i++)
+        {
+            tagArray[i] = tagger.yname(tagger.y(i));
+        }
+        return tagArray;
     }
 }

@@ -17,7 +17,7 @@ public class CrfLearn
     {
         @Argument(description = "use features that occuer no less than INT(default 1)", alias = "f")
         public Integer freq = 1;
-        @Argument(description = "set INT for max iterations in LBFGS routine(default 10k)", alias = "f")
+        @Argument(description = "set INT for max iterations in LBFGS routine(default 10k)", alias = "m")
         public  Integer maxiter = 10000;
         @Argument(description = "set FLOAT for cost parameter(default 1.0)", alias = "c")
         public  Double cost = 1.0;

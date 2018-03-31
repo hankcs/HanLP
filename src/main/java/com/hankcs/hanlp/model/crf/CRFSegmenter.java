@@ -10,10 +10,12 @@
  */
 package com.hankcs.hanlp.model.crf;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
+import com.hankcs.hanlp.tokenizer.lexical.Segmenter;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,10 +26,11 @@ import java.util.List;
 /**
  * @author hankcs
  */
-public class CRFSegmenter extends CRFTagger
+public class CRFSegmenter extends CRFTagger implements Segmenter
 {
-    public CRFSegmenter()
+    public CRFSegmenter() throws IOException
     {
+        this(HanLP.Config.CRFCWSModelPath);
     }
 
     public CRFSegmenter(String modelPath) throws IOException
@@ -72,21 +75,24 @@ public class CRFSegmenter extends CRFTagger
     public List<String> segment(String text)
     {
         List<String> wordList = new LinkedList<String>();
-        if (text.isEmpty()) return wordList;
-        TaggerImpl tagger = new TaggerImpl(TaggerImpl.Mode.TEST);
-        tagger.setModel(this.model);
+        segment(text, CharTable.convert(text), wordList);
+
+        return wordList;
+    }
+
+    @Override
+    public void segment(String text, String normalized, List<String> wordList)
+    {
+        if (text.isEmpty()) return;
+        TaggerImpl tagger = createTagger();
         for (int i = 0; i < text.length(); i++)
         {
             tagger.add(new String[]{String.valueOf(CharTable.convert(text.charAt(i)))});
         }
-        if (!tagger.parse()) return wordList;
+        if (!tagger.parse()) return;
 
         StringBuilder result = new StringBuilder();
         result.append(text.charAt(0));
-//        if (text.length() != tagger.size())
-//        {
-//            System.err.println(text);
-//        }
 
         for (int i = 1; i < tagger.size(); i++)
         {
@@ -102,12 +108,10 @@ public class CRFSegmenter extends CRFTagger
         {
             wordList.add(result.toString());
         }
-
-        return wordList;
     }
 
     @Override
-    protected String getFeatureTemplate()
+    protected String getDefaultFeatureTemplate()
     {
         return "# Unigram\n" +
             "U0:%x[-1,0]\n" +

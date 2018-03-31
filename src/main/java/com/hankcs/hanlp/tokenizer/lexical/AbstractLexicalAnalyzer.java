@@ -1,0 +1,329 @@
+/*
+ * <author>Han He</author>
+ * <email>me@hankcs.com</email>
+ * <create-date>2018-03-30 下午7:42</create-date>
+ *
+ * <copyright file="AbstractLexicalAnalyzer.java">
+ * Copyright (c) 2018, Han He. All Right Reserved, http://www.hankcs.com/
+ * This source is subject to Han He. Please contact Han He to get more information.
+ * </copyright>
+ */
+package com.hankcs.hanlp.tokenizer.lexical;
+
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
+import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
+import com.hankcs.hanlp.model.perceptron.utility.PosTagUtility;
+import com.hankcs.hanlp.seg.CharacterBasedSegment;
+import com.hankcs.hanlp.seg.common.Term;
+
+import java.util.*;
+
+/**
+ * 词法分析器基类（中文分词、词性标注和命名实体识别）
+ *
+ * @author hankcs
+ */
+public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment implements LexicalAnalyzer
+{
+    protected Segmenter segmenter;
+    protected POSTagger posTagger;
+    protected NERecognizer neRecognizer;
+
+    @Override
+    public void segment(String text, String normalized, List<String> output)
+    {
+        segmenter.segment(text, normalized, output);
+    }
+
+    /**
+     * 中文分词
+     *
+     * @param sentence
+     * @return
+     */
+    public List<String> segment(String sentence)
+    {
+        return segmenter.segment(sentence);
+    }
+
+    @Override
+    public String[] recognize(String[] wordArray, String[] posArray)
+    {
+        return neRecognizer.recognize(wordArray, posArray);
+    }
+
+    @Override
+    public String[] tag(String... words)
+    {
+        return posTagger.tag(words);
+    }
+
+    @Override
+    public String[] tag(List<String> wordList)
+    {
+        return posTagger.tag(wordList);
+    }
+
+    @Override
+    public NERTagSet getNERTagSet()
+    {
+        return neRecognizer.getNERTagSet();
+    }
+
+    @Override
+    public Sentence analyze(final String sentence)
+    {
+        if (sentence.isEmpty())
+        {
+            return new Sentence(Collections.<IWord>emptyList());
+        }
+        final String normalized = CharTable.convert(sentence);
+        // 查询词典中的长词
+        final List<String> wordList = new LinkedList<String>();
+        final int[] offset = new int[]{0};
+        if (config.useCustomDictionary)
+        {
+            CustomDictionary.parseLongestText(sentence, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            {
+                @Override
+                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                {
+                    if (end - begin >= 4 && !value.hasNatureStartsWith("nr") && !value.hasNatureStartsWith("ns") && !value.hasNatureStartsWith("nt")) // 将命名实体识别交给下面去做
+                    {
+                        if (begin != offset[0])
+                        {
+                            segment(sentence.substring(offset[0], begin), normalized.substring(offset[0], begin), wordList);
+                        }
+                        wordList.add(sentence.substring(begin, end));
+                        offset[0] = end;
+                    }
+                }
+            });
+            if (offset[0] != sentence.length())
+            {
+                segment(sentence.substring(offset[0]), normalized.substring(offset[0]), wordList);
+            }
+        }
+        else
+        {
+            segment(sentence, normalized, wordList);
+        }
+        String[] wordArray = new String[wordList.size()];
+        offset[0] = 0;
+        int id = 0;
+        for (String word : wordList)
+        {
+            wordArray[id] = normalized.substring(offset[0], offset[0] + word.length());
+            ++id;
+            offset[0] += word.length();
+        }
+
+        List<IWord> termList = new ArrayList<IWord>(wordList.size());
+        if (posTagger != null)
+        {
+            String[] posArray = tag(wordArray);
+            if (neRecognizer != null)
+            {
+                String[] nerArray = neRecognizer.recognize(wordArray, posArray);
+                wordList.toArray(wordArray);
+
+                List<Word> result = new LinkedList<Word>();
+                result.add(new Word(wordArray[0], posArray[0]));
+                String prePos = posArray[0];
+
+                NERTagSet tagSet = getNERTagSet();
+                for (int i = 1; i < nerArray.length; i++)
+                {
+                    if (nerArray[i].charAt(0) == tagSet.B_TAG_CHAR || nerArray[i].charAt(0) == tagSet.S_TAG_CHAR || nerArray[i].charAt(0) == tagSet.O_TAG_CHAR)
+                    {
+                        termList.add(result.size() > 1 ? new CompoundWord(result, prePos) : result.get(0));
+                        result = new ArrayList<Word>();
+                    }
+                    result.add(new Word(wordArray[i], posArray[i]));
+                    if (nerArray[i].charAt(0) == tagSet.O_TAG_CHAR || nerArray[i].charAt(0) == tagSet.S_TAG_CHAR)
+                    {
+                        prePos = posArray[i];
+                    }
+                    else
+                    {
+                        prePos = NERTagSet.posOf(nerArray[i]);
+                    }
+                }
+                if (result.size() != 0)
+                {
+                    termList.add(result.size() > 1 ? new CompoundWord(result, prePos) : result.get(0));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < wordArray.length; i++)
+                {
+                    termList.add(new Word(wordArray[i], posArray[i]));
+                }
+            }
+        }
+        else
+        {
+            for (String word : wordArray)
+            {
+                termList.add(new Word(word, null));
+            }
+        }
+
+        return new Sentence(termList);
+    }
+
+    @Override
+    protected List<Term> roughSegSentence(char[] sentence)
+    {
+        return null;
+    }
+
+    @Override
+    protected List<Term> segSentence(char[] sentence)
+    {
+        if (sentence.length == 0)
+        {
+            return Collections.emptyList();
+        }
+        String original = new String(sentence);
+        CharTable.normalization(sentence);
+        String normalized = new String(sentence);
+        List<String> wordList = new LinkedList<String>();
+        segment(original, normalized, wordList);
+        List<Term> termList = new ArrayList<Term>(wordList.size());
+        int offset = 0;
+        for (String word : wordList)
+        {
+            Term term = new Term(word, null);
+            term.offset = offset;
+            offset += term.length();
+            termList.add(term);
+        }
+        if (config.speechTagging)
+        {
+            if (posTagger != null)
+            {
+                String[] wordArray = new String[wordList.size()];
+                offset = 0;
+                int id = 0;
+                for (String word : wordList)
+                {
+                    wordArray[id] = normalized.substring(offset, offset + word.length());
+                    ++id;
+                    offset += word.length();
+                }
+                String[] posArray = tag(wordArray);
+                Iterator<Term> iterator = termList.iterator();
+                for (String pos : posArray)
+                {
+                    iterator.next().nature = Nature.create(pos);
+                }
+
+                if (config.ner && neRecognizer != null)
+                {
+                    List<Term> childrenList = null;
+                    if (config.isIndexMode())
+                    {
+                        childrenList = new LinkedList<Term>();
+                        iterator = termList.iterator();
+                    }
+                    termList = new ArrayList<Term>(termList.size());
+                    String[] nerArray = recognize(wordArray, posArray);
+                    wordList.toArray(wordArray);
+                    StringBuilder result = new StringBuilder();
+                    result.append(wordArray[0]);
+                    if (childrenList != null)
+                    {
+                        childrenList.add(iterator.next());
+                    }
+                    String prePos = posArray[0];
+                    offset = 0;
+
+                    for (int i = 1; i < nerArray.length; i++)
+                    {
+                        NERTagSet tagSet = getNERTagSet();
+                        if (nerArray[i].charAt(0) == tagSet.B_TAG_CHAR || nerArray[i].charAt(0) == tagSet.S_TAG_CHAR || nerArray[i].charAt(0) == tagSet.O_TAG_CHAR)
+                        {
+                            Term term = new Term(result.toString(), Nature.create(prePos));
+                            term.offset = offset;
+                            offset += term.length();
+                            termList.add(term);
+                            if (childrenList != null)
+                            {
+                                if (childrenList.size() > 1)
+                                {
+                                    for (Term shortTerm : childrenList)
+                                    {
+                                        if (shortTerm.length() >= config.indexMode)
+                                        {
+                                            termList.add(shortTerm);
+                                        }
+                                    }
+                                }
+                                childrenList.clear();
+                            }
+                            result.setLength(0);
+                        }
+                        result.append(wordArray[i]);
+                        if (childrenList != null)
+                        {
+                            childrenList.add(iterator.next());
+                        }
+                        if (nerArray[i].charAt(0) == tagSet.O_TAG_CHAR || nerArray[i].charAt(0) == tagSet.S_TAG_CHAR)
+                        {
+                            prePos = posArray[i];
+                        }
+                        else
+                        {
+                            prePos = NERTagSet.posOf(nerArray[i]);
+                        }
+                    }
+                    if (result.length() != 0)
+                    {
+                        Term term = new Term(result.toString(), Nature.create(posArray[posArray.length - 1]));
+                        term.offset = offset;
+                        termList.add(term);
+                        if (childrenList != null)
+                        {
+                            if (childrenList.size() > 1)
+                            {
+                                for (Term shortTerm : childrenList)
+                                {
+                                    if (shortTerm.length() >= config.indexMode)
+                                    {
+                                        termList.add(shortTerm);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (Term term : termList)
+                {
+                    CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
+                    if (attribute != null)
+                    {
+                        term.nature = Nature.create(PosTagUtility.convert(attribute.nature[0]));
+                    }
+                    else
+                    {
+                        term.nature = Nature.n;
+                    }
+                }
+            }
+        }
+        return termList;
+    }
+}

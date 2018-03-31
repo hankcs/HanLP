@@ -173,6 +173,18 @@ public class HanLP
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
         /**
+         * CRF分词模型
+         */
+        public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.bin";
+        /**
+         * CRF词性标注模型
+         */
+        public static String CRFPOSModelPath = "data/model/crf/pku199801/pos.bin";
+        /**
+         * CRF命名实体识别模型
+         */
+        public static String CRFNERModelPath = "data/model/crf/pku199801/ner.bin";
+        /**
          * 感知机分词模型
          */
         public static String PerceptronCWSModelPath = "data/model/perceptron/pku199801/cws.bin";
@@ -259,6 +271,9 @@ public class HanLP
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
+                CRFCWSModelPath = root + p.getProperty("CRFCWSModelPath", CRFCWSModelPath);
+                CRFPOSModelPath = root + p.getProperty("CRFPOSModelPath", CRFPOSModelPath);
+                CRFNERModelPath = root + p.getProperty("CRFNERModelPath", CRFNERModelPath);
                 PerceptronCWSModelPath = root + p.getProperty("PerceptronCWSModelPath", PerceptronCWSModelPath);
                 PerceptronPOSModelPath = root + p.getProperty("PerceptronPOSModelPath", PerceptronPOSModelPath);
                 PerceptronNERModelPath = root + p.getProperty("PerceptronNERModelPath", PerceptronNERModelPath);

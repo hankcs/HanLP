@@ -28,7 +28,7 @@ import com.hankcs.hanlp.seg.common.Vertex;
  * 基于字构词的生成式模型分词器基类
  * @author hankcs
  */
-public abstract class CharacterBasedGenerativeModelSegment extends Segment
+public abstract class CharacterBasedSegment extends Segment
 {
 
     /**

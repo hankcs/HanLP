@@ -1,0 +1,67 @@
+/*
+ * <author>Han He</author>
+ * <email>me@hankcs.com</email>
+ * <create-date>2018-03-30 下午7:29</create-date>
+ *
+ * <copyright file="CRFLexicalAnalyzer.java">
+ * Copyright (c) 2018, Han He. All Right Reserved, http://www.hankcs.com/
+ * This source is subject to Han He. Please contact Han He to get more information.
+ * </copyright>
+ */
+package com.hankcs.hanlp.model.crf;
+
+import com.hankcs.hanlp.tokenizer.lexical.AbstractLexicalAnalyzer;
+
+import java.io.IOException;
+
+/**
+ * CRF词法分析器（中文分词、词性标注和命名实体识别）
+ *
+ * @author hankcs
+ */
+public class CRFLexicalAnalyzer extends AbstractLexicalAnalyzer
+{
+    /**
+     * 构造CRF词法分析器
+     *
+     * @param segmenter CRF分词器
+     */
+    public CRFLexicalAnalyzer(CRFSegmenter segmenter)
+    {
+        this.segmenter = segmenter;
+    }
+
+    /**
+     * 构造CRF词法分析器
+     *
+     * @param segmenter CRF分词器
+     * @param posTagger CRF词性标注器
+     */
+    public CRFLexicalAnalyzer(CRFSegmenter segmenter, CRFPOSTagger posTagger)
+    {
+        this.segmenter = segmenter;
+        this.posTagger = posTagger;
+        config.speechTagging = true;
+    }
+
+    /**
+     * 构造CRF词法分析器
+     *
+     * @param segmenter    CRF分词器
+     * @param posTagger    CRF词性标注器
+     * @param neRecognizer CRF命名实体识别器
+     */
+    public CRFLexicalAnalyzer(CRFSegmenter segmenter, CRFPOSTagger posTagger, CRFNERecognizer neRecognizer)
+    {
+        this.segmenter = segmenter;
+        this.posTagger = posTagger;
+        this.neRecognizer = neRecognizer;
+        config.speechTagging = true;
+        config.nameRecognize = true;
+    }
+
+    public CRFLexicalAnalyzer() throws IOException
+    {
+        this(new CRFSegmenter(), new CRFPOSTagger(), new CRFNERecognizer());
+    }
+}

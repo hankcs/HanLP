@@ -20,6 +20,7 @@ import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.tagset.CWSTagSet;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.tokenizer.lexical.Segmenter;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -30,7 +31,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class PerceptronSegmenter extends PerceptronTagger
+public class PerceptronSegmenter extends PerceptronTagger implements Segmenter
 {
     private final CWSTagSet CWSTagSet;
 
@@ -64,7 +65,7 @@ public class PerceptronSegmenter extends PerceptronTagger
         segment(text, normalized, output);
     }
 
-    void segment(String text, String normalized, List<String> output)
+    public void segment(String text, String normalized, List<String> output)
     {
         if (text.isEmpty()) return;
         Instance instance = new CWSInstance(normalized, model.featureMap);

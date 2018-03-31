@@ -15,8 +15,10 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.model.crf.crfpp.CrfLearn;
 import com.hankcs.hanlp.model.crf.crfpp.Encoder;
 import com.hankcs.hanlp.model.crf.crfpp.ModelImpl;
+import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
 import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
 import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -88,7 +90,7 @@ public abstract class CRFTagger
         File tmpTemplate = File.createTempFile("crfpp-template-" + new Date().getTime(), ".txt");
         tmpTemplate.deleteOnExit();
         templFile = tmpTemplate.getAbsolutePath();
-        String template = getFeatureTemplate();
+        String template = getDefaultFeatureTemplate();
         IOUtil.saveTxt(templFile, template);
 
         File tmpTrain = File.createTempFile("crfpp-train-" + new Date().getTime(), ".txt");
@@ -105,7 +107,14 @@ public abstract class CRFTagger
 
     protected abstract void convertCorpus(Sentence sentence, BufferedWriter bw) throws IOException;
 
-    protected abstract String getFeatureTemplate();
+    protected TaggerImpl createTagger()
+    {
+        TaggerImpl tagger = new TaggerImpl(TaggerImpl.Mode.TEST);
+        tagger.setModel(this.model);
+        return tagger;
+    }
+
+    protected abstract String getDefaultFeatureTemplate();
 
     public void convertCorpus(String pkuPath, String tsvPath) throws IOException
     {
@@ -115,6 +124,7 @@ public abstract class CRFTagger
             @Override
             public boolean process(Sentence sentence)
             {
+                Utility.normalize(sentence);
                 try
                 {
                     convertCorpus(sentence, bw);
@@ -133,7 +143,7 @@ public abstract class CRFTagger
     public void dumpTemplate(String templatePath) throws IOException
     {
         BufferedWriter bw = IOUtil.newBufferedWriter(templatePath);
-        bw.write(getFeatureTemplate());
+        bw.write(getDefaultFeatureTemplate());
         bw.close();
     }
 }

@@ -10,87 +10,120 @@
  */
 package com.hankcs.hanlp.model.crf;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
-import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
+import com.hankcs.hanlp.tokenizer.lexical.NERecognizer;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author hankcs
  */
-public class CRFNERecognizer extends CRFTagger
+public class CRFNERecognizer extends CRFTagger implements NERecognizer
 {
-    @Override
-    protected void convertCorpus(Sentence sentence, BufferedWriter bw) throws IOException
-    {
 
-        NERTagSet tagSet = new NERTagSet();
+    private NERTagSet tagSet;
+
+    public CRFNERecognizer() throws IOException
+    {
+        this(HanLP.Config.CRFNERModelPath);
+    }
+
+    public CRFNERecognizer(String modelPath) throws IOException
+    {
+        super(modelPath);
+        tagSet = new NERTagSet();
+        if (model != null)
+        {
+            for (String y : model.getFeatureIndex_().getY_())
+            {
+                String label = NERTagSet.posOf(y);
+                if (label.length() != y.length())
+                    tagSet.nerLabels.add(label);
+            }
+        }
+        else
+        {
+            addDefaultNERLabels();
+        }
+    }
+
+    protected void addDefaultNERLabels()
+    {
         tagSet.nerLabels.add("nr");
         tagSet.nerLabels.add("ns");
         tagSet.nerLabels.add("nt");
-        List<String[]> collector = new LinkedList<String[]>();
-        Set<String> nerLabels = tagSet.nerLabels;
-        for (IWord word : sentence.wordList)
-        {
-            if (word instanceof CompoundWord)
-            {
-                List<Word> wordList = ((CompoundWord) word).innerList;
-                Word[] words = wordList.toArray(new Word[0]);
+    }
 
-                if (nerLabels.contains(word.getLabel()))
-                {
-                    collector.add(new String[]{words[0].value, words[0].label, tagSet.B_TAG_PREFIX + word.getLabel()});
-                    for (int i = 1; i < words.length - 1; i++)
-                    {
-                        collector.add(new String[]{words[i].value, words[i].label, tagSet.M_TAG_PREFIX + word.getLabel()});
-                    }
-                    collector.add(new String[]{words[words.length - 1].value, words[words.length - 1].label,
-                        tagSet.E_TAG_PREFIX + word.getLabel()});
-                }
-                else
-                {
-                    for (Word w : words)
-                    {
-                        collector.add(new String[]{w.value, w.label, tagSet.O_TAG});
-                    }
-                }
-            }
-            else
-            {
-                if (nerLabels.contains(word.getLabel()))
-                {
-                    // 单个实体
-                    collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.S_TAG});
-                }
-                else
-                {
-                    collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.O_TAG});
-                }
-            }
-        }
-        String[] wordArray = new String[collector.size()];
-        String[] posArray = new String[collector.size()];
-        String[] tagArray = new String[collector.size()];
-        int i = 0;
+    @Override
+    protected void convertCorpus(Sentence sentence, BufferedWriter bw) throws IOException
+    {
+        List<String[]> collector = Utility.convertSentenceToNER(sentence, tagSet);
         for (String[] tuple : collector)
         {
-            wordArray[i] = tuple[0];
-            posArray[i] = tuple[1];
-            tagArray[i] = tuple[2];
-            ++i;
+            bw.write(tuple[0]);
+            bw.write('\t');
+            bw.write(tuple[1]);
+            bw.write('\t');
+            bw.write(tuple[2]);
+            bw.newLine();
         }
     }
 
     @Override
-    protected String getFeatureTemplate()
+    public String[] recognize(String[] wordArray, String[] posArray)
     {
-        return null;
+        TaggerImpl tagger = createTagger();
+        for (int i = 0; i < wordArray.length; i++)
+        {
+            tagger.add(new String[]{wordArray[i], posArray[i]});
+        }
+        tagger.parse();
+
+        String[] tagArray = new String[wordArray.length];
+        for (int i = 0; i < tagArray.length; i++)
+        {
+            tagArray[i] = tagger.yname(tagger.y(i));
+        }
+
+        return tagArray;
+    }
+
+    @Override
+    public NERTagSet getNERTagSet()
+    {
+        return tagSet;
+    }
+
+    @Override
+    protected String getDefaultFeatureTemplate()
+    {
+        return "# Unigram\n" +
+            // form
+            "U0:%x[-2,0]\n" +
+            "U1:%x[-1,0]\n" +
+            "U2:%x[0,0]\n" +
+            "U3:%x[1,0]\n" +
+            "U4:%x[2,0]\n" +
+            // pos
+            "U5:%x[-2,1]\n" +
+            "U6:%x[-1,1]\n" +
+            "U7:%x[0,1]\n" +
+            "U8:%x[1,1]\n" +
+            "U9:%x[2,1]\n" +
+            // pos 2-gram
+            "UA:%x[-2,1]%x[-1,1]\n" +
+            "UB:%x[-1,1]%x[0,1]\n" +
+            "UC:%x[0,1]%x[1,1]\n" +
+            "UD:%x[1,1]%x[2,1]\n" +
+            "UE:%x[2,1]%x[3,1]\n" +
+            "\n" +
+            "# Bigram\n" +
+            "B";
     }
 }
