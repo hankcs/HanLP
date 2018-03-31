@@ -1,6 +1,7 @@
 package com.hankcs.hanlp.model.crf.crfpp;
 
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.model.perceptron.cli.Args;
 import com.hankcs.hanlp.model.perceptron.cli.Argument;
 
@@ -57,7 +58,7 @@ public class crf_test
         TaggerImpl tagger = new TaggerImpl(TaggerImpl.Mode.TEST);
         try
         {
-            FileInputStream stream = new FileInputStream(model);
+            InputStream stream = IOUtil.newInputStream(model);
             if (!tagger.open(stream, nbest, vlevel, costFactor))
             {
                 System.err.println("open error");
@@ -72,11 +73,11 @@ public class crf_test
             OutputStreamWriter osw = null;
             if (outputFile != null)
             {
-                osw = new OutputStreamWriter(new FileOutputStream(outputFile));
+                osw = new OutputStreamWriter(IOUtil.newOutputStream(outputFile));
             }
             for (String inputFile : restArgs)
             {
-                FileInputStream fis = new FileInputStream(inputFile);
+                InputStream fis = IOUtil.newInputStream(inputFile);
                 InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
                 BufferedReader br = new BufferedReader(isr);
 

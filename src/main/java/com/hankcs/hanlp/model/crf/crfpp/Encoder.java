@@ -1,8 +1,9 @@
 package com.hankcs.hanlp.model.crf.crfpp;
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
+
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,16 +95,16 @@ public class Encoder
         {
             System.err.println("Fail to open " + templFile + " " + trainFile);
         }
-        File file = new File(trainFile);
-        if (!file.exists())
-        {
-            System.err.println("train file " + trainFile + " does not exist.");
-            return false;
-        }
+//        File file = new File(trainFile);
+//        if (!file.exists())
+//        {
+//            System.err.println("train file " + trainFile + " does not exist.");
+//            return false;
+//        }
         BufferedReader br = null;
         try
         {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "UTF-8");
+            InputStreamReader isr = new InputStreamReader(IOUtil.newInputStream(trainFile), "UTF-8");
             br = new BufferedReader(isr);
             int lineNo = 0;
             while (true)
@@ -141,9 +142,9 @@ public class Encoder
             }
             br.close();
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            e.printStackTrace();
+            System.err.println("train file " + trainFile + " does not exist.");
             return false;
         }
         featureIndex.shrink(freq, x);

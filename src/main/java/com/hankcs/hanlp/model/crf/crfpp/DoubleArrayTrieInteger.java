@@ -15,6 +15,8 @@
  */
 package com.hankcs.hanlp.model.crf.crfpp;
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -416,7 +418,7 @@ public class DoubleArrayTrieInteger implements Serializable
         try
         {
             out = new DataOutputStream(new BufferedOutputStream(
-                new FileOutputStream(fileName)));
+                IOUtil.newOutputStream(fileName)));
             for (int i = 0; i < size; i++)
             {
                 out.writeInt(base[i]);

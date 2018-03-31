@@ -1,5 +1,7 @@
 package com.hankcs.hanlp.model.crf.crfpp;
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
+
 import java.io.*;
 import java.util.*;
 
@@ -978,11 +980,15 @@ public class TaggerImpl extends Tagger
         }
 
         TaggerImpl tagger = new TaggerImpl(Mode.TEST);
-        File f = new File(args[0]);
-        FileInputStream stream = null;
-        if (f.exists())
+        InputStream stream = null;
+        try
         {
-            stream = new FileInputStream(f);
+            stream = IOUtil.newInputStream(args[0]);
+        }
+        catch (IOException e)
+        {
+            System.err.printf("model not exits for %s", args[0]);
+            return;
         }
         if (stream != null && !tagger.open(stream, 2, 0, 1.0))
         {
@@ -993,7 +999,7 @@ public class TaggerImpl extends Tagger
 
         if (args.length >= 2)
         {
-            FileInputStream fis = new FileInputStream(args[1]);
+            InputStream fis = IOUtil.newInputStream(args[1]);
             InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
             BufferedReader br = new BufferedReader(isr);
 

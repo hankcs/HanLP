@@ -1,12 +1,10 @@
 package com.hankcs.hanlp.model.crf.crfpp;
 
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.model.perceptron.cli.Args;
 import com.hankcs.hanlp.model.perceptron.cli.Argument;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
@@ -85,32 +83,14 @@ public class ModelImpl extends Model
 
     public boolean open(String model, int nbest, int vlevel, double costFactor)
     {
-        File f = new File(model);
-        if (f.exists())
+        try
         {
-            try
-            {
-                InputStream stream = new FileInputStream(f);
-                return open(stream, nbest, vlevel, costFactor);
-            }
-            catch (FileNotFoundException e)
-            {
-                e.printStackTrace();
-                return false;
-            }
+            InputStream stream = IOUtil.newInputStream(model);
+            return open(stream, nbest, vlevel, costFactor);
         }
-        else
+        catch (Exception e)
         {
-            InputStream stream = this.getClass().getClassLoader().getResourceAsStream(model);
-            if (stream != null)
-            {
-                return open(stream, nbest, vlevel, costFactor);
-            }
-            else
-            {
-                System.err.println("Failed to find " + model + " in local path or classpath");
-                return false;
-            }
+            return false;
         }
     }
 

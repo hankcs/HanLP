@@ -3,6 +3,7 @@ package com.hankcs.hanlp.model.crf.crfpp;
 import com.hankcs.hanlp.collection.dartsclone.DoubleArray;
 import com.hankcs.hanlp.collection.trie.datrie.IntArrayList;
 import com.hankcs.hanlp.collection.trie.datrie.MutableDoubleArrayTrieInteger;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -75,7 +76,7 @@ public class EncoderFeatureIndex extends FeatureIndex
         InputStreamReader isr = null;
         try
         {
-            isr = new InputStreamReader(new FileInputStream(filename), "UTF-8");
+            isr = new InputStreamReader(IOUtil.newInputStream(filename), "UTF-8");
             BufferedReader br = new BufferedReader(isr);
             String line;
             while ((line = br.readLine()) != null)
@@ -132,7 +133,7 @@ public class EncoderFeatureIndex extends FeatureIndex
         y_.clear();
         try
         {
-            isr = new InputStreamReader(new FileInputStream(filename), "UTF-8");
+            isr = new InputStreamReader(IOUtil.newInputStream(filename), "UTF-8");
             BufferedReader br = new BufferedReader(isr);
             String line;
             while ((line = br.readLine()) != null)
@@ -195,7 +196,7 @@ public class EncoderFeatureIndex extends FeatureIndex
     {
         try
         {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
+            ObjectOutputStream oos = new ObjectOutputStream(IOUtil.newOutputStream(filename));
             oos.writeObject(Encoder.MODEL_VERSION);
             oos.writeObject(costFactor_);
             oos.writeObject(maxid_);
@@ -224,7 +225,7 @@ public class EncoderFeatureIndex extends FeatureIndex
 
             if (textModelFile)
             {
-                OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(filename + ".txt"), "UTF-8");
+                OutputStreamWriter osw = new OutputStreamWriter(IOUtil.newOutputStream(filename + ".txt"), "UTF-8");
                 osw.write("version: " + Encoder.MODEL_VERSION + "\n");
                 osw.write("cost-factor: " + costFactor_ + "\n");
                 osw.write("maxid: " + maxid_ + "\n");
@@ -331,7 +332,7 @@ public class EncoderFeatureIndex extends FeatureIndex
     {
         try
         {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(textmodel), "UTF-8");
+            InputStreamReader isr = new InputStreamReader(IOUtil.newInputStream(textmodel), "UTF-8");
             BufferedReader br = new BufferedReader(isr);
             String line;
 
