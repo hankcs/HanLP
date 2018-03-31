@@ -140,10 +140,32 @@ public abstract class CRFTagger
         bw.close();
     }
 
+    /**
+     * 导出特征模板
+     *
+     * @param templatePath
+     * @throws IOException
+     */
     public void dumpTemplate(String templatePath) throws IOException
     {
         BufferedWriter bw = IOUtil.newBufferedWriter(templatePath);
-        bw.write(getDefaultFeatureTemplate());
+        String template = getTemplate();
+        bw.write(template);
         bw.close();
+    }
+
+    /**
+     * 获取特征模板
+     *
+     * @return
+     */
+    public String getTemplate()
+    {
+        String template = getDefaultFeatureTemplate();
+        if (model != null && model.getTemplate() != null)
+        {
+            template = model.getTemplate();
+        }
+        return template;
     }
 }
