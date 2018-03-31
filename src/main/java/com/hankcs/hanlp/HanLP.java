@@ -160,6 +160,8 @@ public class HanLP
         public static String NNParserModelPath = "data/model/dependency/NNParserModel.txt";
         /**
          * CRF分词模型
+         *
+         * @deprecated 已废弃，请使用{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。未来版本将不再发布该模型，并删除配置项
          */
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
         /**

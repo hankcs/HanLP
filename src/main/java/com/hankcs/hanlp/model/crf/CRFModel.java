@@ -28,7 +28,7 @@ import static com.hankcs.hanlp.utility.Predefine.BIN_EXT;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 这份代码目前做到了与CRF++解码结果完全一致。也可以直接使用移植版的CRF++ {@link Model}
+ * 这份代码目前做到了与CRF++解码结果完全一致。也可以直接使用移植版的CRF++ {@link CRFLexicalAnalyzer}
  *
  * @author hankcs
  */
