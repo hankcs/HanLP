@@ -21,6 +21,7 @@ import com.hankcs.hanlp.mining.phrase.IPhraseExtractor;
 import com.hankcs.hanlp.mining.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.mining.word.NewWordDiscover;
 import com.hankcs.hanlp.mining.word.WordInfo;
+import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.HMM.HMMSegment;
@@ -621,8 +622,8 @@ public class HanLP
      *                  <ul>
      *                  <li>维特比 (viterbi)：效率和效果的最佳平衡</li>
      *                  <li>双数组trie树 (dat)：极速词典分词，千万字符每秒</li>
-     *                  <li>条件随机场 (crf)：对陌生领域的适应性稍微强一些</li>
-     *                  <li>感知机 (perceptron)：分词、词性标注与命名实体识别精度都较高，适合要求较高的NLP任务</li>
+     *                  <li>条件随机场 (crf)：分词、词性标注与命名实体识别精度都较高，适合要求较高的NLP任务</li>
+     *                  <li>感知机 (perceptron)：分词、词性标注与命名实体识别，支持在线学习</li>
      *                  <li>N最短路 (nshort)：命名实体识别稍微好一些，牺牲了速度</li>
      *                  <li>2阶隐马 (hmm2)：训练速度较CRF快</li>
      *                  </ul>
@@ -642,7 +643,15 @@ public class HanLP
         else if ("nshort".equals(algorithm) || "n最短路".equals(algorithm))
             return new NShortSegment();
         else if ("crf".equals(algorithm) || "条件随机场".equals(algorithm))
-            return new CRFSegment();
+            try
+            {
+                return new CRFLexicalAnalyzer();
+            }
+            catch (IOException e)
+            {
+                logger.warning("CRF模型加载失败");
+                throw new RuntimeException(e);
+            }
         else if ("hmm2".equals(algorithm) || "二阶隐马".equals(algorithm))
             return new HMMSegment();
         else if ("perceptron".equals(algorithm) || "感知机".equals(algorithm))

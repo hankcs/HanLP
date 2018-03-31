@@ -61,6 +61,44 @@ public class CRFLexicalAnalyzer extends AbstractLexicalAnalyzer
         config.nameRecognize = true;
     }
 
+    /**
+     * 构造CRF词法分析器
+     *
+     * @param cwsModelPath CRF分词器模型路径
+     */
+    public CRFLexicalAnalyzer(String cwsModelPath) throws IOException
+    {
+        this(new CRFSegmenter(cwsModelPath));
+    }
+
+    /**
+     * 构造CRF词法分析器
+     *
+     * @param cwsModelPath CRF分词器模型路径
+     * @param posModelPath CRF词性标注器模型路径
+     */
+    public CRFLexicalAnalyzer(String cwsModelPath, String posModelPath) throws IOException
+    {
+        this(new CRFSegmenter(cwsModelPath), new CRFPOSTagger(posModelPath));
+    }
+
+    /**
+     * 构造CRF词法分析器
+     *
+     * @param cwsModelPath CRF分词器模型路径
+     * @param posModelPath CRF词性标注器模型路径
+     * @param nerModelPath CRF命名实体识别器模型路径
+     */
+    public CRFLexicalAnalyzer(String cwsModelPath, String posModelPath, String nerModelPath) throws IOException
+    {
+        this(new CRFSegmenter(cwsModelPath), new CRFPOSTagger(posModelPath), new CRFNERecognizer(nerModelPath));
+    }
+
+    /**
+     * 加载配置文件指定的模型
+     *
+     * @throws IOException
+     */
     public CRFLexicalAnalyzer() throws IOException
     {
         this(new CRFSegmenter(), new CRFPOSTagger(), new CRFNERecognizer());
