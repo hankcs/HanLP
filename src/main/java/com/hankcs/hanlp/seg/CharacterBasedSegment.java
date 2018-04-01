@@ -37,7 +37,7 @@ public abstract class CharacterBasedSegment extends Segment
      * @param term
      * @return
      */
-    public static CoreDictionary.Attribute guessAttribute(Term term)  
+    public static CoreDictionary.Attribute guessAttribute(Term term)
     {
         CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
         if (attribute == null)
@@ -60,14 +60,12 @@ public abstract class CharacterBasedSegment extends Segment
         else term.nature = attribute.nature[0];
         return attribute;
     }
-    
-    
-    /*
+
+
+    /**
      * 以下方法用于纯分词模型
      * 分词、词性标注联合模型则直接重载segSentence
      */
-
-    
     @Override
     protected List<Term> segSentence(char[] sentence)
     {
@@ -100,9 +98,9 @@ public abstract class CharacterBasedSegment extends Segment
      * @return
      */
     protected abstract List<Term> roughSegSentence(char[] sentence);
-    
+
     /**
-     * 将中间结果转换为词网顶点, 
+     * 将中间结果转换为词网顶点,
      * 这样就可以利用基于Vertex开发的功能, 如词性标注、NER等
      * @param wordList
      * @param appendStart

@@ -20,8 +20,8 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
     public void testLearn() throws Exception
     {
         analyzer.learn("我/r 在/p 浙江/ns 金华/ns 出生/v");
-        System.out.println(analyzer.analyze("我在浙江金华出生"));
-        System.out.println(analyzer.analyze("我的名字叫金华"));
+        assertTrue(analyzer.analyze("我在浙江金华出生").toString().contains("金华/ns"));
+        assertTrue(analyzer.analyze("我的名字叫金华").toString().contains("金华/nr"));
     }
 
     public void testEmptyInput() throws Exception

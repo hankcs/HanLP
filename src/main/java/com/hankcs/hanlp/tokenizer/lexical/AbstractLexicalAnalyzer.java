@@ -38,9 +38,36 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
     protected NERecognizer neRecognizer;
 
     @Override
-    public void segment(String text, String normalized, List<String> output)
+    public void segment(final String sentence, final String normalized, final List<String> wordList)
     {
-        segmenter.segment(text, normalized, output);
+        if (config.useCustomDictionary)
+        {
+            final int[] offset = new int[]{0};
+            CustomDictionary.parseLongestText(sentence, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+            {
+                @Override
+                public void hit(int begin, int end, CoreDictionary.Attribute value)
+                {
+                    if (acceptCustomWord(begin, end, value)) // 将命名实体识别交给下面去做
+                    {
+                        if (begin != offset[0])
+                        {
+                            segmenter.segment(sentence.substring(offset[0], begin), normalized.substring(offset[0], begin), wordList);
+                        }
+                        wordList.add(sentence.substring(begin, end));
+                        offset[0] = end;
+                    }
+                }
+            });
+            if (offset[0] != sentence.length())
+            {
+                segmenter.segment(sentence.substring(offset[0]), normalized.substring(offset[0]), wordList);
+            }
+        }
+        else
+        {
+            segmenter.segment(sentence, normalized, wordList);
+        }
     }
 
     /**
@@ -51,7 +78,7 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
      */
     public List<String> segment(String sentence)
     {
-        return segmenter.segment(sentence);
+        return segment(sentence, CharTable.convert(sentence));
     }
 
     @Override
@@ -86,44 +113,16 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
             return new Sentence(Collections.<IWord>emptyList());
         }
         final String normalized = CharTable.convert(sentence);
-        // 查询词典中的长词
-        final List<String> wordList = new LinkedList<String>();
-        final int[] offset = new int[]{0};
-        if (config.useCustomDictionary)
-        {
-            CustomDictionary.parseLongestText(sentence, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
-            {
-                @Override
-                public void hit(int begin, int end, CoreDictionary.Attribute value)
-                {
-                    if (end - begin >= 4 && !value.hasNatureStartsWith("nr") && !value.hasNatureStartsWith("ns") && !value.hasNatureStartsWith("nt")) // 将命名实体识别交给下面去做
-                    {
-                        if (begin != offset[0])
-                        {
-                            segment(sentence.substring(offset[0], begin), normalized.substring(offset[0], begin), wordList);
-                        }
-                        wordList.add(sentence.substring(begin, end));
-                        offset[0] = end;
-                    }
-                }
-            });
-            if (offset[0] != sentence.length())
-            {
-                segment(sentence.substring(offset[0]), normalized.substring(offset[0]), wordList);
-            }
-        }
-        else
-        {
-            segment(sentence, normalized, wordList);
-        }
+        final List<String> wordList = segment(sentence, normalized);
+
         String[] wordArray = new String[wordList.size()];
-        offset[0] = 0;
+        int offset = 0;
         int id = 0;
         for (String word : wordList)
         {
-            wordArray[id] = normalized.substring(offset[0], offset[0] + word.length());
+            wordArray[id] = normalized.substring(offset, offset + word.length());
             ++id;
-            offset[0] += word.length();
+            offset += word.length();
         }
 
         List<IWord> termList = new ArrayList<IWord>(wordList.size());
@@ -179,6 +178,34 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
         }
 
         return new Sentence(termList);
+    }
+
+    /**
+     * 这个方法会查询用户词典
+     *
+     * @param sentence
+     * @param normalized
+     * @return
+     */
+    public List<String> segment(final String sentence, final String normalized)
+    {
+        // 查询词典中的长词
+        final List<String> wordList = new LinkedList<String>();
+        segment(sentence, normalized, wordList);
+        return wordList;
+    }
+
+    /**
+     * 分词时查询到一个用户词典中的词语，此处控制是否接受它
+     *
+     * @param begin 起始位置
+     * @param end   终止位置
+     * @param value 词性
+     * @return true 表示接受
+     */
+    protected boolean acceptCustomWord(int begin, int end, CoreDictionary.Attribute value)
+    {
+        return end - begin >= 4 && !value.hasNatureStartsWith("nr") && !value.hasNatureStartsWith("ns") && !value.hasNatureStartsWith("nt");
     }
 
     @Override

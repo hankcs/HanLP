@@ -12,24 +12,10 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
-import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
-import com.hankcs.hanlp.model.perceptron.utility.PosTagUtility;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
-import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.Word;
-import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.dictionary.other.CharTable;
-import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.lexical.AbstractLexicalAnalyzer;
-import com.hankcs.hanlp.tokenizer.lexical.NERecognizer;
-import com.hankcs.hanlp.tokenizer.lexical.POSTagger;
-import com.hankcs.hanlp.tokenizer.lexical.Segmenter;
 
 import java.io.IOException;
 import java.util.*;
@@ -146,9 +132,9 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
     public boolean learn(String segmentedTaggedSentence)
     {
         Sentence sentence = Sentence.create(segmentedTaggedSentence);
-        if (!Segmenter().learn(sentence)) return false;
-        if (posTagger != null && !POSTagger().learn(sentence)) return false;
-        if (neRecognizer != null && !NERecognizer().learn(sentence)) return false;
+        if (!getPerceptronSegmenter().learn(sentence)) return false;
+        if (posTagger != null && !getPerceptronPOSTagger().learn(sentence)) return false;
+        if (neRecognizer != null && !getPerceptionNERecognizer().learn(sentence)) return false;
         return true;
     }
 
@@ -157,7 +143,7 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
      *
      * @return
      */
-    public PerceptronSegmenter Segmenter()
+    public PerceptronSegmenter getPerceptronSegmenter()
     {
         return (PerceptronSegmenter) segmenter;
     }
@@ -167,7 +153,7 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
      *
      * @return
      */
-    public PerceptronPOSTagger POSTagger()
+    public PerceptronPOSTagger getPerceptronPOSTagger()
     {
         return (PerceptronPOSTagger) posTagger;
     }
@@ -177,7 +163,7 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
      *
      * @return
      */
-    public PerceptionNERecognizer NERecognizer()
+    public PerceptionNERecognizer getPerceptionNERecognizer()
     {
         return (PerceptionNERecognizer) neRecognizer;
     }
