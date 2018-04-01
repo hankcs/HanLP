@@ -519,6 +519,21 @@ public class CustomDictionary
     }
 
     /**
+     * 最长匹配
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public static void parseLongestText(String text, AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute> processor)
+    {
+//        if (trie != null)
+//        {
+//            trie.parseLongestText(text, processor);
+//        }
+        dat.parseLongestText(text, processor);
+    }
+
+    /**
      * 热更新（重新加载）<br>
      * 集群环境（或其他IOAdapter）需要自行删除缓存文件（路径 = HanLP.Config.CustomDictionaryPath[0] + Predefine.BIN_EXT）
      * @return 是否加载成功

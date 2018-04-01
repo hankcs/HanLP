@@ -15,6 +15,7 @@
  */
 package com.hankcs.hanlp.collection.trie;
 
+import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ByteArrayStream;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -1305,7 +1306,8 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
                         return true;
                     }
 
-                    begin = i + 1;                   // 转移失败，重新开始，状态归零
+                    i = begin;                      // 转移失败，也将起点往前挪一个，重新开始，状态归零
+                    ++begin;
                     b = base[0];
                 }
                 p = b;
@@ -1330,6 +1332,21 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     public LongestSearcher getLongestSearcher(char[] text, int offset)
     {
         return new LongestSearcher(offset, text);
+    }
+
+    /**
+     * 最长匹配
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public void parseLongestText(String text, AhoCorasickDoubleArrayTrie.IHit<V> processor)
+    {
+        LongestSearcher searcher = getLongestSearcher(text, 0);
+        while (searcher.next())
+        {
+            processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
+        }
     }
 
     /**

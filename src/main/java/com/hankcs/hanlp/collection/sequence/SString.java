@@ -14,7 +14,7 @@ package com.hankcs.hanlp.collection.sequence;
 import java.util.Arrays;
 
 /**
- * (SimpleString)字符串，为了公用内存，避免值传递，优化运行效率而设置的String的替代品
+ * (SimpleString)字符串，因为String内部的char[]无法访问，而许多任务经常操作char[]，所以封装了这个结构。
  *
  * @author hankcs
  */

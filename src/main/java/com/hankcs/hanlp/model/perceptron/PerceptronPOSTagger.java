@@ -17,6 +17,7 @@ import com.hankcs.hanlp.model.perceptron.instance.POSInstance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.tokenizer.lexical.POSTagger;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class PerceptronPOSTagger extends PerceptronTagger
+public class PerceptronPOSTagger extends PerceptronTagger implements POSTagger
 {
     public PerceptronPOSTagger(LinearModel model)
     {
@@ -57,6 +58,7 @@ public class PerceptronPOSTagger extends PerceptronTagger
      * @param words
      * @return
      */
+    @Override
     public String[] tag(String... words)
     {
         POSInstance instance = new POSInstance(words, model.featureMap);
@@ -72,6 +74,7 @@ public class PerceptronPOSTagger extends PerceptronTagger
      * @param wordList
      * @return
      */
+    @Override
     public String[] tag(List<String> wordList)
     {
         String[] termArray = new String[wordList.size()];

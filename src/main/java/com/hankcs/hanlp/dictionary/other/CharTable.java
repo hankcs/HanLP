@@ -102,16 +102,21 @@ public class CharTable
         return result;
     }
 
-    public static String convert(String charArray)
+    public static String convert(String sentence)
     {
-        assert charArray != null;
-        char[] result = new char[charArray.length()];
+        assert sentence != null;
+        char[] result = new char[sentence.length()];
+        convert(sentence, result);
+
+        return new String(result);
+    }
+
+    public static void convert(String charArray, char[] result)
+    {
         for (int i = 0; i < charArray.length(); i++)
         {
             result[i] = CONVERT[charArray.charAt(i)];
         }
-
-        return new String(result);
     }
 
     /**

@@ -440,7 +440,7 @@ public class IOUtil
     /**
      * 方便读取按行读取大文件
      */
-    public static class LineIterator implements Iterator<String>
+    public static class LineIterator implements Iterator<String>, Iterable<String>
     {
         BufferedReader bw;
         String line;
@@ -552,6 +552,12 @@ public class IOUtil
         public void remove()
         {
             throw new UnsupportedOperationException("只读，不可写！");
+        }
+
+        @Override
+        public Iterator<String> iterator()
+        {
+            return this;
         }
     }
 

@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static com.hankcs.hanlp.classification.utilities.Predefine.logger;
+import static com.hankcs.hanlp.classification.utilities.io.ConsoleLogger.logger;
 
 /**
  * @author hankcs

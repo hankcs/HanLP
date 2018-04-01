@@ -3,9 +3,7 @@ package com.hankcs.hanlp.collection.trie.datrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -446,6 +444,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
 
     /**
      * 非覆盖模式添加，值默认为当前集合大小
+     *
      * @param key
      * @return
      */
@@ -1183,6 +1182,21 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
         return true;
     }
 
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        out.writeInt(size);
+        out.writeObject(base);
+        out.writeObject(check);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        size = in.readInt();
+        base = (IntArrayList) in.readObject();
+        check = (IntArrayList) in.readObject();
+        charMap = new Utf8CharacterMapping();
+    }
+
 //    /**
 //     * 遍历时无法删除
 //     *
@@ -1251,6 +1265,16 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
         }
 
         public int value()
+        {
+            return value;
+        }
+
+        public String getKey()
+        {
+            return key;
+        }
+
+        public int getValue()
         {
             return value;
         }
