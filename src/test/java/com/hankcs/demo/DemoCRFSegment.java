@@ -22,8 +22,6 @@ import java.util.List;
  * CRF分词
  *
  * @author hankcs
- * @deprecated 已废弃，请使用功能更丰富、设计更优雅的{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。
- * 未来版本将不再发布该模型，并删除配置项
  */
 public class DemoCRFSegment
 {

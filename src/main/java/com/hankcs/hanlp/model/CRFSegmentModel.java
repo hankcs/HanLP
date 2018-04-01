@@ -23,8 +23,8 @@ import java.util.LinkedList;
  * 静态CRF分词模型
  *
  * @author hankcs
- * @deprecated 已废弃，请使用功能更丰富、设计更优雅的{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。
  */
+//  * @deprecated 已废弃，请使用功能更丰富、设计更优雅的{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。
 public final class CRFSegmentModel extends CRFModel
 {
     private int idM;
