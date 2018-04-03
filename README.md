@@ -157,6 +157,7 @@ System.out.println(termList);
 System.out.println(NLPTokenizer.segment("我新造一个词叫幻想乡你能识别并标注正确词性吗？"));
 // 注意观察两个“希望”的词性，两个“晚霞”的词性
 System.out.println(NLPTokenizer.analyze("我的希望是希望张晚霞的背影被晚霞映红").translateLabels());
+System.out.println(NLPTokenizer.analyze("支援臺灣正體香港繁體：微软公司於1975年由比爾·蓋茲和保羅·艾倫創立。"));
 ```
 - 说明
   * NLP分词`NLPTokenizer`会执行全部命名实体识别和词性标注。
@@ -173,7 +174,7 @@ for (Term term : termList)
 ```
 - 说明
   * 索引分词`IndexTokenizer`是面向搜索引擎的分词器，能够对长词全切分，另外通过`term.offset`可以获取单词在文本中的偏移量。
-  * 任何分词器都可以通过积累`Segment`的`enableIndexMode`方法激活索引模式。
+  * 任何分词器都可以通过基类`Segment`的`enableIndexMode`方法激活索引模式。
 
 ### 5. N-最短路径分词
 
