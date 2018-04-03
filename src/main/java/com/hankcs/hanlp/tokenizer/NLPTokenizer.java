@@ -11,15 +11,16 @@
  */
 package com.hankcs.hanlp.tokenizer;
 
-import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Segment;
-import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.lexical.AbstractLexicalAnalyzer;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
- * 可供自然语言处理用的分词器
+ * 可供自然语言处理用的分词器，更重视准确率。
  *
  * @author hankcs
  */
@@ -28,32 +29,56 @@ public class NLPTokenizer
     /**
      * 预置分词器
      */
-    public static final Segment SEGMENT = HanLP.newSegment().enableNameRecognize(true).enableTranslatedNameRecognize(true)
-            .enableJapaneseNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true)
-            .enablePartOfSpeechTagging(true);
+    public static AbstractLexicalAnalyzer ANALYZER;
+
+    static
+    {
+        try
+        {
+            // 目前感知机的效果相当不错，如果能在更大的语料库上训练就更好了
+            ANALYZER = new PerceptronLexicalAnalyzer();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static List<Term> segment(String text)
     {
-        return SEGMENT.seg(text);
+        return ANALYZER.seg(text);
     }
 
     /**
      * 分词
+     *
      * @param text 文本
      * @return 分词结果
      */
     public static List<Term> segment(char[] text)
     {
-        return SEGMENT.seg(text);
+        return ANALYZER.seg(text);
     }
 
     /**
      * 切分为句子形式
+     *
      * @param text 文本
      * @return 句子列表
      */
     public static List<List<Term>> seg2sentence(String text)
     {
-        return SEGMENT.seg2sentence(text);
+        return ANALYZER.seg2sentence(text);
+    }
+
+    /**
+     * 词法分析
+     *
+     * @param sentence
+     * @return 结构化句子
+     */
+    public static Sentence analyze(final String sentence)
+    {
+        return ANALYZER.analyze(sentence);
     }
 }

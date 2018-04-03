@@ -1,6 +1,7 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
@@ -15,6 +16,16 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
     public void setUp() throws Exception
     {
         analyzer = new PerceptronLexicalAnalyzer(Config.CWS_MODEL_FILE, Config.POS_MODEL_FILE, Config.NER_MODEL_FILE);
+    }
+
+    public void testIssue() throws Exception
+    {
+//        System.out.println(analyzer.seg(""));
+        for (Term term : analyzer.seg("张三丰，刘五郎，黄三元，张一楠，王三强，丁一楠，李四光，闻一多，赵一楠，李四"))
+        {
+            if (term.nature == Nature.w) continue;
+            assertEquals(Nature.nr, term.nature);
+        }
     }
 
     public void testLearn() throws Exception

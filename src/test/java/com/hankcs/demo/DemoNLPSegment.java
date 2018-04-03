@@ -11,22 +11,19 @@
  */
 package com.hankcs.demo;
 
-import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
-
-import java.util.List;
 
 /**
  * NLP分词
+ *
  * @author hankcs
  */
 public class DemoNLPSegment
 {
     public static void main(String[] args)
     {
-        HanLP.Config.enableDebug();
-        List<Term> termList = NLPTokenizer.segment("上外日本文化经济学院的陆晚霞教授正在教授泛读课程");
-        System.out.println(termList);
+        System.out.println(NLPTokenizer.segment("我新造一个词叫幻想乡你能识别并标注正确词性吗？"));
+        // 注意观察两个“希望”的词性，两个“晚霞”的词性
+        System.out.println(NLPTokenizer.analyze("我的希望是希望张晚霞的背影被晚霞映红").translateLabels());
     }
 }

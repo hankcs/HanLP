@@ -379,7 +379,6 @@ public class SegmentTest extends TestCase
     public void testNLPSegment() throws Exception
     {
         String text = "2013年4月27日11时54分";
-        NLPTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
 //        System.out.println(NLPTokenizer.segment(text));
     }
 
