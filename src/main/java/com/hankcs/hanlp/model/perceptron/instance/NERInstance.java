@@ -54,7 +54,16 @@ public class NERInstance extends Instance
         }
     }
 
-    private int[] extractFeature(String[] wordArray, String[] posArray, FeatureMap featureMap, int position)
+    /**
+     * 提取特征，override此方法来拓展自己的特征模板
+     *
+     * @param wordArray  词语
+     * @param posArray   词性
+     * @param featureMap 储存特征的结构
+     * @param position   当前提取的词语所在的位置
+     * @return 特征向量
+     */
+    protected int[] extractFeature(String[] wordArray, String[] posArray, FeatureMap featureMap, int position)
     {
         boolean create = featureMap instanceof MutableFeatureMap;
         List<Integer> featVec = new ArrayList<Integer>();
