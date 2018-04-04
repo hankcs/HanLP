@@ -18,19 +18,12 @@ import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
  */
 public abstract class ImmutableFeatureMap extends FeatureMap
 {
-    protected final int size;
+    public ImmutableFeatureMap()
+    {
+    }
 
-    protected ImmutableFeatureMap(int size, TagSet tagSet)
+    public ImmutableFeatureMap(TagSet tagSet)
     {
         super(tagSet);
-        this.size = size;
     }
-
-    @Override
-    public int size()
-    {
-        return size;
-    }
-
-
 }

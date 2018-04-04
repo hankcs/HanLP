@@ -40,6 +40,12 @@ public class MutableFeatureMap extends FeatureMap
     }
 
     @Override
+    public Set<Map.Entry<String, Integer>> entrySet()
+    {
+        return featureIdMap.entrySet();
+    }
+
+    @Override
     public int idOf(String string)
     {
         Integer id = featureIdMap.get(string);

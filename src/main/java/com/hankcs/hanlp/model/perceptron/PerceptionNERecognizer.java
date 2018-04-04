@@ -10,11 +10,15 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
+import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
 import com.hankcs.hanlp.model.perceptron.instance.NERInstance;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.tokenizer.lexical.NERecognizer;
 
 import java.io.IOException;
 
@@ -23,7 +27,7 @@ import java.io.IOException;
  *
  * @author hankcs
  */
-public class PerceptionNERecognizer extends PerceptronTagger
+public class PerceptionNERecognizer extends PerceptronTagger implements NERecognizer
 {
     final NERTagSet tagSet;
 
@@ -42,6 +46,16 @@ public class PerceptionNERecognizer extends PerceptronTagger
         this(new LinearModel(nerModelPath));
     }
 
+    /**
+     * 加载配置文件指定的模型
+     *
+     * @throws IOException
+     */
+    public PerceptionNERecognizer() throws IOException
+    {
+        this(HanLP.Config.PerceptronNERModelPath);
+    }
+
     public String[] recognize(String[] wordArray, String[] posArray)
     {
         NERInstance instance = new NERInstance(wordArray, posArray, model.featureMap);
@@ -49,6 +63,12 @@ public class PerceptionNERecognizer extends PerceptronTagger
         model.viterbiDecode(instance);
 
         return instance.tags(tagSet);
+    }
+
+    @Override
+    public NERTagSet getNERTagSet()
+    {
+        return tagSet;
     }
 
     /**
@@ -63,8 +83,8 @@ public class PerceptionNERecognizer extends PerceptronTagger
     }
 
     @Override
-    public boolean learn(Sentence sentence)
+    protected Instance createInstance(Sentence sentence, FeatureMap featureMap)
     {
-        return learn(NERInstance.create(sentence, model.featureMap));
+        return NERInstance.create(sentence, featureMap);
     }
 }

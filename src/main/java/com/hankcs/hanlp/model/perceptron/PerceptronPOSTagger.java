@@ -10,10 +10,14 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
+import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.instance.POSInstance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.tokenizer.lexical.POSTagger;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +27,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class PerceptronPOSTagger extends PerceptronTagger
+public class PerceptronPOSTagger extends PerceptronTagger implements POSTagger
 {
     public PerceptronPOSTagger(LinearModel model)
     {
@@ -40,11 +44,21 @@ public class PerceptronPOSTagger extends PerceptronTagger
     }
 
     /**
+     * 加载配置文件指定的模型
+     * @throws IOException
+     */
+    public PerceptronPOSTagger() throws IOException
+    {
+        this(HanLP.Config.PerceptronPOSModelPath);
+    }
+
+    /**
      * 标注
      *
      * @param words
      * @return
      */
+    @Override
     public String[] tag(String... words)
     {
         POSInstance instance = new POSInstance(words, model.featureMap);
@@ -60,6 +74,7 @@ public class PerceptronPOSTagger extends PerceptronTagger
      * @param wordList
      * @return
      */
+    @Override
     public String[] tag(List<String> wordList)
     {
         String[] termArray = new String[wordList.size()];
@@ -98,8 +113,8 @@ public class PerceptronPOSTagger extends PerceptronTagger
     }
 
     @Override
-    public boolean learn(Sentence sentence)
+    protected Instance createInstance(Sentence sentence, FeatureMap featureMap)
     {
-        return learn(POSInstance.create(sentence, model.featureMap));
+        return POSInstance.create(sentence, featureMap);
     }
 }

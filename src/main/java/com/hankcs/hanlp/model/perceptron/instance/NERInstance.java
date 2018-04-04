@@ -17,10 +17,12 @@ import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author hankcs
@@ -103,50 +105,7 @@ public class NERInstance extends Instance
         if (sentence == null || featureMap == null) return null;
 
         NERTagSet tagSet = (NERTagSet) featureMap.tagSet;
-        List<String[]> collector = new LinkedList<String[]>();
-        for (IWord word : sentence.wordList)
-        {
-            if (word instanceof CompoundWord)
-            {
-                List<Word> wordList = ((CompoundWord) word).innerList;
-                Word[] words = wordList.toArray(new Word[0]);
-
-                // 此处可以写得更加通用一些，以支持更灵活的NER类型
-                if (word.getLabel().equals("nr") ||
-                        word.getLabel().equals("nt") ||
-                        word.getLabel().equals("ns"))
-                {
-                    collector.add(new String[]{words[0].value, words[0].label, tagSet.B_TAG_PREFIX + word.getLabel()});
-                    for (int i = 1; i < words.length - 1; i++)
-                    {
-                        collector.add(new String[]{words[i].value, words[i].label, tagSet.M_TAG_PREFIX + word.getLabel()});
-                    }
-                    collector.add(new String[]{words[words.length - 1].value, words[words.length - 1].label,
-                            tagSet.E_TAG_PREFIX + word.getLabel()});
-                }
-                else
-                {
-                    for (Word w : words)
-                    {
-                        collector.add(new String[]{w.value, w.label, tagSet.O_TAG});
-                    }
-                }
-            }
-            else
-            {
-                if (word.getLabel().equals("nr") ||
-                        word.getLabel().equals("nt") ||
-                        word.getLabel().equals("ns"))
-                {
-                    // 单个实体
-                    collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.S_TAG});
-                }
-                else
-                {
-                    collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.O_TAG});
-                }
-            }
-        }
+        List<String[]> collector = Utility.convertSentenceToNER(sentence, tagSet);
         String[] wordArray = new String[collector.size()];
         String[] posArray = new String[collector.size()];
         String[] tagArray = new String[collector.size()];

@@ -22,7 +22,6 @@ import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ public class CWSTrainer extends PerceptronTrainer
     @Override
     protected Instance createInstance(Sentence sentence, FeatureMap mutableFeatureMap)
     {
-        List<Word> wordList = Utility.toSimpleWordList(sentence);
+        List<Word> wordList = sentence.toSimpleWordList();
         String[] termArray = Utility.toWordArray(wordList);
         Instance instance = new CWSInstance(termArray, mutableFeatureMap);
         return instance;
@@ -50,66 +49,9 @@ public class CWSTrainer extends PerceptronTrainer
     @Override
     public double[] evaluate(String developFile, LinearModel model) throws IOException
     {
-        PerceptronLexicalAnalyzer segment = new PerceptronLexicalAnalyzer(model);
-        double[] prf = Utility.prf(evaluate(developFile, segment));
+        PerceptronSegmenter segmenter = new PerceptronSegmenter(model);
+        double[] prf = Utility.prf(Utility.evaluateCWS(developFile, segmenter));
         return prf;
     }
 
-    private int[] evaluate(String developFile, final PerceptronLexicalAnalyzer segment) throws IOException
-    {
-        // int goldTotal = 0, predTotal = 0, correct = 0;
-        final int[] stat = new int[3];
-        Arrays.fill(stat, 0);
-        loadInstance(developFile, new InstanceHandler()
-        {
-            @Override
-            public boolean process(Sentence sentence)
-            {
-                List<Word> wordList = Utility.toSimpleWordList(sentence);
-                String[] wordArray = Utility.toWordArray(wordList);
-                stat[0] += wordArray.length;
-                String text = com.hankcs.hanlp.utility.TextUtility.combine(wordArray);
-                String[] predArray = segment.segment(text).toArray(new String[0]);
-                stat[1] += predArray.length;
-
-                int goldIndex = 0, predIndex = 0;
-                int goldLen = 0, predLen = 0;
-
-                while (goldIndex < wordArray.length && predIndex < predArray.length)
-                {
-                    if (goldLen == predLen)
-                    {
-                        if (wordArray[goldIndex].equals(predArray[predIndex]))
-                        {
-                            stat[2]++;
-                            goldLen += wordArray[goldIndex].length();
-                            predLen += wordArray[goldIndex].length();
-                            goldIndex++;
-                            predIndex++;
-                        }
-                        else
-                        {
-                            goldLen += wordArray[goldIndex].length();
-                            predLen += predArray[predIndex].length();
-                            goldIndex++;
-                            predIndex++;
-                        }
-                    }
-                    else if (goldLen < predLen)
-                    {
-                        goldLen += wordArray[goldIndex].length();
-                        goldIndex++;
-                    }
-                    else
-                    {
-                        predLen += predArray[predIndex].length();
-                        predIndex++;
-                    }
-                }
-
-                return false;
-            }
-        });
-        return stat;
-    }
 }

@@ -40,6 +40,6 @@ public class POSTrainer extends PerceptronTrainer
     public Result train(String trainingFile, String developFile, String modelFile) throws IOException
     {
         // 词性标注模型压缩会显著降低效果
-        return train(trainingFile, developFile, modelFile, 0, 5, Runtime.getRuntime().availableProcessors());
+        return train(trainingFile, developFile, modelFile, 0, 10, Runtime.getRuntime().availableProcessors());
     }
 }

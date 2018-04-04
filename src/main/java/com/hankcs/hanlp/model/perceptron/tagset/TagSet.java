@@ -10,6 +10,8 @@
  */
 package com.hankcs.hanlp.model.perceptron.tagset;
 
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.model.perceptron.common.IIdStringMap;
 import com.hankcs.hanlp.model.perceptron.common.IStringIdMap;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
@@ -25,7 +27,7 @@ import java.util.TreeMap;
 /**
  * @author hankcs
  */
-public class TagSet implements IIdStringMap, IStringIdMap, Iterable<Map.Entry<String, Integer>>
+public class TagSet implements IIdStringMap, IStringIdMap, Iterable<Map.Entry<String, Integer>>, ICacheAble
 {
     private Map<String, Integer> stringIdMap;
     private ArrayList<String> idStringMap;
@@ -124,11 +126,26 @@ public class TagSet implements IIdStringMap, IStringIdMap, Iterable<Map.Entry<St
         }
     }
 
+    @Override
+    public boolean load(ByteArray byteArray)
+    {
+        idStringMap.clear();
+        stringIdMap.clear();
+        int size = byteArray.nextInt();
+        for (int i = 0; i < size; i++)
+        {
+            String tag = byteArray.nextUTF();
+            idStringMap.add(tag);
+            stringIdMap.put(tag, i);
+        }
+        lock();
+        return true;
+    }
+
     public void load(DataInputStream in) throws IOException
     {
         idStringMap.clear();
         stringIdMap.clear();
-//        type = TagSetType.values()[in.readInt()];
         int size = in.readInt();
         for (int i = 0; i < size; i++)
         {

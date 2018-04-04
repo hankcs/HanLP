@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.instance.CWSInstance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
@@ -18,6 +20,7 @@ import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.tagset.CWSTagSet;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.tokenizer.lexical.Segmenter;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -28,7 +31,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class PerceptronSegmenter extends PerceptronTagger
+public class PerceptronSegmenter extends PerceptronTagger implements Segmenter
 {
     private final CWSTagSet CWSTagSet;
 
@@ -47,14 +50,24 @@ public class PerceptronSegmenter extends PerceptronTagger
         this(new LinearModel(cwsModelFile));
     }
 
+    /**
+     * 加载配置文件指定的模型
+     * @throws IOException
+     */
+    public PerceptronSegmenter() throws IOException
+    {
+        this(HanLP.Config.PerceptronCWSModelPath);
+    }
+
     public void segment(String text, List<String> output)
     {
-        String normalized = Utility.normalize(text);
+        String normalized = normalize(text);
         segment(text, normalized, output);
     }
 
-    void segment(String text, String normalized, List<String> output)
+    public void segment(String text, String normalized, List<String> output)
     {
+        if (text.isEmpty()) return;
         Instance instance = new CWSInstance(normalized, model.featureMap);
         int[] tagArray = instance.tagArray;
         model.viterbiDecode(instance, tagArray);
@@ -115,8 +128,16 @@ public class PerceptronSegmenter extends PerceptronTagger
     }
 
     @Override
-    public boolean learn(Sentence sentence)
+    protected Instance createInstance(Sentence sentence, FeatureMap featureMap)
     {
-        return learn(CWSInstance.create(sentence, model.featureMap));
+        return CWSInstance.create(sentence, featureMap);
+    }
+
+    @Override
+    public double[] evaluate(String corpora) throws IOException
+    {
+        // 这里用CWS的F1
+        double[] prf = Utility.prf(Utility.evaluateCWS(corpora, this));
+        return prf;
     }
 }

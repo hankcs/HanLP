@@ -8,7 +8,7 @@ import com.hankcs.hanlp.classification.features.BaseFeatureData;
 import com.hankcs.hanlp.classification.models.AbstractModel;
 import com.hankcs.hanlp.classification.models.NaiveBayesModel;
 
-import static com.hankcs.hanlp.classification.utilities.Predefine.logger;
+import static com.hankcs.hanlp.classification.utilities.io.ConsoleLogger.logger;
 
 import java.util.*;
 

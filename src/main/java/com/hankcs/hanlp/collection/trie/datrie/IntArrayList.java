@@ -1,15 +1,21 @@
 package com.hankcs.hanlp.collection.trie.datrie;
 
-import java.io.Serializable;
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ICacheAble;
+
+import java.io.*;
 
 /**
  * 动态数组
  */
-public class IntArrayList implements Serializable
+public class IntArrayList implements Serializable, ICacheAble
 {
     private static final long serialVersionUID = 1908530358259070518L;
     private int[] data;
-    private int count;
+    /**
+     * 实际size
+     */
+    private int size;
     /**
      * 线性递增
      */
@@ -47,15 +53,20 @@ public class IntArrayList implements Serializable
         this.exponentialExpandFactor = exponentialExpandFactor;
     }
 
-    public IntArrayList(int size)
+    public IntArrayList()
     {
-        this(size, 10240);
+        this(1024);
     }
 
-    public IntArrayList(int size, int linearExpandFactor)
+    public IntArrayList(int capacity)
     {
-        this.data = new int[size];
-        this.count = 0;
+        this(capacity, 10240);
+    }
+
+    public IntArrayList(int capacity, int linearExpandFactor)
+    {
+        this.data = new int[capacity];
+        this.size = 0;
         this.linearExpandFactor = linearExpandFactor;
     }
 
@@ -82,12 +93,12 @@ public class IntArrayList implements Serializable
      */
     public void append(int element)
     {
-        if (this.count == this.data.length)
+        if (this.size == this.data.length)
         {
             expand();
         }
-        this.data[this.count] = element;
-        this.count += 1;
+        this.data[this.size] = element;
+        this.size += 1;
     }
 
     /**
@@ -95,18 +106,18 @@ public class IntArrayList implements Serializable
      */
     public void loseWeight()
     {
-        if (count == data.length)
+        if (size == data.length)
         {
             return;
         }
-        int[] newData = new int[count];
-        System.arraycopy(this.data, 0, newData, 0, count);
+        int[] newData = new int[size];
+        System.arraycopy(this.data, 0, newData, 0, size);
         this.data = newData;
     }
 
     public int size()
     {
-        return this.count;
+        return this.size;
     }
 
     public int getLinearExpandFactor()
@@ -126,16 +137,72 @@ public class IntArrayList implements Serializable
 
     public void removeLast()
     {
-        --count;
+        --size;
     }
 
     public int getLast()
     {
-        return data[count - 1];
+        return data[size - 1];
+    }
+
+    public void setLast(int value)
+    {
+        data[size - 1] = value;
     }
 
     public int pop()
     {
-        return data[--count];
+        return data[--size];
+    }
+
+    @Override
+    public void save(DataOutputStream out) throws IOException
+    {
+        out.writeInt(size);
+        for (int i = 0; i < size; i++)
+        {
+            out.writeInt(data[i]);
+        }
+        out.writeInt(linearExpandFactor);
+        out.writeBoolean(exponentialExpanding);
+        out.writeDouble(exponentialExpandFactor);
+    }
+
+    @Override
+    public boolean load(ByteArray byteArray)
+    {
+        if (byteArray == null)
+        {
+            return false;
+        }
+        size = byteArray.nextInt();
+        data = new int[size];
+        for (int i = 0; i < size; i++)
+        {
+            data[i] = byteArray.nextInt();
+        }
+        linearExpandFactor = byteArray.nextInt();
+        exponentialExpanding = byteArray.nextBoolean();
+        exponentialExpandFactor = byteArray.nextDouble();
+        return true;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        loseWeight();
+        out.writeInt(size);
+        out.writeObject(data);
+        out.writeInt(linearExpandFactor);
+        out.writeBoolean(exponentialExpanding);
+        out.writeDouble(exponentialExpandFactor);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        size = in.readInt();
+        data = (int[]) in.readObject();
+        linearExpandFactor = in.readInt();
+        exponentialExpanding = in.readBoolean();
+        exponentialExpandFactor = in.readDouble();
     }
 }

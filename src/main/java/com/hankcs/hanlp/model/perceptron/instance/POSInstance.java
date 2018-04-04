@@ -62,85 +62,86 @@ public class POSInstance extends Instance
         String nextWord = position <= words.length - 2 ? words[position + 1] : "_E_";
 //        String next2Word = position <= words.length - 3 ? words[position + 2] : "_E_";
 
-        StringBuilder bf = new StringBuilder();
-//        bf.delete(0, bf.length());
-//        bf.append("U[-2,0]=").append(pre2Word);
-//        addFeature(bf, featVec, featureMap, create);
+        StringBuilder sbFeature = new StringBuilder();
+//        sbFeature.delete(0, sbFeature.length());
+//        sbFeature.append("U[-2,0]=").append(pre2Word);
+//        addFeature(sbFeature, featVec, featureMap, create);
 
-        bf.delete(0, bf.length());
-        bf.append("U[-1,0]=").append(preWord);
-        addFeature(bf, featVec, featureMap, create);
+        sbFeature.append(preWord).append('1');
+        addFeatureThenClear(sbFeature, featVec, featureMap, create);
 
-        bf.delete(0, bf.length());
-        bf.append("U[0,0]=").append(curWord);
-        addFeature(bf, featVec, featureMap, create);
+        sbFeature.append(curWord).append('2');
+        addFeatureThenClear(sbFeature, featVec, featureMap, create);
 
-        bf.delete(0, bf.length());
-        bf.append("U[1,0]=").append(nextWord);
-        addFeature(bf, featVec, featureMap, create);
+        sbFeature.append(nextWord).append('3');
+        addFeatureThenClear(sbFeature, featVec, featureMap, create);
 
-//        bf.delete(0, bf.length());
-//        bf.append("U[2,0]=").append(next2Word);
-//        addFeature(bf, featVec, featureMap, create);
+//        sbFeature.delete(0, sbFeature.length());
+//        sbFeature.append("U[2,0]=").append(next2Word);
+//        addFeature(sbFeature, featVec, featureMap, create);
 
         // wiwi+1(i = − 1, 0)
-//        bf.delete(0, bf.length());
-//        bf.append("B[-1,0]=").append(preWord).append("/").append(curWord);
-//        addFeature(bf, featVec, featureMap, create);
+//        sbFeature.delete(0, sbFeature.length());
+//        sbFeature.append("B[-1,0]=").append(preWord).append("/").append(curWord);
+//        addFeature(sbFeature, featVec, featureMap, create);
 //
-//        bf.delete(0, bf.length());
-//        bf.append("B[0,1]=").append(curWord).append("/").append(nextWord);
-//        addFeature(bf, featVec, featureMap, create);
+//        sbFeature.delete(0, sbFeature.length());
+//        sbFeature.append("B[0,1]=").append(curWord).append("/").append(nextWord);
+//        addFeature(sbFeature, featVec, featureMap, create);
 //
-//        bf.delete(0, bf.length());
-//        bf.append("B[-1,1]=").append(preWord).append("/").append(nextWord);
-//        addFeature(bf, featVec, featureMap, create);
+//        sbFeature.delete(0, sbFeature.length());
+//        sbFeature.append("B[-1,1]=").append(preWord).append("/").append(nextWord);
+//        addFeature(sbFeature, featVec, featureMap, create);
 
         // last char(w−1)w0
 //        String lastChar = position >= 1 ? "" + words[position - 1].charAt(words[position - 1].length() - 1) : "_BC_";
-//        bf.delete(0, bf.length());
-//        bf.append("CW[-1,0]=").append(lastChar).append("/").append(curWord);
-//        addFeature(bf, featVec, featureMap, create);
+//        sbFeature.delete(0, sbFeature.length());
+//        sbFeature.append("CW[-1,0]=").append(lastChar).append("/").append(curWord);
+//        addFeature(sbFeature, featVec, featureMap, create);
 //
 //        // w0 ﬁrst_char(w1)
 //        String nextChar = position <= words.length - 2 ? "" + words[position + 1].charAt(0) : "_EC_";
-//        bf.delete(0, bf.length());
-//        bf.append("CW[1,0]=").append(curWord).append("/").append(nextChar);
-//        addFeature(bf, featVec, featureMap, create);
+//        sbFeature.delete(0, sbFeature.length());
+//        sbFeature.append("CW[1,0]=").append(curWord).append("/").append(nextChar);
+//        addFeature(sbFeature, featVec, featureMap, create);
 //
         int length = curWord.length();
 //
 //        // ﬁrstchar(w0)lastchar(w0)
-//        bf.delete(0, bf.length());
-//        bf.append("BE=").append(curWord.charAt(0)).append("/").append(curWord.charAt(length - 1));
-//        addFeature(bf, featVec, featureMap, create);
+//        sbFeature.delete(0, sbFeature.length());
+//        sbFeature.append("BE=").append(curWord.charAt(0)).append("/").append(curWord.charAt(length - 1));
+//        addFeature(sbFeature, featVec, featureMap, create);
 
         // prefix
-        addFeature("pf=" + curWord.substring(0, 1), featVec, featureMap, create);
-
+        sbFeature.append(curWord.substring(0, 1)).append('4');
+        addFeatureThenClear(sbFeature, featVec, featureMap, create);
 
         if (length > 1)
         {
-            addFeature("pf=" + curWord.substring(0, 2), featVec, featureMap, create);
+            sbFeature.append(curWord.substring(0, 2)).append('4');
+            addFeatureThenClear(sbFeature, featVec, featureMap, create);
         }
 
         if (length > 2)
         {
-            addFeature("pf=" + curWord.substring(0, 3), featVec, featureMap, create);
+            sbFeature.append(curWord.substring(0, 3)).append('4');
+            addFeatureThenClear(sbFeature, featVec, featureMap, create);
         }
 
         // sufﬁx(w0, i)(i = 1, 2, 3)
-        addFeature("sf=" + curWord.charAt(length - 1), featVec, featureMap, create);
-
+        sbFeature.append(curWord.charAt(length - 1)).append('5');
+        addFeatureThenClear(sbFeature, featVec, featureMap, create);
 
         if (length > 1)
         {
-            addFeature("sf=" + curWord.substring(length - 2), featVec, featureMap, create);
+            sbFeature.append(curWord.substring(length - 2)).append('5');
+            addFeatureThenClear(sbFeature, featVec, featureMap, create);
         }
 
         if (length > 2)
         {
-            addFeature("sf=" + curWord.substring(length - 3), featVec, featureMap, create);
+            sbFeature.append(curWord.substring(length - 3)).append('5');
+            addFeatureThenClear(sbFeature, featVec, featureMap, create);
         }
 
         // length
@@ -224,7 +225,7 @@ public class POSInstance extends Instance
 //        {
 //            addFeature("wT=l", featVec, featureMap, create);
 //        }
-//        bf = null;
+//        sbFeature = null;
 
         return toFeatureArray(featVec);
     }
@@ -249,7 +250,7 @@ public class POSInstance extends Instance
         {
             return null;
         }
-        List<Word> wordList = Utility.toSimpleWordList(sentence);
+        List<Word> wordList = sentence.toSimpleWordList();
         String[] termArray = new String[wordList.size()];
         String[] posArray = new String[wordList.size()];
         int i = 0;

@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.model.perceptron.utility;
 
+import com.hankcs.hanlp.dictionary.other.CharTable;
+import com.hankcs.hanlp.model.perceptron.PerceptronSegmenter;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
@@ -18,15 +20,14 @@ import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
+import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author hankcs
@@ -240,24 +241,6 @@ public class Utility
         return false;
     }
 
-    public static List<Word> toSimpleWordList(Sentence sentence)
-    {
-        List<Word> wordList = new LinkedList<Word>();
-        for (IWord word : sentence.wordList)
-        {
-            if (word instanceof CompoundWord)
-            {
-                wordList.addAll(((CompoundWord) word).innerList);
-            }
-            else
-            {
-                wordList.add((Word) word);
-            }
-        }
-
-        return wordList;
-    }
-
     public static String[] toWordArray(List<Word> wordList)
     {
         String[] wordArray = new String[wordList.size()];
@@ -268,5 +251,126 @@ public class Utility
         }
 
         return wordArray;
+    }
+
+    public static int[] evaluateCWS(String developFile, final PerceptronSegmenter segmenter) throws IOException
+    {
+        // int goldTotal = 0, predTotal = 0, correct = 0;
+        final int[] stat = new int[3];
+        Arrays.fill(stat, 0);
+        IOUtility.loadInstance(developFile, new InstanceHandler()
+        {
+            @Override
+            public boolean process(Sentence sentence)
+            {
+                List<Word> wordList = sentence.toSimpleWordList();
+                String[] wordArray = toWordArray(wordList);
+                stat[0] += wordArray.length;
+                String text = com.hankcs.hanlp.utility.TextUtility.combine(wordArray);
+                String[] predArray = segmenter.segment(text).toArray(new String[0]);
+                stat[1] += predArray.length;
+
+                int goldIndex = 0, predIndex = 0;
+                int goldLen = 0, predLen = 0;
+
+                while (goldIndex < wordArray.length && predIndex < predArray.length)
+                {
+                    if (goldLen == predLen)
+                    {
+                        if (wordArray[goldIndex].equals(predArray[predIndex]))
+                        {
+                            stat[2]++;
+                            goldLen += wordArray[goldIndex].length();
+                            predLen += wordArray[goldIndex].length();
+                            goldIndex++;
+                            predIndex++;
+                        }
+                        else
+                        {
+                            goldLen += wordArray[goldIndex].length();
+                            predLen += predArray[predIndex].length();
+                            goldIndex++;
+                            predIndex++;
+                        }
+                    }
+                    else if (goldLen < predLen)
+                    {
+                        goldLen += wordArray[goldIndex].length();
+                        goldIndex++;
+                    }
+                    else
+                    {
+                        predLen += predArray[predIndex].length();
+                        predIndex++;
+                    }
+                }
+
+                return false;
+            }
+        });
+        return stat;
+    }
+
+    public static List<String[]> convertSentenceToNER(Sentence sentence, NERTagSet tagSet)
+    {
+        List<String[]> collector = new LinkedList<String[]>();
+        Set<String> nerLabels = tagSet.nerLabels;
+        for (IWord word : sentence.wordList)
+        {
+            if (word instanceof CompoundWord)
+            {
+                List<Word> wordList = ((CompoundWord) word).innerList;
+                Word[] words = wordList.toArray(new Word[0]);
+
+                if (nerLabels.contains(word.getLabel()))
+                {
+                    collector.add(new String[]{words[0].value, words[0].label, tagSet.B_TAG_PREFIX + word.getLabel()});
+                    for (int i = 1; i < words.length - 1; i++)
+                    {
+                        collector.add(new String[]{words[i].value, words[i].label, tagSet.M_TAG_PREFIX + word.getLabel()});
+                    }
+                    collector.add(new String[]{words[words.length - 1].value, words[words.length - 1].label,
+                        tagSet.E_TAG_PREFIX + word.getLabel()});
+                }
+                else
+                {
+                    for (Word w : words)
+                    {
+                        collector.add(new String[]{w.value, w.label, tagSet.O_TAG});
+                    }
+                }
+            }
+            else
+            {
+                if (nerLabels.contains(word.getLabel()))
+                {
+                    // 单个实体
+                    collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.S_TAG});
+                }
+                else
+                {
+                    collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.O_TAG});
+                }
+            }
+        }
+        return collector;
+    }
+
+    public static void normalize(Sentence sentence)
+    {
+        for (IWord word : sentence.wordList)
+        {
+            if (word instanceof CompoundWord)
+            {
+                for (Word child : ((CompoundWord) word).innerList)
+                {
+                    child.setValue(CharTable.convert(child.getValue()));
+                }
+            }
+            else
+            {
+                word.setValue(CharTable.convert(word.getValue()));
+            }
+        }
     }
 }
