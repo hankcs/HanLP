@@ -48,6 +48,9 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
         final String text = "张飞摆出一字长蛇阵如入无人之境，孙权惊呆了";
 //        System.out.println(analyzer.analyze(text));
         assertTrue(analyzer.analyze(text).toString().contains(" 一字长蛇阵/"));
+        assertTrue(CustomDictionary.insert("饿了么", "n 1"));
+        analyzer.enableCustomDictionaryForcing(true);
+        assertTrue(analyzer.analyze("美团与饿了么争夺外卖市场").toString().contains("饿了么"));
     }
 
     public void testIndexMode() throws Exception

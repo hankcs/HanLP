@@ -41,6 +41,5 @@ public class DemoPerceptronLexicalAnalyzer
         System.out.println(analyzer.analyze("我在浙江金华出生"));
         analyzer.learn("在/p 浙江/ns 金华/ns 出生/v");
         System.out.println(analyzer.analyze("我在四川金华出生，我的名字叫金华"));
-        System.out.println(analyzer.analyze("我的名字叫金华"));
     }
 }

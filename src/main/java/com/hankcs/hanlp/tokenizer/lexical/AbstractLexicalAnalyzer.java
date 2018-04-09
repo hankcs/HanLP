@@ -205,7 +205,7 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
      */
     protected boolean acceptCustomWord(int begin, int end, CoreDictionary.Attribute value)
     {
-        return end - begin >= 4 && !value.hasNatureStartsWith("nr") && !value.hasNatureStartsWith("ns") && !value.hasNatureStartsWith("nt");
+        return config.forceCustomDictionary || (end - begin >= 4 && !value.hasNatureStartsWith("nr") && !value.hasNatureStartsWith("ns") && !value.hasNatureStartsWith("nt"));
     }
 
     @Override
