@@ -29,7 +29,7 @@ public enum NRPattern
     BG,
     DG,
     EG,
-    BXD,
+//    BXD,
     BZ,
 //    CD,
     EE,
