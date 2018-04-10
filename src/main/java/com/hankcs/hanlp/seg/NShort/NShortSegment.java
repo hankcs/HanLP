@@ -74,22 +74,22 @@ public class NShortSegment extends WordBasedSegment
                 }
                 if (config.translatedNameRecognize)
                 {
-                    TranslatedPersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    TranslatedPersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (config.japaneseNameRecognize)
                 {
-                    JapanesePersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    JapanesePersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (config.placeRecognize)
                 {
-                    PlaceRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    PlaceRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (config.organizationRecognize)
                 {
                     // 层叠隐马模型——生成输出作为下一级隐马输入
                     vertexList = Dijkstra.compute(generateBiGraph(wordNetOptimum));
                     wordNetOptimum.addAll(vertexList);
-                    OrganizationRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    OrganizationRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (!NERexists && preSize != wordNetOptimum.size())
                 {

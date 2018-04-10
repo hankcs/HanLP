@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class OrganizationRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static boolean recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NT>> roleTagList = roleTag(pWordSegResult, wordNetAll);
         if (HanLP.Config.DEBUG)

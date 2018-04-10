@@ -79,15 +79,15 @@ public class ViterbiSegment extends WordBasedSegment
             }
             if (config.translatedNameRecognize)
             {
-                TranslatedPersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                TranslatedPersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (config.japaneseNameRecognize)
             {
-                JapanesePersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                JapanesePersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (config.placeRecognize)
             {
-                PlaceRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                PlaceRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (config.organizationRecognize)
             {
@@ -96,7 +96,7 @@ public class ViterbiSegment extends WordBasedSegment
                 wordNetOptimum.clear();
                 wordNetOptimum.addAll(vertexList);
                 preSize = wordNetOptimum.size();
-                OrganizationRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                OrganizationRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (wordNetOptimum.size() != preSize)
             {

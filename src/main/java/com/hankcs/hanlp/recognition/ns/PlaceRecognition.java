@@ -31,7 +31,7 @@ import java.util.ListIterator;
  */
 public class PlaceRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static boolean recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NS>> roleTagList = roleTag(pWordSegResult, wordNetAll);
         if (HanLP.Config.DEBUG)
