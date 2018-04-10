@@ -18,7 +18,7 @@ import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
 import com.hankcs.hanlp.seg.Dijkstra.Path.State;
-import com.hankcs.hanlp.seg.WordBasedGenerativeModelSegment;
+import com.hankcs.hanlp.seg.WordBasedSegment;
 import com.hankcs.hanlp.seg.common.*;
 
 import java.util.*;
@@ -27,7 +27,7 @@ import java.util.*;
  * 最短路径分词
  * @author hankcs
  */
-public class DijkstraSegment extends WordBasedGenerativeModelSegment
+public class DijkstraSegment extends WordBasedSegment
 {
     @Override
     public List<Term> segSentence(char[] sentence)
@@ -35,9 +35,9 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
         WordNet wordNetOptimum = new WordNet(sentence);
         WordNet wordNetAll = new WordNet(wordNetOptimum.charArray);
         ////////////////生成词网////////////////////
-        GenerateWordNet(wordNetAll);
+        generateWordNet(wordNetAll);
         ///////////////生成词图////////////////////
-        Graph graph = GenerateBiGraph(wordNetAll);
+        Graph graph = generateBiGraph(wordNetAll);
         if (HanLP.Config.DEBUG)
         {
             System.out.printf("粗分词图：%s\n", graph.printByTo());
@@ -87,7 +87,7 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
             if (config.organizationRecognize)
             {
                 // 层叠隐马模型——生成输出作为下一级隐马输入
-                graph = GenerateBiGraph(wordNetOptimum);
+                graph = generateBiGraph(wordNetOptimum);
                 vertexList = dijkstra(graph);
                 wordNetOptimum.clear();
                 wordNetOptimum.addAll(vertexList);
@@ -96,7 +96,7 @@ public class DijkstraSegment extends WordBasedGenerativeModelSegment
             }
             if (wordNetOptimum.size() != preSize)
             {
-                graph = GenerateBiGraph(wordNetOptimum);
+                graph = generateBiGraph(wordNetOptimum);
                 vertexList = dijkstra(graph);
                 if (HanLP.Config.DEBUG)
                 {
