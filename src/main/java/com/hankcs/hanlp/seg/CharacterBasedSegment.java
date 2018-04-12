@@ -12,8 +12,6 @@ package com.hankcs.hanlp.seg;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.hankcs.hanlp.algorithm.Viterbi;
@@ -28,7 +26,7 @@ import com.hankcs.hanlp.seg.common.Vertex;
  * 基于字构词的生成式模型分词器基类
  * @author hankcs
  */
-public abstract class CharacterBasedGenerativeModelSegment extends Segment
+public abstract class CharacterBasedSegment extends Segment
 {
 
     /**
@@ -37,7 +35,7 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
      * @param term
      * @return
      */
-    public static CoreDictionary.Attribute guessAttribute(Term term)  
+    public static CoreDictionary.Attribute guessAttribute(Term term)
     {
         CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
         if (attribute == null)
@@ -60,14 +58,12 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
         else term.nature = attribute.nature[0];
         return attribute;
     }
-    
-    
-    /*
+
+
+    /**
      * 以下方法用于纯分词模型
      * 分词、词性标注联合模型则直接重载segSentence
      */
-
-    
     @Override
     protected List<Term> segSentence(char[] sentence)
     {
@@ -100,9 +96,9 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
      * @return
      */
     protected abstract List<Term> roughSegSentence(char[] sentence);
-    
+
     /**
-     * 将中间结果转换为词网顶点, 
+     * 将中间结果转换为词网顶点,
      * 这样就可以利用基于Vertex开发的功能, 如词性标注、NER等
      * @param wordList
      * @param appendStart
@@ -122,53 +118,4 @@ public abstract class CharacterBasedGenerativeModelSegment extends Segment
         return vertexList;
     }
 
-    /**
-     * 将一条路径转为最终结果
-     *
-     * @param vertexList
-     * @param offsetEnabled 是否计算offset
-     * @return
-     */
-    protected static List<Term> convert(List<Vertex> vertexList, boolean offsetEnabled)
-    {
-        assert vertexList != null;
-        assert vertexList.size() >= 2 : "这条路径不应当短于2" + vertexList.toString();
-        int length = vertexList.size() - 2;
-        List<Term> resultList = new ArrayList<Term>(length);
-        Iterator<Vertex> iterator = vertexList.iterator();
-        iterator.next();
-        if (offsetEnabled)
-        {
-            int offset = 0;
-            for (int i = 0; i < length; ++i)
-            {
-                Vertex vertex = iterator.next();
-                Term term = convert(vertex);
-                term.offset = offset;
-                offset += term.length();
-                resultList.add(term);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < length; ++i)
-            {
-                Vertex vertex = iterator.next();
-                Term term = convert(vertex);
-                resultList.add(term);
-            }
-        }
-        return resultList;
-    }
-
-    /**
-     * 将节点转为term
-     *
-     * @param vertex
-     * @return
-     */
-    private static Term convert(Vertex vertex)
-    {
-        return new Term(vertex.realWord, vertex.guessNature());
-    }
 }

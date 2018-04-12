@@ -40,7 +40,7 @@ public class CWSTrainer extends PerceptronTrainer
     @Override
     protected Instance createInstance(Sentence sentence, FeatureMap mutableFeatureMap)
     {
-        List<Word> wordList = Utility.toSimpleWordList(sentence);
+        List<Word> wordList = sentence.toSimpleWordList();
         String[] termArray = Utility.toWordArray(wordList);
         Instance instance = new CWSInstance(termArray, mutableFeatureMap);
         return instance;

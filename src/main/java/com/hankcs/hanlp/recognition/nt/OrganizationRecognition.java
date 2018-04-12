@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class OrganizationRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static boolean recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NT>> roleTagList = roleTag(pWordSegResult, wordNetAll);
         if (HanLP.Config.DEBUG)
@@ -48,7 +48,7 @@ public class OrganizationRecognition
             }
             System.out.printf("机构名角色观察：%s\n", sbLog.toString());
         }
-        List<NT> NTList = viterbiExCompute(roleTagList);
+        List<NT> NTList = viterbiCompute(roleTagList);
         if (HanLP.Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
@@ -124,7 +124,7 @@ public class OrganizationRecognition
      * @param roleTagList
      * @return
      */
-    public static List<NT> viterbiExCompute(List<EnumItem<NT>> roleTagList)
+    public static List<NT> viterbiCompute(List<EnumItem<NT>> roleTagList)
     {
         return Viterbi.computeEnum(roleTagList, OrganizationDictionary.transformMatrixDictionary);
     }

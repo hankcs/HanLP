@@ -288,6 +288,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
             @Override
             public boolean process(Sentence sentence)
             {
+                Utility.normalize(sentence);
                 instanceList.add(PerceptronTrainer.this.createInstance(sentence, mutableFeatureMap));
                 return false;
             }

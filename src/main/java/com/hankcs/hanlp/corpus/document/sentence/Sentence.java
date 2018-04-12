@@ -157,6 +157,15 @@ public class Sentence implements Serializable, Iterable<IWord>
      */
     public static Sentence create(String param)
     {
+        if (param == null)
+        {
+            return null;
+        }
+        param = param.trim();
+        if (param.isEmpty())
+        {
+            return null;
+        }
         Pattern pattern = Pattern.compile("(\\[(([^\\s]+/[0-9a-zA-Z]+)\\s+)+?([^\\s]+/[0-9a-zA-Z]+)]/?[0-9a-zA-Z]+)|([^\\s]+/[0-9a-zA-Z]+)");
         Matcher matcher = pattern.matcher(param);
         List<IWord> wordList = new LinkedList<IWord>();
@@ -321,5 +330,28 @@ public class Sentence implements Serializable, Iterable<IWord>
     public boolean containsWordWithLabel(String label)
     {
         return findFirstWordByLabel(label) != null;
+    }
+
+    /**
+     * 转换为简单单词列表
+     *
+     * @return
+     */
+    public List<Word> toSimpleWordList()
+    {
+        List<Word> wordList = new LinkedList<Word>();
+        for (IWord word : this.wordList)
+        {
+            if (word instanceof CompoundWord)
+            {
+                wordList.addAll(((CompoundWord) word).innerList);
+            }
+            else
+            {
+                wordList.add((Word) word);
+            }
+        }
+
+        return wordList;
     }
 }

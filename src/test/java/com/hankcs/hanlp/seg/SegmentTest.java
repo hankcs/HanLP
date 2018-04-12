@@ -379,7 +379,6 @@ public class SegmentTest extends TestCase
     public void testNLPSegment() throws Exception
     {
         String text = "2013年4月27日11时54分";
-        NLPTokenizer.SEGMENT.enableNumberQuantifierRecognize(true);
 //        System.out.println(NLPTokenizer.segment(text));
     }
 
@@ -472,5 +471,13 @@ public class SegmentTest extends TestCase
         CustomDictionary.add("钱管家");
         StandardTokenizer.SEGMENT.enableCustomDictionaryForcing(true);
 //        System.out.println(HanLP.segment("钱管家中怎么绑定网银"));
+    }
+
+    public void testIssue784() throws Exception
+    {
+        String s = "苏苏中级会计什么时候更新";
+        CustomDictionary.add("苏苏");
+        StandardTokenizer.SEGMENT.enableCustomDictionaryForcing(true);
+        assertEquals("[苏苏/nz, 中级会计/nz, 什么/ry, 时候/n, 更新/v]", HanLP.segment(s).toString());
     }
 }

@@ -2,7 +2,7 @@ package com.hankcs.hanlp.model.perceptron;
 
 import java.io.IOException;
 
-import static com.hankcs.hanlp.classification.utilities.Predefine.logger;
+import static com.hankcs.hanlp.classification.utilities.io.ConsoleLogger.logger;
 
 
 public class DemoEvaluateCWS

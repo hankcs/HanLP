@@ -18,7 +18,7 @@ import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
-import com.hankcs.hanlp.seg.WordBasedGenerativeModelSegment;
+import com.hankcs.hanlp.seg.WordBasedSegment;
 import com.hankcs.hanlp.seg.NShort.Path.*;
 import com.hankcs.hanlp.seg.common.Graph;
 import com.hankcs.hanlp.seg.common.Term;
@@ -32,12 +32,12 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class NShortSegment extends WordBasedGenerativeModelSegment
+public class NShortSegment extends WordBasedSegment
 {
     List<Vertex> BiOptimumSegment(WordNet wordNetOptimum)
     {
 //        logger.trace("细分词网：\n{}", wordNetOptimum);
-        Graph graph = GenerateBiGraph(wordNetOptimum);
+        Graph graph = generateBiGraph(wordNetOptimum);
         if (HanLP.Config.DEBUG)
         {
             System.out.printf("细分词图：%s\n", graph.printByTo());
@@ -74,22 +74,22 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
                 }
                 if (config.translatedNameRecognize)
                 {
-                    TranslatedPersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    TranslatedPersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (config.japaneseNameRecognize)
                 {
-                    JapanesePersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    JapanesePersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (config.placeRecognize)
                 {
-                    PlaceRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    PlaceRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (config.organizationRecognize)
                 {
                     // 层叠隐马模型——生成输出作为下一级隐马输入
-                    vertexList = Dijkstra.compute(GenerateBiGraph(wordNetOptimum));
+                    vertexList = Dijkstra.compute(generateBiGraph(wordNetOptimum));
                     wordNetOptimum.addAll(vertexList);
-                    OrganizationRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    OrganizationRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (!NERexists && preSize != wordNetOptimum.size())
                 {
@@ -101,7 +101,7 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
         List<Vertex> vertexList = coarseResult.get(0);
         if (NERexists)
         {
-            Graph graph = GenerateBiGraph(wordNetOptimum);
+            Graph graph = generateBiGraph(wordNetOptimum);
             vertexList = Dijkstra.compute(graph);
             if (HanLP.Config.DEBUG)
             {
@@ -150,11 +150,11 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
     {
         List<List<Vertex>> coarseResult = new LinkedList<List<Vertex>>();
         ////////////////生成词网////////////////////
-        GenerateWordNet(wordNetAll);
+        generateWordNet(wordNetAll);
 //        logger.trace("词网大小：" + wordNetAll.size());
 //        logger.trace("打印词网：\n" + wordNetAll);
         ///////////////生成词图////////////////////
-        Graph graph = GenerateBiGraph(wordNetAll);
+        Graph graph = generateBiGraph(wordNetAll);
 //        logger.trace(graph.toString());
         if (HanLP.Config.DEBUG)
         {
@@ -176,7 +176,7 @@ public class NShortSegment extends WordBasedGenerativeModelSegment
         for (int[] path : spResult)
         {
             List<Vertex> vertexes = graph.parsePath(path);
-            GenerateWord(vertexes, wordNetOptimum);
+            generateWord(vertexes, wordNetOptimum);
             coarseResult.add(vertexes);
         }
         return coarseResult;

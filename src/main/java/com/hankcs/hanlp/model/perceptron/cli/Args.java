@@ -274,7 +274,7 @@ public class Args
                 clazzName = clazzName.substring(0, index);
             }
         }
-        errStream.println("用法: " + clazzName);
+        errStream.println("Usage: " + clazzName);
         for (Class<?> currentClazz = clazz; currentClazz != null; currentClazz = currentClazz.getSuperclass())
         {
             for (Field field : currentClazz.getDeclaredFields())

@@ -18,6 +18,7 @@ import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
 import com.hankcs.hanlp.model.perceptron.instance.NERInstance;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.tokenizer.lexical.NERecognizer;
 
 import java.io.IOException;
 
@@ -26,7 +27,7 @@ import java.io.IOException;
  *
  * @author hankcs
  */
-public class PerceptionNERecognizer extends PerceptronTagger
+public class PerceptionNERecognizer extends PerceptronTagger implements NERecognizer
 {
     final NERTagSet tagSet;
 
@@ -62,6 +63,12 @@ public class PerceptionNERecognizer extends PerceptronTagger
         model.viterbiDecode(instance);
 
         return instance.tags(tagSet);
+    }
+
+    @Override
+    public NERTagSet getNERTagSet()
+    {
+        return tagSet;
     }
 
     /**

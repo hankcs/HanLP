@@ -101,11 +101,11 @@ public class CharTable
         return result;
     }
 
-    public static String convert(String charArray)
+    public static String convert(String sentence)
     {
-        assert charArray != null;
-        char[] result = new char[charArray.length()];
-        convert(charArray, result);
+        assert sentence != null;
+        char[] result = new char[sentence.length()];
+        convert(sentence, result);
 
         return new String(result);
     }
