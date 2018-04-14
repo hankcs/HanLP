@@ -11,6 +11,7 @@
  */
 package com.hankcs.hanlp.recognition.nr;
 
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
@@ -39,20 +40,19 @@ public class JapanesePersonRecognition
      * @param wordNetOptimum 粗分结果对应的词图
      * @param wordNetAll     全词图
      */
-    public static void Recognition(List<Vertex> segResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static void recognition(List<Vertex> segResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         StringBuilder sbName = new StringBuilder();
         int appendTimes = 0;
         char[] charArray = wordNetAll.charArray;
-        BaseSearcher searcher = JapanesePersonDictionary.getSearcher(charArray);
-        Map.Entry<String, Character> entry;
+        DoubleArrayTrie<Character>.LongestSearcher searcher = JapanesePersonDictionary.getSearcher(charArray);
         int activeLine = 1;
         int preOffset = 0;
-        while ((entry = searcher.next()) != null)
+        while (searcher.next())
         {
-            Character label = entry.getValue();
-            String key = entry.getKey();
-            int offset = searcher.getOffset();
+            Character label = searcher.value;
+            int offset = searcher.begin;
+            String key = new String(charArray, offset, searcher.length);
             if (preOffset != offset)
             {
                 if (appendTimes > 1 && sbName.length() > 2) // 日本人名最短为3字

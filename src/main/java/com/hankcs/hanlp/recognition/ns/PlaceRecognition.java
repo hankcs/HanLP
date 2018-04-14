@@ -31,7 +31,7 @@ import java.util.ListIterator;
  */
 public class PlaceRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static boolean recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NS>> roleTagList = roleTag(pWordSegResult, wordNetAll);
         if (HanLP.Config.DEBUG)
@@ -48,7 +48,7 @@ public class PlaceRecognition
             }
             System.out.printf("地名角色观察：%s\n", sbLog.toString());
         }
-        List<NS> NSList = viterbiExCompute(roleTagList);
+        List<NS> NSList = viterbiCompute(roleTagList);
         if (HanLP.Config.DEBUG)
         {
             StringBuilder sbLog = new StringBuilder();
@@ -117,20 +117,12 @@ public class PlaceRecognition
         return tagList;
     }
 
-    private static void insert(ListIterator<Vertex> listIterator, List<EnumItem<NS>> tagList, WordNet wordNetAll, int line, NS ns)
-    {
-        Vertex vertex = wordNetAll.getFirst(line);
-        assert vertex != null : "全词网居然有空白行！";
-        listIterator.add(vertex);
-        tagList.add(new EnumItem<NS>(ns, 1000));
-    }
-
     /**
      * 维特比算法求解最优标签
      * @param roleTagList
      * @return
      */
-    public static List<NS> viterbiExCompute(List<EnumItem<NS>> roleTagList)
+    public static List<NS> viterbiCompute(List<EnumItem<NS>> roleTagList)
     {
         return Viterbi.computeEnum(roleTagList, PlaceDictionary.transformMatrixDictionary);
     }

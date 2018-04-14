@@ -31,7 +31,7 @@ public class DemoCRFLexicalAnalyzer
         for (String sentence : tests)
         {
             System.out.println(analyzer.analyze(sentence));
-            System.out.println(analyzer.seg(sentence));
+//            System.out.println(analyzer.seg(sentence));
         }
     }
 }

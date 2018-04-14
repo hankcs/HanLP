@@ -71,6 +71,7 @@ public abstract class CommonDictionary<V>
         catch (Exception e)
         {
             logger.warning("读取" + path + "失败" + e);
+            return false;
         }
         onLoaded(map);
         Set<Map.Entry<String, V>> entrySet = map.entrySet();

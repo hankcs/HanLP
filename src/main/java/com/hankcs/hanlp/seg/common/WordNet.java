@@ -417,6 +417,20 @@ public class WordNet
     }
 
     /**
+     * 清理from属性
+     */
+    public void clean()
+    {
+        for (List<Vertex> vertexList : vertexes)
+        {
+            for (Vertex vertex : vertexList)
+            {
+                vertex.from = null;
+            }
+        }
+    }
+
+    /**
      * 获取内部顶点表格，谨慎操作！
      *
      * @return

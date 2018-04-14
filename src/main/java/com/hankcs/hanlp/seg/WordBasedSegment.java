@@ -23,7 +23,6 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.TextUtility;
-import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.*;
 
@@ -32,10 +31,10 @@ import java.util.*;
  *
  * @author hankcs
  */
-public abstract class WordBasedGenerativeModelSegment extends Segment
+public abstract class WordBasedSegment extends Segment
 {
 
-    public WordBasedGenerativeModelSegment()
+    public WordBasedSegment()
     {
         super();
     }
@@ -46,7 +45,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
      * @param linkedArray    粗分结果
      * @param wordNetOptimum 合并了所有粗分结果的词网
      */
-    protected static void GenerateWord(List<Vertex> linkedArray, WordNet wordNetOptimum)
+    protected static void generateWord(List<Vertex> linkedArray, WordNet wordNetOptimum)
     {
         fixResultByRule(linkedArray);
 
@@ -69,13 +68,13 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
 
         //--------------------------------------------------------------------
         //The delimiter "－－"
-        ChangeDelimiterPOS(linkedArray);
+        changeDelimiterPOS(linkedArray);
 
         //--------------------------------------------------------------------
         //如果前一个词是数字，当前词以“－”或“-”开始，并且不止这一个字符，
         //那么将此“－”符号从当前词中分离出来。
         //例如 “3 / -4 / 月”需要拆分成“3 / - / 4 / 月”
-        SplitMiddleSlashFromDigitalWords(linkedArray);
+        splitMiddleSlashFromDigitalWords(linkedArray);
 
         //--------------------------------------------------------------------
         //1、如果当前词是数字，下一个词是“月、日、时、分、秒、月份”中的一个，则合并,且当前词词性是时间
@@ -83,11 +82,10 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
         //3、如果最后一个汉字是"点" ，则认为当前数字是时间
         //4、如果当前串最后一个汉字不是"∶·．／"和半角的'.''/'，那么是数
         //5、当前串最后一个汉字是"∶·．／"和半角的'.''/'，且长度大于1，那么去掉最后一个字符。例如"1."
-        CheckDateElements(linkedArray);
-
+        checkDateElements(linkedArray);
     }
 
-    static void ChangeDelimiterPOS(List<Vertex> linkedArray)
+    static void changeDelimiterPOS(List<Vertex> linkedArray)
     {
         for (Vertex vertex : linkedArray)
         {
@@ -103,7 +101,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
     //那么将此“－”符号从当前词中分离出来。
     //例如 “3-4 / 月”需要拆分成“3 / - / 4 / 月”
     //====================================================================
-    private static void SplitMiddleSlashFromDigitalWords(List<Vertex> linkedArray)
+    private static void splitMiddleSlashFromDigitalWords(List<Vertex> linkedArray)
     {
         if (linkedArray.size() < 2)
             return;
@@ -148,7 +146,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
     //4、如果当前串最后一个汉字不是"∶·．／"和半角的'.''/'，那么是数
     //5、当前串最后一个汉字是"∶·．／"和半角的'.''/'，且长度大于1，那么去掉最后一个字符。例如"1."
     //====================================================================
-    private static void CheckDateElements(List<Vertex> linkedArray)
+    private static void checkDateElements(List<Vertex> linkedArray)
     {
         if (linkedArray.size() < 2)
             return;
@@ -164,26 +162,14 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                 String nextWord = next.realWord;
                 if ((nextWord.length() == 1 && "月日时分秒".contains(nextWord)) || (nextWord.length() == 2 && nextWord.equals("月份")))
                 {
-                    current = Vertex.newTimeInstance(current.realWord + next.realWord);
-                    listIterator.previous();
-                    listIterator.previous();
-                    listIterator.set(current);
-                    listIterator.next();
-                    listIterator.next();
-                    listIterator.remove();
+                    mergeDate(listIterator, next, current);
                 }
                 //===== 2、如果当前词是可以作为年份的数字，下一个词是“年”，则合并，词性为时间，否则为数字。
                 else if (nextWord.equals("年"))
                 {
                     if (TextUtility.isYearTime(current.realWord))
                     {
-                        current = Vertex.newTimeInstance(current.realWord + next.realWord);
-                        listIterator.previous();
-                        listIterator.previous();
-                        listIterator.set(current);
-                        listIterator.next();
-                        listIterator.next();
-                        listIterator.remove();
+                        mergeDate(listIterator, next, current);
                     }
                     //===== 否则当前词就是数字了 =====
                     else
@@ -226,43 +212,15 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
 //        logger.trace("日期识别后：" + Graph.parseResult(linkedArray));
     }
 
-    /**
-     * 将一条路径转为最终结果
-     *
-     * @param vertexList
-     * @param offsetEnabled 是否计算offset
-     * @return
-     */
-    protected static List<Term> convert(List<Vertex> vertexList, boolean offsetEnabled)
+    private static void mergeDate(ListIterator<Vertex> listIterator, Vertex next, Vertex current)
     {
-        assert vertexList != null;
-        assert vertexList.size() >= 2 : "这条路径不应当短于2" + vertexList.toString();
-        int length = vertexList.size() - 2;
-        List<Term> resultList = new ArrayList<Term>(length);
-        Iterator<Vertex> iterator = vertexList.iterator();
-        iterator.next();
-        if (offsetEnabled)
-        {
-            int offset = 0;
-            for (int i = 0; i < length; ++i)
-            {
-                Vertex vertex = iterator.next();
-                Term term = convert(vertex);
-                term.offset = offset;
-                offset += term.length();
-                resultList.add(term);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < length; ++i)
-            {
-                Vertex vertex = iterator.next();
-                Term term = convert(vertex);
-                resultList.add(term);
-            }
-        }
-        return resultList;
+        current = Vertex.newTimeInstance(current.realWord + next.realWord);
+        listIterator.previous();
+        listIterator.previous();
+        listIterator.set(current);
+        listIterator.next();
+        listIterator.next();
+        listIterator.remove();
     }
 
     /**
@@ -282,7 +240,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
      * @param wordNet
      * @return
      */
-    protected static Graph GenerateBiGraph(WordNet wordNet)
+    protected static Graph generateBiGraph(WordNet wordNet)
     {
         return wordNet.toGraph();
     }
@@ -296,7 +254,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
      * @return
      * @deprecated 应该使用字符数组的版本
      */
-    private static List<AtomNode> AtomSegment(String sSentence, int start, int end)
+    private static List<AtomNode> atomSegment(String sSentence, int start, int end)
     {
         if (end < start)
         {
@@ -337,7 +295,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
             nCurType = charTypeArray[pCur];
 
             if (nCurType == CharType.CT_CHINESE || nCurType == CharType.CT_INDEX ||
-                    nCurType == CharType.CT_DELIMITER || nCurType == CharType.CT_OTHER)
+                nCurType == CharType.CT_DELIMITER || nCurType == CharType.CT_OTHER)
             {
                 String single = String.valueOf(charArray[pCur]);
                 if (single.length() != 0)
@@ -425,7 +383,7 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
      *
      * @param wordNetStorage
      */
-    protected void GenerateWordNet(final WordNet wordNetStorage)
+    protected void generateWordNet(final WordNet wordNetStorage)
     {
         final char[] charArray = wordNetStorage.charArray;
 
@@ -495,10 +453,10 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
                     {
                         Vertex smallVertex = iterator.next();
                         if (
-                                ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
-                                        smallVertex.realWord.length() >= config.indexMode)
-                                        && smallVertex != vertex // 防止重复添加
-                                        && currentLine + smallVertex.realWord.length() <= line + vertex.realWord.length() // 防止超出边界
+                            ((termMain.nature == Nature.mq && smallVertex.hasNature(Nature.q)) ||
+                                smallVertex.realWord.length() >= config.indexMode)
+                                && smallVertex != vertex // 防止重复添加
+                                && currentLine + smallVertex.realWord.length() <= line + vertex.realWord.length() // 防止超出边界
                             )
                         {
                             listIterator.add(smallVertex);
@@ -517,17 +475,6 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
     }
 
     /**
-     * 将节点转为term
-     *
-     * @param vertex
-     * @return
-     */
-    private static Term convert(Vertex vertex)
-    {
-        return new Term(vertex.realWord, vertex.guessNature());
-    }
-
-    /**
      * 词性标注
      *
      * @param vertexList
@@ -536,8 +483,4 @@ public abstract class WordBasedGenerativeModelSegment extends Segment
     {
         Viterbi.compute(vertexList, CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary);
     }
-
-//    protected static void performNamedEntityRecognize(List<Vertex> vertexList, WordNet wordNetOptimum, WordNet wordNetAll)
-//    {
-//    }
 }
