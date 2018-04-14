@@ -34,19 +34,6 @@ import java.util.*;
  */
 public class NShortSegment extends WordBasedSegment
 {
-    List<Vertex> BiOptimumSegment(WordNet wordNetOptimum)
-    {
-//        logger.trace("细分词网：\n{}", wordNetOptimum);
-        Graph graph = generateBiGraph(wordNetOptimum);
-        if (HanLP.Config.DEBUG)
-        {
-            System.out.printf("细分词图：%s\n", graph.printByTo());
-        }
-        NShortPath nShortPath = new NShortPath(graph, 1);
-        List<int[]> spResult = nShortPath.getNPaths(1);
-        assert spResult.size() > 0 : "最短路径求解失败，请检查下图是否有悬孤节点或负圈\n" + graph.printByTo();
-        return graph.parsePath(spResult.get(0));
-    }
 
     @Override
     public List<Term> segSentence(char[] sentence)
@@ -55,7 +42,7 @@ public class NShortSegment extends WordBasedSegment
         WordNet wordNetAll = new WordNet(sentence);
 //        char[] charArray = text.toCharArray();
         // 粗分
-        List<List<Vertex>> coarseResult = BiSegment(sentence, 2, wordNetOptimum, wordNetAll);
+        List<List<Vertex>> coarseResult = biSegment(sentence, 2, wordNetOptimum, wordNetAll);
         boolean NERexists = false;
         for (List<Vertex> vertexList : coarseResult)
         {
@@ -146,7 +133,7 @@ public class NShortSegment extends WordBasedSegment
      * @param wordNetAll
      * @return 一系列粗分结果
      */
-    public List<List<Vertex>> BiSegment(char[] sSentence, int nKind, WordNet wordNetOptimum, WordNet wordNetAll)
+    public List<List<Vertex>> biSegment(char[] sSentence, int nKind, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<List<Vertex>> coarseResult = new LinkedList<List<Vertex>>();
         ////////////////生成词网////////////////////
