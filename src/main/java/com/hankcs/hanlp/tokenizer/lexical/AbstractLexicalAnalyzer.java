@@ -382,7 +382,7 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
                     }
                     if (result.length() != 0)
                     {
-                        Term term = new Term(result.toString(), Nature.create(posArray[posArray.length - 1]));
+                        Term term = new Term(result.toString(), Nature.create(prePos));
                         term.offset = offset;
                         termList.add(term);
                         if (childrenList != null)
