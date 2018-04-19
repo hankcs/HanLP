@@ -306,10 +306,10 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
                 }
                 String[] posArray = tag(wordArray);
                 Iterator<Term> iterator = termList.iterator();
-                Iterator<CoreDictionary.Attribute> attributeIterator = attributeList.iterator();
+                Iterator<CoreDictionary.Attribute> attributeIterator = attributeList == null ? null : attributeList.iterator();
                 for (String pos : posArray)
                 {
-                    if (attributeIterator.hasNext())
+                    if (attributeIterator != null && attributeIterator.hasNext())
                     {
                         CoreDictionary.Attribute attribute = attributeIterator.next();
                         if (attribute != null)
