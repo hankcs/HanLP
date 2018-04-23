@@ -43,6 +43,10 @@ public abstract class FeatureMap implements IStringIdMap, ICacheAble
     }
 
     public TagSet tagSet;
+    /**
+     * 是否允许新增特征
+     */
+    public boolean mutable;
 
     public FeatureMap(TagSet tagSet)
     {

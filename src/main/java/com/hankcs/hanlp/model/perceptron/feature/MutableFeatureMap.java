@@ -37,6 +37,7 @@ public class MutableFeatureMap extends FeatureMap
             idOf("BL=" + tagSet.stringOf(i));
         }
         idOf("BL=_BL_");
+        mutable = true;
     }
 
     @Override

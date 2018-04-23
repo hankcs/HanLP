@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author hankcs
  */
-public class ImmutableFeatureHashMap extends ImmutableFeatureMap
+public class ImmutableFeatureHashMap extends FeatureMap
 {
     public Map<String, Integer> featureIdMap;
 

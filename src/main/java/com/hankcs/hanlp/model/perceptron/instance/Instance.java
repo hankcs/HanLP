@@ -50,10 +50,10 @@ public class Instance
         return tagArray.length;
     }
 
-    protected static void addFeature(CharSequence rawFeature, List<Integer> featureVector, FeatureMap featureMap, boolean create)
+    protected static void addFeature(CharSequence rawFeature, List<Integer> featureVector, FeatureMap featureMap)
     {
         int id = featureMap.idOf(rawFeature.toString());
-        if (create || id != -1)
+        if (id != -1)
         {
             featureVector.add(id);
         }
@@ -65,12 +65,11 @@ public class Instance
      * @param rawFeature
      * @param featureVector
      * @param featureMap
-     * @param create
      */
-    protected static void addFeatureThenClear(StringBuilder rawFeature, List<Integer> featureVector, FeatureMap featureMap, boolean create)
+    protected static void addFeatureThenClear(StringBuilder rawFeature, List<Integer> featureVector, FeatureMap featureMap)
     {
         int id = featureMap.idOf(rawFeature.toString());
-        if (create || id != -1)
+        if (id != -1)
         {
             featureVector.add(id);
         }

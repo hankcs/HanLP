@@ -65,7 +65,6 @@ public class CWSInstance extends Instance
 
     protected int[] extractFeature(String sentence, FeatureMap featureMap, int position)
     {
-        boolean create = featureMap instanceof MutableFeatureMap;
         List<Integer> featureVec = new LinkedList<Integer>();
 
         char pre2Char = position >= 2 ? sentence.charAt(position - 2) : CHAR_BEGIN;
@@ -78,73 +77,73 @@ public class CWSInstance extends Instance
         //char unigram feature
 //        sbFeature.delete(0, sbFeature.length());
 //        sbFeature.append("U[-2,0]=").append(pre2Char);
-//        addFeature(sbFeature, featureVec, featureMap, create);
+//        addFeature(sbFeature, featureVec, featureMap);
 
         sbFeature.delete(0, sbFeature.length());
         sbFeature.append(preChar).append('1');
-        addFeature(sbFeature, featureVec, featureMap, create);
+        addFeature(sbFeature, featureVec, featureMap);
 
         sbFeature.delete(0, sbFeature.length());
         sbFeature.append(curChar).append('2');
-        addFeature(sbFeature, featureVec, featureMap, create);
+        addFeature(sbFeature, featureVec, featureMap);
 
         sbFeature.delete(0, sbFeature.length());
         sbFeature.append(nextChar).append('3');
-        addFeature(sbFeature, featureVec, featureMap, create);
+        addFeature(sbFeature, featureVec, featureMap);
 
 //        sbFeature.delete(0, sbFeature.length());
 //        sbFeature.append("U[2,0]=").append(next2Char);
-//        addFeature(sbFeature, featureVec, featureMap, create);
+//        addFeature(sbFeature, featureVec, featureMap);
 
         //char bigram feature
         sbFeature.delete(0, sbFeature.length());
         sbFeature.append(pre2Char).append("/").append(preChar).append('4');
-        addFeature(sbFeature, featureVec, featureMap, create);
+        addFeature(sbFeature, featureVec, featureMap);
 
         sbFeature.delete(0, sbFeature.length());
         sbFeature.append(preChar).append("/").append(curChar).append('5');
-        addFeature(sbFeature, featureVec, featureMap, create);
+        addFeature(sbFeature, featureVec, featureMap);
 
         sbFeature.delete(0, sbFeature.length());
         sbFeature.append(curChar).append("/").append(nextChar).append('6');
-        addFeature(sbFeature, featureVec, featureMap, create);
+        addFeature(sbFeature, featureVec, featureMap);
 
         sbFeature.delete(0, sbFeature.length());
         sbFeature.append(nextChar).append("/").append(next2Char).append('7');
-        addFeature(sbFeature, featureVec, featureMap, create);
+        addFeature(sbFeature, featureVec, featureMap);
 
 //        sbFeature.delete(0, sbFeature.length());
 //        sbFeature.append("B[-2,0]=").append(pre2Char).append("/").append(curChar);
-//        addFeature(sbFeature, featureVec, featureMap, create);
+//        addFeature(sbFeature, featureVec, featureMap);
 //
 //        sbFeature.delete(0, sbFeature.length());
 //        sbFeature.append("B[-1,1]=").append(preChar).append("/").append(nextChar);
-//        addFeature(sbFeature, featureVec, featureMap, create);
+//        addFeature(sbFeature, featureVec, featureMap);
 //
 //        sbFeature.delete(0, sbFeature.length());
 //        sbFeature.append("B[0,2]=").append(curChar).append("/").append(next2Char);
-//        addFeature(sbFeature, featureVec, featureMap, create);
+//        addFeature(sbFeature, featureVec, featureMap);
 
         //char trigram feature
 //        sbFeature.delete(0, sbFeature.length());
 //        sbFeature.append("T[-1,0]=").append(preChar).append("/").append(curChar).append("/").append(nextChar);
-//        addFeature(sbFeature, featureVec, featureMap, create);
+//        addFeature(sbFeature, featureVec, featureMap);
         sbFeature = null;
 
 //        if (preChar == curChar)
-//            addFeature("-1AABBT", featureVec, featureMap, create);
+//            addFeature("-1AABBT", featureVec, featureMap);
 //        if (curChar == nextChar)
-//            addFeature("0AABBT", featureVec, featureMap, create);
+//            addFeature("0AABBT", featureVec, featureMap);
 //
 //        if (pre2Char == curChar)
-//            addFeature("-2ABABT", featureVec, featureMap, create);
+//            addFeature("-2ABABT", featureVec, featureMap);
 //        if (preChar == nextChar)
-//            addFeature("-1ABABT", featureVec, featureMap, create);
+//            addFeature("-1ABABT", featureVec, featureMap);
 //        if (curChar == next2Char)
-//            addFeature("0ABABT", featureVec, featureMap, create);
+//            addFeature("0ABABT", featureVec, featureMap);
 
         //char type unigram feature
-//        addFeature("cT=" + CharType.get(sentence.charAt(position)), featureVec, featureMap, create);
+//        addFeature("cT=" + CharType.get(sentence.charAt(position)), featureVec, featureMap);
 //
 //        //char type trigram feature
 //        StringBuffer trigram = new StringBuffer();
@@ -161,7 +160,7 @@ public class CWSInstance extends Instance
 //        else
 //            trigram.append("/_EL_");
 //
-//        addFeature("cTT=" + trigram, featureVec, featureMap, create);
+//        addFeature("cTT=" + trigram, featureVec, featureMap);
 
         //dictionary feature
 //        int[] begin = new int[sentence.length()];
@@ -190,14 +189,14 @@ public class CWSInstance extends Instance
 //                if (middle[k] < maxPre)
 //                    middle[k] = maxPre;
 //        }
-//        addFeature("b=" + begin[position], featureVec, featureMap, create);
-//        addFeature("m=" + middle[position], featureVec, featureMap, create);
-//        addFeature("e=" + end[position], featureVec, featureMap, create);
+//        addFeature("b=" + begin[position], featureVec, featureMap);
+//        addFeature("m=" + middle[position], featureVec, featureMap);
+//        addFeature("e=" + end[position], featureVec, featureMap);
 
         //label bigram feature
 //        char preLabel = position > 0 ? tagArray[position - 1].toChar() : CHAR_BEGIN;
 //
-//        addFeature("BL=" + preLabel, featureVec, featureMap, create);    // 虽然有preLabel，但并没有加上当前label，当前label是由调用者自行加的
+//        addFeature("BL=" + preLabel, featureVec, featureMap);    // 虽然有preLabel，但并没有加上当前label，当前label是由调用者自行加的
 
         return toFeatureArray(featureVec);
     }
