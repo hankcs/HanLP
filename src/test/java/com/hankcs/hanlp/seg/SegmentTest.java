@@ -44,11 +44,11 @@ public class SegmentTest extends TestCase
 {
     public void testSeg() throws Exception
     {
-//        HanLP.Config.enableDebug();
+        HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
-//        System.out.println(segment.seg(
-//                "我遗忘我的密码了"
-//        ));
+        System.out.println(segment.seg(
+                "周一至周五工作内容如下"
+        ));
     }
 
     public void testViterbi() throws Exception
