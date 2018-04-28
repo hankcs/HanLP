@@ -44,11 +44,11 @@ public class SegmentTest extends TestCase
 {
     public void testSeg() throws Exception
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
-        System.out.println(segment.seg(
-                "周一至周五工作内容如下"
-        ));
+//        System.out.println(segment.seg(
+//                "我遗忘我的密码了"
+//        ));
     }
 
     public void testViterbi() throws Exception
@@ -490,5 +490,10 @@ public class SegmentTest extends TestCase
         String raw = "1名卫技人员资源和社会保障局余姚市";
 //        System.out.println(seg.seg(raw));
         seg.seg(raw);
+    }
+
+    public void testTimeIssue() throws Exception
+    {
+        assertTrue(HanLP.segment("1月中旬应该会发生什么").toString().contains("1月"));
     }
 }
