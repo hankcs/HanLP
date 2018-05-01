@@ -142,6 +142,10 @@ public class TextRankKeyword extends KeywordExtractor
         }
 //        System.out.println(words);
         Map<String, Float> score = new HashMap<String, Float>();
+        //依据TF来设置初值
+        for (Map.Entry<String, Set<String>> entry : words.entrySet()){ 
+        	score.put(entry.getKey(),sigMoid(entry.getValue().size()));
+        }        
         for (int i = 0; i < max_iter; ++i)
         {
             Map<String, Float> m = new HashMap<String, Float>();
@@ -165,4 +169,13 @@ public class TextRankKeyword extends KeywordExtractor
 
         return score;
     }
+    
+    /**
+     * sigmoid函数
+     * @param value
+     * @return
+     */
+    public static float sigMoid(float value) {
+    	return (float)(1d/(1d+Math.exp(-value)));
+    }    
 }
