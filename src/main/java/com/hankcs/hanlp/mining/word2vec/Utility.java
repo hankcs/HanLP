@@ -117,4 +117,19 @@ final class Utility
         {
         }
     }
+
+    /**
+     * 数组分割
+     *
+     * @param from 源
+     * @param to   目标
+     * @param <T>  类型
+     * @return 目标
+     */
+    public static <T> T[] shrink(T[] from, T[] to)
+    {
+        assert to.length <= from.length;
+        System.arraycopy(from, 0, to, 0, to.length);
+        return to;
+    }
 }
