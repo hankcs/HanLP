@@ -114,9 +114,9 @@ public final class KMeansClustering
         }
         finally
         {
-            Utils.closeQuietly(pw);
-            Utils.closeQuietly(w);
-            Utils.closeQuietly(os);
+            Utility.closeQuietly(pw);
+            Utility.closeQuietly(w);
+            Utility.closeQuietly(os);
         }
     }
 }

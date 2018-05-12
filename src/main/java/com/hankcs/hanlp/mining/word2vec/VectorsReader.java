@@ -59,9 +59,9 @@ public final class VectorsReader
         }
         catch (IOException e)
         {
-            Utils.closeQuietly(br);
-            Utils.closeQuietly(r);
-            Utils.closeQuietly(is);
+            Utility.closeQuietly(br);
+            Utility.closeQuietly(r);
+            Utility.closeQuietly(is);
 
         }
     }
