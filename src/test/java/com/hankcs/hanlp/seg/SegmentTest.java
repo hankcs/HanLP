@@ -480,4 +480,20 @@ public class SegmentTest extends TestCase
         StandardTokenizer.SEGMENT.enableCustomDictionaryForcing(true);
         assertEquals("[苏苏/nz, 中级会计/nz, 什么/ry, 时候/n, 更新/v]", HanLP.segment(s).toString());
     }
+
+    public void testIssue790() throws Exception
+    {
+        Segment seg = HanLP.newSegment();
+        seg.enableOrganizationRecognize(true);
+        seg.enableNumberQuantifierRecognize(true);
+
+        String raw = "1名卫技人员资源和社会保障局余姚市";
+//        System.out.println(seg.seg(raw));
+        seg.seg(raw);
+    }
+
+    public void testTimeIssue() throws Exception
+    {
+        assertTrue(HanLP.segment("1月中旬应该会发生什么").toString().contains("1月"));
+    }
 }

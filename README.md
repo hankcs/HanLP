@@ -9,7 +9,7 @@ HanLP: Han Language Processing
 
 ------
 
-**HanLP**是由一系列模型与算法组成的Java工具包，目标是普及自然语言处理在生产环境中的应用。**HanLP**具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
+**HanLP**是由一系列模型与算法组成的NLP工具包，目标是普及自然语言处理在生产环境中的应用。**HanLP**具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
 
 **HanLP**提供下列功能：
 
@@ -75,7 +75,7 @@ HanLP: Han Language Processing
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.6.2</version>
+    <version>portable-1.6.3</version>
 </dependency>
 ```
 

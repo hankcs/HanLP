@@ -23,7 +23,7 @@ import java.util.Set;
  * 用MutableDoubleArrayTrie实现的ImmutableFeatureMap
  * @author hankcs
  */
-public class ImmutableFeatureMDatMap extends ImmutableFeatureMap
+public class ImmutableFeatureMDatMap extends FeatureMap
 {
     MutableDoubleArrayTrieInteger dat;
 

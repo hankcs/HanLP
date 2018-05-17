@@ -35,8 +35,8 @@ public class StructuredPerceptron extends LinearModel
     /**
      * 根据答案和预测更新参数
      *
-     * @param goldIndex    预测正确的特征函数（非压缩形式）
-     * @param predictIndex 命中的特征函数
+     * @param goldIndex    答案的特征函数（非压缩形式）
+     * @param predictIndex 预测的特征函数（非压缩形式）
      */
     public void update(int[] goldIndex, int[] predictIndex)
     {

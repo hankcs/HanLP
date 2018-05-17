@@ -41,5 +41,11 @@ public class DemoPerceptronLexicalAnalyzer
         System.out.println(analyzer.analyze("我在浙江金华出生"));
         analyzer.learn("在/p 浙江/ns 金华/ns 出生/v");
         System.out.println(analyzer.analyze("我在四川金华出生，我的名字叫金华"));
+
+        // 请用户按需执行对空格制表符等的预处理，只有你最清楚自己的文本中都有些什么奇怪的东西
+        System.out.println(analyzer.analyze("空格 \t\n\r\f&nbsp;统统都不要"
+                                                .replaceAll("\\s+", "")    // 去除所有空白符
+                                                .replaceAll("&nbsp;", "")  // 如果一些文本中含有html控制符
+        ));
     }
 }

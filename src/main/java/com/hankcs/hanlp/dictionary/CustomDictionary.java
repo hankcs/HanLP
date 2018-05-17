@@ -30,7 +30,8 @@ import java.util.*;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
- * 用户自定义词典
+ * 用户自定义词典<br>
+ *     注意自定义词典的动态增删改不是线程安全的。
  *
  * @author He Han
  */
