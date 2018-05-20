@@ -10,6 +10,7 @@
  */
 package com.hankcs.demo;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 
 import java.io.IOException;
@@ -41,6 +42,9 @@ public class DemoPerceptronLexicalAnalyzer
         System.out.println(analyzer.analyze("我在浙江金华出生"));
         analyzer.learn("在/p 浙江/ns 金华/ns 出生/v");
         System.out.println(analyzer.analyze("我在四川金华出生，我的名字叫金华"));
+
+        // 在线学习后的模型支持序列化，以分词模型为例：
+//        analyzer.getPerceptronSegmenter().getModel().save(HanLP.Config.PerceptronCWSModelPath);
 
         // 请用户按需执行对空格制表符等的预处理，只有你最清楚自己的文本中都有些什么奇怪的东西
         System.out.println(analyzer.analyze("空格 \t\n\r\f&nbsp;统统都不要"
