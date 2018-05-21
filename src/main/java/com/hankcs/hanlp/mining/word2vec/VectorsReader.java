@@ -42,6 +42,13 @@ public final class VectorsReader
             {
                 line = br.readLine().trim();
                 String[] params = line.split("\\s+");
+                if (params.length != size + 1)
+                {
+                    logger.info("词向量有一行格式不规范（可能是单词含有空格）：" + line);
+                    --words;
+                    --i;
+                    continue;
+                }
                 vocab[i] = params[0];
                 matrix[i] = new float[size];
                 double len = 0;
@@ -56,12 +63,17 @@ public final class VectorsReader
                     matrix[i][j] /= len;
                 }
             }
+            if (words != vocab.length)
+            {
+                vocab = Utility.shrink(vocab, new String[words]);
+                matrix = Utility.shrink(matrix, new float[words][]);
+            }
         }
         catch (IOException e)
         {
-            Utils.closeQuietly(br);
-            Utils.closeQuietly(r);
-            Utils.closeQuietly(is);
+            Utility.closeQuietly(br);
+            Utility.closeQuietly(r);
+            Utility.closeQuietly(is);
 
         }
     }

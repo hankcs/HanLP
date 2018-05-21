@@ -677,7 +677,7 @@ public class IOUtil
         for (String path : pathArray)
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
-            loadDictionary(br, map);
+            loadDictionary(br, map, path.endsWith(".csv"));
         }
 
         return map;
@@ -689,12 +689,18 @@ public class IOUtil
      * @param storage 储存位置
      * @throws IOException 异常表示加载失败
      */
-    public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage) throws IOException
+    public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage, boolean isCSV) throws IOException
     {
+        String splitter = "\\s";
+        if (isCSV)
+        {
+            splitter = ",";
+        }
         String line;
         while ((line = br.readLine()) != null)
         {
-            String param[] = line.split("\\s");
+            String param[] = line.split(splitter);
+
             int natureCount = (param.length - 1) / 2;
             CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natureCount);
             for (int i = 0; i < natureCount; ++i)

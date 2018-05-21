@@ -15,14 +15,18 @@ import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * @author hankcs
  */
@@ -90,6 +94,7 @@ public class Document implements Serializable
 
     /**
      * 获取简单的句子列表，其中复合词会被拆分为简单词
+     *
      * @return
      */
     public List<List<Word>> getSimpleSentenceList()
@@ -120,6 +125,7 @@ public class Document implements Serializable
 
     /**
      * 获取复杂句子列表，句子中的每个单词有可能是复合词，有可能是简单词
+     *
      * @return
      */
     public List<List<IWord>> getComplexSentenceList()
@@ -135,6 +141,7 @@ public class Document implements Serializable
 
     /**
      * 获取简单的句子列表
+     *
      * @param spilt 如果为真，其中复合词会被拆分为简单词
      * @return
      */
@@ -173,6 +180,7 @@ public class Document implements Serializable
 
     /**
      * 获取简单的句子列表，其中复合词的标签如果是set中指定的话会被拆分为简单词
+     *
      * @param labelSet
      * @return
      */
@@ -220,5 +228,24 @@ public class Document implements Serializable
         }
         if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
+    }
+
+    public static Document create(File file)
+    {
+        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(file.getAbsolutePath());
+        List<Sentence> sentenceList = new LinkedList<Sentence>();
+        for (String line : lineIterator)
+        {
+            line = line.trim();
+            if (line.isEmpty()) continue;
+            Sentence sentence = Sentence.create(line);
+            if (sentence == null)
+            {
+                logger.warning("使用 " + line + " 创建句子失败");
+                return null;
+            }
+            sentenceList.add(sentence);
+        }
+        return new Document(sentenceList);
     }
 }

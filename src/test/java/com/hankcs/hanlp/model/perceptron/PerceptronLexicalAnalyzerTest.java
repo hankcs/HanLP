@@ -1,8 +1,10 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
 
@@ -91,5 +93,20 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
         List<Term> termList = analyzer.seg(text);
 //        System.out.println(termList);
         assertEquals("[來到/v, 美國紐約現代藝術博物館/ns, 參觀/v, ?/w]", termList.toString());
+    }
+
+    public void testWhiteSpace() throws Exception
+    {
+        CharTable.CONVERT[' '] = '!';
+        CharTable.CONVERT['\t'] = '!';
+        Sentence sentence = analyzer.analyze("\"你好， 我想知道： 风是从哪里来; \t雷是从哪里来； 雨是从哪里来？\"");
+        for (IWord word : sentence)
+        {
+            if (!word.getLabel().equals("w"))
+            {
+                assertFalse(word.getValue().contains(" "));
+                assertFalse(word.getValue().contains("\t"));
+            }
+        }
     }
 }

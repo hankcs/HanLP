@@ -22,13 +22,13 @@ public abstract class AbstractTrainer
         paramDesc("-window <int>", "Set max skip length between words; default is 5");
         paramDesc("-sample <float>", "Set threshold for occurrence of words. Those that appear with higher frequency in the training data" +
                 " will be randomly down-sampled; default is 0.001, useful range is (0, 0.00001)");
-        paramDesc("-hs", "Use Hierarchical Softmax; default is not used");
+        paramDesc("-hs <int>", "Use Hierarchical Softmax; default is 0 (not used)");
         paramDesc("-negative <int>", "Number of negative examples; default is 5, common values are 3 - 10 (0 = not used)");
         paramDesc("-threads <int>", "Use <int> threads (default is the cores of local machine)");
         paramDesc("-iter <int>", "Run more training iterations (default 5)");
         paramDesc("-min-count <int>", "This will discard words that appear less than <int> times; default is 5");
         paramDesc("-alpha <float>", "Set the starting learning rate; default is 0.025 for skip-gram and 0.05 for CBOW");
-        paramDesc("-cbow", "Use the continuous bag of words model; default is skip-gram model");
+        paramDesc("-cbow <int>", "Use the continuous bag of words model; default is 1 (use 0 for skip-gram model)");
 
         localUsage();
 

@@ -23,7 +23,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 
 /**
- * 基于字构词的生成式模型分词器基类
+ * 基于“由字构词”方法分词器基类
  * @author hankcs
  */
 public abstract class CharacterBasedSegment extends Segment

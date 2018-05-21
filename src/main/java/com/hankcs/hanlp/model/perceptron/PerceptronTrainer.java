@@ -209,10 +209,6 @@ public abstract class PerceptronTrainer extends InstanceConsumer
                         }
                         models[0].parameter[j] /= threadNum;
                     }
-                    for (int i = 1; i < models.length; i++)
-                    {
-                        System.arraycopy(models[0].parameter, 0, models[i].parameter, 0, models[0].parameter.length);
-                    }
                     accuracy = trainingFile.equals(developFile) ? IOUtility.evaluate(instances, models[0]) : evaluate(developFile, models[0]);
                     out.printf("Iter#%d - ", iter);
                     printAccuracy(accuracy);

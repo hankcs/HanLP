@@ -69,6 +69,8 @@ public class NewWordDiscover
                 for (int j = i + 1; j < end; ++j)
                 {
                     String word = doc.substring(i, j);
+                    if (word.indexOf('\0') >= 0)
+                        continue; // 含有分隔符的不认为是词语
                     WordInfo info = word_cands.get(word);
                     if (info == null)
                     {
