@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class PersonRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static boolean recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NR>> roleTagList = roleObserve(pWordSegResult);
         if (HanLP.Config.DEBUG)
