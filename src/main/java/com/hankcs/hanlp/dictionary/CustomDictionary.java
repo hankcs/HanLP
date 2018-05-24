@@ -155,8 +155,14 @@ public class CustomDictionary
             }
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
+            boolean firstLine = true;
             while ((line = br.readLine()) != null)
             {
+                if (firstLine)
+                {
+                    line = IOUtil.removeUTF8BOM(line);
+                    firstLine = false;
+                }
                 String[] param = line.split(splitter);
                 if (param[0].length() == 0) continue;   // 排除空行
                 if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
