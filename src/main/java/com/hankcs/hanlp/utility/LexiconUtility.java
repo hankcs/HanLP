@@ -41,6 +41,16 @@ public class LexiconUtility
     }
 
     /**
+     * 词库是否收录了词语（查询核心词典和用户词典）
+     * @param word
+     * @return
+     */
+    public static boolean contains(String word)
+    {
+        return getAttribute(word) != null;
+    }
+
+    /**
      * 从HanLP的词库中提取某个单词的属性（包括核心词典和用户词典）
      *
      * @param term 单词

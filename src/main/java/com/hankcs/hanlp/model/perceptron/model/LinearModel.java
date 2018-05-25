@@ -27,7 +27,7 @@ import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
 import java.io.*;
 import java.util.*;
 
-import static com.hankcs.hanlp.classification.utilities.Predefine.logger;
+import static com.hankcs.hanlp.classification.utilities.io.ConsoleLogger.logger;
 
 /**
  * 在线学习标注模型

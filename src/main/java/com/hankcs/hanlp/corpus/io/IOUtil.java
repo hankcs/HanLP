@@ -402,9 +402,24 @@ public class IOUtil
     }
 
     /**
+     * 去除文件第一行中的UTF8 BOM<br>
+     *     这是Java的bug，且官方不会修复。参考 https://stackoverflow.com/questions/4897876/reading-utf-8-bom-marker
+     * @param line 文件第一行
+     * @return 去除BOM的部分
+     */
+    public static String removeUTF8BOM(String line)
+    {
+        if (line.startsWith("\uFEFF")) // UTF-8 byte order mark (EF BB BF)
+        {
+            line = line.substring(1);
+        }
+        return line;
+    }
+
+    /**
      * 方便读取按行读取大文件
      */
-    public static class LineIterator implements Iterator<String>
+    public static class LineIterator implements Iterator<String>, Iterable<String>
     {
         BufferedReader bw;
         String line;
@@ -415,6 +430,7 @@ public class IOUtil
             try
             {
                 line = bw.readLine();
+                line = IOUtil.removeUTF8BOM(line);
             }
             catch (IOException e)
             {
@@ -429,6 +445,7 @@ public class IOUtil
             {
                 bw = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
                 line = bw.readLine();
+                line = IOUtil.removeUTF8BOM(line);
             }
             catch (FileNotFoundException e)
             {
@@ -516,6 +533,12 @@ public class IOUtil
         public void remove()
         {
             throw new UnsupportedOperationException("只读，不可写！");
+        }
+
+        @Override
+        public Iterator<String> iterator()
+        {
+            return this;
         }
     }
 
@@ -612,7 +635,7 @@ public class IOUtil
         for (String path : pathArray)
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
-            loadDictionary(br, map);
+            loadDictionary(br, map, path.endsWith(".csv"));
         }
 
         return map;
@@ -624,12 +647,24 @@ public class IOUtil
      * @param storage 储存位置
      * @throws IOException 异常表示加载失败
      */
-    public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage) throws IOException
+    public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage, boolean isCSV) throws IOException
     {
+        String splitter = "\\s";
+        if (isCSV)
+        {
+            splitter = ",";
+        }
         String line;
+        boolean firstLine = true;
         while ((line = br.readLine()) != null)
         {
-            String param[] = line.split("\\s");
+            if (firstLine)
+            {
+                line = IOUtil.removeUTF8BOM(line);
+                firstLine = false;
+            }
+            String param[] = line.split(splitter);
+
             int natureCount = (param.length - 1) / 2;
             CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natureCount);
             for (int i = 0; i < natureCount; ++i)

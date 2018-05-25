@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author manabe
  */
-public class DoubleArray
+public class DoubleArray implements Serializable
 {
     static Charset utf8 = Charset.forName("UTF-8");
 
@@ -107,6 +107,16 @@ public class DoubleArray
                 out.close();
             }
         }
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        out.writeObject(_array);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        _array = (int[]) in.readObject();
     }
 
     /**

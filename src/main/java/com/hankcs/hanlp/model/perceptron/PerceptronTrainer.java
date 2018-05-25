@@ -44,7 +44,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
     /**
      * 训练结果
      */
-    static class Result
+    public static class Result
     {
         /**
          * 模型
@@ -118,7 +118,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
         TagSet tagSet = createTagSet();
         MutableFeatureMap mutableFeatureMap = new MutableFeatureMap(tagSet);
         ConsoleLogger logger = new ConsoleLogger();
-        logger.start("开始加载训练集...");
+        logger.start("开始加载训练集...\n");
         Instance[] instances = loadTrainInstances(trainingFile, mutableFeatureMap);
         tagSet.lock();
         logger.finish("\n加载完毕，实例一共%d句，特征总数%d\n", instances.length, mutableFeatureMap.size() * tagSet.size());
@@ -209,10 +209,6 @@ public abstract class PerceptronTrainer extends InstanceConsumer
                         }
                         models[0].parameter[j] /= threadNum;
                     }
-                    for (int i = 1; i < models.length; i++)
-                    {
-                        System.arraycopy(models[0].parameter, 0, models[i].parameter, 0, models[0].parameter.length);
-                    }
                     accuracy = trainingFile.equals(developFile) ? IOUtility.evaluate(instances, models[0]) : evaluate(developFile, models[0]);
                     out.printf("Iter#%d - ", iter);
                     printAccuracy(accuracy);
@@ -288,6 +284,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
             @Override
             public boolean process(Sentence sentence)
             {
+                Utility.normalize(sentence);
                 instanceList.add(PerceptronTrainer.this.createInstance(sentence, mutableFeatureMap));
                 return false;
             }

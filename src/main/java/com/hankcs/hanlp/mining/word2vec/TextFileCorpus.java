@@ -20,7 +20,7 @@ public class TextFileCorpus extends Corpus
     @Override
     public void shutdown() throws IOException
     {
-        Utils.closeQuietly(raf);
+        Utility.closeQuietly(raf);
         wordsBuffer = null;
     }
 
@@ -153,9 +153,9 @@ public class TextFileCorpus extends Corpus
         }
         finally
         {
-            Utils.closeQuietly(fileInputStream);
-            Utils.closeQuietly(raf);
-            Utils.closeQuietly(cache);
+            Utility.closeQuietly(fileInputStream);
+            Utility.closeQuietly(raf);
+            Utility.closeQuietly(cache);
             System.err.println();
         }
 

@@ -13,33 +13,20 @@ package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
-import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
-import com.hankcs.hanlp.model.perceptron.utility.PosTagUtility;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
-import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.Word;
-import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.dictionary.other.CharTable;
-import com.hankcs.hanlp.seg.CharacterBasedGenerativeModelSegment;
-import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.lexical.AbstractLexicalAnalyzer;
 
 import java.io.IOException;
 import java.util.*;
 
 /**
- * 词法分析器
+ * 感知机词法分析器，支持简繁全半角和大小写
  *
  * @author hankcs
  */
-public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegment
+public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
 {
-    private final PerceptronSegmenter segmenter;
-    private final PerceptronPOSTagger posTagger;
-    private final PerceptionNERecognizer neRecognizer;
-
     public PerceptronLexicalAnalyzer(LinearModel cwsModel, LinearModel posModel, LinearModel nerModel)
     {
         segmenter = new PerceptronSegmenter(cwsModel);
@@ -94,80 +81,6 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
     }
 
     /**
-     * 对句子进行词法分析
-     *
-     * @param sentence 纯文本句子
-     * @return HanLP定义的结构化句子
-     */
-    public Sentence analyze(String sentence)
-    {
-        if (sentence.isEmpty())
-        {
-            return new Sentence(Collections.<IWord>emptyList());
-        }
-        List<String> wordList = segmenter.segment(sentence);
-        String[] wordArray = new String[wordList.size()];
-        wordList.toArray(wordArray);
-        List<IWord> termList = new ArrayList<IWord>(wordList.size());
-        if (posTagger != null)
-        {
-            String[] posArray = posTagger.tag(wordList);
-            if (neRecognizer != null)
-            {
-                String[] nerArray = neRecognizer.recognize(wordArray, posArray);
-
-                List<Word> result = new LinkedList<Word>();
-                result.add(new Word(wordArray[0], posArray[0]));
-                String prePos = posArray[0];
-
-                for (int i = 1; i < nerArray.length; i++)
-                {
-                    if (nerArray[i].charAt(0) == neRecognizer.tagSet.B_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.S_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.O_TAG_CHAR)
-                    {
-                        termList.add(result.size() > 1 ? new CompoundWord(result, prePos) : result.get(0));
-                        result = new ArrayList<Word>();
-                    }
-                    result.add(new Word(wordArray[i], posArray[i]));
-                    if (nerArray[i].charAt(0) == neRecognizer.tagSet.O_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.S_TAG_CHAR)
-                    {
-                        prePos = posArray[i];
-                    }
-                    else
-                    {
-                        prePos = NERTagSet.posOf(nerArray[i]);
-                    }
-                }
-                if (result.size() != 0)
-                {
-                    termList.add(result.size() > 1 ? new CompoundWord(result, prePos) : result.get(0));
-                }
-            }
-            else
-            {
-                for (int i = 0; i < wordArray.length; i++)
-                {
-                    termList.add(new Word(wordArray[i], posArray[i]));
-                }
-            }
-        }
-        else
-        {
-            for (String word : wordArray)
-            {
-                termList.add(new Word(word, null));
-            }
-        }
-
-        return new Sentence(termList);
-    }
-
-
-    private void segment(String text, String normalized, List<String> output)
-    {
-        segmenter.segment(text, normalized, output);
-    }
-
-    /**
      * 中文分词
      *
      * @param text
@@ -177,17 +90,6 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
     {
         String normalized = Utility.normalize(text);
         segment(text, normalized, output);
-    }
-
-    /**
-     * 中文分词
-     *
-     * @param sentence
-     * @return
-     */
-    public List<String> segment(String sentence)
-    {
-        return segmenter.segment(sentence);
     }
 
     /**
@@ -202,7 +104,7 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
         {
             throw new IllegalStateException("未提供词性标注模型");
         }
-        return posTagger.tag(wordList);
+        return tag(wordList);
     }
 
     /**
@@ -218,92 +120,7 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
         {
             throw new IllegalStateException("未提供命名实体识别模型");
         }
-        return neRecognizer.recognize(wordArray, posArray);
-    }
-
-    @Override
-    protected List<Term> segSentence(char[] sentence)
-    {
-        if (sentence.length == 0)
-        {
-            return Collections.emptyList();
-        }
-        CharTable.normalization(sentence);
-        String normalized = new String(sentence);
-        List<String> wordList = new LinkedList<String>();
-        segment(new String(sentence), normalized, wordList);
-        List<Term> termList = new ArrayList<Term>(wordList.size());
-        for (String word : wordList)
-        {
-            termList.add(new Term(word, null));
-        }
-        if (config.speechTagging)
-        {
-            if (posTagger != null)
-            {
-                String[] wordArray = new String[wordList.size()];
-                wordList.toArray(wordArray);
-                String[] posArray = posTagger.tag(wordArray);
-                Iterator<Term> iterator = termList.iterator();
-                for (String pos : posArray)
-                {
-                    iterator.next().nature = Nature.create(pos);
-                }
-
-                if (config.ner && neRecognizer != null)
-                {
-                    termList = new ArrayList<Term>(termList.size());
-                    String[] nerArray = neRecognizer.recognize(wordArray, posArray);
-                    StringBuilder result = new StringBuilder();
-                    result.append(wordArray[0]);
-                    String prePos = posArray[0];
-
-                    for (int i = 1; i < nerArray.length; i++)
-                    {
-                        if (nerArray[i].charAt(0) == neRecognizer.tagSet.B_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.S_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.O_TAG_CHAR)
-                        {
-                            termList.add(new Term(result.toString(), Nature.create(prePos)));
-                            result.setLength(0);
-                        }
-                        result.append(wordArray[i]);
-                        if (nerArray[i].charAt(0) == neRecognizer.tagSet.O_TAG_CHAR || nerArray[i].charAt(0) == neRecognizer.tagSet.S_TAG_CHAR)
-                        {
-                            prePos = posArray[i];
-                        }
-                        else
-                        {
-                            prePos = NERTagSet.posOf(nerArray[i]);
-                        }
-                    }
-                    if (result.length() != 0)
-                    {
-                        termList.add(new Term(result.toString(), Nature.create(posArray[posArray.length - 1])));
-                    }
-                }
-            }
-            else
-            {
-                for (Term term : termList)
-                {
-                    CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
-                    if (attribute != null)
-                    {
-                        term.nature = Nature.create(PosTagUtility.convert(attribute.nature[0]));
-                    }
-                    else
-                    {
-                        term.nature = Nature.n;
-                    }
-                }
-            }
-        }
-        return termList;
-    }
-
-    @Override
-    protected List<Term> roughSegSentence(char[] sentence)
-    {
-        return null;
+        return recognize(wordArray, posArray);
     }
 
     /**
@@ -315,9 +132,9 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
     public boolean learn(String segmentedTaggedSentence)
     {
         Sentence sentence = Sentence.create(segmentedTaggedSentence);
-        if (!segmenter.learn(sentence)) return false;
-        if (posTagger != null && !posTagger.learn(sentence)) return false;
-        if (neRecognizer != null && !neRecognizer.learn(sentence)) return false;
+        if (!getPerceptronSegmenter().learn(sentence)) return false;
+        if (posTagger != null && !getPerceptronPOSTagger().learn(sentence)) return false;
+        if (neRecognizer != null && !getPerceptionNERecognizer().learn(sentence)) return false;
         return true;
     }
 
@@ -326,9 +143,9 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
      *
      * @return
      */
-    public PerceptronSegmenter getSegmenter()
+    public PerceptronSegmenter getPerceptronSegmenter()
     {
-        return segmenter;
+        return (PerceptronSegmenter) segmenter;
     }
 
     /**
@@ -336,9 +153,9 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
      *
      * @return
      */
-    public PerceptronPOSTagger getPOSTagger()
+    public PerceptronPOSTagger getPerceptronPOSTagger()
     {
-        return posTagger;
+        return (PerceptronPOSTagger) posTagger;
     }
 
     /**
@@ -346,8 +163,9 @@ public class PerceptronLexicalAnalyzer extends CharacterBasedGenerativeModelSegm
      *
      * @return
      */
-    public PerceptionNERecognizer getNERecognizer()
+    public PerceptionNERecognizer getPerceptionNERecognizer()
     {
-        return neRecognizer;
+        return (PerceptionNERecognizer) neRecognizer;
     }
+
 }

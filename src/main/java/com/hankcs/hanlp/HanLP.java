@@ -21,6 +21,12 @@ import com.hankcs.hanlp.mining.phrase.IPhraseExtractor;
 import com.hankcs.hanlp.mining.phrase.MutualInformationEntropyPhraseExtractor;
 import com.hankcs.hanlp.mining.word.NewWordDiscover;
 import com.hankcs.hanlp.mining.word.WordInfo;
+import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
+import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
+import com.hankcs.hanlp.seg.CRF.CRFSegment;
+import com.hankcs.hanlp.seg.HMM.HMMSegment;
+import com.hankcs.hanlp.seg.NShort.NShortSegment;
+import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -109,10 +115,6 @@ public class HanLP
          * 简繁转换词典根目录
          */
         public static String tcDictionaryRoot = "data/dictionary/tc/";
-        /**
-         * 声母韵母语调词典
-         */
-        public static String SYTDictionaryPath = "data/dictionary/pinyin/SYTDictionary.txt";
 
         /**
          * 拼音词典路径
@@ -140,6 +142,11 @@ public class HanLP
         public static String CharTablePath = "data/dictionary/other/CharTable.txt";
 
         /**
+         * 词性标注集描述表，用来进行中英映射（对于Nature词性，可直接参考Nature.java中的注释）
+         */
+        public static String PartOfSpeechTagDictionary = "data/dictionary/other/TagPKU98.csv";
+
+        /**
          * 词-词性-依存关系模型
          */
         public static String WordNatureModelPath = "data/model/dependency/WordNature.txt";
@@ -155,6 +162,7 @@ public class HanLP
         /**
          * CRF分词模型
          */
+        // @deprecated 已废弃，请使用{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。未来版本将不再发布该模型，并删除配置项
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
         /**
          * HMM分词模型
@@ -162,8 +170,22 @@ public class HanLP
         public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
          * CRF依存模型
+         *
+         * @deprecated 已废弃，请使用{@link NeuralNetworkDependencyParser}
          */
         public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
+        /**
+         * CRF分词模型
+         */
+        public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.bin";
+        /**
+         * CRF词性标注模型
+         */
+        public static String CRFPOSModelPath = "data/model/crf/pku199801/pos.bin";
+        /**
+         * CRF命名实体识别模型
+         */
+        public static String CRFNERModelPath = "data/model/crf/pku199801/ner.bin";
         /**
          * 感知机分词模型
          */
@@ -235,7 +257,6 @@ public class HanLP
                 CustomDictionaryPath = pathArray;
                 tcDictionaryRoot = root + p.getProperty("tcDictionaryRoot", tcDictionaryRoot);
                 if (!tcDictionaryRoot.endsWith("/")) tcDictionaryRoot += '/';
-                SYTDictionaryPath = root + p.getProperty("SYTDictionaryPath", SYTDictionaryPath);
                 PinyinDictionaryPath = root + p.getProperty("PinyinDictionaryPath", PinyinDictionaryPath);
                 TranslatedPersonDictionaryPath = root + p.getProperty("TranslatedPersonDictionaryPath", TranslatedPersonDictionaryPath);
                 JapanesePersonDictionaryPath = root + p.getProperty("JapanesePersonDictionaryPath", JapanesePersonDictionaryPath);
@@ -245,12 +266,16 @@ public class HanLP
                 OrganizationDictionaryTrPath = root + p.getProperty("OrganizationDictionaryTrPath", OrganizationDictionaryTrPath);
                 CharTypePath = root + p.getProperty("CharTypePath", CharTypePath);
                 CharTablePath = root + p.getProperty("CharTablePath", CharTablePath);
+                PartOfSpeechTagDictionary = root + p.getProperty("PartOfSpeechTagDictionary", PartOfSpeechTagDictionary);
                 WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
                 CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
+                CRFCWSModelPath = root + p.getProperty("CRFCWSModelPath", CRFCWSModelPath);
+                CRFPOSModelPath = root + p.getProperty("CRFPOSModelPath", CRFPOSModelPath);
+                CRFNERModelPath = root + p.getProperty("CRFNERModelPath", CRFNERModelPath);
                 PerceptronCWSModelPath = root + p.getProperty("PerceptronCWSModelPath", PerceptronCWSModelPath);
                 PerceptronPOSModelPath = root + p.getProperty("PerceptronPOSModelPath", PerceptronPOSModelPath);
                 PerceptronNERModelPath = root + p.getProperty("PerceptronNERModelPath", PerceptronNERModelPath);
@@ -586,6 +611,61 @@ public class HanLP
     public static Segment newSegment()
     {
         return new ViterbiSegment();   // Viterbi分词器是目前效率和效果的最佳平衡
+    }
+
+    /**
+     * 创建一个分词器，
+     * 这是一个工厂方法<br>
+     *
+     * @param algorithm 分词算法，传入算法的中英文名都可以，可选列表：<br>
+     *                  <ul>
+     *                  <li>维特比 (viterbi)：效率和效果的最佳平衡</li>
+     *                  <li>双数组trie树 (dat)：极速词典分词，千万字符每秒</li>
+     *                  <li>条件随机场 (crf)：分词、词性标注与命名实体识别精度都较高，适合要求较高的NLP任务</li>
+     *                  <li>感知机 (perceptron)：分词、词性标注与命名实体识别，支持在线学习</li>
+     *                  <li>N最短路 (nshort)：命名实体识别稍微好一些，牺牲了速度</li>
+     *                  <li>2阶隐马 (hmm2)：训练速度较CRF快</li>
+     *                  </ul>
+     * @return 一个分词器
+     */
+    public static Segment newSegment(String algorithm)
+    {
+        if (algorithm == null)
+        {
+            throw new IllegalArgumentException(String.format("非法参数 algorithm == %s", algorithm));
+        }
+        algorithm = algorithm.toLowerCase();
+        if ("viterbi".equals(algorithm) || "维特比".equals(algorithm))
+            return new ViterbiSegment();   // Viterbi分词器是目前效率和效果的最佳平衡
+        else if ("dat".equals(algorithm) || "双数组trie树".equals(algorithm))
+            return new DoubleArrayTrieSegment();
+        else if ("nshort".equals(algorithm) || "n最短路".equals(algorithm))
+            return new NShortSegment();
+        else if ("crf".equals(algorithm) || "条件随机场".equals(algorithm))
+            try
+            {
+                return new CRFLexicalAnalyzer();
+            }
+            catch (IOException e)
+            {
+                logger.warning("CRF模型加载失败");
+                throw new RuntimeException(e);
+            }
+        else if ("hmm2".equals(algorithm) || "二阶隐马".equals(algorithm))
+            return new HMMSegment();
+        else if ("perceptron".equals(algorithm) || "感知机".equals(algorithm))
+        {
+            try
+            {
+                return new PerceptronLexicalAnalyzer();
+            }
+            catch (IOException e)
+            {
+                logger.warning("感知机模型加载失败");
+                throw new RuntimeException(e);
+            }
+        }
+        throw new IllegalArgumentException(String.format("非法参数 algorithm == %s", algorithm));
     }
 
     /**

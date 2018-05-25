@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class PersonRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static boolean recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NR>> roleTagList = roleObserve(pWordSegResult);
         if (HanLP.Config.DEBUG)
@@ -92,7 +92,9 @@ public class PersonRecognition
                         // 有些双名实际上可以构成更长的三名
                         if (vertex.getAttribute().totalFrequency <= 1000 && vertex.realWord.length() == 2)
                         {
-                            nrEnumItem = new EnumItem<NR>(NR.X, NR.G);
+                            nrEnumItem = new EnumItem<NR>();
+                            nrEnumItem.labelMap.put(NR.X, 2); // 认为是三字人名前2个字=双字人名的可能性更高
+                            nrEnumItem.labelMap.put(NR.G, 1);
                         }
                         else nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
                     }break;

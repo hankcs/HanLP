@@ -11,8 +11,6 @@
  */
 package com.hankcs.hanlp.seg.Dijkstra.Path;
 
-import com.hankcs.hanlp.seg.common.Vertex;
-
 /**
  * @author hankcs
  */

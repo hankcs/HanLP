@@ -17,7 +17,7 @@ import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
-import com.hankcs.hanlp.seg.WordBasedGenerativeModelSegment;
+import com.hankcs.hanlp.seg.WordBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class ViterbiSegment extends WordBasedGenerativeModelSegment
+public class ViterbiSegment extends WordBasedSegment
 {
     @Override
     protected List<Term> segSentence(char[] sentence)
@@ -39,7 +39,7 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
 //        long start = System.currentTimeMillis();
         WordNet wordNetAll = new WordNet(sentence);
         ////////////////生成词网////////////////////
-        GenerateWordNet(wordNetAll);
+        generateWordNet(wordNetAll);
         ///////////////生成词图////////////////////
 //        System.out.println("构图：" + (System.currentTimeMillis() - start));
         if (HanLP.Config.DEBUG)
@@ -75,28 +75,29 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
             int preSize = wordNetOptimum.size();
             if (config.nameRecognize)
             {
-                PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                PersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (config.translatedNameRecognize)
             {
-                TranslatedPersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                TranslatedPersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (config.japaneseNameRecognize)
             {
-                JapanesePersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                JapanesePersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (config.placeRecognize)
             {
-                PlaceRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                PlaceRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (config.organizationRecognize)
             {
                 // 层叠隐马模型——生成输出作为下一级隐马输入
+                wordNetOptimum.clean();
                 vertexList = viterbi(wordNetOptimum);
                 wordNetOptimum.clear();
                 wordNetOptimum.addAll(vertexList);
                 preSize = wordNetOptimum.size();
-                OrganizationRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                OrganizationRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
             }
             if (wordNetOptimum.size() != preSize)
             {

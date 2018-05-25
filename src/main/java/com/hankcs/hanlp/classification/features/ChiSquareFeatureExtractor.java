@@ -34,7 +34,8 @@ public class ChiSquareFeatureExtractor
     }
 
     /**
-     * 使用卡方非参数校验来执行特征选择
+     * 使用卡方非参数校验来执行特征选择<br>
+     *     https://nlp.stanford.edu/IR-book/html/htmledition/feature-selectionchi2-feature-selection-1.html
      *
      * @param stats
      * @return

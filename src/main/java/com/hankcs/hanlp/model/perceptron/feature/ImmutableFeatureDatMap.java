@@ -21,7 +21,7 @@ import java.util.TreeMap;
 /**
  * @author hankcs
  */
-public class ImmutableFeatureDatMap extends ImmutableFeatureMap
+public class ImmutableFeatureDatMap extends FeatureMap
 {
     DoubleArrayTrie<Integer> dat;
 

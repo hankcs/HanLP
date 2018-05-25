@@ -30,7 +30,7 @@ public class MutableFeatureMap extends FeatureMap
 
     public MutableFeatureMap(TagSet tagSet)
     {
-        super(tagSet);
+        super(tagSet, true);
         featureIdMap = new TreeMap<String, Integer>();
         for (int i = 0; i < tagSet.size(); i++)
         {

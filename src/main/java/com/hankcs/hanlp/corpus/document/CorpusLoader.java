@@ -137,7 +137,7 @@ public class CorpusLoader
     {
 //        try
 //        {
-            Document document = Document.create(IOUtil.readTxt(file.getPath()));
+            Document document = Document.create(file);
             if (document != null)
             {
                 return document;

@@ -17,6 +17,7 @@ import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -53,9 +54,17 @@ public class NERInstance extends Instance
         }
     }
 
-    private int[] extractFeature(String[] wordArray, String[] posArray, FeatureMap featureMap, int position)
+    /**
+     * 提取特征，override此方法来拓展自己的特征模板
+     *
+     * @param wordArray  词语
+     * @param posArray   词性
+     * @param featureMap 储存特征的结构
+     * @param position   当前提取的词语所在的位置
+     * @return 特征向量
+     */
+    protected int[] extractFeature(String[] wordArray, String[] posArray, FeatureMap featureMap, int position)
     {
-        boolean create = featureMap instanceof MutableFeatureMap;
         List<Integer> featVec = new ArrayList<Integer>();
 
         String pre2Word = position >= 2 ? wordArray[position - 2] : "_B_";
@@ -71,25 +80,25 @@ public class NERInstance extends Instance
         String next2Pos = position <= posArray.length - 3 ? posArray[position + 2] : "_E_";
 
         StringBuilder sb = new StringBuilder();
-        addFeatureThenClear(sb.append(pre2Word).append('1'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(preWord).append('2'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(curWord).append('3'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(nextWord).append('4'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(next2Word).append('5'), featVec, featureMap, create);
-//        addFeatureThenClear(sb.append(pre2Word).append(preWord).append('6'), featVec, featureMap, create);
-//        addFeatureThenClear(sb.append(preWord).append(curWord).append('7'), featVec, featureMap, create);
-//        addFeatureThenClear(sb.append(curWord).append(nextWord).append('8'), featVec, featureMap, create);
-//        addFeatureThenClear(sb.append(nextWord).append(next2Word).append('9'), featVec, featureMap, create);
+        addFeatureThenClear(sb.append(pre2Word).append('1'), featVec, featureMap);
+        addFeatureThenClear(sb.append(preWord).append('2'), featVec, featureMap);
+        addFeatureThenClear(sb.append(curWord).append('3'), featVec, featureMap);
+        addFeatureThenClear(sb.append(nextWord).append('4'), featVec, featureMap);
+        addFeatureThenClear(sb.append(next2Word).append('5'), featVec, featureMap);
+//        addFeatureThenClear(sb.append(pre2Word).append(preWord).append('6'), featVec, featureMap);
+//        addFeatureThenClear(sb.append(preWord).append(curWord).append('7'), featVec, featureMap);
+//        addFeatureThenClear(sb.append(curWord).append(nextWord).append('8'), featVec, featureMap);
+//        addFeatureThenClear(sb.append(nextWord).append(next2Word).append('9'), featVec, featureMap);
 
-        addFeatureThenClear(sb.append(pre2Pos).append('A'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(prePos).append('B'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(curPos).append('C'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(nextPos).append('D'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(next2Pos).append('E'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(pre2Pos).append(prePos).append('F'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(prePos).append(curPos).append('G'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(curPos).append(nextPos).append('H'), featVec, featureMap, create);
-        addFeatureThenClear(sb.append(nextPos).append(next2Pos).append('I'), featVec, featureMap, create);
+        addFeatureThenClear(sb.append(pre2Pos).append('A'), featVec, featureMap);
+        addFeatureThenClear(sb.append(prePos).append('B'), featVec, featureMap);
+        addFeatureThenClear(sb.append(curPos).append('C'), featVec, featureMap);
+        addFeatureThenClear(sb.append(nextPos).append('D'), featVec, featureMap);
+        addFeatureThenClear(sb.append(next2Pos).append('E'), featVec, featureMap);
+        addFeatureThenClear(sb.append(pre2Pos).append(prePos).append('F'), featVec, featureMap);
+        addFeatureThenClear(sb.append(prePos).append(curPos).append('G'), featVec, featureMap);
+        addFeatureThenClear(sb.append(curPos).append(nextPos).append('H'), featVec, featureMap);
+        addFeatureThenClear(sb.append(nextPos).append(next2Pos).append('I'), featVec, featureMap);
 
         return toFeatureArray(featVec);
     }
@@ -104,46 +113,7 @@ public class NERInstance extends Instance
         if (sentence == null || featureMap == null) return null;
 
         NERTagSet tagSet = (NERTagSet) featureMap.tagSet;
-        List<String[]> collector = new LinkedList<String[]>();
-        Set<String> nerLabels = tagSet.nerLabels;
-        for (IWord word : sentence.wordList)
-        {
-            if (word instanceof CompoundWord)
-            {
-                List<Word> wordList = ((CompoundWord) word).innerList;
-                Word[] words = wordList.toArray(new Word[0]);
-
-                if (nerLabels.contains(word.getLabel()))
-                {
-                    collector.add(new String[]{words[0].value, words[0].label, tagSet.B_TAG_PREFIX + word.getLabel()});
-                    for (int i = 1; i < words.length - 1; i++)
-                    {
-                        collector.add(new String[]{words[i].value, words[i].label, tagSet.M_TAG_PREFIX + word.getLabel()});
-                    }
-                    collector.add(new String[]{words[words.length - 1].value, words[words.length - 1].label,
-                        tagSet.E_TAG_PREFIX + word.getLabel()});
-                }
-                else
-                {
-                    for (Word w : words)
-                    {
-                        collector.add(new String[]{w.value, w.label, tagSet.O_TAG});
-                    }
-                }
-            }
-            else
-            {
-                if (nerLabels.contains(word.getLabel()))
-                {
-                    // 单个实体
-                    collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.S_TAG});
-                }
-                else
-                {
-                    collector.add(new String[]{word.getValue(), word.getLabel(), tagSet.O_TAG});
-                }
-            }
-        }
+        List<String[]> collector = Utility.convertSentenceToNER(sentence, tagSet);
         String[] wordArray = new String[collector.size()];
         String[] posArray = new String[collector.size()];
         String[] tagArray = new String[collector.size()];

@@ -58,8 +58,10 @@ public class PlaceDictionary
     {
         long start = System.currentTimeMillis();
         dictionary = new NSDictionary();
-        dictionary.load(HanLP.Config.PlaceDictionaryPath);
-        logger.info(HanLP.Config.PlaceDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+        if (dictionary.load(HanLP.Config.PlaceDictionaryPath))
+            logger.info(HanLP.Config.PlaceDictionaryPath + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
+        else
+            throw new IllegalArgumentException(HanLP.Config.PlaceDictionaryPath + "加载失败");
         transformMatrixDictionary = new TransformMatrixDictionary<NS>(NS.class);
         transformMatrixDictionary.load(HanLP.Config.PlaceDictionaryTrPath);
         trie = new AhoCorasickDoubleArrayTrie<String>();

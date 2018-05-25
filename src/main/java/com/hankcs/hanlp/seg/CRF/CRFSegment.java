@@ -19,10 +19,9 @@ import com.hankcs.hanlp.model.CRFSegmentModel;
 import com.hankcs.hanlp.model.crf.CRFModel;
 import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.Table;
-import com.hankcs.hanlp.seg.CharacterBasedGenerativeModelSegment;
+import com.hankcs.hanlp.seg.CharacterBasedSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.utility.CharacterHelper;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
 
@@ -36,7 +35,8 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class CRFSegment extends CharacterBasedGenerativeModelSegment
+// @deprecated 已废弃，请使用{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}
+public class CRFSegment extends CharacterBasedSegment
 {
     private CRFModel crfModel;
 
@@ -47,6 +47,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
 
     public CRFSegment(String modelPath)
     {
+//        logger.warning("已废弃CRFSegment，请使用功能更丰富、设计更优雅的CRFLexicalAnalyzer");
         crfModel = GlobalObjectPool.get(modelPath);
         if (crfModel != null)
         {
@@ -66,6 +67,7 @@ public class CRFSegment extends CharacterBasedGenerativeModelSegment
         GlobalObjectPool.put(modelPath, crfModel);
     }
 
+    // 已废弃，请使用功能更丰富、设计更优雅的{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。
     public CRFSegment()
     {
         this(HanLP.Config.CRFSegmentModelPath);

@@ -3,9 +3,7 @@ package com.hankcs.hanlp.collection.trie.datrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * 动态数组
@@ -147,6 +145,11 @@ public class IntArrayList implements Serializable, ICacheAble
         return data[size - 1];
     }
 
+    public void setLast(int value)
+    {
+        data[size - 1] = value;
+    }
+
     public int pop()
     {
         return data[--size];
@@ -182,5 +185,24 @@ public class IntArrayList implements Serializable, ICacheAble
         exponentialExpanding = byteArray.nextBoolean();
         exponentialExpandFactor = byteArray.nextDouble();
         return true;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        loseWeight();
+        out.writeInt(size);
+        out.writeObject(data);
+        out.writeInt(linearExpandFactor);
+        out.writeBoolean(exponentialExpanding);
+        out.writeDouble(exponentialExpandFactor);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        size = in.readInt();
+        data = (int[]) in.readObject();
+        linearExpandFactor = in.readInt();
+        exponentialExpanding = in.readBoolean();
+        exponentialExpandFactor = in.readDouble();
     }
 }
