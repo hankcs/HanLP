@@ -218,6 +218,7 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
             }
             else
             {
+                wordList.toArray(wordArray);
                 for (int i = 0; i < wordArray.length; i++)
                 {
                     termList.add(new Word(wordArray[i], posArray[i]));
@@ -226,6 +227,7 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
         }
         else
         {
+            wordList.toArray(wordArray);
             for (String word : wordArray)
             {
                 termList.add(new Word(word, null));
