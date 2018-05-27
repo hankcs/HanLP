@@ -1341,6 +1341,21 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         }
     }
 
+    /**
+     * 全切分
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public void parseText(String text, AhoCorasickDoubleArrayTrie.IHit<V> processor)
+    {
+        Searcher searcher = getSearcher(text, 0);
+        while (searcher.next())
+        {
+            processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
+        }
+    }
+
     public LongestSearcher getLongestSearcher(String text, int offset)
     {
         return getLongestSearcher(text.toCharArray(), offset);
