@@ -15,6 +15,11 @@ public class CharTableTest extends TestCase
         System.out.println(CharTable.convert('？'));
         assertEquals('(', CharTable.convert('（'));
     }
+    public void testNormalizeSpace() throws Exception{
+        assertEquals(CharTable.convert('\t'),' ');
+        assertEquals(CharTable.convert('\n'),' ');
+        assertEquals(CharTable.convert('\f'),' ');
+    }
 //    public void testConvert() throws Exception
 //    {
 //        System.out.println(CharTable.CONVERT['關']);

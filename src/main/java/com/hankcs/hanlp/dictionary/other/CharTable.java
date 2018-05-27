@@ -57,10 +57,19 @@ public class CharTable
             if (line.length() != 3) continue;
             CONVERT[line.charAt(0)] = CONVERT[line.charAt(2)];
         }
+        loadSpace();
         logger.info("正在缓存字符正规化表到" + binPath);
         IOUtil.saveObjectTo(CONVERT, binPath);
 
         return true;
+    }
+    
+    private static void loadSpace() {
+        for (int i = Character.MIN_CODE_POINT; i <= Character.MAX_CODE_POINT; i++) {
+            if (Character.isWhitespace(i) || Character.isSpaceChar(i)) {
+                CONVERT[i] = ' ';
+            }
+        }
     }
 
     private static boolean loadBin(String path)
