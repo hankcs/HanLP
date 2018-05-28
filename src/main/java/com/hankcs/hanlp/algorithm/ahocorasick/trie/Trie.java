@@ -37,6 +37,11 @@ public class Trie
         this(new TrieConfig());
     }
 
+    public Trie(Collection<String> keywords)
+    {
+        this();
+        addAllKeyword(keywords);
+    }
 
     public Trie removeOverlaps()
     {
