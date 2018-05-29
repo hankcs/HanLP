@@ -13,13 +13,14 @@ package com.hankcs.hanlp.seg.Other;
 
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.DictionaryBasedSegment;
-import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,6 +55,17 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
         super();
         this.trie = trie;
         config.useCustomDictionary = false;
+    }
+
+    /**
+     * 加载自己的词典，构造分词器
+     * @param dictionaryPaths 任意数量个词典
+     *
+     * @throws IOException 加载过程中的IO异常
+     */
+    public DoubleArrayTrieSegment(String... dictionaryPaths) throws IOException
+    {
+        this(new DoubleArrayTrie<CoreDictionary.Attribute>(IOUtil.loadDictionary(dictionaryPaths)));
     }
 
     @Override
