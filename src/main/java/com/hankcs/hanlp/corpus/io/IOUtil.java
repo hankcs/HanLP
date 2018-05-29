@@ -625,7 +625,7 @@ public class IOUtil
 
     /**
      * 加载词典，词典必须遵守HanLP核心词典格式
-     * @param pathArray 词典路径，可以有任意个
+     * @param pathArray 词典路径，可以有任意个。每个路径支持用空格表示默认词性，比如“全国地名大全.txt ns”
      * @return 一个储存了词条的map
      * @throws IOException 异常表示加载失败
      */
@@ -634,8 +634,19 @@ public class IOUtil
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         for (String path : pathArray)
         {
+            int natureIndex = path.lastIndexOf(' ');
+            Nature defaultNature = Nature.n;
+            if (natureIndex > 0)
+            {
+                String natureString = path.substring(natureIndex + 1);
+                path = path.substring(0, natureIndex);
+                if (natureString.length() > 0 && !natureString.endsWith(".txt") && !natureString.endsWith(".csv"))
+                {
+                    defaultNature = Nature.create(natureString);
+                }
+            }
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
-            loadDictionary(br, map, path.endsWith(".csv"));
+            loadDictionary(br, map, path.endsWith(".csv"), defaultNature);
         }
 
         return map;
@@ -647,7 +658,7 @@ public class IOUtil
      * @param storage 储存位置
      * @throws IOException 异常表示加载失败
      */
-    public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage, boolean isCSV) throws IOException
+    public static void loadDictionary(BufferedReader br, TreeMap<String, CoreDictionary.Attribute> storage, boolean isCSV, Nature defaultNature) throws IOException
     {
         String splitter = "\\s";
         if (isCSV)
@@ -666,12 +677,20 @@ public class IOUtil
             String param[] = line.split(splitter);
 
             int natureCount = (param.length - 1) / 2;
-            CoreDictionary.Attribute attribute = new CoreDictionary.Attribute(natureCount);
-            for (int i = 0; i < natureCount; ++i)
+            CoreDictionary.Attribute attribute;
+            if (natureCount == 0)
             {
-                attribute.nature[i] = LexiconUtility.convertStringToNature(param[1 + 2 * i]);
-                attribute.frequency[i] = Integer.parseInt(param[2 + 2 * i]);
-                attribute.totalFrequency += attribute.frequency[i];
+                attribute = new CoreDictionary.Attribute(defaultNature);
+            }
+            else
+            {
+                attribute = new CoreDictionary.Attribute(natureCount);
+                for (int i = 0; i < natureCount; ++i)
+                {
+                    attribute.nature[i] = LexiconUtility.convertStringToNature(param[1 + 2 * i]);
+                    attribute.frequency[i] = Integer.parseInt(param[2 + 2 * i]);
+                    attribute.totalFrequency += attribute.frequency[i];
+                }
             }
             storage.put(param[0], attribute);
         }
