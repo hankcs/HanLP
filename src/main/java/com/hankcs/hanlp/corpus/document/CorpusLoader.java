@@ -14,7 +14,6 @@ package com.hankcs.hanlp.corpus.document;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
-import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
 import java.io.File;
@@ -31,7 +30,7 @@ public class CorpusLoader
     public static void walk(String folderPath, Handler handler)
     {
         long start = System.currentTimeMillis();
-        List<File> fileList = FolderWalker.open(folderPath);
+        List<File> fileList = IOUtil.fileList(folderPath);
         int i = 0;
         for (File file : fileList)
         {
@@ -46,7 +45,7 @@ public class CorpusLoader
     public static void walk(String folderPath, HandlerThread[] threadArray)
     {
         long start = System.currentTimeMillis();
-        List<File> fileList = FolderWalker.open(folderPath);
+        List<File> fileList = IOUtil.fileList(folderPath);
         for (int i = 0; i < threadArray.length - 1; ++i)
         {
             threadArray[i].fileList = fileList.subList(fileList.size() / threadArray.length * i, fileList.size() / threadArray.length * (i + 1));
@@ -71,7 +70,7 @@ public class CorpusLoader
     public static List<Document> convert2DocumentList(String folderPath)
     {
         long start = System.currentTimeMillis();
-        List<File> fileList = FolderWalker.open(folderPath);
+        List<File> fileList = IOUtil.fileList(folderPath);
         List<Document> documentList = new LinkedList<Document>();
         int i = 0;
         for (File file : fileList)

@@ -417,6 +417,48 @@ public class IOUtil
     }
 
     /**
+     * 递归遍历获取目录下的所有文件
+     *
+     * @param path 根目录
+     * @return 文件列表
+     */
+    public static List<File> fileList(String path)
+    {
+        List<File> fileList = new LinkedList<File>();
+        File folder = new File(path);
+        if (folder.isDirectory())
+            enumerate(folder, fileList);
+        else
+            fileList.add(folder); // 兼容路径为文件的情况
+        return fileList;
+    }
+
+    /**
+     * 递归遍历目录
+     *
+     * @param folder   目录
+     * @param fileList 储存文件
+     */
+    private static void enumerate(File folder, List<File> fileList)
+    {
+        File[] fileArray = folder.listFiles();
+        if (fileArray != null)
+        {
+            for (File file : fileArray)
+            {
+                if (file.isFile() && !file.getName().startsWith(".")) // 过滤隐藏文件
+                {
+                    fileList.add(file);
+                }
+                else
+                {
+                    enumerate(file, fileList);
+                }
+            }
+        }
+    }
+
+    /**
      * 方便读取按行读取大文件
      */
     public static class LineIterator implements Iterator<String>, Iterable<String>
