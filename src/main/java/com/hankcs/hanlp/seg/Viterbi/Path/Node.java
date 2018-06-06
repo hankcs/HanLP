@@ -11,8 +11,8 @@
  */
 package com.hankcs.hanlp.seg.Viterbi.Path;
 
+import com.hankcs.hanlp.utility.MathUtility;
 import com.hankcs.hanlp.seg.common.Vertex;
-import com.hankcs.hanlp.utility.MathTools;
 
 /**
  * @author hankcs
@@ -39,7 +39,7 @@ public class Node
 
     public void updateFrom(Node from)
     {
-        double weight = from.weight + MathTools.calculateWeight(from.vertex, this.vertex);
+        double weight = from.weight + MathUtility.calculateWeight(from.vertex, this.vertex);
         if (this.from == null || this.weight > weight)
         {
             this.from = from;

@@ -11,9 +11,9 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import com.hankcs.hanlp.utility.MathUtility;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.Map;
@@ -62,7 +62,7 @@ public class Vertex
 
     public void updateFrom(Vertex from)
     {
-        double weight = from.weight + MathTools.calculateWeight(from, this);
+        double weight = from.weight + MathUtility.calculateWeight(from, this);
         if (this.from == null || this.weight > weight)
         {
             this.from = from;
