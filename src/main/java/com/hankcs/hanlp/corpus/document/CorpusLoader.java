@@ -69,19 +69,34 @@ public class CorpusLoader
 
     public static List<Document> convert2DocumentList(String folderPath)
     {
+        return convert2DocumentList(folderPath, false);
+    }
+
+    /**
+     * 读取整个目录中的人民日报格式语料
+     *
+     * @param folderPath 路径
+     * @param verbose
+     * @return
+     */
+    public static List<Document> convert2DocumentList(String folderPath, boolean verbose)
+    {
         long start = System.currentTimeMillis();
         List<File> fileList = IOUtil.fileList(folderPath);
         List<Document> documentList = new LinkedList<Document>();
         int i = 0;
         for (File file : fileList)
         {
-            System.out.print(file);
+            if (verbose) System.out.print(file);
             Document document = convert2Document(file);
             documentList.add(document);
-            System.out.println(" " + ++i + " / " + fileList.size());
+            if (verbose) System.out.println(" " + ++i + " / " + fileList.size());
         }
-        System.out.println(documentList.size());
-        System.out.printf("花费时间%d ms\n", System.currentTimeMillis() - start);
+        if (verbose)
+        {
+            System.out.println(documentList.size());
+            System.out.printf("花费时间%d ms\n", System.currentTimeMillis() - start);
+        }
         return documentList;
     }
 
