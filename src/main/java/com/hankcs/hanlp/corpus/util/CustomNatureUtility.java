@@ -53,13 +53,27 @@ public class CustomNatureUtility
      */
     public static Nature addNature(String name)
     {
+        return addNature(name, true);
+    }
+
+    /**
+     * 增加词性
+     * @param name 词性名称
+     * @param extendMatrix 是否为核心转移矩阵扩容
+     * @return 词性
+     */
+    public static Nature addNature(String name, boolean extendMatrix)
+    {
         Nature customNature = extraValueMap.get(name);
         if (customNature != null) return customNature;
         customNature = enumBuster.make(name);
         enumBuster.addByValue(customNature);
         extraValueMap.put(name, customNature);
-        // 必须对词性标注HMM模型中的元组做出调整
-        CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary.extendSize();
+        if (extendMatrix)
+        {
+            // 必须对词性标注HMM模型中的元组做出调整
+            CoreDictionaryTransformMatrixDictionary.transformMatrixDictionary.extendSize();
+        }
 
         return customNature;
     }
