@@ -11,7 +11,9 @@
 package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.seg.Segment;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -161,6 +163,35 @@ public class CWSEvaluator
     public static Result evaluate(String goldFile, String predFile) throws IOException
     {
         return evaluate(goldFile, predFile, null);
+    }
+
+    /**
+     * 标准化评测分词器
+     *
+     * @param segment    分词器
+     * @param testFile   测试集raw text
+     * @param outputPath 分词预测输出文件
+     * @param goldFile   测试集segmented file
+     * @param dictPath   训练集单词列表
+     * @return 一个储存准确率的结构
+     * @throws IOException
+     */
+    public static CWSEvaluator.Result evaluate(Segment segment, String testFile, String outputPath, String goldFile, String dictPath) throws IOException
+    {
+        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(testFile);
+        BufferedWriter bw = IOUtil.newBufferedWriter(outputPath);
+        for (String line : lineIterator)
+        {
+            for (Term term : segment.seg(line))
+            {
+                bw.write(term.word);
+                bw.write("  ");
+            }
+            bw.newLine();
+        }
+        bw.close();
+        CWSEvaluator.Result result = CWSEvaluator.evaluate(goldFile, outputPath, dictPath);
+        return result;
     }
 
     /**
