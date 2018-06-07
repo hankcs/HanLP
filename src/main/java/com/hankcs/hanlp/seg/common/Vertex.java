@@ -229,6 +229,16 @@ public class Vertex
         return realWord;
     }
 
+    public Vertex getFrom()
+    {
+        return from;
+    }
+
+    public void setFrom(Vertex from)
+    {
+        this.from = from;
+    }
+
     /**
      * 获取词的属性
      *
