@@ -390,7 +390,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     public int build(List<String> _key, int _length[], int _value[],
                      int _keySize)
     {
-        if (_keySize > _key.size() || _key == null)
+        if (_key == null || _keySize > _key.size())
             return 0;
 
         // progress_func_ = progress_func;
