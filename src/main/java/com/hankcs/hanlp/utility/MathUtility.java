@@ -38,6 +38,17 @@ public class MathUtility
         return sum;
     }
 
+    public static float sum(float ... var)
+    {
+        float sum = 0;
+        for (float x : var)
+        {
+            sum += x;
+        }
+
+        return sum;
+    }
+
     public static double percentage(double current, double total)
     {
         return current / total * 100.;
@@ -133,4 +144,5 @@ public class MathUtility
 //        logger.info(String.format("%5s frequency:%6d, %s nTwoWordsFreq:%3d, weight:%.2f", from.word, frequency, from.word + "@" + to.word, nTwoWordsFreq, value));
         return value;
     }
+
 }
