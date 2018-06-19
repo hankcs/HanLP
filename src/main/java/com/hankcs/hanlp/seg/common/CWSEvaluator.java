@@ -182,10 +182,13 @@ public class CWSEvaluator
         BufferedWriter bw = IOUtil.newBufferedWriter(outputPath);
         for (String line : lineIterator)
         {
-            for (Term term : segment.seg(line))
+            List<Term> termList = segment.seg(line);
+            int i = 0;
+            for (Term term : termList)
             {
                 bw.write(term.word);
-                bw.write("  ");
+                if (++i != termList.size())
+                    bw.write("  ");
             }
             bw.newLine();
         }
