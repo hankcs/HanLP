@@ -18,6 +18,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ByteArrayStream;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.model.perceptron.common.TaskType;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureSortItem;
 import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureMDatMap;
@@ -37,7 +38,7 @@ import static com.hankcs.hanlp.classification.utilities.io.ConsoleLogger.logger;
 public class LinearModel implements ICacheAble
 {
     /**
-     * 特征全集
+     * 特征函数
      */
     public FeatureMap featureMap;
     /**
@@ -178,15 +179,50 @@ public class LinearModel implements ICacheAble
             for (Map.Entry<String, Integer> entry : featureIdSet)
             {
                 bw.write(entry.getKey());
-                for (int i = 0; i < tagSet.size(); ++i)
+                if (featureIdSet.size() == parameter.length)
                 {
                     bw.write("\t");
-                    bw.write(String.valueOf(parameter[entry.getValue() * tagSet.size() + i]));
+                    bw.write(String.valueOf(parameter[entry.getValue()]));
+                }
+                else
+                {
+                    for (int i = 0; i < tagSet.size(); ++i)
+                    {
+                        bw.write("\t");
+                        bw.write(String.valueOf(parameter[entry.getValue() * tagSet.size() + i]));
+                    }
                 }
                 bw.newLine();
             }
             bw.close();
         }
+    }
+
+    /**
+     * 参数更新
+     *
+     * @param x 特征向量
+     * @param y 正确答案
+     */
+    public void update(Collection<Integer> x, int y)
+    {
+        assert y == 1 || y == -1 : "感知机的标签y必须是±1";
+        for (Integer f : x)
+            parameter[f] += y;
+    }
+
+    /**
+     * 分离超平面解码
+     *
+     * @param x 特征向量
+     * @return sign(wx)
+     */
+    public int decode(Collection<Integer> x)
+    {
+        float y = 0;
+        for (Integer f : x)
+            y += parameter[f];
+        return y < 0 ? -1 : 1;
     }
 
     /**
@@ -358,16 +394,32 @@ public class LinearModel implements ICacheAble
         featureMap.load(byteArray);
         int size = featureMap.size();
         TagSet tagSet = featureMap.tagSet;
-        parameter = new float[size * tagSet.size()];
-        for (int i = 0; i < size; i++)
+        if (tagSet.type == TaskType.CLASSIFICATION)
         {
-            for (int j = 0; j < tagSet.size(); ++j)
+            parameter = new float[size];
+            for (int i = 0; i < size; i++)
             {
-                parameter[i * tagSet.size() + j] = byteArray.nextFloat();
+                parameter[i] = byteArray.nextFloat();
+            }
+        }
+        else
+        {
+            parameter = new float[size * tagSet.size()];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < tagSet.size(); ++j)
+                {
+                    parameter[i * tagSet.size() + j] = byteArray.nextFloat();
+                }
             }
         }
         assert !byteArray.hasMore();
         byteArray.close();
         return true;
+    }
+
+    public TaskType taskType()
+    {
+        return featureMap.tagSet.type;
     }
 }
