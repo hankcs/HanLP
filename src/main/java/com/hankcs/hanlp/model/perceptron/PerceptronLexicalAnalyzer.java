@@ -41,7 +41,7 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
         }
         if (nerModel != null)
         {
-            neRecognizer = new PerceptionNERecognizer(nerModel);
+            neRecognizer = new PerceptronNERecognizer(nerModel);
             config.ner = true;
         }
         else
@@ -163,9 +163,9 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
      *
      * @return
      */
-    public PerceptionNERecognizer getPerceptionNERecognizer()
+    public PerceptronNERecognizer getPerceptionNERecognizer()
     {
-        return (PerceptionNERecognizer) neRecognizer;
+        return (PerceptronNERecognizer) neRecognizer;
     }
 
 }
