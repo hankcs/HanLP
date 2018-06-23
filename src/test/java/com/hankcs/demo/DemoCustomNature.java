@@ -13,7 +13,6 @@ package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.corpus.util.CustomNatureUtility;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
@@ -21,9 +20,10 @@ import com.hankcs.hanlp.utility.LexiconUtility;
 
 import java.util.List;
 
+import static com.hankcs.hanlp.corpus.tag.Nature.n;
+
 /**
  * 演示自定义词性,以及往词典中插入自定义词性的词语
- * !!!由于采用了反射技术,用户需对本地环境的兼容性和稳定性负责!!!
  *
  * @author hankcs
  */
@@ -57,14 +57,12 @@ public class DemoCustomNature
         StandardTokenizer.SEGMENT.enablePartOfSpeechTagging(true);  // 依然支持隐马词性标注
         termList = HanLP.segment("苹果电脑可以运行开源阿尔法狗代码吗");
         System.out.println(termList);
-        // 如果使用了动态词性之后任何类使用了switch(nature)语句,必须注册每个类:
-        CustomNatureUtility.registerSwitchClass(DemoCustomNature.class);
+        // 1.6.5之后Nature不再是枚举类型，无法switch。但终于不再设计反射了，在各种JRE环境下都更稳定。
         for (Term term : termList)
         {
-            switch (term.nature)
+            if (term.nature == n)
             {
-                case n:
-                    System.out.printf("找到了 [%s] : %s\n", "名词", term.word);
+                System.out.printf("找到了 [%s] : %s\n", "名词", term.word);
             }
         }
     }

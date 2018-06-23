@@ -19,6 +19,8 @@ import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 
 import java.util.List;
 
+import static com.hankcs.hanlp.corpus.tag.Nature.nz;
+
 /**
  * 演示如何去除停用词
  *
@@ -45,9 +47,8 @@ public class DemoStopWord
             @Override
             public boolean shouldInclude(Term term)
             {
-                switch (term.nature)
+                if (term.nature == nz)
                 {
-                    case nz:
                     return !CoreStopWordDictionary.contains(term.word);
                 }
                 return false;

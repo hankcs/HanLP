@@ -21,10 +21,17 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CoreDictionaryTransformMatrixDictionary
 {
-    public static TransformMatrixDictionary<Nature> transformMatrixDictionary;
+    public static TransformMatrix transformMatrixDictionary;
     static
     {
-        transformMatrixDictionary = new TransformMatrixDictionary<Nature>(Nature.class);
+        transformMatrixDictionary = new TransformMatrix(){
+
+            @Override
+            public int ordinal(String tag)
+            {
+                return Nature.create(tag).ordinal();
+            }
+        };
         long start = System.currentTimeMillis();
         if (!transformMatrixDictionary.load(HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath))
         {

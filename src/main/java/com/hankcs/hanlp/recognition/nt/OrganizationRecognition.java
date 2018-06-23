@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.hankcs.hanlp.corpus.tag.Nature.*;
+
 /**
  * 地址识别
  *
@@ -78,33 +80,24 @@ public class OrganizationRecognition
         {
             // 构成更长的
             Nature nature = vertex.guessNature();
-            switch (nature)
+            if (nature == nrf)
             {
-                case nrf:
+                if (vertex.getAttribute().totalFrequency <= 1000)
                 {
-                    if (vertex.getAttribute().totalFrequency <= 1000)
-                    {
-                        tagList.add(new EnumItem<NT>(NT.F, 1000));
-                    }
-                    else break;
+                    tagList.add(new EnumItem<NT>(NT.F, 1000));
                 }
-                continue;
-                case ni:
-                case nic:
-                case nis:
-                case nit:
-                {
-                    EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.K, 1000);
-                    ntEnumItem.addLabel(NT.D, 1000);
-                    tagList.add(ntEnumItem);
-                }
-                continue;
-                case m:
-                {
-                    EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.M, 1000);
-                    tagList.add(ntEnumItem);
-                }
-                continue;
+                else break;
+            }
+            else if (nature == ni || nature == nic || nature == nis || nature == nit)
+            {
+                EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.K, 1000);
+                ntEnumItem.addLabel(NT.D, 1000);
+                tagList.add(ntEnumItem);
+            }
+            else if (nature == m)
+            {
+                EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.M, 1000);
+                tagList.add(ntEnumItem);
             }
 
             EnumItem<NT> NTEnumItem = OrganizationDictionary.dictionary.get(vertex.word);  // 此处用等效词，更加精准

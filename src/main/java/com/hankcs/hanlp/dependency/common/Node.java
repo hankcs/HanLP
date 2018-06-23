@@ -16,6 +16,9 @@ import com.hankcs.hanlp.corpus.dependency.CoNll.PosTagCompiler;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * 节点
  * @author hankcs
@@ -23,9 +26,80 @@ import com.hankcs.hanlp.seg.common.Term;
 public class Node
 {
     public final static Node NULL = new Node(new Term(CoNLLWord.NULL.NAME, Nature.n), -1);
+    private final static Map<String, String> natureConverter = new TreeMap<String, String>();
     static
     {
         NULL.label = "null";
+        natureConverter.put("begin", "root");
+        natureConverter.put("bg", "b");
+        natureConverter.put("e", "y");
+        natureConverter.put("g", "nz");
+        natureConverter.put("gb", "nz");
+        natureConverter.put("gbc", "nz");
+        natureConverter.put("gc", "nz");
+        natureConverter.put("gg", "nz");
+        natureConverter.put("gi", "nz");
+        natureConverter.put("gm", "nz");
+        natureConverter.put("gp", "nz");
+        natureConverter.put("i", "nz");
+        natureConverter.put("j", "nz");
+        natureConverter.put("l", "nz");
+        natureConverter.put("mg", "Mg");
+        natureConverter.put("nb", "nz");
+        natureConverter.put("nba", "nz");
+        natureConverter.put("nbc", "nz");
+        natureConverter.put("nbp", "nz");
+        natureConverter.put("nf", "n");
+        natureConverter.put("nh", "nz");
+        natureConverter.put("nhd", "nz");
+        natureConverter.put("nhm", "nz");
+        natureConverter.put("ni", "nt");
+        natureConverter.put("nic", "nt");
+        natureConverter.put("nis", "n");
+        natureConverter.put("nit", "nt");
+        natureConverter.put("nm", "n");
+        natureConverter.put("nmc", "nz");
+        natureConverter.put("nn", "n");
+        natureConverter.put("nnd", "n");
+        natureConverter.put("nnt", "n");
+        natureConverter.put("ntc", "nt");
+        natureConverter.put("ntcb", "nt");
+        natureConverter.put("ntcf", "nt");
+        natureConverter.put("ntch", "nt");
+        natureConverter.put("nth", "nt");
+        natureConverter.put("nto", "nt");
+        natureConverter.put("nts", "nt");
+        natureConverter.put("ntu", "nt");
+        natureConverter.put("nx", "x");
+        natureConverter.put("qg", "q");
+        natureConverter.put("rg", "Rg");
+        natureConverter.put("ud", "u");
+        natureConverter.put("udh", "u");
+        natureConverter.put("ug", "uguo");
+        natureConverter.put("uj", "u");
+        natureConverter.put("ul", "ulian");
+        natureConverter.put("uv", "u");
+        natureConverter.put("uz", "uzhe");
+        natureConverter.put("w", "x");
+        natureConverter.put("wb", "x");
+        natureConverter.put("wd", "x");
+        natureConverter.put("wf", "x");
+        natureConverter.put("wh", "x");
+        natureConverter.put("wj", "x");
+        natureConverter.put("wky", "x");
+        natureConverter.put("wkz", "x");
+        natureConverter.put("wm", "x");
+        natureConverter.put("wn", "x");
+        natureConverter.put("wp", "x");
+        natureConverter.put("ws", "x");
+        natureConverter.put("wt", "x");
+        natureConverter.put("ww", "x");
+        natureConverter.put("wyy", "x");
+        natureConverter.put("wyz", "x");
+        natureConverter.put("xu", "x");
+        natureConverter.put("xx", "x");
+        natureConverter.put("yg", "y");
+        natureConverter.put("zg", "z");
     }
     public String word;
     public String compiledWord;
@@ -35,160 +109,10 @@ public class Node
     public Node(Term term, int id)
     {
         this.id = id;
-        switch (term.nature)
-        {
-
-            case bg:
-                label = "b";
-                break;
-            case mg:
-                label = "Mg";
-                break;
-            case nx:
-                label = "x";
-                break;
-            case qg:
-                label = "q";
-                break;
-            case ud:
-                label = "u";
-                break;
-            case uj:
-                label = "u";
-                break;
-            case uz:
-                label = "uzhe";
-                break;
-            case ug:
-                label = "uguo";
-                break;
-            case ul:
-                label = "ulian";
-                break;
-            case uv:
-                label = "u";
-                break;
-            case yg:
-                label = "y";
-                break;
-            case zg:
-                label = "z";
-                break;
-            case ntc:
-            case ntcf:
-            case ntcb:
-            case ntch:
-            case nto:
-            case ntu:
-            case nts:
-            case nth:
-                label = "nt";
-                break;
-            case nh:
-            case nhm:
-            case nhd:
-                label = "nz";
-                break;
-            case nn:
-                label = "n";
-                break;
-            case nnt:
-                label = "n";
-                break;
-            case nnd:
-                label = "n";
-                break;
-            case nf:
-                label = "n";
-                break;
-            case ni:
-            case nit:
-            case nic:
-                label = "nt";
-                break;
-            case nis:
-                label = "n";
-                break;
-            case nm:
-                label = "n";
-                break;
-            case nmc:
-                label = "nz";
-                break;
-            case nb:
-                label = "nz";
-                break;
-            case nba:
-                label = "nz";
-                break;
-            case nbc:
-            case nbp:
-            case nz:
-                label = "nz";
-                break;
-            case g:
-                label = "nz";
-                break;
-            case gm:
-            case gp:
-            case gc:
-            case gb:
-            case gbc:
-            case gg:
-            case gi:
-                label = "nz";
-                break;
-            case j:
-                label = "nz";
-                break;
-            case i:
-                label = "nz";
-                break;
-            case l:
-                label = "nz";
-                break;
-            case rg:
-            case Rg:
-                label = "Rg";
-                break;
-            case udh:
-                label = "u";
-                break;
-            case e:
-                label = "y";
-                break;
-            case xx:
-                label = "x";
-                break;
-            case xu:
-                label = "x";
-                break;
-            case w:
-            case wkz:
-            case wky:
-            case wyz:
-            case wyy:
-            case wj:
-            case ww:
-            case wt:
-            case wd:
-            case wf:
-            case wn:
-            case wm:
-            case ws:
-            case wp:
-            case wb:
-            case wh:
-                label = "x";
-                break;
-            case begin:
-                label = "root";
-                break;
-            default:
-                label = term.nature.toString();
-                break;
-        }
         word = term.word;
+        label = natureConverter.get(term.nature.toString());
+        if (label == null)
+            label = term.nature.toString();
         compiledWord = PosTagCompiler.compile(label, word);
     }
 
