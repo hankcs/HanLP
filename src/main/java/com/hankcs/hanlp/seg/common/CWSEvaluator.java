@@ -100,25 +100,6 @@ public class CWSEvaluator
     }
 
     /**
-     * 将分词结果转换为区间
-     *
-     * @param line 商品 和 服务
-     * @return [(0, 2), (2, 3), (3, 5)]
-     */
-    public static List<Region> toRegion(String line)
-    {
-        List<Region> region = new LinkedList<Region>();
-        int start = 0;
-        for (String word : line.split("\\s+"))
-        {
-            int end = start + word.length();
-            region.add(new Region(start, end));
-            start = end;
-        }
-        return region;
-    }
-
-    /**
      * 比较标准答案与分词结果
      *
      * @param gold
@@ -126,29 +107,61 @@ public class CWSEvaluator
      */
     public void compare(String gold, String pred)
     {
+        String[] wordArray = gold.split("\\s+");
+        A_size += wordArray.length;
+        String[] predArray = pred.split("\\s+");
+        B_size += predArray.length;
 
-        Set<Region> A = new TreeSet<Region>(toRegion(gold));
-        Set<Region> B = new TreeSet<Region>(toRegion(pred));
-        A_size += A.size();
-        B_size += B.size();
-        B.retainAll(A);
-        A_cap_B_size += B.size();
+        int goldIndex = 0, predIndex = 0;
+        int goldLen = 0, predLen = 0;
+
+        while (goldIndex < wordArray.length && predIndex < predArray.length)
+        {
+            if (goldLen == predLen)
+            {
+                if (wordArray[goldIndex].equals(predArray[predIndex]))
+                {
+                    if (dic != null)
+                    {
+                        if (dic.contains(wordArray[goldIndex]))
+                            IV_R += 1;
+                        else
+                            OOV_R += 1;
+                    }
+                    A_cap_B_size++;
+                    goldLen += wordArray[goldIndex].length();
+                    predLen += wordArray[goldIndex].length();
+                    goldIndex++;
+                    predIndex++;
+                }
+                else
+                {
+                    goldLen += wordArray[goldIndex].length();
+                    predLen += predArray[predIndex].length();
+                    goldIndex++;
+                    predIndex++;
+                }
+            }
+            else if (goldLen < predLen)
+            {
+                goldLen += wordArray[goldIndex].length();
+                goldIndex++;
+            }
+            else
+            {
+                predLen += predArray[predIndex].length();
+                predIndex++;
+            }
+        }
+
         if (dic != null)
         {
-            String text = gold.replaceAll("\\s+", "");
-            for (Region region : A)
+            for (String word : wordArray)
             {
-                if (dic.contains(region.toString(text)))
+                if (dic.contains(word))
                     IV += 1;
                 else
                     OOV += 1;
-            }
-            for (Region region : B)
-            {
-                if (dic.contains(region.toString(text)))
-                    IV_R += 1;
-                else
-                    OOV_R += 1;
             }
         }
     }
@@ -169,20 +182,19 @@ public class CWSEvaluator
      * 标准化评测分词器
      *
      * @param segment    分词器
-     * @param testFile   测试集raw text
      * @param outputPath 分词预测输出文件
      * @param goldFile   测试集segmented file
      * @param dictPath   训练集单词列表
      * @return 一个储存准确率的结构
      * @throws IOException
      */
-    public static CWSEvaluator.Result evaluate(Segment segment, String testFile, String outputPath, String goldFile, String dictPath) throws IOException
+    public static CWSEvaluator.Result evaluate(Segment segment, String outputPath, String goldFile, String dictPath) throws IOException
     {
-        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(testFile);
+        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(goldFile);
         BufferedWriter bw = IOUtil.newBufferedWriter(outputPath);
         for (String line : lineIterator)
         {
-            List<Term> termList = segment.seg(line);
+            List<Term> termList = segment.seg(line.replaceAll("\\s+", "")); // 一些testFile与goldFile根本不匹配，比如MSR的testFile有些行缺少单词，所以用goldFile去掉空格代替
             int i = 0;
             for (Term term : termList)
             {
@@ -195,6 +207,22 @@ public class CWSEvaluator
         bw.close();
         CWSEvaluator.Result result = CWSEvaluator.evaluate(goldFile, outputPath, dictPath);
         return result;
+    }
+
+    /**
+     * 标准化评测分词器
+     *
+     * @param segment    分词器
+     * @param testFile   测试集raw text
+     * @param outputPath 分词预测输出文件
+     * @param goldFile   测试集segmented file
+     * @param dictPath   训练集单词列表
+     * @return 一个储存准确率的结构
+     * @throws IOException
+     */
+    public static CWSEvaluator.Result evaluate(Segment segment, String testFile, String outputPath, String goldFile, String dictPath) throws IOException
+    {
+        return evaluate(segment, outputPath, goldFile, dictPath);
     }
 
     /**
@@ -216,30 +244,6 @@ public class CWSEvaluator
         return evaluator.getResult();
     }
 
-    private static class Region implements Comparable<Region>
-    {
-        int start, end;
-
-        public Region(int start, int end)
-        {
-            this.start = start;
-            this.end = end;
-        }
-
-        @Override
-        public int compareTo(Region o)
-        {
-            if (start != o.start)
-                return new Integer(start).compareTo(o.start);
-            return new Integer(end).compareTo(o.end);
-        }
-
-        public String toString(String text)
-        {
-            return text.substring(start, end);
-        }
-    }
-
     public static class Result
     {
         float P, R, F1, OOV_R, IV_R;
@@ -256,13 +260,7 @@ public class CWSEvaluator
         @Override
         public String toString()
         {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("P=").append(P);
-            sb.append(", R=").append(R);
-            sb.append(", F1=").append(F1);
-            sb.append(", OOV_R=").append(OOV_R);
-            sb.append(", IV_R=").append(IV_R);
-            return sb.toString();
+            return String.format("P:%.2f R:%.2f F1:%.2f OOV-R:%.2f IV-R:%.2f", P, R, F1, OOV_R, IV_R);
         }
     }
 }
