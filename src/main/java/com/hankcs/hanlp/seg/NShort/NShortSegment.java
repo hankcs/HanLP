@@ -57,7 +57,7 @@ public class NShortSegment extends WordBasedSegment
                 int preSize = wordNetOptimum.size();
                 if (config.nameRecognize)
                 {
-                    PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
+                    PersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
                 }
                 if (config.translatedNameRecognize)
                 {

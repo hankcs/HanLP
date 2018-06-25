@@ -18,6 +18,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ByteArrayStream;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.model.perceptron.common.TaskType;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureSortItem;
 import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureMDatMap;
@@ -37,7 +38,7 @@ import static com.hankcs.hanlp.classification.utilities.io.ConsoleLogger.logger;
 public class LinearModel implements ICacheAble
 {
     /**
-     * 特征全集
+     * 特征函数
      */
     public FeatureMap featureMap;
     /**
@@ -64,10 +65,21 @@ public class LinearModel implements ICacheAble
     }
 
     /**
+     * 模型压缩
      * @param ratio 压缩比c（压缩掉的体积，压缩后体积变为1-c）
      * @return
      */
     public LinearModel compress(final double ratio)
+    {
+        return compress(ratio, 1e-3f);
+    }
+
+    /**
+     * @param ratio 压缩比c（压缩掉的体积，压缩后体积变为1-c）
+     * @param threshold 特征权重绝对值之和最低阈值
+     * @return
+     */
+    public LinearModel compress(final double ratio, final double threshold)
     {
         if (ratio < 0 || ratio >= 1)
         {
@@ -92,7 +104,7 @@ public class LinearModel implements ICacheAble
                 continue;
             }
             FeatureSortItem item = new FeatureSortItem(entry, this.parameter, tagSet.size());
-            if (item.total < 1e-3f) continue;
+            if (item.total < threshold) continue;
             heap.add(item);
         }
 
@@ -165,7 +177,7 @@ public class LinearModel implements ICacheAble
     public void save(String modelFile, Set<Map.Entry<String, Integer>> featureIdSet, final double ratio, boolean text) throws IOException
     {
         float[] parameter = this.parameter;
-        this.compress(ratio);
+        this.compress(ratio, 1e-3f);
 
         DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(modelFile)));
         save(out);
@@ -178,15 +190,50 @@ public class LinearModel implements ICacheAble
             for (Map.Entry<String, Integer> entry : featureIdSet)
             {
                 bw.write(entry.getKey());
-                for (int i = 0; i < tagSet.size(); ++i)
+                if (featureIdSet.size() == parameter.length)
                 {
                     bw.write("\t");
-                    bw.write(String.valueOf(parameter[entry.getValue() * tagSet.size() + i]));
+                    bw.write(String.valueOf(parameter[entry.getValue()]));
+                }
+                else
+                {
+                    for (int i = 0; i < tagSet.size(); ++i)
+                    {
+                        bw.write("\t");
+                        bw.write(String.valueOf(parameter[entry.getValue() * tagSet.size() + i]));
+                    }
                 }
                 bw.newLine();
             }
             bw.close();
         }
+    }
+
+    /**
+     * 参数更新
+     *
+     * @param x 特征向量
+     * @param y 正确答案
+     */
+    public void update(Collection<Integer> x, int y)
+    {
+        assert y == 1 || y == -1 : "感知机的标签y必须是±1";
+        for (Integer f : x)
+            parameter[f] += y;
+    }
+
+    /**
+     * 分离超平面解码
+     *
+     * @param x 特征向量
+     * @return sign(wx)
+     */
+    public int decode(Collection<Integer> x)
+    {
+        float y = 0;
+        for (Integer f : x)
+            y += parameter[f];
+        return y < 0 ? -1 : 1;
     }
 
     /**
@@ -358,16 +405,32 @@ public class LinearModel implements ICacheAble
         featureMap.load(byteArray);
         int size = featureMap.size();
         TagSet tagSet = featureMap.tagSet;
-        parameter = new float[size * tagSet.size()];
-        for (int i = 0; i < size; i++)
+        if (tagSet.type == TaskType.CLASSIFICATION)
         {
-            for (int j = 0; j < tagSet.size(); ++j)
+            parameter = new float[size];
+            for (int i = 0; i < size; i++)
             {
-                parameter[i * tagSet.size() + j] = byteArray.nextFloat();
+                parameter[i] = byteArray.nextFloat();
+            }
+        }
+        else
+        {
+            parameter = new float[size * tagSet.size()];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < tagSet.size(); ++j)
+                {
+                    parameter[i * tagSet.size() + j] = byteArray.nextFloat();
+                }
             }
         }
         assert !byteArray.hasMore();
         byteArray.close();
         return true;
+    }
+
+    public TaskType taskType()
+    {
+        return featureMap.tagSet.type;
     }
 }

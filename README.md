@@ -9,7 +9,7 @@ HanLP: Han Language Processing
 
 ------
 
-**HanLP**是由一系列模型与算法组成的NLP工具包，目标是普及自然语言处理在生产环境中的应用。**HanLP**具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
+**HanLP**是一系列模型与算法组成的NLP工具包，由大快搜索主导并完全开源，目标是普及自然语言处理在生产环境中的应用。**HanLP**具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
 
 **HanLP**提供下列功能：
 
@@ -53,7 +53,7 @@ HanLP: Han Language Processing
 * [word2vec](https://github.com/hankcs/HanLP/wiki/word2vec)
     * 词向量训练、加载、词语相似度计算、语义运算、查询、KMeans聚类
     * 文档语义相似度计算
-* 语料库工具
+* [语料库工具](https://github.com/hankcs/HanLP/tree/master/src/main/java/com/hankcs/hanlp/corpus)
 
 在提供丰富功能的同时，**HanLP**内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便，同时自带一些语料处理工具，帮助用户训练自己的模型。
 
@@ -75,7 +75,7 @@ HanLP: Han Language Processing
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.6.4</version>
+    <version>portable-1.6.5</version>
 </dependency>
 ```
 
@@ -161,7 +161,7 @@ System.out.println(NLPTokenizer.analyze("支援臺灣正體香港繁體：微软
 ```
 - 说明
   * NLP分词`NLPTokenizer`会执行全部命名实体识别和词性标注。
-  * 欢迎用户在自己的语料上[训练新模型](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)以适应新领域、识别新的命名实体。
+  * 默认模型训练自[98年1月份人民日报语料](https://github.com/hankcs/OpenCorpus/tree/master/pku98)，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上[训练新模型](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)以适应新领域、识别新的命名实体。
 
 ### 4. 索引分词
 
@@ -752,9 +752,12 @@ HanLP.Config.enableDebug();
 - HanLP产品初始知识产权归上海林原信息科技有限公司所有，任何人和企业可以无偿使用，可以对产品、源代码进行任何形式的修改，可以打包在其他产品中进行销售。
 - 任何使用了HanLP的全部或部分功能、词典、模型的项目、产品或文章等形式的成果必须显式注明HanLP及此项目主页。
 
+### 大快搜索
+- 现在正式由大快搜索主导开发，新模块继续完全开源。
+
 ### 其他版权方
-- 自`1.2.4`后是个人维护，还会接受任何人与任何公司向本项目开源的模块。
-- 充分尊重所有版权方的贡献，本项目不占有这些新模块的版权。
+- 实施上由个人维护，欢迎任何人与任何公司向本项目开源模块。
+- 充分尊重所有版权方的贡献，本项目不占有用户贡献模块的版权。
 
 ### 鸣谢
 感谢下列优秀开源项目：

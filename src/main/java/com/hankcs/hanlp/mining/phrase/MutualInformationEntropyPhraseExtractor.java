@@ -22,6 +22,9 @@ import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.hankcs.hanlp.corpus.tag.Nature.nx;
+import static com.hankcs.hanlp.corpus.tag.Nature.t;
+
 /**
  * 利用互信息和左右熵的短语提取器
  * @author hankcs
@@ -41,12 +44,8 @@ public class MutualInformationEntropyPhraseExtractor implements IPhraseExtractor
                             @Override
                             public boolean shouldInclude(Term term)
                             {
-                                switch (term.nature)
-                                {
-                                    case t:
-                                    case nx:
-                                        return false;
-                                }
+                                if (term.nature == t || term.nature == nx)
+                                    return false;
                                 return true;
                             }
                         }

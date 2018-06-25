@@ -14,7 +14,7 @@ public class NERTrainerTest extends TestCase
 
     public void testTag() throws Exception
     {
-        PerceptionNERecognizer recognizer = new PerceptionNERecognizer(Config.NER_MODEL_FILE);
+        PerceptronNERecognizer recognizer = new PerceptronNERecognizer(Config.NER_MODEL_FILE);
         System.out.println(Arrays.toString(recognizer.recognize("吴忠市 乳制品 公司 谭利华 来到 布达拉宫 广场".split(" "), "ns n n nr p ns n".split(" "))));
     }
 }

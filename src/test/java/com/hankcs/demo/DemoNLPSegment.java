@@ -12,6 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
+import com.hankcs.hanlp.utility.TestUtility;
 
 /**
  * NLP分词，更精准的中文分词、词性标注与命名实体识别
@@ -20,7 +21,7 @@ import com.hankcs.hanlp.tokenizer.NLPTokenizer;
  *
  * @author hankcs
  */
-public class DemoNLPSegment
+public class DemoNLPSegment extends TestUtility
 {
     public static void main(String[] args)
     {

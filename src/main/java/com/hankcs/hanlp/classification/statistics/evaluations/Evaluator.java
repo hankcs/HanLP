@@ -15,7 +15,7 @@ import com.hankcs.hanlp.classification.classifiers.IClassifier;
 import com.hankcs.hanlp.classification.corpus.Document;
 import com.hankcs.hanlp.classification.corpus.IDataSet;
 import com.hankcs.hanlp.classification.corpus.MemoryDataSet;
-import com.hankcs.hanlp.classification.utilities.MathUtility;
+import com.hankcs.hanlp.utility.MathUtility;
 
 import java.util.Map;
 

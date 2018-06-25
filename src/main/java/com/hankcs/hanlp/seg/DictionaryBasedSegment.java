@@ -15,6 +15,8 @@ import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 
 import java.util.List;
 
+import static com.hankcs.hanlp.utility.Predefine.logger;
+
 /**
  * 基于词典的机械分词器基类
  *
@@ -72,5 +74,15 @@ public abstract class DictionaryBasedSegment extends Segment
                 }
             }
         }
+    }
+
+    @Override
+    public Segment enableCustomDictionary(boolean enable)
+    {
+        if (enable)
+        {
+            logger.warning("为基于词典的分词器开启用户词典太浪费了，建议直接将所有词典的路径传入构造函数，这样速度更快、内存更省");
+        }
+        return super.enableCustomDictionary(enable);
     }
 }

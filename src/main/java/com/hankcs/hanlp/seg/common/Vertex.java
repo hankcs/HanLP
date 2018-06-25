@@ -11,9 +11,9 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import com.hankcs.hanlp.utility.MathUtility;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.Map;
@@ -62,7 +62,7 @@ public class Vertex
 
     public void updateFrom(Vertex from)
     {
-        double weight = from.weight + MathTools.calculateWeight(from, this);
+        double weight = from.weight + MathUtility.calculateWeight(from, this);
         if (this.from == null || this.weight > weight)
         {
             this.from = from;
@@ -103,75 +103,58 @@ public class Vertex
     {
         if (attribute.nature.length == 1)
         {
-            switch (attribute.nature[0])
+            Nature nature = attribute.nature[0];
+            if (nature.startsWith("nr"))
             {
-                case nr:
-                case nr1:
-                case nr2:
-                case nrf:
-                case nrj:
-                {
-                    wordID = CoreDictionary.NR_WORD_ID;
+                wordID = CoreDictionary.NR_WORD_ID;
 //                    this.attribute = CoreDictionary.get(CoreDictionary.NR_WORD_ID);
-                    return Predefine.TAG_PEOPLE;
-                }
-                case ns:
-                case nsf:
-                {
-                    wordID = CoreDictionary.NS_WORD_ID;
-                    // 在地名识别的时候,希望类似"河镇"的词语保持自己的词性,而不是未##地的词性
+                return Predefine.TAG_PEOPLE;
+            }
+            else if (nature.startsWith("ns"))
+            {
+                wordID = CoreDictionary.NS_WORD_ID;
+                // 在地名识别的时候,希望类似"河镇"的词语保持自己的词性,而不是未##地的词性
 //                    this.attribute = CoreDictionary.get(CoreDictionary.NS_WORD_ID);
-                    return Predefine.TAG_PLACE;
-                }
+                return Predefine.TAG_PLACE;
+            }
 //                case nz:
-                case nx:
-                {
-                    wordID = CoreDictionary.NX_WORD_ID;
-                    if (wordID == -1)
-                        wordID = CoreDictionary.X_WORD_ID;
-//                    this.attribute = CoreDictionary.get(wordID);
-                    return Predefine.TAG_PROPER;
-                }
-                case nt:
-                case ntc:
-                case ntcf:
-                case ntcb:
-                case ntch:
-                case nto:
-                case ntu:
-                case nts:
-                case nth:
-                case nit:
-                {
-                    wordID = CoreDictionary.NT_WORD_ID;
-//                    this.attribute = CoreDictionary.get(CoreDictionary.NT_WORD_ID);
-                    return Predefine.TAG_GROUP;
-                }
-                case m:
-                case mq:
-                {
-                    wordID = CoreDictionary.M_WORD_ID;
-                    this.attribute = CoreDictionary.get(CoreDictionary.M_WORD_ID);
-                    return Predefine.TAG_NUMBER;
-                }
-                case x:
-                {
+            else if (nature == Nature.nx)
+            {
+                wordID = CoreDictionary.NX_WORD_ID;
+                if (wordID == -1)
                     wordID = CoreDictionary.X_WORD_ID;
-                    this.attribute = CoreDictionary.get(CoreDictionary.X_WORD_ID);
-                    return Predefine.TAG_CLUSTER;
-                }
+//                    this.attribute = CoreDictionary.get(wordID);
+                return Predefine.TAG_PROPER;
+            }
+            else if (nature.startsWith("nt") || nature == Nature.nit)
+            {
+                wordID = CoreDictionary.NT_WORD_ID;
+//                    this.attribute = CoreDictionary.get(CoreDictionary.NT_WORD_ID);
+                return Predefine.TAG_GROUP;
+            }
+            else if (nature.startsWith('m'))
+            {
+                wordID = CoreDictionary.M_WORD_ID;
+                this.attribute = CoreDictionary.get(CoreDictionary.M_WORD_ID);
+                return Predefine.TAG_NUMBER;
+            }
+            else if (nature.startsWith('x'))
+            {
+                wordID = CoreDictionary.X_WORD_ID;
+                this.attribute = CoreDictionary.get(CoreDictionary.X_WORD_ID);
+                return Predefine.TAG_CLUSTER;
+            }
 //                case xx:
 //                case w:
 //                {
 //                    word= Predefine.TAG_OTHER;
 //                }
 //                break;
-                case t:
-                {
-                    wordID = CoreDictionary.T_WORD_ID;
-                    this.attribute = CoreDictionary.get(CoreDictionary.T_WORD_ID);
-                    return Predefine.TAG_TIME;
-                }
+            else if (nature.startsWith('t'))
+            {
+                wordID = CoreDictionary.T_WORD_ID;
+                this.attribute = CoreDictionary.get(CoreDictionary.T_WORD_ID);
+                return Predefine.TAG_TIME;
             }
         }
 
@@ -229,6 +212,16 @@ public class Vertex
         return realWord;
     }
 
+    public Vertex getFrom()
+    {
+        return from;
+    }
+
+    public void setFrom(Vertex from)
+    {
+        this.from = from;
+    }
+
     /**
      * 获取词的属性
      *
@@ -271,13 +264,13 @@ public class Vertex
      */
     public boolean confirmNature(Nature nature, boolean updateWord)
     {
-        switch (nature)
+        switch (nature.firstChar())
         {
 
-            case m:
+            case 'm':
                 word = Predefine.TAG_NUMBER;
                 break;
-            case t:
+            case 't':
                 word = Predefine.TAG_TIME;
                 break;
             default:

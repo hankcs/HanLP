@@ -14,7 +14,7 @@ package com.hankcs.hanlp.classification.corpus;
 import com.hankcs.hanlp.classification.models.AbstractModel;
 import com.hankcs.hanlp.classification.tokenizers.HanLPTokenizer;
 import com.hankcs.hanlp.classification.tokenizers.ITokenizer;
-import com.hankcs.hanlp.classification.utilities.MathUtility;
+import com.hankcs.hanlp.utility.MathUtility;
 import com.hankcs.hanlp.classification.utilities.TextProcessUtility;
 
 import java.io.File;

@@ -15,6 +15,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.NR;
+import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.nr.PersonDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
@@ -23,13 +24,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.hankcs.hanlp.corpus.tag.Nature.nnt;
+import static com.hankcs.hanlp.corpus.tag.Nature.nr;
+
 /**
  * 人名识别
  * @author hankcs
  */
 public class PersonRecognition
 {
-    public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
+    public static boolean recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NR>> roleTagList = roleObserve(pWordSegResult);
         if (HanLP.Config.DEBUG)
@@ -85,28 +89,27 @@ public class PersonRecognition
             EnumItem<NR> nrEnumItem = PersonDictionary.dictionary.get(vertex.realWord);
             if (nrEnumItem == null)
             {
-                switch (vertex.guessNature())
+                Nature nature = vertex.guessNature();
+                if (nature == nr)
                 {
-                    case nr:
+                    // 有些双名实际上可以构成更长的三名
+                    if (vertex.getAttribute().totalFrequency <= 1000 && vertex.realWord.length() == 2)
                     {
-                        // 有些双名实际上可以构成更长的三名
-                        if (vertex.getAttribute().totalFrequency <= 1000 && vertex.realWord.length() == 2)
-                        {
-                            nrEnumItem = new EnumItem<NR>();
-                            nrEnumItem.labelMap.put(NR.X, 2); // 认为是三字人名前2个字=双字人名的可能性更高
-                            nrEnumItem.labelMap.put(NR.G, 1);
-                        }
-                        else nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
-                    }break;
-                    case nnt:
-                    {
-                        // 姓+职位
-                        nrEnumItem = new EnumItem<NR>(NR.G, NR.K);
-                    }break;
-                    default:
-                    {
+                        nrEnumItem = new EnumItem<NR>();
+                        nrEnumItem.labelMap.put(NR.X, 2); // 认为是三字人名前2个字=双字人名的可能性更高
+                        nrEnumItem.labelMap.put(NR.G, 1);
+                    }
+                    else
                         nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
-                    }break;
+                }
+                else if (nature == nnt)
+                {
+                    // 姓+职位
+                    nrEnumItem = new EnumItem<NR>(NR.G, NR.K);
+                }
+                else
+                {
+                    nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
                 }
             }
             tagList.add(nrEnumItem);

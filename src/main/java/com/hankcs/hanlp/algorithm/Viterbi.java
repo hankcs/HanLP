@@ -13,6 +13,7 @@ package com.hankcs.hanlp.algorithm;
 
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.dictionary.TransformMatrix;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
 import com.hankcs.hanlp.seg.common.Vertex;
 
@@ -99,8 +100,10 @@ public class Viterbi
      * @param vertexList                包含Vertex.B节点的路径
      * @param transformMatrixDictionary 词典对应的转移矩阵
      */
-    public static void compute(List<Vertex> vertexList, TransformMatrixDictionary<Nature> transformMatrixDictionary)
+    public static void compute(List<Vertex> vertexList, TransformMatrix transformMatrixDictionary)
     {
+        if (Nature.values().length != transformMatrixDictionary.states.length)
+            transformMatrixDictionary.extend(Nature.values().length);
         int length = vertexList.size() - 1;
         double[][] cost = new double[2][];  // 滚动数组
         Iterator<Vertex> iterator = vertexList.iterator();
@@ -118,7 +121,7 @@ public class Viterbi
             int curIndex = 0;
             for (Nature cur : item.attribute.nature)
             {
-                cost[0][j] = transformMatrixDictionary.transititon_probability[pre.ordinal()][cur.ordinal()] - Math.log((item.attribute.frequency[curIndex] + 1e-8) / transformMatrixDictionary.getTotalFrequency(cur));
+                cost[0][j] = transformMatrixDictionary.transititon_probability[pre.ordinal()][cur.ordinal()] - Math.log((item.attribute.frequency[curIndex] + 1e-8) / transformMatrixDictionary.getTotalFrequency(cur.ordinal()));
                 ++j;
                 ++curIndex;
             }
@@ -141,7 +144,7 @@ public class Viterbi
                 int j = 0;
                 for (Nature p : preTagSet)
                 {
-                    double now = cost[index_i_1][j] + transformMatrixDictionary.transititon_probability[p.ordinal()][cur.ordinal()] - Math.log((item.attribute.frequency[k] + 1e-8) / transformMatrixDictionary.getTotalFrequency(cur));
+                    double now = cost[index_i_1][j] + transformMatrixDictionary.transititon_probability[p.ordinal()][cur.ordinal()] - Math.log((item.attribute.frequency[k] + 1e-8) / transformMatrixDictionary.getTotalFrequency(cur.ordinal()));
                     if (now < cost[index_i][k])
                     {
                         cost[index_i][k] = now;

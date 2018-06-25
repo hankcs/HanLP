@@ -15,6 +15,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.utility.TestUtility;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class DemoCRFSegment
+public class DemoCRFSegment extends TestUtility
 {
     public static void main(String[] args)
     {

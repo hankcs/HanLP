@@ -33,6 +33,12 @@ public class ImmutableFeatureMDatMap extends FeatureMap
         dat = new MutableDoubleArrayTrieInteger();
     }
 
+    public ImmutableFeatureMDatMap(TagSet tagSet)
+    {
+        super(tagSet);
+        dat = new MutableDoubleArrayTrieInteger();
+    }
+
     public ImmutableFeatureMDatMap(MutableDoubleArrayTrieInteger dat, TagSet tagSet)
     {
         super(tagSet);

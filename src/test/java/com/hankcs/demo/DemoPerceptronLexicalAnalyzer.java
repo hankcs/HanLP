@@ -12,6 +12,7 @@ package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
+import com.hankcs.hanlp.utility.TestUtility;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ import java.io.IOException;
  *
  * @author hankcs
  */
-public class DemoPerceptronLexicalAnalyzer
+public class DemoPerceptronLexicalAnalyzer extends TestUtility
 {
     public static void main(String[] args) throws IOException
     {

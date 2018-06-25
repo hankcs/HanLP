@@ -14,6 +14,7 @@ package com.hankcs.demo;
 
 import com.hankcs.hanlp.classification.classifiers.IClassifier;
 import com.hankcs.hanlp.classification.classifiers.NaiveBayesClassifier;
+import com.hankcs.hanlp.utility.TestUtility;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class DemoSentimentAnalysis
     /**
      * 中文情感挖掘语料-ChnSentiCorp 谭松波
      */
-    public static final String CORPUS_FOLDER = "data/test/ChnSentiCorp情感分析酒店评论";
+    public static final String CORPUS_FOLDER = TestUtility.ensureTestData("ChnSentiCorp情感分析酒店评论", "http://hanlp.linrunsoft.com/release/corpus/ChnSentiCorp.zip");
 
     public static void main(String[] args) throws IOException
     {

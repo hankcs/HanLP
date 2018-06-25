@@ -11,11 +11,11 @@
  */
 package com.hankcs.hanlp.seg.common;
 
+import com.hankcs.hanlp.utility.MathUtility;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
-import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.Iterator;
@@ -348,7 +348,7 @@ public class WordNet
                 int toIndex = row + from.realWord.length();
                 for (Vertex to : vertexes[toIndex])
                 {
-                    graph.connect(from.index, to.index, MathTools.calculateWeight(from, to));
+                    graph.connect(from.index, to.index, MathUtility.calculateWeight(from, to));
                 }
             }
         }

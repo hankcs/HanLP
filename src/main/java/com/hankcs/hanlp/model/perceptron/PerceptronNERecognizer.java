@@ -27,11 +27,11 @@ import java.io.IOException;
  *
  * @author hankcs
  */
-public class PerceptionNERecognizer extends PerceptronTagger implements NERecognizer
+public class PerceptronNERecognizer extends PerceptronTagger implements NERecognizer
 {
     final NERTagSet tagSet;
 
-    public PerceptionNERecognizer(LinearModel nerModel)
+    public PerceptronNERecognizer(LinearModel nerModel)
     {
         super(nerModel);
         if (nerModel.tagSet().type != TaskType.NER)
@@ -41,7 +41,7 @@ public class PerceptionNERecognizer extends PerceptronTagger implements NERecogn
         this.tagSet = (NERTagSet) model.tagSet();
     }
 
-    public PerceptionNERecognizer(String nerModelPath) throws IOException
+    public PerceptronNERecognizer(String nerModelPath) throws IOException
     {
         this(new LinearModel(nerModelPath));
     }
@@ -51,7 +51,7 @@ public class PerceptionNERecognizer extends PerceptronTagger implements NERecogn
      *
      * @throws IOException
      */
-    public PerceptionNERecognizer() throws IOException
+    public PerceptronNERecognizer() throws IOException
     {
         this(HanLP.Config.PerceptronNERModelPath);
     }

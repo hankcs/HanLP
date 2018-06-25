@@ -15,12 +15,145 @@ import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author hankcs
  */
 public class PosTagUtil
 {
+    private static Map<String, String> posConverter = new TreeMap<String, String>();
+    static
+    {
+        posConverter.put("Mg", "m");
+        posConverter.put("Rg", "r");
+        posConverter.put("ad", "a");
+        posConverter.put("ag", "a");
+        posConverter.put("al", "a");
+        posConverter.put("an", "a");
+        posConverter.put("begin", "x");
+        posConverter.put("bg", "b");
+        posConverter.put("bl", "b");
+        posConverter.put("cc", "c");
+        posConverter.put("dg", "d");
+        posConverter.put("dl", "d");
+        posConverter.put("end", "x");
+        posConverter.put("f", "nd");
+        posConverter.put("g", "nz");
+        posConverter.put("gb", "nz");
+        posConverter.put("gbc", "nz");
+        posConverter.put("gc", "nz");
+        posConverter.put("gg", "nz");
+        posConverter.put("gi", "nz");
+        posConverter.put("gm", "nz");
+        posConverter.put("gp", "nz");
+        posConverter.put("l", "i");
+        posConverter.put("mg", "m");
+        posConverter.put("mq", "m");
+        posConverter.put("nb", "nz");
+        posConverter.put("nba", "nz");
+        posConverter.put("nbc", "nz");
+        posConverter.put("nbp", "nz");
+        posConverter.put("nf", "n");
+        posConverter.put("ng", "n");
+        posConverter.put("nh", "nz");
+        posConverter.put("nhd", "nz");
+        posConverter.put("nhm", "nz");
+        posConverter.put("ni", "n");
+        posConverter.put("nic", "nt");
+        posConverter.put("nis", "nt");
+        posConverter.put("nit", "nt");
+        posConverter.put("nl", "n");
+        posConverter.put("nm", "nz");
+        posConverter.put("nmc", "nz");
+        posConverter.put("nn", "nz");
+        posConverter.put("nnd", "nz");
+        posConverter.put("nnt", "nz");
+        posConverter.put("nr", "nh");
+        posConverter.put("nr1", "nh");
+        posConverter.put("nr2", "nh");
+        posConverter.put("nrf", "nh");
+        posConverter.put("nrj", "nh");
+        posConverter.put("nsf", "ns");
+        posConverter.put("nt", "ni");
+        posConverter.put("ntc", "ni");
+        posConverter.put("ntcb", "ni");
+        posConverter.put("ntcf", "ni");
+        posConverter.put("ntch", "ni");
+        posConverter.put("nth", "ni");
+        posConverter.put("nto", "ni");
+        posConverter.put("nts", "ni");
+        posConverter.put("ntu", "ni");
+        posConverter.put("nx", "ws");
+        posConverter.put("pba", "p");
+        posConverter.put("pbei", "p");
+        posConverter.put("qg", "q");
+        posConverter.put("qt", "q");
+        posConverter.put("qv", "q");
+        posConverter.put("rg", "r");
+        posConverter.put("rr", "r");
+        posConverter.put("ry", "r");
+        posConverter.put("rys", "r");
+        posConverter.put("ryt", "r");
+        posConverter.put("ryv", "r");
+        posConverter.put("rz", "r");
+        posConverter.put("rzs", "r");
+        posConverter.put("rzt", "r");
+        posConverter.put("rzv", "r");
+        posConverter.put("s", "nl");
+        posConverter.put("t", "nt");
+        posConverter.put("tg", "nt");
+        posConverter.put("ud", "u");
+        posConverter.put("ude1", "u");
+        posConverter.put("ude2", "u");
+        posConverter.put("ude3", "u");
+        posConverter.put("udeng", "u");
+        posConverter.put("udh", "u");
+        posConverter.put("ug", "u");
+        posConverter.put("uguo", "u");
+        posConverter.put("uj", "u");
+        posConverter.put("ul", "u");
+        posConverter.put("ule", "u");
+        posConverter.put("ulian", "u");
+        posConverter.put("uls", "u");
+        posConverter.put("usuo", "u");
+        posConverter.put("uv", "u");
+        posConverter.put("uyy", "u");
+        posConverter.put("uz", "u");
+        posConverter.put("uzhe", "u");
+        posConverter.put("uzhi", "u");
+        posConverter.put("vd", "v");
+        posConverter.put("vf", "v");
+        posConverter.put("vg", "v");
+        posConverter.put("vi", "v");
+        posConverter.put("vl", "v");
+        posConverter.put("vn", "v");
+        posConverter.put("vshi", "v");
+        posConverter.put("vx", "v");
+        posConverter.put("vyou", "v");
+        posConverter.put("w", "wp");
+        posConverter.put("wb", "wp");
+        posConverter.put("wd", "wp");
+        posConverter.put("wf", "wp");
+        posConverter.put("wh", "wp");
+        posConverter.put("wj", "wp");
+        posConverter.put("wky", "wp");
+        posConverter.put("wkz", "wp");
+        posConverter.put("wm", "wp");
+        posConverter.put("wn", "wp");
+        posConverter.put("ws", "wp");
+        posConverter.put("wt", "wp");
+        posConverter.put("ww", "wp");
+        posConverter.put("wyy", "wp");
+        posConverter.put("wyz", "wp");
+        posConverter.put("xu", "x");
+        posConverter.put("xx", "x");
+        posConverter.put("y", "e");
+        posConverter.put("yg", "u");
+        posConverter.put("z", "u");
+        posConverter.put("zg", "u");
+    }
     /**
      * 转为863标注集<br>
      * 863词性标注集，其各个词性含义如下表：
@@ -48,245 +181,9 @@ public class PosTagUtil
         List<String> posTagList = new ArrayList<String>(termList.size());
         for (Term term : termList)
         {
-            String posTag = "x";
-            switch (term.nature)
-            {
-                case bg:
-                    posTag = "b";
-                    break;
-                case mg:
-                    posTag = "m";
-                    break;
-                case nl:
-                    posTag = "n";
-                    break;
-                case nx:
-                    posTag = "ws";
-                    break;
-                case qg:
-                    posTag = "q";
-                    break;
-                case ud:
-                case uj:
-                case uz:
-                case ug:
-                case ul:
-                case uv:
-                    posTag = "u";
-                    break;
-                case yg:
-                    posTag = "u";
-                    break;
-                case zg:
-                    posTag = "u";
-                    break;
-                case n:
-                    posTag = "n";
-                    break;
-                case nr:
-                case nrj:
-                case nrf:
-                case nr1:
-                case nr2:
-                    posTag = "nh";
-                    break;
-                case ns:
-                case nsf:
-                    posTag = "ns";
-                    break;
-                case nt:
-                case ntc:
-                case ntcf:
-                case ntcb:
-                case ntch:
-                case nto:
-                case ntu:
-                case nts:
-                case nth:
-                    posTag = "ni";
-                    break;
-                case nh:
-                case nhm:
-                case nhd:
-                case nn:
-                case nnt:
-                case nnd:
-                    posTag = "nz";
-                    break;
-                case ng:
-                    posTag = "n";
-                    break;
-                case nf:
-                    posTag = "n";
-                    break;
-                case ni:
-                    posTag = "n";
-                    break;
-                case nit:
-                case nic:
-                case nis:
-                    posTag = "nt";
-                    break;
-                case nm:
-                case nmc:
-                case nb:
-                case nba:
-                case nbc:
-                case nbp:
-                case nz:
-                    posTag = "nz";
-                    break;
-                case g:
-                case gm:
-                case gp:
-                case gc:
-                case gb:
-                case gbc:
-                case gg:
-                case gi:
-                    posTag = "nz";
-                    break;
-                case j:
-                    posTag = "j";
-                    break;
-                case i:
-                    posTag = "i";
-                    break;
-                case l:
-                    posTag = "i";
-                    break;
-                case t:
-                    posTag = "nt";
-                    break;
-                case tg:
-                    posTag = "nt";
-                    break;
-                case s:
-                    posTag = "nl";
-                    break;
-                case f:
-                    posTag = "nd";
-                    break;
-                case v:
-                case vd:
-                case vn:
-                case vshi:
-                case vyou:
-                case vf:
-                case vx:
-                case vi:
-                case vl:
-                case vg:
-                    posTag = "v";
-                    break;
-                case a:
-                case ad:
-                case an:
-                case ag:
-                case al:
-                    posTag = "a";
-                    break;
-                case b:
-                case bl:
-                    posTag = "b";
-                    break;
-                case z:
-                    posTag = "u";
-                    break;
-                case r:
-                case rr:
-                case rz:
-                case rzt:
-                case rzs:
-                case rzv:
-                case ry:
-                case ryt:
-                case rys:
-                case ryv:
-                case rg:
-                case Rg:
-                    posTag = "r";
-                    break;
-                case m:
-                case mq:
-                case Mg:
-                    posTag = "m";
-                    break;
-                case q:
-                case qv:
-                case qt:
-                    posTag = "q";
-                    break;
-                case d:
-                case dg:
-                case dl:
-                    posTag = "d";
-                    break;
-                case p:
-                case pba:
-                case pbei:
-                    posTag = "p";
-                    break;
-                case c:
-                case cc:
-                    posTag = "c";
-                    break;
-                case u:
-                case uzhe:
-                case ule:
-                case uguo:
-                case ude1:
-                case ude2:
-                case ude3:
-                case usuo:
-                case udeng:
-                case uyy:
-                case udh:
-                case uls:
-                case uzhi:
-                case ulian:
-                    posTag = "u";
-                    break;
-                case e:
-                    posTag = "e";
-                    break;
-                case y:
-                    posTag = "e";
-                    break;
-                case o:
-                    posTag = "o";
-                    break;
-                case h:
-                    posTag = "h";
-                    break;
-                case k:
-                    posTag = "k";
-                    break;
-                case x:
-                case xx:
-                case xu:
-                    posTag = "x";
-                    break;
-                case w:
-                case wkz:
-                case wky:
-                case wyz:
-                case wyy:
-                case wj:
-                case ww:
-                case wt:
-                case wd:
-                case wf:
-                case wn:
-                case wm:
-                case ws:
-                case wp:
-                case wb:
-                case wh:
-                    posTag = "wp";
-                    break;
-            }
-
+            String posTag = posConverter.get(term.nature.toString());
+            if (posTag == null)
+                posTag = term.nature.toString();
             posTagList.add(posTag);
         }
 

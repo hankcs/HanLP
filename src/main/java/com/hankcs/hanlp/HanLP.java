@@ -224,10 +224,25 @@ public class HanLP
                 {  // IKVM (v.0.44.0.5) doesn't set context classloader
                     loader = HanLP.Config.class.getClassLoader();
                 }
-                p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
-                                                 loader.getResourceAsStream("hanlp.properties") :
-                                                 new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
-                    , "UTF-8"));
+                try
+                {
+                    p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
+                                                     loader.getResourceAsStream("hanlp.properties") :
+                                                     new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
+                        , "UTF-8"));
+                }
+                catch (Exception e)
+                {
+                    String HANLP_ROOT = System.getenv("HANLP_ROOT");
+                    if (HANLP_ROOT != null)
+                    {
+                        HANLP_ROOT = HANLP_ROOT.trim();
+                        p = new Properties();
+                        p.setProperty("root", HANLP_ROOT);
+                        logger.info("使用环境变量 HANLP_ROOT=" + HANLP_ROOT);
+                    }
+                    else throw e;
+                }
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (root.length() > 0 && !root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
@@ -313,26 +328,40 @@ public class HanLP
             }
             catch (Exception e)
             {
-                StringBuilder sbInfo = new StringBuilder("========Tips========\n请将hanlp.properties放在下列目录：\n"); // 打印一些友好的tips
-                String classPath = (String) System.getProperties().get("java.class.path");
-                if (classPath != null)
+                if (new File("data/dictionary/CoreNatureDictionary.tr.txt").isFile())
                 {
-                    for (String path : classPath.split(File.pathSeparator))
-                    {
-                        if (new File(path).isDirectory())
-                        {
-                            sbInfo.append(path).append('\n');
-                        }
-                    }
+                    logger.info("使用当前目录下的data");
                 }
-                sbInfo.append("Web项目则请放到下列目录：\n" +
-                                      "Webapp/WEB-INF/lib\n" +
-                                      "Webapp/WEB-INF/classes\n" +
-                                      "Appserver/lib\n" +
-                                      "JRE/lib\n");
-                sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
-                sbInfo.append("现在HanLP将尝试从jar包内部resource读取data……");
-                logger.info("hanlp.properties，进入portable模式。若需要自定义HanLP，请按下列提示操作：\n" + sbInfo);
+                else
+                {
+                    StringBuilder sbInfo = new StringBuilder("========Tips========\n请将hanlp.properties放在下列目录：\n"); // 打印一些友好的tips
+                    if (new File("src/main/java").isDirectory())
+                    {
+                        sbInfo.append("src/main/resources");
+                    }
+                    else
+                    {
+                        String classPath = (String) System.getProperties().get("java.class.path");
+                        if (classPath != null)
+                        {
+                            for (String path : classPath.split(File.pathSeparator))
+                            {
+                                if (new File(path).isDirectory())
+                                {
+                                    sbInfo.append(path).append('\n');
+                                }
+                            }
+                        }
+                        sbInfo.append("Web项目则请放到下列目录：\n" +
+                                          "Webapp/WEB-INF/lib\n" +
+                                          "Webapp/WEB-INF/classes\n" +
+                                          "Appserver/lib\n" +
+                                          "JRE/lib\n");
+                        sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
+                        sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
+                    }
+                    logger.severe("没有找到hanlp.properties，可能会导致找不到data\n" + sbInfo);
+                }
             }
         }
 

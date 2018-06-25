@@ -16,6 +16,7 @@ import com.hankcs.hanlp.classification.classifiers.IClassifier;
 import com.hankcs.hanlp.classification.classifiers.NaiveBayesClassifier;
 import com.hankcs.hanlp.classification.models.NaiveBayesModel;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.utility.TestUtility;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,11 +31,12 @@ public class DemoTextClassification
     /**
      * 搜狗文本分类语料库5个类目，每个类目下1000篇文章，共计5000篇文章
      */
-    public static final String CORPUS_FOLDER = "data/test/搜狗文本分类语料库迷你版";
+    public static final String CORPUS_FOLDER = TestUtility.ensureTestData("搜狗文本分类语料库迷你版", "http://hanlp.linrunsoft.com/release/corpus/sogou-text-classification-corpus-mini.zip");
     /**
      * 模型保存路径
      */
     public static final String MODEL_PATH = "data/test/classification-model.ser";
+
 
     public static void main(String[] args) throws IOException
     {

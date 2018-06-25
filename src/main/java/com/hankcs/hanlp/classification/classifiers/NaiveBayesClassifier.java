@@ -1,6 +1,6 @@
 package com.hankcs.hanlp.classification.classifiers;
 
-import com.hankcs.hanlp.classification.utilities.MathUtility;
+import com.hankcs.hanlp.utility.MathUtility;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.classification.corpus.*;
 import com.hankcs.hanlp.classification.features.ChiSquareFeatureExtractor;

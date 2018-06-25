@@ -14,7 +14,6 @@ package com.hankcs.hanlp.corpus.document;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
-import com.hankcs.hanlp.corpus.io.FolderWalker;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
 import java.io.File;
@@ -31,7 +30,7 @@ public class CorpusLoader
     public static void walk(String folderPath, Handler handler)
     {
         long start = System.currentTimeMillis();
-        List<File> fileList = FolderWalker.open(folderPath);
+        List<File> fileList = IOUtil.fileList(folderPath);
         int i = 0;
         for (File file : fileList)
         {
@@ -46,7 +45,7 @@ public class CorpusLoader
     public static void walk(String folderPath, HandlerThread[] threadArray)
     {
         long start = System.currentTimeMillis();
-        List<File> fileList = FolderWalker.open(folderPath);
+        List<File> fileList = IOUtil.fileList(folderPath);
         for (int i = 0; i < threadArray.length - 1; ++i)
         {
             threadArray[i].fileList = fileList.subList(fileList.size() / threadArray.length * i, fileList.size() / threadArray.length * (i + 1));
@@ -70,19 +69,34 @@ public class CorpusLoader
 
     public static List<Document> convert2DocumentList(String folderPath)
     {
+        return convert2DocumentList(folderPath, false);
+    }
+
+    /**
+     * 读取整个目录中的人民日报格式语料
+     *
+     * @param folderPath 路径
+     * @param verbose
+     * @return
+     */
+    public static List<Document> convert2DocumentList(String folderPath, boolean verbose)
+    {
         long start = System.currentTimeMillis();
-        List<File> fileList = FolderWalker.open(folderPath);
+        List<File> fileList = IOUtil.fileList(folderPath);
         List<Document> documentList = new LinkedList<Document>();
         int i = 0;
         for (File file : fileList)
         {
-            System.out.print(file);
+            if (verbose) System.out.print(file);
             Document document = convert2Document(file);
             documentList.add(document);
-            System.out.println(" " + ++i + " / " + fileList.size());
+            if (verbose) System.out.println(" " + ++i + " / " + fileList.size());
         }
-        System.out.println(documentList.size());
-        System.out.printf("花费时间%d ms\n", System.currentTimeMillis() - start);
+        if (verbose)
+        {
+            System.out.println(documentList.size());
+            System.out.printf("花费时间%d ms\n", System.currentTimeMillis() - start);
+        }
         return documentList;
     }
 

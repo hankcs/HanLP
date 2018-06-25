@@ -38,6 +38,15 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable
         status = Status.NOT_WORD_1;
     }
 
+    public BinTrie(Map<String, V> map)
+    {
+        this();
+        for (Map.Entry<String, V> entry : map.entrySet())
+        {
+            put(entry.getKey(), entry.getValue());
+        }
+    }
+
     /**
      * 插入一个词
      *

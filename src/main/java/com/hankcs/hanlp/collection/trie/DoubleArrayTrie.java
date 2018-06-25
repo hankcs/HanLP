@@ -390,7 +390,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     public int build(List<String> _key, int _length[], int _value[],
                      int _keySize)
     {
-        if (_keySize > _key.size() || _key == null)
+        if (_key == null || _keySize > _key.size())
             return 0;
 
         // progress_func_ = progress_func;
@@ -1321,6 +1321,21 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             }
 
             return false;
+        }
+    }
+
+    /**
+     * 全切分
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public void parseText(String text, AhoCorasickDoubleArrayTrie.IHit<V> processor)
+    {
+        Searcher searcher = getSearcher(text, 0);
+        while (searcher.next())
+        {
+            processor.hit(searcher.begin, searcher.begin + searcher.length, searcher.value);
         }
     }
 
