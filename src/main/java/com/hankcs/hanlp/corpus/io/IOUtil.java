@@ -95,10 +95,10 @@ public class IOUtil
             InputStream in = IOAdapter == null ? new FileInputStream(path) :
                     IOAdapter.open(path);
             byte[] fileContent = new byte[in.available()];
-            readBytesFromOtherInputStream(in, fileContent);
+            int read = readBytesFromOtherInputStream(in, fileContent);
             in.close();
             // 处理 UTF-8 BOM
-            if (fileContent[0] == -17 && fileContent[1] == -69 && fileContent[2] == -65)
+            if (read >= 3 && fileContent[0] == -17 && fileContent[1] == -69 && fileContent[2] == -65)
                 return new String(fileContent, 3, fileContent.length - 3, Charset.forName("UTF-8"));
             return new String(fileContent, Charset.forName("UTF-8"));
         }
@@ -292,7 +292,7 @@ public class IOUtil
     public static int readBytesFromOtherInputStream(InputStream is, byte[] targetArray) throws IOException
     {
         assert targetArray != null;
-        assert targetArray.length > 0;
+        if (targetArray.length == 0) return 0;
         int len;
         int off = 0;
         while (off < targetArray.length && (len = is.read(targetArray, off, targetArray.length - off)) != -1)
