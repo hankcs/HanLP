@@ -17,6 +17,7 @@ import com.hankcs.hanlp.model.perceptron.feature.LockableFeatureMap;
 import com.hankcs.hanlp.model.perceptron.model.AveragedPerceptron;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -49,16 +50,16 @@ public abstract class PerceptronClassifier
 
     /**
      * 朴素感知机训练算法
-     *
-     * @param instanceList 训练实例
+     *  @param instanceList 训练实例
      * @param featureMap   特征函数
      * @param maxIteration 训练迭代次数
      */
-    private static LinearModel trainNaivePerceptron(List<Instance> instanceList, FeatureMap featureMap, int maxIteration)
+    private static LinearModel trainNaivePerceptron(Instance[] instanceList, FeatureMap featureMap, int maxIteration)
     {
         LinearModel model = new LinearModel(featureMap, new float[featureMap.size()]);
         for (int it = 0; it < maxIteration; ++it)
         {
+            Utility.shuffleArray(instanceList);
             for (Instance instance : instanceList)
             {
                 int y = model.decode(instance.x);
@@ -71,12 +72,11 @@ public abstract class PerceptronClassifier
 
     /**
      * 平均感知机训练算法
-     *
-     * @param instanceList 训练实例
+     *  @param instanceList 训练实例
      * @param featureMap   特征函数
      * @param maxIteration 训练迭代次数
      */
-    private static LinearModel trainAveragedPerceptron(List<Instance> instanceList, FeatureMap featureMap, int maxIteration)
+    private static LinearModel trainAveragedPerceptron(Instance[] instanceList, FeatureMap featureMap, int maxIteration)
     {
         float[] parameter = new float[featureMap.size()];
         double[] sum = new double[featureMap.size()];
@@ -86,6 +86,7 @@ public abstract class PerceptronClassifier
         int t = 0;
         for (int it = 0; it < maxIteration; ++it)
         {
+            Utility.shuffleArray(instanceList);
             for (Instance instance : instanceList)
             {
                 ++t;
@@ -122,7 +123,7 @@ public abstract class PerceptronClassifier
     {
         FeatureMap featureMap = new LockableFeatureMap(new TagSet(TaskType.CLASSIFICATION));
         featureMap.mutable = true; // 训练时特征映射可拓充
-        List<Instance> instanceList = readInstance(corpus, featureMap);
+        Instance[] instanceList = readInstance(corpus, featureMap);
         model = averagePerceptron ? trainAveragedPerceptron(instanceList, featureMap, maxIteration)
             : trainNaivePerceptron(instanceList, featureMap, maxIteration);
         featureMap.mutable = false; // 训练结束后特征不可写
@@ -151,7 +152,7 @@ public abstract class PerceptronClassifier
      */
     public BinaryClassificationFMeasure evaluate(String corpus)
     {
-        List<Instance> instanceList = readInstance(corpus, model.featureMap);
+        Instance[] instanceList = readInstance(corpus, model.featureMap);
         return evaluate(instanceList);
     }
 
@@ -161,7 +162,7 @@ public abstract class PerceptronClassifier
      * @param instanceList
      * @return
      */
-    public BinaryClassificationFMeasure evaluate(List<Instance> instanceList)
+    public BinaryClassificationFMeasure evaluate(Instance[] instanceList)
     {
         int TP = 0, FP = 0, FN = 0;
         for (Instance instance : instanceList)
@@ -189,7 +190,7 @@ public abstract class PerceptronClassifier
      * @param featureMap 特征映射
      * @return 数据集
      */
-    private List<Instance> readInstance(String corpus, FeatureMap featureMap)
+    private Instance[] readInstance(String corpus, FeatureMap featureMap)
     {
         IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(corpus);
         List<Instance> instanceList = new LinkedList<Instance>();
@@ -205,7 +206,7 @@ public abstract class PerceptronClassifier
                 throw new IllegalArgumentException("类别数大于2，目前只支持二分类。");
             instanceList.add(new Instance(x, y));
         }
-        return instanceList;
+        return instanceList.toArray(new Instance[0]);
     }
 
     /**
