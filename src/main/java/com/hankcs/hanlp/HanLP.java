@@ -223,10 +223,25 @@ public class HanLP
                 {  // IKVM (v.0.44.0.5) doesn't set context classloader
                     loader = HanLP.Config.class.getClassLoader();
                 }
-                p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
-                                                 loader.getResourceAsStream("hanlp.properties") :
-                                                 new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
-                    , "UTF-8"));
+                try
+                {
+                    p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
+                                                     loader.getResourceAsStream("hanlp.properties") :
+                                                     new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
+                        , "UTF-8"));
+                }
+                catch (Exception e)
+                {
+                    String HANLP_ROOT = System.getenv("HANLP_ROOT");
+                    if (HANLP_ROOT != null)
+                    {
+                        HANLP_ROOT = HANLP_ROOT.trim();
+                        p = new Properties();
+                        p.setProperty("root", HANLP_ROOT);
+                        logger.info("使用环境变量 HANLP_ROOT=" + HANLP_ROOT);
+                    }
+                    else throw e;
+                }
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (root.length() > 0 && !root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
