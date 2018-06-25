@@ -28,7 +28,7 @@ public class TestUtility
 
     public static void ensureFullData()
     {
-        ensureData("data/model/crf", "http://nlp.hankcs.com/download.php?file=data", ".");
+        ensureData("data/model/crf", "http://nlp.hankcs.com/download.php?file=data", ".", false);
     }
 
     /**
@@ -40,7 +40,7 @@ public class TestUtility
      */
     public static String ensureData(String name, String url)
     {
-        return ensureData(name, url, null);
+        return ensureData(name, url, null, true);
     }
 
     /**
@@ -50,7 +50,7 @@ public class TestUtility
      * @param url  下载地址
      * @return name的绝对路径
      */
-    public static String ensureData(String name, String url, String parentPath)
+    public static String ensureData(String name, String url, String parentPath, boolean overwrite)
     {
         File target = new File(name);
         if (target.exists()) return target.getAbsolutePath();
@@ -61,7 +61,7 @@ public class TestUtility
             String filePath = downloadFile(url, parentFile.getAbsolutePath());
             if (filePath.endsWith(".zip"))
             {
-                unzip(filePath, parentFile.getAbsolutePath());
+                unzip(filePath, parentFile.getAbsolutePath(), overwrite);
             }
             return target.getAbsolutePath();
         }
@@ -186,7 +186,7 @@ public class TestUtility
         }
     }
 
-    private static void unzip(String zipFilePath, String destDir)
+    private static void unzip(String zipFilePath, String destDir, boolean overwrite)
     {
         System.err.println("Unzipping to " + destDir);
         File dir = new File(destDir);
@@ -204,23 +204,26 @@ public class TestUtility
             {
                 String fileName = ze.getName();
                 File newFile = new File(destDir + File.separator + fileName);
-                //create directories for sub directories in zip
-                if (ze.isDirectory())
+                if (overwrite || !newFile.exists())
                 {
-                    newFile.mkdirs();
-                }
-                else
-                {
-                    new File(newFile.getParent()).mkdirs();
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0)
+                    if (ze.isDirectory())
                     {
-                        fos.write(buffer, 0, len);
+                        //create directories for sub directories in zip
+                        newFile.mkdirs();
                     }
-                    fos.close();
-                    //close this ZipEntry
-                    zis.closeEntry();
+                    else
+                    {
+                        new File(newFile.getParent()).mkdirs();
+                        FileOutputStream fos = new FileOutputStream(newFile);
+                        int len;
+                        while ((len = zis.read(buffer)) > 0)
+                        {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
+                        //close this ZipEntry
+                        zis.closeEntry();
+                    }
                 }
                 ze = zis.getNextEntry();
             }
