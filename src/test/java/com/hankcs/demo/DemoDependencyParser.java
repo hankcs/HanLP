@@ -14,12 +14,13 @@ package com.hankcs.demo;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
+import com.hankcs.hanlp.utility.TestUtility;
 
 /**
  * 依存句法分析（CRF句法模型需要-Xms512m -Xmx512m -Xmn256m，MaxEnt和神经网络句法模型需要-Xms1g -Xmx1g -Xmn512m）
  * @author hankcs
  */
-public class DemoDependencyParser
+public class DemoDependencyParser extends TestUtility
 {
     public static void main(String[] args)
     {

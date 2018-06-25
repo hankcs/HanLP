@@ -73,15 +73,16 @@ public class TestMakeTranslateName extends TestCase
 //        IOUtil.saveCollectionToTxt(wordSet, "data/dictionary/person/音译用字.txt");
 //    }
 //
-//    public void testQuery() throws Exception
-//    {
+    public void testQuery() throws Exception
+    {
+        assertTrue(TranslatedPersonDictionary.containsKey("汤姆"));
 //        HanLP.Config.enableDebug();
 //        System.out.println(TranslatedPersonDictionary.containsKey("汤姆"));
 //        System.out.println(TranslatedPersonDictionary.containsKey("汤"));
 //        System.out.println(TranslatedPersonDictionary.containsKey("姆"));
 //        System.out.println(TranslatedPersonDictionary.containsKey("点"));
 //        System.out.println(TranslatedPersonDictionary.containsKey("·"));
-//    }
+    }
 //
 //    public void testSeg() throws Exception
 //    {

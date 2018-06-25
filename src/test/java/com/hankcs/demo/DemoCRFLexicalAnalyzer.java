@@ -11,6 +11,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
+import com.hankcs.hanlp.utility.TestUtility;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ import java.io.IOException;
  * CRF词法分析器
  * @author hankcs
  */
-public class DemoCRFLexicalAnalyzer
+public class DemoCRFLexicalAnalyzer extends TestUtility
 {
     public static void main(String[] args) throws IOException
     {

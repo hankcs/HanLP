@@ -5,6 +5,7 @@ import com.hankcs.hanlp.collection.MDAG.MDAGSet;
 import com.hankcs.hanlp.collection.trie.bintrie.BinTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.utility.TestUtility;
 import junit.framework.TestCase;
 
 import java.io.DataOutputStream;
@@ -27,6 +28,7 @@ public class MDAGSetTest extends TestCase
 
     public void setUp() throws Exception
     {
+        TestUtility.ensureFullData();
         tempFile = File.createTempFile("hanlp-", ".bin");
         DATA_TEST_OUT_BIN = tempFile.getAbsolutePath();
         IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/custom/CustomDictionary.txt");

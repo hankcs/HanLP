@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class DemoWord2Vec
 {
-    private static final String TRAIN_FILE_NAME = TestUtility.ensureData("搜狗文本分类语料库已分词.txt", "http://hanlp.linrunsoft.com/release/corpus/sogou-mini-segmented.zip");
+    private static final String TRAIN_FILE_NAME = TestUtility.ensureTestData("搜狗文本分类语料库已分词.txt", "http://hanlp.linrunsoft.com/release/corpus/sogou-mini-segmented.zip");
     private static final String MODEL_FILE_NAME = "data/test/word2vec.txt";
 
     public static void main(String[] args) throws IOException
