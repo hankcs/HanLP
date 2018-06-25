@@ -65,10 +65,21 @@ public class LinearModel implements ICacheAble
     }
 
     /**
+     * 模型压缩
      * @param ratio 压缩比c（压缩掉的体积，压缩后体积变为1-c）
      * @return
      */
     public LinearModel compress(final double ratio)
+    {
+        return compress(ratio, 1e-3f);
+    }
+
+    /**
+     * @param ratio 压缩比c（压缩掉的体积，压缩后体积变为1-c）
+     * @param threshold 特征权重绝对值之和最低阈值
+     * @return
+     */
+    public LinearModel compress(final double ratio, final double threshold)
     {
         if (ratio < 0 || ratio >= 1)
         {
@@ -93,7 +104,7 @@ public class LinearModel implements ICacheAble
                 continue;
             }
             FeatureSortItem item = new FeatureSortItem(entry, this.parameter, tagSet.size());
-            if (item.total < 1e-3f) continue;
+            if (item.total < threshold) continue;
             heap.add(item);
         }
 
@@ -166,7 +177,7 @@ public class LinearModel implements ICacheAble
     public void save(String modelFile, Set<Map.Entry<String, Integer>> featureIdSet, final double ratio, boolean text) throws IOException
     {
         float[] parameter = this.parameter;
-        this.compress(ratio);
+        this.compress(ratio, 1e-3f);
 
         DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(modelFile)));
         save(out);
