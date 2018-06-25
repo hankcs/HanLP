@@ -75,7 +75,7 @@ HanLP: Han Language Processing
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.6.4</version>
+    <version>portable-1.6.5</version>
 </dependency>
 ```
 
