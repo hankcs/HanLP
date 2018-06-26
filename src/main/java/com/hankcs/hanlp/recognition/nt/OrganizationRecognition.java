@@ -85,19 +85,21 @@ public class OrganizationRecognition
                 if (vertex.getAttribute().totalFrequency <= 1000)
                 {
                     tagList.add(new EnumItem<NT>(NT.F, 1000));
+                    continue;
                 }
-                else break;
             }
             else if (nature == ni || nature == nic || nature == nis || nature == nit)
             {
                 EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.K, 1000);
                 ntEnumItem.addLabel(NT.D, 1000);
                 tagList.add(ntEnumItem);
+                continue;
             }
             else if (nature == m)
             {
                 EnumItem<NT> ntEnumItem = new EnumItem<NT>(NT.M, 1000);
                 tagList.add(ntEnumItem);
+                continue;
             }
 
             EnumItem<NT> NTEnumItem = OrganizationDictionary.dictionary.get(vertex.word);  // 此处用等效词，更加精准
