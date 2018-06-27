@@ -322,7 +322,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
 
     public Result train(String trainingFile, String developFile, String modelFile) throws IOException
     {
-        return train(trainingFile, developFile, modelFile, 0.1, 10, Runtime.getRuntime().availableProcessors());
+        return train(trainingFile, developFile, modelFile, 0.1, 50, Runtime.getRuntime().availableProcessors());
     }
 
     private static void loadWordFromFile(String path, FrequencyMap storage, boolean segmented) throws IOException
