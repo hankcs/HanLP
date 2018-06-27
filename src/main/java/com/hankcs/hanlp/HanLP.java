@@ -169,12 +169,6 @@ public class HanLP
          */
         public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
-         * CRF依存模型
-         *
-         * @deprecated 已废弃，请使用{@link NeuralNetworkDependencyParser}
-         */
-        public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
-        /**
          * CRF分词模型
          */
         public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.bin";
@@ -286,7 +280,6 @@ public class HanLP
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
-                CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 CRFCWSModelPath = root + p.getProperty("CRFCWSModelPath", CRFCWSModelPath);
                 CRFPOSModelPath = root + p.getProperty("CRFPOSModelPath", CRFPOSModelPath);
