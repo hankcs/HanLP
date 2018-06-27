@@ -1,5 +1,6 @@
 package com.hankcs.hanlp.model.perceptron;
 
+import com.hankcs.hanlp.utility.TestUtility;
 import junit.framework.TestCase;
 
 public class PerceptronNameGenderClassifierTest extends TestCase
@@ -7,6 +8,13 @@ public class PerceptronNameGenderClassifierTest extends TestCase
     public static String TRAINING_SET = "data/test/cnname/train.csv";
     public static String TESTING_SET = "data/test/cnname/test.csv";
     public static String MODEL = "data/test/cnname.bin";
+
+    @Override
+    public void setUp() throws Exception
+    {
+        super.setUp();
+        TestUtility.ensureTestData("cnname", "http://file.hankcs.com/corpus/cnname.zip");
+    }
 
     public void testTrain() throws Exception
     {

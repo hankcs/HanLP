@@ -57,7 +57,7 @@ public class DemoCustomNature
         StandardTokenizer.SEGMENT.enablePartOfSpeechTagging(true);  // 依然支持隐马词性标注
         termList = HanLP.segment("苹果电脑可以运行开源阿尔法狗代码吗");
         System.out.println(termList);
-        // 1.6.5之后Nature不再是枚举类型，无法switch。但终于不再设计反射了，在各种JRE环境下都更稳定。
+        // 1.6.5之后Nature不再是枚举类型，无法switch。但终于不再涉及反射了，在各种JRE环境下都更稳定。
         for (Term term : termList)
         {
             if (term.nature == n)
