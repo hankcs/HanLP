@@ -69,6 +69,11 @@ public class PerceptronSegmenter extends PerceptronTagger implements Segmenter
     {
         if (text.isEmpty()) return;
         Instance instance = new CWSInstance(normalized, model.featureMap);
+        segment(text, instance, output);
+    }
+
+    public void segment(String text, Instance instance, List<String> output)
+    {
         int[] tagArray = instance.tagArray;
         model.viterbiDecode(instance, tagArray);
 

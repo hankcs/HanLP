@@ -16,6 +16,7 @@ import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -78,7 +79,7 @@ public class FeatureTemplate implements ICacheAble
     }
 
     @Override
-    public void save(DataOutputStream out) throws Exception
+    public void save(DataOutputStream out) throws IOException
     {
         out.writeUTF(template);
         out.writeInt(offsetList.size());
@@ -121,5 +122,10 @@ public class FeatureTemplate implements ICacheAble
         sb.append(", delimiterList=").append(delimiterList);
         sb.append('}');
         return sb.toString();
+    }
+
+    public String getTemplate()
+    {
+        return template;
     }
 }

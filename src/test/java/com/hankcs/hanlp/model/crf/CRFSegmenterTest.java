@@ -31,7 +31,7 @@ public class CRFSegmenterTest extends TestCase
 
     public void testLoad() throws Exception
     {
-        CRFSegmenter segmenter = new CRFSegmenter(CWS_MODEL_PATH);
+        CRFSegmenter segmenter = new CRFSegmenter("data/test/converted.txt");
         List<String> wordList = segmenter.segment("商品和服务");
         System.out.println(wordList);
     }

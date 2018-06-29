@@ -17,6 +17,9 @@ import java.io.IOException;
 
 /**
  * CRF词法分析器
+ * 自1.6.6版起模型格式不兼容旧版：CRF模型为对数线性模型{@link com.hankcs.hanlp.model.crf.LogLinearModel}，
+ * 通过复用结构化感知机的维特比解码算法，效率提高10倍。
+ *
  * @author hankcs
  */
 public class DemoCRFLexicalAnalyzer extends TestUtility
