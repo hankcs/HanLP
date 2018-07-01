@@ -17,7 +17,7 @@ public class crf_test
 {
     private static class Option
     {
-        @Argument(description = "set FILE for model file", alias = "m")
+        @Argument(description = "set FILE for model file", alias = "m", required = true)
         String model;
         @Argument(description = "output n-best results", alias = "n")
         Integer nbest = 0;
