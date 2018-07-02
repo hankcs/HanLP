@@ -145,8 +145,7 @@ public class CRFSegmenter extends CRFTagger implements Segmenter
             "U3:%x[-2,0]%x[-1,0]\n" +
             "U4:%x[-1,0]%x[0,0]\n" +
             "U5:%x[0,0]%x[1,0]\n" +
-            "U6:%x[-1,0]%x[1,0]\n" +
-            "U7:%x[1,0]%x[2,0]\n" +
+            "U6:%x[1,0]%x[2,0]\n" +
             "\n" +
             "# Bigram\n" +
             "B";
