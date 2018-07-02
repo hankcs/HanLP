@@ -231,7 +231,7 @@ public class LogLinearModel extends LinearModel
                 if (feature.startsWith(header))
                 {
                     int fid = featureMap.idOf(feature.substring(header.length()) + tid);
-                    assert id == sizeOfTagSet * sizeOfTagSet + (fid - 5) * sizeOfTagSet;
+//                    assert id == sizeOfTagSet * sizeOfTagSet + (fid - sizeOfTagSet - 1) * sizeOfTagSet;
                     for (int i = 0; i < sizeOfTagSet; ++i)
                     {
                         parameter[fid * sizeOfTagSet + i] = (float) f.w[i];

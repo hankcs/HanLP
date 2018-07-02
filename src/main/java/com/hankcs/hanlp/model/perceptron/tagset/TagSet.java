@@ -94,7 +94,9 @@ public class TagSet implements IIdStringMap, IStringIdMap, Iterable<Map.Entry<St
     @Override
     public int idOf(String string)
     {
-        return stringIdMap.get(string);
+        Integer id = stringIdMap.get(string);
+        if (id == null) id = -1;
+        return id;
     }
 
     @Override
