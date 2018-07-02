@@ -311,6 +311,13 @@ public class Utility
         return stat;
     }
 
+    /**
+     * 将句子转换为 （单词，词性，NER标签）三元组
+     *
+     * @param sentence
+     * @param tagSet
+     * @return
+     */
     public static List<String[]> convertSentenceToNER(Sentence sentence, NERTagSet tagSet)
     {
         List<String[]> collector = new LinkedList<String[]>();
