@@ -172,15 +172,15 @@ public class HanLP
         /**
          * CRF分词模型
          */
-        public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.bin";
+        public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.txt";
         /**
          * CRF词性标注模型
          */
-        public static String CRFPOSModelPath = "data/model/crf/pku199801/pos.bin";
+        public static String CRFPOSModelPath = "data/model/crf/pku199801/pos.txt";
         /**
          * CRF命名实体识别模型
          */
-        public static String CRFNERModelPath = "data/model/crf/pku199801/ner.bin";
+        public static String CRFNERModelPath = "data/model/crf/pku199801/ner.txt";
         /**
          * 感知机分词模型
          */

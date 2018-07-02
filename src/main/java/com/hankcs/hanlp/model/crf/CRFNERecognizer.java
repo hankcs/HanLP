@@ -55,6 +55,7 @@ public class CRFNERecognizer extends CRFTagger implements NERecognizer
         else
         {
             perceptronNERecognizer = new PerceptronNERecognizer(this.model);
+            tagSet = perceptronNERecognizer.getNERTagSet();
         }
     }
 
