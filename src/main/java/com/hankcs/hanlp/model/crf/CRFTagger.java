@@ -10,6 +10,7 @@
  */
 package com.hankcs.hanlp.model.crf;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.model.crf.crfpp.Encoder;
@@ -101,6 +102,10 @@ public abstract class CRFTagger
         tmpTrain.deleteOnExit();
         convertCorpus(trainFile, tmpTrain.getAbsolutePath());
         trainFile = tmpTrain.getAbsolutePath();
+        System.out.printf("Java效率低，建议安装CRF++，执行下列等价训练命令（不要终止本进程，否则临时语料库和特征模板将被清除）：\n" +
+                              "crf_learn -m %d -f %d -e %f -c %f -p %d -H %d -a %s -t %s %s %s\n", maxitr, freq, eta,
+                          C, threadNum, shrinkingSize, algorithm.toString().replace('_', '-'),
+                          templFile, trainFile, modelFile);
         Encoder encoder = new Encoder();
         if (!encoder.learn(templFile, trainFile, modelFile,
                            true, maxitr, freq, eta, C, threadNum, shrinkingSize, algorithm))
