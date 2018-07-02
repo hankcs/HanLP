@@ -15,7 +15,7 @@ public class crf_learn
 {
     public static class Option
     {
-        @Argument(description = "use features that occuer no less than INT(default 1)", alias = "f")
+        @Argument(description = "use features that occur no less than INT(default 1)", alias = "f")
         public Integer freq = 1;
         @Argument(description = "set INT for max iterations in LBFGS routine(default 10k)", alias = "m")
         public  Integer maxiter = 10000;

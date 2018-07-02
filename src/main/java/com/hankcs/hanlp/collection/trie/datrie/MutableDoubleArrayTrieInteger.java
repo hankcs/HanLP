@@ -992,7 +992,12 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
             @Override
             public Object[] toArray()
             {
-                throw new UnsupportedOperationException();
+                ArrayList<Map.Entry<String, Integer>> entries = new ArrayList<Map.Entry<String, Integer>>(size);
+                for (Map.Entry<String, Integer> entry : this)
+                {
+                    entries.add(entry);
+                }
+                return entries.toArray();
             }
 
             @Override

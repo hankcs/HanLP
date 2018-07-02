@@ -11,8 +11,11 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
 import com.hankcs.hanlp.seg.CRF.CRFSegment;
 import com.hankcs.hanlp.seg.Segment;
+
+import java.io.IOException;
 
 /**
  * 演示多线程并行分词
@@ -22,9 +25,9 @@ import com.hankcs.hanlp.seg.Segment;
  */
 public class DemoMultithreadingSegment
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
-        Segment segment = new CRFSegment(); // CRF分词器效果好，速度慢，并行化之后可以提高一些速度
+        Segment segment = new CRFLexicalAnalyzer(HanLP.Config.CRFCWSModelPath).enableCustomDictionary(false); // CRF分词器效果好，速度慢，并行化之后可以提高一些速度
 
         String text = "举办纪念活动铭记二战历史，不忘战争带给人类的深重灾难，是为了防止悲剧重演，确保和平永驻；" +
                 "铭记二战历史，更是为了提醒国际社会，需要共同捍卫二战胜利成果和国际公平正义，" +

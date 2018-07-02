@@ -22,10 +22,25 @@ public class CWSTagSet extends TagSet
     public final int M;
     public final int E;
     public final int S;
-    /**
-     * 超出句首
-     */
-    public final int BOS;
+
+    public CWSTagSet(int b, int m, int e, int s)
+    {
+        super(TaskType.CWS);
+        B = b;
+        M = m;
+        E = e;
+        S = s;
+        String[] id2tag = new String[4];
+        id2tag[b] = "B";
+        id2tag[m] = "M";
+        id2tag[e] = "E";
+        id2tag[s] = "S";
+        for (String tag : id2tag)
+        {
+            add(tag);
+        }
+        lock();
+    }
 
     public CWSTagSet()
     {
@@ -34,7 +49,6 @@ public class CWSTagSet extends TagSet
         M = add("M");
         E = add("E");
         S = add("S");
-        BOS = size();
         lock();
     }
 }

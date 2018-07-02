@@ -424,8 +424,10 @@ public class LinearModel implements ICacheAble
                 }
             }
         }
-        assert !byteArray.hasMore();
-        byteArray.close();
+//        assert !byteArray.hasMore();
+//        byteArray.close();
+        if (!byteArray.hasMore())
+            byteArray.close();
         return true;
     }
 

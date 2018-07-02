@@ -162,31 +162,26 @@ public class HanLP
         public static String NNParserModelPath = "data/model/dependency/NNParserModel.txt";
         /**
          * CRF分词模型
+         *
+         * @deprecated 已废弃，请使用{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。未来版本将不再发布该模型，并删除配置项
          */
-        // @deprecated 已废弃，请使用{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。未来版本将不再发布该模型，并删除配置项
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
         /**
          * HMM分词模型
          */
         public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
-         * CRF依存模型
-         *
-         * @deprecated 已废弃，请使用{@link NeuralNetworkDependencyParser}
-         */
-        public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
-        /**
          * CRF分词模型
          */
-        public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.bin";
+        public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.txt";
         /**
          * CRF词性标注模型
          */
-        public static String CRFPOSModelPath = "data/model/crf/pku199801/pos.bin";
+        public static String CRFPOSModelPath = "data/model/crf/pku199801/pos.txt";
         /**
          * CRF命名实体识别模型
          */
-        public static String CRFNERModelPath = "data/model/crf/pku199801/ner.bin";
+        public static String CRFNERModelPath = "data/model/crf/pku199801/ner.txt";
         /**
          * 感知机分词模型
          */
@@ -287,7 +282,6 @@ public class HanLP
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
-                CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 CRFCWSModelPath = root + p.getProperty("CRFCWSModelPath", CRFCWSModelPath);
                 CRFPOSModelPath = root + p.getProperty("CRFPOSModelPath", CRFPOSModelPath);

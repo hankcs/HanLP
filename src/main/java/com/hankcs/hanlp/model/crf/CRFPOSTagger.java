@@ -13,13 +13,19 @@ package com.hankcs.hanlp.model.crf;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.model.crf.crfpp.FeatureIndex;
 import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
+import com.hankcs.hanlp.model.perceptron.PerceptronPOSTagger;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
+import com.hankcs.hanlp.model.perceptron.instance.CWSInstance;
+import com.hankcs.hanlp.model.perceptron.instance.POSInstance;
 import com.hankcs.hanlp.tokenizer.lexical.POSTagger;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,6 +33,8 @@ import java.util.List;
  */
 public class CRFPOSTagger extends CRFTagger implements POSTagger
 {
+    private PerceptronPOSTagger perceptronPOSTagger;
+
     public CRFPOSTagger() throws IOException
     {
         this(HanLP.Config.CRFPOSModelPath);
@@ -35,6 +43,10 @@ public class CRFPOSTagger extends CRFTagger implements POSTagger
     public CRFPOSTagger(String modelPath) throws IOException
     {
         super(modelPath);
+        if (modelPath != null)
+        {
+            perceptronPOSTagger = new PerceptronPOSTagger(this.model);
+        }
     }
 
     @Override
@@ -74,10 +86,10 @@ public class CRFPOSTagger extends CRFTagger implements POSTagger
         int length = curWord.length();
         cells[0] = curWord;
         cells[1] = curWord.substring(0, 1);
-        cells[2] = length > 1 ? curWord.substring(0, 2) : "<>";
+        cells[2] = length > 1 ? curWord.substring(0, 2) : "_";
         // length > 2 ? curWord.substring(0, 3) : "<>"
         cells[3] = curWord.substring(length - 1);
-        cells[4] = length > 1 ? curWord.substring(length - 2) : "<>";
+        cells[4] = length > 1 ? curWord.substring(length - 2) : "_";
         // length > 2 ? curWord.substring(length - 3) : "<>"
     }
 
@@ -101,38 +113,58 @@ public class CRFPOSTagger extends CRFTagger implements POSTagger
 
     public String[] tag(List<String> wordList)
     {
-        String[] tagArray = new String[wordList.size()];
-        TaggerImpl tagger = createTagger();
-        for (String word : wordList)
-        {
-            String[] cells = createCells(false);
-            extractFeature(word, cells);
-            tagger.add(cells);
-        }
-        tagger.parse();
-        for (int i = 0; i < tagger.ysize(); i++)
-        {
-            tagArray[i] = tagger.yname(tagger.y(i));
-        }
-        return tagArray;
+        String[] words = new String[wordList.size()];
+        wordList.toArray(words);
+        return tag(words);
     }
 
     @Override
     public String[] tag(String... words)
     {
-        String[] tagArray = new String[words.length];
-        TaggerImpl tagger = createTagger();
-        for (String word : words)
+        return perceptronPOSTagger.tag(createInstance(words));
+    }
+
+    private POSInstance createInstance(String[] words)
+    {
+        final FeatureTemplate[] featureTemplateArray = model.getFeatureTemplateArray();
+        final String[][] table = new String[words.length][5];
+        for (int i = 0; i < words.length; i++)
         {
-            String[] cells = createCells(false);
-            extractFeature(word, cells);
-            tagger.add(cells);
+            extractFeature(words[i], table[i]);
         }
-        tagger.parse();
-        for (int i = 0; i < tagger.size(); i++)
+
+        return new POSInstance(words, model.featureMap)
         {
-            tagArray[i] = tagger.yname(tagger.y(i));
-        }
-        return tagArray;
+            @Override
+            protected int[] extractFeature(String[] words, FeatureMap featureMap, int position)
+            {
+                StringBuilder sbFeature = new StringBuilder();
+                List<Integer> featureVec = new LinkedList<Integer>();
+                for (int i = 0; i < featureTemplateArray.length; i++)
+                {
+                    Iterator<int[]> offsetIterator = featureTemplateArray[i].offsetList.iterator();
+                    Iterator<String> delimiterIterator = featureTemplateArray[i].delimiterList.iterator();
+                    delimiterIterator.next(); // ignore U0 之类的id
+                    while (offsetIterator.hasNext())
+                    {
+                        int[] offset = offsetIterator.next();
+                        int t = offset[0] + position;
+                        int j = offset[1];
+                        if (t < 0)
+                            sbFeature.append(FeatureIndex.BOS[-(t + 1)]);
+                        else if (t >= words.length)
+                            sbFeature.append(FeatureIndex.EOS[t - words.length]);
+                        else
+                            sbFeature.append(table[t][j]);
+                        if (delimiterIterator.hasNext())
+                            sbFeature.append(delimiterIterator.next());
+                        else
+                            sbFeature.append(i);
+                    }
+                    addFeatureThenClear(sbFeature, featureVec, featureMap);
+                }
+                return toFeatureArray(featureVec);
+            }
+        };
     }
 }

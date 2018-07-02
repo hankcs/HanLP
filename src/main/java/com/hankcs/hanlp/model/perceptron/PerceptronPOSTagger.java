@@ -62,7 +62,12 @@ public class PerceptronPOSTagger extends PerceptronTagger implements POSTagger
     public String[] tag(String... words)
     {
         POSInstance instance = new POSInstance(words, model.featureMap);
-        instance.tagArray = new int[words.length];
+        return tag(instance);
+    }
+
+    public String[] tag(POSInstance instance)
+    {
+        instance.tagArray = new int[instance.featureMatrix.length];
 
         model.viterbiDecode(instance, instance.tagArray);
         return instance.tags(model.tagSet());

@@ -10,12 +10,11 @@
  */
 package com.hankcs.hanlp.model.crf;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.model.crf.crfpp.crf_learn;
 import com.hankcs.hanlp.model.crf.crfpp.Encoder;
-import com.hankcs.hanlp.model.crf.crfpp.ModelImpl;
-import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
+import com.hankcs.hanlp.model.crf.crfpp.crf_learn;
 import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
 import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
@@ -30,21 +29,16 @@ import java.util.Date;
  */
 public abstract class CRFTagger
 {
-    protected ModelImpl model;
+    protected LogLinearModel model;
 
     public CRFTagger()
     {
     }
 
-
     public CRFTagger(String modelPath) throws IOException
     {
         if (modelPath == null) return; // 训练模式
-        model = new ModelImpl();
-        if (!model.open(IOUtil.newInputStream(modelPath), 0, 0, 1.0))
-        {
-            throw new IOException(String.format("%s 加载失败", modelPath));
-        }
+        model = new LogLinearModel(modelPath);
     }
 
     /**
@@ -53,7 +47,6 @@ public abstract class CRFTagger
      * @param templFile     模板文件
      * @param trainFile     训练文件
      * @param modelFile     模型文件
-     * @param textModelFile 是否输出文本形式的模型文件
      * @param maxitr        最大迭代次数
      * @param freq          特征最低频次
      * @param eta           收敛阈值
@@ -63,26 +56,38 @@ public abstract class CRFTagger
      * @param algorithm     训练算法
      * @return
      */
-    public void train(String templFile, String trainFile, String modelFile, boolean textModelFile,
+    public void train(String templFile, String trainFile, String modelFile,
                       int maxitr, int freq, double eta, double C, int threadNum, int shrinkingSize,
                       Encoder.Algorithm algorithm) throws IOException
     {
         Encoder encoder = new Encoder();
         if (!encoder.learn(templFile, trainFile, modelFile,
-                           textModelFile, maxitr, freq, eta, C, threadNum, shrinkingSize, algorithm))
+                           true, maxitr, freq, eta, C, threadNum, shrinkingSize, algorithm))
         {
             throw new IOException("fail to learn model");
         }
+        convert(modelFile);
+    }
+
+    /**
+     * 将CRF++格式转为HanLP格式
+     *
+     * @param modelFile
+     * @throws IOException
+     */
+    private void convert(String modelFile) throws IOException
+    {
+        this.model = new LogLinearModel(modelFile + ".txt", modelFile);
     }
 
     public void train(String trainCorpusPath, String modelPath) throws IOException
     {
         crf_learn.Option option = new crf_learn.Option();
-        train(trainCorpusPath, modelPath, option.textmodel, option.maxiter, option.freq, option.eta, option.cost,
+        train(trainCorpusPath, modelPath, option.maxiter, option.freq, option.eta, option.cost,
               option.thread, option.shrinking_size, Encoder.Algorithm.fromString(option.algorithm));
     }
 
-    public void train(String trainFile, String modelFile, boolean textModelFile,
+    public void train(String trainFile, String modelFile,
                       int maxitr, int freq, double eta, double C, int threadNum, int shrinkingSize,
                       Encoder.Algorithm algorithm) throws IOException
     {
@@ -97,22 +102,20 @@ public abstract class CRFTagger
         tmpTrain.deleteOnExit();
         convertCorpus(trainFile, tmpTrain.getAbsolutePath());
         trainFile = tmpTrain.getAbsolutePath();
+        System.out.printf("Java效率低，建议安装CRF++，执行下列等价训练命令（不要终止本进程，否则临时语料库和特征模板将被清除）：\n" +
+                              "crf_learn -m %d -f %d -e %f -c %f -p %d -H %d -a %s -t %s %s %s\n", maxitr, freq, eta,
+                          C, threadNum, shrinkingSize, algorithm.toString().replace('_', '-'),
+                          templFile, trainFile, modelFile);
         Encoder encoder = new Encoder();
         if (!encoder.learn(templFile, trainFile, modelFile,
-                           textModelFile, maxitr, freq, eta, C, threadNum, shrinkingSize, algorithm))
+                           true, maxitr, freq, eta, C, threadNum, shrinkingSize, algorithm))
         {
             throw new IOException("fail to learn model");
         }
+        convert(modelFile);
     }
 
     protected abstract void convertCorpus(Sentence sentence, BufferedWriter bw) throws IOException;
-
-    protected TaggerImpl createTagger()
-    {
-        TaggerImpl tagger = new TaggerImpl(TaggerImpl.Mode.TEST);
-        tagger.setModel(this.model);
-        return tagger;
-    }
 
     protected abstract String getDefaultFeatureTemplate();
 
@@ -162,9 +165,13 @@ public abstract class CRFTagger
     public String getTemplate()
     {
         String template = getDefaultFeatureTemplate();
-        if (model != null && model.getTemplate() != null)
+        if (model != null && model.getFeatureTemplateArray() != null)
         {
-            template = model.getTemplate();
+            StringBuilder sbTemplate = new StringBuilder();
+            for (FeatureTemplate featureTemplate : model.getFeatureTemplateArray())
+            {
+                sbTemplate.append(featureTemplate.getTemplate()).append('\n');
+            }
         }
         return template;
     }

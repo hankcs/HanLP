@@ -13,6 +13,7 @@ package com.hankcs.hanlp.model.perceptron.tagset;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.model.perceptron.common.TaskType;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +42,19 @@ public class NERTagSet extends TagSet
     {
         super(TaskType.NER);
         O = add(O_TAG);
+    }
+
+    public NERTagSet(int o, Collection<String> tags)
+    {
+        super(TaskType.NER);
+        O = o;
+        for (String tag : tags)
+        {
+            add(tag);
+            String label = NERTagSet.posOf(tag);
+            if (label.length() != tag.length())
+                nerLabels.add(label);
+        }
     }
 
     public static String posOf(String tag)

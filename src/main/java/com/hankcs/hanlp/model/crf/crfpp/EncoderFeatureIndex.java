@@ -280,8 +280,9 @@ public class EncoderFeatureIndex extends FeatureIndex
             return;
         }
         int newMaxId = 0;
-        int[] old2new = new int[dic_.size()];
+        Map<Integer, Integer> old2new = new TreeMap<Integer, Integer>();
         List<String> deletedKeys = new ArrayList<String>(dic_.size() / 8);
+        List<Map.Entry<String, Integer>> l = new LinkedList<Map.Entry<String, Integer>>(dic_.entrySet());
         // update dictionary in key order, to make result compatible with crfpp
         for (MutableDoubleArrayTrieInteger.KeyValuePair pair : dic_)
         {
@@ -291,14 +292,13 @@ public class EncoderFeatureIndex extends FeatureIndex
             int f = frequency.get(cid);
             if (f >= freq)
             {
-                old2new[cid] = newMaxId;
+                old2new.put(id, newMaxId);
                 pair.setValue(newMaxId);
                 newMaxId += (key.charAt(0) == 'U' ? y_.size() : y_.size() * y_.size());
-                deletedKeys.add(key);
             }
             else
             {
-                old2new[cid] = -1;
+                deletedKeys.add(key);
             }
         }
         for (String key : deletedKeys)
@@ -315,8 +315,12 @@ public class EncoderFeatureIndex extends FeatureIndex
                 List<Integer> newCache = new ArrayList<Integer>();
                 for (Integer it : featureCacheItem)
                 {
-                    int nid = old2new[it];
-                    if (nid != -1)
+                    if (it == -1)
+                    {
+                        continue;
+                    }
+                    Integer nid = old2new.get(it);
+                    if (nid != null)
                     {
                         newCache.add(nid);
                     }

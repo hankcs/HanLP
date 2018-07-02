@@ -12,13 +12,20 @@ package com.hankcs.hanlp.model.crf;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.model.crf.crfpp.FeatureIndex;
 import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
+import com.hankcs.hanlp.model.perceptron.PerceptronNERecognizer;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
+import com.hankcs.hanlp.model.perceptron.instance.NERInstance;
+import com.hankcs.hanlp.model.perceptron.instance.POSInstance;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
 import com.hankcs.hanlp.tokenizer.lexical.NERecognizer;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,8 +33,11 @@ import java.util.List;
  */
 public class CRFNERecognizer extends CRFTagger implements NERecognizer
 {
-
     private NERTagSet tagSet;
+    /**
+     * 复用感知机的解码模块
+     */
+    private PerceptronNERecognizer perceptronNERecognizer;
 
     public CRFNERecognizer() throws IOException
     {
@@ -37,19 +47,15 @@ public class CRFNERecognizer extends CRFTagger implements NERecognizer
     public CRFNERecognizer(String modelPath) throws IOException
     {
         super(modelPath);
-        tagSet = new NERTagSet();
-        if (model != null)
+        if (model == null)
         {
-            for (String y : model.getFeatureIndex_().getY_())
-            {
-                String label = NERTagSet.posOf(y);
-                if (label.length() != y.length())
-                    tagSet.nerLabels.add(label);
-            }
+            tagSet = new NERTagSet();
+            addDefaultNERLabels();
         }
         else
         {
-            addDefaultNERLabels();
+            perceptronNERecognizer = new PerceptronNERecognizer(this.model);
+            tagSet = perceptronNERecognizer.getNERTagSet();
         }
     }
 
@@ -78,26 +84,51 @@ public class CRFNERecognizer extends CRFTagger implements NERecognizer
     @Override
     public String[] recognize(String[] wordArray, String[] posArray)
     {
-        TaggerImpl tagger = createTagger();
-        for (int i = 0; i < wordArray.length; i++)
-        {
-            tagger.add(new String[]{wordArray[i], posArray[i]});
-        }
-        tagger.parse();
-
-        String[] tagArray = new String[wordArray.length];
-        for (int i = 0; i < tagArray.length; i++)
-        {
-            tagArray[i] = tagger.yname(tagger.y(i));
-        }
-
-        return tagArray;
+        return perceptronNERecognizer.recognize(createInstance(wordArray, posArray));
     }
 
     @Override
     public NERTagSet getNERTagSet()
     {
         return tagSet;
+    }
+
+    private NERInstance createInstance(String[] wordArray, String[] posArray)
+    {
+        final FeatureTemplate[] featureTemplateArray = model.getFeatureTemplateArray();
+        return new NERInstance(wordArray, posArray, model.featureMap)
+        {
+            @Override
+            protected int[] extractFeature(String[] wordArray, String[] posArray, FeatureMap featureMap, int position)
+            {
+                StringBuilder sbFeature = new StringBuilder();
+                List<Integer> featureVec = new LinkedList<Integer>();
+                for (int i = 0; i < featureTemplateArray.length; i++)
+                {
+                    Iterator<int[]> offsetIterator = featureTemplateArray[i].offsetList.iterator();
+                    Iterator<String> delimiterIterator = featureTemplateArray[i].delimiterList.iterator();
+                    delimiterIterator.next(); // ignore U0 之类的id
+                    while (offsetIterator.hasNext())
+                    {
+                        int[] offset = offsetIterator.next();
+                        int t = offset[0] + position;
+                        boolean first = offset[1] == 0;
+                        if (t < 0)
+                            sbFeature.append(FeatureIndex.BOS[-(t + 1)]);
+                        else if (t >= wordArray.length)
+                            sbFeature.append(FeatureIndex.EOS[t - wordArray.length]);
+                        else
+                            sbFeature.append(first ? wordArray[t] : posArray[t]);
+                        if (delimiterIterator.hasNext())
+                            sbFeature.append(delimiterIterator.next());
+                        else
+                            sbFeature.append(i);
+                    }
+                    addFeatureThenClear(sbFeature, featureVec, featureMap);
+                }
+                return toFeatureArray(featureVec);
+            }
+        };
     }
 
     @Override

@@ -14,11 +14,17 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.dictionary.other.CharTable;
+import com.hankcs.hanlp.model.crf.crfpp.FeatureIndex;
 import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
+import com.hankcs.hanlp.model.perceptron.PerceptronSegmenter;
+import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
+import com.hankcs.hanlp.model.perceptron.instance.CWSInstance;
 import com.hankcs.hanlp.tokenizer.lexical.Segmenter;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 //import static com.hankcs.hanlp.classification.utilities.io.ConsoleLogger.logger;
@@ -28,6 +34,9 @@ import java.util.List;
  */
 public class CRFSegmenter extends CRFTagger implements Segmenter
 {
+
+    private PerceptronSegmenter perceptronSegmenter;
+
     public CRFSegmenter() throws IOException
     {
         this(HanLP.Config.CRFCWSModelPath);
@@ -36,6 +45,10 @@ public class CRFSegmenter extends CRFTagger implements Segmenter
     public CRFSegmenter(String modelPath) throws IOException
     {
         super(modelPath);
+        if (modelPath != null)
+        {
+            perceptronSegmenter = new PerceptronSegmenter(this.model);
+        }
     }
 
     @Override
@@ -83,31 +96,43 @@ public class CRFSegmenter extends CRFTagger implements Segmenter
     @Override
     public void segment(String text, String normalized, List<String> wordList)
     {
-        if (text.isEmpty()) return;
-        TaggerImpl tagger = createTagger();
-        for (int i = 0; i < text.length(); i++)
-        {
-            tagger.add(new String[]{String.valueOf(CharTable.convert(text.charAt(i)))});
-        }
-        if (!tagger.parse()) return;
+        perceptronSegmenter.segment(text, createInstance(normalized), wordList);
+    }
 
-        StringBuilder result = new StringBuilder();
-        result.append(text.charAt(0));
-
-        for (int i = 1; i < tagger.size(); i++)
+    private CWSInstance createInstance(String text)
+    {
+        final FeatureTemplate[] featureTemplateArray = model.getFeatureTemplateArray();
+        return new CWSInstance(text, model.featureMap)
         {
-            char tag = tagger.yname(tagger.y(i)).charAt(0);
-            if (tag == 'B' || tag == 'S')
+            @Override
+            protected int[] extractFeature(String sentence, FeatureMap featureMap, int position)
             {
-                wordList.add(result.toString());
-                result.setLength(0);
+                StringBuilder sbFeature = new StringBuilder();
+                List<Integer> featureVec = new LinkedList<Integer>();
+                for (int i = 0; i < featureTemplateArray.length; i++)
+                {
+                    Iterator<int[]> offsetIterator = featureTemplateArray[i].offsetList.iterator();
+                    Iterator<String> delimiterIterator = featureTemplateArray[i].delimiterList.iterator();
+                    delimiterIterator.next(); // ignore U0 之类的id
+                    while (offsetIterator.hasNext())
+                    {
+                        int offset = offsetIterator.next()[0] + position;
+                        if (offset < 0)
+                            sbFeature.append(FeatureIndex.BOS[-(offset + 1)]);
+                        else if (offset >= sentence.length())
+                            sbFeature.append(FeatureIndex.EOS[offset - sentence.length()]);
+                        else
+                            sbFeature.append(sentence.charAt(offset));
+                        if (delimiterIterator.hasNext())
+                            sbFeature.append(delimiterIterator.next());
+                        else
+                            sbFeature.append(i);
+                    }
+                    addFeatureThenClear(sbFeature, featureVec, featureMap);
+                }
+                return toFeatureArray(featureVec);
             }
-            result.append(text.charAt(i));
-        }
-        if (result.length() != 0)
-        {
-            wordList.add(result.toString());
-        }
+        };
     }
 
     @Override
@@ -117,9 +142,10 @@ public class CRFSegmenter extends CRFTagger implements Segmenter
             "U0:%x[-1,0]\n" +
             "U1:%x[0,0]\n" +
             "U2:%x[1,0]\n" +
-            "U3:%x[-1,0]%x[0,0]\n" +
-            "U4:%x[0,0]%x[1,0]\n" +
-            "U5:%x[-1,0]%x[1,0]\n" +
+            "U3:%x[-2,0]%x[-1,0]\n" +
+            "U4:%x[-1,0]%x[0,0]\n" +
+            "U5:%x[0,0]%x[1,0]\n" +
+            "U6:%x[1,0]%x[2,0]\n" +
             "\n" +
             "# Bigram\n" +
             "B";

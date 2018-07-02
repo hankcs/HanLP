@@ -19,10 +19,7 @@ import com.hankcs.hanlp.model.perceptron.common.TaskType;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author hankcs
@@ -97,7 +94,9 @@ public class TagSet implements IIdStringMap, IStringIdMap, Iterable<Map.Entry<St
     @Override
     public int idOf(String string)
     {
-        return stringIdMap.get(string);
+        Integer id = stringIdMap.get(string);
+        if (id == null) id = -1;
+        return id;
     }
 
     @Override
@@ -154,5 +153,10 @@ public class TagSet implements IIdStringMap, IStringIdMap, Iterable<Map.Entry<St
             stringIdMap.put(tag, i);
         }
         lock();
+    }
+
+    public Collection<String> tags()
+    {
+        return idStringMap;
     }
 }

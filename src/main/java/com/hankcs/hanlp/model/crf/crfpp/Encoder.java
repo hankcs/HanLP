@@ -137,7 +137,7 @@ public class Encoder
                 }
                 if (++lineNo % 100 == 0)
                 {
-                    System.out.println(lineNo + ".. ");
+                    System.out.print(lineNo + ".. ");
                 }
             }
             br.close();

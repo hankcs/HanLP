@@ -37,6 +37,28 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
     protected POSTagger posTagger;
     protected NERecognizer neRecognizer;
 
+    public AbstractLexicalAnalyzer()
+    {
+    }
+
+    public AbstractLexicalAnalyzer(Segmenter segmenter)
+    {
+        this.segmenter = segmenter;
+    }
+
+    public AbstractLexicalAnalyzer(Segmenter segmenter, POSTagger posTagger)
+    {
+        this.segmenter = segmenter;
+        this.posTagger = posTagger;
+    }
+
+    public AbstractLexicalAnalyzer(Segmenter segmenter, POSTagger posTagger, NERecognizer neRecognizer)
+    {
+        this.segmenter = segmenter;
+        this.posTagger = posTagger;
+        this.neRecognizer = neRecognizer;
+    }
+
     /**
      * 分词
      *

@@ -59,6 +59,11 @@ public class PerceptronNERecognizer extends PerceptronTagger implements NERecogn
     public String[] recognize(String[] wordArray, String[] posArray)
     {
         NERInstance instance = new NERInstance(wordArray, posArray, model.featureMap);
+        return recognize(instance);
+    }
+
+    public String[] recognize(NERInstance instance)
+    {
         instance.tagArray = new int[instance.size()];
         model.viterbiDecode(instance);
 

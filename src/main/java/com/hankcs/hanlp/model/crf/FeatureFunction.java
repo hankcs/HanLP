@@ -46,6 +46,11 @@ public class FeatureFunction implements ICacheAble
     {
     }
 
+    public FeatureFunction(String o, int tagSize)
+    {
+        this(o.toCharArray(), tagSize);
+    }
+
     @Override
     public void save(DataOutputStream out) throws Exception
     {

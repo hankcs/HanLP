@@ -11,7 +11,6 @@
  */
 package com.hankcs.hanlp.dependency;
 
-import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.corpus.io.IOUtil;
@@ -30,7 +29,7 @@ public abstract class AbstractDependencyParser implements IDependencyParser
     /**
      * 本Parser使用的分词器，可以自由替换
      */
-    private Segment segment = HanLP.newSegment().enablePartOfSpeechTagging(true);
+    private Segment segment;
     /**
      * 依存关系映射表（可以将英文标签映射为中文）
      */
@@ -39,6 +38,16 @@ public abstract class AbstractDependencyParser implements IDependencyParser
      * 是否自动转换依存关系
      */
     private boolean enableDeprelTranslater;
+
+    public AbstractDependencyParser(Segment segment)
+    {
+        this.segment = segment;
+    }
+
+    public AbstractDependencyParser()
+    {
+        this(NLPTokenizer.ANALYZER);
+    }
 
     @Override
     public CoNLLSentence parse(String sentence)
