@@ -13,10 +13,25 @@ package com.hankcs.hanlp.tokenizer.lexical;
 import java.util.List;
 
 /**
+ * 词性标注接口
+ *
  * @author hankcs
  */
 public interface POSTagger
 {
+    /**
+     * 词性标注
+     *
+     * @param words 单词
+     * @return 词性数组
+     */
     String[] tag(String... words);
+
+    /**
+     * 词性标注
+     *
+     * @param wordList 单词
+     * @return 词性数组
+     */
     String[] tag(List<String> wordList);
 }

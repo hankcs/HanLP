@@ -31,7 +31,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment implements LexicalAnalyzer
+public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements LexicalAnalyzer
 {
     protected Segmenter segmenter;
     protected POSTagger posTagger;

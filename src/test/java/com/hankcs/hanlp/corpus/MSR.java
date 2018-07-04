@@ -8,7 +8,7 @@
  * This source is subject to Han He. Please contact Han He for more information.
  * </copyright>
  */
-package com.hankcs.hanlp.model.perceptron;
+package com.hankcs.hanlp.corpus;
 
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.TestUtility;
