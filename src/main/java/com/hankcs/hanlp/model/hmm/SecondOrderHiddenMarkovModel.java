@@ -144,7 +144,7 @@ public class SecondOrderHiddenMarkovModel extends HiddenMarkovModel
 
         if (time == 1)
         {
-            int best_s = -1;
+            int best_s = 0;
             float max_score = Integer.MIN_VALUE;
             for (int cur_s = 0; cur_s < max_s; ++cur_s)
             {
