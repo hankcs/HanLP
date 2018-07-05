@@ -20,7 +20,6 @@ import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
-import com.hankcs.hanlp.model.perceptron.utility.PosTagUtility;
 import com.hankcs.hanlp.seg.CharacterBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
@@ -432,7 +431,7 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
                     CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
                     if (attribute != null)
                     {
-                        term.nature = Nature.create(PosTagUtility.convert(attribute.nature[0]));
+                        term.nature = attribute.nature[0];
                     }
                     else
                     {
