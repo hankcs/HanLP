@@ -11,12 +11,17 @@
  */
 package com.hankcs.hanlp.dependency.nnparser.util;
 
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.model.perceptron.PerceptronTrainer;
+import com.hankcs.hanlp.model.perceptron.instance.Instance;
+import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
+import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.lexical.POSTagger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author hankcs
@@ -24,6 +29,7 @@ import java.util.TreeMap;
 public class PosTagUtil
 {
     private static Map<String, String> posConverter = new TreeMap<String, String>();
+
     static
     {
         posConverter.put("Mg", "m");
@@ -154,25 +160,27 @@ public class PosTagUtil
         posConverter.put("z", "u");
         posConverter.put("zg", "u");
     }
+
     /**
      * 转为863标注集<br>
      * 863词性标注集，其各个词性含义如下表：
-
-     Tag	Description	Example	Tag	Description	Example
-     a	adjective	美丽	ni	organization name	保险公司
-     b	other noun-modifier	大型, 西式	nl	location noun	城郊
-     c	conjunction	和, 虽然	ns	geographical name	北京
-     d	adverb	很	nt	temporal noun	近日, 明代
-     e	exclamation	哎	nz	other proper noun	诺贝尔奖
-     g	morpheme	茨, 甥	o	onomatopoeia	哗啦
-     h	prefix	阿, 伪	p	preposition	在, 把
-     i	idiom	百花齐放	q	quantity	个
-     j	abbreviation	公检法	r	pronoun	我们
-     k	suffix	界, 率	u	auxiliary	的, 地
-     m	number	一, 第一	v	verb	跑, 学习
-     n	general noun	苹果	wp	punctuation	，。！
-     nd	direction noun	右侧	ws	foreign words	CPU
-     nh	person name	杜甫, 汤姆	x	non-lexeme	萄, 翱
+     * <p>
+     * Tag	Description	Example	Tag	Description	Example
+     * a	adjective	美丽	ni	organization name	保险公司
+     * b	other noun-modifier	大型, 西式	nl	location noun	城郊
+     * c	conjunction	和, 虽然	ns	geographical name	北京
+     * d	adverb	很	nt	temporal noun	近日, 明代
+     * e	exclamation	哎	nz	other proper noun	诺贝尔奖
+     * g	morpheme	茨, 甥	o	onomatopoeia	哗啦
+     * h	prefix	阿, 伪	p	preposition	在, 把
+     * i	idiom	百花齐放	q	quantity	个
+     * j	abbreviation	公检法	r	pronoun	我们
+     * k	suffix	界, 率	u	auxiliary	的, 地
+     * m	number	一, 第一	v	verb	跑, 学习
+     * n	general noun	苹果	wp	punctuation	，。！
+     * nd	direction noun	右侧	ws	foreign words	CPU
+     * nh	person name	杜甫, 汤姆	x	non-lexeme	萄, 翱
+     *
      * @param termList
      * @return
      */
@@ -188,5 +196,34 @@ public class PosTagUtil
         }
 
         return posTagList;
+    }
+
+    /**
+     * 评估词性标注器的准确率
+     *
+     * @param tagger 词性标注器
+     * @param corpus 测试集
+     * @return Accuracy百分比
+     */
+    public static float evaluate(POSTagger tagger, String corpus)
+    {
+        int correct = 0, total = 0;
+        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(corpus);
+        for (String line : lineIterator)
+        {
+            Sentence sentence = Sentence.create(line);
+            if (sentence == null) continue;
+            String[][] wordTagArray = sentence.toWordTagArray();
+            String[] prediction = tagger.tag(wordTagArray[0]);
+            assert prediction.length == wordTagArray[1].length;
+            total += prediction.length;
+            for (int i = 0; i < prediction.length; i++)
+            {
+                if (prediction[i].equals(wordTagArray[1][i]))
+                    ++correct;
+            }
+        }
+        if (total == 0) return 0;
+        return correct / (float) total * 100;
     }
 }

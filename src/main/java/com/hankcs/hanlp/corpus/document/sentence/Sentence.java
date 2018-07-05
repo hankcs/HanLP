@@ -16,6 +16,8 @@ import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.document.sentence.word.WordFactory;
 import com.hankcs.hanlp.dictionary.other.PartOfSpeechTagDictionary;
+import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
+import com.hankcs.hanlp.model.perceptron.utility.Utility;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -353,5 +355,63 @@ public class Sentence implements Serializable, Iterable<IWord>
         }
 
         return wordList;
+    }
+
+    /**
+     * 获取所有单词构成的数组
+     *
+     * @return
+     */
+    public String[] toWordArray()
+    {
+        List<Word> wordList = toSimpleWordList();
+        String[] wordArray = new String[wordList.size()];
+        Iterator<Word> iterator = wordList.iterator();
+        for (int i = 0; i < wordArray.length; i++)
+        {
+            wordArray[i] = iterator.next().value;
+        }
+        return wordArray;
+    }
+
+    /**
+     * word pos
+     *
+     * @return
+     */
+    public String[][] toWordTagArray()
+    {
+        List<Word> wordList = toSimpleWordList();
+        String[][] pair = new String[2][wordList.size()];
+        Iterator<Word> iterator = wordList.iterator();
+        for (int i = 0; i < pair[0].length; i++)
+        {
+            Word word = iterator.next();
+            pair[0][i] = word.value;
+            pair[1][i] = word.label;
+        }
+        return pair;
+    }
+
+    /**
+     * word pos ner
+     *
+     * @param tagSet
+     * @return
+     */
+    public String[][] toWordTagNerArray(NERTagSet tagSet)
+    {
+        List<String[]> tupleList = Utility.convertSentenceToNER(this, tagSet);
+        String[][] result = new String[3][tupleList.size()];
+        Iterator<String[]> iterator = tupleList.iterator();
+        for (int i = 0; i < result[0].length; i++)
+        {
+            String[] tuple = iterator.next();
+            for (int j = 0; j < 3; ++j)
+            {
+                result[j][i] = tuple[j];
+            }
+        }
+        return result;
     }
 }
