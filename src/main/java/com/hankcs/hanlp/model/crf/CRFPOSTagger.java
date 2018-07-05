@@ -13,11 +13,11 @@ package com.hankcs.hanlp.model.crf;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+import com.hankcs.hanlp.model.crf.crfpp.Encoder;
 import com.hankcs.hanlp.model.crf.crfpp.FeatureIndex;
-import com.hankcs.hanlp.model.crf.crfpp.TaggerImpl;
+import com.hankcs.hanlp.model.crf.crfpp.crf_learn;
 import com.hankcs.hanlp.model.perceptron.PerceptronPOSTagger;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
-import com.hankcs.hanlp.model.perceptron.instance.CWSInstance;
 import com.hankcs.hanlp.model.perceptron.instance.POSInstance;
 import com.hankcs.hanlp.tokenizer.lexical.POSTagger;
 
@@ -47,6 +47,14 @@ public class CRFPOSTagger extends CRFTagger implements POSTagger
         {
             perceptronPOSTagger = new PerceptronPOSTagger(this.model);
         }
+    }
+
+    @Override
+    public void train(String trainCorpusPath, String modelPath) throws IOException
+    {
+        crf_learn.Option option = new crf_learn.Option();
+        train(trainCorpusPath, modelPath, option.maxiter, 10, option.eta, option.cost,
+              option.thread, option.shrinking_size, Encoder.Algorithm.fromString(option.algorithm));
     }
 
     @Override
