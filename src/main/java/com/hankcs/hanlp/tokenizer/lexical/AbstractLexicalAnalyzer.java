@@ -330,7 +330,7 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
                 String[] posArray = tag(wordArray);
                 Iterator<Term> iterator = termList.iterator();
                 Iterator<CoreDictionary.Attribute> attributeIterator = attributeList == null ? null : attributeList.iterator();
-                for (String pos : posArray)
+                for (int i = 0; i < posArray.length; i++)
                 {
                     if (attributeIterator != null && attributeIterator.hasNext())
                     {
@@ -338,10 +338,11 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
                         if (attribute != null)
                         {
                             iterator.next().nature = attribute.nature[0]; // 使用词典中的词性
+                            posArray[i] = attribute.nature[0].toString(); // 覆盖词性标注器的结果
                             continue;
                         }
                     }
-                    iterator.next().nature = Nature.create(pos);
+                    iterator.next().nature = Nature.create(posArray[i]);
                 }
 
                 if (config.ner && neRecognizer != null)
