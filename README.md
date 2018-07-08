@@ -54,6 +54,7 @@ HanLP: Han Language Processing
     * 词向量训练、加载、词语相似度计算、语义运算、查询、KMeans聚类
     * 文档语义相似度计算
 * [语料库工具](https://github.com/hankcs/HanLP/tree/master/src/main/java/com/hankcs/hanlp/corpus)
+    - 默认模型训练自小型语料库，鼓励用户自行训练。所有模块提供训练接口，语料可参考[OpenCorpus](https://github.com/hankcs/OpenCorpus)。
 
 在提供丰富功能的同时，**HanLP**内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便，同时自带一些语料处理工具，帮助用户训练自己的模型。
 
@@ -161,7 +162,7 @@ System.out.println(NLPTokenizer.analyze("支援臺灣正體香港繁體：微软
 ```
 - 说明
   * NLP分词`NLPTokenizer`会执行全部命名实体识别和词性标注。
-  * 默认模型训练自[98年1月份人民日报语料](https://github.com/hankcs/OpenCorpus/tree/master/pku98)，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上[训练新模型](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)以适应新领域、识别新的命名实体。
+  * 默认模型训练自[98年1月份人民日报语料](https://github.com/hankcs/OpenCorpus/tree/master/pku98)，仅有`183`万字。语料库规模决定实际效果，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上[训练新模型](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)以适应新领域、识别新的命名实体。
 
 ### 4. 索引分词
 
