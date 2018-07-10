@@ -56,4 +56,10 @@ public class SentenceTest extends TestCase
         Sentence sentence = Sentence.create(text);
         System.out.println(sentence);
     }
+
+    public void testMerge() throws Exception
+    {
+        Sentence sentence = Sentence.create("晚９时４０分/TIME ，/v 鸟/n 迷/v 、/v 专家/n 托尼/PERSON 率领/v 的/u [英国/ns “/w 野翅膀/nz ”/w 观/Vg 鸟/n 团/n]/ORGANIZATION 一行/n ２９/INTEGER 人/n ，/v 才/d 吃/v 完/v 晚饭/n 回到/v [金山/nz 宾馆/n]/ORGANIZATION 的/u 大/a 酒吧间/n ，/v 他们/r 一边/d 喝/v 着/u 青岛/LOCATION 啤酒/n ，/v 一边/d 兴致勃勃/i 地/u 回答/v 记者/n 的/u 提问/vn 。/w");
+        System.out.println(sentence.mergeCompoundWords());
+    }
 }
