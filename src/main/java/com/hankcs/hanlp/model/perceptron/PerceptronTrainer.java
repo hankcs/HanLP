@@ -12,7 +12,7 @@ package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.model.perceptron.common.FrequencyMap;
-import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureHashMap;
+import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureMap;
 import com.hankcs.hanlp.model.perceptron.feature.MutableFeatureMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.model.AveragedPerceptron;
@@ -124,7 +124,7 @@ public abstract class PerceptronTrainer extends InstanceConsumer
         logger.finish("\n加载完毕，实例一共%d句，特征总数%d\n", instances.length, mutableFeatureMap.size() * tagSet.size());
 
         // 开始训练
-        ImmutableFeatureHashMap immutableFeatureMap = new ImmutableFeatureHashMap(mutableFeatureMap.featureIdMap.entrySet(), tagSet);
+        ImmutableFeatureMap immutableFeatureMap = new ImmutableFeatureMap(mutableFeatureMap.featureIdMap, tagSet);
         mutableFeatureMap = null;
         double[] accuracy = null;
 

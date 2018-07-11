@@ -20,17 +20,17 @@ import java.util.Set;
 /**
  * @author hankcs
  */
-public class ImmutableFeatureHashMap extends FeatureMap
+public class ImmutableFeatureMap extends FeatureMap
 {
     public Map<String, Integer> featureIdMap;
 
-    public ImmutableFeatureHashMap(Map<String, Integer> featureIdMap, TagSet tagSet)
+    public ImmutableFeatureMap(Map<String, Integer> featureIdMap, TagSet tagSet)
     {
         super(tagSet);
         this.featureIdMap = featureIdMap;
     }
 
-    public ImmutableFeatureHashMap(Set<Map.Entry<String, Integer>> entrySet, TagSet tagSet)
+    public ImmutableFeatureMap(Set<Map.Entry<String, Integer>> entrySet, TagSet tagSet)
     {
         super(tagSet);
         this.featureIdMap = new HashMap<String, Integer>();
