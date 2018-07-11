@@ -68,6 +68,18 @@ public class Sentence implements Serializable, Iterable<IWord>
      */
     public String toStandoff()
     {
+        return toStandoff(false);
+    }
+
+    /**
+     * brat standoff format<br>
+     * http://brat.nlplab.org/standoff.html
+     *
+     * @param withComment
+     * @return
+     */
+    public String toStandoff(boolean withComment)
+    {
         StringBuilder sb = new StringBuilder(size() * 4);
         String delimiter = " ";
         String text = text(delimiter);
@@ -77,14 +89,14 @@ public class Sentence implements Serializable, Iterable<IWord>
         for (IWord word : wordList)
         {
             assert text.charAt(offset) == word.getValue().charAt(0);
-            printWord(word, sb, i, offset);
+            printWord(word, sb, i, offset, withComment);
             ++i;
             if (word instanceof CompoundWord)
             {
                 int offsetChild = offset;
                 for (Word child : ((CompoundWord) word).innerList)
                 {
-                    printWord(child, sb, i, offsetChild);
+                    printWord(child, sb, i, offsetChild, withComment);
                     offsetChild += child.length();
                     offsetChild += delimiter.length();
                     ++i;
@@ -138,6 +150,11 @@ public class Sentence implements Serializable, Iterable<IWord>
 
     private void printWord(IWord word, StringBuilder sb, int id, int offset)
     {
+        printWord(word, sb, id, offset, false);
+    }
+
+    private void printWord(IWord word, StringBuilder sb, int id, int offset, boolean withComment)
+    {
         char delimiter = '\t';
         char endLine = '\n';
         sb.append('T').append(id).append(delimiter);
@@ -149,6 +166,13 @@ public class Sentence implements Serializable, Iterable<IWord>
         }
         sb.append(offset).append(delimiter).append(offset + length).append(delimiter);
         sb.append(word.getValue()).append(endLine);
+        String translated = PartOfSpeechTagDictionary.translate(word.getLabel());
+        if (withComment && !word.getLabel().equals(translated))
+        {
+            sb.append('#').append(id).append(delimiter).append("AnnotatorNotes").append(delimiter)
+                .append('T').append(id).append(delimiter).append(translated)
+            .append(endLine);
+        }
     }
 
     /**
