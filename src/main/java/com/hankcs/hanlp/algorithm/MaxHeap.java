@@ -18,7 +18,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class MaxHeap<E>
+public class MaxHeap<E> implements Iterable<E>
 {
     /**
      * 优先队列
@@ -94,5 +94,16 @@ public class MaxHeap<E>
         }
 
         return list;
+    }
+
+    @Override
+    public Iterator<E> iterator()
+    {
+        return queue.iterator();
+    }
+
+    public int size()
+    {
+        return queue.size();
     }
 }
