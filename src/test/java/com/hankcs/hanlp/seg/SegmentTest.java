@@ -51,6 +51,15 @@ public class SegmentTest extends TestCase
 //        ));
     }
 
+    public void testIssue880() throws Exception
+    {
+        HanLP.Config.enableDebug();
+        Segment segment = new DijkstraSegment();
+        System.out.println(segment.seg(
+            "王中军代表蓝队发言"
+        ));
+    }
+
     public void testViterbi() throws Exception
     {
 //        HanLP.Config.enableDebug(true);
