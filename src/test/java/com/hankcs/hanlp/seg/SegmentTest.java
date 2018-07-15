@@ -53,11 +53,10 @@ public class SegmentTest extends TestCase
 
     public void testIssue880() throws Exception
     {
-        HanLP.Config.enableDebug();
+//        HanLP.Config.enableDebug();
         Segment segment = new DijkstraSegment();
-        System.out.println(segment.seg(
-            "王中军代表蓝队发言"
-        ));
+        System.out.println(segment.seg("龚学平等表示会保证金云鹏的安全"));
+        System.out.println(segment.seg("王中军代表蓝队发言"));
     }
 
     public void testViterbi() throws Exception
