@@ -150,7 +150,7 @@ public class Vertex
 //                    word= Predefine.TAG_OTHER;
 //                }
 //                break;
-            else if (nature.startsWith('t'))
+            else if (nature == Nature.t)
             {
                 wordID = CoreDictionary.T_WORD_ID;
                 this.attribute = CoreDictionary.get(CoreDictionary.T_WORD_ID);
