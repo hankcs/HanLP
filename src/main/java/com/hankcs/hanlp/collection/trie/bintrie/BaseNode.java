@@ -50,6 +50,17 @@ public abstract class BaseNode<V> implements Comparable<BaseNode>
      */
     protected V value;
 
+    public BaseNode<V> transition(String path, int begin)
+    {
+        BaseNode<V> cur = this;
+        for (int i = begin; i < path.length(); ++i)
+        {
+            cur = cur.getChild(path.charAt(i));
+            if (cur == null || cur.status == Status.UNDEFINED_0) return null;
+        }
+        return cur;
+    }
+
     public BaseNode<V> transition(char[] path, int begin)
     {
         BaseNode<V> cur = this;
