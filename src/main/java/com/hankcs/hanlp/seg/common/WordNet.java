@@ -150,7 +150,10 @@ public class WordNet
         // 保证这个词语前面直连
         for (int l = line - 1; l > 1; --l)
         {
-            for (Vertex pre : wordNetAll.get(l))
+            LinkedList<Vertex> all = wordNetAll.get(l);
+            if (all == vertexes[l])
+                continue;
+            for (Vertex pre : all)
             {
                 if (pre.length() + l == line)
                 {
