@@ -61,6 +61,35 @@ public class Sentence implements Serializable, Iterable<IWord>
     }
 
     /**
+     * 转换为空格分割无标签的String
+     *
+     * @return
+     */
+    public String toStringWithoutLabels()
+    {
+        StringBuilder sb = new StringBuilder(size() * 4);
+        int i = 1;
+        for (IWord word : wordList)
+        {
+            if (word instanceof CompoundWord)
+            {
+                int j = 0;
+                for (Word w : ((CompoundWord) word).innerList)
+                {
+                    sb.append(w.getValue());
+                    if (++j != ((CompoundWord) word).innerList.size())
+                        sb.append(' ');
+                }
+            }
+            else
+                sb.append(word.getValue());
+            if (i != wordList.size()) sb.append(' ');
+            ++i;
+        }
+        return sb.toString();
+    }
+
+    /**
      * brat standoff format<br>
      * http://brat.nlplab.org/standoff.html
      *
@@ -171,7 +200,7 @@ public class Sentence implements Serializable, Iterable<IWord>
         {
             sb.append('#').append(id).append(delimiter).append("AnnotatorNotes").append(delimiter)
                 .append('T').append(id).append(delimiter).append(translated)
-            .append(endLine);
+                .append(endLine);
         }
     }
 
