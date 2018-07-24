@@ -11,20 +11,15 @@
  */
 package com.hankcs.hanlp.corpus.dictionary;
 
-import com.hankcs.hanlp.corpus.document.CorpusLoader;
-import com.hankcs.hanlp.corpus.document.Document;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.NR;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.corpus.util.Precompiler;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
-import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * nr词典（词典+ngram转移+词性转移矩阵）制作工具
@@ -41,7 +36,8 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
     @Override
     protected void addToDictionary(List<List<IWord>> sentenceList)
     {
-        logger.warning("开始制作词典");
+        if (verbose)
+            System.out.println("开始制作词典");
         // 将非A的词语保存下来
         for (List<IWord> wordList : sentenceList)
         {
@@ -71,12 +67,16 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
     @Override
     protected void roleTag(List<List<IWord>> sentenceList)
     {
-        logger.info("开始标注角色");
+        if (verbose)
+            System.out.println("开始标注角色");
         int i = 0;
         for (List<IWord> wordList : sentenceList)
         {
-            logger.info(++i + " / " + sentenceList.size());
-            if (verbose) System.out.println("原始语料 " + wordList);
+            if (verbose)
+            {
+                System.out.println(++i + " / " + sentenceList.size());
+                System.out.println("原始语料 " + wordList);
+            }
             // 先标注A和K
             IWord pre = new Word("##始##", "begin");
             ListIterator<IWord> listIterator = wordList.listIterator();
@@ -158,6 +158,8 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
                             word.setValue(word.getValue().substring(0, 1));
                             word.setLabel(NR.B.toString());
                             break;
+                        default:
+                            word.setLabel(NR.A.toString()); // 非中国人名
                     }
                 }
             }

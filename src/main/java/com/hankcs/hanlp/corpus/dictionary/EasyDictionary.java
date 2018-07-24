@@ -48,8 +48,7 @@ public class EasyDictionary
     private boolean load(String path)
     {
         logger.info("通用词典开始加载:" + path);
-        List<String> wordList = new ArrayList<String>();
-        List<Attribute> attributeList = new ArrayList<Attribute>();
+        TreeMap<String, Attribute> map = new TreeMap<String, Attribute>();
         BufferedReader br = null;
         try
         {
@@ -57,8 +56,7 @@ public class EasyDictionary
             String line;
             while ((line = br.readLine()) != null)
             {
-                String param[] = line.split(" ");
-                wordList.add(param[0]);
+                String param[] = line.split("\\s+");
                 int natureCount = (param.length - 1) / 2;
                 Attribute attribute = new Attribute(natureCount);
                 for (int i = 0; i < natureCount; ++i)
@@ -67,9 +65,9 @@ public class EasyDictionary
                     attribute.frequency[i] = Integer.parseInt(param[2 + 2 * i]);
                     attribute.totalFrequency += attribute.frequency[i];
                 }
-                attributeList.add(attribute);
+                map.put(param[0], attribute);
             }
-            logger.info("通用词典读入词条" + wordList.size() + " 属性" + attributeList.size());
+            logger.info("通用词典读入词条" + map.size());
             br.close();
         }
         catch (FileNotFoundException e)
@@ -83,7 +81,7 @@ public class EasyDictionary
             return false;
         }
 
-        logger.info("通用词典DAT构建结果:" + trie.build(wordList, attributeList));
+        logger.info("通用词典DAT构建结果:" + trie.build(map));
         logger.info("通用词典加载成功:" + trie.size() +"个词条" );
         return true;
     }

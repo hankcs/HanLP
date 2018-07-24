@@ -11,16 +11,22 @@
  */
 package com.hankcs.hanlp.corpus.dictionary;
 
+import com.hankcs.hanlp.corpus.document.CorpusLoader;
+import com.hankcs.hanlp.corpus.document.Document;
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * @author hankcs
  */
 public abstract class CommonDictionaryMaker implements ISaveAble
 {
-    static boolean verbose = false;
+    public boolean verbose = false;
     /**
      * 语料库中的单词
      */
@@ -62,6 +68,51 @@ public abstract class CommonDictionaryMaker implements ISaveAble
     {
         roleTag(sentenceList);
         addToDictionary(sentenceList);
+    }
+
+    /**
+     * 同compute
+     * @param sentenceList
+     */
+    public void learn(List<Sentence> sentenceList)
+    {
+        List<List<IWord>> s = new ArrayList<List<IWord>>(sentenceList.size());
+        for (Sentence sentence : sentenceList)
+        {
+            s.add(sentence.wordList);
+        }
+        compute(s);
+    }
+
+    /**
+     * 同compute
+     * @param sentences
+     */
+    public void learn(Sentence ... sentences)
+    {
+        learn(Arrays.asList(sentences));
+    }
+
+    /**
+     * 训练
+     * @param corpus 语料库路径
+     */
+    public void train(String corpus)
+    {
+        CorpusLoader.walk(corpus, new CorpusLoader.Handler()
+        {
+            @Override
+            public void handle(Document document)
+            {
+                List<List<Word>> simpleSentenceList = document.getSimpleSentenceList();
+                List<List<IWord>> compatibleList = new LinkedList<List<IWord>>();
+                for (List<Word> wordList : simpleSentenceList)
+                {
+                    compatibleList.add(new LinkedList<IWord>(wordList));
+                }
+                CommonDictionaryMaker.this.compute(compatibleList);
+            }
+        });
     }
 
     /**
