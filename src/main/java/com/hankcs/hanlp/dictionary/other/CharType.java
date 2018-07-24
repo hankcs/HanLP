@@ -154,4 +154,15 @@ public class CharType
     {
         return type[(int) c];
     }
+
+    /**
+     * 设置字符类型
+     *
+     * @param c 字符
+     * @param t 类型
+     */
+    public static void set(char c, byte t)
+    {
+        type[c] = t;
+    }
 }
