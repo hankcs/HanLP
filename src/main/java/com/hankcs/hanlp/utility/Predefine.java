@@ -26,22 +26,6 @@ public class Predefine
      */
     public static String HANLP_PROPERTIES_PATH;
     public final static double MIN_PROBABILITY = 1e-10;
-    public final static int CT_SENTENCE_BEGIN = 1;        //Sentence begin
-    public final static int CT_SENTENCE_END = 4;          //Sentence ending
-    /** @deprecated 使用CharType中的相应常量 */
-    public final static int CT_SINGLE = 5;                //SINGLE byte
-    /** @deprecated 使用CharType中的相应常量 */
-    public final static int CT_DELIMITER = CT_SINGLE + 1; //delimiter
-    /** @deprecated 使用CharType中的相应常量 */
-    public final static int CT_CHINESE = CT_SINGLE + 2;   //Chinese Char
-    /** @deprecated 使用CharType中的相应常量 */
-    public final static int CT_LETTER = CT_SINGLE + 3;    //HanYu Pinyin
-    /** @deprecated 使用CharType中的相应常量 */
-    public final static int CT_NUM = CT_SINGLE + 4;       //HanYu Pinyin
-    /** @deprecated 使用CharType中的相应常量 */
-    public final static int CT_INDEX = CT_SINGLE + 5;     //HanYu Pinyin
-    /** @deprecated  */
-    public final static int CT_OTHER = CT_SINGLE + 12;    //Other
     /**
      * 浮点数正则
      */
@@ -57,11 +41,6 @@ public class Predefine
         "水库","隧道","特区","铁路","新村","雪峰","盐场","盐湖","渔场","直辖市",
         "自治区","自治县","自治州"};
 
-    //Translation type
-    public static int TT_ENGLISH = 0;
-    public static int TT_RUSSIAN = 1;
-    public static int TT_JAPANESE = 2;
-
     //Seperator type
     public static String SEPERATOR_C_SENTENCE = "。！？：；…";
     public static String SEPERATOR_C_SUB_SENTENCE = "、，（）“”‘’";
@@ -73,15 +52,6 @@ public class Predefine
     //Seperator between two words
     public static String WORD_SEGMENTER = "@";
 
-    public static int CC_NUM = 6768;
-
-    //The number of Chinese Char,including 5 empty position between 3756-3761
-    public static int WORD_MAXLENGTH = 100;
-    public static int WT_DELIMITER = 0;
-    public static int WT_CHINESE = 1;
-    public static int WT_OTHER = 2;
-
-    public static int MAX_WORDS = 650;
     public static int MAX_SEGMENT_NUM = 10;
 
     public static final int MAX_FREQUENCY = 25146057; // 现在总词频25146057

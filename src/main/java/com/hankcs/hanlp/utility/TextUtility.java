@@ -10,52 +10,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.hankcs.hanlp.dictionary.other.CharType.*;
+
 /**
  * 文本工具类
  */
 public class TextUtility
 {
-
-    /**
-     * 单字节
-     */
-    public static final int CT_SINGLE = 5;// SINGLE byte
-
-    /**
-     * 分隔符"!,.?()[]{}+=
-     */
-    public static final int CT_DELIMITER = CT_SINGLE + 1;// delimiter
-
-    /**
-     * 中文字符
-     */
-    public static final int CT_CHINESE = CT_SINGLE + 2;// Chinese Char
-
-    /**
-     * 字母
-     */
-    public static final int CT_LETTER = CT_SINGLE + 3;// HanYu Pinyin
-
-    /**
-     * 数字
-     */
-    public static final int CT_NUM = CT_SINGLE + 4;// HanYu Pinyin
-
-    /**
-     * 序号
-     */
-    public static final int CT_INDEX = CT_SINGLE + 5;// HanYu Pinyin
-
-    /**
-     * 中文数字
-     */
-    public static final int CT_CNUM = CT_SINGLE + 6;
-
-    /**
-     * 其他
-     */
-    public static final int CT_OTHER = CT_SINGLE + 12;// Other
-
     public static int charType(char c)
     {
         return charType(String.valueOf(c));
