@@ -148,10 +148,11 @@ public class WordNet
         vertexes[line].add(vertex);
         ++size;
         // 保证这个词语前面直连
-        for (int l = line - 1; l > 1; --l)
+        final int start = Math.max(0, line - 5); // 效率起见，只扫描前4行
+        for (int l = line - 1; l > start; --l)
         {
             LinkedList<Vertex> all = wordNetAll.get(l);
-            if (all == vertexes[l])
+            if (all.size() <= vertexes[l].size())
                 continue;
             for (Vertex pre : all)
             {
