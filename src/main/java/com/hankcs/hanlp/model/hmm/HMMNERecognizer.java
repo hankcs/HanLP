@@ -29,12 +29,14 @@ public class HMMNERecognizer extends HMMTrainer implements NERecognizer
     {
         super(model);
         tagSet = new NERTagSet();
+        tagSet.nerLabels.add("nr");
+        tagSet.nerLabels.add("ns");
+        tagSet.nerLabels.add("nt");
     }
 
     public HMMNERecognizer()
     {
-        super();
-        tagSet = new NERTagSet();
+        this(new FirstOrderHiddenMarkovModel());
     }
 
     @Override
