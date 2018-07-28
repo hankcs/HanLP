@@ -19,6 +19,14 @@ import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
  */
 public interface NERecognizer
 {
+    /**
+     * 命名实体识别
+     *
+     * @param wordArray 单词
+     * @param posArray  词性
+     * @return BMES-NER标签
+     */
     String[] recognize(String[] wordArray, String[] posArray);
+
     NERTagSet getNERTagSet();
 }
