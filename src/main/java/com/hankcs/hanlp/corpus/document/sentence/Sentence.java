@@ -481,4 +481,20 @@ public class Sentence implements Serializable, Iterable<IWord>
         }
         return this;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sentence sentence = (Sentence) o;
+        return toString().equals(sentence.toString());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return toString().hashCode();
+    }
 }
