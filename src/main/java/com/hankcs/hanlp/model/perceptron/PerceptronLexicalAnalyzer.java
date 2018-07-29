@@ -89,7 +89,7 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
      */
     public void segment(String text, List<String> output)
     {
-        String normalized = Utility.normalize(text);
+        String normalized = CharTable.convert(text);
         segment(text, normalized, output);
     }
 

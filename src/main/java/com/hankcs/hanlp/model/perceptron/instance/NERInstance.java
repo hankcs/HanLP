@@ -11,18 +11,12 @@
 package com.hankcs.hanlp.model.perceptron.instance;
 
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
-import com.hankcs.hanlp.model.perceptron.feature.MutableFeatureMap;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
-import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author hankcs
@@ -117,14 +111,8 @@ public class NERInstance extends Instance
         String[] wordArray = new String[collector.size()];
         String[] posArray = new String[collector.size()];
         String[] tagArray = new String[collector.size()];
-        int i = 0;
-        for (String[] tuple : collector)
-        {
-            wordArray[i] = tuple[0];
-            posArray[i] = tuple[1];
-            tagArray[i] = tuple[2];
-            ++i;
-        }
+        Utility.reshapeNER(collector, wordArray, posArray, tagArray);
         return new NERInstance(wordArray, posArray, tagArray, tagSet, featureMap);
     }
+
 }
