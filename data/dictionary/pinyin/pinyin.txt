@@ -21141,7 +21141,7 @@
 苷=gan1
 苸=hu1
 苹=ping2,peng1
-苹果=pin2,guo3
+苹果=ping2,guo3
 苺=mei2
 苻=fu2
 苼=sheng1,rui2
@@ -26383,7 +26383,7 @@
 金相玉映=jin1,xiang1,yu4,ying4
 金相玉质=jin1,xiang4,yu4,zhi4
 金翅擘海=jin1,chi4,bai1,hai3
-金苹果=jin1,pin2,guo3
+金苹果=jin1,ping2,guo3
 金蝉脱壳=jin1,chan2,tuo1,qiao4
 金谷酒数=jin1,gu3,jiu3,shu4
 金针见血=jin1,zhen1,jian4,xue4
