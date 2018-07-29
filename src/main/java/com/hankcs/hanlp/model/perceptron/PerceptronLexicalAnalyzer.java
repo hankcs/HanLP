@@ -12,14 +12,13 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
-import com.hankcs.hanlp.model.perceptron.utility.Utility;
-import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.tokenizer.lexical.AbstractLexicalAnalyzer;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 /**
  * 感知机词法分析器，支持简繁全半角和大小写
@@ -28,6 +27,21 @@ import java.util.*;
  */
 public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
 {
+    public PerceptronLexicalAnalyzer(PerceptronSegmenter segmenter)
+    {
+        super(segmenter);
+    }
+
+    public PerceptronLexicalAnalyzer(PerceptronSegmenter segmenter, PerceptronPOSTagger posTagger)
+    {
+        super(segmenter, posTagger);
+    }
+
+    public PerceptronLexicalAnalyzer(PerceptronSegmenter segmenter, PerceptronPOSTagger posTagger, PerceptronNERecognizer neRecognizer)
+    {
+        super(segmenter, posTagger, neRecognizer);
+    }
+
     public PerceptronLexicalAnalyzer(LinearModel cwsModel, LinearModel posModel, LinearModel nerModel)
     {
         segmenter = new PerceptronSegmenter(cwsModel);
