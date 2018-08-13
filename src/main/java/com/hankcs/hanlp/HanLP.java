@@ -184,7 +184,7 @@ public class HanLP
         /**
          * 感知机分词模型
          */
-        public static String PerceptronCWSModelPath = "data/model/perceptron/pku199801/cws.bin";
+        public static String PerceptronCWSModelPath = "data/model/perceptron/msra/cws.bin";
         /**
          * 感知机词性标注模型
          */
