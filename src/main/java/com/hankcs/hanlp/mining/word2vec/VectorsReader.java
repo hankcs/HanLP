@@ -1,5 +1,7 @@
 package com.hankcs.hanlp.mining.word2vec;
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -27,7 +29,7 @@ public final class VectorsReader
         BufferedReader br = null;
         try
         {
-            is = new FileInputStream(file);
+            is = IOUtil.newInputStream(file);
             r = new InputStreamReader(is, ENCODING);
             br = new BufferedReader(r);
 

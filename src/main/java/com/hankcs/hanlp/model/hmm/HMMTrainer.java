@@ -27,10 +27,22 @@ import java.util.List;
 public abstract class HMMTrainer
 {
     HiddenMarkovModel model;
+    Vocabulary vocabulary;
+
+    public HMMTrainer(HiddenMarkovModel model, Vocabulary vocabulary)
+    {
+        this.model = model;
+        this.vocabulary = vocabulary;
+    }
 
     public HMMTrainer(HiddenMarkovModel model)
     {
-        this.model = model;
+        this(model, new Vocabulary());
+    }
+
+    public HMMTrainer()
+    {
+        this(new FirstOrderHiddenMarkovModel());
     }
 
     public void train(String corpus) throws IOException
@@ -46,7 +58,6 @@ public abstract class HMMTrainer
             }
         });
 
-        Vocabulary vocabulary = getVocabulary();
         TagSet tagSet = getTagSet();
 
         List<int[][]> sampleList = new ArrayList<int[][]>(sequenceList.size());
@@ -57,7 +68,9 @@ public abstract class HMMTrainer
             for (String[] os : sequence)
             {
                 sample[0][i] = vocabulary.idOf(os[0]);
-                sample[1][i] = tagSet.idOf(os[1]);
+                assert sample[0][i] != -1;
+                sample[1][i] = tagSet.add(os[1]);
+                assert sample[1][i] != -1;
                 ++i;
             }
             sampleList.add(sample);
@@ -68,8 +81,5 @@ public abstract class HMMTrainer
     }
 
     protected abstract List<String[]> convertToSequence(Sentence sentence);
-
     protected abstract TagSet getTagSet();
-
-    protected abstract Vocabulary getVocabulary();
 }

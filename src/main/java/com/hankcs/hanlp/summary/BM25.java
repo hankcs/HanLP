@@ -109,6 +109,13 @@ public class BM25
         }
     }
 
+    /**
+     * 计算一个句子与一个文档的BM25相似度
+     *
+     * @param sentence 句子（查询语句）
+     * @param index    文档（用语料库中的下标表示）
+     * @return BM25 score
+     */
     public double sim(List<String> sentence, int index)
     {
         double score = 0;
@@ -116,9 +123,9 @@ public class BM25
         {
             if (!f[index].containsKey(word)) continue;
             int d = docs.get(index).size();
-            Integer wf = f[index].get(word);
-            score += (idf.get(word) * wf * (k1 + 1)
-                    / (wf + k1 * (1 - b + b * d
+            Integer tf = f[index].get(word);
+            score += (idf.get(word) * tf * (k1 + 1)
+                    / (tf + k1 * (1 - b + b * d
                                                 / avgdl)));
         }
 

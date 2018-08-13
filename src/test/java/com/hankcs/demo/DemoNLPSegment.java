@@ -15,7 +15,8 @@ import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.utility.TestUtility;
 
 /**
- * NLP分词，更精准的中文分词、词性标注与命名实体识别
+ * NLP分词，更精准的中文分词、词性标注与命名实体识别。
+ * 语料库规模决定实际效果，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上训练新模型以适应新领域、识别新的命名实体。
  * 标注集请查阅 https://github.com/hankcs/HanLP/blob/master/data/dictionary/other/TagPKU98.csv
  * 或者干脆调用 Sentence#translateLabels() 转为中文
  *

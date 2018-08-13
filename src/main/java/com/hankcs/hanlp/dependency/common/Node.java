@@ -25,11 +25,9 @@ import java.util.TreeMap;
  */
 public class Node
 {
-    public final static Node NULL = new Node(new Term(CoNLLWord.NULL.NAME, Nature.n), -1);
     private final static Map<String, String> natureConverter = new TreeMap<String, String>();
     static
     {
-        NULL.label = "null";
         natureConverter.put("begin", "root");
         natureConverter.put("bg", "b");
         natureConverter.put("e", "y");
@@ -100,6 +98,11 @@ public class Node
         natureConverter.put("xx", "x");
         natureConverter.put("yg", "y");
         natureConverter.put("zg", "z");
+    }
+    public final static Node NULL = new Node(new Term(CoNLLWord.NULL.NAME, Nature.n), -1);
+    static
+    {
+        NULL.label = "null";
     }
     public String word;
     public String compiledWord;

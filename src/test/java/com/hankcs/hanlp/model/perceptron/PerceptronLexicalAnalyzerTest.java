@@ -109,4 +109,16 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
             }
         }
     }
+
+    public void testCustomDictionaryForcing() throws Exception
+    {
+        String text = "银川普通人与川普通电话讲四川普通话";
+        CustomDictionary.insert("川普", "NRF 1");
+
+        analyzer.enableCustomDictionaryForcing(false);
+        System.out.println(analyzer.analyze(text));
+
+        analyzer.enableCustomDictionaryForcing(true);
+        System.out.println(analyzer.analyze(text));
+    }
 }

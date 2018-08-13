@@ -135,4 +135,14 @@ public class Vector
         divideToSelf(norm());
         return this;
     }
+
+    public float[] getElementArray()
+    {
+        return elementArray;
+    }
+
+    public void setElementArray(float[] elementArray)
+    {
+        this.elementArray = elementArray;
+    }
 }

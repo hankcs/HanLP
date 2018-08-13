@@ -147,46 +147,29 @@ public class WordNet
         }
         vertexes[line].add(vertex);
         ++size;
-        // 保证连接
-        for (int l = line - 1; l > 1; --l)
+        // 保证这个词语前面直连
+        final int start = Math.max(0, line - 5); // 效率起见，只扫描前4行
+        for (int l = line - 1; l > start; --l)
         {
-            if (get(l, 1) == null)
+            LinkedList<Vertex> all = wordNetAll.get(l);
+            if (all.size() <= vertexes[l].size())
+                continue;
+            for (Vertex pre : all)
             {
-                Vertex first = wordNetAll.getFirst(l);
-                if (first == null) break;
-                vertexes[l].add(first);
-                ++size;
-                if (vertexes[l].size() > 1) break;
-            }
-            else
-            {
-                break;
+                if (pre.length() + l == line)
+                {
+                    vertexes[l].add(pre);
+                    ++size;
+                }
             }
         }
-        // 首先保证这个词语可直达
+        // 保证这个词语后面直连
         int l = line + vertex.realWord.length();
-        if (get(l).size() == 0)
+        LinkedList<Vertex> targetLine = wordNetAll.get(l);
+        if (vertexes[l].size() < targetLine.size())
         {
-            List<Vertex> targetLine = wordNetAll.get(l);
-            if (targetLine == null || targetLine.size() == 0) return;
-            vertexes[l].addAll(targetLine);
-            size += targetLine.size();
-        }
-        // 直达之后一直往后
-        for (++l; l < vertexes.length; ++l)
-        {
-            if (get(l).size() == 0)
-            {
-                Vertex first = wordNetAll.getFirst(l);
-                if (first == null) break;
-                vertexes[l].add(first);
-                ++size;
-                if (vertexes[l].size() > 1) break;
-            }
-            else
-            {
-                break;
-            }
+            size += (targetLine.size() - vertexes[l].size());
+            vertexes[l] = targetLine;
         }
     }
 
@@ -211,7 +194,7 @@ public class WordNet
      * @param line 行号
      * @return 一个数组
      */
-    public List<Vertex> get(int line)
+    public LinkedList<Vertex> get(int line)
     {
         return vertexes[line];
     }

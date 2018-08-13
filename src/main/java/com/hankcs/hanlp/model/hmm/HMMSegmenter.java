@@ -28,23 +28,16 @@ import java.util.List;
 public class HMMSegmenter extends HMMTrainer implements Segmenter
 {
     CWSTagSet tagSet;
-    Vocabulary vocabulary;
-
-    public HMMSegmenter(HiddenMarkovModel model, Vocabulary vocabulary)
-    {
-        super(model);
-        this.tagSet = new CWSTagSet();
-        this.vocabulary = vocabulary;
-    }
 
     public HMMSegmenter(HiddenMarkovModel model)
     {
-        this(model, new Vocabulary());
+        super(model);
+        tagSet = new CWSTagSet();
     }
 
     public HMMSegmenter()
     {
-        this(new FirstOrderHiddenMarkovModel());
+        tagSet = new CWSTagSet();
     }
 
     @Override
@@ -111,12 +104,6 @@ public class HMMSegmenter extends HMMTrainer implements Segmenter
     protected TagSet getTagSet()
     {
         return tagSet;
-    }
-
-    @Override
-    protected Vocabulary getVocabulary()
-    {
-        return vocabulary;
     }
 
     /**

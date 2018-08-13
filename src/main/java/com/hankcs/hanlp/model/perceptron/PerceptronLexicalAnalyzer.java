@@ -12,13 +12,13 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.model.perceptron.model.LinearModel;
-import com.hankcs.hanlp.model.perceptron.utility.Utility;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.dictionary.other.CharTable;
+import com.hankcs.hanlp.model.perceptron.model.LinearModel;
 import com.hankcs.hanlp.tokenizer.lexical.AbstractLexicalAnalyzer;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 /**
  * 感知机词法分析器，支持简繁全半角和大小写
@@ -27,6 +27,21 @@ import java.util.*;
  */
 public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
 {
+    public PerceptronLexicalAnalyzer(PerceptronSegmenter segmenter)
+    {
+        super(segmenter);
+    }
+
+    public PerceptronLexicalAnalyzer(PerceptronSegmenter segmenter, PerceptronPOSTagger posTagger)
+    {
+        super(segmenter, posTagger);
+    }
+
+    public PerceptronLexicalAnalyzer(PerceptronSegmenter segmenter, PerceptronPOSTagger posTagger, PerceptronNERecognizer neRecognizer)
+    {
+        super(segmenter, posTagger, neRecognizer);
+    }
+
     public PerceptronLexicalAnalyzer(LinearModel cwsModel, LinearModel posModel, LinearModel nerModel)
     {
         segmenter = new PerceptronSegmenter(cwsModel);
@@ -88,7 +103,7 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
      */
     public void segment(String text, List<String> output)
     {
-        String normalized = Utility.normalize(text);
+        String normalized = CharTable.convert(text);
         segment(text, normalized, output);
     }
 
@@ -132,6 +147,18 @@ public class PerceptronLexicalAnalyzer extends AbstractLexicalAnalyzer
     public boolean learn(String segmentedTaggedSentence)
     {
         Sentence sentence = Sentence.create(segmentedTaggedSentence);
+        return learn(sentence);
+    }
+
+    /**
+     * 在线学习
+     *
+     * @param sentence 已分词、标好词性和命名实体的人民日报2014格式的句子
+     * @return 是否学习成果（失败的原因是句子格式不合法）
+     */
+    public boolean learn(Sentence sentence)
+    {
+        CharTable.normalize(sentence);
         if (!getPerceptronSegmenter().learn(sentence)) return false;
         if (posTagger != null && !getPerceptronPOSTagger().learn(sentence)) return false;
         if (neRecognizer != null && !getPerceptionNERecognizer().learn(sentence)) return false;

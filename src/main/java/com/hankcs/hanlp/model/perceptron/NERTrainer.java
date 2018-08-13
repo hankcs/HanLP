@@ -23,6 +23,28 @@ import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 public class NERTrainer extends PerceptronTrainer
 {
     /**
+     * 支持任意自定义NER类型，例如：<br>
+     * tagSet.nerLabels.clear();<br>
+     * tagSet.nerLabels.add("nr");<br>
+     * tagSet.nerLabels.add("ns");<br>
+     * tagSet.nerLabels.add("nt");<br>
+     */
+    public NERTagSet tagSet;
+
+    public NERTrainer(NERTagSet tagSet)
+    {
+        this.tagSet = tagSet;
+    }
+
+    public NERTrainer()
+    {
+        tagSet = new NERTagSet();
+        tagSet.nerLabels.add("nr");
+        tagSet.nerLabels.add("ns");
+        tagSet.nerLabels.add("nt");
+    }
+
+    /**
      * 重载此方法以支持任意自定义NER类型，例如：<br>
      * NERTagSet tagSet = new NERTagSet();<br>
      * tagSet.nerLabels.add("nr");<br>
@@ -34,10 +56,6 @@ public class NERTrainer extends PerceptronTrainer
     @Override
     protected TagSet createTagSet()
     {
-        NERTagSet tagSet = new NERTagSet();
-        tagSet.nerLabels.add("nr");
-        tagSet.nerLabels.add("ns");
-        tagSet.nerLabels.add("nt");
         return tagSet;
     }
 

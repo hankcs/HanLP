@@ -11,6 +11,8 @@
 package com.hankcs.hanlp.tokenizer.lexical;
 
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
@@ -20,7 +22,6 @@ import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
-import com.hankcs.hanlp.model.perceptron.utility.PosTagUtility;
 import com.hankcs.hanlp.seg.CharacterBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
@@ -31,7 +32,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment implements LexicalAnalyzer
+public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements LexicalAnalyzer
 {
     protected Segmenter segmenter;
     protected POSTagger posTagger;
@@ -77,19 +78,16 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
                 @Override
                 public void hit(int begin, int end, CoreDictionary.Attribute value)
                 {
-                    if (acceptCustomWord(begin, end, value)) // 将命名实体识别交给下面去做
+                    if (begin != offset[0])
                     {
-                        if (begin != offset[0])
-                        {
-                            segmenter.segment(sentence.substring(offset[0], begin), normalized.substring(offset[0], begin), wordList);
-                        }
-                        while (attributeList.size() < wordList.size())
-                            attributeList.add(null);
-                        wordList.add(sentence.substring(begin, end));
-                        attributeList.add(value);
-                        assert wordList.size() == attributeList.size() : "词语列表与属性列表不等长";
-                        offset[0] = end;
+                        segmenter.segment(sentence.substring(offset[0], begin), normalized.substring(offset[0], begin), wordList);
                     }
+                    while (attributeList.size() < wordList.size())
+                        attributeList.add(null);
+                    wordList.add(sentence.substring(begin, end));
+                    attributeList.add(value);
+                    assert wordList.size() == attributeList.size() : "词语列表与属性列表不等长";
+                    offset[0] = end;
                 }
             });
             if (offset[0] != sentence.length())
@@ -114,15 +112,12 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
                 @Override
                 public void hit(int begin, int end, CoreDictionary.Attribute value)
                 {
-                    if (acceptCustomWord(begin, end, value)) // 将命名实体识别交给下面去做
+                    if (begin != offset[0])
                     {
-                        if (begin != offset[0])
-                        {
-                            segmenter.segment(sentence.substring(offset[0], begin), normalized.substring(offset[0], begin), wordList);
-                        }
-                        wordList.add(sentence.substring(begin, end));
-                        offset[0] = end;
+                        segmenter.segment(sentence.substring(offset[0], begin), normalized.substring(offset[0], begin), wordList);
                     }
+                    wordList.add(sentence.substring(begin, end));
+                    offset[0] = end;
                 }
             });
             if (offset[0] != sentence.length())
@@ -196,19 +191,10 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
         if (posTagger != null)
         {
             String[] posArray = tag(wordArray);
-            if (attributeList != null)
-            {
-                id = 0;
-                for (CoreDictionary.Attribute attribute : attributeList)
-                {
-                    if (attribute != null)
-                        posArray[id] = attribute.nature[0].toString();
-                    ++id;
-                }
-            }
             if (neRecognizer != null)
             {
                 String[] nerArray = neRecognizer.recognize(wordArray, posArray);
+                overwriteTag(attributeList, posArray);
                 wordList.toArray(wordArray);
 
                 List<Word> result = new LinkedList<Word>();
@@ -240,6 +226,7 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
             }
             else
             {
+                overwriteTag(attributeList, posArray);
                 wordList.toArray(wordArray);
                 for (int i = 0; i < wordArray.length; i++)
                 {
@@ -259,6 +246,21 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
         return new Sentence(termList);
     }
 
+    private void overwriteTag(List<CoreDictionary.Attribute> attributeList, String[] posArray)
+    {
+        int id;
+        if (attributeList != null)
+        {
+            id = 0;
+            for (CoreDictionary.Attribute attribute : attributeList)
+            {
+                if (attribute != null)
+                    posArray[id] = attribute.nature[0].toString();
+                ++id;
+            }
+        }
+    }
+
     /**
      * 这个方法会查询用户词典
      *
@@ -268,7 +270,6 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
      */
     public List<String> segment(final String sentence, final String normalized)
     {
-        // 查询词典中的长词
         final List<String> wordList = new LinkedList<String>();
         segment(sentence, normalized, wordList);
         return wordList;
@@ -281,6 +282,7 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
      * @param end   终止位置
      * @param value 词性
      * @return true 表示接受
+     * @deprecated 自1.6.7起废弃，强制模式下为最长匹配，否则按分词结果合并
      */
     protected boolean acceptCustomWord(int begin, int end, CoreDictionary.Attribute value)
     {
@@ -331,18 +333,18 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
                 String[] posArray = tag(wordArray);
                 Iterator<Term> iterator = termList.iterator();
                 Iterator<CoreDictionary.Attribute> attributeIterator = attributeList == null ? null : attributeList.iterator();
-                for (String pos : posArray)
+                for (int i = 0; i < posArray.length; i++)
                 {
                     if (attributeIterator != null && attributeIterator.hasNext())
                     {
                         CoreDictionary.Attribute attribute = attributeIterator.next();
                         if (attribute != null)
                         {
-                            iterator.next().nature = attribute.nature[0]; // 使用词典中的词性
+                            iterator.next().nature = attribute.nature[0]; // 使用词典中的词性覆盖词性标注器的结果
                             continue;
                         }
                     }
-                    iterator.next().nature = Nature.create(pos);
+                    iterator.next().nature = Nature.create(posArray[i]);
                 }
 
                 if (config.ner && neRecognizer != null)
@@ -432,7 +434,7 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
                     CoreDictionary.Attribute attribute = CoreDictionary.get(term.word);
                     if (attribute != null)
                     {
-                        term.nature = Nature.create(PosTagUtility.convert(attribute.nature[0]));
+                        term.nature = attribute.nature[0];
                     }
                     else
                     {
@@ -455,16 +457,133 @@ public abstract class AbstractLexicalAnalyzer extends CharacterBasedSegment impl
     private List<CoreDictionary.Attribute> segmentWithAttribute(String original, String normalized, List<String> wordList)
     {
         List<CoreDictionary.Attribute> attributeList;
-        if (config.useCustomDictionary && config.speechTagging && posTagger != null)
+        if (config.useCustomDictionary)
         {
-            attributeList = new LinkedList<CoreDictionary.Attribute>();
-            segment(original, normalized, wordList, attributeList);
+            if (config.forceCustomDictionary)
+            {
+                attributeList = new LinkedList<CoreDictionary.Attribute>();
+                segment(original, normalized, wordList, attributeList);
+            }
+            else
+            {
+                segmenter.segment(original, normalized, wordList);
+                attributeList = combineWithCustomDictionary(wordList);
+            }
         }
         else
         {
+            segmenter.segment(original, normalized, wordList);
             attributeList = null;
-            segment(original, normalized, wordList);
         }
         return attributeList;
+    }
+
+    /**
+     * 使用用户词典合并粗分结果
+     *
+     * @param vertexList 粗分结果
+     * @return 合并后的结果
+     */
+    protected static List<CoreDictionary.Attribute> combineWithCustomDictionary(List<String> vertexList)
+    {
+        String[] wordNet = new String[vertexList.size()];
+        vertexList.toArray(wordNet);
+        CoreDictionary.Attribute[] attributeArray = new CoreDictionary.Attribute[wordNet.length];
+        // DAT合并
+        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
+        int length = wordNet.length;
+        for (int i = 0; i < length; ++i)
+        {
+            int state = 1;
+            state = dat.transition(wordNet[i], state);
+            if (state > 0)
+            {
+                int to = i + 1;
+                int end = to;
+                CoreDictionary.Attribute value = dat.output(state);
+                for (; to < length; ++to)
+                {
+                    state = dat.transition(wordNet[to], state);
+                    if (state < 0) break;
+                    CoreDictionary.Attribute output = dat.output(state);
+                    if (output != null)
+                    {
+                        value = output;
+                        end = to + 1;
+                    }
+                }
+                if (value != null)
+                {
+                    combineWords(wordNet, i, end, attributeArray, value);
+                    i = end - 1;
+                }
+            }
+        }
+        // BinTrie合并
+        if (CustomDictionary.trie != null)
+        {
+            for (int i = 1; i < length; ++i)
+            {
+                if (wordNet[i] == null) continue;
+                BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i], 0);
+                if (state != null)
+                {
+                    int to = i + 1;
+                    int end = to;
+                    CoreDictionary.Attribute value = state.getValue();
+                    for (; to < length; ++to)
+                    {
+                        if (wordNet[to] == null) continue;
+                        state = state.transition(wordNet[to], 0);
+                        if (state == null) break;
+                        if (state.getValue() != null)
+                        {
+                            value = state.getValue();
+                            end = to + 1;
+                        }
+                    }
+                    if (value != null)
+                    {
+                        combineWords(wordNet, i, end, attributeArray, value);
+                        i = end - 1;
+                    }
+                }
+            }
+        }
+        vertexList.clear();
+        List<CoreDictionary.Attribute> attributeList = new LinkedList<CoreDictionary.Attribute>();
+        for (int i = 0; i < wordNet.length; i++)
+        {
+            if (wordNet[i] != null)
+            {
+                vertexList.add(wordNet[i]);
+                attributeList.add(attributeArray[i]);
+            }
+        }
+        return attributeList;
+    }
+
+    /**
+     * 将连续的词语合并为一个
+     *
+     * @param wordNet 词图
+     * @param start   起始下标（包含）
+     * @param end     结束下标（不包含）
+     * @param value   新的属性
+     */
+    private static void combineWords(String[] wordNet, int start, int end, CoreDictionary.Attribute[] attributeArray, CoreDictionary.Attribute value)
+    {
+        if (start + 1 != end)   // 小优化，如果只有一个词，那就不需要合并，直接应用新属性
+        {
+            StringBuilder sbTerm = new StringBuilder();
+            for (int j = start; j < end; ++j)
+            {
+                if (wordNet[j] == null) continue;
+                sbTerm.append(wordNet[j]);
+                wordNet[j] = null;
+            }
+            wordNet[start] = sbTerm.toString();
+        }
+        attributeArray[start] = value;
     }
 }

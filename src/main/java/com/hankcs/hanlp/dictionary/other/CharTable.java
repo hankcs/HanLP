@@ -12,6 +12,10 @@
 package com.hankcs.hanlp.dictionary.other;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.document.sentence.Sentence;
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
 
@@ -138,6 +142,22 @@ public class CharTable
         for (int i = 0; i < charArray.length; i++)
         {
             charArray[i] = CONVERT[charArray[i]];
+        }
+    }
+
+    public static void normalize(Sentence sentence)
+    {
+        for (IWord word : sentence)
+        {
+            if (word instanceof CompoundWord)
+            {
+                for (Word w : ((CompoundWord) word).innerList)
+                {
+                    w.value = convert(w.value);
+                }
+            }
+            else
+                word.setValue(word.getValue());
         }
     }
 }

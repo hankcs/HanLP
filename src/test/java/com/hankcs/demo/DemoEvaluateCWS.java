@@ -1,7 +1,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.model.perceptron.CWSTrainer;
-import com.hankcs.hanlp.model.perceptron.MSR;
+import com.hankcs.hanlp.corpus.MSR;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.model.perceptron.PerceptronTrainer;
 import com.hankcs.hanlp.seg.Segment;
