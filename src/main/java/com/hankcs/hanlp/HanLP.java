@@ -352,9 +352,9 @@ public class HanLP
                                           "Appserver/lib\n" +
                                           "JRE/lib\n");
                         sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
-                        sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
+                        sbInfo.append("现在HanLP将尝试从jar包内部resource读取data……");
                     }
-                    logger.severe("没有找到hanlp.properties，可能会导致找不到data\n" + sbInfo);
+                    logger.info("没有找到hanlp.properties，进入portable模式。若需要自定义，请按下列提示操作：\n" + sbInfo);
                 }
             }
         }
