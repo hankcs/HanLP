@@ -38,7 +38,6 @@ public class ClusterAnalyzer<K>
     protected MutableDoubleArrayTrieInteger vocabulary;
     static final int NUM_REFINE_LOOP = 30;
 
-
     public ClusterAnalyzer()
     {
         documents_ = new HashMap<K, Document<K>>();
@@ -57,6 +56,12 @@ public class ClusterAnalyzer<K>
         return id;
     }
 
+    /**
+     * 重载此方法实现自己的预处理逻辑（预处理、分词、去除停用词）
+     *
+     * @param document 文档
+     * @return 单词列表
+     */
     protected List<String> preprocess(String document)
     {
         List<Term> termList = segment.seg(document);
@@ -165,7 +170,7 @@ public class ClusterAnalyzer<K>
     }
 
     /**
-     * 执行 repeated bisection 聚类
+     * repeated bisection 聚类
      *
      * @param nclusters 簇的数量
      * @return 指定数量的簇（Set）构成的集合
@@ -176,7 +181,7 @@ public class ClusterAnalyzer<K>
     }
 
     /**
-     * 执行 repeated bisection 聚类
+     * repeated bisection 聚类
      *
      * @param limit_eval 准则函数增幅阈值
      * @return 指定数量的簇（Set）构成的集合
@@ -187,7 +192,7 @@ public class ClusterAnalyzer<K>
     }
 
     /**
-     * 执行 repeated bisection 聚类
+     * repeated bisection 聚类
      *
      * @param nclusters  簇的数量
      * @param limit_eval 准则函数增幅阈值
@@ -355,10 +360,10 @@ public class ClusterAnalyzer<K>
      *                   │   └── ...<br>
      *                   └── ...<br>
      *                   文件不一定需要用数字命名,也不需要以txt作为后缀名,但一定需要是文本文件.
-     * @param algoritm   kmeans 或 repeated bisection
+     * @param algorithm  kmeans 或 repeated bisection
      * @throws IOException 任何可能的IO异常
      */
-    public static double evaluate(String folderPath, String algoritm)
+    public static double evaluate(String folderPath, String algorithm)
     {
         if (folderPath == null) throw new IllegalArgumentException("参数 folderPath == null");
         File root = new File(folderPath);
@@ -400,8 +405,8 @@ public class ClusterAnalyzer<K>
             ++offset;
         }
         logger.finish(" 加载了 %d 个类目,共 %d 篇文档\n", folders.length, docSize);
-        logger.start(algoritm + "聚类中...");
-        List<Set<String>> clusterList = algoritm.replaceAll("[-\\s]", "").toLowerCase().equals("kmeans") ?
+        logger.start(algorithm + "聚类中...");
+        List<Set<String>> clusterList = algorithm.replaceAll("[-\\s]", "").toLowerCase().equals("kmeans") ?
             analyzer.kmeans(ni.length) : analyzer.repeatedBisection(ni.length);
         logger.finish(" 完毕。\n");
         double[] fi = new double[ni.length];
