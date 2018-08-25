@@ -166,9 +166,9 @@ public class WordNet
         // 保证这个词语后面直连
         int l = line + vertex.realWord.length();
         LinkedList<Vertex> targetLine = wordNetAll.get(l);
-        if (vertexes[l].size() < targetLine.size())
+        if (vertexes[l].size() == 0 && targetLine.size() != 0) // 有时候vertexes里面的词语已经经过用户词典合并，造成数量更少
         {
-            size += (targetLine.size() - vertexes[l].size());
+            size += targetLine.size();
             vertexes[l] = targetLine;
         }
     }
@@ -201,6 +201,7 @@ public class WordNet
 
     /**
      * 获取某一行的逆序迭代器
+     *
      * @param line 行号
      * @return 逆序迭代器
      */
