@@ -26,6 +26,7 @@ public class DemoNLPSegment extends TestUtility
 {
     public static void main(String[] args)
     {
+        NLPTokenizer.ANALYZER.enableCustomDictionary(false); // 中文分词≠词典，不用词典照样分词。
         System.out.println(NLPTokenizer.segment("我新造一个词叫幻想乡你能识别并正确标注词性吗？")); // “正确”是副形词。
         // 注意观察下面两个“希望”的词性、两个“晚霞”的词性
         System.out.println(NLPTokenizer.analyze("我的希望是希望张晚霞的背影被晚霞映红").translateLabels());

@@ -16,7 +16,7 @@ HanLP提供下列功能：
 * 中文分词
     * HMM-Bigram（速度与精度最佳平衡；一百兆内存）
         * [最短路分词](https://github.com/hankcs/HanLP#1-%E7%AC%AC%E4%B8%80%E4%B8%AAdemo)、[N-最短路分词](https://github.com/hankcs/HanLP#5-n-%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E5%88%86%E8%AF%8D)
-    * 由字构词（侧重精度，可识别新词；适合NLP任务）
+    * 由字构词（侧重精度，全世界最大语料库，可识别新词；适合NLP任务）
         * [感知机分词](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)、[CRF分词](https://github.com/hankcs/HanLP#6-crf%E5%88%86%E8%AF%8D)
     * 词典分词（侧重速度，每秒数千万字符；省内存）
         * [极速词典分词](https://github.com/hankcs/HanLP#7-%E6%9E%81%E9%80%9F%E8%AF%8D%E5%85%B8%E5%88%86%E8%AF%8D)
@@ -54,15 +54,15 @@ HanLP提供下列功能：
     * 词向量训练、加载、词语相似度计算、语义运算、查询、KMeans聚类
     * 文档语义相似度计算
 * [语料库工具](https://github.com/hankcs/HanLP/tree/master/src/main/java/com/hankcs/hanlp/corpus)
-    - 默认模型训练自小型语料库，鼓励用户自行训练。所有模块提供[训练接口](https://github.com/hankcs/HanLP/wiki)，语料可参考[OpenCorpus](https://github.com/hankcs/OpenCorpus)。
+    - 部分默认模型训练自小型语料库，鼓励用户自行训练。所有模块提供[训练接口](https://github.com/hankcs/HanLP/wiki)，语料可参考[OpenCorpus](https://github.com/hankcs/OpenCorpus)。
 
-在提供丰富功能的同时，HanLP内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便，同时自带一些语料处理工具，帮助用户训练自己的模型。
+在提供丰富功能的同时，HanLP内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便。默认模型训练自全世界最大规模的中文语料库，同时自带一些语料处理工具，帮助用户训练自己的模型。
 
 ------
 
 ## 项目主页
 
-[在线演示](http://hanlp.hankcs.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[国内下载](http://hanlp.dksou.com/HanLP.html)、[更多信息](https://github.com/hankcs/HanLP/wiki)。
+[在线演示](http://hanlp.hankcs.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[论文引用](https://github.com/hankcs/HanLP/wiki/%E8%AE%BA%E6%96%87%E5%BC%95%E7%94%A8)、[更多信息](https://github.com/hankcs/HanLP/wiki)。
 
 ------
 
@@ -76,7 +76,7 @@ HanLP提供下列功能：
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.6.7</version>
+    <version>portable-1.6.8</version>
 </dependency>
 ```
 
@@ -110,7 +110,7 @@ HanLP中的数据分为*词典*和*模型*，其中*词典*是词法分析必需
 
 为data的**父目录**即可，比如data目录是`/Users/hankcs/Documents/data`，那么`root=/Users/hankcs/Documents/` 。
 
-最后将`hanlp.properties`放入classpath即可，对于任何项目，都可以放到src或resources目录下，编译时IDE会自动将其复制到classpath中。除了配置文件外，还可以使用环境变量`HANLP_ROOT`来设置`root`。
+最后将`hanlp.properties`放入classpath即可，对于多数项目，都可以放到src或resources目录下，编译时IDE会自动将其复制到classpath中。除了配置文件外，还可以使用环境变量`HANLP_ROOT`来设置`root`。安卓项目请参考[demo](https://github.com/hankcs/HanLPAndroidDemo)。
 
 如果放置不当，HanLP会提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
 
@@ -118,7 +118,7 @@ HanLP中的数据分为*词典*和*模型*，其中*词典*是词法分析必需
 
 HanLP几乎所有的功能都可以通过工具类`HanLP`快捷调用，当你想不起来调用方法时，只需键入`HanLP.`，IDE应当会给出提示，并展示HanLP完善的文档。
 
-所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下，比文档覆盖了更多细节，更新更及时，**强烈建议运行一遍**。
+所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下，比文档覆盖了更多细节，更新更及时，**强烈建议运行一遍**。此处仅列举部分常用接口。
 
 ### 1. 第一个Demo
 
@@ -155,8 +155,8 @@ System.out.println(NLPTokenizer.analyze("我的希望是希望张晚霞的背影
 System.out.println(NLPTokenizer.analyze("支援臺灣正體香港繁體：微软公司於1975年由比爾·蓋茲和保羅·艾倫創立。"));
 ```
 - 说明
-  * NLP分词`NLPTokenizer`会执行全部命名实体识别和词性标注。
-  * 默认模型训练自[微软研究院语料库修订版](https://github.com/hankcs/OpenCorpus/tree/master/msra-ne)或[98年1月份人民日报语料修订版](https://github.com/hankcs/OpenCorpus/tree/master/pku98)（仅有`183`万字）。语料库规模决定实际效果，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上[训练新模型](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)以适应新领域、识别新的命名实体。
+  * NLP分词`NLPTokenizer`会执行词性标注和命名实体识别，由[结构化感知机序列标注框架](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)支撑。
+  * 默认模型训练自`9970`万字的大型综合语料库，是已知范围内**全世界最大**的中文分词语料库。语料库规模决定实际效果，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上[训练新模型](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)以适应新领域、识别新的命名实体。
 
 ### 4. 索引分词
 
@@ -194,23 +194,21 @@ for (String sentence : testCase)
 ### 6. CRF分词
 
 ```java
-Segment segment = new CRFSegment();
-segment.enablePartOfSpeechTagging(true);
-List<Term> termList = segment.seg("你看过穆赫兰道吗");
-System.out.println(termList);
-for (Term term : termList)
-{
-    if (term.nature == null)
-    {
-        System.out.println("识别到新词：" + term.word);
-    }
-}
+        CRFLexicalAnalyzer analyzer = new CRFLexicalAnalyzer();
+        String[] tests = new String[]{
+            "商品和服务",
+            "上海华安工业（集团）公司董事长谭旭光和秘书胡花蕊来到美国纽约现代艺术博物馆参观",
+            "微软公司於1975年由比爾·蓋茲和保羅·艾倫創立，18年啟動以智慧雲端、前端為導向的大改組。" // 支持繁体中文
+        };
+        for (String sentence : tests)
+        {
+            System.out.println(analyzer.analyze(sentence));
+        }
 ```
 - 说明
   * CRF对新词有很好的识别能力，但是开销较大。
 - 算法详解
-  * [《CRF分词的纯Java实现》](http://www.hankcs.com/nlp/segment/crf-segmentation-of-the-pure-java-implementation.html)
-  * [《CRF++模型格式说明》](http://www.hankcs.com/nlp/the-crf-model-format-description.html)
+  * [《CRF中文分词、词性标注与命名实体识别》](https://github.com/hankcs/HanLP/wiki/CRF%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90)
 
 ### 7. 极速词典分词
 
@@ -282,8 +280,8 @@ public class DemoCustomDictionary
 }
 ```
 - 说明
-  * `CustomDictionary`是一份全局的用户自定义词典，可以随时增删，影响全部分词器。
-  * 另外可以在任何分词器中关闭它。通过代码动态增删不会保存到词典文件。
+  * `CustomDictionary`是一份全局的用户自定义词典，可以随时增删，影响全部分词器。另外可以在任何分词器中关闭它。通过代码动态增删不会保存到词典文件。
+  * 中文分词≠词典，词典无法解决中文分词，`Segment`提供高低优先级应对不同场景，请参考[FAQ](https://github.com/hankcs/HanLP/wiki/FAQ#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BF%AE%E6%94%B9%E4%BA%86%E8%AF%8D%E5%85%B8%E8%BF%98%E6%98%AF%E6%B2%A1%E6%9C%89%E6%95%88%E6%9E%9C)。
 - 追加词典
   * `CustomDictionary`主词典文本路径是`data/dictionary/custom/CustomDictionary.txt`，用户可以在此增加自己的词语（不推荐）；也可以单独新建一个文本文件，通过配置文件`CustomDictionaryPath=data/dictionary/custom/CustomDictionary.txt; 我的词典.txt;`来追加词典（推荐）。
   * 始终建议将相同词性的词语放到同一个词典文件里，便于维护和分享。
