@@ -504,4 +504,11 @@ public class SegmentTest extends TestCase
     {
         assertTrue(HanLP.segment("1月中旬应该会发生什么").toString().contains("1月"));
     }
+
+    public void testIssue932() throws Exception
+    {
+        Segment segment = new DijkstraSegment().enableOrganizationRecognize(true);
+        HanLP.Config.enableDebug();
+        System.out.println(segment.seg("福哈生态工程有限公司"));
+    }
 }
