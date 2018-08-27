@@ -13,6 +13,7 @@ package com.hankcs.demo;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.mining.word.WordInfo;
+import com.hankcs.hanlp.utility.TestUtility;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,10 +25,12 @@ import java.util.List;
  */
 public class DemoNewWordDiscover
 {
+    static final String CORPUS_PATH = TestUtility.ensureTestData("红楼梦.txt", "http://hanlp.linrunsoft.com/release/corpus/红楼梦.zip");
+
     public static void main(String[] args) throws IOException
     {
         // 文本长度越大越好，试试红楼梦？
-        List<WordInfo> wordInfoList = HanLP.extractWords(IOUtil.newBufferedReader("data/test/红楼梦.txt"), 100);
+        List<WordInfo> wordInfoList = HanLP.extractWords(IOUtil.newBufferedReader(CORPUS_PATH), 100);
         System.out.println(wordInfoList);
     }
 }

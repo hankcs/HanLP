@@ -26,12 +26,14 @@ public class PKU
     public static String PKU199801_TRAIN = "data/test/pku98/199801-train.txt";
     public static String PKU199801_TEST = "data/test/pku98/199801-test.txt";
     public static String POS_MODEL = "/pos.bin";
+    public static String NER_MODEL = "/ner.bin";
     public static final String PKU_98 = TestUtility.ensureTestData("pku98", "http://hanlp.linrunsoft.com/release/corpus/pku98.zip");
 
     static
     {
         PKU199801 = PKU_98 + "/199801.txt";
         POS_MODEL = PKU_98 + POS_MODEL;
+        NER_MODEL = PKU_98 +NER_MODEL;
         if (!IOUtil.isFileExisted(PKU199801_TRAIN))
         {
             ArrayList<String> all = new ArrayList<String>();

@@ -409,7 +409,7 @@ public class IOUtil
      */
     public static String removeUTF8BOM(String line)
     {
-        if (line.startsWith("\uFEFF")) // UTF-8 byte order mark (EF BB BF)
+        if (line != null && line.startsWith("\uFEFF")) // UTF-8 byte order mark (EF BB BF)
         {
             line = line.substring(1);
         }

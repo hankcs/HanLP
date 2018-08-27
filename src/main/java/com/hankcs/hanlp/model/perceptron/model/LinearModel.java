@@ -24,6 +24,7 @@ import com.hankcs.hanlp.model.perceptron.feature.FeatureSortItem;
 import com.hankcs.hanlp.model.perceptron.feature.ImmutableFeatureMDatMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
+import com.hankcs.hanlp.utility.MathUtility;
 
 import java.io.*;
 import java.util.*;
@@ -97,8 +98,15 @@ public class LinearModel implements ICacheAble
             }
         });
 
+        logger.start("裁剪特征...\n");
+        int logEvery = (int) Math.ceil(featureMap.size() / 10000f);
+        int n = 0;
         for (Map.Entry<String, Integer> entry : featureIdSet)
         {
+            if (++n % logEvery == 0 || n == featureMap.size())
+            {
+                logger.out("\r%.2f%% ", MathUtility.percentage(n, featureMap.size()));
+            }
             if (entry.getValue() < tagSet.sizeIncludingBos())
             {
                 continue;
@@ -107,9 +115,9 @@ public class LinearModel implements ICacheAble
             if (item.total < threshold) continue;
             heap.add(item);
         }
+        logger.finish("\n裁剪完毕\n");
 
-        List<FeatureSortItem> items = heap.toList();
-        int size = items.size() + tagSet.sizeIncludingBos();
+        int size = heap.size() + tagSet.sizeIncludingBos();
         float[] parameter = new float[size * tagSet.size()];
         MutableDoubleArrayTrieInteger mdat = new MutableDoubleArrayTrieInteger();
         for (Map.Entry<String, Integer> tag : tagSet)
@@ -121,8 +129,15 @@ public class LinearModel implements ICacheAble
         {
             parameter[i] = this.parameter[i];
         }
-        for (FeatureSortItem item : items)
+        logger.start("构建双数组trie树...\n");
+        logEvery = (int) Math.ceil(heap.size() / 10000f);
+        n = 0;
+        for (FeatureSortItem item : heap)
         {
+            if (++n % logEvery == 0 || n == heap.size())
+            {
+                logger.out("\r%.2f%% ", MathUtility.percentage(n, heap.size()));
+            }
             int id = mdat.size();
             mdat.put(item.key, id);
             for (int i = 0; i < tagSet.size(); ++i)
@@ -130,6 +145,7 @@ public class LinearModel implements ICacheAble
                 parameter[id * tagSet.size() + i] = this.parameter[item.id * tagSet.size() + i];
             }
         }
+        logger.finish("\n构建完毕\n");
         this.featureMap = new ImmutableFeatureMDatMap(mdat, tagSet);
         this.parameter = parameter;
         return this;

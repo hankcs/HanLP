@@ -14,10 +14,6 @@ import java.util.*;
 public class TextRankKeyword extends KeywordExtractor
 {
     /**
-     * 提取多少个关键字
-     */
-    int nKeyword = 10;
-    /**
      * 阻尼系数（ＤａｍｐｉｎｇＦａｃｔｏｒ），一般取值为0.85
      */
     final static float d = 0.85f;
@@ -37,9 +33,8 @@ public class TextRankKeyword extends KeywordExtractor
     public static List<String> getKeywordList(String document, int size)
     {
         TextRankKeyword textRankKeyword = new TextRankKeyword();
-        textRankKeyword.nKeyword = size;
 
-        return textRankKeyword.getKeyword(document);
+        return textRankKeyword.getKeywords(document, size);
     }
 
     /**
@@ -47,16 +42,11 @@ public class TextRankKeyword extends KeywordExtractor
      *
      * @param content
      * @return
+     * @deprecated 请使用 {@link KeywordExtractor#getKeywords(java.lang.String)}
      */
     public List<String> getKeyword(String content)
     {
-        Set<Map.Entry<String, Float>> entrySet = getTermAndRank(content, nKeyword).entrySet();
-        List<String> result = new ArrayList<String>(entrySet.size());
-        for (Map.Entry<String, Float> entry : entrySet)
-        {
-            result.add(entry.getKey());
-        }
-        return result;
+        return getKeywords(content);
     }
 
     /**
@@ -69,7 +59,7 @@ public class TextRankKeyword extends KeywordExtractor
     {
         assert content != null;
         List<Term> termList = defaultSegment.seg(content);
-        return getRank(termList);
+        return getTermAndRank(termList);
     }
 
     /**
@@ -79,9 +69,16 @@ public class TextRankKeyword extends KeywordExtractor
      * @param size
      * @return
      */
-    public Map<String, Float> getTermAndRank(String content, Integer size)
+    public Map<String, Float> getTermAndRank(String content, int size)
     {
         Map<String, Float> map = getTermAndRank(content);
+        Map<String, Float> result = top(size, map);
+
+        return result;
+    }
+
+    private Map<String, Float> top(int size, Map<String, Float> map)
+    {
         Map<String, Float> result = new LinkedHashMap<String, Float>();
         for (Map.Entry<String, Float> entry : new MaxHeap<Map.Entry<String, Float>>(size, new Comparator<Map.Entry<String, Float>>()
         {
@@ -94,7 +91,6 @@ public class TextRankKeyword extends KeywordExtractor
         {
             result.put(entry.getKey(), entry.getValue());
         }
-
         return result;
     }
 
@@ -104,7 +100,7 @@ public class TextRankKeyword extends KeywordExtractor
      * @param termList
      * @return
      */
-    public Map<String, Float> getRank(List<Term> termList)
+    public Map<String, Float> getTermAndRank(List<Term> termList)
     {
         List<String> wordList = new ArrayList<String>(termList.size());
         for (Term t : termList)
@@ -143,9 +139,10 @@ public class TextRankKeyword extends KeywordExtractor
 //        System.out.println(words);
         Map<String, Float> score = new HashMap<String, Float>();
         //依据TF来设置初值
-        for (Map.Entry<String, Set<String>> entry : words.entrySet()){ 
-        	score.put(entry.getKey(),sigMoid(entry.getValue().size()));
-        }        
+        for (Map.Entry<String, Set<String>> entry : words.entrySet())
+        {
+            score.put(entry.getKey(), sigMoid(entry.getValue().size()));
+        }
         for (int i = 0; i < max_iter; ++i)
         {
             Map<String, Float> m = new HashMap<String, Float>();
@@ -169,13 +166,27 @@ public class TextRankKeyword extends KeywordExtractor
 
         return score;
     }
-    
+
     /**
      * sigmoid函数
+     *
      * @param value
      * @return
      */
-    public static float sigMoid(float value) {
-    	return (float)(1d/(1d+Math.exp(-value)));
-    }    
+    public static float sigMoid(float value)
+    {
+        return (float) (1d / (1d + Math.exp(-value)));
+    }
+
+    @Override
+    public List<String> getKeywords(List<Term> termList, int size)
+    {
+        Set<Map.Entry<String, Float>> entrySet = top(size, getTermAndRank(termList)).entrySet();
+        List<String> result = new ArrayList<String>(entrySet.size());
+        for (Map.Entry<String, Float> entry : entrySet)
+        {
+            result.add(entry.getKey());
+        }
+        return result;
+    }
 }

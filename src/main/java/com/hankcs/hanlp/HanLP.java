@@ -167,6 +167,8 @@ public class HanLP
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
         /**
          * HMM分词模型
+         *
+         * @deprecated 已废弃，请使用{@link PerceptronLexicalAnalyzer}
          */
         public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
@@ -184,7 +186,7 @@ public class HanLP
         /**
          * 感知机分词模型
          */
-        public static String PerceptronCWSModelPath = "data/model/perceptron/pku199801/cws.bin";
+        public static String PerceptronCWSModelPath = "data/model/perceptron/large/cws.bin";
         /**
          * 感知机词性标注模型
          */
@@ -764,6 +766,24 @@ public class HanLP
     public static List<WordInfo> extractWords(BufferedReader reader, int size, boolean newWordsOnly) throws IOException
     {
         NewWordDiscover discover = new NewWordDiscover(4, 0.0f, .5f, 100f, newWordsOnly);
+        return discover.discover(reader, size);
+    }
+
+    /**
+     * 提取词语（新词发现）
+     *
+     * @param reader          从reader获取文本
+     * @param size            需要提取词语的数量
+     * @param newWordsOnly    是否只提取词典中没有的词语
+     * @param max_word_len    词语最长长度
+     * @param min_freq        词语最低频率
+     * @param min_entropy     词语最低熵
+     * @param min_aggregation 词语最低互信息
+     * @return 一个词语列表
+     */
+    public static List<WordInfo> extractWords(BufferedReader reader, int size, boolean newWordsOnly, int max_word_len, float min_freq, float min_entropy, float min_aggregation) throws IOException
+    {
+        NewWordDiscover discover = new NewWordDiscover(max_word_len, min_freq, min_entropy, min_aggregation, newWordsOnly);
         return discover.discover(reader, size);
     }
 

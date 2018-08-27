@@ -17,6 +17,7 @@ public class CRFPOSTaggerTest extends TestCase
     {
         CRFPOSTagger tagger = new CRFPOSTagger(null); // 创建空白标注器
         tagger.train(PKU.PKU199801_TRAIN, PKU.POS_MODEL); // 训练
+        tagger = new CRFPOSTagger(PKU.POS_MODEL); // 加载
         System.out.println(Arrays.toString(tagger.tag("他", "的", "希望", "是", "希望", "上学"))); // 预测
         AbstractLexicalAnalyzer analyzer = new AbstractLexicalAnalyzer(new PerceptronSegmenter(), tagger); // 构造词法分析器
         System.out.println(analyzer.analyze("李狗蛋的希望是希望上学")); // 分词+词性标注

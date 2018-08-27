@@ -11,9 +11,9 @@
  */
 package com.hankcs.hanlp.model.perceptron.utility;
 
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.perceptron.PerceptronSegmenter;
-import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.document.Document;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
@@ -22,6 +22,7 @@ import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
+import com.hankcs.hanlp.tokenizer.lexical.NERecognizer;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -83,13 +84,7 @@ public class Utility
 
     public static String normalize(String text)
     {
-        return text;
-//        StringBuilder sb = new StringBuilder(text.length());
-//        for (int i = 0; i < text.length(); i++)
-//        {
-//            sb.append(CharTable.convertPKUtoCWS(text.charAt(i)));
-//        }
-//        return sb.toString();
+        return CharTable.convert(text);
     }
 
     /**
@@ -378,6 +373,121 @@ public class Utility
             {
                 word.setValue(CharTable.convert(word.getValue()));
             }
+        }
+    }
+
+    public static Map<String, double[]> evaluateNER(NERecognizer recognizer, String goldFile)
+    {
+        Map<String, double[]> scores = new TreeMap<String, double[]>();
+        double[] avg = new double[]{0, 0, 0};
+        scores.put("avg.", avg);
+        NERTagSet tagSet = recognizer.getNERTagSet();
+        IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(goldFile);
+        for (String line : lineIterator)
+        {
+            line = line.trim();
+            if (line.isEmpty()) continue;
+            Sentence sentence = Sentence.create(line);
+            if (sentence == null) continue;
+            String[][] table = reshapeNER(convertSentenceToNER(sentence, tagSet));
+            Set<String> pred = combineNER(recognizer.recognize(table[0], table[1]), tagSet);
+            Set<String> gold = combineNER(table[2], tagSet);
+            for (String p : pred)
+            {
+                String type = p.split("\t")[2];
+                double[] s = scores.get(type);
+                if (s == null)
+                {
+                    s = new double[]{0, 0, 0};
+                    scores.put(type, s);
+                }
+                if (gold.contains(p))
+                {
+                    ++s[2]; // 正确识别该类命名实体数
+                    ++avg[2];
+                }
+                ++s[0]; // 识别出该类命名实体总数
+                ++avg[0];
+            }
+            for (String g : gold)
+            {
+                String type = g.split("\t")[2];
+                double[] s = scores.get(type);
+                if (s == null)
+                {
+                    s = new double[]{0, 0, 0};
+                    scores.put(type, s);
+                }
+                ++s[1]; // 该类命名实体总数
+                ++avg[1];
+            }
+        }
+        for (double[] s : scores.values())
+        {
+            if (s[2] == 0)
+            {
+                s[0] = 0;
+                s[1] = 0;
+                continue;
+            }
+            s[1] = s[2] / s[1] * 100; // R=正确识别该类命名实体数/该类命名实体总数×100%
+            s[0] = s[2] / s[0] * 100; // P=正确识别该类命名实体数/识别出该类命名实体总数×100%
+            s[2] = 2 * s[0] * s[1] / (s[0] + s[1]);
+        }
+        return scores;
+    }
+
+    public static Set<String> combineNER(String[] nerArray, NERTagSet tagSet)
+    {
+        Set<String> result = new LinkedHashSet<String>();
+        int begin = 0;
+        String prePos = NERTagSet.posOf(nerArray[0]);
+        for (int i = 1; i < nerArray.length; i++)
+        {
+            if (nerArray[i].charAt(0) == tagSet.B_TAG_CHAR || nerArray[i].charAt(0) == tagSet.S_TAG_CHAR || nerArray[i].charAt(0) == tagSet.O_TAG_CHAR)
+            {
+                if (i - begin > 1)
+                    result.add(String.format("%d\t%d\t%s", begin, i, prePos));
+                begin = i;
+            }
+            prePos = NERTagSet.posOf(nerArray[i]);
+        }
+        if (nerArray.length - 1 - begin > 1)
+        {
+            result.add(String.format("%d\t%d\t%s", begin, nerArray.length, prePos));
+        }
+        return result;
+    }
+
+    public static String[][] reshapeNER(List<String[]> ner)
+    {
+        String[] wordArray = new String[ner.size()];
+        String[] posArray = new String[ner.size()];
+        String[] nerArray = new String[ner.size()];
+        reshapeNER(ner, wordArray, posArray, nerArray);
+        return new String[][]{wordArray, posArray, nerArray};
+    }
+
+    public static void reshapeNER(List<String[]> collector, String[] wordArray, String[] posArray, String[] tagArray)
+    {
+        int i = 0;
+        for (String[] tuple : collector)
+        {
+            wordArray[i] = tuple[0];
+            posArray[i] = tuple[1];
+            tagArray[i] = tuple[2];
+            ++i;
+        }
+    }
+
+    public static void printNERScore(Map<String, double[]> scores)
+    {
+        System.out.printf("%4s\t%6s\t%6s\t%6s\n", "NER", "P", "R", "F1");
+        for (Map.Entry<String, double[]> entry : scores.entrySet())
+        {
+            String type = entry.getKey();
+            double[] s = entry.getValue();
+            System.out.printf("%4s\t%6.2f\t%6.2f\t%6.2f\n", type, s[0], s[1], s[2]);
         }
     }
 }

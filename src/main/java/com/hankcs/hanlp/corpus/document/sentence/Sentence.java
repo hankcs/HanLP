@@ -61,12 +61,53 @@ public class Sentence implements Serializable, Iterable<IWord>
     }
 
     /**
+     * 转换为空格分割无标签的String
+     *
+     * @return
+     */
+    public String toStringWithoutLabels()
+    {
+        StringBuilder sb = new StringBuilder(size() * 4);
+        int i = 1;
+        for (IWord word : wordList)
+        {
+            if (word instanceof CompoundWord)
+            {
+                int j = 0;
+                for (Word w : ((CompoundWord) word).innerList)
+                {
+                    sb.append(w.getValue());
+                    if (++j != ((CompoundWord) word).innerList.size())
+                        sb.append(' ');
+                }
+            }
+            else
+                sb.append(word.getValue());
+            if (i != wordList.size()) sb.append(' ');
+            ++i;
+        }
+        return sb.toString();
+    }
+
+    /**
      * brat standoff format<br>
      * http://brat.nlplab.org/standoff.html
      *
      * @return
      */
     public String toStandoff()
+    {
+        return toStandoff(false);
+    }
+
+    /**
+     * brat standoff format<br>
+     * http://brat.nlplab.org/standoff.html
+     *
+     * @param withComment
+     * @return
+     */
+    public String toStandoff(boolean withComment)
     {
         StringBuilder sb = new StringBuilder(size() * 4);
         String delimiter = " ";
@@ -77,14 +118,14 @@ public class Sentence implements Serializable, Iterable<IWord>
         for (IWord word : wordList)
         {
             assert text.charAt(offset) == word.getValue().charAt(0);
-            printWord(word, sb, i, offset);
+            printWord(word, sb, i, offset, withComment);
             ++i;
             if (word instanceof CompoundWord)
             {
                 int offsetChild = offset;
                 for (Word child : ((CompoundWord) word).innerList)
                 {
-                    printWord(child, sb, i, offsetChild);
+                    printWord(child, sb, i, offsetChild, withComment);
                     offsetChild += child.length();
                     offsetChild += delimiter.length();
                     ++i;
@@ -138,6 +179,11 @@ public class Sentence implements Serializable, Iterable<IWord>
 
     private void printWord(IWord word, StringBuilder sb, int id, int offset)
     {
+        printWord(word, sb, id, offset, false);
+    }
+
+    private void printWord(IWord word, StringBuilder sb, int id, int offset, boolean withComment)
+    {
         char delimiter = '\t';
         char endLine = '\n';
         sb.append('T').append(id).append(delimiter);
@@ -149,6 +195,13 @@ public class Sentence implements Serializable, Iterable<IWord>
         }
         sb.append(offset).append(delimiter).append(offset + length).append(delimiter);
         sb.append(word.getValue()).append(endLine);
+        String translated = PartOfSpeechTagDictionary.translate(word.getLabel());
+        if (withComment && !word.getLabel().equals(translated))
+        {
+            sb.append('#').append(id).append(delimiter).append("AnnotatorNotes").append(delimiter)
+                .append('T').append(id).append(delimiter).append(translated)
+                .append(endLine);
+        }
     }
 
     /**
@@ -413,5 +466,35 @@ public class Sentence implements Serializable, Iterable<IWord>
             }
         }
         return result;
+    }
+
+    public Sentence mergeCompoundWords()
+    {
+        ListIterator<IWord> listIterator = wordList.listIterator();
+        while (listIterator.hasNext())
+        {
+            IWord word = listIterator.next();
+            if (word instanceof CompoundWord)
+            {
+                listIterator.set(new Word(word.getValue(), word.getLabel()));
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sentence sentence = (Sentence) o;
+        return toString().equals(sentence.toString());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return toString().hashCode();
     }
 }

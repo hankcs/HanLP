@@ -17,7 +17,10 @@ import com.hankcs.hanlp.utility.TestUtility;
 import java.io.IOException;
 
 /**
- * 基于感知机序列标注的词法分析器，默认模型训练自1998人民日报语料1月份。欢迎在更大的语料库上训练，以得到更好的效果。
+ * 基于感知机序列标注的词法分析器，可选多个模型。
+ * - large训练自一亿字的大型综合语料库，是已知范围内全世界最大的中文分词语料库。
+ * - pku199801训练自个人修订版1998人民日报语料1月份，仅有183万字。
+ * 语料库规模决定实际效果，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上训练新模型以适应新领域、识别新的命名实体。
  * 无论在何种语料上训练，都完全支持简繁全半角和大小写。
  *
  * @author hankcs
@@ -26,7 +29,9 @@ public class DemoPerceptronLexicalAnalyzer extends TestUtility
 {
     public static void main(String[] args) throws IOException
     {
-        PerceptronLexicalAnalyzer analyzer = new PerceptronLexicalAnalyzer();
+        PerceptronLexicalAnalyzer analyzer = new PerceptronLexicalAnalyzer("data/model/perceptron/pku199801/cws.bin",
+                                                                           HanLP.Config.PerceptronPOSModelPath,
+                                                                           HanLP.Config.PerceptronNERModelPath);
         System.out.println(analyzer.analyze("上海华安工业（集团）公司董事长谭旭光和秘书胡花蕊来到美国纽约现代艺术博物馆参观"));
         System.out.println(analyzer.analyze("微软公司於1975年由比爾·蓋茲和保羅·艾倫創立，18年啟動以智慧雲端、前端為導向的大改組。"));
 

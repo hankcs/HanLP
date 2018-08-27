@@ -139,6 +139,7 @@ public class LogLinearModel extends LinearModel
                 tagSet = new NERTagSet(tagSet.idOf("O"), tagSet.tags());
                 break;
         }
+        tagSet.lock();
         this.featureMap = new MutableFeatureMap(tagSet);
         FeatureMap featureMap = this.featureMap;
         final int sizeOfTagSet = tagSet.size();

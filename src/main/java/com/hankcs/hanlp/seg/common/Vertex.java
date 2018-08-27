@@ -150,7 +150,7 @@ public class Vertex
 //                    word= Predefine.TAG_OTHER;
 //                }
 //                break;
-            else if (nature.startsWith('t'))
+            else if (nature == Nature.t)
             {
                 wordID = CoreDictionary.T_WORD_ID;
                 this.attribute = CoreDictionary.get(CoreDictionary.T_WORD_ID);
@@ -462,6 +462,11 @@ public class Vertex
     public static Vertex newE()
     {
         return new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.end, Predefine.MAX_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
+    }
+
+    public int length()
+    {
+        return realWord.length();
     }
 
     @Override
