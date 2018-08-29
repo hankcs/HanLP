@@ -1365,7 +1365,6 @@
 体=ti3,ti1
 体己=ti1,ji5
 体胀系数=ti3,zhang4,xi4,shu4
-体面=ti3,cao3
 佔=zhan4,dian1
 何=he2,he1,he4
 何乐不为=he2,le4,bu4,wei2
