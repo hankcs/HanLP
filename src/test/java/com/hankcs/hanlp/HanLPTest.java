@@ -11,4 +11,9 @@ public class HanLPTest extends TestCase
         assertTrue(HanLP.newSegment("维特比") instanceof ViterbiSegment);
         assertTrue(HanLP.newSegment("感知机") instanceof PerceptronLexicalAnalyzer);
     }
+
+    public void testDicUpdate()
+    {
+        System.out.println(HanLP.segment("大数据是一个新词汇！"));
+    }
 }
