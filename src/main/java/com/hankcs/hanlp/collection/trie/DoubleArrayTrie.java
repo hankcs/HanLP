@@ -1320,6 +1320,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
                     if (begin == arrayLength) break;
                     if (value != null)
                     {
+                        i = begin + length;         // 输出最长词后，从该词语的下一个位置恢复扫描
                         return true;
                     }
 
