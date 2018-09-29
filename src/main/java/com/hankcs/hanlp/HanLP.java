@@ -229,7 +229,8 @@ public class HanLP
                 }
                 catch (Exception e)
                 {
-                    String HANLP_ROOT = System.getenv("HANLP_ROOT");
+                    String HANLP_ROOT = System.getProperty("HANLP_ROOT");
+                    if (HANLP_ROOT == null) HANLP_ROOT = System.getenv("HANLP_ROOT");
                     if (HANLP_ROOT != null)
                     {
                         HANLP_ROOT = HANLP_ROOT.trim();
