@@ -58,6 +58,14 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
         this.segmenter = segmenter;
         this.posTagger = posTagger;
         this.neRecognizer = neRecognizer;
+        if (posTagger != null)
+        {
+            config.speechTagging = true;
+            if (neRecognizer != null)
+            {
+                config.ner = true;
+            }
+        }
     }
 
     /**
