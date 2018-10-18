@@ -58,7 +58,7 @@ public class NewWordDiscover
         String doc;
         Map<String, WordInfo> word_cands = new TreeMap<String, WordInfo>();
         int totalLength = 0;
-        Pattern delimiter = Pattern.compile("[\\s\\d,.<>/?:;'\"\\[\\]{}()\\|~!@#$%^&*\\-_=+a-zA-Z，。《》、？：；“”‘’｛｝【】（）…￥！—┄－]+");
+        Pattern delimiter = Pattern.compile("[\\s\\d,.<>/?:;'\"\\[\\]{}()\\|~!@#$%^&*\\-_=+，。《》、？：；“”‘’｛｝【】（）…￥！—┄－]+");
         while ((doc = reader.readLine()) != null)
         {
             doc = delimiter.matcher(doc).replaceAll("\0");
