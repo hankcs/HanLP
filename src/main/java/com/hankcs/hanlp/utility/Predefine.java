@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
  */
 public class Predefine
 {
+    public static final String CHINESE_NUMBERS = "零○〇一二两三四五六七八九十廿百千万亿壹贰叁肆伍陆柒捌玖拾佰仟";
     /**
      * hanlp.properties的路径，一般情况下位于classpath目录中。
      * 但在某些极端情况下（不标准的Java虚拟机，用户缺乏相关知识等），允许将其设为绝对路径
