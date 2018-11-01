@@ -34,10 +34,16 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
 {
     private parser_dll parser_dll;
 
-    public NeuralNetworkDependencyParser()
+    public NeuralNetworkDependencyParser(Segment segment)
     {
+        super(segment);
         parser_dll = new parser_dll();
         setDeprelTranslater(ConfigOption.DEPRL_DESCRIPTION_PATH).enableDeprelTranslator(true);
+    }
+
+    public NeuralNetworkDependencyParser()
+    {
+        this(NLPTokenizer.ANALYZER);
     }
 
     @Override

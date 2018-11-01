@@ -269,6 +269,10 @@ public class CoreDictionary
             try
             {
                 String param[] = natureWithFrequency.split(" ");
+                if (param.length % 2 != 0)
+                {
+                    return new Attribute(Nature.create(natureWithFrequency.trim()), 1); // 儿童锁
+                }
                 int natureCount = param.length / 2;
                 Attribute attribute = new Attribute(natureCount);
                 for (int i = 0; i < natureCount; ++i)
