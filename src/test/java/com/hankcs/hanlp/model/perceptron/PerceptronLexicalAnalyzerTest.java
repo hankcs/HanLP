@@ -121,4 +121,10 @@ public class PerceptronLexicalAnalyzerTest extends TestCase
         analyzer.enableCustomDictionaryForcing(true);
         System.out.println(analyzer.analyze(text));
     }
+
+    public void testRules() throws Exception
+    {
+        analyzer.enableRuleBasedSegment(true);
+        System.out.println(analyzer.analyze("これは微软公司於1975年由比爾·蓋茲和保羅·艾倫創立，18年啟動以智慧雲端、前端為導向的大改組。"));
+    }
 }

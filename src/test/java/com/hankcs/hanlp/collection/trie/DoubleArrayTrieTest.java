@@ -118,4 +118,19 @@ public class DoubleArrayTrieTest extends TestCase
         {
         }
     }
+
+    public void testIssue966() throws Exception
+    {
+        TreeMap<String, String> map = new TreeMap<String, String>();
+        for (String word : "001乡道, 北京, 北京市通信公司, 来广营乡, 通州区".split(", "))
+        {
+            map.put(word, word);
+        }
+        DoubleArrayTrie<String> trie = new DoubleArrayTrie<String>(map);
+        DoubleArrayTrie<String>.LongestSearcher searcher = trie.getLongestSearcher("北京市通州区001乡道发生了一件有意思的事情，来广营乡歌舞队正在跳舞", 0);
+        while (searcher.next())
+        {
+            System.out.printf("%d %s\n", searcher.begin, searcher.value);
+        }
+    }
 }

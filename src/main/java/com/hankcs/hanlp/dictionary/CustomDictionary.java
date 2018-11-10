@@ -303,6 +303,10 @@ public class CustomDictionary
     {
         try
         {
+            if (isDicNeedUpdate(path))
+            {
+                return false;
+            }
             ByteArray byteArray = ByteArray.createByteArray(path + Predefine.BIN_EXT);
             if (byteArray == null) return false;
             int size = byteArray.nextInt();
@@ -337,6 +341,38 @@ public class CustomDictionary
             return false;
         }
         return true;
+    }
+
+    /**
+     * 获取本地词典更新状态
+     * @return true 表示本地词典比缓存文件新，需要删除缓存
+     */
+    private static boolean isDicNeedUpdate(String mainPath)
+    {
+        if (HanLP.Config.IOAdapter != null &&
+            !HanLP.Config.IOAdapter.getClass().getName().contains("com.hankcs.hanlp.corpus.io.FileIOAdapter"))
+        {
+            return false;
+        }
+        String binPath = mainPath + Predefine.BIN_EXT;
+        File binFile = new File(binPath);
+        if (!binFile.exists())
+        {
+            return true;
+        }
+        long lastModified = binFile.lastModified();
+        String path[] = HanLP.Config.CustomDictionaryPath;
+        for (String p : path)
+        {
+            File f = new File(p);
+            if (f.exists() && f.lastModified() > lastModified)
+            {
+                IOUtil.deleteFile(binPath); // 删掉缓存
+                logger.info("已清除自定义词典缓存文件！");
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -17,6 +17,7 @@ import static com.hankcs.hanlp.dictionary.other.CharType.*;
  */
 public class TextUtility
 {
+
     public static int charType(char c)
     {
         return charType(String.valueOf(c));
@@ -31,7 +32,7 @@ public class TextUtility
     {
         if (str != null && str.length() > 0)
         {
-            if ("零○〇一二两三四五六七八九十廿百千万亿壹贰叁肆伍陆柒捌玖拾佰仟".contains(str)) return CT_CNUM;
+            if (Predefine.CHINESE_NUMBERS.contains(str)) return CT_CNUM;
             byte[] b;
             try
             {
