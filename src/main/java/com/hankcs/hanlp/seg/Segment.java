@@ -581,9 +581,21 @@ public abstract class Segment
      */
     public List<List<Term>> seg2sentence(String text)
     {
+        return seg2sentence(text, true);
+    }
+
+    /**
+     * 分词断句 输出句子形式
+     *
+     * @param text     待分词句子
+     * @param shortest 是否断句为最细的子句（将逗号也视作分隔符）
+     * @return 句子列表，每个句子由一个单词列表组成
+     */
+    public List<List<Term>> seg2sentence(String text, boolean shortest)
+    {
         List<List<Term>> resultList = new LinkedList<List<Term>>();
         {
-            for (String sentence : SentencesUtil.toSentenceList(text))
+            for (String sentence : SentencesUtil.toSentenceList(text, shortest))
             {
                 resultList.add(segSentence(sentence.toCharArray()));
             }
