@@ -50,6 +50,8 @@ HanLP提供下列功能：
     * [MaxEnt依存句法分析](https://github.com/hankcs/HanLP/blob/master/src/main/java/com/hankcs/hanlp/dependency/MaxEntDependencyParser.java)
 * [文本分类](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%8E%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90)
     * [情感分析](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%8E%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90#%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90)
+* [文本聚类](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E8%81%9A%E7%B1%BB)
+    - KMeans、Repeated Bisection、自动推断聚类数目k
 * [word2vec](https://github.com/hankcs/HanLP/wiki/word2vec)
     * 词向量训练、加载、词语相似度计算、语义运算、查询、KMeans聚类
     * 文档语义相似度计算
@@ -76,7 +78,7 @@ HanLP提供下列功能：
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.6.8</version>
+    <version>portable-1.7.0</version>
 </dependency>
 ```
 
