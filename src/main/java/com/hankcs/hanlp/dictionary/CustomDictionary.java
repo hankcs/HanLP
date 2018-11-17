@@ -71,12 +71,14 @@ public class CustomDictionary
             for (String p : path)
             {
                 Nature defaultNature = Nature.n;
-                int cut = p.indexOf(' ');
+                File file = new File(p);
+                String fileName = file.getName();
+                int cut = fileName.lastIndexOf(' ');
                 if (cut > 0)
                 {
                     // 有默认词性
-                    String nature = p.substring(cut + 1);
-                    p = p.substring(0, cut);
+                    String nature = fileName.substring(cut + 1);
+                    p = file.getParent() + File.separator + fileName.substring(0, cut);
                     try
                     {
                         defaultNature = LexiconUtility.convertStringToNature(nature, customNatureCollector);

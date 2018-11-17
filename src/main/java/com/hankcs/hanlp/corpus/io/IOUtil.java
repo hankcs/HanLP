@@ -676,12 +676,14 @@ public class IOUtil
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         for (String path : pathArray)
         {
-            int natureIndex = path.lastIndexOf(' ');
+            File file = new File(path);
+            String fileName = file.getName();
+            int natureIndex = fileName.lastIndexOf(' ');
             Nature defaultNature = Nature.n;
             if (natureIndex > 0)
             {
-                String natureString = path.substring(natureIndex + 1);
-                path = path.substring(0, natureIndex);
+                String natureString = fileName.substring(natureIndex + 1);
+                path = file.getParent() + File.separator + fileName.substring(0, natureIndex);
                 if (natureString.length() > 0 && !natureString.endsWith(".txt") && !natureString.endsWith(".csv"))
                 {
                     defaultNature = Nature.create(natureString);
