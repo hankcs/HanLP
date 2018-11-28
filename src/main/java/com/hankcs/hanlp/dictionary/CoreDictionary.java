@@ -90,7 +90,7 @@ public class CoreDictionary
             logger.info("核心词典加载成功:" + trie.size() + "个词条，下面将写入缓存……");
             try
             {
-                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
+                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT)));
                 Collection<CoreDictionary.Attribute> attributeList = map.values();
                 out.writeInt(attributeList.size());
                 for (CoreDictionary.Attribute attribute : attributeList)

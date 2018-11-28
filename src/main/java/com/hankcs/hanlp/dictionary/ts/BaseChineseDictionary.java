@@ -21,6 +21,7 @@ import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.util.*;
@@ -146,7 +147,7 @@ public class BaseChineseDictionary
         }
         try
         {
-            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT)));
             out.writeInt(entrySet.size());
             for (Map.Entry<String, String> entry : entrySet)
             {

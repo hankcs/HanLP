@@ -17,7 +17,6 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.TreeMap;
@@ -80,7 +79,7 @@ public class TranslatedPersonDictionary
             logger.info("音译人名词典" + path + "开始构建双数组……");
             trie.build(map);
             logger.info("音译人名词典" + path + "开始编译DAT文件……");
-            logger.info("音译人名词典" + path + "编译结果：" + saveDat(map));
+            logger.info("音译人名词典" + path + "编译结果：" + saveDat());
         }
         catch (Exception e)
         {
@@ -93,10 +92,9 @@ public class TranslatedPersonDictionary
 
     /**
      * 保存dat到磁盘
-     * @param map
      * @return
      */
-    static boolean saveDat(TreeMap<String, Boolean> map)
+    static boolean saveDat()
     {
         return trie.save(path + Predefine.TRIE_EXT);
     }

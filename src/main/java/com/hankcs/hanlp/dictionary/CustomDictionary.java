@@ -108,7 +108,7 @@ public class CustomDictionary
             {
                 attributeList.add(entry.getValue());
             }
-            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(mainPath + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(mainPath + Predefine.BIN_EXT)));
             // 缓存用户词性
             if (customNatureCollector.isEmpty()) // 热更新
             {

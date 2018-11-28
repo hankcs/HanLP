@@ -18,6 +18,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.util.List;
@@ -40,7 +41,7 @@ public class CoreStopWordDictionary
             try
             {
                 dictionary = new StopWordDictionary(HanLP.Config.CoreStopWordDictionaryPath);
-                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT));
+                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT)));
                 dictionary.save(out);
                 out.close();
             }
