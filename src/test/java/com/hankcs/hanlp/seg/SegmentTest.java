@@ -77,6 +77,14 @@ public class SegmentTest extends TestCase
         System.out.println(termList);
     }
 
+    public void testExtendViterbi1() throws Exception
+    {
+        HanLP.Config.enableDebug(false);
+        Segment seg = new ExtendViterbiSegment("D:/data/dictionary/custom/MyDic.txt; D:/data/dictionary/custom/MyOrg.txt nt;", false);
+        List<Term> termList = seg.seg("西安交大长天软件股份有限公司；南京朗坤智慧科技股份有限公司");
+        System.out.println(termList);
+    }
+
     public void testNotional() throws Exception
     {
 //        System.out.println(NotionalTokenizer.segment("算法可以宽泛的分为三类"));

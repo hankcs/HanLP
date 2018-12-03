@@ -35,11 +35,24 @@ public class ExtendViterbiSegment extends ViterbiSegment
         super();
         if (!TextUtility.isBlank(customPath))
         {
-            loadCustomDic(customPath);
+            loadCustomDic(customPath, true);
         }
     }
 
-    private void loadCustomDic(String customPath)
+    /**
+     * @param customPath customPath 自定义字典路径（绝对路径，多词典使用英文分号隔开）
+     * @param cache      是否缓存词典
+     */
+    public ExtendViterbiSegment(String customPath, boolean cache)
+    {
+        super();
+        if (!TextUtility.isBlank(customPath))
+        {
+            loadCustomDic(customPath, cache);
+        }
+    }
+
+    private void loadCustomDic(String customPath, boolean cache)
     {
         logger.info("自定义词典开始加载:" + customPath);
         DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
@@ -92,32 +105,35 @@ public class ExtendViterbiSegment extends ViterbiSegment
             }
             logger.info("正在构建DoubleArrayTrie……");
             dat.build(map);
-            // 缓存成dat文件，下次加载会快很多
-            logger.info("正在缓存词典为dat文件……");
-            // 缓存值文件
-            List<CoreDictionary.Attribute> attributeList = new LinkedList<CoreDictionary.Attribute>();
-            for (Map.Entry<String, CoreDictionary.Attribute> entry : map.entrySet())
+            if (cache)
             {
-                attributeList.add(entry.getValue());
-            }
-            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(mainPath + Predefine.BIN_EXT)));
-            // 缓存用户词性
-            if (customNatureCollector.isEmpty()) // 热更新
-            {
-                for (int i = Nature.begin.ordinal() + 1; i < Nature.values().length; ++i)
+                // 缓存成dat文件，下次加载会快很多
+                logger.info("正在缓存词典为dat文件……");
+                // 缓存值文件
+                List<CoreDictionary.Attribute> attributeList = new LinkedList<CoreDictionary.Attribute>();
+                for (Map.Entry<String, CoreDictionary.Attribute> entry : map.entrySet())
                 {
-                    customNatureCollector.add(Nature.values()[i]);
+                    attributeList.add(entry.getValue());
                 }
+                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(mainPath + Predefine.BIN_EXT)));
+                // 缓存用户词性
+                if (customNatureCollector.isEmpty()) // 热更新
+                {
+                    for (int i = Nature.begin.ordinal() + 1; i < Nature.values().length; ++i)
+                    {
+                        customNatureCollector.add(Nature.values()[i]);
+                    }
+                }
+                IOUtil.writeCustomNature(out, customNatureCollector);
+                // 缓存正文
+                out.writeInt(attributeList.size());
+                for (CoreDictionary.Attribute attribute : attributeList)
+                {
+                    attribute.save(out);
+                }
+                dat.save(out);
+                out.close();
             }
-            IOUtil.writeCustomNature(out, customNatureCollector);
-            // 缓存正文
-            out.writeInt(attributeList.size());
-            for (CoreDictionary.Attribute attribute : attributeList)
-            {
-                attribute.save(out);
-            }
-            dat.save(out);
-            out.close();
             super.setDat(dat);
         }
         catch (Exception e)
