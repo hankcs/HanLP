@@ -24,7 +24,6 @@ public class ExtendViterbiSegment extends ViterbiSegment
     public ExtendViterbiSegment()
     {
         super();
-        super.setDat(CustomDictionary.dat);
     }
 
     /**
@@ -100,7 +99,6 @@ public class ExtendViterbiSegment extends ViterbiSegment
             if (map.size() == 0)
             {
                 logger.warning("没有加载到任何词条，使用默认词典");
-                super.setDat(CustomDictionary.dat);
                 return;
             }
             logger.info("正在构建DoubleArrayTrie……");
@@ -139,7 +137,6 @@ public class ExtendViterbiSegment extends ViterbiSegment
         catch (Exception e)
         {
             logger.warning("自定义词典" + customPath + "缓存失败！\n" + TextUtility.exceptionToString(e));
-            super.setDat(CustomDictionary.dat);
         }
     }
 }

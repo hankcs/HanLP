@@ -14,6 +14,7 @@ package com.hankcs.hanlp.seg.Viterbi;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
@@ -36,6 +37,11 @@ import java.util.List;
 public class ViterbiSegment extends WordBasedSegment
 {
     private DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
+
+    public ViterbiSegment()
+    {
+        this.dat = CustomDictionary.dat;
+    }
 
     public DoubleArrayTrie<CoreDictionary.Attribute> getDat()
     {
