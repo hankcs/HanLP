@@ -23,6 +23,7 @@ import com.hankcs.hanlp.seg.Other.CommonAhoCorasickSegmentUtil;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
+import com.hankcs.hanlp.seg.Viterbi.ExtendViterbiSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
@@ -66,6 +67,14 @@ public class SegmentTest extends TestCase
         Segment seg = new DijkstraSegment();
         List<Term> termList = seg.seg("优酷总裁魏明介绍了优酷2015年的内容战略，表示要以“大电影、大网剧、大综艺”为关键词");
 //        System.out.println(termList);
+    }
+
+    public void testExtendViterbi() throws Exception
+    {
+        HanLP.Config.enableDebug(false);
+        Segment seg = new ExtendViterbiSegment("D:/data/dictionary/custom/MyDic.txt; D:/data/dictionary/custom/MyOrg.txt nt;");
+        List<Term> termList = seg.seg("西安交大长天软件股份有限公司；南京朗坤智慧科技股份有限公司");
+        System.out.println(termList);
     }
 
     public void testNotional() throws Exception

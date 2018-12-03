@@ -61,7 +61,7 @@ public class CustomDictionary
     private static boolean loadMainDictionary(String mainPath)
     {
         logger.info("自定义词典开始加载:" + mainPath);
-        if (loadDat(mainPath)) return true;
+        if (loadDat(mainPath, CustomDictionary.dat)) return true;
         dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         LinkedHashSet<Nature> customNatureCollector = new LinkedHashSet<Nature>();
@@ -301,17 +301,23 @@ public class CustomDictionary
         return insert(word, null);
     }
 
+    public static boolean loadDat(String path, DoubleArrayTrie<CoreDictionary.Attribute> dat)
+    {
+        return loadDat(path, HanLP.Config.CustomDictionaryPath, dat);
+    }
+
     /**
      * 从磁盘加载双数组
      *
-     * @param path
+     * @param path 主词典路径
+     * @param customDicPath 用户词典路径
      * @return
      */
-    static boolean loadDat(String path)
+    public static boolean loadDat(String path, String customDicPath[], DoubleArrayTrie<CoreDictionary.Attribute> dat)
     {
         try
         {
-            if (isDicNeedUpdate(path))
+            if (isDicNeedUpdate(path, customDicPath))
             {
                 return false;
             }
@@ -355,7 +361,7 @@ public class CustomDictionary
      * 获取本地词典更新状态
      * @return true 表示本地词典比缓存文件新，需要删除缓存
      */
-    private static boolean isDicNeedUpdate(String mainPath)
+    private static boolean isDicNeedUpdate(String mainPath, String path[])
     {
         if (HanLP.Config.IOAdapter != null &&
             !HanLP.Config.IOAdapter.getClass().getName().contains("com.hankcs.hanlp.corpus.io.FileIOAdapter"))
@@ -369,10 +375,17 @@ public class CustomDictionary
             return true;
         }
         long lastModified = binFile.lastModified();
-        String path[] = HanLP.Config.CustomDictionaryPath;
+        //String path[] = HanLP.Config.CustomDictionaryPath;
         for (String p : path)
         {
             File f = new File(p);
+            String fileName = f.getName();
+            int cut = fileName.lastIndexOf(' ');
+            if (cut > 0)
+            {
+                p = f.getParent() + File.separator + fileName.substring(0, cut);
+            }
+            f = new File(p);
             if (f.exists() && f.lastModified() > lastModified)
             {
                 IOUtil.deleteFile(binPath); // 删掉缓存
