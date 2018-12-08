@@ -1245,6 +1245,7 @@ public class MutableDoubleArrayTrieInteger implements Serializable, Iterable<Mut
                             from = b + i;
                             path.append(from);
                             b = base.get(from);
+                            i = 0;
                             if (getCheck(b + UNUSED_CHAR_VALUE) == from)
                             {
                                 value = getLeafValue(getBase(b + UNUSED_CHAR_VALUE));

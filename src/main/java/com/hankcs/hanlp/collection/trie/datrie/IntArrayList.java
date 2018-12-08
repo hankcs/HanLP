@@ -4,6 +4,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ICacheAble;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * 动态数组
@@ -204,5 +205,16 @@ public class IntArrayList implements Serializable, ICacheAble
         linearExpandFactor = in.readInt();
         exponentialExpanding = in.readBoolean();
         exponentialExpandFactor = in.readDouble();
+    }
+
+    @Override
+    public String toString()
+    {
+        ArrayList<Integer> head = new ArrayList<Integer>(20);
+        for (int i = 0; i < Math.min(size, 20); ++i)
+        {
+            head.add(data[i]);
+        }
+        return head.toString();
     }
 }
