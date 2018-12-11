@@ -20,7 +20,6 @@ import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Other.CommonAhoCorasickSegmentUtil;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
-import com.hankcs.hanlp.seg.Viterbi.ExtendViterbiSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
@@ -32,7 +31,6 @@ import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -76,7 +74,7 @@ public class SegmentTest extends TestCase
         path = path.replace("\\", "/");
         String text = "一半天帕克斯曼是走不出丁字桥镇的";
         Segment segment = HanLP.newSegment().enableCustomDictionary(false);
-        Segment seg = new ExtendViterbiSegment(path);
+        Segment seg = new ViterbiSegment(path);
         System.out.println("不启用字典的分词结果：" + segment.seg(text));
         System.out.println("默认分词结果：" + HanLP.segment(text));
         seg.enableCustomDictionaryForcing(true).enableCustomDictionary(true);

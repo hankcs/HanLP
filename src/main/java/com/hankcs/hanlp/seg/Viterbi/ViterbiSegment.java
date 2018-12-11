@@ -24,9 +24,13 @@ import com.hankcs.hanlp.seg.WordBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
+import com.hankcs.hanlp.utility.TextUtility;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * Viterbi分词器<br>
@@ -41,6 +45,23 @@ public class ViterbiSegment extends WordBasedSegment
     public ViterbiSegment()
     {
         this.dat = CustomDictionary.dat;
+    }
+
+    /**
+     * @param customPath 自定义字典路径（绝对路径，多词典使用英文分号隔开）
+     */
+    public ViterbiSegment(String customPath)
+    {
+        loadCustomDic(customPath, false);
+    }
+
+    /**
+     * @param customPath customPath 自定义字典路径（绝对路径，多词典使用英文分号隔开）
+     * @param cache      是否缓存词典
+     */
+    public ViterbiSegment(String customPath, boolean cache)
+    {
+        loadCustomDic(customPath, cache);
     }
 
     public DoubleArrayTrie<CoreDictionary.Attribute> getDat()
@@ -173,6 +194,30 @@ public class ViterbiSegment extends WordBasedSegment
             from = from.from;
         }
         return vertexList;
+    }
+
+    private void loadCustomDic(String customPath, boolean isCache)
+    {
+        if (TextUtility.isBlank(customPath))
+        {
+            return;
+        }
+        logger.info("开始加载自定义词典:" + customPath);
+        DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
+        String path[] = customPath.split(";");
+        String mainPath = path[0];
+        StringBuilder combinePath = new StringBuilder();
+        for (String aPath : path)
+        {
+            combinePath.append(aPath.trim());
+        }
+        File file = new File(mainPath);
+        mainPath = file.getParent() + "/" + Math.abs(combinePath.toString().hashCode());
+        mainPath = mainPath.replace("\\", "/");
+        if (CustomDictionary.loadMainDictionary(mainPath, path, dat, isCache))
+        {
+            this.setDat(dat);
+        }
     }
 
     /**
