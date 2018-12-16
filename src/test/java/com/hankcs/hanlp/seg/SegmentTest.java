@@ -13,26 +13,24 @@ package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
-import com.hankcs.hanlp.seg.CRF.CRFSegment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Other.CommonAhoCorasickSegmentUtil;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
-import com.hankcs.hanlp.seg.Segment;
-import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
-import com.hankcs.hanlp.tokenizer.*;
+import com.hankcs.hanlp.tokenizer.IndexTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.tokenizer.TraditionalChineseTokenizer;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -66,6 +64,22 @@ public class SegmentTest extends TestCase
         Segment seg = new DijkstraSegment();
         List<Term> termList = seg.seg("优酷总裁魏明介绍了优酷2015年的内容战略，表示要以“大电影、大网剧、大综艺”为关键词");
 //        System.out.println(termList);
+    }
+
+    public void testExtendViterbi() throws Exception
+    {
+        HanLP.Config.enableDebug(false);
+        String path = System.getProperty("user.dir") + "/" + "data/dictionary/custom/CustomDictionary.txt;" +
+            System.getProperty("user.dir") + "/" + "data/dictionary/custom/全国地名大全.txt";
+        path = path.replace("\\", "/");
+        String text = "一半天帕克斯曼是走不出丁字桥镇的";
+        Segment segment = HanLP.newSegment().enableCustomDictionary(false);
+        Segment seg = new ViterbiSegment(path);
+        System.out.println("不启用字典的分词结果：" + segment.seg(text));
+        System.out.println("默认分词结果：" + HanLP.segment(text));
+        seg.enableCustomDictionaryForcing(true).enableCustomDictionary(true);
+        List<Term> termList = seg.seg(text);
+        System.out.println("自定义字典的分词结果：" + termList);
     }
 
     public void testNotional() throws Exception
