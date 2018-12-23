@@ -16,10 +16,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.TextUtility;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 import static com.hankcs.hanlp.utility.Predefine.BIN_EXT;
@@ -120,7 +117,7 @@ public abstract class CommonDictionary<V>
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path));
+            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(path)));
             out.writeInt(valueArray.size());
             for (V item : valueArray)
             {

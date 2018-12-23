@@ -64,7 +64,7 @@ HanLP提供下列功能：
 
 ## 项目主页
 
-[在线演示](http://hanlp.hankcs.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[论文引用](https://github.com/hankcs/HanLP/wiki/%E8%AE%BA%E6%96%87%E5%BC%95%E7%94%A8)、[更多信息](https://github.com/hankcs/HanLP/wiki)。
+[在线演示](http://hanlp.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[论文引用](https://github.com/hankcs/HanLP/wiki/papers)、[更多信息](https://github.com/hankcs/HanLP/wiki)。
 
 ------
 
@@ -78,7 +78,7 @@ HanLP提供下列功能：
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.7.0</version>
+    <version>portable-1.7.1</version>
 </dependency>
 ```
 

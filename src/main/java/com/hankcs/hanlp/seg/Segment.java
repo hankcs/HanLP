@@ -196,11 +196,21 @@ public abstract class Segment
      */
     protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList)
     {
+        return combineByCustomDictionary(vertexList, CustomDictionary.dat);
+    }
+
+    /**
+     * 使用用户词典合并粗分结果
+     * @param vertexList 粗分结果
+     * @param dat 用户自定义词典
+     * @return 合并后的结果
+     */
+    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, DoubleArrayTrie<CoreDictionary.Attribute> dat)
+    {
         assert vertexList.size() >= 2 : "vertexList至少包含 始##始 和 末##末";
         Vertex[] wordNet = new Vertex[vertexList.size()];
         vertexList.toArray(wordNet);
         // DAT合并
-        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
         int length = wordNet.length - 1; // 跳过首尾
         for (int i = 1; i < length; ++i)
         {
@@ -276,7 +286,19 @@ public abstract class Segment
      */
     protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, final WordNet wordNetAll)
     {
-        List<Vertex> outputList = combineByCustomDictionary(vertexList);
+        return combineByCustomDictionary(vertexList, CustomDictionary.dat, wordNetAll);
+    }
+
+    /**
+     * 使用用户词典合并粗分结果，并将用户词语收集到全词图中
+     * @param vertexList 粗分结果
+     * @param dat 用户自定义词典
+     * @param wordNetAll 收集用户词语到全词图中
+     * @return 合并后的结果
+     */
+    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, DoubleArrayTrie<CoreDictionary.Attribute> dat, final WordNet wordNetAll)
+    {
+        List<Vertex> outputList = combineByCustomDictionary(vertexList, dat);
         int line = 0;
         for (final Vertex vertex : outputList)
         {

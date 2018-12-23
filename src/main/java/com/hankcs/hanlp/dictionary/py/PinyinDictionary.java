@@ -22,6 +22,7 @@ import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.util.*;
@@ -107,7 +108,7 @@ public class PinyinDictionary
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
+            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT)));
             out.writeInt(entrySet.size());
             for (Map.Entry<String, Pinyin[]> entry : entrySet)
             {

@@ -94,7 +94,7 @@ public class JapanesePersonDictionary
     {
         try
         {
-            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.VALUE_EXT));
+            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(path + Predefine.VALUE_EXT)));
             out.writeInt(map.size());
             for (Character character : map.values())
             {
