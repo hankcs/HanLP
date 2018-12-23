@@ -78,7 +78,7 @@ HanLP提供下列功能：
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.7.0</version>
+    <version>portable-1.7.1</version>
 </dependency>
 ```
 
