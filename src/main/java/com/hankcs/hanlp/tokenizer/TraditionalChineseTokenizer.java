@@ -40,18 +40,9 @@ public class TraditionalChineseTokenizer
         int offset = 0;
         for (Term term : termList)
         {
-            String tText;
             term.offset = offset;
-            if (term.length() == 1 || (tText = SimplifiedChineseDictionary.getTraditionalChinese(term.word)) == null)
-            {
-                term.word = text.substring(offset, offset + term.length());
-                offset += term.length();
-            }
-            else
-            {
-                offset += term.length();
-                term.word = tText;
-            }
+            term.word = text.substring(offset, offset + term.length());
+            offset += term.length();
         }
 
         return termList;
