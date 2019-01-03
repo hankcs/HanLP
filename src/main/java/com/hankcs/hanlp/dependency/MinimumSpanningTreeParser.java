@@ -99,7 +99,13 @@ public abstract class MinimumSpanningTreeParser extends AbstractDependencyParser
         for (int i = 0; i < wordArray.length; ++i)
         {
             wordArray[i] = new CoNLLWord(i + 1, nodeArray[i + 1].word, nodeArray[i + 1].label);
-            wordArray[i].DEPREL = edgeResult[i].label;
+            if (this.isDeprelTranslatorEnabled() && getDeprelTranslator() != null)
+            {
+                String translatedDeprel = getDeprelTranslator().get(edgeResult[i].label);
+                wordArray[i].DEPREL = translatedDeprel;
+            }else{
+                wordArray[i].DEPREL = edgeResult[i].label;
+            }
         }
         for (int i = 0; i < edgeResult.length; ++i)
         {

@@ -123,4 +123,9 @@ public abstract class AbstractDependencyParser implements IDependencyParser
         enableDeprelTranslater = enable;
         return this;
     }
+
+    @Override
+    public boolean isDeprelTranslatorEnabled(){
+        return this.enableDeprelTranslater;
+    }
 }
