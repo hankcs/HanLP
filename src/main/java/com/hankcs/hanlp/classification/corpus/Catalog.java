@@ -69,6 +69,11 @@ public class Catalog implements Serializable
         return idCategory.get(id);
     }
 
+    public List<String> getCategories()
+    {
+        return idCategory;
+    }
+
     public int size()
     {
         return idCategory.size();
@@ -80,5 +85,11 @@ public class Catalog implements Serializable
         idCategory.toArray(catalog);
 
         return catalog;
+    }
+
+    @Override
+    public String toString()
+    {
+        return idCategory.toString();
     }
 }
