@@ -44,7 +44,7 @@ public class ChiSquareFeatureExtractor
     {
         Map<Integer, Double> selectedFeatures = new HashMap<Integer, Double>();
 
-        int N1dot, N0dot, N00, N01, N10, N11;
+        double N1dot, N0dot, N00, N01, N10, N11;
         double chisquareScore;
         Double previousScore;
         for (int feature = 0; feature < stats.featureCategoryJointCount.length; feature++)
