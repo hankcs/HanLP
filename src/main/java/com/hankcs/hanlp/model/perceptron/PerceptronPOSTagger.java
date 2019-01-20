@@ -11,6 +11,7 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.instance.POSInstance;
@@ -45,6 +46,7 @@ public class PerceptronPOSTagger extends PerceptronTagger implements POSTagger
 
     /**
      * 加载配置文件指定的模型
+     *
      * @throws IOException
      */
     public PerceptronPOSTagger() throws IOException
@@ -120,6 +122,11 @@ public class PerceptronPOSTagger extends PerceptronTagger implements POSTagger
     @Override
     protected Instance createInstance(Sentence sentence, FeatureMap featureMap)
     {
+        for (Word word : sentence.toSimpleWordList())
+        {
+            if (!model.featureMap.tagSet.contains(word.getLabel()))
+                throw new IllegalArgumentException("在线学习不可能学习新的标签: " + word + " ；请标注语料库后重新全量训练。");
+        }
         return POSInstance.create(sentence, featureMap);
     }
 }

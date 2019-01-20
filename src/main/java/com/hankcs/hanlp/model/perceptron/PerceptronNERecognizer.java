@@ -11,6 +11,8 @@
 package com.hankcs.hanlp.model.perceptron;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
+import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
@@ -21,6 +23,8 @@ import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.tokenizer.lexical.NERecognizer;
 
 import java.io.IOException;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 命名实体识别
@@ -90,6 +94,11 @@ public class PerceptronNERecognizer extends PerceptronTagger implements NERecogn
     @Override
     protected Instance createInstance(Sentence sentence, FeatureMap featureMap)
     {
+        for (IWord word : sentence)
+        {
+            if (word instanceof CompoundWord && !tagSet.nerLabels.contains(word.getLabel()))
+                logger.warning("在线学习不可能学习新的标签: " + word + " ；请标注语料库后重新全量训练。");
+        }
         return NERInstance.create(sentence, featureMap);
     }
 }
