@@ -63,23 +63,28 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
         typeTable[CharTable.convert('·')] = CharType.CT_CHINESE;
     }
 
-    public AbstractLexicalAnalyzer()
+    protected AbstractLexicalAnalyzer()
     {
+        config.translatedNameRecognize = false;
+        config.japaneseNameRecognize = false;
     }
 
     public AbstractLexicalAnalyzer(Segmenter segmenter)
     {
+        this();
         this.segmenter = segmenter;
     }
 
     public AbstractLexicalAnalyzer(Segmenter segmenter, POSTagger posTagger)
     {
+        this();
         this.segmenter = segmenter;
         this.posTagger = posTagger;
     }
 
     public AbstractLexicalAnalyzer(Segmenter segmenter, POSTagger posTagger, NERecognizer neRecognizer)
     {
+        this();
         this.segmenter = segmenter;
         this.posTagger = posTagger;
         this.neRecognizer = neRecognizer;
