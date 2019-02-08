@@ -14,17 +14,25 @@ package com.hankcs.demo;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
+import com.hankcs.hanlp.dependency.IDependencyParser;
+import com.hankcs.hanlp.dependency.perceptron.parser.KBeamArcEagerDependencyParser;
 import com.hankcs.hanlp.utility.TestUtility;
 
+import java.io.IOException;
+
 /**
- * 依存句法分析（CRF句法模型需要-Xms512m -Xmx512m -Xmn256m，MaxEnt和神经网络句法模型需要-Xms1g -Xmx1g -Xmn512m）
+ * 依存句法分析（神经网络句法模型需要-Xms1g -Xmx1g -Xmn512m）
+ *
  * @author hankcs
  */
 public class DemoDependencyParser extends TestUtility
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException, ClassNotFoundException
     {
         CoNLLSentence sentence = HanLP.parseDependency("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。");
+        // 也可以用基于ArcEager转移系统的依存句法分析器
+//        IDependencyParser parser = new KBeamArcEagerDependencyParser();
+//        CoNLLSentence sentence = parser.parse("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。");
         System.out.println(sentence);
         // 可以方便地遍历它
         for (CoNLLWord word : sentence)

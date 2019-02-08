@@ -34,6 +34,11 @@ public class KBeamArcEagerDependencyParser extends AbstractDependencyParser
 {
     KBeamArcEagerParser parser;
 
+    public KBeamArcEagerDependencyParser() throws IOException, ClassNotFoundException
+    {
+        this(HanLP.Config.PerceptronParserModelPath);
+    }
+
     public KBeamArcEagerDependencyParser(Segment segment, KBeamArcEagerParser parser)
     {
         super(segment);
