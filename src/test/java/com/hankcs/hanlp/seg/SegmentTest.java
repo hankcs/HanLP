@@ -49,6 +49,11 @@ public class SegmentTest extends TestCase
 //        ));
     }
 
+    public void testIssue1054()
+    {
+        System.out.println(HanLP.segment("私信必回"));
+    }
+
     public void testIssue880() throws Exception
     {
 //        HanLP.Config.enableDebug();
