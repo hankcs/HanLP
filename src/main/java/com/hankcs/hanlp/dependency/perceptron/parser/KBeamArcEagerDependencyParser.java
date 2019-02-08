@@ -57,6 +57,18 @@ public class KBeamArcEagerDependencyParser extends AbstractDependencyParser
         ).enableCustomDictionary(false), new KBeamArcEagerParser(modelPath));
     }
 
+    /**
+     * 训练依存句法分析器
+     *
+     * @param trainCorpus 训练集
+     * @param devCorpus   开发集
+     * @param clusterPath Brown词聚类文件
+     * @param modelPath   模型储存路径
+     * @throws InterruptedException
+     * @throws ExecutionException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void train(String trainCorpus, String devCorpus, String clusterPath, String modelPath) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException
     {
         Options options = new Options();
@@ -75,6 +87,14 @@ public class KBeamArcEagerDependencyParser extends AbstractDependencyParser
         return parse(termList, 64, 1);
     }
 
+    /**
+     * 执行句法分析
+     *
+     * @param termList     分词结果
+     * @param beamWidth    柱搜索宽度
+     * @param numOfThreads 多线程数
+     * @return 句法树
+     */
     public CoNLLSentence parse(List<Term> termList, int beamWidth, int numOfThreads)
     {
         String[] words = new String[termList.size()];
