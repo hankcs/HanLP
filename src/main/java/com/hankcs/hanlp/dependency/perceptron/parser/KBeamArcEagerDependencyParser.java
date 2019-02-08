@@ -69,7 +69,7 @@ public class KBeamArcEagerDependencyParser extends AbstractDependencyParser
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public void train(String trainCorpus, String devCorpus, String clusterPath, String modelPath) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException
+    public static KBeamArcEagerDependencyParser train(String trainCorpus, String devCorpus, String clusterPath, String modelPath) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException
     {
         Options options = new Options();
         options.train = true;
@@ -78,7 +78,7 @@ public class KBeamArcEagerDependencyParser extends AbstractDependencyParser
         options.clusterFile = clusterPath;
         options.modelFile = modelPath;
         Main.train(options);
-        parser = new KBeamArcEagerParser(modelPath);
+        return new KBeamArcEagerDependencyParser(modelPath);
     }
 
     @Override
