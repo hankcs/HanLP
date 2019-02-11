@@ -85,6 +85,6 @@ public class Evaluator
         double ulabExact = 100.0 * fullULabMatch / numTree;
 //        System.err.println("Labeled exact match:  " + format.format(labExact));
 //        System.err.println("Unlabeled exact match:  " + format.format(ulabExact) + " \n");
-        return new double[]{unlabaledAccuracy, labeledAccuracy, ulabExact, labExact};
+        return new double[]{unlabaledAccuracy, labeledAccuracy};
     }
 }

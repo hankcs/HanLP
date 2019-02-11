@@ -14,6 +14,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.dependency.AbstractDependencyParser;
+import com.hankcs.hanlp.dependency.perceptron.accessories.Evaluator;
 import com.hankcs.hanlp.dependency.perceptron.accessories.Options;
 import com.hankcs.hanlp.dependency.perceptron.transition.configuration.Configuration;
 import com.hankcs.hanlp.dependency.perceptron.transition.parser.KBeamArcEagerParser;
@@ -21,7 +22,9 @@ import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -79,6 +82,30 @@ public class KBeamArcEagerDependencyParser extends AbstractDependencyParser
         options.modelFile = modelPath;
         Main.train(options);
         return new KBeamArcEagerDependencyParser(modelPath);
+    }
+
+    /**
+     * 标准化评测
+     *
+     * @param testCorpus 测试语料
+     * @return 包含UF、LF的数组
+     * @throws IOException
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public double[] evaluate(String testCorpus) throws IOException, ExecutionException, InterruptedException
+    {
+        Options options = parser.options;
+        options.goldFile = testCorpus;
+        File tmpTemplate = File.createTempFile("pred-" + new Date().getTime(), ".conll");
+        tmpTemplate.deleteOnExit();
+        options.predFile = tmpTemplate.getAbsolutePath();
+        options.outputFile = options.predFile;
+        File scoreFile = File.createTempFile("score-" + new Date().getTime(), ".txt");
+        scoreFile.deleteOnExit();
+        parser.parseConllFile(testCorpus, options.outputFile, options.rootFirst, options.beamWidth, true,
+                              options.lowercase, 1, false, scoreFile.getAbsolutePath());
+        return Evaluator.evaluate(options.goldFile, options.predFile, options.punctuations);
     }
 
     @Override
