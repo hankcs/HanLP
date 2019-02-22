@@ -169,4 +169,10 @@ public class CustomDictionaryTest extends TestCase
         CustomDictionary.remove("123");
         CustomDictionary.remove("摩根");
     }
+
+    public void testReload()
+    {
+        CustomDictionary.reload();
+        System.out.println(HanLP.segment("自然语言处理"));
+    }
 }

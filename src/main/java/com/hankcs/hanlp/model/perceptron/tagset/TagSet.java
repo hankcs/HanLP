@@ -159,4 +159,9 @@ public class TagSet implements IIdStringMap, IStringIdMap, Iterable<Map.Entry<St
     {
         return idStringMap;
     }
+
+    public boolean contains(String tag)
+    {
+        return idStringMap.contains(tag);
+    }
 }

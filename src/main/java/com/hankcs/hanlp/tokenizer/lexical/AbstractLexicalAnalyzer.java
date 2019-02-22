@@ -23,9 +23,12 @@ import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
+import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
+import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.seg.CharacterBasedSegment;
-import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.seg.common.Vertex;
+import com.hankcs.hanlp.seg.common.WordNet;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.util.*;
@@ -60,23 +63,28 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
         typeTable[CharTable.convert('·')] = CharType.CT_CHINESE;
     }
 
-    public AbstractLexicalAnalyzer()
+    protected AbstractLexicalAnalyzer()
     {
+        config.translatedNameRecognize = false;
+        config.japaneseNameRecognize = false;
     }
 
     public AbstractLexicalAnalyzer(Segmenter segmenter)
     {
+        this();
         this.segmenter = segmenter;
     }
 
     public AbstractLexicalAnalyzer(Segmenter segmenter, POSTagger posTagger)
     {
+        this();
         this.segmenter = segmenter;
         this.posTagger = posTagger;
     }
 
     public AbstractLexicalAnalyzer(Segmenter segmenter, POSTagger posTagger, NERecognizer neRecognizer)
     {
+        this();
         this.segmenter = segmenter;
         this.posTagger = posTagger;
         this.neRecognizer = neRecognizer;
@@ -472,6 +480,21 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
                     }
                 }
             }
+        }
+        if (config.translatedNameRecognize || config.japaneseNameRecognize)
+        {
+            List<Vertex> vertexList = toVertexList(termList, true);
+            WordNet wordNetOptimum = new WordNet(sentence, vertexList);
+            WordNet wordNetAll = wordNetOptimum;
+            if (config.translatedNameRecognize)
+            {
+                TranslatedPersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
+            }
+            if (config.japaneseNameRecognize)
+            {
+                JapanesePersonRecognition.recognition(vertexList, wordNetOptimum, wordNetAll);
+            }
+            termList = convert(vertexList, config.offset);
         }
         return termList;
     }

@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.corpus.dependency.CoNll;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -126,5 +127,38 @@ public class CoNLLSentence implements Iterable<CoNLLWord>
                 throw new UnsupportedOperationException("CoNLLSentence是只读对象，不允许删除");
             }
         };
+    }
+
+    /**
+     * 找出所有子节点
+     * @param word
+     * @return
+     */
+    public List<CoNLLWord> findChildren(CoNLLWord word)
+    {
+        List<CoNLLWord> result = new LinkedList<CoNLLWord>();
+        for (CoNLLWord other : this)
+        {
+            if (other.HEAD == word)
+                result.add(other);
+        }
+        return result;
+    }
+
+    /**
+     * 找出特定依存关系的子节点
+     * @param word
+     * @param relation
+     * @return
+     */
+    public List<CoNLLWord> findChildren(CoNLLWord word, String relation)
+    {
+        List<CoNLLWord> result = new LinkedList<CoNLLWord>();
+        for (CoNLLWord other : this)
+        {
+            if (other.HEAD == word && other.DEPREL.equals(relation))
+                result.add(other);
+        }
+        return result;
     }
 }

@@ -18,6 +18,7 @@ import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.ByteArrayFileStream;
 import com.hankcs.hanlp.dependency.common.Edge;
 import com.hankcs.hanlp.dependency.common.Node;
+import com.hankcs.hanlp.dependency.perceptron.parser.KBeamArcEagerDependencyParser;
 import com.hankcs.hanlp.model.maxent.MaxEntModel;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
@@ -30,6 +31,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 最大熵句法分析器
  *
+ * @deprecated 已废弃，请使用{@link KBeamArcEagerDependencyParser}。未来版本将不再发布该模型，并删除配置项
  * @author hankcs
  */
 public class MaxEntDependencyParser extends MinimumSpanningTreeParser

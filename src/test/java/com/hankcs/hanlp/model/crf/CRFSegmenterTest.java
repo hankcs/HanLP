@@ -1,6 +1,7 @@
 package com.hankcs.hanlp.model.crf;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.PKU;
 import com.hankcs.hanlp.model.crf.crfpp.crf_learn;
 import junit.framework.TestCase;
 
@@ -14,7 +15,7 @@ public class CRFSegmenterTest extends TestCase
     public void testTrain() throws Exception
     {
         CRFSegmenter segmenter = new CRFSegmenter(null);
-        segmenter.train("data/test/pku98/199801.txt", CWS_MODEL_PATH);
+        segmenter.train(PKU.PKU199801, CWS_MODEL_PATH);
     }
 
     public void testConvert() throws Exception
@@ -25,7 +26,7 @@ public class CRFSegmenterTest extends TestCase
     public void testConvertCorpus() throws Exception
     {
         CRFSegmenter segmenter = new CRFSegmenter(null);
-        segmenter.convertCorpus("data/test/pku98/199801.txt", "data/test/crf/cws-corpus.tsv");
+        segmenter.convertCorpus(PKU.PKU199801, "data/test/crf/cws-corpus.tsv");
         segmenter.dumpTemplate("data/test/crf/cws-template.txt");
     }
 
@@ -41,7 +42,7 @@ public class CRFSegmenterTest extends TestCase
 //        final CRFSegmenter segmenter = new CRFSegmenter(CWS_MODEL_PATH);
 //
 //        final BufferedWriter bw = IOUtil.newBufferedWriter("data/test/crf/cws/mdat.txt");
-//        IOUtility.loadInstance("data/test/pku98/199801.txt", new InstanceHandler()
+//        IOUtility.loadInstance(PKU.PKU199801, new InstanceHandler()
 //        {
 //            @Override
 //            public boolean process(Sentence instance)
