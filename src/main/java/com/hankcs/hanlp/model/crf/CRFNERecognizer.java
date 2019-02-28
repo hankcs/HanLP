@@ -172,10 +172,5 @@ public class CRFNERecognizer extends CRFTagger implements NERecognizer
             "# Bigram\n" +
             "B";
     }
-
-    public static void main (String[] args) throws IOException{
-        String[] nerTags = {"nr","nt"};
-        CRFNERecognizer c = new CRFNERecognizer(null,nerTags);
-        CRFNERecognizer c2 = new CRFNERecognizer(null);
-    }
+    
 }
