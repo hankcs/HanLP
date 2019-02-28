@@ -46,11 +46,21 @@ public class CRFNERecognizer extends CRFTagger implements NERecognizer
 
     public CRFNERecognizer(String modelPath) throws IOException
     {
+        this(modelPath,null);
+    }
+
+    public CRFNERecognizer(String modelPath,String[] customeNERTags) throws IOException
+    {
         super(modelPath);
         if (model == null)
         {
             tagSet = new NERTagSet();
             addDefaultNERLabels();
+            if (customeNERTags != null) {
+                for (String nerTags : customeNERTags) {
+                    addNERLabels(nerTags);
+                }
+            }
         }
         else
         {
@@ -64,6 +74,11 @@ public class CRFNERecognizer extends CRFTagger implements NERecognizer
         tagSet.nerLabels.add("nr");
         tagSet.nerLabels.add("ns");
         tagSet.nerLabels.add("nt");
+    }
+
+    public void addNERLabels(String newNerTag)
+    {
+        tagSet.nerLabels.add(newNerTag);
     }
 
     @Override
@@ -156,5 +171,11 @@ public class CRFNERecognizer extends CRFTagger implements NERecognizer
             "\n" +
             "# Bigram\n" +
             "B";
+    }
+
+    public static void main (String[] args) throws IOException{
+        String[] nerTags = {"nr","nt"};
+        CRFNERecognizer c = new CRFNERecognizer(null,nerTags);
+        CRFNERecognizer c2 = new CRFNERecognizer(null);
     }
 }
