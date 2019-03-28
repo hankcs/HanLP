@@ -40,7 +40,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class ViterbiSegment extends WordBasedSegment
 {
-    private DoubleArrayTrie<CoreDictionary.Attribute> dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
+    private DoubleArrayTrie<CoreDictionary.Attribute> dat;
 
     public ViterbiSegment()
     {
