@@ -59,7 +59,6 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     protected int check[];
     protected int base[];
 
-    private BitSet used;
     /**
      * base 和 check 的大小
      */
@@ -159,7 +158,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
      * @param siblings 等待插入的兄弟节点
      * @return 插入位置
      */
-    private int insert(List<Node> siblings)
+    private int insert(List<Node> siblings, BitSet used)
     {
         if (error_ < 0)
             return 0;
@@ -254,7 +253,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             }
             else
             {
-                int h = insert(new_siblings);   // dfs
+                int h = insert(new_siblings, used);   // dfs
                 base[begin + siblings.get(i).code] = h;
 //                System.out.println(this);
             }
@@ -266,7 +265,6 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     {
         check = null;
         base = null;
-        used = new BitSet();
         size = 0;
         allocSize = 0;
         // no_delete_ = false;
@@ -300,7 +298,6 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         // if (! no_delete_)
         check = null;
         base = null;
-        used = null;
         allocSize = 0;
         size = 0;
         // no_delete_ = false;
@@ -399,6 +396,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         keySize = _keySize;
         value = _value;
         progress = 0;
+        allocSize = 0;
 
         resize(65536 * 32); // 32个双字节
 
@@ -412,13 +410,12 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         List<Node> siblings = new ArrayList<Node>();
         fetch(root_node, siblings);
-        insert(siblings);
+        insert(siblings, new BitSet());
         shrink();
 
         // size += (1 << 8 * 2) + 1; // ???
         // if (size >= allocSize) resize (size);
 
-        used = null;
         key = null;
         length = null;
 
@@ -545,7 +542,6 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             check[i] = byteArray.nextInt();
         }
         v = value;
-        used = null;    // 无用的对象,释放掉
         return true;
     }
 
@@ -571,7 +567,6 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             offset += 4;
         }
         v = value;
-        used = null;    // 无用的对象,释放掉
         return true;
     }
 

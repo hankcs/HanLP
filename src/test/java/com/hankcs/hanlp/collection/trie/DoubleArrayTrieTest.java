@@ -24,6 +24,12 @@ public class DoubleArrayTrieTest extends TestCase
         {
             assertEquals(key, trie.get(key));
         }
+
+        trie.build(map);
+        for (String key : map.keySet())
+        {
+            assertEquals(key, trie.get(key));
+        }
     }
 
     public void testGet() throws Exception

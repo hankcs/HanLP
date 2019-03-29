@@ -654,7 +654,6 @@ public class CustomDictionary
         String path[] = HanLP.Config.CustomDictionaryPath;
         if (path == null || path.length == 0) return false;
         IOUtil.deleteFile(path[0] + Predefine.BIN_EXT); // 删掉缓存
-        dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
         return loadMainDictionary(path[0]);
     }
 }
