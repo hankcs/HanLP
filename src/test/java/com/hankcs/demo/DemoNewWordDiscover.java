@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class DemoNewWordDiscover
 {
-    static final String CORPUS_PATH = TestUtility.ensureTestData("红楼梦.txt", "http://hanlp.linrunsoft.com/release/corpus/红楼梦.zip");
+    static final String CORPUS_PATH = TestUtility.ensureTestData("红楼梦.txt", "http://file.hankcs.com/corpus/红楼梦.zip");
 
     public static void main(String[] args) throws IOException
     {
