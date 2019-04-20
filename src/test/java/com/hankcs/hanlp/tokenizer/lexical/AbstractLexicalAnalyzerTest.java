@@ -2,11 +2,13 @@ package com.hankcs.hanlp.tokenizer.lexical;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.util.List;
 
 public class AbstractLexicalAnalyzerTest extends TestCase
@@ -33,5 +35,14 @@ public class AbstractLexicalAnalyzerTest extends TestCase
         System.out.println(analyzer.segment(text));
         CustomDictionary.add("攻城狮");
         System.out.println(analyzer.segment(text));
+    }
+
+    public void testOverwriteTag() throws IOException
+    {
+        CRFLexicalAnalyzer analyzer = new CRFLexicalAnalyzer();
+        String text = "强行修改词性";
+        System.out.println(analyzer.seg(text));
+        CustomDictionary.add("修改", "自定义词性");
+        System.out.println(analyzer.seg(text));
     }
 }
