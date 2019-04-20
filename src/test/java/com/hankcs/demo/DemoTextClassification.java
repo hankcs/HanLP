@@ -31,7 +31,7 @@ public class DemoTextClassification
     /**
      * 搜狗文本分类语料库5个类目，每个类目下1000篇文章，共计5000篇文章
      */
-    public static final String CORPUS_FOLDER = TestUtility.ensureTestData("搜狗文本分类语料库迷你版", "http://hanlp.linrunsoft.com/release/corpus/sogou-text-classification-corpus-mini.zip");
+    public static final String CORPUS_FOLDER = TestUtility.ensureTestData("搜狗文本分类语料库迷你版", "http://file.hankcs.com/corpus/sogou-text-classification-corpus-mini.zip");
     /**
      * 模型保存路径
      */

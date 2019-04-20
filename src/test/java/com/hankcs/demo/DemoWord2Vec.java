@@ -10,6 +10,7 @@
  */
 package com.hankcs.demo;
 
+import com.hankcs.hanlp.corpus.MSR;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.mining.word2vec.DocVectorModel;
 import com.hankcs.hanlp.mining.word2vec.Word2VecTrainer;
@@ -26,15 +27,17 @@ import java.util.Map;
  */
 public class DemoWord2Vec
 {
-    private static final String TRAIN_FILE_NAME = TestUtility.ensureTestData("搜狗文本分类语料库已分词.txt", "http://hanlp.linrunsoft.com/release/corpus/sogou-mini-segmented.zip");
+    private static final String TRAIN_FILE_NAME = MSR.TRAIN_PATH;
     private static final String MODEL_FILE_NAME = "data/test/word2vec.txt";
 
     public static void main(String[] args) throws IOException
     {
         WordVectorModel wordVectorModel = trainOrLoadModel();
-        printNearest("中国", wordVectorModel);
+        printNearest("上海", wordVectorModel);
         printNearest("美丽", wordVectorModel);
         printNearest("购买", wordVectorModel);
+        System.out.println(wordVectorModel.similarity("上海", "广州"));
+        System.out.println(wordVectorModel.analogy("日本", "自民党", "共和党"));
 
         // 文档向量
         DocVectorModel docVectorModel = new DocVectorModel(wordVectorModel);

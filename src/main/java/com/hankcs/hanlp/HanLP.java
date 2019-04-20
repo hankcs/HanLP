@@ -197,11 +197,11 @@ public class HanLP
         /**
          * 感知机词性标注模型
          */
-        public static String PerceptronPOSModelPath = "data/model/perceptron/pku199801/pos.bin";
+        public static String PerceptronPOSModelPath = "data/model/perceptron/pku1998/pos.bin";
         /**
          * 感知机命名实体识别模型
          */
-        public static String PerceptronNERModelPath = "data/model/perceptron/pku199801/ner.bin";
+        public static String PerceptronNERModelPath = "data/model/perceptron/pku1998/ner.bin";
         /**
          * 分词结果是否展示词性
          */

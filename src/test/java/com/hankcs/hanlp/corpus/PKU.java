@@ -27,7 +27,7 @@ public class PKU
     public static String PKU199801_TEST = "data/test/pku98/199801-test.txt";
     public static String POS_MODEL = "/pos.bin";
     public static String NER_MODEL = "/ner.bin";
-    public static final String PKU_98 = TestUtility.ensureTestData("pku98", "http://hanlp.linrunsoft.com/release/corpus/pku98.zip");
+    public static final String PKU_98 = TestUtility.ensureTestData("pku98", "http://file.hankcs.com/corpus/pku98.zip");
 
     static
     {

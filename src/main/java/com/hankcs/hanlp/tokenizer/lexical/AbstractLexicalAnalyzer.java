@@ -402,6 +402,16 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
                     {
                         childrenList.add(iterator.next());
                     }
+                    if (attributeList != null)
+                    {
+                        attributeIterator = attributeList.iterator();
+                        for (int i = 0; i < wordArray.length; i++)
+                        {
+                            CoreDictionary.Attribute attribute = attributeIterator.next();
+                            if (attribute != null)
+                                posArray[i] = attribute.nature[0].toString();
+                        }
+                    }
                     String prePos = posArray[0];
                     offset = 0;
 
@@ -648,7 +658,7 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
         // BinTrie合并
         if (CustomDictionary.trie != null)
         {
-            for (int i = 1; i < length; ++i)
+            for (int i = 0; i < length; ++i)
             {
                 if (wordNet[i] == null) continue;
                 BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i], 0);
