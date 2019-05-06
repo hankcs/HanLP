@@ -344,7 +344,8 @@ public abstract class Segment
                 sbTerm.append(realWord);
                 wordNet[j] = null;
             }
-            wordNet[start] = new Vertex(sbTerm.toString(), value);
+            String realWord = sbTerm.toString();
+            wordNet[start] = new Vertex(realWord, realWord, value);
         }
     }
 

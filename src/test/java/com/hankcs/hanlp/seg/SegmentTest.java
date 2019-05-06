@@ -530,4 +530,10 @@ public class SegmentTest extends TestCase
         HanLP.Config.enableDebug();
         System.out.println(segment.seg("福哈生态工程有限公司"));
     }
+
+    public void testIssue1172()
+    {
+        CustomDictionary.insert("我的额度", "xyz");
+        System.out.println(HanLP.segment("我的额度不够，需要提高额度"));
+    }
 }
