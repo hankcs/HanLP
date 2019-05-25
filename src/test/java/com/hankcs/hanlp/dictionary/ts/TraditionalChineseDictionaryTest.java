@@ -20,4 +20,11 @@ public class TraditionalChineseDictionaryTest extends TestCase
         assertEquals("“以后等你当上皇后，就能买草莓庆祝了”", HanLP.convertToSimplifiedChinese("「以後等妳當上皇后，就能買士多啤梨慶祝了」"));
         assertEquals("「以後等你當上皇后，就能買草莓慶祝了」", HanLP.convertToTraditionalChinese("“以后等你当上皇后，就能买草莓庆祝了”"));
     }
+
+    public void testIssue1182() throws Exception
+    {
+        String content = "直面现实,直面人生,手工捏面人";
+        System.out.println(HanLP.s2hk(content));
+        System.out.println(HanLP.s2tw(content));
+    }
 }
