@@ -89,7 +89,7 @@ public class NTDictionaryMaker extends CommonDictionaryMaker
             while (iterator.hasNext())
             {
                 IWord current = iterator.next();
-                if (current.getLabel().startsWith("nt") && !pre.getLabel().startsWith("nt"))
+                if (current.getLabel().startsWith("nt") && !pre.getLabel().startsWith("nt") && !pre.getValue().equals(Predefine.TAG_BIGIN))
                 {
                     pre.setLabel(NT.A.toString());
                 }

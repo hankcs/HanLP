@@ -91,7 +91,7 @@ public class NSDictionaryMaker extends CommonDictionaryMaker
             while (iterator.hasNext())
             {
                 IWord current = iterator.next();
-                if (current.getLabel().startsWith("ns") && !pre.getLabel().startsWith("ns"))
+                if (current.getLabel().startsWith("ns") && !pre.getLabel().startsWith("ns") && !pre.getValue().equals(Predefine.TAG_BIGIN))
                 {
                     pre.setLabel(NS.A.toString());
                 }
