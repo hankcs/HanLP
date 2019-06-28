@@ -3,6 +3,7 @@ package com.hankcs.hanlp.dictionary.stopword;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.MDAG.MDAGSet;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 import junit.framework.TestCase;
 
 import java.io.BufferedWriter;
@@ -46,4 +47,17 @@ public class CoreStopWordDictionaryTest extends TestCase
 //        }
 //        bw.close();
 //    }
+
+
+    public void testAdd()
+    {
+        CoreStopWordDictionary.add("加入");
+        System.out.println(NotionalTokenizer.segment("加入单词"));
+    }
+
+    public void testReload()
+    {
+        CoreStopWordDictionary.reload();
+        assertTrue(CoreStopWordDictionary.contains("这里"));
+    }
 }

@@ -78,7 +78,7 @@ HanLP提供下列功能：
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.7.3</version>
+    <version>portable-1.7.4</version>
 </dependency>
 ```
 
@@ -741,14 +741,16 @@ HanLP.Config.enableDebug();
 
 ### Apache License Version 2.0
 
-如不特殊注明，所有模块都以此协议授权使用。
-
-### 上海林原信息科技有限公司
-- HanLP产品初始知识产权归上海林原信息科技有限公司所有，任何人和企业可以无偿使用，可以对产品、源代码进行任何形式的修改，可以打包在其他产品中进行销售。
+- 如不特殊注明，所有模块都以此协议授权使用。
 - 任何使用了HanLP的全部或部分功能、词典、模型的项目、产品或文章等形式的成果必须显式注明HanLP及此项目主页。
 
-### 大快搜索
-- 现在正式由大快搜索主导开发，新模块继续完全开源。
+### 青岛大快搜索计算技术股份有限公司
+
+- HanLP从v1.3版本起正式由大快搜索主导开发，并拥有后续版本的版权，新版本继续完全开源，目前唯一官网为：http://hanlp.com/ 。
+
+### 上海林原信息科技有限公司
+
+- HanLP 早期得到了上海林原公司的大力支持，并拥有1.28及前序版本的版权，相关版本也曾在上海林源公司网站发布。
 
 ### 其他版权方
 - 实施上由个人维护，欢迎任何人与任何公司向本项目开源模块。
@@ -772,9 +774,9 @@ HanLP.Config.enableDebug();
 - An Efficient Implementation of Trie Structures, JUN-ICHI AOE AND KATSUSHI MORIMOTO
 - TextRank: Bringing Order into Texts, Rada Mihalcea and Paul Tarau
 
-感谢上海林原信息科技有限公司的刘先生，允许我利用工作时间开发HanLP，提供服务器和域名，并且促成了开源。感谢诸位用户的关注和使用，HanLP并不完善，未来还恳求各位NLP爱好者多多关照，提出宝贵意见。
+感谢诸位用户的关注和使用，HanLP并不完善，未来还恳求各位NLP爱好者多多关照，提出宝贵意见。
 
 作者 [@hankcs](http://weibo.com/hankcs/)
 
-2014年12月16日
+2016年9月16日
 

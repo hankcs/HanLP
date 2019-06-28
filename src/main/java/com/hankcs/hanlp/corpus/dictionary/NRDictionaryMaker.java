@@ -89,7 +89,7 @@ public class NRDictionaryMaker extends CommonDictionaryMaker
                 }
                 else
                 {
-                    if (!pre.getLabel().equals(Nature.nr.toString()))
+                    if (!pre.getLabel().equals(Nature.nr.toString()) && !pre.getValue().equals(Predefine.TAG_BIGIN))
                     {
                         pre.setLabel(NR.K.toString());
                     }

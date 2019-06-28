@@ -20,7 +20,6 @@ import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.util.List;
 import java.util.ListIterator;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -35,7 +34,25 @@ public class CoreStopWordDictionary
     static StopWordDictionary dictionary;
     static
     {
-        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT);
+        load(HanLP.Config.CoreStopWordDictionaryPath, true);
+    }
+
+    /**
+     * 重新加载{@link HanLP.Config#CoreStopWordDictionaryPath}所指定的停用词词典，并且生成新缓存。
+     */
+    public static void reload()
+    {
+        load(HanLP.Config.CoreStopWordDictionaryPath, false);
+    }
+
+    /**
+     * 加载另一部停用词词典
+     * @param coreStopWordDictionaryPath 词典路径
+     * @param loadCacheIfPossible 是否优先加载缓存（速度更快）
+     */
+    public static void load(String coreStopWordDictionaryPath, boolean loadCacheIfPossible)
+    {
+        ByteArray byteArray = loadCacheIfPossible ? ByteArray.createByteArray(coreStopWordDictionaryPath + Predefine.BIN_EXT) : null;
         if (byteArray == null)
         {
             try
