@@ -2,6 +2,8 @@ package com.hankcs.hanlp.model.crf;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
+
 public class CRFLexicalAnalyzerTest extends TestCase
 {
     public void testLoad() throws Exception
@@ -17,5 +19,12 @@ public class CRFLexicalAnalyzerTest extends TestCase
 //            System.out.println(analyzer.analyze(sentence));
 //            System.out.println(analyzer.seg(sentence));
 //        }
+    }
+
+    public void testIssue1221() throws IOException
+    {
+        CRFLexicalAnalyzer analyzer = new CRFLexicalAnalyzer();
+        analyzer.enableCustomDictionaryForcing(true);
+        System.out.println(analyzer.seg("商品和服务"));
     }
 }

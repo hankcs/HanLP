@@ -405,7 +405,7 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
                     if (attributeList != null)
                     {
                         attributeIterator = attributeList.iterator();
-                        for (int i = 0; i < wordArray.length; i++)
+                        for (int i = 0; i < wordArray.length && attributeIterator.hasNext(); i++)
                         {
                             CoreDictionary.Attribute attribute = attributeIterator.next();
                             if (attribute != null)
