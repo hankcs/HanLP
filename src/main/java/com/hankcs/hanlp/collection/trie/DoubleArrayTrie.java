@@ -338,7 +338,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     public int build(List<String> key, V[] value)
     {
         assert key.size() == value.length : "键的个数与值的个数不一样！";
-        assert key.size() > 0 : "键值个数为0！";
+        assert key.size() == 0 : "键值个数为0！";
         v = value;
         return build(key, null, null, key.size());
     }
