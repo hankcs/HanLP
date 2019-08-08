@@ -228,17 +228,20 @@ public class ClusterAnalyzer<K>
 
             for (Cluster<K> c : sectioned)
             {
-                c.section(2);
-                refine_clusters(c.sectioned_clusters());
-                c.set_sectioned_gain();
-                if (c.sectioned_gain() < limit_eval)
+                if (c.size() >= 2)
                 {
-                    for (Cluster<K> sub : c.sectioned_clusters())
+                    c.section(2);
+                    refine_clusters(c.sectioned_clusters());
+                    c.set_sectioned_gain();
+                    if (c.sectioned_gain() < limit_eval)
                     {
-                        sub.clear();
+                        for (Cluster<K> sub : c.sectioned_clusters())
+                        {
+                            sub.clear();
+                        }
                     }
+                    c.composite_vector().clear();
                 }
-                c.composite_vector().clear();
                 que.add(c);
             }
         }
