@@ -74,7 +74,7 @@ HanLP提供下列功能：
 
 为了方便用户，特提供内置了数据包的Portable版，只需在pom.xml加入：
 
-```
+```xml
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
@@ -82,7 +82,7 @@ HanLP提供下列功能：
 </dependency>
 ```
 
-零配置，即可使用基本功能（除由字构词、依存句法分析外的全部功能）。如果用户有自定义的需求，可以参考方式二，使用hanlp.properties进行配置。
+零配置，即可使用基本功能（除由字构词、依存句法分析外的全部功能）。如果用户有自定义的需求，可以参考方式二，使用hanlp.properties进行配置（Portable版同样支持hanlp.properties）。
 
 ### 方式二、下载jar、data、hanlp.properties
 
