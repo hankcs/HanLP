@@ -1,8 +1,11 @@
 package com.hankcs.hanlp.dictionary.other;
 
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.TextUtility;
 import junit.framework.TestCase;
+
+import java.util.List;
 
 public class CharTypeTest extends TestCase
 {
@@ -31,5 +34,11 @@ public class CharTypeTest extends TestCase
         assertTrue(TextUtility.charType('\0') == CharType.CT_DELIMITER);
 
 //        System.out.println(HanLP.segment("\t"));
+    }
+
+    public void testNonPrintable()
+    {
+        List<Term> termList = HanLP.segment(")\r\n ");
+        assertEquals(2, termList.size());
     }
 }
