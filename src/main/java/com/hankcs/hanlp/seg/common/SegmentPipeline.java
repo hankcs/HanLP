@@ -8,12 +8,12 @@
  * See LICENSE file in the project root for full license information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg;
+package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.tokenizer.pipe.Pipe;
 
 import java.util.*;
@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * @author hankcs
  */
-public class SegmentPipeline extends Segment implements Pipe<String, List<Term>>, List<Pipe<List<IWord>, List<IWord>>>
+public class SegmentPipeline extends AbstractSegment implements Pipe<String, List<Term>>, List<Pipe<List<IWord>, List<IWord>>>
 {
     Pipe<String, List<IWord>> first;
     Pipe<List<IWord>, List<Term>> last;
@@ -34,7 +34,7 @@ public class SegmentPipeline extends Segment implements Pipe<String, List<Term>>
         pipeList = new ArrayList<Pipe<List<IWord>, List<IWord>>>();
     }
 
-    public SegmentPipeline(final Segment delegate)
+    public SegmentPipeline(final AbstractSegment delegate)
     {
         this(new Pipe<String, List<IWord>>()
              {
@@ -71,7 +71,7 @@ public class SegmentPipeline extends Segment implements Pipe<String, List<Term>>
 
 
     @Override
-    protected List<Term> segSentence(char[] sentence)
+    public List<Term> segSentence(char[] sentence)
     {
         return seg(new String(sentence));
     }

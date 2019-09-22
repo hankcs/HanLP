@@ -14,14 +14,11 @@ package com.hankcs.hanlp.dependency.nnparser;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.dependency.AbstractDependencyParser;
-import com.hankcs.hanlp.dependency.IDependencyParser;
-import com.hankcs.hanlp.dependency.nnparser.option.BasicOption;
 import com.hankcs.hanlp.dependency.nnparser.option.ConfigOption;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.dependency.nnparser.util.PosTagUtil;
-import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class NeuralNetworkDependencyParser extends AbstractDependencyParser
 {
     private parser_dll parser_dll;
 
-    public NeuralNetworkDependencyParser(Segment segment)
+    public NeuralNetworkDependencyParser(AbstractSegment segment)
     {
         super(segment);
         parser_dll = new parser_dll();

@@ -11,11 +11,10 @@
 package com.hankcs.hanlp.mining.cluster;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.classification.utilities.TextProcessUtility;
 import com.hankcs.hanlp.collection.trie.datrie.MutableDoubleArrayTrieInteger;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.MathUtility;
 
@@ -34,7 +33,7 @@ import static com.hankcs.hanlp.classification.utilities.io.ConsoleLogger.logger;
 public class ClusterAnalyzer<K>
 {
     protected HashMap<K, Document<K>> documents_;
-    protected Segment segment;
+    protected AbstractSegment segment;
     protected MutableDoubleArrayTrieInteger vocabulary;
     static final int NUM_REFINE_LOOP = 30;
 

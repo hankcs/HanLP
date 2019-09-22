@@ -1,19 +1,8 @@
 package com.hankcs.hanlp.dictionary;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.corpus.dictionary.DictionaryMaker;
-import com.hankcs.hanlp.corpus.dictionary.item.Item;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.seg.Segment;
-import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.utility.Predefine;
 import junit.framework.TestCase;
-
-import java.io.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class CustomDictionaryTest extends TestCase
 {
@@ -120,7 +109,7 @@ public class CustomDictionaryTest extends TestCase
 //        }
 //        DictionaryMaker.load(path).saveTxtTo(path, new DictionaryMaker.Filter()
 //        {
-//            Segment segment = HanLP.newSegment().enableCustomDictionary(false);
+//            AbstractSegment segment = HanLP.newSegment().enableCustomDictionary(false);
 //            @Override
 //            public boolean onSave(Item item)
 //            {

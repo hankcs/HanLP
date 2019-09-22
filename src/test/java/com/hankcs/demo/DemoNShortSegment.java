@@ -12,7 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 
 /**
@@ -24,8 +24,8 @@ public class DemoNShortSegment
 {
     public static void main(String[] args)
     {
-        Segment nShortSegment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
-        Segment shortestSegment = new ViterbiSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
+        AbstractSegment nShortSegment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
+        AbstractSegment shortestSegment = new ViterbiSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
         String[] testCase = new String[]{
                 "今天，刘志军案的关键人物,山西女商人丁书苗在市二中院出庭受审。",
                 "江西省监狱管理局与中国太平洋财产保险股份有限公司南昌中心支公司保险合同纠纷案",

@@ -14,7 +14,7 @@ package com.hankcs.hanlp.dependency;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
 
@@ -29,7 +29,7 @@ public abstract class AbstractDependencyParser implements IDependencyParser
     /**
      * 本Parser使用的分词器，可以自由替换
      */
-    private Segment segment;
+    private AbstractSegment segment;
     /**
      * 依存关系映射表（可以将英文标签映射为中文）
      */
@@ -39,7 +39,7 @@ public abstract class AbstractDependencyParser implements IDependencyParser
      */
     private boolean enableDeprelTranslater;
 
-    public AbstractDependencyParser(Segment segment)
+    public AbstractDependencyParser(AbstractSegment segment)
     {
         this.segment = segment;
     }
@@ -66,13 +66,13 @@ public abstract class AbstractDependencyParser implements IDependencyParser
     }
 
     @Override
-    public Segment getSegment()
+    public AbstractSegment getSegment()
     {
         return segment;
     }
 
     @Override
-    public IDependencyParser setSegment(Segment segment)
+    public IDependencyParser setSegment(AbstractSegment segment)
     {
         this.segment = segment;
         return this;

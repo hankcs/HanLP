@@ -12,7 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class DemoChineseNameRecognition
                 "这里有关天培的有关事迹",
                 "龚学平等领导说,邓颖超生前杜绝超生",
         };
-        Segment segment = HanLP.newSegment().enableNameRecognize(true);
+        AbstractSegment segment = HanLP.newSegment().enableNameRecognize(true);
         for (String sentence : testCase)
         {
             List<Term> termList = segment.seg(sentence);

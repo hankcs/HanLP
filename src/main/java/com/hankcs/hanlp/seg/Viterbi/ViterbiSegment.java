@@ -20,7 +20,7 @@ import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
-import com.hankcs.hanlp.seg.WordBasedSegment;
+import com.hankcs.hanlp.seg.base.AbstractWordBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
@@ -38,7 +38,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class ViterbiSegment extends WordBasedSegment
+public class ViterbiSegment extends AbstractWordBasedSegment
 {
     private DoubleArrayTrie<CoreDictionary.Attribute> dat;
 
@@ -75,7 +75,7 @@ public class ViterbiSegment extends WordBasedSegment
     }
 
     @Override
-    protected List<Term> segSentence(char[] sentence)
+    public List<Term> segSentence(char[] sentence)
     {
 //        long start = System.currentTimeMillis();
         WordNet wordNetAll = new WordNet(sentence);

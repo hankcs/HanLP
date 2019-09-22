@@ -12,7 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class DemoOrganizationRecognition
                 "偶尔去开元地中海影城看电影。",
                 "不用词典，福哈生态工程有限公司是动态识别的结果。",
         };
-        Segment segment = HanLP.newSegment().enableCustomDictionary(false).enableOrganizationRecognize(true);
+        AbstractSegment segment = HanLP.newSegment().enableCustomDictionary(false).enableOrganizationRecognize(true);
         for (String sentence : testCase)
         {
             List<Term> termList = segment.seg(sentence);

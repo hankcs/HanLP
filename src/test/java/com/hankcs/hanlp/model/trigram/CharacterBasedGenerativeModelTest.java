@@ -1,17 +1,6 @@
 package com.hankcs.hanlp.model.trigram;
 
-import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.corpus.document.CorpusLoader;
-import com.hankcs.hanlp.corpus.document.Document;
-import com.hankcs.hanlp.corpus.document.sentence.word.Word;
-import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.seg.HMM.HMMSegment;
-import com.hankcs.hanlp.seg.Segment;
-import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class CharacterBasedGenerativeModelTest extends TestCase
 {
@@ -89,7 +78,7 @@ public class CharacterBasedGenerativeModelTest extends TestCase
 //    {
 //        HanLP.Config.ShowTermNature = false;
 //        String text = "我实现了一个基于Character Based TriGram的分词器";
-//        Segment segment = new HMMSegment();
+//        AbstractSegment segment = new HMMSegment();
 //        List<Term> termList = segment.seg(text);
 //        System.out.println(termList);
 //    }

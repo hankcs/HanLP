@@ -4,7 +4,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.corpus.document.sentence.word.CompoundWord;
 import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import junit.framework.TestCase;
 
@@ -24,7 +24,7 @@ public class CWSTrainerTest extends TestCase
 //        System.out.printf("准确率F1:%.2f\n", result.prf[2]);
         PerceptronSegmenter segmenter = new PerceptronSegmenter(result.model);
         // 也可以用
-//        Segment segmenter = new AveragedPerceptronSegment(POS_MODEL_FILE);
+//        AbstractSegment segmenter = new AveragedPerceptronSegment(POS_MODEL_FILE);
         System.out.println(segmenter.segment("商品和服务?"));
     }
 
@@ -37,7 +37,7 @@ public class CWSTrainerTest extends TestCase
 
     public void testCWSandPOS() throws Exception
     {
-        Segment segmenter = new PerceptronLexicalAnalyzer(Config.CWS_MODEL_FILE, Config.POS_MODEL_FILE);
+        AbstractSegment segmenter = new PerceptronLexicalAnalyzer(Config.CWS_MODEL_FILE, Config.POS_MODEL_FILE);
         System.out.println(segmenter.seg(SENTENCE));
     }
 

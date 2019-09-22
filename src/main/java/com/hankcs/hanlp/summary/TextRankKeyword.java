@@ -2,7 +2,7 @@ package com.hankcs.hanlp.summary;
 
 
 import com.hankcs.hanlp.algorithm.MaxHeap;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.*;
@@ -24,7 +24,7 @@ public class TextRankKeyword extends KeywordExtractor
     public static int max_iter = 200;
     final static float min_diff = 0.001f;
 
-    public TextRankKeyword(Segment defaultSegment)
+    public TextRankKeyword(AbstractSegment defaultSegment)
     {
         super(defaultSegment);
     }

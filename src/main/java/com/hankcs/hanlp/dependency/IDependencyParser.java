@@ -12,7 +12,7 @@
 package com.hankcs.hanlp.dependency;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -46,14 +46,14 @@ public interface IDependencyParser
      *
      * @return
      */
-    Segment getSegment();
+    AbstractSegment getSegment();
 
     /**
      * 设置Parser使用的分词器
      *
      * @param segment
      */
-    IDependencyParser setSegment(Segment segment);
+    IDependencyParser setSegment(AbstractSegment segment);
 
     /**
      * 获取依存关系映射表

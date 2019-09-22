@@ -13,8 +13,7 @@ package com.hankcs.hanlp.tokenizer;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.other.CharTable;
-import com.hankcs.hanlp.dictionary.ts.SimplifiedChineseDictionary;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.SentencesUtil;
 
@@ -31,7 +30,7 @@ public class TraditionalChineseTokenizer
     /**
      * 预置分词器
      */
-    public static Segment SEGMENT = HanLP.newSegment();
+    public static AbstractSegment SEGMENT = HanLP.newSegment();
 
     private static List<Term> segSentence(String text)
     {

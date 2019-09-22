@@ -4,7 +4,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import junit.framework.TestCase;
 
@@ -20,7 +20,7 @@ public class AbstractLexicalAnalyzerTest extends TestCase
             "林志玲亮相网友:确定不是波多野结衣？",
             "龟山千广和近藤公园在龟山公园里喝酒赏花",
         };
-        Segment segment = HanLP.newSegment("crf").enableJapaneseNameRecognize(true);
+        AbstractSegment segment = HanLP.newSegment("crf").enableJapaneseNameRecognize(true);
         for (String sentence : testCase)
         {
             List<Term> termList = segment.seg(sentence);

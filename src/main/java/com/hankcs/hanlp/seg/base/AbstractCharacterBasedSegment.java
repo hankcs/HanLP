@@ -8,7 +8,7 @@
  * Copyright (c) 2003-2015, hankcs. All Right Reserved, http://www.hankcs.com/
  * </copyright>
  */
-package com.hankcs.hanlp.seg;
+package com.hankcs.hanlp.seg.base;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +26,7 @@ import com.hankcs.hanlp.seg.common.Vertex;
  * 基于“由字构词”方法分词器基类
  * @author hankcs
  */
-public abstract class CharacterBasedSegment extends Segment
+public abstract class AbstractCharacterBasedSegment extends AbstractSegment
 {
 
     /**
@@ -65,7 +65,7 @@ public abstract class CharacterBasedSegment extends Segment
      * 分词、词性标注联合模型则直接重载segSentence
      */
     @Override
-    protected List<Term> segSentence(char[] sentence)
+    public List<Term> segSentence(char[] sentence)
     {
         if (sentence.length == 0) return Collections.emptyList();
         List<Term> termList = roughSegSentence(sentence);

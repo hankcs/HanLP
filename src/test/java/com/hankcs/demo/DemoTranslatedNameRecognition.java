@@ -12,7 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class DemoTranslatedNameRecognition
                 "一桶冰水当头倒下，微软的比尔盖茨、Facebook的扎克伯格跟桑德博格、亚马逊的贝索斯、苹果的库克全都不惜湿身入镜，这些硅谷的科技人，飞蛾扑火似地牺牲演出，其实全为了慈善。",
                 "世界上最长的姓名是简森·乔伊·亚历山大·比基·卡利斯勒·达夫·埃利奥特·福克斯·伊维鲁莫·马尔尼·梅尔斯·帕特森·汤普森·华莱士·普雷斯顿。",
         };
-        Segment segment = HanLP.newSegment().enableTranslatedNameRecognize(true);
+        AbstractSegment segment = HanLP.newSegment().enableTranslatedNameRecognize(true);
         for (String sentence : testCase)
         {
             List<Term> termList = segment.seg(sentence);

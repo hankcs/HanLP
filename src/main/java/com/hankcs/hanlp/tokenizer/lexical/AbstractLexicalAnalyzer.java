@@ -25,7 +25,7 @@ import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.model.perceptron.tagset.NERTagSet;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
-import com.hankcs.hanlp.seg.CharacterBasedSegment;
+import com.hankcs.hanlp.seg.base.AbstractCharacterBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
@@ -38,7 +38,7 @@ import java.util.*;
  *
  * @author hankcs
  */
-public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements LexicalAnalyzer
+public class AbstractLexicalAnalyzer extends AbstractCharacterBasedSegment implements LexicalAnalyzer
 {
     protected Segmenter segmenter;
     protected POSTagger posTagger;
@@ -334,7 +334,7 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
     }
 
     @Override
-    protected List<Term> segSentence(char[] sentence)
+    public List<Term> segSentence(char[] sentence)
     {
         if (sentence.length == 0)
         {

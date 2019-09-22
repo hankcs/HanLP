@@ -11,7 +11,7 @@
 package com.hankcs.hanlp.mining.word;
 
 import com.hankcs.hanlp.algorithm.MaxHeap;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.KeywordExtractor;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
@@ -40,14 +40,14 @@ public class TfIdfCounter extends KeywordExtractor
         this(StandardTokenizer.SEGMENT, filterStopWord);
     }
 
-    public TfIdfCounter(Segment defaultSegment, boolean filterStopWord)
+    public TfIdfCounter(AbstractSegment defaultSegment, boolean filterStopWord)
     {
         super(defaultSegment);
         this.filterStopWord = filterStopWord;
         tfMap = new HashMap<Object, Map<String, Double>>();
     }
 
-    public TfIdfCounter(Segment defaultSegment)
+    public TfIdfCounter(AbstractSegment defaultSegment)
     {
         this(defaultSegment, true);
     }

@@ -12,12 +12,10 @@
 package com.hankcs.hanlp.tokenizer;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * 标准分词器
@@ -28,7 +26,7 @@ public class StandardTokenizer
     /**
      * 预置分词器
      */
-    public static final Segment SEGMENT = HanLP.newSegment();
+    public static final AbstractSegment SEGMENT = HanLP.newSegment();
 
     /**
      * 分词

@@ -15,7 +15,7 @@ import com.hankcs.hanlp.corpus.document.sentence.word.Word;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.perceptron.tagset.CWSTagSet;
 import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.lexical.Segmenter;
 
@@ -111,12 +111,12 @@ public class HMMSegmenter extends HMMTrainer implements Segmenter
      *
      * @return
      */
-    public Segment toSegment()
+    public AbstractSegment toSegment()
     {
-        return new Segment()
+        return new AbstractSegment()
         {
             @Override
-            protected List<Term> segSentence(char[] sentence)
+            public List<Term> segSentence(char[] sentence)
             {
                 List<String> wordList = segment(new String(sentence));
                 List<Term> termList = new LinkedList<Term>();

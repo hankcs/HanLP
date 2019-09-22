@@ -13,7 +13,7 @@ package com.hankcs.hanlp.mining.word;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.algorithm.MaxHeap;
 import com.hankcs.hanlp.corpus.occurrence.TermFrequency;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.KeywordExtractor;
 
@@ -35,7 +35,7 @@ public class TermFrequencyCounter extends KeywordExtractor implements Collection
      * @param filterStopWord 是否过滤停用词
      * @param segment        分词器
      */
-    public TermFrequencyCounter(Segment segment, boolean filterStopWord)
+    public TermFrequencyCounter(AbstractSegment segment, boolean filterStopWord)
     {
         this.filterStopWord = filterStopWord;
         this.defaultSegment = segment;

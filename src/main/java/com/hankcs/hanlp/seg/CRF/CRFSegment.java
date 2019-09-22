@@ -19,8 +19,8 @@ import com.hankcs.hanlp.model.CRFSegmentModel;
 import com.hankcs.hanlp.model.crf.CRFModel;
 import com.hankcs.hanlp.model.crf.FeatureFunction;
 import com.hankcs.hanlp.model.crf.Table;
-import com.hankcs.hanlp.seg.CharacterBasedSegment;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
+import com.hankcs.hanlp.seg.base.AbstractCharacterBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.CharacterHelper;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
@@ -36,7 +36,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  * @author hankcs
  * @deprecated 已废弃，请使用{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}
  */
-public class CRFSegment extends CharacterBasedSegment
+public class CRFSegment extends AbstractCharacterBasedSegment
 {
     private CRFModel crfModel;
 
@@ -298,7 +298,7 @@ public class CRFSegment extends CharacterBasedSegment
     }
 
     @Override
-    public Segment enableNumberQuantifierRecognize(boolean enable)
+    public AbstractSegment enableNumberQuantifierRecognize(boolean enable)
     {
         throw new UnsupportedOperationException("暂不支持");
 //        enablePartOfSpeechTagging(enable);

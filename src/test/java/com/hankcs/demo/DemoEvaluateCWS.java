@@ -4,7 +4,7 @@ import com.hankcs.hanlp.model.perceptron.CWSTrainer;
 import com.hankcs.hanlp.corpus.MSR;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.model.perceptron.PerceptronTrainer;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.CWSEvaluator;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class DemoEvaluateCWS
         );
         logger.finish(" 训练完毕\n");
 
-        Segment segment = new PerceptronLexicalAnalyzer(result.getModel()).enableCustomDictionary(false); // 重要！必须禁用词典
+        AbstractSegment segment = new PerceptronLexicalAnalyzer(result.getModel()).enableCustomDictionary(false); // 重要！必须禁用词典
         System.out.println(CWSEvaluator.evaluate(segment, MSR.TEST_PATH, MSR.OUTPUT_PATH, MSR.GOLD_PATH, MSR.TRAIN_WORDS)); // 标准化评测
         // P:96.80 R:96.55 F1:96.68 OOV-R:70.91 IV-R:97.25
         // 受随机数影响，可能在96.60%左右波动

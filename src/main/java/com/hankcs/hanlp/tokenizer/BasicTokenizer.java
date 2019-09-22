@@ -11,7 +11,7 @@
 package com.hankcs.hanlp.tokenizer;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class BasicTokenizer
     /**
      * 预置分词器
      */
-    public static final Segment SEGMENT = HanLP.newSegment().enableAllNamedEntityRecognize(false).enableCustomDictionary(false);
+    public static final AbstractSegment SEGMENT = HanLP.newSegment().enableAllNamedEntityRecognize(false).enableCustomDictionary(false);
 
     /**
      * 分词

@@ -24,11 +24,9 @@ import com.hankcs.hanlp.mining.word.NewWordDiscover;
 import com.hankcs.hanlp.mining.word.WordInfo;
 import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
-import com.hankcs.hanlp.seg.CRF.CRFSegment;
-import com.hankcs.hanlp.seg.HMM.HMMSegment;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.TextRankKeyword;
@@ -641,7 +639,7 @@ public class HanLP
      *
      * @return 一个分词器
      */
-    public static Segment newSegment()
+    public static AbstractSegment newSegment()
     {
         return new ViterbiSegment();   // Viterbi分词器是目前效率和效果的最佳平衡
     }
@@ -660,7 +658,7 @@ public class HanLP
      *                  </ul>
      * @return 一个分词器
      */
-    public static Segment newSegment(String algorithm)
+    public static AbstractSegment newSegment(String algorithm)
     {
         if (algorithm == null)
         {

@@ -21,7 +21,9 @@ import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Other.CommonAhoCorasickSegmentUtil;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.ResultTerm;
+import com.hankcs.hanlp.seg.common.SegmentTypeEnum;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
 import com.hankcs.hanlp.tokenizer.IndexTokenizer;
@@ -43,7 +45,7 @@ public class SegmentTest extends TestCase
     public void testSeg() throws Exception
     {
 //        HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment();
+        AbstractSegment segment = new DijkstraSegment();
 //        System.out.println(segment.seg(
 //                "我遗忘我的密码了"
 //        ));
@@ -57,7 +59,7 @@ public class SegmentTest extends TestCase
     public void testIssue880() throws Exception
     {
 //        HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment();
+        AbstractSegment segment = new DijkstraSegment();
         System.out.println(segment.seg("龚学平等表示会保证金云鹏的安全"));
         System.out.println(segment.seg("王中军代表蓝队发言"));
     }
@@ -66,7 +68,7 @@ public class SegmentTest extends TestCase
     {
 //        HanLP.Config.enableDebug(true);
         CustomDictionary.add("网剧");
-        Segment seg = new DijkstraSegment();
+        Segment seg = new Segment.Builder().init(SegmentTypeEnum.DIJKSTRA).build();
         List<Term> termList = seg.seg("优酷总裁魏明介绍了优酷2015年的内容战略，表示要以“大电影、大网剧、大综艺”为关键词");
 //        System.out.println(termList);
     }
@@ -78,11 +80,13 @@ public class SegmentTest extends TestCase
             System.getProperty("user.dir") + "/" + "data/dictionary/custom/全国地名大全.txt";
         path = path.replace("\\", "/");
         String text = "一半天帕克斯曼是走不出丁字桥镇的";
-        Segment segment = HanLP.newSegment().enableCustomDictionary(false);
-        Segment seg = new ViterbiSegment(path);
+        AbstractSegment segment = HanLP.newSegment().enableCustomDictionary(false);
+        Segment seg = new Segment.Builder().init(SegmentTypeEnum.VITERBIT)
+            .enableCustomDictionaryForcing(true)
+            .enableCustomDictionary(true)
+            .build();
         System.out.println("不启用字典的分词结果：" + segment.seg(text));
         System.out.println("默认分词结果：" + HanLP.segment(text));
-        seg.enableCustomDictionaryForcing(true).enableCustomDictionary(true);
         List<Term> termList = seg.seg(text);
         System.out.println("自定义字典的分词结果：" + termList);
     }
@@ -100,7 +104,7 @@ public class SegmentTest extends TestCase
     public void testShortest() throws Exception
     {
 //        HanLP.Config.enableDebug();
-//        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(true);
+//        AbstractSegment segment = new ViterbiSegment().enableAllNamedEntityRecognize(true);
 //        System.out.println(segment.seg("把市场经济奉行的等价交换原则引入党的生活和国家机关政务活动中"));
     }
 
@@ -147,26 +151,27 @@ public class SegmentTest extends TestCase
 
     public void testFactory() throws Exception
     {
-        Segment segment = HanLP.newSegment();
+        AbstractSegment segment = HanLP.newSegment();
     }
 
     public void testCustomDictionary() throws Exception
     {
         CustomDictionary.insert("肯德基", "ns 1000");
-        Segment segment = new ViterbiSegment();
+        AbstractSegment segment = new ViterbiSegment();
 //        System.out.println(segment.seg("肯德基"));
     }
 
     public void testNT() throws Exception
     {
 //        HanLP.Config.enableDebug();
-        Segment segment = new DijkstraSegment().enableOrganizationRecognize(true);
+        Segment segment = new Segment.Builder().init(SegmentTypeEnum.DIJKSTRA)
+            .enableOrganizationRecognize(true).build();
 //        System.out.println(segment.seg("张克智与潍坊地铁建设工程公司"));
     }
 
     public void testACSegment() throws Exception
     {
-        Segment segment = new DoubleArrayTrieSegment();
+        AbstractSegment segment = new DoubleArrayTrieSegment();
         segment.enablePartOfSpeechTagging(true);
 //        System.out.println(segment.seg("江西鄱阳湖干枯，中国最大淡水湖变成大草原"));
     }
@@ -196,20 +201,20 @@ public class SegmentTest extends TestCase
     public void testQuickAtomSegment() throws Exception
     {
         String text = "你好1234abc Good一二三四3.14";
-//        System.out.println(Segment.quickAtomSegment(text.toCharArray(), 0, text.length()));
+//        System.out.println(AbstractSegment.quickAtomSegment(text.toCharArray(), 0, text.length()));
     }
 
     public void testJP() throws Exception
     {
         String text = "明天8.9你好abc对了";
-        Segment segment = new ViterbiSegment().enableCustomDictionary(false).enableAllNamedEntityRecognize(false);
+        AbstractSegment segment = new ViterbiSegment().enableCustomDictionary(false).enableAllNamedEntityRecognize(false);
 //        System.out.println(segment.seg(text));
     }
 
 //    public void testSpeedOfSecondViterbi() throws Exception
 //    {
 //        String text = "王总和小丽结婚了";
-//        Segment segment = new ViterbiSegment().enableAllNamedEntityRecognize(false)
+//        AbstractSegment segment = new ViterbiSegment().enableAllNamedEntityRecognize(false)
 //                .enableNameRecognize(false) // 人名识别需要二次维特比，比较慢
 //                .enableCustomDictionary(false);
 //        System.out.println(segment.seg(text));
@@ -255,7 +260,7 @@ public class SegmentTest extends TestCase
 
 //    public void testIssue199() throws Exception
 //    {
-//        Segment segment = new CRFSegment();
+//        AbstractSegment segment = new CRFSegment();
 //        segment.enableCustomDictionary(false);// 开启自定义词典
 //        segment.enablePartOfSpeechTagging(true);
 //        List<Term> termList = segment.seg("更多采购");
@@ -271,7 +276,7 @@ public class SegmentTest extends TestCase
 
 //    public void testMultiThreading() throws Exception
 //    {
-//        Segment segment = BasicTokenizer.SEGMENT;
+//        AbstractSegment segment = BasicTokenizer.SEGMENT;
 //        // 测个速度
 //        String text = "江西鄱阳湖干枯，中国最大淡水湖变成大草原。";
 //        System.out.println(segment.seg(text));
@@ -309,7 +314,7 @@ public class SegmentTest extends TestCase
 //    public void testTryToCrashSegment() throws Exception
 //    {
 //        String text = "尝试玩坏分词器";
-//        Segment segment = new ViterbiSegment().enableMultithreading(100);
+//        AbstractSegment segment = new ViterbiSegment().enableMultithreading(100);
 //        System.out.println(segment.seg(text));
 //    }
 
@@ -317,14 +322,14 @@ public class SegmentTest extends TestCase
 //    {
 //        HanLP.Config.enableDebug();
 ////        HanLP.Config.ShowTermNature = false;
-//        Segment segment = new CRFSegment();
+//        AbstractSegment segment = new CRFSegment();
 //        System.out.println(segment.seg("有句谚语叫做一个萝卜一个坑儿"));
 //    }
 
     public void testIssue16() throws Exception
     {
         CustomDictionary.insert("爱听4g", "nz 1000");
-        Segment segment = new ViterbiSegment();
+        Segment segment = new Segment.Builder().init(SegmentTypeEnum.VITERBIT).build();
 //        System.out.println(segment.seg("爱听4g"));
 //        System.out.println(segment.seg("爱听4G"));
 //        System.out.println(segment.seg("爱听４G"));
@@ -357,7 +362,7 @@ public class SegmentTest extends TestCase
 
     public void testIssue71() throws Exception
     {
-        Segment segment = HanLP.newSegment();
+        AbstractSegment segment = HanLP.newSegment();
         segment = segment.enableAllNamedEntityRecognize(true);
         segment = segment.enableNumberQuantifierRecognize(true);
 //        System.out.println(segment.seg("曾幻想过，若干年后的我就是这个样子的吗"));
@@ -377,7 +382,7 @@ public class SegmentTest extends TestCase
             "华夏基金与嘉实基金两家京系基金公司",
             "则应从排名第八的投标人开始依次递补三名投标人"
         };
-        Segment segment = HanLP.newSegment().enableOrganizationRecognize(true).enableNumberQuantifierRecognize(true);
+        AbstractSegment segment = HanLP.newSegment().enableOrganizationRecognize(true).enableNumberQuantifierRecognize(true);
         for (String sentence : testCase)
         {
             List<Term> termList = segment.seg(sentence);
@@ -419,7 +424,7 @@ public class SegmentTest extends TestCase
     {
 //        HanLP.Config.enableDebug();
         String txt = "而其他肢解出去的七个贝尔公司如西南贝尔、太平洋贝尔、大西洋贝尔。";
-        Segment seg_viterbi = new ViterbiSegment().enablePartOfSpeechTagging(true).enableOffset(true).enableNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true).enableNumberQuantifierRecognize(true);
+        AbstractSegment seg_viterbi = new ViterbiSegment().enablePartOfSpeechTagging(true).enableOffset(true).enableNameRecognize(true).enablePlaceRecognize(true).enableOrganizationRecognize(true).enableNumberQuantifierRecognize(true);
 //        System.out.println(seg_viterbi.seg(txt));
     }
 
@@ -427,7 +432,7 @@ public class SegmentTest extends TestCase
     {
         CustomDictionary.insert("酷我");
         CustomDictionary.insert("酷我音乐");
-        Segment segment = HanLP.newSegment().enableIndexMode(true);
+        AbstractSegment segment = HanLP.newSegment().enableIndexMode(true);
 //        System.out.println(segment.seg("1酷我音乐2酷我音乐3酷我4酷我音乐6酷7酷我音乐"));
     }
 
@@ -436,7 +441,7 @@ public class SegmentTest extends TestCase
 //        HanLP.Config.enableDebug();
         String text = "受约束，需要遵守心理学会所定的道德原则，所需要时须说明该实验与所能得到的知识的关系";
 
-        Segment segment = StandardTokenizer.SEGMENT.enableAllNamedEntityRecognize(false).enableCustomDictionary(false)
+        AbstractSegment segment = StandardTokenizer.SEGMENT.enableAllNamedEntityRecognize(false).enableCustomDictionary(false)
             .enableOrganizationRecognize(true);
 
 //        System.out.println(segment.seg(text));
@@ -444,7 +449,7 @@ public class SegmentTest extends TestCase
 
     public void testIssue496() throws Exception
     {
-        Segment segment = HanLP.newSegment().enableIndexMode(true);
+        AbstractSegment segment = HanLP.newSegment().enableIndexMode(true);
 //        System.out.println(segment.seg("中医药"));
 //        System.out.println(segment.seg("中医药大学"));
     }
@@ -480,7 +485,7 @@ public class SegmentTest extends TestCase
 
     public void testIssue542() throws Exception
     {
-        Segment seg = HanLP.newSegment();
+        AbstractSegment seg = HanLP.newSegment();
         seg.enableAllNamedEntityRecognize(true);
         seg.enableNumberQuantifierRecognize(true);
 //        System.out.println(seg.seg("一分钟就累了"));
@@ -510,7 +515,7 @@ public class SegmentTest extends TestCase
 
     public void testIssue790() throws Exception
     {
-        Segment seg = HanLP.newSegment();
+        AbstractSegment seg = HanLP.newSegment();
         seg.enableOrganizationRecognize(true);
         seg.enableNumberQuantifierRecognize(true);
 
@@ -526,7 +531,7 @@ public class SegmentTest extends TestCase
 
     public void testIssue932() throws Exception
     {
-        Segment segment = new DijkstraSegment().enableOrganizationRecognize(true);
+        AbstractSegment segment = new DijkstraSegment().enableOrganizationRecognize(true);
         HanLP.Config.enableDebug();
         System.out.println(segment.seg("福哈生态工程有限公司"));
     }

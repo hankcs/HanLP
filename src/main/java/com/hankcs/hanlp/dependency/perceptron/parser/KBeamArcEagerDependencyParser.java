@@ -19,7 +19,7 @@ import com.hankcs.hanlp.dependency.perceptron.accessories.Options;
 import com.hankcs.hanlp.dependency.perceptron.transition.configuration.Configuration;
 import com.hankcs.hanlp.dependency.perceptron.transition.parser.KBeamArcEagerParser;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.io.File;
@@ -42,7 +42,7 @@ public class KBeamArcEagerDependencyParser extends AbstractDependencyParser
         this(HanLP.Config.PerceptronParserModelPath);
     }
 
-    public KBeamArcEagerDependencyParser(Segment segment, KBeamArcEagerParser parser)
+    public KBeamArcEagerDependencyParser(AbstractSegment segment, KBeamArcEagerParser parser)
     {
         super(segment);
         this.parser = parser;

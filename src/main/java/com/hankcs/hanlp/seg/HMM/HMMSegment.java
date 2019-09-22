@@ -13,7 +13,7 @@ package com.hankcs.hanlp.seg.HMM;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.model.trigram.CharacterBasedGenerativeModel;
-import com.hankcs.hanlp.seg.CharacterBasedSegment;
+import com.hankcs.hanlp.seg.base.AbstractCharacterBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.GlobalObjectPool;
 import com.hankcs.hanlp.utility.TextUtility;
@@ -27,7 +27,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class HMMSegment extends CharacterBasedSegment
+public class HMMSegment extends AbstractCharacterBasedSegment
 {
     CharacterBasedGenerativeModel model;
 

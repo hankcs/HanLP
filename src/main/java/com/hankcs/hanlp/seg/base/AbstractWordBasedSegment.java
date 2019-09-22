@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hankcs.hanlp.seg;
+package com.hankcs.hanlp.seg.base;
 
 import com.hankcs.hanlp.algorithm.Viterbi;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
@@ -31,10 +31,10 @@ import java.util.*;
  *
  * @author hankcs
  */
-public abstract class WordBasedSegment extends Segment
+public abstract class AbstractWordBasedSegment extends AbstractSegment
 {
 
-    public WordBasedSegment()
+    public AbstractWordBasedSegment()
     {
         super();
     }

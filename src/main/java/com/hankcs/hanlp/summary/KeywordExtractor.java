@@ -12,11 +12,10 @@
 package com.hankcs.hanlp.summary;
 
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -30,9 +29,9 @@ public abstract class KeywordExtractor
     /**
      * 默认分词器
      */
-    protected Segment defaultSegment;
+    protected AbstractSegment defaultSegment;
 
-    public KeywordExtractor(Segment defaultSegment)
+    public KeywordExtractor(AbstractSegment defaultSegment)
     {
         this.defaultSegment = defaultSegment;
     }
@@ -60,13 +59,13 @@ public abstract class KeywordExtractor
      * @param segment 任何开启了词性标注的分词器
      * @return 自己
      */
-    public KeywordExtractor setSegment(Segment segment)
+    public KeywordExtractor setSegment(AbstractSegment segment)
     {
         defaultSegment = segment;
         return this;
     }
 
-    public Segment getSegment()
+    public AbstractSegment getSegment()
     {
         return defaultSegment;
     }

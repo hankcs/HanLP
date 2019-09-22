@@ -14,7 +14,7 @@ package com.hankcs.hanlp.tokenizer;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
 import com.hankcs.hanlp.dictionary.stopword.Filter;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class NotionalTokenizer
     /**
      * 预置分词器
      */
-    public static Segment SEGMENT = HanLP.newSegment();
+    public static AbstractSegment SEGMENT = HanLP.newSegment();
 
     public static List<Term> segment(String text)
     {

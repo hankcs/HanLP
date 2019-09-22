@@ -8,7 +8,7 @@
  * Copyright (c) 2003-2015, hankcs. All Right Reserved, http://www.hankcs.com/
  * </copyright>
  */
-package com.hankcs.hanlp.seg;
+package com.hankcs.hanlp.seg.base;
 
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
@@ -22,7 +22,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public abstract class DictionaryBasedSegment extends Segment
+public abstract class AbstractDictionaryBasedSegment extends AbstractSegment
 {
     /**
      * 开启数词和英文识别（与标准意义上的词性标注不同，只是借用这个配置方法，不是真的开启了词性标注。
@@ -31,7 +31,7 @@ public abstract class DictionaryBasedSegment extends Segment
      * @param enable
      * @return
      */
-    public Segment enablePartOfSpeechTagging(boolean enable)
+    public AbstractSegment enablePartOfSpeechTagging(boolean enable)
     {
         return super.enablePartOfSpeechTagging(enable);
     }
@@ -77,7 +77,7 @@ public abstract class DictionaryBasedSegment extends Segment
     }
 
     @Override
-    public Segment enableCustomDictionary(boolean enable)
+    public AbstractSegment enableCustomDictionary(boolean enable)
     {
         if (enable)
         {

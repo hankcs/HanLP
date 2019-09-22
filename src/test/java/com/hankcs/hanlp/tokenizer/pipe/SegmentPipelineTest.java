@@ -1,7 +1,7 @@
 package com.hankcs.hanlp.tokenizer.pipe;
 
 import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
-import com.hankcs.hanlp.seg.SegmentPipeline;
+import com.hankcs.hanlp.seg.common.SegmentPipeline;
 import junit.framework.TestCase;
 
 import java.util.regex.Pattern;

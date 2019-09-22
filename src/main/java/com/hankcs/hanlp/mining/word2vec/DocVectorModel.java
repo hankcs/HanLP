@@ -12,7 +12,7 @@ package com.hankcs.hanlp.mining.word2vec;
 
 
 import com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NotionalTokenizer;
 
@@ -30,7 +30,7 @@ public class DocVectorModel extends AbstractVectorModel<Integer>
     /**
      * 分词器
      */
-    private Segment segment;
+    private AbstractSegment segment;
     /**
      * 是否使用CoreStopwordDictionary的过滤器
      */
@@ -41,7 +41,7 @@ public class DocVectorModel extends AbstractVectorModel<Integer>
         this(wordVectorModel, NotionalTokenizer.SEGMENT, true);
     }
 
-    public DocVectorModel(WordVectorModel wordVectorModel, Segment segment, boolean filter)
+    public DocVectorModel(WordVectorModel wordVectorModel, AbstractSegment segment, boolean filter)
     {
         super();
         this.wordVectorModel = wordVectorModel;
@@ -133,12 +133,12 @@ public class DocVectorModel extends AbstractVectorModel<Integer>
         return A.cosineForUnitVector(B);
     }
 
-    public Segment getSegment()
+    public AbstractSegment getSegment()
     {
         return segment;
     }
 
-    public void setSegment(Segment segment)
+    public void setSegment(AbstractSegment segment)
     {
         this.segment = segment;
     }

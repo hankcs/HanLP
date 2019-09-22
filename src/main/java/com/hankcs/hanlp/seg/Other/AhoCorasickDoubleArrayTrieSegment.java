@@ -15,8 +15,8 @@ import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.seg.DictionaryBasedSegment;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
+import com.hankcs.hanlp.seg.base.AbstractDictionaryBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.TextUtility;
 
@@ -31,7 +31,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  *
  * @author hankcs
  */
-public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
+public class AhoCorasickDoubleArrayTrieSegment extends AbstractDictionaryBasedSegment
 {
     AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute> trie;
 
@@ -64,7 +64,7 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
     }
 
     @Override
-    protected List<Term> segSentence(char[] sentence)
+    public List<Term> segSentence(char[] sentence)
     {
         if (trie == null)
         {
@@ -103,7 +103,7 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
     }
 
     @Override
-    public Segment enableCustomDictionary(boolean enable)
+    public AbstractSegment enableCustomDictionary(boolean enable)
     {
         throw new UnsupportedOperationException("AhoCorasickDoubleArrayTrieSegment暂时不支持用户词典。");
     }

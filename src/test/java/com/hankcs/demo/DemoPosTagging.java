@@ -12,7 +12,7 @@
 package com.hankcs.demo;
 
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 
 /**
  * 词性标注
@@ -23,7 +23,7 @@ public class DemoPosTagging
     public static void main(String[] args)
     {
         String text = "教授正在教授自然语言处理课程";
-        Segment segment = HanLP.newSegment();
+        AbstractSegment segment = HanLP.newSegment();
 
         System.out.println("未标注：" + segment.seg(text));
         segment.enablePartOfSpeechTagging(true);

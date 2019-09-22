@@ -17,7 +17,7 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
-import com.hankcs.hanlp.seg.DictionaryBasedSegment;
+import com.hankcs.hanlp.seg.base.AbstractDictionaryBasedSegment;
 import com.hankcs.hanlp.seg.common.Term;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author hankcs
  */
-public class DoubleArrayTrieSegment extends DictionaryBasedSegment
+public class DoubleArrayTrieSegment extends AbstractDictionaryBasedSegment
 {
     /**
      * 分词用到的trie树，可以直接赋值为自己的trie树（赋值操作不保证线程安全）
@@ -69,7 +69,7 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
     }
 
     @Override
-    protected List<Term> segSentence(char[] sentence)
+    public List<Term> segSentence(char[] sentence)
     {
         char[] charArray = sentence;
         final int[] wordNet = new int[charArray.length];

@@ -1,7 +1,6 @@
 package com.hankcs.hanlp.seg.NShort;
 
-import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import junit.framework.TestCase;
@@ -34,7 +33,7 @@ public class NShortSegmentTest extends TestCase
     {
 //        HanLP.Config.enableDebug();
         StandardTokenizer.SEGMENT.enableCustomDictionary(false);
-        Segment nShortSegment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
+        AbstractSegment nShortSegment = new NShortSegment().enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
 //        System.out.println(nShortSegment.seg("今天，刘志军案的关键人物,山西女商人丁书苗在市二中院出庭受审。"));
 //        System.out.println(nShortSegment.seg("今日消费5,513.58元"));
     }

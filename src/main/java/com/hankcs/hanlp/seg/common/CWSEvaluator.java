@@ -11,7 +11,7 @@
 package com.hankcs.hanlp.seg.common;
 
 import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.base.AbstractSegment;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -188,7 +188,7 @@ public class CWSEvaluator
      * @return 一个储存准确率的结构
      * @throws IOException
      */
-    public static CWSEvaluator.Result evaluate(Segment segment, String outputPath, String goldFile, String dictPath) throws IOException
+    public static CWSEvaluator.Result evaluate(AbstractSegment segment, String outputPath, String goldFile, String dictPath) throws IOException
     {
         IOUtil.LineIterator lineIterator = new IOUtil.LineIterator(goldFile);
         BufferedWriter bw = IOUtil.newBufferedWriter(outputPath);
@@ -220,7 +220,7 @@ public class CWSEvaluator
      * @return 一个储存准确率的结构
      * @throws IOException
      */
-    public static CWSEvaluator.Result evaluate(Segment segment, String testFile, String outputPath, String goldFile, String dictPath) throws IOException
+    public static CWSEvaluator.Result evaluate(AbstractSegment segment, String testFile, String outputPath, String goldFile, String dictPath) throws IOException
     {
         return evaluate(segment, outputPath, goldFile, dictPath);
     }
