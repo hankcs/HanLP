@@ -167,12 +167,13 @@ public class CoreStopWordDictionary
      * 对分词结果应用过滤
      * @param termList
      */
-    public static void apply(List<Term> termList)
+    public static List<Term> apply(List<Term> termList)
     {
         ListIterator<Term> listIterator = termList.listIterator();
         while (listIterator.hasNext())
         {
             if (shouldRemove(listIterator.next())) listIterator.remove();
         }
+        return termList;
     }
 }

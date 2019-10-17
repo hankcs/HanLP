@@ -9,7 +9,7 @@ HanLP: Han Language Processing
 
 ------
 
-HanLP是一系列模型与算法组成的NLP工具包，由大快搜索主导并完全开源，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
+HanLP是一系列模型与算法组成的NLP工具包，由大快搜索主导并完全开源，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。内部算法经过工业界和学术界考验，配套书籍[《自然语言处理入门》](http://nlp.hankcs.com/book.php)已经出版。
 
 HanLP提供下列功能：
 
@@ -64,7 +64,7 @@ HanLP提供下列功能：
 
 ## 项目主页
 
-[在线演示](http://hanlp.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[论文引用](https://github.com/hankcs/HanLP/wiki/papers)、[更多信息](https://github.com/hankcs/HanLP/wiki)。
+[《自然语言处理入门》🔥](http://nlp.hankcs.com/book.php)、[随书代码](https://github.com/hankcs/HanLP/tree/v1.7.5/src/test/java/com/hankcs/book)、[在线演示](http://hanlp.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[论坛](https://bbs.hankcs.com/)、[论文引用](https://github.com/hankcs/HanLP/wiki/papers)、[更多信息](https://github.com/hankcs/HanLP/wiki)。
 
 ------
 
@@ -74,15 +74,15 @@ HanLP提供下列功能：
 
 为了方便用户，特提供内置了数据包的Portable版，只需在pom.xml加入：
 
-```
+```xml
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.7.4</version>
+    <version>portable-1.7.5</version>
 </dependency>
 ```
 
-零配置，即可使用基本功能（除由字构词、依存句法分析外的全部功能）。如果用户有自定义的需求，可以参考方式二，使用hanlp.properties进行配置。
+零配置，即可使用基本功能（除由字构词、依存句法分析外的全部功能）。如果用户有自定义的需求，可以参考方式二，使用hanlp.properties进行配置（Portable版同样支持hanlp.properties）。
 
 ### 方式二、下载jar、data、hanlp.properties
 
@@ -733,9 +733,17 @@ HanLP.Config.enableDebug();
   * 基于角色标注的命名实体识别比较依赖词典，所以词典的质量大幅影响识别质量。
   * 这些词典的格式与原理都是类似的，请阅读[相应的文章](http://www.hankcs.com/category/nlp/ner/)或代码修改它。
 
-如果问题解决了，欢迎向我提交一个pull request，这是我在代码库中保留明文词典的原因，众人拾柴火焰高！
+若还有疑问，请参考[《自然语言处理入门》](http://nlp.hankcs.com/book.php)相应章节。如果问题解决了，欢迎向我提交一个pull request，这是我在代码库中保留明文词典的原因，众人拾柴火焰高！
 
 ------
+
+## [《自然语言处理入门》](http://nlp.hankcs.com/book.php)
+
+![img](http://file.hankcs.com/img/nlp-book-squre.jpg)
+
+一本配套HanLP的NLP入门书，基础理论与生产代码并重，Python与Java双实现。从基本概念出发，逐步介绍中文分词、词性标注、命名实体识别、信息抽取、文本聚类、文本分类、句法分析这几个热门问题的算法原理与工程实现。书中通过对多种算法的讲解，比较了它们的优缺点和适用场景，同时详细演示生产级成熟代码，助你真正将自然语言处理应用在生产环境中。
+
+[《自然语言处理入门》](http://nlp.hankcs.com/book.php)由南方科技大学数学系创系主任夏志宏、微软亚洲研究院副院长周明、字节跳动人工智能实验室总监李航、华为诺亚方舟实验室语音语义首席科学家刘群、小米人工智能实验室主任兼NLP首席科学家王斌、中国科学院自动化研究所研究员宗成庆、清华大学副教授刘知远、北京理工大学副教授张华平和52nlp作序推荐。感谢各位前辈老师，希望这个项目和这本书能成为大家工程和学习上的“蝴蝶效应”，帮助大家在NLP之路上蜕变成蝶。
 
 ## 版权
 
