@@ -382,7 +382,7 @@ public class NeuralNetworkClassifier
 //        final List <double> classes = sample -> classes;
 //
 //        Matrix Y = Matrix.Map(   classes[0], classes.size());
-//        Matrix _ = (Eigen.ArrayXd.Random (hidden_layer_size) > mask_prob).select(
+//        Matrix buffer = (Eigen.ArrayXd.Random (hidden_layer_size) > mask_prob).select(
 //                Matrix.Ones (hidden_layer_size),
 //                Matrix.zero(hidden_layer_size));
 //        Matrix hidden_layer = Matrix.zero(hidden_layer_size);
