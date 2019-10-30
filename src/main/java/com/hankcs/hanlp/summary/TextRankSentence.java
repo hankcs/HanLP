@@ -92,7 +92,7 @@ public class TextRankSentence
             vertex[cnt] = 1.0;
             ++cnt;
         }
-        for (int _ = 0; _ < max_iter; ++_)
+        for (int buffer = 0; buffer < max_iter; ++buffer)
         {
             double[] m = new double[D];
             double max_diff = 0;
