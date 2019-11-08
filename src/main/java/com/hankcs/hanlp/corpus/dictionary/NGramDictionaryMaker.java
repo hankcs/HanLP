@@ -74,7 +74,7 @@ public class NGramDictionaryMaker
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path), "UTF-8"));
             for (Map.Entry<String, Integer> entry : trie.entrySet())
             {
                 bw.write(entry.getKey() + " " + entry.getValue());
