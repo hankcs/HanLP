@@ -182,6 +182,7 @@ public class NaiveDictionaryBasedSegmentation
                     if (word.length() > longestWord.length())
                     {
                         longestWord = word;
+                        break;
                     }
                 }
             }
