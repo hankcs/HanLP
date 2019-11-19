@@ -100,6 +100,7 @@ public class TestUtility
         System.err.printf("Downloading %s to %s\n", fileURL, savePath);
         URL url = new URL(fileURL);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
         int responseCode = httpConn.getResponseCode();
 
         // always check HTTP response code first
