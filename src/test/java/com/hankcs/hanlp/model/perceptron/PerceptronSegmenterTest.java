@@ -42,4 +42,10 @@ public class PerceptronSegmenterTest extends TestCase
         analyzer.learn("与/c 特朗普/nr 通/v 电话/n 讨论/v [太空/s 探索/vn 技术公司/n]/nt");
         assertEquals("[与/c, 特朗普/k, 通/v, 电话/n, 讨论/v, 太空探索技术公司/nt]", analyzer.seg("与特朗普通电话讨论太空探索技术公司").toString());
     }
+
+    public void testBlanks()
+    {
+        System.out.println(segmenter.segment("建议自己处理空格  这就是你们要的效果？"));
+        System.out.println(segmenter.segment("我买了iPhone X 12 G和爱疯 8"));
+    }
 }
