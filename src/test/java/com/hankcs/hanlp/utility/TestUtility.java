@@ -10,6 +10,8 @@
  */
 package com.hankcs.hanlp.utility;
 
+import com.hankcs.hanlp.HanLP;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -28,7 +30,7 @@ public class TestUtility
 
     public static void ensureFullData()
     {
-        ensureData("data/model/crf", "http://nlp.hankcs.com/download.php?file=data", ".", false);
+        ensureData(HanLP.Config.PerceptronCWSModelPath, "http://nlp.hankcs.com/download.php?file=data", HanLP.Config.PerceptronCWSModelPath.split("data")[0], false);
     }
 
     /**
