@@ -76,6 +76,17 @@ public class DocVectorModel extends AbstractVectorModel<Integer>
         return queryNearest(query, 10);
     }
 
+    /**
+     * 查询最相似的前n个文档
+     *
+     * @param query 查询语句（或者说一个文档的内容）
+     * @return
+     */
+    public List<Map.Entry<Integer, Float>> nearest(String query, int n)
+    {
+        return queryNearest(query, n);
+    }
+
 
     /**
      * 将一个文档转为向量
