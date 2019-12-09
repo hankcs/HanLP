@@ -57,15 +57,15 @@ public class CoreStopWordDictionary
         {
             try
             {
-                dictionary = new StopWordDictionary(HanLP.Config.CoreStopWordDictionaryPath);
-                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT)));
+                dictionary = new StopWordDictionary(coreStopWordDictionaryPath);
+                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(coreStopWordDictionaryPath + Predefine.BIN_EXT)));
                 dictionary.save(out);
                 out.close();
             }
             catch (Exception e)
             {
-                logger.severe("载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败"  + TextUtility.exceptionToString(e));
-                throw new RuntimeException("载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败");
+                logger.severe("载入停用词词典" + coreStopWordDictionaryPath + "失败"  + TextUtility.exceptionToString(e));
+                throw new RuntimeException("载入停用词词典" + coreStopWordDictionaryPath + "失败");
             }
         }
         else
