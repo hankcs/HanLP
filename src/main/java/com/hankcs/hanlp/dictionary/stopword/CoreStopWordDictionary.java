@@ -31,7 +31,10 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
  */
 public class CoreStopWordDictionary
 {
-    static StopWordDictionary dictionary;
+    /**
+     * 储存词条的结构
+     */
+    public static StopWordDictionary dictionary;
     static
     {
         load(HanLP.Config.CoreStopWordDictionaryPath, true);
