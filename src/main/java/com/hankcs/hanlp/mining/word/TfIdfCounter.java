@@ -11,12 +11,17 @@
 package com.hankcs.hanlp.mining.word;
 
 import com.hankcs.hanlp.algorithm.MaxHeap;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.summary.KeywordExtractor;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
+
+import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * TF-IDF统计工具兼关键词提取工具
@@ -136,10 +141,46 @@ public class TfIdfCounter extends KeywordExtractor
         add(id, text);
         return id;
     }
+    
+    /**
+     * 加载自定义idf文件
+     *
+     * @param idfPath
+     */
+    public void loadIdfFile(String idfPath){
+        String line = null;
+        boolean first = true;
+        try
+        {
+            idf  = new HashMap<String, Double>();
+            BufferedReader bw = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(idfPath), "UTF-8"));
+            while ((line = bw.readLine()) != null)
+            {
+                if (first)
+                {
+                    first = false;
+                    if (!line.isEmpty() && line.charAt(0) == '\uFEFF')
+                        line = line.substring(1);
+                }
+                String lineValue[] = line.split(" ");
+                idf.put(lineValue[0],Double.valueOf( lineValue[1]));
+            }
+            bw.close();
+        }
+        catch (Exception e)
+        {
+            logger.warning("加载" + idfPath + "失败，" + e);
+            throw new RuntimeException("载入反文档词频文件" + idfPath + "失败");
+        }
+
+    }
 
     public Map<Object, Map<String, Double>> compute()
     {
-        idf = TfIdf.idfFromTfs(tfMap.values());
+        // 如果没有加载idf文件，则通过tf计算
+        if(idf==null) {
+            idf = TfIdf.idfFromTfs(tfMap.values());
+        }
         tfidfMap = new HashMap<Object, Map<String, Double>>(idf.size());
         for (Map.Entry<Object, Map<String, Double>> entry : tfMap.entrySet())
         {
