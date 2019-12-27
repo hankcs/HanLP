@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.corpus.tag;
 
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 词性
@@ -762,21 +763,24 @@ public class Nature
      */
     public static final Nature begin = new Nature("begin");
 
-    private static TreeMap<String, Integer> idMap;
+    private static ConcurrentHashMap<String, Integer> idMap;
     private static Nature[] values;
     private int ordinal;
     private final String name;
 
     private Nature(String name)
     {
-        if (idMap == null) idMap = new TreeMap<String, Integer>();
+        if (idMap == null) {
+            idMap = new ConcurrentHashMap<String, Integer>();
+        }
         assert !idMap.containsKey(name);
         this.name = name;
         ordinal = idMap.size();
         idMap.put(name, ordinal);
         Nature[] extended = new Nature[idMap.size()];
-        if (values != null)
+        if (values != null){
             System.arraycopy(values, 0, extended, 0, values.length);
+        }
         extended[ordinal] = this;
         values = extended;
     }
