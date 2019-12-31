@@ -15,7 +15,6 @@ import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.model.perceptron.feature.FeatureMap;
 import com.hankcs.hanlp.model.perceptron.instance.Instance;
 import com.hankcs.hanlp.model.perceptron.model.LinearModel;
-import com.hankcs.hanlp.model.perceptron.model.StructuredPerceptron;
 import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
 import com.hankcs.hanlp.model.perceptron.instance.InstanceHandler;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
@@ -29,6 +28,17 @@ import java.io.IOException;
  */
 public abstract class InstanceConsumer
 {
+    private static char[] tableChar;
+
+    static
+    {
+        tableChar = new char[CharTable.CONVERT.length];
+        System.arraycopy(CharTable.CONVERT, 0, tableChar, 0, tableChar.length);
+        for (int c = 0; c <= 32; ++c)
+        {
+            tableChar[c] = '&'; // 也可以考虑用 '。'
+        }
+    }
 
     protected abstract Instance createInstance(Sentence sentence, final FeatureMap featureMap);
 
@@ -57,6 +67,11 @@ public abstract class InstanceConsumer
 
     protected String normalize(String text)
     {
-        return CharTable.convert(text);
+        char[] result = new char[text.length()];
+        for (int i = 0; i < result.length; i++)
+        {
+            result[i] = tableChar[text.charAt(i)];
+        }
+        return new String(result);
     }
 }

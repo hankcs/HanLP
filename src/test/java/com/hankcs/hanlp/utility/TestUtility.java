@@ -10,6 +10,8 @@
  */
 package com.hankcs.hanlp.utility;
 
+import com.hankcs.hanlp.HanLP;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -28,7 +30,7 @@ public class TestUtility
 
     public static void ensureFullData()
     {
-        ensureData("data/model/crf", "http://nlp.hankcs.com/download.php?file=data", ".", false);
+        ensureData(HanLP.Config.PerceptronCWSModelPath, "http://nlp.hankcs.com/download.php?file=data", HanLP.Config.PerceptronCWSModelPath.split("data")[0], false);
     }
 
     /**
@@ -98,12 +100,14 @@ public class TestUtility
         throws IOException
     {
         System.err.printf("Downloading %s to %s\n", fileURL, savePath);
-        URL url = new URL(fileURL);
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        int responseCode = httpConn.getResponseCode();
+        HttpURLConnection httpConn = request(fileURL);
+        while (httpConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM || httpConn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP)
+        {
+            httpConn = request(httpConn.getHeaderField("Location"));
+        }
 
         // always check HTTP response code first
-        if (responseCode == HttpURLConnection.HTTP_OK)
+        if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK)
         {
             String fileName = "";
             String disposition = httpConn.getHeaderField("Content-Disposition");
@@ -182,8 +186,15 @@ public class TestUtility
         else
         {
             httpConn.disconnect();
-            throw new IOException("No file to download. Server replied HTTP code: " + responseCode);
+            throw new IOException("No file to download. Server replied HTTP code: " + httpConn.getResponseCode());
         }
+    }
+
+    private static HttpURLConnection request(String url) throws IOException
+    {
+        HttpURLConnection httpConn = (HttpURLConnection) new URL(url).openConnection();
+        httpConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+        return httpConn;
     }
 
     private static void unzip(String zipFilePath, String destDir, boolean overwrite)

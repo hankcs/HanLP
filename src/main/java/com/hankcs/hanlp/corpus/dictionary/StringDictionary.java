@@ -62,7 +62,7 @@ public class StringDictionary extends SimpleDictionary<String>
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path), "UTF-8"));
             for (Map.Entry<String, String> entry : trie.entrySet())
             {
                 bw.write(entry.getKey());

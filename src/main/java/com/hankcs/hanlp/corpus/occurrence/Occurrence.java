@@ -364,9 +364,16 @@ public class Occurrence
         for (Map.Entry<String, PairFrequency> entry : entrySetPair)
         {
             PairFrequency value = entry.getValue();
-            value.score = value.mi / total_mi + value.le / total_le+ value.re / total_re;   // 归一化
+            value.score = safeDivide(value.mi, total_mi) + safeDivide(value.le, total_le) + safeDivide(value.re, total_re);   // 归一化
             value.score *= entrySetPair.size();
         }
+    }
+
+    private static double safeDivide(double x, double y)
+    {
+        if (y == 0)
+            return 0;
+        return x / y;
     }
 
     /**

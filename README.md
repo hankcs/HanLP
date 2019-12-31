@@ -9,7 +9,7 @@ HanLP: Han Language Processing
 
 ------
 
-HanLP是一系列模型与算法组成的NLP工具包，由大快搜索主导并完全开源，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。内部算法经过工业界和学术界考验，配套书籍[《自然语言处理入门》](http://nlp.hankcs.com/book.php)已经出版。
+HanLP是一系列模型与算法组成的NLP工具包，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。内部算法经过工业界和学术界考验，配套书籍[《自然语言处理入门》](http://nlp.hankcs.com/book.php)已经出版。
 
 HanLP提供下列功能：
 
@@ -78,7 +78,7 @@ HanLP提供下列功能：
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.7.5</version>
+    <version>portable-1.7.6</version>
 </dependency>
 ```
 
@@ -754,11 +754,11 @@ HanLP.Config.enableDebug();
 
 ### 青岛大快搜索计算技术股份有限公司
 
-- HanLP从v1.3版本起正式由大快搜索主导开发，并拥有后续版本的版权，新版本继续完全开源，目前唯一官网为：http://hanlp.com/ 。
+- HanLP从v1.3版本起至v1.6正式由大快搜索主导开发，并拥有1.3-1.6版本的版权。这些版本继续完全开源，唯一官网为：http://hanlp.com/ 。
 
 ### 上海林原信息科技有限公司
 
-- HanLP 早期得到了上海林原公司的大力支持，并拥有1.28及前序版本的版权，相关版本也曾在上海林源公司网站发布。
+- HanLP 早期得到了上海林原公司的大力支持，并拥有1.2及前序版本的版权，相关版本也曾在上海林源公司网站发布。
 
 ### 其他版权方
 - 实施上由个人维护，欢迎任何人与任何公司向本项目开源模块。

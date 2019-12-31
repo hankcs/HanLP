@@ -174,9 +174,9 @@ public class SecondOrderHiddenMarkovModel extends HiddenMarkovModel
         for (int i = 2; i < observation.length; i++)
         {
             // swap(now, pre)
-            float[][] _ = pre;
+            float[][] buffer = pre;
             pre = score;
-            score = _;
+            score = buffer;
             // end of swap
             for (int s = 0; s < max_s; ++s)
             {

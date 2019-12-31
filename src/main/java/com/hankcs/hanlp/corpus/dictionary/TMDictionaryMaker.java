@@ -92,7 +92,7 @@ public class TMDictionaryMaker implements ISaveAble
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path), "UTF-8"));
             bw.write(toString());
             bw.close();
         }

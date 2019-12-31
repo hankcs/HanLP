@@ -133,24 +133,6 @@ public class Cluster<K> implements Comparable<Cluster<K>>
     }
 
     /**
-     * Remove a document from this cluster.
-     *
-     * @param doc the pointer of a document object
-     */
-    void remove_document(Document doc)
-    {
-        for (Document<K> document : documents_)
-        {
-            if (document.equals(doc))
-            {
-                remove_document(doc);
-                return;
-            }
-        }
-    }
-
-
-    /**
      * Delete removed documents from the internal container.
      */
     void refresh()

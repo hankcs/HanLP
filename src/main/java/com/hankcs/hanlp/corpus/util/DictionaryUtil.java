@@ -42,7 +42,7 @@ public class DictionaryUtil
             }
             br.close();
 
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path)));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(IOUtil.newOutputStream(path), "UTF-8"));
             for (Map.Entry<String, String> entry : map.entrySet())
             {
                 bw.write(entry.getValue());

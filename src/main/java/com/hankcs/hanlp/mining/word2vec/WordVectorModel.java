@@ -29,19 +29,30 @@ public class WordVectorModel extends AbstractVectorModel<String>
      */
     public WordVectorModel(String modelFileName) throws IOException
     {
-        super(loadVectorMap(modelFileName));
+        this(modelFileName, new TreeMap<String, Vector>());
     }
 
-    private static TreeMap<String, Vector> loadVectorMap(String modelFileName) throws IOException
+    /**
+     * 加载模型
+     *
+     * @param modelFileName 模型路径
+     * @param storage 一个空白的Map（HashMap等）
+     * @throws IOException 加载错误
+     */
+    public WordVectorModel(String modelFileName, Map<String, Vector> storage) throws IOException
+    {
+        super(loadVectorMap(modelFileName, storage));
+    }
+
+    private static Map<String, Vector> loadVectorMap(String modelFileName, Map<String, Vector> storage) throws IOException
     {
         VectorsReader reader = new VectorsReader(modelFileName);
         reader.readVectorFile();
-        TreeMap<String, Vector> map = new TreeMap<String, Vector>();
         for (int i = 0; i < reader.vocab.length; i++)
         {
-            map.put(reader.vocab[i], new Vector(reader.matrix[i]));
+            storage.put(reader.vocab[i], new Vector(reader.matrix[i]));
         }
-        return map;
+        return storage;
     }
 
     /**
