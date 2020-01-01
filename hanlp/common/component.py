@@ -178,7 +178,9 @@ class KerasComponent(Component, ABC):
 
     def load_meta(self, save_dir, filename='meta.json'):
         save_dir = get_resource(save_dir)
-        self.meta.update(load_json(os.path.join(save_dir, filename)))
+        metapath = os.path.join(save_dir, filename)
+        if os.path.isfile(metapath):
+            self.meta.update(load_json(metapath))
 
     def save_config(self, save_dir, filename='config.json'):
         self.config.save_json(os.path.join(save_dir, filename))
