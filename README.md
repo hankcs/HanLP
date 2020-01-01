@@ -1,6 +1,6 @@
 # HanLP: Han Language Processing
 
-A multilingual NLP library for researchers and companies, built on TensorFlow 2.0, for advancing state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be efficient, user friendly and extendable. It comes with pretrained models for many human languages including English, Chinese and many more. Currently, HanLP 2.0 is in alpha stage with more killer features on the roadmap. Discussions are welcomed on our [forum](https://bbs.hankcs.com/), while bug reports and feature requests are reserved for GitHub issues. For Java users, please checkout the [1.x](https://github.com/hankcs/HanLP/tree/1.x) branch.
+The multilingual NLP library for researchers and companies, built on TensorFlow 2.0, for advancing state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be efficient, user friendly and extendable. It comes with pretrained models for many human languages including English, Chinese and many more. Currently, HanLP 2.0 is in alpha stage with more killer features on the roadmap. Discussions are welcomed on our [forum](https://bbs.hankcs.com/), while bug reports and feature requests are reserved for GitHub issues. For Java users, please checkout the [1.x](https://github.com/hankcs/HanLP/tree/1.x) branch.
 
  ## Installation
 
@@ -14,14 +14,14 @@ HanLP requires Python 3.6 or later. GPU/TPU is suggested but not mandatory.
 
 ### Tokenization
 
-For an end user, the basic flow starts with loading some pretrained models from disk or Internet. Each model comes with an identifier, which could be one path on your computer or an URL to any public servers. Here, let's load a tokenizer called `CTB6_CONVSEG` with 2 lines of code.
+For an end user, the basic flow starts with loading some pretrained models from disk or Internet. Each model has an identifier, which could be one path on your computer or an URL to any public servers. Here, let's load a tokenizer called `CTB6_CONVSEG` with 2 lines of code.
 
 ```python
 >>> import hanlp
 >>> tokenizer = hanlp.load('CTB6_CONVSEG')
 ```
 
-HanLP will automatically resolve the identifier `CTB6_CONVSEG` to a [URL](https://file.hankcs.com/hanlp/cws/ctb6-convseg-cws_20191230_184525.zip), then download it and unzip it, as shown below.
+HanLP will automatically resolve the identifier `CTB6_CONVSEG` to an [URL](https://file.hankcs.com/hanlp/cws/ctb6-convseg-cws_20191230_184525.zip), then download it and unzip it, as shown below.
 
 ```
 Downloading https://file.hankcs.com/hanlp/cws/ctb6-convseg-cws_20191230_184525.zip to /home/hankcs/.hanlp/cws/ctb6-convseg-cws_20191230_184525.zip
@@ -53,7 +53,7 @@ That's it! You're now ready to employ the latest DL models from HanLP in your re
 
 - Print `hanlp.pretrained.ALL` to list all the pretrained models available in HanLP.
 
-- Use `hanlp.pretrained.cws.*` to browse pretrained models by categories of NLP tasks. You can use the variables to identify them too.
+- Use `hanlp.pretrained.*` to browse pretrained models by categories of NLP tasks. You can use the variables to identify them too.
 
   ```python
   >>> hanlp.pretrained.cws.CTB6_CONVSEG
@@ -62,7 +62,7 @@ That's it! You're now ready to employ the latest DL models from HanLP in your re
 
 ### Part-of-Speech Tagging
 
-Taggers take list of tokens as input, then outputs one tag for each token.
+Taggers take lists of tokens as input, then outputs one tag for each token.
 
 ```python
 >>> tagger = hanlp.load(hanlp.pretrained.pos.CTB5_POS_RNN_FASTTEXT)
@@ -74,7 +74,7 @@ Did you notice the different pos tags for the same word `希望` ("hope")? The f
 
 ### Named Entity Recognition
 
-The NER component requires tokenized tokens as input, and outputs the entities along with their types and spans.
+The NER component requires tokenized tokens as input, then outputs the entities along with their types and spans.
 
 ```python
 >>> recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_CN)
@@ -84,7 +84,7 @@ The NER component requires tokenized tokens as input, and outputs the entities a
  [('萨哈夫', 'NR', 0, 3), ('伊拉克', 'NS', 5, 8), ('联合国销毁伊拉克大规模杀伤性武器特别委员会', 'NT', 10, 31)]]
 ```
 
-Recognizers take list of characters as input, so don't forget to wrap your sentence with `list`. For the outputs, each tuple stands for `(entity, type, begin, end)`.
+Recognizers take lists of tokens as input, so don't forget to wrap your sentence with `list`. For the outputs, each tuple stands for `(entity, type, begin, end)`.
 
 This `MSRA_NER_BERT_BASE_CN` is the state-of-the-art NER model based on BERT[^bert]. You can read its evaluation log through:
 
@@ -138,7 +138,7 @@ A graph is a generalized tree, which conveys more information about the semantic
 9	企业	_	NN	_	_	3	Prod	_	_
 ```
 
-The out is a `CoNLLSentence` too. However, it's not a tree but a graph in which one node can have multiple heads, e.g. `中国` has two 2 heads (ID 2 and 3).
+The output is a `CoNLLSentence` too. However, it's not a tree but a graph in which one node can have multiple heads, e.g. `中国` has two heads (ID 2 and 3).
 
 ### Pipelines
 
@@ -153,7 +153,7 @@ pipeline = hanlp.pipeline() \
     .append(semantic_parser, input_key=('tokens', 'part_of_speech_tags'), output_key='semantic_dependencies')
 ```
 
-Notice that the first pipe is an old-school Python function `split_sentence`, which split the input text into a list of sentences. Then the later DL components can utilize the batch processing seamlessly. This results in a pipeline with one input (text) pipe, multiple flow pipes and one output (parsed document). You can print out the pipeline to check its structure.
+Notice that the first pipe is an old-school Python function `split_sentence`, which splits the input text into a list of sentences. Then the later DL components can utilize the batch processing seamlessly. This results in a pipeline with one input (text) pipe, multiple flow pipes and one output (parsed document). You can print out the pipeline to check its structure.
 
 ```python
 >>> pipeline
@@ -193,14 +193,14 @@ This time, let's feed in a whole document, which might be the scenario in your d
 }
 ```
 
-The output is json `dict`, which most people are familiar with.
+The output is a json `dict`, which most people are familiar with.
 
-- Feel free to add more pre/pos-processing to the pipeline, including cleaning, custom dictionary etc.
+- Feel free to add more pre/post-processing to the pipeline, including cleaning, custom dictionary etc.
 - Use `pipeline.save('zh.json')` to save your pipeline and deploy it to your production server.
 
 ## Train Your Own Models
 
-To write DL models is not hard, the real hard thing is to write a model which can reproduce the score on papers. The snippet below shows how to train a 97% F1 cws model on MSR corpus.
+To write DL models is not hard, the real hard thing is to write a model able to reproduce the score in papers. The snippet below shows how to train a 97% F1 cws model on MSR corpus.
 
 ```python
 tokenizer = NgramConvTokenizer()
@@ -251,7 +251,7 @@ classifier.evaluate(CHNSENTICORP_ERNIE_TEST, save_dir=save_dir)
 
 Due to the size of models, and the fact that corpora are domain specific, HanLP has limited plan to distribute pretrained text classification models.
 
-For more training scripts, please refer to `tests/train`.
+For more training scripts, please refer to [`tests/train`](https://github.com/hankcs/HanLP/tree/master/tests/train). We are also working hard to release more examples in [`tests/demo`](https://github.com/hankcs/HanLP/tree/master/tests/demo). Serving, documentations and more pretrained models are on the way too.
 
 ## Citing
 
@@ -265,6 +265,10 @@ If you use HanLP in your research, please cite this repository.
   url = {https://github.com/hankcs/HanLP},
 }
 ```
+
+## License
+
+HanLP is licensed under **Apache License 2.0**. You can use HanLP in your commercial products for free. We would appreciate it if you add a link to HanLP on your website.
 
 ## References
 
