@@ -19,7 +19,7 @@ from hanlp.utils.tf_util import hanlp_register
 @hanlp_register
 class FastTextEmbedding(tf.keras.layers.Embedding):
 
-    def __init__(self, filepath: str, padding=PAD, **kwargs):
+    def __init__(self, filepath: str, padding=PAD, name=None, **kwargs):
         self.padding = padding.encode('utf-8')
         self.filepath = filepath
         filepath = get_resource(filepath)
@@ -37,8 +37,10 @@ class FastTextEmbedding(tf.keras.layers.Embedding):
         kwargs.pop('input_dim', None)
         kwargs.pop('output_dim', None)
         kwargs.pop('mask_zero', None)
+        if not name:
+            name = os.path.splitext(os.path.basename(filepath))[0]
         super().__init__(input_dim=len(self.model.words), output_dim=self.model['king'].size,
-                         mask_zero=padding is not None, trainable=False, dtype=tf.string, **kwargs)
+                         mask_zero=padding is not None, trainable=False, dtype=tf.string, name=name, **kwargs)
         embed_fn = np.frompyfunc(self.embed, 1, 1)
         # vf = np.vectorize(self.embed, otypes=[np.ndarray])
         self._embed_np = embed_fn
