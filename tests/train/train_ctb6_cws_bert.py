@@ -12,6 +12,6 @@ save_dir = 'data/model/cws_bert_base_ctb6'
 # tokenizer.fit(CTB6_CWS_TRAIN, CTB6_CWS_VALID, save_dir, transformer='bert-base-chinese',
 #               metrics='f1')
 tokenizer.load(save_dir)
-print(tokenizer.tokenize(['中央民族乐团离开北京前往维也纳', '商品和服务']))
+print(tokenizer.predict(['中央民族乐团离开北京前往维也纳', '商品和服务']))
 tokenizer.evaluate(CTB6_CWS_TEST, save_dir=save_dir)
 print(f'Model saved in {save_dir}')

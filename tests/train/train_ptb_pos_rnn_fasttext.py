@@ -12,14 +12,13 @@ from tests.resources import project_root
 os.chdir(project_root)
 tagger = RNNPartOfSpeechTagger()
 save_dir = 'data/model/pos/ptb_pos_rnn_fasttext'
-# print(save_dir)
 optimizer = tf.keras.optimizers.SGD(lr=0.015)
 # optimizer = 'adam'
 tagger.fit('data/ptb-pos/train.tsv',
            'data/ptb-pos/dev.tsv',
            batch_size=10,
            save_dir=save_dir,
-           embeddings={'class_name': 'FastTextEmbedding',
+           embeddings={'class_name': 'HanLP>FastTextEmbedding',
                        'config': {'filepath': FASTTEXT_CC_300_EN}},
            optimizer=optimizer,
            lr_decay_per_epoch=0.05,

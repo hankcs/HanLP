@@ -28,5 +28,5 @@ tokenizer.fit(CTB6_CWS_TRAIN,
               window_size=0,
               weight_norm=True)
 tokenizer.evaluate(CTB6_CWS_TEST, save_dir=save_dir, output=False)
-print(tokenizer.tokenize(['中央民族乐团离开北京前往维也纳', '商品和服务']))
+print(tokenizer.predict(['中央民族乐团离开北京前往维也纳', '商品和服务']))
 print(f'Model saved in {save_dir}')
