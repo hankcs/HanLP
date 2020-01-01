@@ -35,4 +35,4 @@ def split_by_dic(text: str):
     return flat
 
 
-print(split_by_dic('NLP统计模型没有加规则，聪明人知道自己加。英文、数字、自定义词典统统都是规则。'))
+print(split_by_dic(text))
