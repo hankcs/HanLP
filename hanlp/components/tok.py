@@ -1,0 +1,83 @@
+# -*- coding:utf-8 -*-
+# Author: hankcs
+# Date: 2019-10-27 14:30
+import logging
+from typing import Union, Any, Tuple, Iterable, List
+
+import tensorflow as tf
+
+from hanlp.common.component import KerasComponent
+from hanlp.components.taggers.ngram_conv.ngram_conv_tagger import NgramTransform, NgramConvTagger
+from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
+from hanlp.components.taggers.transformers.transformer_transform import TransformerTransform
+from hanlp.losses.sparse_categorical_crossentropy import SparseCategoricalCrossentropyOverBatchFirstDim
+from hanlp.metrics.chunking.bmes import BMES_F1
+from hanlp.transform.txt import extract_ngram_features_and_tags, bmes_to_words, TxtFormat, TxtBMESFormat
+from hanlp.utils.util import merge_locals_kwargs
+
+
+class BMESTokenizer(KerasComponent):
+
+    def build_metrics(self, metrics, logger: logging.Logger, **kwargs):
+        if metrics == 'f1':
+            self.config.run_eagerly = True
+            return BMES_F1(self.transform.tag_vocab)
+        return super().build_metrics(metrics, logger, **kwargs)
+
+    def predict_batch(self, batch, inputs=None):
+        tags_batch = super().predict_batch(batch, inputs)
+        for text, tags in zip(inputs, tags_batch):
+            yield bmes_to_words(list(text), tags)
+
+
+class NgramConvTokenizerTransform(TxtFormat, NgramTransform):
+
+    def inputs_to_samples(self, inputs, gold=False):
+        if self.input_is_single_sample(inputs):
+            inputs = [inputs]
+        for sent in inputs:
+            # bigram_only = false
+            yield extract_ngram_features_and_tags(sent, False, self.config.window_size, gold)
+
+    def input_is_single_sample(self, input: Union[List[str], List[List[str]]]) -> bool:
+        if not input:
+            return True
+        return isinstance(input, str)
+
+
+class NgramConvTokenizer(BMESTokenizer, NgramConvTagger):
+
+    def __init__(self) -> None:
+        super().__init__(NgramConvTokenizerTransform())
+
+    def fit(self, trn_data: Any, dev_data: Any, save_dir: str, word_embed: Union[str, int, dict] = 200,
+            ngram_embed: Union[str, int, dict] = 50, embedding_trainable=True, window_size=4, kernel_size=3,
+            filters=(200, 200, 200, 200, 200), dropout_embed=0.2, dropout_hidden=0.2, weight_norm=True,
+            loss: Union[tf.keras.losses.Loss, str] = None,
+            optimizer: Union[str, tf.keras.optimizers.Optimizer] = 'adam', metrics='f1', batch_size=100,
+            epochs=100, logger=None, verbose=True, **kwargs):
+        return super().fit(**merge_locals_kwargs(locals(), kwargs))
+
+    def evaluate_output_to_file(self, batch, outputs, out):
+        for x, y_pred in zip(self.transform.X_to_inputs(batch[0]),
+                             self.transform.Y_to_outputs(outputs, gold=False)):
+            out.write(self.transform.input_truth_output_to_str(x, None, y_pred))
+            out.write('\n')
+
+    def build_loss(self, loss, **kwargs):
+        if loss is None:
+            return SparseCategoricalCrossentropyOverBatchFirstDim()
+        return super().build_loss(loss, **kwargs)
+
+
+class TransformerTokenizerTransform(TxtBMESFormat, TransformerTransform):
+
+    def input_is_single_sample(self, input: Union[List[str], List[List[str]]]) -> bool:
+        return isinstance(input, str)
+
+
+class TransformerTokenizer(BMESTokenizer, TransformerTagger):
+    def __init__(self, transform: TransformerTokenizerTransform = None) -> None:
+        if transform is None:
+            transform = TransformerTokenizerTransform()
+        super().__init__(transform)
