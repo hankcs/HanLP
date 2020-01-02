@@ -3,8 +3,7 @@
 # Date: 2019-12-21 15:39
 import tensorflow as tf
 
-from hanlp.components.tok import NgramConvTokenizer, RNNTokenizer
-from hanlp.datasets.cws.sighan2005.pku import SIGHAN2005_PKU_TEST, SIGHAN2005_PKU_VALID
+from hanlp.components.tok import RNNTokenizer
 from hanlp.pretrained.word2vec import RADICAL_CHAR_EMBEDDING_100
 from tests import cdroot
 

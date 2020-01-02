@@ -7,7 +7,6 @@ from typing import Union, Any, List
 import tensorflow as tf
 
 from hanlp.common.component import KerasComponent
-from hanlp.common.transform import Transform
 from hanlp.components.taggers.ngram_conv.ngram_conv_tagger import NgramTransform, NgramConvTagger
 from hanlp.components.taggers.rnn_tagger import RNNTagger
 from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
