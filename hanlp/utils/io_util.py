@@ -25,6 +25,7 @@ from hanlp.utils import time_util
 from hanlp.utils.log_util import logger
 from hanlp.utils.time_util import now_filename
 from hanlp.common.constant import HANLP_URL
+from hanlp import version
 
 
 def save_pickle(item, path):
@@ -68,7 +69,8 @@ def make_debug_corpus(path, delimiter=None, percentage=0.1, max_samples=100):
                 delimiter = '\n\n'
             else:
                 delimiter = '\n'
-        with open(filepath, encoding='utf-8') as src, open(filename + '.debug' + file_extension, 'w', encoding='utf-8') as out:
+        with open(filepath, encoding='utf-8') as src, open(filename + '.debug' + file_extension, 'w',
+                                                           encoding='utf-8') as out:
             samples = src.read().strip().split(delimiter)
             max_samples = min(max_samples, int(len(samples) * percentage))
             out.write(delimiter.join(samples[:max_samples]))
@@ -187,6 +189,9 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
 
             import socket
             socket.setdefaulttimeout(10)
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('User-agent', f'HanLP/{version.__version__}')]
+            urllib.request.install_opener(opener)
             urlretrieve(url, tmp_path, reporthook)
             print()
         except BaseException as e:
