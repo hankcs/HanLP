@@ -67,7 +67,7 @@ def vocab_from_tsv(tsv_file_path, lower=False, lock_word_vocab=False, lock_char_
 class TsvTaggingFormat(Transform, ABC):
     def file_to_inputs(self, filepath: str, gold=True):
         assert gold, 'TsvTaggingFormat does not support reading non-gold files'
-        yield from generator_words_tags(filepath, gold=gold, lower=False)
+        yield from generator_words_tags(filepath, gold=gold, lower=self.config.get('lower', False))
 
 
 class TSVTaggingTransform(TsvTaggingFormat, Transform):
@@ -81,7 +81,7 @@ class TSVTaggingTransform(TsvTaggingFormat, Transform):
         self.word_vocab = Vocab()
         self.tag_vocab = Vocab(pad_token=None, unk_token=None)
         num_samples = 0
-        for words, tags in generator_words_tags(trn_path, gold=True, lower=self.config.get('lower', False)):
+        for words, tags in self.file_to_inputs(trn_path, True):
             self.word_vocab.update(words)
             self.tag_vocab.update(tags)
             num_samples += 1

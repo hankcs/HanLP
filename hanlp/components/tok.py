@@ -2,16 +2,19 @@
 # Author: hankcs
 # Date: 2019-10-27 14:30
 import logging
-from typing import Union, Any, Tuple, Iterable, List
+from typing import Union, Any, List
 
 import tensorflow as tf
 
 from hanlp.common.component import KerasComponent
+from hanlp.common.transform import Transform
 from hanlp.components.taggers.ngram_conv.ngram_conv_tagger import NgramTransform, NgramConvTagger
+from hanlp.components.taggers.rnn_tagger import RNNTagger
 from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
 from hanlp.components.taggers.transformers.transformer_transform import TransformerTransform
 from hanlp.losses.sparse_categorical_crossentropy import SparseCategoricalCrossentropyOverBatchFirstDim
 from hanlp.metrics.chunking.bmes import BMES_F1
+from hanlp.transform.tsv import TSVTaggingTransform
 from hanlp.transform.txt import extract_ngram_features_and_tags, bmes_to_words, TxtFormat, TxtBMESFormat
 from hanlp.utils.util import merge_locals_kwargs
 
@@ -71,9 +74,7 @@ class NgramConvTokenizer(BMESTokenizer, NgramConvTagger):
 
 
 class TransformerTokenizerTransform(TxtBMESFormat, TransformerTransform):
-
-    def input_is_single_sample(self, input: Union[List[str], List[List[str]]]) -> bool:
-        return isinstance(input, str)
+    pass
 
 
 class TransformerTokenizer(BMESTokenizer, TransformerTagger):
@@ -81,3 +82,21 @@ class TransformerTokenizer(BMESTokenizer, TransformerTagger):
         if transform is None:
             transform = TransformerTokenizerTransform()
         super().__init__(transform)
+
+
+class RNNTokenizerTransform(TxtBMESFormat, TSVTaggingTransform):
+    pass
+
+
+class RNNTokenizer(BMESTokenizer, RNNTagger):
+    def __init__(self, transform: RNNTokenizerTransform = None) -> None:
+        if not transform:
+            transform = RNNTokenizerTransform()
+        super().__init__(transform)
+
+    def fit(self, trn_data: str, dev_data: str = None, save_dir: str = None, embeddings=100, embedding_trainable=False,
+            rnn_input_dropout=0.2, rnn_units=100, rnn_output_dropout=0.2, epochs=20, lower=False, logger=None,
+            loss: Union[tf.keras.losses.Loss, str] = None,
+            optimizer: Union[str, tf.keras.optimizers.Optimizer] = 'adam', metrics='f1', batch_size=32,
+            dev_batch_size=32, lr_decay_per_epoch=None, verbose=True, **kwargs):
+        return super().fit(**merge_locals_kwargs(locals(), kwargs))

@@ -3,7 +3,7 @@
 # Date: 2019-10-24 15:07
 import functools
 from abc import ABC
-from typing import Tuple
+from typing import Tuple, Union, List
 
 import tensorflow as tf
 
@@ -194,3 +194,6 @@ class TxtBMESFormat(TxtFormat, ABC):
         for text in super().file_to_inputs(filepath, gold):
             chars, tags = bmes_of(text, gold)
             yield chars, tags
+
+    def input_is_single_sample(self, input: Union[List[str], List[List[str]]]) -> bool:
+        return isinstance(input, str)
