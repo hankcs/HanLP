@@ -98,7 +98,7 @@ accuracy:  99.34%; precision:  94.37%; recall:  95.77%; FB1:  95.06
                NT: precision:  88.40%; recall:  92.90%; FB1:  90.59  1362
 ```
 
-## Syntactic Dependency Parsing
+### Syntactic Dependency Parsing
 
 Parsing lies in the core of NLP. Without parsing, one cannot claim to be a NLP researcher or engineer. But using HanLP, it takes no more than two lines of code.
 

@@ -23,11 +23,13 @@ setup(
     license='Apache License 2.0',
     classifiers=[
         'Intended Audience :: Science/Research',
+        'Intended Audience :: Developers',
         "Development Status :: 3 - Alpha",
         'Operating System :: OS Independent',
         "License :: OSI Approved :: Apache Software License",
-        'Programming Language :: Python :: 3.6',
-        'Topic :: Scientific/Engineering :: Artificial Intelligence'
+        'Programming Language :: Python :: 3 :: Only',
+        'Topic :: Scientific/Engineering :: Artificial Intelligence',
+        "Topic :: Text Processing :: Linguistic"
     ],
     keywords='corpus,machine-learning,NLU,NLP',
     packages=find_packages(exclude=['docs', 'tests*']),
