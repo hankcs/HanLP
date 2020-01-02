@@ -9,7 +9,7 @@ import numpy as np
 import tensorflow as tf
 
 
-class StreamTableFormater(object):
+class StreamTableFormatter(object):
 
     def __init__(self) -> None:
         super().__init__()
@@ -39,7 +39,7 @@ class FineCSVLogger(tf.keras.callbacks.History):
         self.filename = filename
         self.out: TextIOWrapper = None
         self.keys = []
-        self.formatter = StreamTableFormater()
+        self.formatter = StreamTableFormatter()
 
     def on_train_begin(self, logs=None):
         super().on_train_begin(logs)

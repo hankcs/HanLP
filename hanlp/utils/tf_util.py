@@ -47,7 +47,7 @@ def set_gpu(idx=0):
     idx : int
         Which GPU to use
     """
-    gpus = get_visiable_gpus()
+    gpus = get_visible_gpus()
     if gpus:
         try:
             tf.config.experimental.set_visible_devices(gpus[idx], 'GPU')
@@ -59,13 +59,13 @@ def set_gpu(idx=0):
             raise e
 
 
-def get_visiable_gpus():
+def get_visible_gpus():
     gpus = tf.config.experimental.list_physical_devices('GPU')
     return gpus
 
 
 def set_gpu_memory_growth(growth=True):
-    gpus = get_visiable_gpus()
+    gpus = get_visible_gpus()
     if gpus:
         try:
             # Currently, memory growth needs to be the same across GPUs
