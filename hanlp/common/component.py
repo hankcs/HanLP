@@ -40,6 +40,11 @@ class Component(ABC):
 
     @abstractmethod
     def predict(self, data: Any, **kwargs):
+        """
+        Predict on data
+        :param data: Any type of data subject to sub-classes
+        :param kwargs: Additional arguments
+        """
         raise NotImplementedError('%s.%s()' % (self.__class__.__name__, inspect.stack()[0][3]))
 
     def __call__(self, data, **kwargs):
