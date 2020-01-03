@@ -1,6 +1,6 @@
 # HanLP: Han Language Processing
 
-The multilingual NLP library for researchers and companies, built on TensorFlow 2.0, for advancing state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be efficient, user friendly and extendable. It comes with pretrained models for various human languages including English, Chinese and many more. Currently, HanLP 2.0 is in alpha stage with more killer features on the roadmap. Discussions are welcomed on our [forum](https://bbs.hankcs.com/), while bug reports and feature requests are reserved for GitHub issues. For Java users, please checkout the [1.x](https://github.com/hankcs/HanLP/tree/1.x) branch.
+The multilingual NLP library for researchers and companies, built on TensorFlow 2.0, for advancing state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be efficient, user friendly and extendable. It comes with pretrained models for various human languages including English, Chinese and many others. Currently, HanLP 2.0 is in alpha stage with more killer features on the roadmap. Discussions are welcomed on our [forum](https://bbs.hankcs.com/), while bug reports and feature requests are reserved for GitHub issues. For Java users, please checkout the [1.x](https://github.com/hankcs/HanLP/tree/1.x) branch.
 
  ## Installation
 
@@ -245,7 +245,7 @@ classifier = BertTextClassifier(BertTextTransform(y_column=0))
 classifier.fit(CHNSENTICORP_ERNIE_TRAIN, CHNSENTICORP_ERNIE_VALID, save_dir,
                bert='bert-base-chinese')
 classifier.load(save_dir)
-print(classifier.classify('前台客房服务态度非常好！早餐很丰富，房价很干净。再接再厉！'))
+print(classifier.predict('前台客房服务态度非常好！早餐很丰富，房价很干净。再接再厉！'))
 classifier.evaluate(CHNSENTICORP_ERNIE_TEST, save_dir=save_dir)
 ```
 
