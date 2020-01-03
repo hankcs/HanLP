@@ -16,8 +16,6 @@ from hanlp.metrics.chunking.bmes import BMES_F1
 from hanlp.transform.tsv import TSVTaggingTransform
 from hanlp.transform.txt import extract_ngram_features_and_tags, bmes_to_words, TxtFormat, TxtBMESFormat
 from hanlp.utils.util import merge_locals_kwargs
-
-
 class BMESTokenizer(KerasComponent):
 
     def build_metrics(self, metrics, logger: logging.Logger, **kwargs):
