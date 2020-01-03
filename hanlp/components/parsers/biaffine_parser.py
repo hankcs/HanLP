@@ -310,8 +310,7 @@ class BiaffineSemanticDependencyParser(BiaffineDependencyParser):
                            verbose, **kwargs)
 
     def get_loss(self, arc_scores, rel_scores, arcs, rels, mask, arc_loss, rel_loss):
-        mask = tf.tile(tf.expand_dims(mask, -1), [1, 1, tf.shape(mask)[-1]])
-        mask &= tf.transpose(mask, [0, 2, 1])
+        mask = tf.tile(tf.expand_dims(mask, -2), [1, tf.shape(mask)[-1], 1])
         arc_scores, arcs = arc_scores[mask], arcs[mask]
         rel_scores, rels = rel_scores[mask], rels[mask]
         rel_scores, rels = rel_scores[arcs], rels[arcs]

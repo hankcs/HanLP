@@ -18,8 +18,7 @@ class LabeledF1(object):
         return f"UF: {self.uf:6.2%} LF: {self.lf:6.2%}"
 
     def __call__(self, arc_preds, rel_preds, arc_golds, rel_golds, mask):
-        mask = tf.tile(tf.expand_dims(mask, -1), [1, 1, tf.shape(mask)[-1]])
-        mask &= tf.transpose(mask, [0, 2, 1])
+        mask = tf.tile(tf.expand_dims(mask, -2), [1, tf.shape(mask)[-1], 1])
 
         mask_gold = mask & arc_golds
         mask_pred = mask & arc_preds
