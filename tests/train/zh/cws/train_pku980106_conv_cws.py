@@ -25,7 +25,6 @@ tokenizer.fit('data/cws/pku98/199801-06-seg.txt',
                           }},
               optimizer=optimizer,
               window_size=0,
-              epochs=1,
               weight_norm=True)
 tokenizer.evaluate('data/cws/pku98/test_pku98_name_merged.txt', save_dir=save_dir, output=False)
 print(tokenizer.predict(['中央民族乐团离开北京前往维也纳', '商品和服务']))
