@@ -309,6 +309,15 @@ class CoNLL_SDP_Transform(CoNLLTransform):
     def __init__(self, config: SerializableDict = None, map_x=True, map_y=True, lower=True, n_buckets=32,
                  n_tokens_per_batch=5000, min_freq=2, **kwargs) -> None:
         super().__init__(config, map_x, map_y, lower, n_buckets, n_tokens_per_batch, min_freq, **kwargs)
+        self.orphan_relation = ROOT
+
+    def lock_vocabs(self):
+        super().lock_vocabs()
+        # heuristic to find the orphan relation
+        for rel in self.rel_vocab.idx_to_token:
+            if 'root' in rel.lower():
+                self.orphan_relation = rel
+                break
 
     def file_to_inputs(self, filepath: str, gold=True):
         assert gold, 'only support gold file for now'
@@ -449,7 +458,7 @@ class CoNLL_SDP_Transform(CoNLLTransform):
                         ar.append((idx + 1, self.rel_vocab.idx_to_token[r]))
                 if not ar:
                     # orphan
-                    ar.append((0, self.rel_vocab.idx_to_token[2]))
+                    ar.append((0, self.orphan_relation))
                 sent.append(ar)
             sents.append(sent)
 
