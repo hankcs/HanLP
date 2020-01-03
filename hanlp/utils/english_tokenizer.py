@@ -4,6 +4,7 @@ Regex-based word tokenizers.
 
 Note that small/full/half-width character variants are *not* covered.
 If a text were to contains such characters, normalize it first.
+A modified version of https://github.com/fnl/segtok
 """
 from html import unescape
 

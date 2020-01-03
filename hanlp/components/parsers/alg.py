@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-26 19:49
+# Ported from the PyTorch implementation https://github.com/zysite/biaffine-parser
 from typing import List
 
 import tensorflow as tf

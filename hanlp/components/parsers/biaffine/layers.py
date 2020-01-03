@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-26 23:05
+# Ported from the PyTorch implementation https://github.com/zysite/biaffine-parser
 import tensorflow as tf
 
 from hanlp.utils.tf_util import tf_bernoulli
