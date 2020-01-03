@@ -19,6 +19,7 @@ parser.fit('data/semeval15/en.dm.train.conll', 'data/semeval15/en.dm.dev.conll',
                                  'normalize': True,
                              }},
            )
+parser.load(save_dir)  # disable variational dropout during evaluation so as to use CudaLSTM
 sentence = [('Is', 'VBZ'), ('this', 'DT'), ('the', 'DT'), ('future', 'NN'), ('of', 'IN'), ('chamber', 'NN'),
             ('music', 'NN'), ('?', '.')]
 print(parser.predict(sentence))
