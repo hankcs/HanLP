@@ -8,7 +8,7 @@ from hanlp.datasets.glue import STANFORD_SENTIMENT_TREEBANK_2_TRAIN, STANFORD_SE
 save_dir = 'data/model/classification/sst2_bert_base_uncased_en'
 classifier = TransformerClassifier()
 classifier.fit(STANFORD_SENTIMENT_TREEBANK_2_TRAIN, STANFORD_SENTIMENT_TREEBANK_2_VALID, save_dir,
-               transformer='bert-base-uncased')
+               transformer='uncased_L-12_H-768_A-12')
 classifier.load(save_dir)
-print(classifier.classify('it\' s a charming and often affecting journey'))
+print(classifier.predict('it\' s a charming and often affecting journey'))
 classifier.evaluate(STANFORD_SENTIMENT_TREEBANK_2_TEST, save_dir=save_dir)

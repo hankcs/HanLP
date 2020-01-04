@@ -12,7 +12,7 @@ from bert.loader_albert import map_to_tfhub_albert_variable_name
 from tensorflow import keras
 
 from hanlp.layers.transformers import albert_models_google
-from hanlp.utils.io_util import get_resource
+from hanlp.utils.io_util import get_resource, stdout_redirected
 
 
 def load_stock_weights(bert: BertModelLayer, ckpt_path):
@@ -105,9 +105,10 @@ def build_transformer(transformer, max_seq_length, num_labels, tagging=True):
     ckpt = glob.glob(os.path.join(bert_dir, '*.index'))
     assert ckpt, f'No checkpoint found under {bert_dir}'
     ckpt, _ = os.path.splitext(ckpt[0])
-    if albert:
-        skipped_weight_value_tuples = load_stock_weights(l_bert, ckpt)
-    else:
-        skipped_weight_value_tuples = bert.load_bert_weights(l_bert, ckpt)
-    assert 0 == len(skipped_weight_value_tuples), 'failed to load pretrained model'
+    with stdout_redirected(to=os.devnull):
+        if albert:
+            skipped_weight_value_tuples = load_stock_weights(l_bert, ckpt)
+        else:
+            skipped_weight_value_tuples = bert.load_bert_weights(l_bert, ckpt)
+    assert 0 == len(skipped_weight_value_tuples), f'failed to load pretrained {transformer}'
     return model, tokenizer
