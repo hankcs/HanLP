@@ -4,9 +4,9 @@
 import hanlp
 
 tokenizer = hanlp.load('CTB6_CONVSEG')
-tagger = hanlp.load('CTB5_POS_RNN_FASTTEXT')
-syntactic_parser = hanlp.load('CTB7_BIAFFINE_DEP')
-semantic_parser = hanlp.load('SEMEVAL16_TEXT_BIAFFINE')
+tagger = hanlp.load('CTB5_POS_RNN_FASTTEXT_ZH')
+syntactic_parser = hanlp.load('CTB7_BIAFFINE_DEP_ZH')
+semantic_parser = hanlp.load('SEMEVAL16_TEXT_BIAFFINE_ZH')
 
 pipeline = hanlp.pipeline() \
     .append(hanlp.utils.rules.split_sentence, output_key='sentences') \

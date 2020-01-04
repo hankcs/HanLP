@@ -4,7 +4,7 @@
 import hanlp
 from hanlp.components.parsers.conll import CoNLLSentence
 
-semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL15_EN_PAS_BIAFFINE)
+semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL15_PAS_BIAFFINE_EN)
 sent = [('Is', 'VBZ'),
         ('this', 'DT'),
         ('the', 'DT'),

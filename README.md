@@ -65,7 +65,7 @@ That's it! You're now ready to employ the latest DL models from HanLP in your re
 Taggers take lists of tokens as input, then outputs one tag for each token.
 
 ```python
->>> tagger = hanlp.load(hanlp.pretrained.pos.CTB5_POS_RNN_FASTTEXT)
+>>> tagger = hanlp.load(hanlp.pretrained.pos.CTB5_POS_RNN_FASTTEXT_ZH)
 >>> tagger.predict(['我', '的', '希望', '是', '希望', '和平'])
 ['PN', 'DEG', 'NN', 'VC', 'VV', 'NN']
 ```
@@ -77,7 +77,7 @@ Did you notice the different pos tags for the same word `希望` ("hope")? The f
 The NER component requires tokenized tokens as input, then outputs the entities along with their types and spans.
 
 ```python
->>> recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_CN)
+>>> recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_ZH)
 >>> recognizer.predict([list('上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。'),
                         list('萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。')])
 [[('上海华安工业（集团）公司', 'NT', 0, 12), ('谭旭光', 'NR', 15, 18), ('张晚霞', 'NR', 21, 24), ('美国', 'NS', 26, 28), ('纽约现代艺术博物馆', 'NS', 28, 37)], 
@@ -103,7 +103,7 @@ accuracy:  99.34%; precision:  94.37%; recall:  95.77%; FB1:  95.06
 Parsing lies in the core of NLP. Without parsing, one cannot claim to be a NLP researcher or engineer. But using HanLP, it takes no more than two lines of code.
 
 ```python
->>> syntactic_parser = hanlp.load(hanlp.pretrained.dep.CTB7_BIAFFINE_DEP)
+>>> syntactic_parser = hanlp.load(hanlp.pretrained.dep.CTB7_BIAFFINE_DEP_ZH)
 >>> print(syntactic_parser.predict([('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]))
 1	中国	_	NR	_	_	2	nsubj	_	_
 2	批准	_	VV	_	_	0	root	_	_
@@ -123,7 +123,7 @@ Parsers take both tokens and part-of-speech tags as input. The output is a tree 
 A graph is a generalized tree, which conveys more information about the semantic relations between tokens. HanLP implements the biaffine[^biaffine] model which delivers the SOTA performance.
 
 ```python
->>> semantic_parser = hanlp.load('SEMEVAL16_NEWS_BIAFFINE')
+>>> semantic_parser = hanlp.load(SEMEVAL16_NEWS_BIAFFINE_ZH)
 >>> print(semantic_parser.predict([('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]))
 1	中国	_	NR	_	_	2	Agt	_	_
 1	中国	_	NR	_	_	3	Agt	_	_

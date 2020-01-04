@@ -3,7 +3,7 @@
 # Date: 2019-12-31 23:55
 import hanlp
 
-semantic_parser = hanlp.load('SEMEVAL16_NEWS_BIAFFINE')
+semantic_parser = hanlp.load('SEMEVAL16_NEWS_BIAFFINE_ZH')
 sent = [('中国', 'NR'),
         ('批准', 'VV'),
         ('设立', 'VV'),
