@@ -1,20 +1,26 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-29 13:55
+import glob
 import logging
 import math
 import os
 
 import tensorflow as tf
+from bert import bert_models_google
 
 from hanlp.components.taggers.tagger import TaggerComponent
 from hanlp.components.taggers.transformers.metrics import MaskedSparseCategoricalAccuracy
 from hanlp.components.taggers.transformers.transformer_transform import TransformerTransform
 from hanlp.layers.transformers import AutoTokenizer, TFAutoModel, TFPreTrainedModel, PreTrainedTokenizer, TFAlbertModel, \
-    BertTokenizer
-from hanlp.losses.sparse_categorical_crossentropy import MaskedSparseCategoricalCrossentropyOverBatchFirstDim
+    BertTokenizer, albert_models_google
+from hanlp.layers.transformers.loader import load_stock_weights
+from hanlp.losses.sparse_categorical_crossentropy import MaskedSparseCategoricalCrossentropyOverBatchFirstDim, \
+    SparseCategoricalCrossentropyOverBatchFirstDim
 from hanlp.optimizers.adamw import create_optimizer
+from hanlp.utils.io_util import get_resource
 from hanlp.utils.util import merge_locals_kwargs
+import bert
 
 
 class TransformerTaggingModel(tf.keras.Model):
@@ -33,7 +39,47 @@ class TransformerTagger(TaggerComponent):
         super().__init__(transform)
         self.transform: TransformerTransform = transform
 
-    def build_model(self, transformer, max_seq_length, **kwargs) -> tf.keras.Model:
+    def build_model(self, transformer, max_seq_length, implementation, **kwargs) -> tf.keras.Model:
+        if implementation == 'bert-for-tf2':
+            if transformer in albert_models_google:
+                from bert.tokenization.albert_tokenization import FullTokenizer
+                model_url = albert_models_google[transformer]
+                albert = True
+            elif transformer in bert_models_google:
+                from bert.tokenization.bert_tokenization import FullTokenizer
+                model_url = bert_models_google[transformer]
+                albert = False
+            else:
+                raise ValueError(
+                    f'Unknown model {transformer}, available ones: {bert_models_google.keys() + albert_models_google.keys()}')
+            albert_dir = get_resource(model_url)
+            vocab = glob.glob(os.path.join(albert_dir, '*vocab*.txt'))
+            assert len(vocab) == 1, 'No vocab found or unambiguous vocabs found'
+            vocab = vocab[0]
+            # noinspection PyTypeChecker
+            self.transform.tokenizer = FullTokenizer(vocab_file=vocab)
+            bert_params = bert.params_from_pretrained_ckpt(albert_dir)
+            l_bert = bert.BertModelLayer.from_params(bert_params, name="bert")
+            l_input_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype='int32', name="input_ids")
+            l_mask_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype='int32', name="mask_ids")
+            l_token_type_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype='int32', name="token_type_ids")
+            output = l_bert([l_input_ids, l_token_type_ids], mask=l_mask_ids)
+            output = tf.keras.layers.Dropout(bert_params.hidden_dropout, name='hidden_dropout')(output)
+            logits = tf.keras.layers.Dense(len(self.transform.tag_vocab),
+                                           kernel_initializer=tf.keras.initializers.TruncatedNormal(
+                                               bert_params.initializer_range))(output)
+            model = tf.keras.Model(inputs=[l_input_ids, l_mask_ids, l_token_type_ids], outputs=logits)
+            model.build(input_shape=(None, max_seq_length))
+            ckpt = glob.glob(os.path.join(albert_dir, '*.index'))
+            assert ckpt, f'No checkpoint found under {albert_dir}'
+            ckpt, _ = os.path.splitext(ckpt[0])
+            if albert:
+                skipped_weight_value_tuples = load_stock_weights(l_bert, ckpt)
+            else:
+                skipped_weight_value_tuples = bert.load_bert_weights(l_bert, ckpt)
+            assert 0 == len(skipped_weight_value_tuples), 'failed to load pretrained model'
+            return model
+
         tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(transformer)
         self.transform.tokenizer = tokenizer
         transformer: TFPreTrainedModel = TFAutoModel.from_pretrained(transformer, name=os.path.basename(transformer))
@@ -64,6 +110,7 @@ class TransformerTagger(TaggerComponent):
             batch_size=32,
             epochs=3,
             metrics='accuracy',
+            implementation='transformers',
             run_eagerly=False,
             logger=None,
             verbose=True,
@@ -112,6 +159,8 @@ class TransformerTagger(TaggerComponent):
         return history
 
     def build_loss(self, loss, **kwargs):
+        if self.config.implementation == 'bert-for-tf2':
+            return SparseCategoricalCrossentropyOverBatchFirstDim()
         return MaskedSparseCategoricalCrossentropyOverBatchFirstDim()
 
     def build_metrics(self, metrics, logger: logging.Logger, **kwargs):

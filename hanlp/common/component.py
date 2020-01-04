@@ -93,6 +93,7 @@ class KerasComponent(Component, ABC):
                                  mode='w')
         tst_data = self.transform.file_to_dataset(input_path, batch_size=batch_size)
         samples = size_of_dataset(tst_data)
+        num_batches = math.ceil(samples / batch_size)
         if warm_up:
             self.model.predict_on_batch(tst_data.take(1))
         if output:
@@ -104,7 +105,7 @@ class KerasComponent(Component, ABC):
             else:
                 raise RuntimeError('output ({}) must be of type bool or str'.format(repr(output)))
         timer = Timer()
-        loss, score, output = self.evaluate_dataset(tst_data, callbacks, output)
+        loss, score, output = self.evaluate_dataset(tst_data, callbacks, output, num_batches)
         delta_time = timer.stop()
         speed = samples / delta_time.delta_seconds
 
@@ -126,14 +127,12 @@ class KerasComponent(Component, ABC):
         if output:
             logger.info('Saving output to {}'.format(output))
             with open(output, 'w', encoding='utf-8') as out:
-                num_batches = math.ceil(samples / batch_size)
-
                 self.evaluate_output(tst_data, out, num_batches, self.model.metrics)
 
         return loss, score, speed
 
-    def evaluate_dataset(self, tst_data, callbacks, output):
-        loss, score = self.model.evaluate(tst_data, callbacks=callbacks)
+    def evaluate_dataset(self, tst_data, callbacks, output, num_batches):
+        loss, score = self.model.evaluate(tst_data, callbacks=callbacks, steps=num_batches)
         return loss, score, output
 
     def evaluate_output(self, tst_data, out, num_batches, metrics: List[tf.keras.metrics.Metric]):

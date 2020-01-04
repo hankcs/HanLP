@@ -32,7 +32,10 @@ class TransformerTransform(TsvTaggingFormat, Transform):
     @tokenizer.setter
     def tokenizer(self, tokenizer):
         self._tokenizer = tokenizer
-        self.special_token_ids = tf.constant(self.tokenizer.all_special_ids, dtype=tf.int32)
+        if self.config.implementation == 'bert-for-tf2':
+            self.special_token_ids = tf.constant([tokenizer.vocab[token] for token in ['[PAD]', '[CLS]', '[SEP]']], dtype=tf.int32)
+        else:
+            self.special_token_ids = tf.constant(self.tokenizer.all_special_ids, dtype=tf.int32)
 
     def fit(self, trn_path: str, **kwargs) -> int:
         self.tag_vocab = Vocab(unk_token=None)
@@ -49,42 +52,56 @@ class TransformerTransform(TsvTaggingFormat, Transform):
         values = (0, 0, 0), self.tag_vocab.pad_idx
         return types, shapes, values
 
+    def lock_vocabs(self):
+        super().lock_vocabs()
+
     def inputs_to_samples(self, inputs, gold=False):
         max_seq_length = self.config.get('max_seq_length', 128)
         tokenizer = self._tokenizer
-        config = self.transformer_config
+        if self.config.implementation == 'bert-for-tf2':
+            xlnet = False
+            roberta = False
+            pad_token = '[PAD]'
+            cls_token = '[CLS]'
+            sep_token = '[SEP]'
+        else:
+            config = self.transformer_config
+            xlnet = config_is(config, 'xlnet')
+            roberta = config_is(config, 'roberta')
+            pad_token = tokenizer.pad_token
+            cls_token = tokenizer.cls_token
+            sep_token = tokenizer.sep_token
+
         pad_label_idx = self.tag_vocab.pad_idx
-        pad_token = tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0]
+        pad_token = tokenizer.convert_tokens_to_ids([pad_token])[0]
         for sample in inputs:
             if gold:
                 words, tags = sample
             else:
                 words, tags = sample, [self.tag_vocab.pad_token] * len(sample)
+
             input_ids, input_mask, segment_ids, label_ids = convert_examples_to_features(words, tags,
                                                                                          self.tag_vocab.token_to_idx,
                                                                                          max_seq_length, tokenizer,
-                                                                                         cls_token_at_end=config_is(
-                                                                                             config,
-                                                                                             'xlnet'),
+                                                                                         cls_token_at_end=xlnet,
                                                                                          # xlnet has a cls token at the end
-                                                                                         cls_token=tokenizer.cls_token,
-                                                                                         cls_token_segment_id=2 if config_is(
-                                                                                             config,
-                                                                                             'xlnet') else 0,
-                                                                                         sep_token=tokenizer.sep_token,
-                                                                                         sep_token_extra=config_is(
-                                                                                             config,
-                                                                                             'roberta'),
+                                                                                         cls_token=cls_token,
+                                                                                         cls_token_segment_id=2 if xlnet else 0,
+                                                                                         sep_token=sep_token,
+                                                                                         sep_token_extra=roberta,
                                                                                          # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
-                                                                                         pad_on_left=config_is(config,
-                                                                                                               'xlnet'),
+                                                                                         pad_on_left=xlnet,
                                                                                          # pad on the left for xlnet
                                                                                          pad_token=pad_token,
-                                                                                         pad_token_segment_id=4 if config_is(
-                                                                                             config,
-                                                                                             'xlnet') else 0,
+                                                                                         pad_token_segment_id=4 if xlnet else 0,
                                                                                          pad_token_label_id=pad_label_idx)
 
+            if None in input_ids:
+                print(input_ids)
+            if None in input_mask:
+                print(input_mask)
+            if None in segment_ids:
+                print(input_mask)
             yield (input_ids, input_mask, segment_ids), label_ids
 
     def x_to_idx(self, x) -> Union[tf.Tensor, Tuple]:

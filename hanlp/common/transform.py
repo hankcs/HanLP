@@ -131,6 +131,10 @@ class Transform(ABC):
 
         """
 
+        # debug
+        # for sample in self.file_to_samples(filepath):
+        #     pass
+
         def generator():
             inputs = self.file_to_inputs(filepath, gold)
             samples = self.inputs_to_samples(inputs, gold)
@@ -142,6 +146,10 @@ class Transform(ABC):
     def inputs_to_dataset(self, inputs, gold=False, map_x=None, map_y=None, batch_size=32, shuffle=None, repeat=None,
                           drop_remainder=False,
                           prefetch=1, cache=False, **kwargs) -> tf.data.Dataset:
+        # debug
+        # for sample in self.inputs_to_samples(inputs):
+        #     pass
+
         def generator():
             samples = self.inputs_to_samples(inputs, gold)
             yield from samples
