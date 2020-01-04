@@ -98,8 +98,3 @@ class TransformerTagger(TaggerComponent):
 
     def build_loss(self, loss, **kwargs):
         return SparseCategoricalCrossentropyOverBatchFirstDim()
-
-    def build_metrics(self, metrics, logger: logging.Logger, **kwargs):
-        if metrics == 'accuracy':
-            return MaskedSparseCategoricalAccuracy('accuracy')
-        return super().build_metrics(metrics, logger, **kwargs)

@@ -41,9 +41,10 @@ class TransformerTransform(TsvTaggingFormat, Transform):
         return num_samples
 
     def create_types_shapes_values(self) -> Tuple[Tuple, Tuple, Tuple]:
+        max_seq_length = self.config.get('max_seq_length', 128)
         types = (tf.int32, tf.int32, tf.int32), tf.int32
         # (input_ids, input_mask, segment_ids), label_ids
-        shapes = ([None], [None], [None]), [None]
+        shapes = ([max_seq_length], [max_seq_length], [max_seq_length]), [None]
         values = (0, 0, 0), self.tag_vocab.pad_idx
         return types, shapes, values
 

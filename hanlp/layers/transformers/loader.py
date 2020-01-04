@@ -81,7 +81,7 @@ def build_transformer(transformer, max_seq_length, num_labels, tagging=True):
         albert = False
     else:
         raise ValueError(
-            f'Unknown model {transformer}, available ones: {bert_models_google.keys() + albert_models_google.keys()}')
+            f'Unknown model {transformer}, available ones: {list(bert_models_google.keys()) + list(albert_models_google.keys())}')
     bert_dir = get_resource(model_url)
     vocab = glob.glob(os.path.join(bert_dir, '*vocab*.txt'))
     assert len(vocab) == 1, 'No vocab found or unambiguous vocabs found'
