@@ -8,3 +8,5 @@ FASTTEXT_WIKI_NYT_AMAZON_FRIENDS_200_EN \
 
 FASTTEXT_WIKI_300_ZH = 'https://dl.fbaipublicfiles.com/fasttext/vectors-wiki/wiki.zh.zip#wiki.zh.bin'
 FASTTEXT_WIKI_300_ZH_CLASSICAL = 'https://dl.fbaipublicfiles.com/fasttext/vectors-wiki/wiki.zh_classical.zip#wiki.zh_classical.bin'
+
+ALL = {}

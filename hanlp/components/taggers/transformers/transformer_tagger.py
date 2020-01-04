@@ -49,7 +49,6 @@ class TransformerTagger(TaggerComponent):
             batch_size=32,
             epochs=3,
             metrics='accuracy',
-            implementation='transformers',
             run_eagerly=False,
             logger=None,
             verbose=True,

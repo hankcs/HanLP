@@ -8,7 +8,7 @@ from tests import cdroot
 
 cdroot()
 recognizer = TransformerNamedEntityRecognizer()
-save_dir = 'data/model/ner/ner_albert_base_msra_3'
+save_dir = 'data/model/ner/ner_albert_base_msra'
 recognizer.fit(MSRA_NER_TRAIN, MSRA_NER_VALID, save_dir, transformer='albert_base_zh',
                learning_rate=5e-5,
                metrics='f1')

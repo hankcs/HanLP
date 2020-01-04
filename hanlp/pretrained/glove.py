@@ -10,3 +10,5 @@ GLOVE_6B_200D = GLOVE_6B_ROOT + '#' + 'glove.6B.200d.txt'
 GLOVE_6B_300D = GLOVE_6B_ROOT + '#' + 'glove.6B.300d.txt'
 
 GLOVE_840B_300D = 'http://nlp.stanford.edu/data/glove.840B.300d.zip'
+
+ALL = {}

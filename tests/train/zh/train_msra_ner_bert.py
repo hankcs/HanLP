@@ -9,7 +9,7 @@ cdroot()
 recognizer = TransformerNamedEntityRecognizer()
 save_dir = 'data/model/ner/ner_bert_base_msra'
 recognizer.fit(MSRA_NER_TRAIN, MSRA_NER_VALID, save_dir, transformer='chinese_L-12_H-768_A-12',
-               metrics='f1')
+               metrics='f1', epochs=10, warmup_steps_ratio=.1)
 recognizer.load(save_dir)
 print(recognizer.predict(list('上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。')))
 recognizer.evaluate(MSRA_NER_TEST, save_dir=save_dir)
