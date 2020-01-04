@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-29 15:32
-from hanlp.layers.transformers import PreTrainedTokenizer
 
 
 def config_is(config, model='bert'):
@@ -13,7 +12,7 @@ def convert_examples_to_features(
         labels,
         label_map,
         max_seq_length,
-        tokenizer: PreTrainedTokenizer,
+        tokenizer,
         cls_token_at_end=False,
         cls_token="[CLS]",
         cls_token_segment_id=1,

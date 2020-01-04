@@ -9,18 +9,15 @@ from hanlp.common.structure import SerializableDict
 from hanlp.common.transform import Transform
 from hanlp.common.vocab import Vocab
 from hanlp.components.taggers.transformers.utils import convert_examples_to_features, config_is
-from hanlp.layers.transformers import BertTokenizer, PretrainedConfig
 from hanlp.transform.tsv import TsvTaggingFormat
 
 
 class TransformerTransform(TsvTaggingFormat, Transform):
     def __init__(self,
-                 transformer_config: PretrainedConfig = None,
-                 tokenizer: BertTokenizer = None,
+                 tokenizer=None,
                  config: SerializableDict = None,
                  map_x=False, map_y=False, **kwargs) -> None:
         super().__init__(config, map_x, map_y, **kwargs)
-        self.transformer_config = transformer_config
         self._tokenizer = tokenizer
         self.tag_vocab: Vocab = None
         self.special_token_ids = None

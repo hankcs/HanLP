@@ -1,26 +1,18 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-29 13:55
-import glob
 import logging
 import math
-import os
 
 import tensorflow as tf
-from bert import bert_models_google
 
 from hanlp.components.taggers.tagger import TaggerComponent
 from hanlp.components.taggers.transformers.metrics import MaskedSparseCategoricalAccuracy
 from hanlp.components.taggers.transformers.transformer_transform import TransformerTransform
-from hanlp.layers.transformers import AutoTokenizer, TFAutoModel, TFPreTrainedModel, PreTrainedTokenizer, TFAlbertModel, \
-    BertTokenizer, albert_models_google
-from hanlp.layers.transformers.loader import load_stock_weights, build_transformer
-from hanlp.losses.sparse_categorical_crossentropy import MaskedSparseCategoricalCrossentropyOverBatchFirstDim, \
-    SparseCategoricalCrossentropyOverBatchFirstDim
+from hanlp.layers.transformers.loader import build_transformer
+from hanlp.losses.sparse_categorical_crossentropy import SparseCategoricalCrossentropyOverBatchFirstDim
 from hanlp.optimizers.adamw import create_optimizer
-from hanlp.utils.io_util import get_resource
 from hanlp.utils.util import merge_locals_kwargs
-import bert
 
 
 class TransformerTaggingModel(tf.keras.Model):

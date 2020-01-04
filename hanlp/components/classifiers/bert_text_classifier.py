@@ -80,8 +80,7 @@ class BertTextTransform(TableTransform):
         exit(1)
 
     def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None) -> Iterable:
-        preds = Y[0]
-        preds = tf.argmax(preds, axis=1)
+        preds = tf.argmax(Y, axis=-1)
         for y in preds:
             yield self.label_vocab.idx_to_token[y]
 
@@ -89,7 +88,7 @@ class BertTextTransform(TableTransform):
         return isinstance(input, (str, tuple))
 
 
-class BertTextClassifier(KerasComponent):
+class TransformerClassifier(KerasComponent):
 
     def __init__(self, bert_text_transform=None) -> None:
         if not bert_text_transform:
@@ -97,22 +96,6 @@ class BertTextClassifier(KerasComponent):
         super().__init__(bert_text_transform)
         self.model: tf.keras.Model
         self.transform: BertTextTransform = bert_text_transform
-
-    def classify(self, docs: Union[str, List[str], Tuple[str, str]], batch_size=32) -> Union[str, List[str]]:
-        flat = False
-        if isinstance(docs, (str, tuple)):
-            docs = [docs]
-            flat = True
-        dataset = self.transform.inputs_to_dataset(docs, batch_size=batch_size, cache=False, gold=False)
-        outputs = []
-        for batch in dataset:
-            preds = self.model.predict_on_batch(batch[0])[0]
-            preds = tf.argmax(preds, axis=1)
-            for y in preds:
-                outputs.append(self._y_id_to_str(y))
-        if flat:
-            outputs = outputs[0]
-        return outputs
 
     # noinspection PyMethodOverriding
     def fit(self, trn_data: Any, dev_data: Any, save_dir: str, transformer: str, max_length: int = 128,
