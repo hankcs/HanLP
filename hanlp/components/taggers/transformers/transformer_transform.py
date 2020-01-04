@@ -32,10 +32,8 @@ class TransformerTransform(TsvTaggingFormat, Transform):
     @tokenizer.setter
     def tokenizer(self, tokenizer):
         self._tokenizer = tokenizer
-        if self.config.implementation == 'bert-for-tf2':
-            self.special_token_ids = tf.constant([tokenizer.vocab[token] for token in ['[PAD]', '[CLS]', '[SEP]']], dtype=tf.int32)
-        else:
-            self.special_token_ids = tf.constant(self.tokenizer.all_special_ids, dtype=tf.int32)
+        self.special_token_ids = tf.constant([tokenizer.vocab[token] for token in ['[PAD]', '[CLS]', '[SEP]']],
+                                             dtype=tf.int32)
 
     def fit(self, trn_path: str, **kwargs) -> int:
         self.tag_vocab = Vocab(unk_token=None)
@@ -58,19 +56,11 @@ class TransformerTransform(TsvTaggingFormat, Transform):
     def inputs_to_samples(self, inputs, gold=False):
         max_seq_length = self.config.get('max_seq_length', 128)
         tokenizer = self._tokenizer
-        if self.config.implementation == 'bert-for-tf2':
-            xlnet = False
-            roberta = False
-            pad_token = '[PAD]'
-            cls_token = '[CLS]'
-            sep_token = '[SEP]'
-        else:
-            config = self.transformer_config
-            xlnet = config_is(config, 'xlnet')
-            roberta = config_is(config, 'roberta')
-            pad_token = tokenizer.pad_token
-            cls_token = tokenizer.cls_token
-            sep_token = tokenizer.sep_token
+        xlnet = False
+        roberta = False
+        pad_token = '[PAD]'
+        cls_token = '[CLS]'
+        sep_token = '[SEP]'
 
         pad_label_idx = self.tag_vocab.pad_idx
         pad_token = tokenizer.convert_tokens_to_ids([pad_token])[0]

@@ -6,10 +6,11 @@ import math
 from typing import Union, Tuple, List, Any, Iterable
 
 import tensorflow as tf
+from bert.tokenization.bert_tokenization import FullTokenizer
 
 from hanlp.common.component import KerasComponent
 from hanlp.common.structure import SerializableDict
-from hanlp.layers.transformers import BertConfig, BertTokenizer, TFBertForSequenceClassification
+from hanlp.layers.transformers.loader import build_transformer
 from hanlp.optimizers.adamw import create_optimizer
 from hanlp.transform.table import TableTransform
 from hanlp.utils.log_util import logger
@@ -21,17 +22,13 @@ class BertTextTransform(TableTransform):
     def __init__(self, config: SerializableDict = None, map_x=False, map_y=True, x_columns=None,
                  y_column=-1, skip_header=True, delimiter='auto', **kwargs) -> None:
         super().__init__(config, map_x, map_y, x_columns, y_column, skip_header, delimiter, **kwargs)
-        self.tokenizer: BertTokenizer = None
-
-    def build_config(self):
-        super().build_config()
-        bert = self.config.bert
-        self.tokenizer = BertTokenizer.from_pretrained(bert)
+        self.tokenizer: FullTokenizer = None
 
     def inputs_to_samples(self, inputs, gold=False):
         tokenizer = self.tokenizer
         max_length = self.config.max_length
         num_features = None
+        pad_token = None if self.label_vocab.mutable else tokenizer.convert_tokens_to_ids(['[PAD]'])[0]
         for (X, Y) in super().inputs_to_samples(inputs, gold):
             if self.label_vocab.mutable:
                 yield None, Y
@@ -44,44 +41,37 @@ class BertTextTransform(TableTransform):
                                            f'inconsistent with current {len(X)}'
             text_a = X[0]
             text_b = X[1] if len(X) > 1 else None
-            inputs = tokenizer.encode_plus(
-                text_a,
-                text_b,
-                add_special_tokens=True,
-                max_length=max_length,
-            )
-            input_ids, token_type_ids = inputs["input_ids"], inputs["token_type_ids"]
+            tokens_a = self.tokenizer.tokenize(text_a)
+            tokens_b = self.tokenizer.tokenize(text_b) if text_b else None
+            tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
+            segment_ids = [0] * len(tokens)
+            if tokens_b:
+                tokens += tokens_b
+                segment_ids += [1] * len(tokens_b)
+            token_ids = self.tokenizer.convert_tokens_to_ids(tokens)
+            attention_mask = [1] * len(token_ids)
+            diff = max_length - len(token_ids)
+            if diff < 0:
+                token_ids = token_ids[:max_length]
+                attention_mask = attention_mask[:max_length]
+                segment_ids = segment_ids[:max_length]
+            elif diff > 0:
+                token_ids += [pad_token] * diff
+                attention_mask += [0] * diff
+                segment_ids += [0] * diff
 
-            mask_padding_with_zero = True
-            pad_on_left = False
-            pad_token = 0
-            pad_token_segment_id = 0
-            # The mask has 1 for real tokens and 0 for padding tokens. Only real
-            # tokens are attended to.
-            attention_mask = [1 if mask_padding_with_zero else 0] * len(input_ids)
-
-            # Zero-pad up to the sequence length.
-            padding_length = max_length - len(input_ids)
-            if pad_on_left:
-                input_ids = ([pad_token] * padding_length) + input_ids
-                attention_mask = ([0 if mask_padding_with_zero else 1] * padding_length) + attention_mask
-                token_type_ids = ([pad_token_segment_id] * padding_length) + token_type_ids
-            else:
-                input_ids = input_ids + ([pad_token] * padding_length)
-                attention_mask = attention_mask + ([0 if mask_padding_with_zero else 1] * padding_length)
-                token_type_ids = token_type_ids + ([pad_token_segment_id] * padding_length)
-
-            assert len(input_ids) == max_length, "Error with input length {} vs {}".format(len(input_ids), max_length)
+            assert len(token_ids) == max_length, "Error with input length {} vs {}".format(len(token_ids), max_length)
             assert len(attention_mask) == max_length, "Error with input length {} vs {}".format(len(attention_mask),
                                                                                                 max_length)
-            assert len(token_type_ids) == max_length, "Error with input length {} vs {}".format(len(token_type_ids),
-                                                                                                max_length)
+            assert len(segment_ids) == max_length, "Error with input length {} vs {}".format(len(segment_ids),
+                                                                                             max_length)
             label = Y
-            yield (input_ids, attention_mask, token_type_ids), label
+            yield (token_ids, attention_mask, segment_ids), label
 
     def create_types_shapes_values(self) -> Tuple[Tuple, Tuple, Tuple]:
+        max_length = self.config.max_length
         types = (tf.int32, tf.int32, tf.int32), tf.string
-        shapes = ([None], [None], [None]), []
+        shapes = ([max_length], [max_length], [max_length]), []
         values = (0, 0, 0), self.label_vocab.safe_pad_token
         return types, shapes, values
 
@@ -105,8 +95,8 @@ class BertTextClassifier(KerasComponent):
         if not bert_text_transform:
             bert_text_transform = BertTextTransform()
         super().__init__(bert_text_transform)
-        self.model: TFBertForSequenceClassification
-        self.transform: BertTextTransform
+        self.model: tf.keras.Model
+        self.transform: BertTextTransform = bert_text_transform
 
     def classify(self, docs: Union[str, List[str], Tuple[str, str]], batch_size=32) -> Union[str, List[str]]:
         flat = False
@@ -125,7 +115,7 @@ class BertTextClassifier(KerasComponent):
         return outputs
 
     # noinspection PyMethodOverriding
-    def fit(self, trn_data: Any, dev_data: Any, save_dir: str, bert: str, max_length: int = 128,
+    def fit(self, trn_data: Any, dev_data: Any, save_dir: str, transformer: str, max_length: int = 128,
             optimizer='adamw', warmup_steps_ratio=0.1, use_amp=False, batch_size=32,
             epochs=3, logger=None, verbose=1, **kwargs):
         return super().fit(**merge_locals_kwargs(locals(), kwargs))
@@ -165,7 +155,7 @@ class BertTextClassifier(KerasComponent):
             self.config.optimizer = tf.keras.utils.serialize_keras_object(opt)
             lr_config = self.config.optimizer['config']['learning_rate']['config']
             lr_config['decay_schedule_fn'] = dict(
-                (k, v) for k, v in lr_config['decay_schedule_fn'].items() if not k.startswith('_'))
+                (k, v) for k, v in lr_config['decay_schedule_fn'].get_config().items() if not k.startswith('_'))
         else:
             opt = super().build_optimizer(optimizer)
         if use_amp:
@@ -174,9 +164,10 @@ class BertTextClassifier(KerasComponent):
         return opt
 
     # noinspection PyMethodOverriding
-    def build_model(self, bert, **kwargs):
-        bert_config = BertConfig.from_pretrained(bert, num_labels=len(self.transform.label_vocab))
-        return TFBertForSequenceClassification.from_pretrained(bert, config=bert_config)
+    def build_model(self, transformer, max_length, **kwargs):
+        model, self.transform.tokenizer = build_transformer(transformer, max_length, len(self.transform.label_vocab),
+                                                            tagging=False)
+        return model
 
     def build_vocab(self, trn_data, logger):
         train_examples = super().build_vocab(trn_data, logger)

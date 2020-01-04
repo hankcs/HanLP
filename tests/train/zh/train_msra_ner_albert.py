@@ -8,11 +8,10 @@ from tests import cdroot
 
 cdroot()
 recognizer = TransformerNamedEntityRecognizer()
-save_dir = 'data/model/ner/ner_albert_base_msra'
-# recognizer.fit(MSRA_NER_TRAIN, MSRA_NER_VALID, save_dir, transformer='albert_base_zh',
-#                implementation='bert-for-tf2',
-#                learning_rate=5e-5,
-#                metrics='f1')
+save_dir = 'data/model/ner/ner_albert_base_msra_3'
+recognizer.fit(MSRA_NER_TRAIN, MSRA_NER_VALID, save_dir, transformer='albert_base_zh',
+               learning_rate=5e-5,
+               metrics='f1')
 recognizer.load(save_dir)
 print(recognizer.predict(list('上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。')))
 recognizer.evaluate(MSRA_NER_TEST, save_dir=save_dir)

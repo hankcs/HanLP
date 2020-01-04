@@ -10,7 +10,7 @@ cdroot()
 save_dir = 'data/model/classification/chnsenticorp_bert_base'
 classifier = BertTextClassifier(BertTextTransform(y_column=0))
 classifier.fit(CHNSENTICORP_ERNIE_TRAIN, CHNSENTICORP_ERNIE_VALID, save_dir,
-               bert='bert-base-chinese')
+               transformer='chinese_L-12_H-768_A-12')
 classifier.load(save_dir)
 print(classifier.classify('前台客房服务态度非常好！早餐很丰富，房价很干净。再接再厉！'))
 classifier.evaluate(CHNSENTICORP_ERNIE_TEST, save_dir=save_dir)
