@@ -17,7 +17,7 @@ from hanlp.utils.log_util import logger
 from hanlp.utils.util import merge_locals_kwargs
 
 
-class BertTextTransform(TableTransform):
+class TransformerTextTransform(TableTransform):
 
     def __init__(self, config: SerializableDict = None, map_x=False, map_y=True, x_columns=None,
                  y_column=-1, skip_header=True, delimiter='auto', **kwargs) -> None:
@@ -92,10 +92,10 @@ class TransformerClassifier(KerasComponent):
 
     def __init__(self, bert_text_transform=None) -> None:
         if not bert_text_transform:
-            bert_text_transform = BertTextTransform()
+            bert_text_transform = TransformerTextTransform()
         super().__init__(bert_text_transform)
         self.model: tf.keras.Model
-        self.transform: BertTextTransform = bert_text_transform
+        self.transform: TransformerTextTransform = bert_text_transform
 
     # noinspection PyMethodOverriding
     def fit(self, trn_data: Any, dev_data: Any, save_dir: str, transformer: str, max_length: int = 128,
