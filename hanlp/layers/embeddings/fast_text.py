@@ -54,7 +54,7 @@ class FastTextEmbedding(tf.keras.layers.Embedding):
             mask = words != self.padding
             output *= mask
             output = np.stack(output.reshape(-1)).reshape(list(words.shape) + [self.output_dim])
-            return output, mask
+            return output, tf.constant(mask)
         else:
             output = np.stack(output.reshape(-1)).reshape(list(words.shape) + [self.output_dim])
             return output
