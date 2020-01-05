@@ -3,7 +3,7 @@
 # Date: 2019-12-31 03:24
 import hanlp
 
-tokenizer = hanlp.load('PKU_NAME_MERGED_SIX_MONTHS_CONVSEG')
+tokenizer = hanlp.load('CTB6_CONVSEG')
 tagger = hanlp.load('CTB5_POS_RNN_FASTTEXT_ZH')
 syntactic_parser = hanlp.load('CTB7_BIAFFINE_DEP_ZH')
 semantic_parser = hanlp.load('SEMEVAL16_TEXT_BIAFFINE_ZH')
