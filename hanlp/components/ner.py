@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-09-14 20:33
-from typing import Union, List, Any
+from abc import ABC
+from typing import Union, Any
 
 import tensorflow as tf
 
@@ -13,13 +14,16 @@ from hanlp.metrics.chunking.sequence_labeling import get_entities
 from hanlp.utils.util import merge_locals_kwargs
 
 
-class IOBES_NamedEntityRecognizer(KerasComponent):
+class IOBES_NamedEntityRecognizer(KerasComponent, ABC):
 
     def predict_batch(self, batch, inputs=None):
         for words, tags in zip(inputs, super().predict_batch(batch, inputs)):
+            delimiter = ' '
+            if all([len(w) == 1 for w in words]):
+                delimiter = ''  # might be Chinese
             entities = []
             for tag, start, end in get_entities(tags):
-                entities.append((''.join(words[start:end]), tag, start, end))
+                entities.append((delimiter.join(words[start:end]), tag, start, end))
             yield entities
 
 
