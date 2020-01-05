@@ -12,5 +12,5 @@ sent = [('Is', 'VBZ'),
         ('chamber', 'NN'),
         ('music', 'NN'),
         ('?', '.')]
-tree = syntactic_parser.predict(sent)
+tree = syntactic_parser(sent)
 print(tree)

@@ -467,7 +467,7 @@ class CoNLL_SDP_Transform(CoNLLTransform):
     def XY_to_inputs_outputs(self, X: Union[tf.Tensor, Tuple[tf.Tensor]], Y: Union[tf.Tensor, Tuple[tf.Tensor]],
                              gold=False, inputs=None) -> Iterable:
         (words, feats, mask), (arc_preds, rel_preds) = X, Y
-        xs = self.X_to_inputs(X)
+        xs = inputs
         ys = self.Y_to_outputs((arc_preds, rel_preds, mask))
         sents = []
         for x, y in zip(xs, ys):

@@ -243,71 +243,81 @@ def tokenize_english(sentence):
        in the range from yocto, y (10^-24) to yotta, Y (10^+24)).
     6. Subscript digits are attached if prefixed with letters that look like a chemical formula.
     """
-    pruned = HYPHENATED_LINEBREAK.sub(r'\1\2', sentence)
-    tokens = [token for span in space_tokenizer(pruned) for
-              token in tokenize_english.split(span) if token]
+    if not sentence:
+        return []
+    flat = not isinstance(sentence, list)
+    if flat:
+        sents = [sentence]
+    else:
+        sents = sentence
+    results = []
+    for sentence in sents:
+        pruned = HYPHENATED_LINEBREAK.sub(r'\1\2', sentence)
+        tokens = [token for span in space_tokenizer(pruned) for
+                  token in tokenize_english.split(span) if token]
 
-    # splice the sentence terminal off the last word/token if it has any at its borders
-    # only look for the sentence terminal in the last three tokens
-    for idx, word in enumerate(reversed(tokens[-3:]), 1):
-        if (tokenize_english.match(word) and not APO_MATCHER.match(word)) or \
-                any(t in word for t in SENTENCE_TERMINALS):
-            last = len(word) - 1
+        # splice the sentence terminal off the last word/token if it has any at its borders
+        # only look for the sentence terminal in the last three tokens
+        for idx, word in enumerate(reversed(tokens[-3:]), 1):
+            if (tokenize_english.match(word) and not APO_MATCHER.match(word)) or \
+                    any(t in word for t in SENTENCE_TERMINALS):
+                last = len(word) - 1
 
-            if 0 == last or u'...' == word:
-                # any case of "..." or any single char (last == 0)
-                pass  # leave the token as it is
-            elif any(word.rfind(t) == last for t in SENTENCE_TERMINALS):
-                # "stuff."
-                tokens[-idx] = word[:-1]
-                tokens.insert(len(tokens) - idx + 1, word[-1])
-            elif any(word.find(t) == 0 for t in SENTENCE_TERMINALS):
-                # ".stuff"
-                tokens[-idx] = word[0]
-                tokens.insert(len(tokens) - idx + 1, word[1:])
+                if 0 == last or u'...' == word:
+                    # any case of "..." or any single char (last == 0)
+                    pass  # leave the token as it is
+                elif any(word.rfind(t) == last for t in SENTENCE_TERMINALS):
+                    # "stuff."
+                    tokens[-idx] = word[:-1]
+                    tokens.insert(len(tokens) - idx + 1, word[-1])
+                elif any(word.find(t) == 0 for t in SENTENCE_TERMINALS):
+                    # ".stuff"
+                    tokens[-idx] = word[0]
+                    tokens.insert(len(tokens) - idx + 1, word[1:])
 
-            break
+                break
 
-    # keep splicing off any dangling commas and (semi-) colons
-    dirty = True
-    while dirty:
-        dirty = False
+        # keep splicing off any dangling commas and (semi-) colons
+        dirty = True
+        while dirty:
+            dirty = False
 
-        for idx, word in enumerate(reversed(tokens), 1):
-            while len(word) > 1 and word[-1] in u',;:':
-                char = word[-1]  # the dangling comma/colon
-                word = word[:-1]
-                tokens[-idx] = word
-                tokens.insert(len(tokens) - idx + 1, char)
-                idx += 1
-                dirty = True
-            if dirty:
-                break  # restart check to avoid index errors
+            for idx, word in enumerate(reversed(tokens), 1):
+                while len(word) > 1 and word[-1] in u',;:':
+                    char = word[-1]  # the dangling comma/colon
+                    word = word[:-1]
+                    tokens[-idx] = word
+                    tokens.insert(len(tokens) - idx + 1, char)
+                    idx += 1
+                    dirty = True
+                if dirty:
+                    break  # restart check to avoid index errors
 
-    # split concat words
-    chunks = []
-    for token in tokens:
-        t = MAP_CONCAT_WORD.get(token.lower(), None)
-        if t:
-            i = 0
-            for j in t:
-                chunks.append(token[i:j])
-                i = j
-        else:
-            chunks.append(token)
-    tokens = chunks
-    # split APOSTROPHE
-    chunks = []
-    for token in tokens:
-        m = RE_APOSTROPHE.search(token)
-        if m:
-            chunks.append(token[:m.start(1)])
-            chunks.append(token[m.start(1):m.end(1)])
-            chunks.append(token[m.end(1):])
-        else:
-            chunks.append(token)
-    tokens = chunks
-    return tokens
+        # split concat words
+        chunks = []
+        for token in tokens:
+            t = MAP_CONCAT_WORD.get(token.lower(), None)
+            if t:
+                i = 0
+                for j in t:
+                    chunks.append(token[i:j])
+                    i = j
+            else:
+                chunks.append(token)
+        tokens = chunks
+        # split APOSTROPHE
+        chunks = []
+        for token in tokens:
+            m = RE_APOSTROPHE.search(token)
+            if m:
+                chunks.append(token[:m.start(1)])
+                chunks.append(token[m.start(1):m.end(1)])
+                chunks.append(token[m.end(1):])
+            else:
+                chunks.append(token)
+        tokens = chunks
+        results.append(tokens)
+    return results[0] if flat else results
 
 
 @_matches(r"""

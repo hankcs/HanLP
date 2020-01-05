@@ -5,7 +5,7 @@ The multilingual NLP library for researchers and companies, built on TensorFlow 
  ## Installation
 
 ```bash
-pip3 install hanlp
+pip install hanlp
 ```
 
 HanLP requires Python 3.6 or later. GPU/TPU is suggested but not mandatory.
@@ -14,28 +14,28 @@ HanLP requires Python 3.6 or later. GPU/TPU is suggested but not mandatory.
 
 ### Tokenization
 
-For an end user, the basic flow starts with loading some pretrained models from disk or Internet. Each model has an identifier, which could be one path on your computer or an URL to any public servers. Here, let's load a tokenizer called `CTB6_CONVSEG` with 2 lines of code.
+For an end user, the basic workflow starts with loading some pretrained models from disk or Internet. Each model has an identifier, which could be one path on your computer or an URL to any public servers. Here, let's load a tokenizer called `CTB6_CONVSEG` with 2 lines of code.
 
 ```python
 >>> import hanlp
 >>> tokenizer = hanlp.load('CTB6_CONVSEG')
 ```
 
-HanLP will automatically resolve the identifier `CTB6_CONVSEG` to an [URL](https://file.hankcs.com/hanlp/cws/ctb6-convseg-cws_20191230_184525.zip), then download it and unzip it, as shown below.
+HanLP will automatically resolve the identifier `CTB6_CONVSEG` to an [URL](https://file.hankcs.com/hanlp/cws/ctb6-convseg-cws_20191230_184525.zip), then download it and unzip it. Due to the huge network traffic, it could fail temporally then you need to retry or manually download and unzip it to the path shown in your terminal . 
 
-```
-Downloading https://file.hankcs.com/hanlp/cws/ctb6-convseg-cws_20191230_184525.zip to /home/hankcs/.hanlp/cws/ctb6-convseg-cws_20191230_184525.zip
-100.00%, 7.4 MB/7.4 MB, 64.1 MB/s, ETA 0 s      
-Extracting /home/hankcs/.hanlp/cws/ctb6-convseg-cws_20191230_184525.zip to /home/hankcs/.hanlp/cws	
-```
-
-- Due to the huge network traffic (especially from mainland China), it could fail temporally then you need to retry or manually download and unzip it to the path shown in your terminal . 
-
-Once the model is loaded, you can then tokenize one sentence through `predict`:
+Once the model is loaded, you can then tokenize one sentence through calling the tokenizer as a function:
 
 ```python
->>> tokenizer.predict('商品和服务')
+>>> tokenizer('商品和服务')
 ['商品', '和', '服务']
+```
+
+If you're processing English, a rule based function should be good enough.
+
+```python
+>>> tokenizer = hanlp.utils.rules.tokenize_english
+>>> tokenizer('Mr. Hankcs bought hankcs.com for 1.5 thousand dollars.')
+['Mr.', 'Hankcs', 'bought', 'hankcs.com', 'for', '1.5', 'thousand', 'dollars', '.']
 ```
 
 #### Going Further
@@ -43,7 +43,7 @@ Once the model is loaded, you can then tokenize one sentence through `predict`:
 However, you can predict much faster. In the era of deep learning, batched computation usually gives a linear scale-up factor of `batch_size`. So, you can predict multiple sentences at once, at the cost of GPU memory.
 
 ```python
->>> tokenizer.predict(['萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。',
+>>> tokenizer(['萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。',
                        '上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。'])
 [['萨哈夫', '说', '，', '伊拉克', '将', '同', '联合国', '销毁', '伊拉克', '大规模', '杀伤性', '武器', '特别', '委员会', '继续', '保持', '合作', '。'],
  ['上海', '华安', '工业', '（', '集团', '）', '公司', '董事长', '谭旭光', '和', '秘书', '张晚霞', '来到', '美国', '纽约', '现代', '艺术', '博物馆', '参观', '。']]
@@ -65,8 +65,18 @@ That's it! You're now ready to employ the latest DL models from HanLP in your re
 Taggers take lists of tokens as input, then outputs one tag for each token.
 
 ```python
+>>> tagger = hanlp.load(hanlp.pretrained.pos.PTB_POS_RNN_FASTTEXT_EN)
+>>> tagger([['I', 'banked', '2', 'dollars', 'in', 'a', 'bank', '.'],
+            ['Is', 'this', 'the', 'future', 'of', 'chamber', 'music', '?']])
+[['PRP', 'VBD', 'CD', 'NNS', 'IN', 'DT', 'NN', '.'], 
+ ['VBZ', 'DT', 'DT', 'NN', 'IN', 'NN', 'NN', '.']]
+```
+
+The language solely depends on which model you load.
+
+```python
 >>> tagger = hanlp.load(hanlp.pretrained.pos.CTB5_POS_RNN_FASTTEXT_ZH)
->>> tagger.predict(['我', '的', '希望', '是', '希望', '和平'])
+>>> tagger(['我', '的', '希望', '是', '希望', '和平'])
 ['PN', 'DEG', 'NN', 'VC', 'VV', 'NN']
 ```
 
@@ -77,25 +87,31 @@ Did you notice the different pos tags for the same word `希望` ("hope")? The f
 The NER component requires tokenized tokens as input, then outputs the entities along with their types and spans.
 
 ```python
->>> recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_ZH)
->>> recognizer.predict([list('上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。'),
-                        list('萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。')])
-[[('上海华安工业（集团）公司', 'NT', 0, 12), ('谭旭光', 'NR', 15, 18), ('张晚霞', 'NR', 21, 24), ('美国', 'NS', 26, 28), ('纽约现代艺术博物馆', 'NS', 28, 37)], 
- [('萨哈夫', 'NR', 0, 3), ('伊拉克', 'NS', 5, 8), ('联合国销毁伊拉克大规模杀伤性武器特别委员会', 'NT', 10, 31)]]
+>>> recognizer = hanlp.load(hanlp.pretrained.ner.CONLL03_NER_BERT_BASE_UNCASED_EN)
+>>> recognizer(["President", "Obama", "is", "speaking", "at", "the", "White", "House"])
+[('Obama', 'PER', 1, 2), ('White House', 'LOC', 6, 8)]
 ```
 
 Recognizers take lists of tokens as input, so don't forget to wrap your sentence with `list`. For the outputs, each tuple stands for `(entity, type, begin, end)`.
 
+```python
+>>> recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_ZH)
+>>> recognizer([list('上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。'),
+                list('萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。')])
+[[('上海华安工业（集团）公司', 'NT', 0, 12), ('谭旭光', 'NR', 15, 18), ('张晚霞', 'NR', 21, 24), ('美国', 'NS', 26, 28), ('纽约现代艺术博物馆', 'NS', 28, 37)], 
+ [('萨哈夫', 'NR', 0, 3), ('伊拉克', 'NS', 5, 8), ('联合国销毁伊拉克大规模杀伤性武器特别委员会', 'NT', 10, 31)]]
+```
+
 This `MSRA_NER_BERT_BASE_CN` is the state-of-the-art NER model based on BERT[^bert]. You can read its evaluation log through:
 
 ```bash
-$ cat /home/hankcs/.hanlp/ner/ner_bert_base_msra_20191230_205748/test.log 
-19-12-30 02:37:28 INFO Evaluation results for test.tsv - loss: 1.5659 - f1: 0.9506 - speed: 48.40 sample/sec 
-processed 168612 tokens with 5268 phrases; found: 5346 phrases; correct: 5045.
-accuracy:  99.34%; precision:  94.37%; recall:  95.77%; FB1:  95.06
-               NR: precision:  97.05%; recall:  98.43%; FB1:  97.73  1356
-               NS: precision:  96.08%; recall:  95.83%; FB1:  95.95  2628
-               NT: precision:  88.40%; recall:  92.90%; FB1:  90.59  1362
+$ cat ~/.hanlp/ner/ner_bert_base_msra_20200104_185735/test.log 
+20-01-04 18:55:02 INFO Evaluation results for test.tsv - loss: 1.4949 - f1: 0.9522 - speed: 113.37 sample/sec 
+processed 177342 tokens with 5268 phrases; found: 5316 phrases; correct: 5039.
+accuracy:  99.37%; precision:  94.79%; recall:  95.65%; FB1:  95.22
+               NR: precision:  96.39%; recall:  97.83%; FB1:  97.10  1357
+               NS: precision:  96.70%; recall:  95.79%; FB1:  96.24  2610
+               NT: precision:  89.47%; recall:  93.13%; FB1:  91.27  1349
 ```
 
 ### Syntactic Dependency Parsing
@@ -103,8 +119,23 @@ accuracy:  99.34%; precision:  94.37%; recall:  95.77%; FB1:  95.06
 Parsing lies in the core of NLP. Without parsing, one cannot claim to be a NLP researcher or engineer. But using HanLP, it takes no more than two lines of code.
 
 ```python
+>>> syntactic_parser = hanlp.load(hanlp.pretrained.dep.PTB_BIAFFINE_DEP_EN)
+>>> print(syntactic_parser([('Is', 'VBZ'), ('this', 'DT'), ('the', 'DT'), ('future', 'NN'), ('of', 'IN'), ('chamber', 'NN'), ('music', 'NN'), ('?', '.')]))
+1	Is	_	VBZ	_	_	4	cop	_	_
+2	this	_	DT	_	_	4	nsubj	_	_
+3	the	_	DT	_	_	4	det	_	_
+4	future	_	NN	_	_	0	root	_	_
+5	of	_	IN	_	_	4	prep	_	_
+6	chamber	_	NN	_	_	7	nn	_	_
+7	music	_	NN	_	_	5	pobj	_	_
+8	?	_	.	_	_	4	punct	_	_
+```
+
+Parsers take both tokens and part-of-speech tags as input. The output is a tree in CoNLL-X format[^conllx], which can be manipulated through the `CoNLLSentence` class. Similar codes for Chinese:
+
+```python
 >>> syntactic_parser = hanlp.load(hanlp.pretrained.dep.CTB7_BIAFFINE_DEP_ZH)
->>> print(syntactic_parser.predict([('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]))
+>>> print(syntactic_parser([('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]))
 1	中国	_	NR	_	_	2	nsubj	_	_
 2	批准	_	VV	_	_	0	root	_	_
 3	设立	_	VV	_	_	2	ccomp	_	_
@@ -116,15 +147,31 @@ Parsing lies in the core of NLP. Without parsing, one cannot claim to be a NLP r
 9	企业	_	NN	_	_	3	dobj	_	_
 ```
 
-Parsers take both tokens and part-of-speech tags as input. The output is a tree in CoNLL-X format[^conllx], which can be manipulated through the `CoNLLSentence` class.
-
 ### Semantic Dependency Parsing
 
-A graph is a generalized tree, which conveys more information about the semantic relations between tokens. HanLP implements the biaffine[^biaffine] model which delivers the SOTA performance.
+A graph is a generalized tree, which conveys more information about the semantic relations between tokens. 
+
+```python
+>>> semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL15_PAS_BIAFFINE_EN)
+>>> print(semantic_parser([('Is', 'VBZ'), ('this', 'DT'), ('the', 'DT'), ('future', 'NN'), ('of', 'IN'), ('chamber', 'NN'), ('music', 'NN'), ('?', '.')]))
+1	Is	_	VBZ	_	_	0	ROOT	_	_
+2	this	_	DT	_	_	1	verb_ARG1	_	_
+3	the	_	DT	_	_	0	ROOT	_	_
+4	future	_	NN	_	_	1	verb_ARG2	_	_
+4	future	_	NN	_	_	3	det_ARG1	_	_
+4	future	_	NN	_	_	5	prep_ARG1	_	_
+5	of	_	IN	_	_	0	ROOT	_	_
+6	chamber	_	NN	_	_	0	ROOT	_	_
+7	music	_	NN	_	_	5	prep_ARG2	_	_
+7	music	_	NN	_	_	6	noun_ARG1	_	_
+8	?	_	.	_	_	0	ROOT	_	_
+```
+
+HanLP implements the biaffine[^biaffine] model which delivers the SOTA performance.
 
 ```python
 >>> semantic_parser = hanlp.load(SEMEVAL16_NEWS_BIAFFINE_ZH)
->>> print(semantic_parser.predict([('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]))
+>>> print(semantic_parser([('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]))
 1	中国	_	NR	_	_	2	Agt	_	_
 1	中国	_	NR	_	_	3	Agt	_	_
 2	批准	_	VV	_	_	0	Aft	_	_
@@ -161,6 +208,33 @@ Notice that the first pipe is an old-school Python function `split_sentence`, wh
 ```
 
 This time, let's feed in a whole document, which might be the scenario in your daily work.
+
+```python
+{
+  "sentences": [
+    "Jobs and Wozniak co-founded Apple in 1976 to sell Wozniak's Apple I personal computer.",
+    "Together the duo gained fame and wealth a year later with the Apple II."
+  ],
+  "tokens": [
+    ["Jobs", "and", "Wozniak", "co-founded", "Apple", "in", "1976", "to", "sell", "Wozniak", "'s", "", "Apple", "I", "personal", "computer", "."],
+    ["Together", "the", "duo", "gained", "fame", "and", "wealth", "a", "year", "later", "with", "the", "Apple", "II", "."]
+  ],
+  "part_of_speech_tags": [
+    ["NNS", "CC", "NNP", "VBD", "NNP", "IN", "CD", "TO", "VB", "NNP", "POS", "``", "NNP", "PRP", "JJ", "NN", "."],
+    ["IN", "DT", "NN", "VBD", "NN", "CC", "NN", "DT", "NN", "RB", "IN", "DT", "NNP", "NNP", "."]
+  ],
+  "syntactic_dependencies": [
+    [[4, "nsubj"], [1, "cc"], [1, "conj"], [0, "root"], [4, "dobj"], [4, "prep"], [6, "pobj"], [9, "aux"], [4, "xcomp"], [16, "poss"], [10, "possessive"], [16, "punct"], [16, "nn"], [16, "nn"], [16, "amod"], [9, "dobj"], [4, "punct"]],
+    [[4, "advmod"], [3, "det"], [4, "nsubj"], [0, "root"], [4, "dobj"], [5, "cc"], [5, "conj"], [9, "det"], [10, "npadvmod"], [4, "advmod"], [4, "prep"], [14, "det"], [14, "nn"], [11, "pobj"], [4, "punct"]]
+  ],
+  "semantic_dependencies": [
+    [[[2], ["coord_ARG1"]], [[4, 9], ["verb_ARG1", "verb_ARG1"]], [[2], ["coord_ARG2"]], [[6, 8], ["prep_ARG1", "comp_MOD"]], [[4], ["verb_ARG2"]], [[0], ["ROOT"]], [[6], ["prep_ARG2"]], [[0], ["ROOT"]], [[8], ["comp_ARG1"]], [[11], ["poss_ARG2"]], [[0], ["ROOT"]], [[0], ["ROOT"]], [[0], ["ROOT"]], [[0], ["ROOT"]], [[0], ["ROOT"]], [[9, 11, 12, 14, 15], ["verb_ARG3", "poss_ARG1", "punct_ARG1", "noun_ARG1", "adj_ARG1"]], [[0], ["ROOT"]]],
+    [[[0], ["ROOT"]], [[0], ["ROOT"]], [[1, 2, 4], ["adj_ARG1", "det_ARG1", "verb_ARG1"]], [[1, 10], ["adj_ARG1", "adj_ARG1"]], [[6], ["coord_ARG1"]], [[4], ["verb_ARG2"]], [[6], ["coord_ARG2"]], [[0], ["ROOT"]], [[8], ["det_ARG1"]], [[9], ["noun_ARG1"]], [[0], ["ROOT"]], [[0], ["ROOT"]], [[0], ["ROOT"]], [[11, 12, 13], ["prep_ARG2", "det_ARG1", "noun_ARG1"]], [[0], ["ROOT"]]]
+  ]
+}
+```
+
+The output for Chinese looks similar to the English one.
 
 ```python
 >>> print(pipeline(text))
@@ -245,7 +319,7 @@ classifier = BertTextClassifier(BertTextTransform(y_column=0))
 classifier.fit(CHNSENTICORP_ERNIE_TRAIN, CHNSENTICORP_ERNIE_VALID, save_dir,
                bert='bert-base-chinese')
 classifier.load(save_dir)
-print(classifier.predict('前台客房服务态度非常好！早餐很丰富，房价很干净。再接再厉！'))
+print(classifier('前台客房服务态度非常好！早餐很丰富，房价很干净。再接再厉！'))
 classifier.evaluate(CHNSENTICORP_ERNIE_TEST, save_dir=save_dir)
 ```
 

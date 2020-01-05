@@ -4,4 +4,5 @@
 import hanlp
 
 tagger = hanlp.load(hanlp.pretrained.pos.PTB_POS_RNN_FASTTEXT_EN)
-print(tagger(['Is', 'this', 'the', 'future', 'of', 'chamber', 'music', '?']))
+print(tagger([['I', 'banked', '2', 'dollars', 'in', 'a', 'bank', '.'],
+              ['Is', 'this', 'the', 'future', 'of', 'chamber', 'music', '?']]))

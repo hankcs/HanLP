@@ -13,5 +13,5 @@ sent = [('Is', 'VBZ'),
         ('chamber', 'NN'),
         ('music', 'NN'),
         ('?', '.')]
-tree = semantic_parser.predict(sent)  # type:CoNLLSentence
+tree = semantic_parser(sent)  # type:CoNLLSentence
 print(tree)
