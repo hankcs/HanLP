@@ -7,5 +7,7 @@ SEMEVAL16_NEWS_BIAFFINE_ZH = HANLP_URL + 'sdp/semeval16-news-biaffine_20191231_2
 SEMEVAL16_TEXT_BIAFFINE_ZH = HANLP_URL + 'sdp/semeval16-text-biaffine_20200101_002257.zip'
 
 SEMEVAL15_PAS_BIAFFINE_EN = HANLP_URL + 'sdp/semeval15_biaffine_pas_20200103_152405.zip'
+SEMEVAL15_PSD_BIAFFINE_EN = HANLP_URL + 'sdp/semeval15_biaffine_psd_20200106_123009.zip'
+SEMEVAL15_DM_BIAFFINE_EN = HANLP_URL + 'sdp/semeval15_biaffine_dm_20200106_122808.zip'
 
 ALL = {}

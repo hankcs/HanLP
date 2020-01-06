@@ -4,7 +4,10 @@
 import hanlp
 from hanlp.components.parsers.conll import CoNLLSentence
 
+# semeval15 offers three independent annotations over the Penn Treebank (PTB)
 semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL15_PAS_BIAFFINE_EN)
+# semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL15_DM_BIAFFINE_EN)
+# semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL15_PSD_BIAFFINE_EN)
 sent = [('Is', 'VBZ'),
         ('this', 'DT'),
         ('the', 'DT'),

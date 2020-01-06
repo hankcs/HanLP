@@ -238,7 +238,7 @@ class BiaffineDependencyParser(KerasComponent):
 
         return arc_preds, rel_preds
 
-    def evaluate_dataset(self, tst_data, callbacks, output):
+    def evaluate_dataset(self, tst_data, callbacks, output, num_batches):
         arc_loss, rel_loss = self.build_loss(**self.config)
         callbacks = [self.build_progbar(self.config['metrics'])]
         steps_per_epoch = len(list(iter(tst_data)))
