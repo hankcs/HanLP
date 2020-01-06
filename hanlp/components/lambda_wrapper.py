@@ -14,6 +14,9 @@ class LambdaComponent(Component):
         self.meta['function'] = class_path_of(function)
 
     def predict(self, data: Any, **kwargs):
+        unpack = kwargs.pop('_hanlp_unpack', None)
+        if unpack:
+            return self.function(*data, **kwargs)
         return self.function(data, **kwargs)
 
     @staticmethod

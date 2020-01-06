@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2019-12-31 00:22
 import types
-from typing import Callable, List, Generator, Union, Any
+from typing import Callable, List, Generator, Union, Any, Tuple, Iterable
 from hanlp.components.lambda_wrapper import LambdaComponent
 from hanlp.common.component import Component
 from hanlp.common.document import Document
@@ -29,9 +29,14 @@ class Pipe(Component):
     # noinspection PyShadowingBuiltins
     def predict(self, doc: Document, **kwargs) -> Document:
 
+        unpack = False
         if self.input_key:
             if isinstance(self.input_key, (tuple, list)):
-                input = list(list(zip(*sent)) for sent in zip(*[doc[key] for key in self.input_key]))
+                if isinstance(self.component, LambdaComponent):  # assume functions take multiple arguments
+                    input = [doc[key] for key in self.input_key]
+                    unpack = True
+                else:
+                    input = list(list(zip(*sent)) for sent in zip(*[doc[key] for key in self.input_key]))
             else:
                 input = doc[self.input_key]
         else:
@@ -39,13 +44,19 @@ class Pipe(Component):
 
         if self.kwargs:
             kwargs.update(self.kwargs)
+        if unpack:
+            kwargs['_hanlp_unpack'] = True
         output = self.component(input, **kwargs)
         if isinstance(output, types.GeneratorType):
             output = list(output)
         if self.output_key:
             if not isinstance(doc, Document):
                 doc = Document()
-            doc[self.output_key] = output
+            if isinstance(self.output_key, tuple):
+                for key, value in zip(self.output_key, output):
+                    doc[key] = value
+            else:
+                doc[self.output_key] = output
             return doc
         return output
 
@@ -65,11 +76,13 @@ class Pipeline(Component, list):
         if pipes:
             self.extend(pipes)
 
-    def append(self, component: Callable, input_key: Union[str, List[str]] = None, output_key: str = None, **kwargs):
+    def append(self, component: Callable, input_key: Union[str, Iterable[str]] = None,
+               output_key: Union[str, Iterable[str]] = None, **kwargs):
         self.insert(len(self), component, input_key, output_key, **kwargs)
         return self
 
-    def insert(self, index: int, component: Callable, input_key: Union[str, List[str]] = None, output_key: str = None,
+    def insert(self, index: int, component: Callable, input_key: Union[str, Iterable[str]] = None,
+               output_key: Union[str, Iterable[str]] = None,
                **kwargs):
         if not input_key and len(self):
             input_key = self[-1].output_key
