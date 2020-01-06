@@ -102,7 +102,7 @@ Recognizers take lists of tokens as input, so don't forget to wrap your sentence
  [('萨哈夫', 'NR', 0, 3), ('伊拉克', 'NS', 5, 8), ('联合国销毁伊拉克大规模杀伤性武器特别委员会', 'NT', 10, 31)]]
 ```
 
-This `MSRA_NER_BERT_BASE_CN` is the state-of-the-art NER model based on BERT[^bert]. You can read its evaluation log through:
+This `MSRA_NER_BERT_BASE_ZH` is the state-of-the-art NER model based on BERT[^bert]. You can read its evaluation log through:
 
 ```bash
 $ cat ~/.hanlp/ner/ner_bert_base_msra_20200104_185735/test.log 
@@ -207,9 +207,10 @@ Notice that the first pipe is an old-school Python function `split_sentence`, wh
 [None->LambdaComponent->sentences, sentences->NgramConvTokenizer->tokens, tokens->RNNPartOfSpeechTagger->part_of_speech_tags, ('tokens', 'part_of_speech_tags')->BiaffineDependencyParser->syntactic_dependencies, ('tokens', 'part_of_speech_tags')->BiaffineSemanticDependencyParser->semantic_dependencies]
 ```
 
-This time, let's feed in a whole document, which might be the scenario in your daily work.
+This time, let's feed in a whole document `text`, which might be the scenario in your daily work.
 
 ```python
+>>> print(pipeline(text))
 {
   "sentences": [
     "Jobs and Wozniak co-founded Apple in 1976 to sell Wozniak's Apple I personal computer.",
@@ -315,9 +316,9 @@ Similarly, you can train a sentiment classifier to classify the comments of hote
 
 ```python
 save_dir = 'data/model/classification/chnsenticorp_bert_base'
-classifier = BertTextClassifier(BertTextTransform(y_column=0))
+classifier = TransformerClassifier(TransformerTextTransform(y_column=0))
 classifier.fit(CHNSENTICORP_ERNIE_TRAIN, CHNSENTICORP_ERNIE_VALID, save_dir,
-               bert='bert-base-chinese')
+               transformer='chinese_L-12_H-768_A-12')
 classifier.load(save_dir)
 print(classifier('前台客房服务态度非常好！早餐很丰富，房价很干净。再接再厉！'))
 classifier.evaluate(CHNSENTICORP_ERNIE_TEST, save_dir=save_dir)
