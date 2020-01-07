@@ -1,6 +1,16 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-06-13 18:05
+import os
+
+if not os.environ.get('HANLP_SHOW_TF_LOG', None):
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+    os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '3'
+    import absl.logging, logging
+
+    logging.getLogger('tensorflow').setLevel(logging.ERROR)
+    logging.root.removeHandler(absl.logging._absl_handler)
+    exec('absl.logging._warn_preinit_stderr = False')  # prevent exporting _warn_preinit_stderr
 
 import hanlp.callbacks
 import hanlp.common
@@ -14,17 +24,6 @@ import hanlp.pretrained
 import hanlp.utils
 
 from hanlp.version import __version__
-
-import os
-
-if not os.environ.get('HANLP_SHOW_TF_LOG', None):
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-    os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '3'
-    import absl.logging, logging
-
-    logging.getLogger('tensorflow').setLevel(logging.ERROR)
-    logging.root.removeHandler(absl.logging._absl_handler)
-    exec('absl.logging._warn_preinit_stderr = False')  # prevent exporting _warn_preinit_stderr
 
 if not os.environ.get('HANLP_GREEDY_GPU', None):
     exec('from hanlp.utils.tf_util import nice_gpu')
