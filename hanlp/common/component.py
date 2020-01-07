@@ -21,7 +21,7 @@ from hanlp.metrics.chunking.iobes import IOBES_F1
 from hanlp.optimizers.adamw.optimization import AdamWeightDecay
 from hanlp.utils import io_util
 from hanlp.utils.io_util import get_resource, tempdir_human, save_json, load_json
-from hanlp.utils.log_util import init_logger
+from hanlp.utils.log_util import init_logger, logger
 from hanlp.utils.reflection import class_path_of, str_to_type
 from hanlp.utils.string_util import format_metrics, format_scores
 from hanlp.utils.tf_util import size_of_dataset, summary_of_model, get_callback_by_class
@@ -478,3 +478,11 @@ class KerasComponent(Component, ABC):
         assert 'load_path' in meta, f'{meta} doesn\'t contain load_path field'
         obj.load(meta['load_path'])
         return obj
+
+    def export_model_for_serving(self, export_dir=None):
+        assert self.model, 'You have to fit or load a model before exporting it'
+        if not export_dir:
+            assert 'load_path' in self.meta, 'When not specifying save_dir, load_path has to present'
+            export_dir = get_resource(self.meta['load_path'])
+        tf.saved_model.save(self.model, export_dir)
+        logger.info(f'Successfully exported model to {export_dir}')

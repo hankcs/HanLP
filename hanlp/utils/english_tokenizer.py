@@ -99,8 +99,8 @@ def split_possessive_markers(tokens):
     """
     A function to split possessive markers at the end of alphanumeric (and hyphenated) tokens.
 
-    Takes the output of any of the tokenizer functions and produces and updated list.
-    To use it, simply wrap the tokenizer function, for example::
+    Takes the output of any of the tagger functions and produces and updated list.
+    To use it, simply wrap the tagger function, for example::
 
     >>> my_sentence = "This is Fred's latest book."
     >>> split_possessive_markers(tokenize_english(my_sentence))
@@ -131,7 +131,7 @@ def split_contractions(tokens):
     """
     A function to split apostrophe contractions at the end of alphanumeric (and hyphenated) tokens.
 
-    Takes the output of any of the tokenizer functions and produces and updated list.
+    Takes the output of any of the tagger functions and produces and updated list.
 
     :param tokens: a list of tokens
     :returns: an updated list if a split was made or the original list otherwise
@@ -183,7 +183,7 @@ def space_tokenizer(sentence):
 @_matches(r'(%s+)' % ALNUM)
 def symbol_tokenizer(sentence):
     """
-    The symbol tokenizer extends the :func:`space_tokenizer` by separating alphanumerics.
+    The symbol tagger extends the :func:`space_tokenizer` by separating alphanumerics.
 
     Separates alphanumeric Unicode character sequences in already space-split tokens.
     """
@@ -218,8 +218,8 @@ def symbol_tokenizer(sentence):
                   hyphen=HYPHEN, letter=LETTER, number=NUMBER))
 def tokenize_english(sentence):
     """
-    A modified version of the segtok tokenizer: https://github.com/fnl/segtok
-    This tokenizer extends the alphanumeric :func:`symbol_tokenizer` by splitting fewer cases:
+    A modified version of the segtok tagger: https://github.com/fnl/segtok
+    This tagger extends the alphanumeric :func:`symbol_tokenizer` by splitting fewer cases:
 
     1. Dots appearing after a letter are maintained as part of the word, except for the last word
        in a sentence if that dot is the sentence terminal. Therefore, abbreviation marks (words
@@ -343,7 +343,7 @@ def tokenize_english(sentence):
     """)
 def web_tokenizer(sentence):
     """
-    The web tokenizer works like the :func:`word_tokenizer`, but does not split URIs or
+    The web tagger works like the :func:`word_tokenizer`, but does not split URIs or
     e-mail addresses. It also un-escapes all escape sequences (except in URIs or email addresses).
     """
     return [token for i, span in enumerate(web_tokenizer.split(sentence))

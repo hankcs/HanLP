@@ -93,10 +93,10 @@ class TransformerTransform(TsvTaggingFormat, Transform):
             yield (input_ids, input_mask, segment_ids), label_ids
 
     def x_to_idx(self, x) -> Union[tf.Tensor, Tuple]:
-        raise NotImplementedError('transformers has its own tokenizer, not need to convert idx for x')
+        raise NotImplementedError('transformers has its own tagger, not need to convert idx for x')
 
     def y_to_idx(self, y) -> tf.Tensor:
-        raise NotImplementedError('transformers has its own tokenizer, not need to convert idx for y')
+        raise NotImplementedError('transformers has its own tagger, not need to convert idx for y')
 
     def input_is_single_sample(self, input: Union[List[str], List[List[str]]]) -> bool:
         return isinstance(input[0], str)

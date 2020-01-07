@@ -39,7 +39,7 @@ def convert_examples_to_features(
     for word, label in zip(words, labels):
         word_tokens = tokenizer.tokenize(word)
         if not word_tokens:
-            # some wired chars cause the tokenizer to return empty list
+            # some wired chars cause the tagger to return empty list
             word_tokens = [tokenizer.unk_token] * len(word)
         tokens.extend(word_tokens)
         # Use the real label id for the first token of the word, and padding ids for the remaining tokens

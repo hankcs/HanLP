@@ -29,7 +29,7 @@ tokenizer.fit(SIGHAN2005_PKU_TRAIN,
               window_size=0,
               weight_norm=True)
 tokenizer.evaluate(SIGHAN2005_PKU_TEST, save_dir=save_dir, output=False)
-# print(tokenizer.tag(list('中央民族乐团离开北京前往维也纳')))
-# print(tokenizer.predict('中央民族乐团离开北京前往维也纳'))
+# print(tagger.tag(list('中央民族乐团离开北京前往维也纳')))
+# print(tagger.predict('中央民族乐团离开北京前往维也纳'))
 print(tokenizer.predict(['中央民族乐团离开北京前往维也纳', '商品和服务']))
 print(f'Model saved in {save_dir}')
