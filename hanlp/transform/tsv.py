@@ -126,14 +126,11 @@ class TSVTaggingTransform(TsvTaggingFormat, Transform):
 
     def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False,
                      inputs=None, X=None, **kwargs) -> Iterable:
-        masks = Y._keras_mask if hasattr(Y, '_keras_mask') else tf.ones_like(Y)
         if not gold:
             Y = tf.argmax(Y, axis=2)
-        for ys, mask in zip(Y, masks):
+        for ys, xs in zip(Y, inputs):
             tags = []
-            for y, m in zip(ys, mask):
-                if not m:
-                    break
+            for y, x in zip(ys, xs):
                 tags.append(self.tag_vocab.idx_to_token[int(y)])
             yield tags
 
