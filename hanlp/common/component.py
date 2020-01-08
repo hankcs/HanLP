@@ -479,10 +479,29 @@ class KerasComponent(Component, ABC):
         obj.load(meta['load_path'])
         return obj
 
-    def export_model_for_serving(self, export_dir=None):
+    def export_model_for_serving(self, export_dir=None, version=1, overwrite=False, show_hint=False):
         assert self.model, 'You have to fit or load a model before exporting it'
         if not export_dir:
             assert 'load_path' in self.meta, 'When not specifying save_dir, load_path has to present'
             export_dir = get_resource(self.meta['load_path'])
-        tf.saved_model.save(self.model, export_dir)
+        model_path = os.path.join(export_dir, str(version))
+        if os.path.isdir(model_path) and not overwrite:
+            logger.info(f'{model_path} exists, skip since overwrite = {overwrite}')
+            return export_dir
+        logger.info(f'Exporting to {export_dir} ...')
+        tf.saved_model.save(self.model, model_path)
         logger.info(f'Successfully exported model to {export_dir}')
+        if show_hint:
+            logger.info(f'You can serve it through \n'
+                        f'tensorflow_model_server --model_name={os.path.splitext(os.path.basename(self.meta["load_path"]))[0]} '
+                        f'--model_base_path={export_dir} --rest_api_port=8888')
+        return export_dir
+
+    def serve(self, export_dir=None, grpc_port=8500, rest_api_port=0):
+        export_dir = self.export_model_for_serving(export_dir)
+        del self.model  # free memory
+        cmd = f'nohup tensorflow_model_server --model_name={os.path.splitext(os.path.basename(self.meta["load_path"]))[0]} ' \
+              f'--model_base_path={export_dir} --port={grpc_port} --rest_api_port={rest_api_port} ' \
+              f'>serve.log 2>&1 &'
+        logger.info(f'Running ...\n{cmd}')
+        os.system(cmd)

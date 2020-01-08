@@ -6,4 +6,4 @@ from hanlp.common.component import KerasComponent
 
 tagger: KerasComponent = hanlp.load(hanlp.pretrained.pos.CTB5_POS_RNN)
 print(tagger('商品 和 服务'.split()))
-tagger.export_model_for_serving()
+tagger.serve()
