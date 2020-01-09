@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-29 15:32
+from hanlp.utils.log_util import logger
 
 
 def config_is(config, model='bert'):
@@ -49,6 +50,11 @@ def convert_examples_to_features(
     # Account for [CLS] and [SEP] with "- 2" and with "- 3" for RoBERTa.
     special_tokens_count = 3 if sep_token_extra else 2
     if len(tokens) > max_seq_length - special_tokens_count:
+        logger.warning(
+            f'Input tokens {words} exceed the max sequence length of {max_seq_length - special_tokens_count}. '
+            f'The exceeded part will be truncated and ignored. '
+            f'You are recommended to split your long text into several sentences within '
+            f'{max_seq_length - special_tokens_count} tokens beforehand.')
         tokens = tokens[: (max_seq_length - special_tokens_count)]
         label_ids = label_ids[: (max_seq_length - special_tokens_count)]
 
