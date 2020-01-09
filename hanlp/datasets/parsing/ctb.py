@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-28 18:44
+from hanlp.common.constant import HANLP_URL
 
-CTB_HOME = 'https://github.com/SUDA-LA/CIP/archive/master.zip#'
+CTB_HOME = HANLP_URL + 'embeddings/SUDA-LA-CIP_20200109_021624.zip#'
 
 CTB5_DEP_HOME = CTB_HOME + 'BPNN/data/ctb5/'
 
