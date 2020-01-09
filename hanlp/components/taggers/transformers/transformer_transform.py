@@ -59,6 +59,7 @@ class TransformerTransform(TsvTaggingFormat, Transform):
         pad_token = '[PAD]'
         cls_token = '[CLS]'
         sep_token = '[SEP]'
+        unk_token = '[UNK]'
 
         pad_label_idx = self.tag_vocab.pad_idx
         pad_token = tokenizer.convert_tokens_to_ids([pad_token])[0]
@@ -82,7 +83,8 @@ class TransformerTransform(TsvTaggingFormat, Transform):
                                                                                          # pad on the left for xlnet
                                                                                          pad_token=pad_token,
                                                                                          pad_token_segment_id=4 if xlnet else 0,
-                                                                                         pad_token_label_id=pad_label_idx)
+                                                                                         pad_token_label_id=pad_label_idx,
+                                                                                         unk_token=unk_token)
 
             if None in input_ids:
                 print(input_ids)

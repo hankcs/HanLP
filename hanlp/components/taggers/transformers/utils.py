@@ -24,6 +24,7 @@ def convert_examples_to_features(
         pad_token_label_id=0,
         sequence_a_segment_id=0,
         mask_padding_with_zero=True,
+        unk_token='[UNK]'
 ):
     """ Loads a data file into a list of `InputBatch`s
         `cls_token_at_end` define the location of the CLS token:
@@ -40,7 +41,7 @@ def convert_examples_to_features(
         word_tokens = tokenizer.tokenize(word)
         if not word_tokens:
             # some wired chars cause the tagger to return empty list
-            word_tokens = [tokenizer.unk_token] * len(word)
+            word_tokens = [unk_token] * len(word)
         tokens.extend(word_tokens)
         # Use the real label id for the first token of the word, and padding ids for the remaining tokens
         label_ids.extend([label_map[label]] + [pad_token_label_id] * (len(word_tokens) - 1))
