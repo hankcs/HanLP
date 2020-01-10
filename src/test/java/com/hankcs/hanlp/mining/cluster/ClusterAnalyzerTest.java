@@ -21,4 +21,13 @@ public class ClusterAnalyzerTest extends TestCase
         analyzer.addDocument("马六", "古典, 古典, 古典, 古典, 古典, 古典, 古典, 古典, 摇滚");
         System.out.println(analyzer.repeatedBisection(0.12)); // 自动判断聚类数量k
     }
+
+    public void testKmeans()
+    {
+        ClusterAnalyzer<String> analyzer = new ClusterAnalyzer<String>();
+        analyzer.addDocument("赵一", "流行, 流行, 流行, 流行, 流行, 流行, 流行, 流行, 流行, 流行, 蓝调, 蓝调, 蓝调, 蓝调, 蓝调, 蓝调, 摇滚, 摇滚, 摇滚, 摇滚");
+        analyzer.addDocument("钱二", "爵士, 爵士, 爵士, 爵士, 爵士, 爵士, 爵士, 爵士, 舞曲, 舞曲, 舞曲, 舞曲, 舞曲, 舞曲, 舞曲, 舞曲, 舞曲");
+        System.out.println(analyzer.kmeans(3));
+        System.out.println(analyzer.repeatedBisection(3));
+    }
 }
