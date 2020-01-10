@@ -3,11 +3,11 @@
 # Date: 2019-12-28 21:25
 import hanlp
 
-tokenizer = hanlp.load(hanlp.pretrained.cws.CTB6_CONVSEG)
+tokenizer = hanlp.load(hanlp.pretrained.cws.PKU_NAME_MERGED_SIX_MONTHS_CONVSEG)
 print(tokenizer('商品和服务'))
 print(tokenizer(['萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。',
                  '上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。',
-                 'HanLP支援臺灣正體、香港繁體']))
+                 'HanLP支援臺灣正體、香港繁體，具有新詞辨識能力的中文斷詞系統']))
 
 text = 'NLP统计模型没有加规则，聪明人知道自己加。英文、数字、自定义词典统统都是规则。'
 print(tokenizer(text))
