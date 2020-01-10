@@ -59,7 +59,7 @@ class Vocab(Serializable):
 
     def add(self, token: str) -> int:
         assert self.mutable, 'It is not allowed to call add on an immutable Vocab'
-        assert isinstance(token, str), 'Token type must be str'
+        assert isinstance(token, str), f'Token type must be str but got {type(token)} from {token}'
         assert token, 'Token must not be None or length 0'
         idx = self.token_to_idx.get(token, None)
         if idx is None:

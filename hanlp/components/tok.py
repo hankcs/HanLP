@@ -16,6 +16,8 @@ from hanlp.metrics.chunking.bmes import BMES_F1
 from hanlp.transform.tsv import TSVTaggingTransform
 from hanlp.transform.txt import extract_ngram_features_and_tags, bmes_to_words, TxtFormat, TxtBMESFormat
 from hanlp.utils.util import merge_locals_kwargs
+
+
 class BMESTokenizer(KerasComponent):
 
     def build_metrics(self, metrics, logger: logging.Logger, **kwargs):
@@ -92,8 +94,8 @@ class RNNTokenizer(BMESTokenizer, RNNTagger):
         super().__init__(transform)
 
     def fit(self, trn_data: str, dev_data: str = None, save_dir: str = None, embeddings=100, embedding_trainable=False,
-            rnn_input_dropout=0.2, rnn_units=100, rnn_output_dropout=0.2, epochs=20, lower=False, logger=None,
-            loss: Union[tf.keras.losses.Loss, str] = None,
+            rnn_input_dropout=0.2, rnn_units=100, rnn_output_dropout=0.2, epochs=20, lower=False, max_seq_len=50,
+            logger=None, loss: Union[tf.keras.losses.Loss, str] = None,
             optimizer: Union[str, tf.keras.optimizers.Optimizer] = 'adam', metrics='f1', batch_size=32,
             dev_batch_size=32, lr_decay_per_epoch=None, verbose=True, **kwargs):
         return super().fit(**merge_locals_kwargs(locals(), kwargs))

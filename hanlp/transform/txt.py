@@ -10,6 +10,7 @@ import tensorflow as tf
 from hanlp.common.transform import Transform
 from hanlp.common.vocab import Vocab
 from hanlp.utils.io_util import get_resource
+from hanlp.utils.lang.zh.char_table import CharTable
 
 
 def generate_words_per_line(file_path):
@@ -66,6 +67,7 @@ def extract_ngram_features_and_tags(sentence, bigram_only=False, window_size=4, 
 
     """
     chars, tags = bmes_of(sentence, segmented)
+    chars = CharTable.normalize_chars(chars)
     ret = []
     ret.append(chars)
     # TODO: optimize ngram generation using https://www.tensorflow.org/api_docs/python/tf/strings/ngrams
@@ -191,9 +193,29 @@ class TxtFormat(Transform, ABC):
 
 class TxtBMESFormat(TxtFormat, ABC):
     def file_to_inputs(self, filepath: str, gold=True):
+        max_seq_len = self.config.get('max_seq_len', False)
+        if max_seq_len:
+            delimiter = set()
+            delimiter.update('。！？：；、，,;!?、,')
         for text in super().file_to_inputs(filepath, gold):
             chars, tags = bmes_of(text, gold)
-            yield chars, tags
+            if max_seq_len and len(chars) > max_seq_len:
+                short_chars, short_tags = [], []
+                for idx, (char, tag) in enumerate(zip(chars, tags)):
+                    short_chars.append(char)
+                    short_tags.append(tag)
+                    if len(short_chars) >= max_seq_len and char in delimiter:
+                        yield short_chars, short_tags
+                        short_chars, short_tags = [], []
+                if short_chars:
+                    yield short_chars, short_tags
+            else:
+                yield chars, tags
 
     def input_is_single_sample(self, input: Union[List[str], List[List[str]]]) -> bool:
         return isinstance(input, str)
+
+    def inputs_to_samples(self, inputs, gold=False):
+        for chars, tags in inputs:
+            chars = CharTable.normalize_chars(chars)
+            yield chars, tags
