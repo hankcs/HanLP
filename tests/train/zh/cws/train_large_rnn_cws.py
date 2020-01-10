@@ -26,7 +26,7 @@ tokenizer.fit('data/cws/large/all.txt',
                           }},
               early_stopping_patience=5,
               batch_size=64,
-              max_seq_len=128
+              max_seq_len=64
               )
 tokenizer.evaluate(CTB6_CWS_TEST, save_dir=save_dir, output=False)
 print(tokenizer.predict(['中央民族乐团离开北京前往维也纳', '商品和服务']))
