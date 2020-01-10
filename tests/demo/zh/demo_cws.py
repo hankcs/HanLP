@@ -3,13 +3,14 @@
 # Date: 2019-12-28 21:25
 import hanlp
 
-tokenizer = hanlp.load('PKU_NAME_MERGED_SIX_MONTHS_CONVSEG')
-print(tokenizer.predict('商品和服务'))
-print(tokenizer.predict(['萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。',
-                         '上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。']))
+tokenizer = hanlp.load(hanlp.pretrained.cws.CTB6_CONVSEG)
+print(tokenizer('商品和服务'))
+print(tokenizer(['萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。',
+                 '上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。',
+                 'HanLP支援臺灣正體、香港繁體']))
 
 text = 'NLP统计模型没有加规则，聪明人知道自己加。英文、数字、自定义词典统统都是规则。'
-print(tokenizer.predict(text))
+print(tokenizer(text))
 
 dic = {'自定义': 'custom', '词典': 'dict', '聪明人': 'smart'}
 
@@ -28,7 +29,7 @@ def split_by_dic(text: str):
         sents.append(text[offset:])
         words.append((None, None))
     flat = []
-    for pred, (word, tag) in zip(tokenizer.predict(sents), words):
+    for pred, (word, tag) in zip(tokenizer(sents), words):
         flat.extend(pred)
         if word:
             flat.append((word, tag))
