@@ -5,8 +5,12 @@ Regex-based word tokenizers.
 Note that small/full/half-width character variants are *not* covered.
 If a text were to contains such characters, normalize it first.
 A modified version of https://github.com/fnl/segtok
+
+- dropped dependency on regex
+- dropped web_tokenize
+- supported concat word
+
 """
-from html import unescape
 
 __author__ = 'Florian Leitner <florian.leitner@gmail.com>'
 from re import compile, UNICODE, VERBOSE
@@ -29,10 +33,10 @@ APOSTROPHE = r"[\u00B4\u02B9\u02BC\u2019\u2032]"
 LINEBREAK = r'(?:\r\n|\n|\r|\u2028)'
 """Any valid linebreak sequence (Windows, Unix, Mac, or U+2028)."""
 
-LETTER = r'[\p{Ll}\p{Lm}\p{Lt}\p{Lu}]'
+LETTER = r'[^\W\d_]'
 """Any Unicode letter character that can form part of a word: Ll, Lm, Lt, Lu."""
 
-NUMBER = r'[\p{Nd}\p{Nl}]'
+NUMBER = r'\d'
 """Any Unicode number character: Nd or Nl."""
 
 POWER = r'\u207B?[\u00B9\u00B2\u00B3]'
@@ -41,12 +45,12 @@ POWER = r'\u207B?[\u00B9\u00B2\u00B3]'
 SUBDIGIT = r'[\u2080-\u2089]'
 """Subscript digits."""
 
-ALNUM = LETTER[:-1] + NUMBER[1:]
+ALNUM = LETTER[:-1] + NUMBER + ']'
 """Any alphanumeric Unicode character: letter or number."""
 
 HYPHEN = r'[%s]' % HYPHENS
 
-SPACE = r'[\p{Zs}\t]'
+SPACE = r'\s'
 """Any unicode space character plus the (horizontal) tab."""
 
 APO_MATCHER = compile(APOSTROPHE, UNICODE)
@@ -312,39 +316,10 @@ def tokenize_english(sentence):
             if m:
                 chunks.append(token[:m.start(1)])
                 chunks.append(token[m.start(1):m.end(1)])
-                chunks.append(token[m.end(1):])
+                if m.end(1) < len(token):
+                    chunks.append(token[m.end(1):])
             else:
                 chunks.append(token)
         tokens = chunks
         results.append(tokens)
     return results[0] if flat else results
-
-
-@_matches(r"""
-    (?<=^|[\s<"'(\[{])            # visual border
-
-    (                             # RFC3986-like URIs:
-        [A-z]+                    # required scheme
-        ://                       # required hier-part
-        (?:[^@]+@)?               # optional user
-        (?:[\w-]+\.)+\w+          # required host
-        (?::\d+)?                 # optional port
-        (?:\/[^?\#\s'">)\]}]*)?   # optional path
-        (?:\?[^\#\s'">)\]}]+)?    # optional query
-        (?:\#[^\s'">)\]}]+)?      # optional fragment
-
-    |                             # simplified e-Mail addresses:
-        [\w.#$%&'*+/=!?^`{|}~-]+  # local part
-        @                         # klammeraffe
-        (?:[\w-]+\.)+             # (sub-)domain(s)
-        \w+                       # TLD
-
-    )(?=[\s>"')\]}]|$)            # visual border
-    """)
-def web_tokenizer(sentence):
-    """
-    The web tagger works like the :func:`word_tokenizer`, but does not split URIs or
-    e-mail addresses. It also un-escapes all escape sequences (except in URIs or email addresses).
-    """
-    return [token for i, span in enumerate(web_tokenizer.split(sentence))
-            for token in ((span,) if i % 2 else tokenize_english(unescape(span)))]

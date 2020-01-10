@@ -35,7 +35,7 @@ If you're processing English, a rule based function should be good enough.
 ```python
 >>> tokenizer = hanlp.utils.rules.tokenize_english
 >>> tokenizer("Don't go gentle into that good night.")
-['Do', "n't", '', 'go', 'gentle', 'into', 'that', 'good', 'night', '.']
+['Do', "n't", 'go', 'gentle', 'into', 'that', 'good', 'night', '.']
 ```
 
 #### Going Further
