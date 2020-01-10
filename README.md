@@ -34,8 +34,8 @@ If you're processing English, a rule based function should be good enough.
 
 ```python
 >>> tokenizer = hanlp.utils.rules.tokenize_english
->>> tokenizer('Mr. Hankcs bought hankcs.com for 1.5 thousand dollars.')
-['Mr.', 'Hankcs', 'bought', 'hankcs.com', 'for', '1.5', 'thousand', 'dollars', '.']
+>>> tokenizer("Don't go gentle into that good night.")
+['Do', "n't", '', 'go', 'gentle', 'into', 'that', 'good', 'night', '.']
 ```
 
 #### Going Further
