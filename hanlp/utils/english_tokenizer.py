@@ -9,7 +9,7 @@ A modified version of https://github.com/fnl/segtok
 from html import unescape
 
 __author__ = 'Florian Leitner <florian.leitner@gmail.com>'
-from regex import compile, DOTALL, UNICODE, VERBOSE
+from re import compile, UNICODE, VERBOSE
 
 SENTENCE_TERMINALS = '.!?\u203C\u203D\u2047\u2048\u2049\u3002' \
                      '\uFE52\uFE57\uFF01\uFF0E\uFF1F\uFF61'
