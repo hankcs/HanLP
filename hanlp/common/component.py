@@ -225,6 +225,7 @@ class KerasComponent(Component, ABC):
         :param save_dir: The path to load.
         """
         save_dir = get_resource(save_dir)
+        self.load_config(save_dir)
         self.load_vocabs(save_dir)
         self.transform.build_config()
         self.transform.lock_vocabs()
