@@ -2,14 +2,13 @@
 # Author: hankcs
 # Date: 2019-12-28 23:15
 from hanlp.components.ner import TransformerNamedEntityRecognizer
-from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
 from hanlp.datasets.ner.msra import MSRA_NER_TRAIN, MSRA_NER_VALID, MSRA_NER_TEST
 from tests import cdroot
 
 cdroot()
 recognizer = TransformerNamedEntityRecognizer()
-save_dir = 'data/model/ner/ner_albert_large_msra'
-recognizer.fit(MSRA_NER_TRAIN, MSRA_NER_VALID, save_dir, transformer='albert_large_zh',
+save_dir = 'data/model/ner/ner_albert_base_zh_msra'
+recognizer.fit(MSRA_NER_TRAIN, MSRA_NER_VALID, save_dir, transformer='albert_base_zh',
                learning_rate=5e-5,
                metrics='f1')
 recognizer.load(save_dir)
