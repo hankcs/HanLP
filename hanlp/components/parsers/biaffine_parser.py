@@ -38,6 +38,11 @@ class BiaffineDependencyParser(KerasComponent):
         model = BiaffineModel(self.config, pretrained)
         return model
 
+    def load_weights(self, save_dir, filename='model.h5', functional=False, **kwargs):
+        super().load_weights(save_dir, filename)
+        if functional:
+            self.model = self.model.to_functional()
+
     def build_vocab(self, trn_data, logger):
         return super().build_vocab(trn_data, logger)
 
@@ -282,7 +287,8 @@ class BiaffineDependencyParser(KerasComponent):
         mask = tf.not_equal(words, self.config.pad_index) & tf.not_equal(words, self.config.bos_index)
         arc_scores, rel_scores = self.model((words, feats))
         arc_preds, rel_preds = self.decode(arc_scores, rel_scores, mask)
-        for sent in self.transform.XY_to_inputs_outputs((words, feats, mask), (arc_preds, rel_preds), gold=False, inputs=inputs):
+        for sent in self.transform.XY_to_inputs_outputs((words, feats, mask), (arc_preds, rel_preds), gold=False,
+                                                        inputs=inputs):
             yield sent
 
     def compile_model(self, optimizer, loss, metrics):

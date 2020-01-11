@@ -43,11 +43,12 @@ def load_from_meta_file(save_dir, meta_filename='meta.json', transform_only=Fals
     except Exception as e:
         eprint(f'Failed to load {identifier}. See stack trace below')
         traceback.print_exc()
-        old_version = meta.get("hanlp_version", "unknown")
+        model_version = meta.get("hanlp_version", "unknown")
         cur_version = version.__version__
-        if old_version != cur_version:
+        if model_version != cur_version:
             eprint(
-                f'{identifier} was created with hanlp-{old_version}, but you are running {cur_version}. Try to upgrade hanlp with\n'
+                f'{identifier} was created with hanlp-{model_version}, while you are running {cur_version}. '
+                f'Try to upgrade hanlp with\n'
                 f'pip install --upgrade hanlp')
         exit(1)
 

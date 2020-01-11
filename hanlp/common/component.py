@@ -241,7 +241,7 @@ class KerasComponent(Component, ABC):
         self.load_config(save_dir)
         self.load_vocabs(save_dir)
         self.build(**merge_dict(self.config, training=False, logger=logger, **kwargs, overwrite=True, inplace=True))
-        self.load_weights(save_dir)
+        self.load_weights(save_dir, **kwargs)
         self.load_meta(save_dir)
 
     @property

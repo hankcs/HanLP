@@ -69,7 +69,7 @@ class BiaffineModel(tf.keras.Model):
         self.unk_index = tf.constant(config.unk_index, dtype=tf.int64)
 
     # noinspection PyMethodOverriding
-    def call(self, inputs, **kwargs):
+    def call(self, inputs, mask_inf=True, **kwargs):
         words, feats = inputs
         # batch_size, seq_len = words.shape
         # get the mask and lengths of given batch
@@ -104,6 +104,13 @@ class BiaffineModel(tf.keras.Model):
         # [batch_size, seq_len, seq_len, n_rels]
         s_rel = tf.transpose(self.rel_attn(rel_d, rel_h), [0, 2, 3, 1])
         # set the scores that exceed the length of each sentence to -inf
-        s_arc = tf.where(tf.expand_dims(mask, 1), s_arc, float('-inf'))
+        if mask_inf:
+            s_arc = tf.where(tf.expand_dims(mask, 1), s_arc, float('-inf'))
 
         return s_arc, s_rel
+
+    def to_functional(self):
+        words = tf.keras.Input(shape=[None], dtype=tf.int64, name='words')
+        feats = tf.keras.Input(shape=[None], dtype=tf.int64, name='feats')
+        s_arc, s_rel = self.call([words, feats], mask_inf=False)
+        return tf.keras.Model(inputs=[words, feats], outputs=[s_arc, s_rel])
