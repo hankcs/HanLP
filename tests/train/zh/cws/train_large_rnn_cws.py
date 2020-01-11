@@ -11,7 +11,7 @@ from tests import cdroot
 cdroot()
 
 tokenizer = RNNTokenizer()
-save_dir = 'data/model/cws/pku_6m_rnn_cws'
+save_dir = 'data/model/cws/large_rnn_cws'
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.001,
                                      epsilon=1e-8, clipnorm=5)
 tokenizer.fit('data/cws/large/all.txt',
