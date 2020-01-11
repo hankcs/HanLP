@@ -498,7 +498,10 @@ def split_file(filepath, train=0.8, valid=0.1, test=0.1, names=None, shuffle=Fal
 
 
 def fileno(file_or_fd):
-    fd = getattr(file_or_fd, 'fileno', lambda: file_or_fd)()
+    try:
+        fd = getattr(file_or_fd, 'fileno', lambda: file_or_fd)()
+    except:
+        return None
     if not isinstance(fd, int):
         raise ValueError("Expected a file (`.fileno()`) or a file descriptor")
     return fd
@@ -516,9 +519,11 @@ def stdout_redirected(to=os.devnull, stdout=None):
     """
     if stdout is None:
         stdout = sys.stdout
-
     stdout_fd = fileno(stdout)
-    # copy stdout_fd before it is overwritten
+    if not stdout_fd:
+        yield None
+        return
+        # copy stdout_fd before it is overwritten
     # NOTE: `copied` is inheritable on Windows when duplicating a standard stream
     with os.fdopen(os.dup(stdout_fd), 'wb') as copied:
         stdout.flush()  # flush library buffers that dup2 knows nothing about
