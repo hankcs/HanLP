@@ -11,7 +11,8 @@ from hanlp.utils.reflection import object_from_class_path, str_to_type
 from hanlp import version
 
 
-def load_from_meta_file(save_dir, meta_filename='meta.json', transform_only=False, **kwargs) -> Component:
+def load_from_meta_file(save_dir, meta_filename='meta.json', transform_only=False, load_kwargs=None,
+                        **kwargs) -> Component:
     identifier = save_dir
     load_path = save_dir
     save_dir = get_resource(save_dir)
@@ -37,7 +38,9 @@ def load_from_meta_file(save_dir, meta_filename='meta.json', transform_only=Fals
                 # noinspection PyUnresolvedReferences
                 obj.load_transform(save_dir)
             else:
-                obj.load(save_dir)
+                if load_kwargs is None:
+                    load_kwargs = {}
+                obj.load(save_dir, **load_kwargs)
             obj.meta['load_path'] = load_path
         return obj
     except Exception as e:
