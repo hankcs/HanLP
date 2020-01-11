@@ -497,8 +497,8 @@ class KerasComponent(Component, ABC):
                         f'--model_base_path={export_dir} --rest_api_port=8888')
         return export_dir
 
-    def serve(self, export_dir=None, grpc_port=8500, rest_api_port=0, dry_run=False):
-        export_dir = self.export_model_for_serving(export_dir, show_hint=False)
+    def serve(self, export_dir=None, grpc_port=8500, rest_api_port=0, overwrite=False, dry_run=False):
+        export_dir = self.export_model_for_serving(export_dir, show_hint=False, overwrite=overwrite)
         if not dry_run:
             del self.model  # free memory
         cmd = f'nohup tensorflow_model_server --model_name={os.path.splitext(os.path.basename(self.meta["load_path"]))[0]} ' \

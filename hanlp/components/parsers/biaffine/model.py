@@ -22,12 +22,12 @@ class BiaffineModel(tf.keras.Model):
         # the embedding layer
         self.word_embed = tf.keras.layers.Embedding(input_dim=config.n_words,
                                                     output_dim=config.n_embed,
-                                                    embeddings_initializer=tf.keras.initializers.zeros if embed
+                                                    embeddings_initializer=tf.keras.initializers.zeros() if embed
                                                     else normal,
                                                     name='word_embed')
         self.feat_embed = tf.keras.layers.Embedding(input_dim=config.n_feats,
                                                     output_dim=config.n_embed,
-                                                    embeddings_initializer=tf.keras.initializers.zeros if embed
+                                                    embeddings_initializer=tf.keras.initializers.zeros() if embed
                                                     else normal,
                                                     name='feat_embed')
         self.embed_dropout = IndependentDropout(p=config.embed_dropout, name='embed_dropout')
