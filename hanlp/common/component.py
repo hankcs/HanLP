@@ -513,6 +513,8 @@ class KerasComponent(Component, ABC):
         export_dir = self.export_model_for_serving(export_dir, show_hint=False, overwrite=overwrite)
         if not dry_run:
             del self.model  # free memory
+        logger.info('The inputs of exported model is shown below.')
+        os.system(f'saved_model_cli show --all --dir {export_dir}/1')
         cmd = f'nohup tensorflow_model_server --model_name={os.path.splitext(os.path.basename(self.meta["load_path"]))[0]} ' \
               f'--model_base_path={export_dir} --port={grpc_port} --rest_api_port={rest_api_port} ' \
               f'>serve.log 2>&1 &'
