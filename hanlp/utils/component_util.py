@@ -11,7 +11,7 @@ from hanlp.utils.reflection import object_from_class_path, str_to_type
 from hanlp import version
 
 
-def load_from_meta_file(save_dir, meta_filename='meta.json', **kwargs) -> Component:
+def load_from_meta_file(save_dir, meta_filename='meta.json', transform_only=False, **kwargs) -> Component:
     identifier = save_dir
     load_path = save_dir
     save_dir = get_resource(save_dir)
@@ -33,7 +33,11 @@ def load_from_meta_file(save_dir, meta_filename='meta.json', **kwargs) -> Compon
     try:
         obj: Component = object_from_class_path(cls, **kwargs)
         if hasattr(obj, 'load') and os.path.isfile(os.path.join(save_dir, 'config.json')):
-            obj.load(save_dir)
+            if transform_only:
+                # noinspection PyUnresolvedReferences
+                obj.load_transform(save_dir)
+            else:
+                obj.load(save_dir)
             obj.meta['load_path'] = load_path
         return obj
     except Exception as e:

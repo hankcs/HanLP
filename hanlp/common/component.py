@@ -218,6 +218,18 @@ class KerasComponent(Component, ABC):
             vocab.copy_from(value)
             setattr(self.transform, key, vocab)
 
+    def load_transform(self, save_dir) -> Transform:
+        """
+        Try to load transform only. This method might fail due to the fact it avoids building the model.
+        If it do fail, then you have to use `load` which might be too heavy but that's the best we can do.
+        :param save_dir: The path to load.
+        """
+        save_dir = get_resource(save_dir)
+        self.load_vocabs(save_dir)
+        self.transform.build_config()
+        self.transform.lock_vocabs()
+        return self.transform
+
     def save(self, save_dir: str, **kwargs):
         self.save_config(save_dir)
         self.save_vocabs(save_dir)

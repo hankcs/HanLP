@@ -35,17 +35,18 @@ ls_resource_in_module(hanlp.pretrained)
 ''')
 
 
-def load(save_dir: str, meta_filename='meta.json', **kwargs) -> hanlp.common.component.Component:
+def load(save_dir: str, meta_filename='meta.json', transform_only=False, **kwargs) -> hanlp.common.component.Component:
     """
     Load saved component from identifier.
     :param save_dir: The identifier to the saved component.
     :param meta_filename: The meta file of that saved component, which stores the class_path and version.
+    :param transform_only: Whether to load transform only.
     :param kwargs: Additional arguments parsed to the `from_meta` method.
     :return: A pretrained component.
     """
     save_dir = hanlp.pretrained.ALL.get(save_dir, save_dir)
     from hanlp.utils.component_util import load_from_meta_file
-    return load_from_meta_file(save_dir, meta_filename, **kwargs)
+    return load_from_meta_file(save_dir, meta_filename, transform_only=transform_only, **kwargs)
 
 
 def pipeline(*pipes) -> hanlp.components.pipeline.Pipeline:
