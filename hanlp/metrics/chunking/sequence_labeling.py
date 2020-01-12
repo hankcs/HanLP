@@ -9,6 +9,16 @@ import numpy as np
 from hanlp.metrics.chunking import conlleval
 
 
+def iobes_to_span(words, tags):
+    delimiter = ' '
+    if all([len(w) == 1 for w in words]):
+        delimiter = ''  # might be Chinese
+    entities = []
+    for tag, start, end in get_entities(tags):
+        entities.append((delimiter.join(words[start:end]), tag, start, end))
+    yield entities
+
+
 def get_entities(seq, suffix=False):
     """Gets entities from sequence.
 

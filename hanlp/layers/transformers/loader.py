@@ -70,7 +70,7 @@ def load_stock_weights(bert: BertModelLayer, ckpt_path):
     return skipped_weight_value_tuples  # (bert_weight, value_from_ckpt)
 
 
-def build_transformer(transformer, max_seq_length, num_labels, tagging=True):
+def build_transformer(transformer, max_seq_length, num_labels, tagging=True, tokenizer_only=False):
     if transformer in albert_models_google:
         from bert.tokenization.albert_tokenization import FullTokenizer
         model_url = albert_models_google[transformer]
@@ -88,6 +88,8 @@ def build_transformer(transformer, max_seq_length, num_labels, tagging=True):
     vocab = vocab[0]
     # noinspection PyTypeChecker
     tokenizer = FullTokenizer(vocab_file=vocab)
+    if tokenizer_only:
+        return tokenizer
     bert_params = bert.params_from_pretrained_ckpt(bert_dir)
     l_bert = bert.BertModelLayer.from_params(bert_params, name="bert")
     l_input_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype='int32', name="input_ids")

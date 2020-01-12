@@ -6,6 +6,7 @@ import math
 
 import tensorflow as tf
 
+from hanlp.common.transform import Transform
 from hanlp.components.taggers.tagger import TaggerComponent
 from hanlp.components.taggers.transformers.metrics import MaskedSparseCategoricalAccuracy
 from hanlp.components.taggers.transformers.transformer_transform import TransformerTransform
@@ -100,3 +101,9 @@ class TransformerTagger(TaggerComponent):
         if not loss:
             return SparseCategoricalCrossentropyOverBatchFirstDim()
         return super().build_loss(loss, **kwargs)
+
+    def load_transform(self, save_dir) -> Transform:
+        super().load_transform(save_dir)
+        self.transform.tokenizer = build_transformer(self.config.transformer, self.config.max_seq_length,
+                                                     len(self.transform.tag_vocab), tagging=True, tokenizer_only=True)
+        return self.transform

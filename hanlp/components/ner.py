@@ -10,7 +10,7 @@ from hanlp.common.component import KerasComponent
 from hanlp.components.taggers.ngram_conv.ngram_conv_tagger import NgramConvTagger
 from hanlp.components.taggers.rnn_tagger import RNNTagger
 from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
-from hanlp.metrics.chunking.sequence_labeling import get_entities
+from hanlp.metrics.chunking.sequence_labeling import get_entities, iobes_to_span
 from hanlp.utils.util import merge_locals_kwargs
 
 
@@ -18,13 +18,7 @@ class IOBES_NamedEntityRecognizer(KerasComponent, ABC):
 
     def predict_batch(self, batch, inputs=None):
         for words, tags in zip(inputs, super().predict_batch(batch, inputs)):
-            delimiter = ' '
-            if all([len(w) == 1 for w in words]):
-                delimiter = ''  # might be Chinese
-            entities = []
-            for tag, start, end in get_entities(tags):
-                entities.append((delimiter.join(words[start:end]), tag, start, end))
-            yield entities
+            yield from iobes_to_span(words, tags)
 
 
 class RNNNamedEntityRecognizer(RNNTagger, IOBES_NamedEntityRecognizer):
