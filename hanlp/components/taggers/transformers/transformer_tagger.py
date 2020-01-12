@@ -97,4 +97,6 @@ class TransformerTagger(TaggerComponent):
         return history
 
     def build_loss(self, loss, **kwargs):
-        return SparseCategoricalCrossentropyOverBatchFirstDim()
+        if not loss:
+            return SparseCategoricalCrossentropyOverBatchFirstDim()
+        return super().build_loss(loss, **kwargs)

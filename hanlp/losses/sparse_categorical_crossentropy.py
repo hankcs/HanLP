@@ -32,6 +32,9 @@ class SparseCategoricalCrossentropyOverBatchFirstDim(object):
         loss = tf.reduce_sum(loss) / tf.cast(tf.shape(y_true)[0], tf.float32)
         return loss
 
+    def get_config(self):
+        return {}
+
 
 @hanlp_register
 class MaskedSparseCategoricalCrossentropyOverBatchFirstDim(object):

@@ -7,7 +7,7 @@ from tests import cdroot
 
 cdroot()
 recognizer = TransformerNamedEntityRecognizer()
-save_dir = 'data/model/ner/ner_albert_base_zh_msra'
+save_dir = 'data/model/ner/ner_albert_base_zh_msra_sparse_categorical_crossentropy'
 recognizer.fit(MSRA_NER_TRAIN, MSRA_NER_VALID, save_dir, transformer='albert_base_zh',
                learning_rate=5e-5,
                metrics='f1')
