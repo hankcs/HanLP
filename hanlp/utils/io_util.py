@@ -23,6 +23,7 @@ import numpy as np
 
 from hanlp.utils import time_util
 from hanlp.utils.log_util import logger
+from hanlp.utils.string_util import split_long_sentence_into
 from hanlp.utils.time_util import now_filename
 from hanlp.common.constant import HANLP_URL
 from hanlp import version
@@ -450,16 +451,29 @@ def read_tsv(tsv_file_path):
         yield sent
 
 
-def generator_words_tags(tsv_file_path, lower=True, gold=True):
+def generator_words_tags(tsv_file_path, lower=True, gold=True, max_seq_length=None):
     for sent in read_tsv(tsv_file_path):
         words = [cells[0] for cells in sent]
-        if gold:
-            tags = [cells[1] for cells in sent]
+        if max_seq_length and len(words) > max_seq_length:
+            offset = 0
+            # try to split the sequence to make it fit into max_seq_length
+            for shorter_words in split_long_sentence_into(words, max_seq_length):
+                if gold:
+                    shorter_tags = [cells[1] for cells in sent[offset:offset + len(shorter_words)]]
+                    offset += len(shorter_words)
+                else:
+                    shorter_tags = None
+                if lower:
+                    shorter_words = [word.lower() for word in shorter_words]
+                yield shorter_words, shorter_tags
         else:
-            tags = None
-        if lower:
-            words = [word.lower() for word in words]
-        yield words, tags
+            if gold:
+                tags = [cells[1] for cells in sent]
+            else:
+                tags = None
+            if lower:
+                words = [word.lower() for word in words]
+            yield words, tags
 
 
 def split_file(filepath, train=0.8, valid=0.1, test=0.1, names=None, shuffle=False):

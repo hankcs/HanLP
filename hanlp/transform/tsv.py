@@ -67,7 +67,12 @@ def vocab_from_tsv(tsv_file_path, lower=False, lock_word_vocab=False, lock_char_
 class TsvTaggingFormat(Transform, ABC):
     def file_to_inputs(self, filepath: str, gold=True):
         assert gold, 'TsvTaggingFormat does not support reading non-gold files'
-        yield from generator_words_tags(filepath, gold=gold, lower=self.config.get('lower', False))
+        yield from generator_words_tags(filepath, gold=gold, lower=self.config.get('lower', False),
+                                        max_seq_length=self.max_seq_length)
+
+    @property
+    def max_seq_length(self):
+        return self.config.get('max_seq_length', None)
 
 
 class TSVTaggingTransform(TsvTaggingFormat, Transform):

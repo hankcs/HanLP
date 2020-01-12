@@ -23,6 +23,11 @@ class TransformerTransform(TsvTaggingFormat, Transform):
         self.special_token_ids = None
 
     @property
+    def max_seq_length(self):
+        # -2 for special tokens [CLS] and [SEP]
+        return self.config.get('max_seq_length', 128) - 2
+
+    @property
     def tokenizer(self):
         return self._tokenizer
 

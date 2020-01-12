@@ -20,3 +20,16 @@ def ispunct(token):
                for char in token)
 
 
+def split_long_sentence_into(tokens: List[str], max_seq_length):
+    punct_offset = [i for i, x in enumerate(tokens) if ispunct(x)]
+    if not punct_offset:
+        # treat every token as punct
+        punct_offset = [i for i in range(len(tokens))]
+    punct_offset += [len(tokens)]
+    start = 0
+    for i, offset in enumerate(punct_offset[:-1]):
+        if punct_offset[i + 1] - start >= max_seq_length:
+            yield tokens[start: offset + 1]
+            start = offset + 1
+    if start < punct_offset[-1]:
+        yield tokens[start:]
