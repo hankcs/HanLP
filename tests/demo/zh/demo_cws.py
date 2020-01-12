@@ -22,9 +22,10 @@ def split_by_dic(text: str):
     p = re.compile('(' + '|'.join(dic.keys()) + ')')
     sents, offset, words = [], 0, []
     for m in p.finditer(text):
-        sents.append(text[offset: m.start()])
-        words.append((m.group(), dic[m.group()]))
-        offset = m.end()
+        if offset < m.start():
+            sents.append(text[offset: m.start()])
+            words.append((m.group(), dic[m.group()]))
+            offset = m.end()
     if offset < len(text):
         sents.append(text[offset:])
         words.append((None, None))

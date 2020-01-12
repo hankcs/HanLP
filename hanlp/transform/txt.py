@@ -216,6 +216,8 @@ class TxtBMESFormat(TxtFormat, ABC):
         return isinstance(input, str)
 
     def inputs_to_samples(self, inputs, gold=False):
-        for chars, tags in inputs:
+        for chars, tags in (inputs if gold else zip(inputs, [None] * len(inputs))):
+            if not gold:
+                tags = [self.tag_vocab.safe_pad_token] * len(chars)
             chars = CharTable.normalize_chars(chars)
             yield chars, tags
