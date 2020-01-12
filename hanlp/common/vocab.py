@@ -127,7 +127,7 @@ class Vocab(Serializable):
         tensor = tf.constant(self.idx_to_token, dtype=tf.string)
         self.token_to_idx_table = index_table_from_tensor(tensor, num_oov_buckets=1 if self.unk_idx is None else 0,
                                                           default_value=-1 if self.unk_idx is None else self.unk_idx)
-        self.idx_to_token_table = index_to_string_table_from_tensor(self.idx_to_token, self.safe_unk_token)
+        # self.idx_to_token_table = index_to_string_table_from_tensor(self.idx_to_token, self.safe_unk_token)
 
     def unlock(self):
         if not self.locked:
