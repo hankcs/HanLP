@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2019-10-27 14:30
 import logging
-from typing import Union, Any, List
+from typing import Union, Any, List, Tuple, Iterable
 
 import tensorflow as tf
 
@@ -26,11 +26,6 @@ class BMESTokenizer(KerasComponent):
             return BMES_F1(self.transform.tag_vocab)
         return super().build_metrics(metrics, logger, **kwargs)
 
-    def predict_batch(self, batch, inputs=None):
-        tags_batch = super().predict_batch(batch, inputs)
-        for text, tags in zip(inputs, tags_batch):
-            yield bmes_to_words(list(text), tags)
-
 
 class NgramConvTokenizerTransform(TxtFormat, NgramTransform):
 
@@ -45,6 +40,10 @@ class NgramConvTokenizerTransform(TxtFormat, NgramTransform):
         if not input:
             return True
         return isinstance(input, str)
+
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None,
+                     **kwargs) -> Iterable:
+        yield from TxtBMESFormat.Y_to_tokens(self.tag_vocab, Y, gold, inputs)
 
 
 class NgramConvTokenizer(BMESTokenizer, NgramConvTagger):
