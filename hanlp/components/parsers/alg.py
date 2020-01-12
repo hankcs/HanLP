@@ -24,7 +24,9 @@ def randperm(n: int) -> tf.Tensor:
 
 
 def tolist(t: tf.Tensor) -> List:
-    return t.numpy().tolist()
+    if isinstance(t, tf.Tensor):
+        t = t.numpy()
+    return t.tolist()
 
 
 def kmeans(x, k):
