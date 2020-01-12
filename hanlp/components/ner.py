@@ -2,9 +2,12 @@
 # Author: hankcs
 # Date: 2019-09-14 20:33
 from abc import ABC
-from typing import Union, Any
+from typing import Union, Any, Tuple, Iterable
 
 import tensorflow as tf
+from hanlp.components.taggers.transformers.transformer_transform import TransformerTransform
+
+from hanlp.common.transform import Transform
 
 from hanlp.common.component import KerasComponent
 from hanlp.components.taggers.ngram_conv.ngram_conv_tagger import NgramConvTagger
@@ -18,6 +21,13 @@ class IOBES_NamedEntityRecognizer(KerasComponent, ABC):
 
     def predict_batch(self, batch, inputs=None):
         for words, tags in zip(inputs, super().predict_batch(batch, inputs)):
+            yield from iobes_to_span(words, tags)
+
+
+class IOBES_Transform(Transform):
+
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None) -> Iterable:
+        for words, tags in zip(inputs, super().Y_to_outputs(Y, gold, inputs=inputs, X=X)):
             yield from iobes_to_span(words, tags)
 
 
@@ -55,7 +65,16 @@ class NgramConvNamedEntityRecognizer(NgramConvTagger, IOBES_NamedEntityRecognize
                            batch_size, epochs, logger, verbose, **kwargs)
 
 
-class TransformerNamedEntityRecognizer(IOBES_NamedEntityRecognizer, TransformerTagger):
+class IOBES_TransformerTransform(IOBES_Transform, TransformerTransform):
+    pass
+
+
+class TransformerNamedEntityRecognizer(TransformerTagger):
+
+    def __init__(self, transform: TransformerTransform = None) -> None:
+        if not transform:
+            transform = IOBES_TransformerTransform()
+        super().__init__(transform)
 
     def fit(self, trn_data, dev_data, save_dir, transformer, optimizer='adamw', learning_rate=5e-5, weight_decay_rate=0,
             epsilon=1e-8, clipnorm=1.0, warmup_steps_ratio=0, use_amp=False, max_seq_length=128, batch_size=32,
