@@ -121,11 +121,15 @@ def hanlp_home_default():
 
     :return: default data directory depending on the platform and environment variables
     """
-    system = platform.system()
-    if system == 'Windows':
+    if windows():
         return os.path.join(os.environ.get('APPDATA'), 'hanlp')
     else:
         return os.path.join(os.path.expanduser("~"), '.hanlp')
+
+
+def windows():
+    system = platform.system()
+    return system == 'Windows'
 
 
 def hanlp_home():
@@ -197,8 +201,13 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             print()
         except BaseException as e:
             remove_file(tmp_path)
+            hints_for_download = ''
+            url = url.split('#')[0]
+            if not windows():
+                hints_for_download = f'e.g. \nwget {url} -O {save_path}\n'
             eprint(f'Failed to download {url} due to {repr(e)}. Please download it to {save_path} by yourself. '
-                   f'Or consider upgrading pip install -U hanlp')
+                   f'{hints_for_download}'
+                   f'Or consider upgrading to a new version.\npip install -U hanlp')
             exit(1)
         remove_file(save_path)
         os.rename(tmp_path, save_path)
@@ -292,31 +301,31 @@ def get_resource(path: str, save_dir=None, extract=True, prefix=HANLP_URL, appen
         if '#' in url:
             url, anchor = url.split('#', maxsplit=1)
         realpath = path_from_url(path, save_dir, prefix, append_location)
+        realpath, compressed = split_if_compressed(realpath)
+        # check if resource is there
+        if anchor:
+            if anchor.startswith('/'):
+                # indicates the folder name has to be polished
+                anchor = anchor.lstrip('/')
+                parts = anchor.split('/')
+                realpath = str(Path(realpath).parent.joinpath(parts[0]))
+                anchor = '/'.join(parts[1:])
+            child = path_join(realpath, anchor)
+            if os.path.exists(child):
+                return child
+        elif os.path.isdir(realpath) or os.path.isfile(realpath):
+            return realpath
+        else:
+            pattern = realpath + '.*'
+            files = glob.glob(pattern)
+            if files:
+                if len(files) > 1:
+                    logger.debug(f'Found multiple files with {pattern}, will use the first one.')
+                return files[0]
+        # realpath is where its path after exaction
+        if compressed:
+            realpath += compressed
         if not os.path.isfile(realpath):
-            realpath, compressed = split_if_compressed(realpath)
-            # check if resource is there
-            if anchor:
-                if anchor.startswith('/'):
-                    # indicates the folder name has to be polished
-                    anchor = anchor.lstrip('/')
-                    parts = anchor.split('/')
-                    realpath = str(Path(realpath).parent.joinpath(parts[0]))
-                    anchor = '/'.join(parts[1:])
-                child = path_join(realpath, anchor)
-                if os.path.exists(child):
-                    return child
-            elif os.path.isdir(realpath) or os.path.isfile(realpath):
-                return realpath
-            else:
-                pattern = realpath + '.*'
-                files = glob.glob(pattern)
-                if files:
-                    if len(files) > 1:
-                        logger.debug(f'Found multiple files with {pattern}, will use the first one.')
-                    return files[0]
-            # realpath is where its path after exaction
-            if compressed:
-                realpath += compressed
             path = download(url=path, save_path=realpath)
         else:
             path = realpath
