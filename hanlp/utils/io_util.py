@@ -161,11 +161,11 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
     if not save_path:
         save_path = path_from_url(url, save_dir, prefix, append_location)
     if os.path.isfile(save_path):
-        print('Using local {}, ignore {}'.format(save_path, url))
+        eprint('Using local {}, ignore {}'.format(save_path, url))
         return save_path
     else:
         makedirs(parent_dir(save_path))
-        print('Downloading {} to {}'.format(url, save_path))
+        eprint('Downloading {} to {}'.format(url, save_path))
         tmp_path = '{}.downloading'.format(save_path)
         remove_file(tmp_path)
         try:
@@ -187,10 +187,10 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
                 eta = duration / ratio * (1 - ratio)
                 speed = human_bytes(speed)
                 progress_size = human_bytes(progress_size)
-                sys.stdout.write("\r%.2f%%, %s/%s, %s/s, ETA %s      " %
+                sys.stderr.write("\r%.2f%%, %s/%s, %s/s, ETA %s      " %
                                  (percent, progress_size, human_bytes(total_size), speed,
                                   time_util.report_time_delta(eta)))
-                sys.stdout.flush()
+                sys.stderr.flush()
 
             import socket
             socket.setdefaulttimeout(10)
@@ -198,7 +198,7 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             opener.addheaders = [('User-agent', f'HanLP/{version.__version__}')]
             urllib.request.install_opener(opener)
             urlretrieve(url, tmp_path, reporthook)
-            print()
+            eprint()
         except BaseException as e:
             remove_file(tmp_path)
             hints_for_download = ''
@@ -253,7 +253,7 @@ def uncompress(path, dest=None, remove=True):
                 else:
                     root_of_folder = None
                     dest = prefix  # assume zip contains more than one files or folders
-            print('Extracting {} to {}'.format(path, dest))
+            eprint('Extracting {} to {}'.format(path, dest))
             archive.extractall(dest)
             if root_of_folder:
                 if root_of_folder != folder_name:
