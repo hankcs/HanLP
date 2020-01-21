@@ -137,8 +137,9 @@ class TransformerClassifier(KerasComponent):
             # opt = tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08)
             self.config.optimizer = tf.keras.utils.serialize_keras_object(opt)
             lr_config = self.config.optimizer['config']['learning_rate']['config']
-            lr_config['decay_schedule_fn'] = dict(
-                (k, v) for k, v in lr_config['decay_schedule_fn'].get_config().items() if not k.startswith('_'))
+            if hasattr(lr_config['decay_schedule_fn'], 'get_config'):
+                lr_config['decay_schedule_fn'] = dict(
+                    (k, v) for k, v in lr_config['decay_schedule_fn'].get_config().items() if not k.startswith('_'))
         else:
             opt = super().build_optimizer(optimizer)
         if use_amp:
