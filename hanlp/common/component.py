@@ -447,13 +447,17 @@ class KerasComponent(Component, ABC):
         if not batch_size:
             batch_size = self.config.batch_size
 
-        dataset = self.transform.inputs_to_dataset(data, batch_size=batch_size)
+        dataset = self.transform.inputs_to_dataset(data, batch_size=batch_size, gold=kwargs.get('gold', False))
 
         results = []
         num_samples = 0
+        data_is_list = isinstance(data, list)
         for idx, batch in enumerate(dataset):
             samples_in_batch = tf.shape(batch[-1] if isinstance(batch[-1], tf.Tensor) else batch[-1][0])[0]
-            inputs = data[num_samples:num_samples + samples_in_batch]
+            if data_is_list:
+                inputs = data[num_samples:num_samples + samples_in_batch]
+            else:
+                inputs = None  # if data is a generator, it's usually one-time, not able to transform into a list
             for output in self.predict_batch(batch, inputs=inputs):
                 results.append(output)
             num_samples += samples_in_batch

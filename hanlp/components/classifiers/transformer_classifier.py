@@ -38,7 +38,7 @@ class TransformerTextTransform(TableTransform):
             if num_features is None:
                 num_features = self.config.num_features
             assert num_features == len(X), f'Numbers of features {num_features} ' \
-                                           f'inconsistent with current {len(X)}'
+                                           f'inconsistent with current {len(X)}={X}'
             text_a = X[0]
             text_b = X[1] if len(X) > 1 else None
             tokens_a = self.tokenizer.tokenize(text_a)
