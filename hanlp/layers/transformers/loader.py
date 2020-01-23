@@ -6,13 +6,13 @@ import os
 
 import bert
 import tensorflow as tf
-from bert import BertModelLayer
+from bert import BertModelLayer, albert_models_tfhub, fetch_tfhub_albert_model
 from bert.loader import _checkpoint_exists, bert_prefix, bert_models_google
-from bert.loader_albert import map_to_tfhub_albert_variable_name
+from bert.loader_albert import map_to_tfhub_albert_variable_name, albert_params
 from tensorflow import keras
 
-from hanlp.layers.transformers import albert_models_google
-from hanlp.utils.io_util import get_resource, stdout_redirected
+from hanlp.layers.transformers import zh_albert_models_google
+from hanlp.utils.io_util import get_resource, stdout_redirected, hanlp_home
 
 
 def load_stock_weights(bert: BertModelLayer, ckpt_path):
@@ -71,27 +71,47 @@ def load_stock_weights(bert: BertModelLayer, ckpt_path):
 
 
 def build_transformer(transformer, max_seq_length, num_labels, tagging=True, tokenizer_only=False):
-    if transformer in albert_models_google:
+    spm_model_file = None
+    if transformer in zh_albert_models_google:
         from bert.tokenization.albert_tokenization import FullTokenizer
-        model_url = albert_models_google[transformer]
+        model_url = zh_albert_models_google[transformer]
         albert = True
+    elif transformer in albert_models_tfhub:
+        from hanlp.layers.transformers.albert_tokenization import FullTokenizer
+        with stdout_redirected(to=os.devnull):
+            model_url = fetch_tfhub_albert_model(transformer,
+                                                 os.path.join(hanlp_home(), 'thirdparty', 'tfhub.dev', 'google',
+                                                              transformer))
+        albert = True
+        spm_model_file = glob.glob(os.path.join(model_url, 'assets', '*.model'))
+        assert len(spm_model_file) == 1, 'No vocab found or unambiguous vocabs found'
+        spm_model_file = spm_model_file[0]
     elif transformer in bert_models_google:
         from bert.tokenization.bert_tokenization import FullTokenizer
         model_url = bert_models_google[transformer]
         albert = False
     else:
         raise ValueError(
-            f'Unknown model {transformer}, available ones: {list(bert_models_google.keys()) + list(albert_models_google.keys())}')
+            f'Unknown model {transformer}, available ones: {list(bert_models_google.keys()) + list(zh_albert_models_google.keys()) + list(albert_models_tfhub.keys())}')
     bert_dir = get_resource(model_url)
-    vocab = glob.glob(os.path.join(bert_dir, '*vocab*.txt'))
+    if spm_model_file:
+        vocab = glob.glob(os.path.join(bert_dir, 'assets', '*.vocab'))
+    else:
+        vocab = glob.glob(os.path.join(bert_dir, '*vocab*.txt'))
     assert len(vocab) == 1, 'No vocab found or unambiguous vocabs found'
     vocab = vocab[0]
-    # noinspection PyTypeChecker
-    tokenizer = FullTokenizer(vocab_file=vocab)
+    if spm_model_file:
+        # noinspection PyTypeChecker
+        tokenizer = FullTokenizer(vocab_file=vocab, spm_model_file=spm_model_file)
+    else:
+        tokenizer = FullTokenizer(vocab_file=vocab)
     if tokenizer_only:
         return tokenizer
-    bert_params = bert.params_from_pretrained_ckpt(bert_dir)
-    l_bert = bert.BertModelLayer.from_params(bert_params, name="bert")
+    if spm_model_file:
+        bert_params = albert_params(bert_dir)
+    else:
+        bert_params = bert.params_from_pretrained_ckpt(bert_dir)
+    l_bert = bert.BertModelLayer.from_params(bert_params, name='albert' if albert else "bert")
     l_input_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype='int32', name="input_ids")
     l_mask_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype='int32', name="mask_ids")
     l_token_type_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype='int32', name="token_type_ids")
@@ -104,13 +124,19 @@ def build_transformer(transformer, max_seq_length, num_labels, tagging=True, tok
         bert_params.initializer_range))(output)
     model = tf.keras.Model(inputs=[l_input_ids, l_mask_ids, l_token_type_ids], outputs=logits)
     model.build(input_shape=(None, max_seq_length))
-    ckpt = glob.glob(os.path.join(bert_dir, '*.index'))
-    assert ckpt, f'No checkpoint found under {bert_dir}'
-    ckpt, _ = os.path.splitext(ckpt[0])
+    if not spm_model_file:
+        ckpt = glob.glob(os.path.join(bert_dir, '*.index'))
+        assert ckpt, f'No checkpoint found under {bert_dir}'
+        ckpt, _ = os.path.splitext(ckpt[0])
     with stdout_redirected(to=os.devnull):
         if albert:
-            skipped_weight_value_tuples = load_stock_weights(l_bert, ckpt)
+            if spm_model_file:
+                skipped_weight_value_tuples = bert.load_albert_weights(l_bert, bert_dir)
+            else:
+                # noinspection PyUnboundLocalVariable
+                skipped_weight_value_tuples = load_stock_weights(l_bert, ckpt)
         else:
+            # noinspection PyUnboundLocalVariable
             skipped_weight_value_tuples = bert.load_bert_weights(l_bert, ckpt)
     assert 0 == len(skipped_weight_value_tuples), f'failed to load pretrained {transformer}'
     return model, tokenizer
