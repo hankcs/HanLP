@@ -23,7 +23,8 @@ class Pipe(Component):
         self.meta.update({
             'component': component.meta,
             'input_key': self.input_key,
-            'output_key': self.output_key
+            'output_key': self.output_key,
+            'kwargs': self.kwargs
         })
 
     # noinspection PyShadowingBuiltins
@@ -67,7 +68,7 @@ class Pipe(Component):
     def from_meta(meta: dict, **kwargs):
         cls = str_to_type(meta['class_path'])
         component = load_from_meta(meta['component'])
-        return cls(component, meta['input_key'], meta['output_key'])
+        return cls(component, meta['input_key'], meta['output_key'], **meta['kwargs'])
 
 
 class Pipeline(Component, list):

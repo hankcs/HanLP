@@ -458,7 +458,7 @@ class KerasComponent(Component, ABC):
                 inputs = data[num_samples:num_samples + samples_in_batch]
             else:
                 inputs = None  # if data is a generator, it's usually one-time, not able to transform into a list
-            for output in self.predict_batch(batch, inputs=inputs):
+            for output in self.predict_batch(batch, inputs=inputs, **kwargs):
                 results.append(output)
             num_samples += samples_in_batch
 
@@ -466,10 +466,10 @@ class KerasComponent(Component, ABC):
             return results[0]
         return results
 
-    def predict_batch(self, batch, inputs=None):
+    def predict_batch(self, batch, inputs=None, **kwargs):
         X = batch[0]
         Y = self.model.predict_on_batch(X)
-        for output in self.transform.Y_to_outputs(Y, X=X, inputs=inputs):
+        for output in self.transform.Y_to_outputs(Y, X=X, inputs=inputs, **kwargs):
             yield output
 
     @property

@@ -1,6 +1,6 @@
 # HanLP: Han Language Processing
 
-[中文](https://github.com/hankcs/HanLP/wiki/README.zh-CN) | [1.x](https://github.com/hankcs/HanLP/tree/1.x) | [forum](https://bbs.hankcs.com/)
+[中文](https://github.com/hankcs/HanLP/tree/doc-zh) | [1.x](https://github.com/hankcs/HanLP/tree/1.x) | [forum](https://bbs.hankcs.com/)
 
 The multilingual NLP library for researchers and companies, built on TensorFlow 2.0, for advancing state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be efficient, user friendly and extendable. It comes with pretrained models for various human languages including English, Chinese and many others. Currently, HanLP 2.0 is in alpha stage with more killer features on the roadmap. Discussions are welcomed on our [forum](https://bbs.hankcs.com/), while bug reports and feature requests are reserved for GitHub issues. For Java users, please checkout the [1.x](https://github.com/hankcs/HanLP/tree/1.x) branch.
 

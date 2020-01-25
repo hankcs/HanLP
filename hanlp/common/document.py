@@ -5,7 +5,7 @@ import json
 from typing import List
 
 from hanlp.common.structure import SerializableDict
-from hanlp.components.parsers.conll import CoNLLWord, CoNLLSentence
+from hanlp.components.parsers.conll import CoNLLSentence
 from hanlp.utils.util import collapse_json
 
 
@@ -46,7 +46,7 @@ class Document(SerializableDict):
         return dict((k, v) for k, v in self.items() if v)
 
     def to_json(self, ensure_ascii=False, indent=2) -> str:
-        text = json.dumps(self.to_dict(), ensure_ascii=ensure_ascii, indent=indent, default=_document_json_encode)
+        text = json.dumps(self.to_dict(), ensure_ascii=ensure_ascii, indent=indent)
         text = collapse_json(text, 4)
         return text
 
@@ -62,10 +62,3 @@ class Document(SerializableDict):
         for k, v in self.items():
             if len(v) and isinstance(v[0], CoNLLSentence):
                 return v
-
-
-def _document_json_encode(o):
-    if isinstance(o, CoNLLWord):
-        # return o.nonempty_fields
-        return [o.head, o.deprel]
-    return repr(o)
