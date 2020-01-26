@@ -11,14 +11,14 @@ from hanlp.utils.reflection import object_from_class_path, str_to_type
 from hanlp import version
 
 
-def load_from_meta_file(save_dir:str, meta_filename='meta.json', transform_only=False, load_kwargs=None,
+def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only=False, load_kwargs=None,
                         **kwargs) -> Component:
-    if save_dir.endswith('.json'):
-        meta_filename = os.path.basename(save_dir)
-        save_dir = os.path.dirname(save_dir)
     identifier = save_dir
     load_path = save_dir
     save_dir = get_resource(save_dir)
+    if save_dir.endswith('.json'):
+        meta_filename = os.path.basename(save_dir)
+        save_dir = os.path.dirname(save_dir)
     metapath = os.path.join(save_dir, meta_filename)
     if not os.path.isfile(metapath):
         tips = ''
