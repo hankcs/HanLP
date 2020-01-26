@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-31 03:24
-import json
 
 import hanlp
 
@@ -31,6 +30,6 @@ print(doc)
 # You can save the config to disk for deploying or sharing.
 pipeline.save('zh.json')
 # Then load it smoothly.
-deployed = hanlp.components.Pipeline.from_meta('zh.json')
+deployed = hanlp.load('zh.json')
 print(deployed)
 print(deployed(text))
