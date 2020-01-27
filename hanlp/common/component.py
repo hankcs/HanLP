@@ -196,7 +196,7 @@ class KerasComponent(Component, ABC):
     def save_weights(self, save_dir, filename='model.h5'):
         self.model.save_weights(os.path.join(save_dir, filename))
 
-    def load_weights(self, save_dir, filename='model.h5'):
+    def load_weights(self, save_dir, filename='model.h5', **kwargs):
         assert self.model.built or self.model.weights, 'You must call self.model.built() in build_model() ' \
                                                        'in order to load it'
         save_dir = get_resource(save_dir)
