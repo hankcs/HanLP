@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2019-12-26 15:37
 from collections import Counter
-from typing import Generator, Tuple, Union, Iterable, Any
+from typing import Generator, Tuple, Union, Iterable, Any, List
 
 import tensorflow as tf
 import numpy as np
@@ -92,6 +92,41 @@ class CoNLLSentence(list):
 
     def __str__(self):
         return '\n'.join([word.__str__() for word in self])
+
+    @staticmethod
+    def from_str(conll: str):
+        """
+        Build a CoNLLSentence from CoNLL-X format str
+
+        Parameters
+        ----------
+        conll : str
+             CoNLL-X format string
+
+        Returns
+        -------
+        CoNLLSentence
+
+        """
+        words: List[CoNLLWord] = []
+        prev_id = None
+        for line in conll.strip().split('\n'):
+            if line.startswith('#'):
+                continue
+            cells = line.split()
+            cells[0] = int(cells[0])
+            cells[6] = int(cells[6])
+            if cells[0] != prev_id:
+                words.append(CoNLLWord(*cells))
+            else:
+                if isinstance(words[-1].head, list):
+                    words[-1].head.append(cells[6])
+                    words[-1].deprel.append(cells[7])
+                else:
+                    words[-1].head = [words[-1].head] + [cells[6]]
+                    words[-1].deprel = [words[-1].deprel] + [cells[7]]
+            prev_id = cells[0]
+        return CoNLLSentence(words)
 
 
 def read_conll(filepath):

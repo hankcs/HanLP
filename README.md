@@ -139,16 +139,11 @@ Parsers take both tokens and part-of-speech tags as input. The output is a tree 
 
 ```python
 >>> syntactic_parser = hanlp.load(hanlp.pretrained.dep.CTB7_BIAFFINE_DEP_ZH)
->>> print(syntactic_parser([('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]))
-1	中国	_	NR	_	_	2	nsubj	_	_
-2	批准	_	VV	_	_	0	root	_	_
-3	设立	_	VV	_	_	2	ccomp	_	_
-4	了	_	AS	_	_	3	asp	_	_
-5	三十万	_	CD	_	_	6	nummod	_	_
-6	家	_	M	_	_	9	clf	_	_
-7	外商	_	NN	_	_	9	nn	_	_
-8	投资	_	NN	_	_	9	nn	_	_
-9	企业	_	NN	_	_	3	dobj	_	_
+>>> print(syntactic_parser([('蜡烛', 'NN'), ('两', 'CD'), ('头', 'NN'), ('烧', 'VV')]))
+1	蜡烛	_	NN	_	_	4	nsubj	_	_
+2	两	_	CD	_	_	3	nummod	_	_
+3	头	_	NN	_	_	4	dep	_	_
+4	烧	_	VV	_	_	0	root	_	_
 ```
 
 ### Semantic Dependency Parsing
@@ -175,21 +170,15 @@ HanLP implements the biaffine[^biaffine] model which delivers the SOTA performan
 
 ```python
 >>> semantic_parser = hanlp.load(SEMEVAL16_NEWS_BIAFFINE_ZH)
->>> print(semantic_parser([('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]))
-1	中国	_	NR	_	_	2	Agt	_	_
-1	中国	_	NR	_	_	3	Agt	_	_
-2	批准	_	VV	_	_	0	Root	_	_
-3	设立	_	VV	_	_	2	eProg	_	_
-4	了	_	AS	_	_	3	mTime	_	_
-5	三十万	_	CD	_	_	6	Quan	_	_
-6	家	_	M	_	_	9	Qp	_	_
-7	外商	_	NN	_	_	8	Agt	_	_
-8	投资	_	NN	_	_	9	rDatv	_	_
-9	企业	_	NN	_	_	2	Pat	_	_
-9	企业	_	NN	_	_	3	Prod	_	_
+>>> print(semantic_parser([('蜡烛', 'NN'), ('两', 'CD'), ('头', 'NN'), ('烧', 'VV')]))
+1	蜡烛	_	NN	_	_	3	Poss	_	_
+1	蜡烛	_	NN	_	_	4	Pat	_	_
+2	两	_	CD	_	_	3	Quan	_	_
+3	头	_	NN	_	_	4	Loc	_	_
+4	烧	_	VV	_	_	0	Root	_	_
 ```
 
-The output is a `CoNLLSentence` too. However, it's not a tree but a graph in which one node can have multiple heads, e.g. `中国` has two heads (ID 2 and 3).
+The output is a `CoNLLSentence` too. However, it's not a tree but a graph in which one node can have multiple heads, e.g. `蜡烛` has two heads (ID 3 and 4).
 
 ### Pipelines
 

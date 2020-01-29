@@ -4,6 +4,6 @@
 import hanlp
 
 syntactic_parser = hanlp.load(hanlp.pretrained.dep.CTB7_BIAFFINE_DEP_ZH)
-sent = [('中国', 'NR'),('批准', 'VV'),('设立', 'VV'),('了', 'AS'),('三十万', 'CD'),('家', 'M'),('外商', 'NN'),('投资', 'NN'), ('企业', 'NN')]
-tree = syntactic_parser.predict(sent)
+sent = [('蜡烛', 'NN'), ('两', 'CD'), ('头', 'NN'), ('烧', 'VV')]
+tree = syntactic_parser(sent)
 print(tree)
