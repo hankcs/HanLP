@@ -30,12 +30,12 @@ class Sentence(SerializableDict):
 class Document(SerializableDict):
     def __init__(self) -> None:
         super().__init__()
-        self.sentences = []
-        self.tokens = []
-        self.part_of_speech_tags = []
-        self.named_entities = []
-        self.syntactic_dependencies = []
-        self.semantic_dependencies = []
+        # self.sentences = []
+        # self.tokens = []
+        # self.part_of_speech_tags = []
+        # self.named_entities = []
+        # self.syntactic_dependencies = []
+        # self.semantic_dependencies = []
 
     def __missing__(self, key):
         value = []
