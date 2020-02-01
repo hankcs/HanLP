@@ -2,52 +2,52 @@ HanLP: Han Language Processing
 =====
 
 汉语言处理包
-[![Maven Central](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/hankcs/hanlp/maven-metadata.xml.svg)](https://mvnrepository.com/artifact/com.hankcs/hanlp)
+[![Maven Central](https://img.shields.io/maven-central/v/com.hankcs/hanlp?label=maven)](https://mvnrepository.com/artifact/com.hankcs/hanlp)
 [![GitHub release](https://img.shields.io/github/release/hankcs/HanLP.svg)](https://github.com/hankcs/hanlp/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Docker Stars](https://img.shields.io/docker/stars/samurais/hanlp-api.svg?maxAge=2592000)](https://hub.docker.com/r/samurais/hanlp-api/)
 
 ------
 
-HanLP是一系列模型与算法组成的NLP工具包，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。内部算法经过工业界和学术界考验，配套书籍[《自然语言处理入门》](http://nlp.hankcs.com/book.php)已经出版。
+HanLP是一系列模型与算法组成的NLP工具包，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。内部算法经过工业界和学术界考验，配套书籍[《自然语言处理入门》](http://nlp.hankcs.com/book.php)已经出版。目前，基于深度学习的[HanLP 2.0](https://github.com/hankcs/HanLP/tree/doc-zh)正处于alpha测试阶段，未来将实现知识图谱、问答系统、自动摘要、文本语义相似度、指代消解、三元组抽取、实体链接等功能。
 
 HanLP提供下列功能：
 
 * 中文分词
     * HMM-Bigram（速度与精度最佳平衡；一百兆内存）
-        * [最短路分词](https://github.com/hankcs/HanLP#1-%E7%AC%AC%E4%B8%80%E4%B8%AAdemo)、[N-最短路分词](https://github.com/hankcs/HanLP#5-n-%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E5%88%86%E8%AF%8D)
+        * [最短路分词](https://github.com/hankcs/HanLP/tree/1.x#1-%E7%AC%AC%E4%B8%80%E4%B8%AAdemo)、[N-最短路分词](https://github.com/hankcs/HanLP/tree/1.x#5-n-%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E5%88%86%E8%AF%8D)
     * 由字构词（侧重精度，全世界最大语料库，可识别新词；适合NLP任务）
-        * [感知机分词](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)、[CRF分词](https://github.com/hankcs/HanLP#6-crf%E5%88%86%E8%AF%8D)
+        * [感知机分词](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)、[CRF分词](https://github.com/hankcs/HanLP/tree/1.x#6-crf%E5%88%86%E8%AF%8D)
     * 词典分词（侧重速度，每秒数千万字符；省内存）
-        * [极速词典分词](https://github.com/hankcs/HanLP#7-%E6%9E%81%E9%80%9F%E8%AF%8D%E5%85%B8%E5%88%86%E8%AF%8D)
+        * [极速词典分词](https://github.com/hankcs/HanLP/tree/1.x#7-%E6%9E%81%E9%80%9F%E8%AF%8D%E5%85%B8%E5%88%86%E8%AF%8D)
     * 所有分词器都支持：
-        * [索引全切分模式](https://github.com/hankcs/HanLP#4-%E7%B4%A2%E5%BC%95%E5%88%86%E8%AF%8D)
-        * [用户自定义词典](https://github.com/hankcs/HanLP#8-%E7%94%A8%E6%88%B7%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%8D%E5%85%B8)
-        * [兼容繁体中文](https://github.com/hankcs/HanLP/blob/master/src/test/java/com/hankcs/demo/DemoPerceptronLexicalAnalyzer.java#L29)
+        * [索引全切分模式](https://github.com/hankcs/HanLP/tree/1.x#4-%E7%B4%A2%E5%BC%95%E5%88%86%E8%AF%8D)
+        * [用户自定义词典](https://github.com/hankcs/HanLP/tree/1.x#8-%E7%94%A8%E6%88%B7%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%8D%E5%85%B8)
+        * [兼容繁体中文](https://github.com/hankcs/HanLP/blob/1.x/src/test/java/com/hankcs/demo/DemoPerceptronLexicalAnalyzer.java#L29)
         * [训练用户自己的领域模型](https://github.com/hankcs/HanLP/wiki)
 * 词性标注
-    * [HMM词性标注](https://github.com/hankcs/HanLP/blob/master/src/main/java/com/hankcs/hanlp/seg/Segment.java#L584)（速度快）
+    * [HMM词性标注](https://github.com/hankcs/HanLP/blob/1.x/src/main/java/com/hankcs/hanlp/seg/Segment.java#L584)（速度快）
     * [感知机词性标注](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)、[CRF词性标注](https://github.com/hankcs/HanLP/wiki/CRF%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90)（精度高）
 * 命名实体识别
     * 基于HMM角色标注的命名实体识别 （速度快）
-        * [中国人名识别](https://github.com/hankcs/HanLP#9-%E4%B8%AD%E5%9B%BD%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)、[音译人名识别](https://github.com/hankcs/HanLP#10-%E9%9F%B3%E8%AF%91%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)、[日本人名识别](https://github.com/hankcs/HanLP#11-%E6%97%A5%E6%9C%AC%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)、[地名识别](https://github.com/hankcs/HanLP#12-%E5%9C%B0%E5%90%8D%E8%AF%86%E5%88%AB)、[实体机构名识别](https://github.com/hankcs/HanLP#13-%E6%9C%BA%E6%9E%84%E5%90%8D%E8%AF%86%E5%88%AB)
+        * [中国人名识别](https://github.com/hankcs/HanLP/tree/1.x#9-%E4%B8%AD%E5%9B%BD%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)、[音译人名识别](https://github.com/hankcs/HanLP/tree/1.x#10-%E9%9F%B3%E8%AF%91%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)、[日本人名识别](https://github.com/hankcs/HanLP/tree/1.x#11-%E6%97%A5%E6%9C%AC%E4%BA%BA%E5%90%8D%E8%AF%86%E5%88%AB)、[地名识别](https://github.com/hankcs/HanLP/tree/1.x#12-%E5%9C%B0%E5%90%8D%E8%AF%86%E5%88%AB)、[实体机构名识别](https://github.com/hankcs/HanLP/tree/1.x#13-%E6%9C%BA%E6%9E%84%E5%90%8D%E8%AF%86%E5%88%AB)
     * 基于线性模型的命名实体识别（精度高）
         * [感知机命名实体识别](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)、[CRF命名实体识别](https://github.com/hankcs/HanLP/wiki/CRF%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90)
 * 关键词提取
-    * [TextRank关键词提取](https://github.com/hankcs/HanLP#14-%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96)
+    * [TextRank关键词提取](https://github.com/hankcs/HanLP/tree/1.x#14-%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96)
 * 自动摘要
-    * [TextRank自动摘要](https://github.com/hankcs/HanLP#15-%E8%87%AA%E5%8A%A8%E6%91%98%E8%A6%81)
+    * [TextRank自动摘要](https://github.com/hankcs/HanLP/tree/1.x#15-%E8%87%AA%E5%8A%A8%E6%91%98%E8%A6%81)
 * 短语提取
-    * [基于互信息和左右信息熵的短语提取](https://github.com/hankcs/HanLP#16-%E7%9F%AD%E8%AF%AD%E6%8F%90%E5%8F%96)
-* [拼音转换](https://github.com/hankcs/HanLP#17-%E6%8B%BC%E9%9F%B3%E8%BD%AC%E6%8D%A2)
+    * [基于互信息和左右信息熵的短语提取](https://github.com/hankcs/HanLP/tree/1.x#16-%E7%9F%AD%E8%AF%AD%E6%8F%90%E5%8F%96)
+* [拼音转换](https://github.com/hankcs/HanLP/tree/1.x#17-%E6%8B%BC%E9%9F%B3%E8%BD%AC%E6%8D%A2)
     * 多音字、声母、韵母、声调
-* [简繁转换](https://github.com/hankcs/HanLP#18-%E7%AE%80%E7%B9%81%E8%BD%AC%E6%8D%A2)
+* [简繁转换](https://github.com/hankcs/HanLP/tree/1.x#18-%E7%AE%80%E7%B9%81%E8%BD%AC%E6%8D%A2)
     * 简繁分歧词（简体、繁体、臺灣正體、香港繁體）
-* [文本推荐](https://github.com/hankcs/HanLP#19-%E6%96%87%E6%9C%AC%E6%8E%A8%E8%8D%90)
+* [文本推荐](https://github.com/hankcs/HanLP/tree/1.x#19-%E6%96%87%E6%9C%AC%E6%8E%A8%E8%8D%90)
     * 语义推荐、拼音推荐、字词推荐
 * 依存句法分析
-    * [基于神经网络的高性能依存句法分析器](https://github.com/hankcs/HanLP#21-%E4%BE%9D%E5%AD%98%E5%8F%A5%E6%B3%95%E5%88%86%E6%9E%90)
-    * [基于ArcEager转移系统的柱搜索依存句法分析器](https://github.com/hankcs/HanLP/blob/master/src/test/java/com/hankcs/demo/DemoDependencyParser.java#L34)
+    * [基于神经网络的高性能依存句法分析器](https://github.com/hankcs/HanLP/tree/1.x#21-%E4%BE%9D%E5%AD%98%E5%8F%A5%E6%B3%95%E5%88%86%E6%9E%90)
+    * [基于ArcEager转移系统的柱搜索依存句法分析器](https://github.com/hankcs/HanLP/blob/1.x/src/test/java/com/hankcs/demo/DemoDependencyParser.java#L34)
 * [文本分类](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%8E%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90)
     * [情感分析](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%8E%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90#%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90)
 * [文本聚类](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E8%81%9A%E7%B1%BB)
@@ -55,7 +55,7 @@ HanLP提供下列功能：
 * [word2vec](https://github.com/hankcs/HanLP/wiki/word2vec)
     * 词向量训练、加载、词语相似度计算、语义运算、查询、KMeans聚类
     * 文档语义相似度计算
-* [语料库工具](https://github.com/hankcs/HanLP/tree/master/src/main/java/com/hankcs/hanlp/corpus)
+* [语料库工具](https://github.com/hankcs/HanLP/tree/1.x/src/main/java/com/hankcs/hanlp/corpus)
     - 部分默认模型训练自小型语料库，鼓励用户自行训练。所有模块提供[训练接口](https://github.com/hankcs/HanLP/wiki)，语料可参考[98年人民日报语料库](http://file.hankcs.com/corpus/pku98.zip)。
 
 在提供丰富功能的同时，HanLP内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便。默认模型训练自全世界最大规模的中文语料库，同时自带一些语料处理工具，帮助用户训练自己的模型。
@@ -120,7 +120,7 @@ HanLP中的数据分为*词典*和*模型*，其中*词典*是词法分析必需
 
 HanLP几乎所有的功能都可以通过工具类`HanLP`快捷调用，当你想不起来调用方法时，只需键入`HanLP.`，IDE应当会给出提示，并展示HanLP完善的文档。
 
-所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下，比文档覆盖了更多细节，更新更及时，**强烈建议运行一遍**。此处仅列举部分常用接口。
+所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/1.x/src/test/java/com/hankcs/demo)下，比文档覆盖了更多细节，更新更及时，**强烈建议运行一遍**。此处仅列举部分常用接口。
 
 ### 1. 第一个Demo
 
@@ -746,18 +746,19 @@ HanLP.Config.enableDebug();
 
 ## 版权
 
-### Apache License Version 2.0
+HanLP 的授权协议为 **Apache License 2.0**，可免费用做商业用途。请在产品说明中附加HanLP的链接和授权协议。HanLP受版权法保护，侵权必究。
 
-- 如不特殊注明，所有模块都以此协议授权使用。
-- 任何使用了HanLP的全部或部分功能、词典、模型的项目、产品或文章等形式的成果必须显式注明HanLP及此项目主页。
+##### 自然语义（青岛）科技有限公司
 
-### 青岛大快搜索计算技术股份有限公司
+HanLP从v1.7版起独立运作，由自然语义（青岛）科技有限公司作为项目主体，主导后续版本的开发，并拥有后续版本的版权。
 
-- HanLP从v1.3版本起至v1.6正式由大快搜索主导开发，并拥有1.3-1.6版本的版权。这些版本继续完全开源，唯一官网为：http://hanlp.com/ 。
+##### 大快搜索
 
-### 上海林原信息科技有限公司
+HanLP v1.3~v1.65版由大快搜索主导开发，继续完全开源，大快搜索拥有相关版权。
 
-- HanLP 早期得到了上海林原公司的大力支持，并拥有1.2及前序版本的版权，相关版本也曾在上海林源公司网站发布。
+##### 上海林原公司
+
+HanLP 早期得到了上海林原公司的大力支持，并拥有1.28及前序版本的版权，相关版本也曾在上海林原公司网站发布。
 
 ### 其他版权方
 - 实施上由个人维护，欢迎任何人与任何公司向本项目开源模块。
