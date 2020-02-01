@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: 🚀Feature request
 about: Suggest an idea for this project
 title: ''
 labels: feature request
@@ -8,7 +8,8 @@ assignees: hankcs
 ---
 
 <!--
-Please carefully fill out this form to bypass our spam filter. Please make sure that this is a feature request. We only address bugs and feature requests issues on GitHub. Other questions should be posted on stackoverflow or https://bbs.hankcs.com/
+Thank you for suggesting an idea to make HanLP better.
+Please fill in the template below to bypass our spam filter.  
 以下必填，否则直接关闭。
 -->
 

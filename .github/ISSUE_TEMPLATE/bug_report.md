@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: 🐛Bug report
 about: Create a report to help us improve
 title: ''
 labels: bug
@@ -8,7 +8,8 @@ assignees: hankcs
 ---
 
 <!--
-Please carefully fill out this form to bypass our spam filter. Please make sure that this is a bug. We only address bugs and feature requests issues on GitHub. Other questions should be posted on stackoverflow or https://bbs.hankcs.com/
+Thank you for reporting a possible bug in HanLP.
+Please fill in the template below to bypass our spam filter.  
 以下必填，否则直接关闭。
 -->
 
