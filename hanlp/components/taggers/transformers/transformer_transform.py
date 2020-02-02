@@ -21,6 +21,8 @@ class TransformerTransform(TsvTaggingFormat, Transform):
         self._tokenizer = tokenizer
         self.tag_vocab: Vocab = None
         self.special_token_ids = None
+        self.pad = '[PAD]'
+        self.unk = '[UNK]'
 
     @property
     def max_seq_length(self):
@@ -34,7 +36,12 @@ class TransformerTransform(TsvTaggingFormat, Transform):
     @tokenizer.setter
     def tokenizer(self, tokenizer):
         self._tokenizer = tokenizer
-        self.special_token_ids = tf.constant([tokenizer.vocab[token] for token in ['[PAD]', '[CLS]', '[SEP]']],
+        if self.pad not in tokenizer.vocab:
+            # English albert use <pad> instead of [PAD]
+            self.pad = '<pad>'
+        if self.unk not in tokenizer.vocab:
+            self.unk = '<unk>'
+        self.special_token_ids = tf.constant([tokenizer.vocab[token] for token in [self.pad, '[CLS]', '[SEP]']],
                                              dtype=tf.int32)
 
     def fit(self, trn_path: str, **kwargs) -> int:
@@ -61,10 +68,10 @@ class TransformerTransform(TsvTaggingFormat, Transform):
         tokenizer = self._tokenizer
         xlnet = False
         roberta = False
-        pad_token = '[PAD]'
+        pad_token = self.pad
         cls_token = '[CLS]'
         sep_token = '[SEP]'
-        unk_token = '[UNK]'
+        unk_token = self.unk
 
         pad_label_idx = self.tag_vocab.pad_idx
         pad_token = tokenizer.convert_tokens_to_ids([pad_token])[0]

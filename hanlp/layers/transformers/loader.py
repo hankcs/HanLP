@@ -100,11 +100,12 @@ def build_transformer(transformer, max_seq_length, num_labels, tagging=True, tok
         vocab = glob.glob(os.path.join(bert_dir, '*vocab*.txt'))
     assert len(vocab) == 1, 'No vocab found or unambiguous vocabs found'
     vocab = vocab[0]
+    lower_case = any(key in transformer for key in ['uncased', 'multilingual', 'chinese', 'albert'])
     if spm_model_file:
         # noinspection PyTypeChecker
-        tokenizer = FullTokenizer(vocab_file=vocab, spm_model_file=spm_model_file)
+        tokenizer = FullTokenizer(vocab_file=vocab, spm_model_file=spm_model_file, do_lower_case=lower_case)
     else:
-        tokenizer = FullTokenizer(vocab_file=vocab)
+        tokenizer = FullTokenizer(vocab_file=vocab, do_lower_case=lower_case)
     if tokenizer_only:
         return tokenizer
     if spm_model_file:
