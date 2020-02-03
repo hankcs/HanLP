@@ -9,6 +9,7 @@ import platform
 import random
 import shutil
 import sys
+from sys import exit
 from contextlib import contextmanager
 import tempfile
 import time

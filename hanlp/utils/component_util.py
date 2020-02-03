@@ -3,6 +3,7 @@
 # Date: 2019-12-31 19:24
 import os
 import traceback
+from sys import exit
 
 from hanlp import pretrained
 from hanlp.common.component import Component
@@ -58,7 +59,8 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             eprint(
                 f'{identifier} was created with hanlp-{model_version}, while you are running {cur_version}. '
                 f'Try to upgrade hanlp with\n'
-                f'pip install --upgrade hanlp')
+                f'pip install --upgrade hanlp\n'
+                f'If the problem persists, please submit an issue to https://github.com/hankcs/HanLP/issues .')
         exit(1)
 
 
