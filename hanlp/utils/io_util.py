@@ -314,11 +314,14 @@ def get_resource(path: str, save_dir=None, extract=True, prefix=HANLP_URL, appen
             child = path_join(realpath, anchor)
             if os.path.exists(child):
                 return child
-        elif os.path.isdir(realpath) or os.path.isfile(realpath):
+        elif os.path.isdir(realpath) or (os.path.isfile(realpath) and (not compressed or not extract)):
             return realpath
         else:
             pattern = realpath + '.*'
             files = glob.glob(pattern)
+            zip_path = realpath + compressed
+            if zip_path in files:
+                files.remove(zip_path)
             if files:
                 if len(files) > 1:
                     logger.debug(f'Found multiple files with {pattern}, will use the first one.')
