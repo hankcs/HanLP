@@ -544,6 +544,9 @@ def stdout_redirected(to=os.devnull, stdout=None):
     to
     stdout
     """
+    if windows():  # This doesn't play well with windows
+        yield None
+        return
     if stdout is None:
         stdout = sys.stdout
     stdout_fd = fileno(stdout)
@@ -564,5 +567,9 @@ def stdout_redirected(to=os.devnull, stdout=None):
         finally:
             # restore stdout to its previous value
             # NOTE: dup2 makes stdout_fd inheritable unconditionally
-            stdout.flush()
-            os.dup2(copied.fileno(), stdout_fd)  # $ exec >&copied
+            try:
+                stdout.flush()
+                os.dup2(copied.fileno(), stdout_fd)  # $ exec >&copied
+            except:
+                # This is the best we can do
+                pass
