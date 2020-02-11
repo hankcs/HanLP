@@ -76,14 +76,11 @@ class TextTransform(Transform):
     def y_to_idx(self, y) -> tf.Tensor:
         return self.x_to_idx(y)
 
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False) -> Iterable:
-        mask = Y._keras_mask
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, **kwargs) -> Iterable:
         pred = tf.argmax(Y, axis=-1)
-        for ys, ms in zip(pred, mask):
+        for ys, ms in zip(pred, inputs):
             ret = []
-            for y, m in zip(ys, ms):
-                if not m:
-                    break
+            for y in ys:
                 ret.append(self.vocab.idx_to_token[int(y)])
             yield ret
 
