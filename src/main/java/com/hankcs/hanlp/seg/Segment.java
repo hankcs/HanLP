@@ -91,7 +91,7 @@ public abstract class Segment
             nCurType = charTypeArray[pCur - start];
 
             if (nCurType == CharType.CT_CHINESE || nCurType == CharType.CT_INDEX ||
-                    nCurType == CharType.CT_DELIMITER || nCurType == CharType.CT_OTHER)
+                nCurType == CharType.CT_DELIMITER || nCurType == CharType.CT_OTHER)
             {
                 String single = String.valueOf(charArray[pCur]);
                 if (single.length() != 0)
@@ -169,9 +169,9 @@ public abstract class Segment
                 // 浮点数识别
                 if (preType == CharType.CT_NUM && "，,．.".indexOf(charArray[offsetAtom]) != -1)
                 {
-                    if (offsetAtom+1 < end)
+                    if (offsetAtom + 1 < end)
                     {
-                        int nextType = CharType.get(charArray[offsetAtom+1]);
+                        int nextType = CharType.get(charArray[offsetAtom + 1]);
                         if (nextType == CharType.CT_NUM)
                         {
                             continue;
@@ -191,6 +191,7 @@ public abstract class Segment
 
     /**
      * 使用用户词典合并粗分结果
+     *
      * @param vertexList 粗分结果
      * @return 合并后的结果
      */
@@ -201,8 +202,9 @@ public abstract class Segment
 
     /**
      * 使用用户词典合并粗分结果
+     *
      * @param vertexList 粗分结果
-     * @param dat 用户自定义词典
+     * @param dat        用户自定义词典
      * @return 合并后的结果
      */
     protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, DoubleArrayTrie<CoreDictionary.Attribute> dat)
@@ -280,6 +282,7 @@ public abstract class Segment
 
     /**
      * 使用用户词典合并粗分结果，并将用户词语收集到全词图中
+     *
      * @param vertexList 粗分结果
      * @param wordNetAll 收集用户词语到全词图中
      * @return 合并后的结果
@@ -291,8 +294,9 @@ public abstract class Segment
 
     /**
      * 使用用户词典合并粗分结果，并将用户词语收集到全词图中
+     *
      * @param vertexList 粗分结果
-     * @param dat 用户自定义词典
+     * @param dat        用户自定义词典
      * @param wordNetAll 收集用户词语到全词图中
      * @return 合并后的结果
      */
@@ -323,10 +327,11 @@ public abstract class Segment
 
     /**
      * 将连续的词语合并为一个
+     *
      * @param wordNet 词图
-     * @param start 起始下标（包含）
-     * @param end 结束下标（不包含）
-     * @param value 新的属性
+     * @param start   起始下标（包含）
+     * @param end     结束下标（不包含）
+     * @param value   新的属性
      */
     private static void combineWords(Vertex[] wordNet, int start, int end, CoreDictionary.Attribute value)
     {
@@ -401,6 +406,7 @@ public abstract class Segment
 
     /**
      * 合并数字
+     *
      * @param termList
      */
     protected void mergeNumberQuantifier(List<Vertex> termList, WordNet wordNetAll, Config config)
@@ -461,10 +467,11 @@ public abstract class Segment
 
     /**
      * 将一个词语从词网中彻底抹除
-     * @param cur 词语
+     *
+     * @param cur        词语
      * @param wordNetAll 词网
-     * @param line 当前扫描的行数
-     * @param length 当前缓冲区的长度
+     * @param line       当前扫描的行数
+     * @param length     当前缓冲区的长度
      */
     private static void removeFromWordNet(Vertex cur, WordNet wordNetAll, int line, int length)
     {
@@ -724,11 +731,11 @@ public abstract class Segment
 
     /**
      * 是否尽可能强制使用用户词典（使用户词典的优先级尽可能高）<br>
-     *     警告：具体实现由各子类决定，可能会破坏分词器的统计特性（例如，如果用户词典
-     *     含有“和服”，则“商品和服务”的分词结果可能会被用户词典的高优先级影响）。
+     * 警告：具体实现由各子类决定，可能会破坏分词器的统计特性（例如，如果用户词典
+     * 含有“和服”，则“商品和服务”的分词结果可能会被用户词典的高优先级影响）。
+     *
      * @param enable
      * @return 分词器本身
-     *
      * @since 1.3.5
      */
     public Segment enableCustomDictionaryForcing(boolean enable)
@@ -779,7 +786,8 @@ public abstract class Segment
 
     /**
      * 是否启用数词和数量词识别<br>
-     *     即[二, 十, 一] => [二十一]，[十, 九, 元] => [十九元]
+     * 即[二, 十, 一] => [二十一]，[十, 九, 元] => [十九元]
+     *
      * @param enable
      * @return
      */
@@ -833,6 +841,7 @@ public abstract class Segment
 
     /**
      * 开启多线程
+     *
      * @param enable true表示开启[系统CPU核心数]个线程，false表示单线程
      * @return
      */
@@ -845,6 +854,7 @@ public abstract class Segment
 
     /**
      * 开启多线程
+     *
      * @param threadNumber 线程数量
      * @return
      */
