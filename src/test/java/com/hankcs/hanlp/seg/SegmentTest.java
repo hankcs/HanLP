@@ -536,4 +536,11 @@ public class SegmentTest extends TestCase
         CustomDictionary.insert("我的额度", "xyz");
         System.out.println(HanLP.segment("我的额度不够，需要提高额度"));
     }
+
+    public void testIssue1421()
+    {
+        System.out.println(HanLP.segment("十一中国放假吗"));
+        System.out.println(HanLP.segment("十一发展计划"));
+        System.out.println(HanLP.segment("十一通过山海关吗"));
+    }
 }

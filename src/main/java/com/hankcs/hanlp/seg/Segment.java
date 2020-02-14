@@ -161,7 +161,7 @@ public abstract class Segment
         int offsetAtom = start;
         int preType = CharType.get(charArray[offsetAtom]);
         int curType;
-        while (++offsetAtom < end)
+        while (++offsetAtom < end || (atomNodeList.isEmpty() && offsetAtom < charArray.length))
         {
             curType = CharType.get(charArray[offsetAtom]);
             if (curType != preType)
