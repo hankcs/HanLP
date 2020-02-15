@@ -414,7 +414,7 @@ public abstract class WordBasedSegment extends Segment
                 int j = i + 1;
                 for (; j < vertexes.length - 1; ++j)
                 {
-                    if (!vertexes[j].isEmpty()) break;
+                    if (!vertexes[j].isEmpty() && CharType.get(charArray[j - 1]) != CharType.CT_CNUM) break;
                 }
                 wordNetStorage.add(i, quickAtomSegment(charArray, i - 1, j - 1));
                 i = j;
