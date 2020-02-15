@@ -1,38 +1,40 @@
 # HanLP: Han Language Processing
 
-[中文](https://github.com/hankcs/HanLP/tree/doc-zh) | [1.x](https://github.com/hankcs/HanLP/tree/1.x) | [forum](https://bbs.hankcs.com/) | [docker](https://github.com/WalterInSH/hanlp-jupyter-docker)
+ [English](https://github.com/hankcs/HanLP/tree/master) | [1.x版](https://github.com/hankcs/HanLP/tree/1.x) | [论坛](https://bbs.hankcs.com/) | [docker](https://github.com/WalterInSH/hanlp-jupyter-docker)
 
-The multilingual NLP library for researchers and companies, built on TensorFlow 2.0, for advancing state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be efficient, user friendly and extendable. It comes with pretrained models for various human languages including English, Chinese and many others. Currently, HanLP 2.0 is in alpha stage with more killer features on the roadmap. Discussions are welcomed on our [forum](https://bbs.hankcs.com/), while bug reports and feature requests are reserved for GitHub issues. For Java users, please checkout the [1.x](https://github.com/hankcs/HanLP/tree/1.x) branch.
+面向生产环境的多语种自然语言处理工具包，基于 TensorFlow 2.x，目标是普及落地最前沿的NLP技术。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。目前，基于深度学习的HanLP 2.0正处于**alpha测试阶段**，将综合这一年来大家的批评建议，于年底发布2.1版。Java用户请使用[1.x分支](https://github.com/hankcs/HanLP/tree/1.x) ，经典稳定，永久维护。[RESTful API已经上线](https://www.hanlp.com/)，2.x正式版将支持包括Java、Python在内的开发语言。
 
- ## Installation
+GitHub仅在周末处理格式严谨的bug，深恐招待不周，提问请上[蝴蝶效应](https://bbs.hankcs.com/)互帮互助。
+
+ ## 安装
 
 ```bash
 pip install hanlp
 ```
 
-HanLP requires Python 3.6 or later. GPU/TPU is suggested but not mandatory.
+要求Python 3.6以上，支持Windows，可以在CPU上运行，推荐GPU/TPU。
 
-## Quick Start
+## 快速上手
 
-### Tokenization
+### 分词（中文分词、中文斷詞、英文分词、任意语种分词）
 
-For an end user, the basic workflow starts with loading some pretrained models from disk or Internet. Each model has an identifier, which could be one path on your computer or an URL to any public servers. To tokenize Chinese, let's load a tokenizer called `CTB6_CONVSEG` with 2 lines of code.
+作为终端用户，第一步需要从磁盘或网络加载预训练模型。比如，此处用两行代码加载一个名为 `LARGE_ALBERT_BASE` 的分词模型。
 
 ```python
 >>> import hanlp
->>> tokenizer = hanlp.load('CTB6_CONVSEG')
+>>> tokenizer = hanlp.load('LARGE_ALBERT_BASE')
 ```
 
-HanLP will automatically resolve the identifier `CTB6_CONVSEG` to an [URL](https://file.hankcs.com/hanlp/cws/ctb6-convseg-cws_20191230_184525.zip), then download it and unzip it. Due to the huge network traffic, it could fail temporally then you need to retry or manually download and unzip it to the path shown in your terminal . 
+HanLP 会自动将 `LARGE_ALBERT_BASE` 解析为一个URL，然后自动下载并解压。由于巨大的用户量，万一下载失败请使用[国内镜像](https://bbs.hankcs.com/t/topic/833)或参考提示手动下载。 
 
-Once the model is loaded, you can then tokenize one sentence through calling the tokenizer as a function:
+一旦模型下载完毕，即可将`tokenizer`当成一个函数调用：
 
 ```python
 >>> tokenizer('商品和服务')
 ['商品', '和', '服务']
 ```
 
-If you're processing English, a rule based function should be good enough.
+如果你要处理英文，一个基于规则的普通函数应该足够了。
 
 ```python
 >>> tokenizer = hanlp.utils.rules.tokenize_english
@@ -40,9 +42,9 @@ If you're processing English, a rule based function should be good enough.
 ['Do', "n't", 'go', 'gentle', 'into', 'that', 'good', 'night', '.']
 ```
 
-#### Going Further
+#### 并行
 
-However, you can predict much faster. In the era of deep learning, batched computation usually gives a linear scale-up factor of `batch_size`. So, you can predict multiple sentences at once, at the cost of GPU memory.
+好消息，你可以运行得更快。在深度学习的时代，批处理最高带来`batch_size`的加速比。你可以并行切分多个句子，代价是消耗更多GPU显存。
 
 ```python
 >>> tokenizer(['萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。',
@@ -53,20 +55,22 @@ However, you can predict much faster. In the era of deep learning, batched compu
  ['HanLP', '支援', '臺灣', '正體', '、', '香港', '繁體', '，', '具有', '新詞', '辨識', '能力', '的', '中文', '斷詞', '系統']]
 ```
 
-That's it! You're now ready to employ the latest DL models from HanLP in your research and work. Here are some tips if you want to go further.
+就是如此简单，你现在已经能够将HanLP提供的最新的深度学习模型应用到你的研究和工作中了。下面是一些小技巧：
 
-- Print `hanlp.pretrained.ALL` to list all the pretrained models available in HanLP.
+- 打印 `hanlp.pretrained.ALL` 来列出HanLP中的所有预训练模型。比如，`LARGE_ALBERT_BASE`是在世界上最大的1亿字语料库LARGE上训练的ALBERT_BASE分词模型，比`PKU*`系列模型有质的提升。
 
-- Use `hanlp.pretrained.*` to browse pretrained models by categories of NLP tasks. You can use the variables to identify them too.
+- 参考[demo](https://github.com/hankcs/HanLP/blob/master/tests/demo/zh/demo_cws_trie.py)挂载用户词典，或嵌入正则表达式来应对你的业务逻辑。
+
+- 使用 `hanlp.pretrained.*` 来分门别类地浏览预训练模型，你还可以通过变量来加载模型。
 
   ```python
-  >>> hanlp.pretrained.cws.CTB6_CONVSEG
-  'https://file.hankcs.com/hanlp/cws/ctb6-convseg-cws_20191230_184525.zip'
+  >>> hanlp.pretrained.cws.LARGE_ALBERT_BASE
+  'https://file.hankcs.com/hanlp/cws/large_cws_albert_base_20200828_011451.zip'
   ```
 
-### Part-of-Speech Tagging
+### 词性标注
 
-Taggers take lists of tokens as input, then outputs one tag for each token.
+词性标注器的输入是单词，输出是每个单词的词性标签。
 
 ```python
 >>> tagger = hanlp.load(hanlp.pretrained.pos.PTB_POS_RNN_FASTTEXT_EN)
@@ -76,19 +80,19 @@ Taggers take lists of tokens as input, then outputs one tag for each token.
  ['VBZ', 'DT', 'DT', 'NN', 'IN', 'NN', 'NN', '.']]
 ```
 
-The language solely depends on which model you load.
+词性标注同样支持多语种，取决于你加载的是哪个模型（注意变量名后面的`EN`）。
 
 ```python
 >>> tagger = hanlp.load(hanlp.pretrained.pos.CTB9_POS_ALBERT_BASE)
->>> tagger(['我', '的', '希望', '是', '希望', '和平'])
-['PN', 'DEG', 'NN', 'VC', 'VV', 'NN']
+>>> tagger(['我', '的', '希望', '是', '希望', '世界', '和平'])
+           ['PN', 'DEG', 'NN', 'VC', 'VV', 'NN', 'NN']
 ```
 
-Did you notice the different pos tags for the same word `希望` ("hope")? The first one means "my dream" as a noun while the later means "want" as a verb. This tagger uses fasttext[^fasttext] as its embedding layer, which is free from OOV.
+注意到句子中两个 `希望`的词性各不相同，第一个是名词而第二个是动词。关于词性标签，请参考[CTB标记规范](https://www.cs.brandeis.edu/~clp/ctb/posguide.3rd.ch.pdf)，或等待正式文档。这个标注器使用了fasttext[^fasttext] 或ALBERT作为嵌入层，所以免疫于OOV。
 
-### Named Entity Recognition
+### 命名实体识别
 
-The NER component requires tokenized tokens as input, then outputs the entities along with their types and spans.
+命名实体识别模块的输入是单词列表，输出是命名实体的边界和类别。
 
 ```python
 >>> recognizer = hanlp.load(hanlp.pretrained.ner.CONLL03_NER_BERT_BASE_UNCASED_EN)
@@ -96,7 +100,7 @@ The NER component requires tokenized tokens as input, then outputs the entities 
 [('Obama', 'PER', 1, 2), ('White House', 'LOC', 6, 8)]
 ```
 
-Recognizers take lists of tokens as input, so don't forget to wrap your sentence with `list`. For the outputs, each tuple stands for `(entity, type, begin, end)`.
+中文命名实体识别是字符级模型，所以不要忘了用 `list`将字符串转换为字符列表。至于输出，格式为 `(entity, type, begin, end)`。
 
 ```python
 >>> recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_ZH)
@@ -106,7 +110,7 @@ Recognizers take lists of tokens as input, so don't forget to wrap your sentence
  [('萨哈夫', 'NR', 0, 3), ('伊拉克', 'NS', 5, 8), ('联合国销毁伊拉克大规模杀伤性武器特别委员会', 'NT', 10, 31)]]
 ```
 
-This `MSRA_NER_BERT_BASE_ZH` is the state-of-the-art NER model based on BERT[^bert]. You can read its evaluation log through:
+这里的 `MSRA_NER_BERT_BASE_ZH` 是基于 BERT[^bert]的最准确的模型，你可以浏览该模型的评测指标：
 
 ```bash
 $ cat ~/.hanlp/ner/ner_bert_base_msra_20200104_185735/test.log 
@@ -118,9 +122,9 @@ accuracy:  99.37%; precision:  94.79%; recall:  95.65%; FB1:  95.22
                NT: precision:  89.47%; recall:  93.13%; FB1:  91.27  1349
 ```
 
-### Syntactic Dependency Parsing
+### 依存句法分析
 
-Parsing lies in the core of NLP. Without parsing, one cannot claim to be a NLP researcher or engineer. But using HanLP, it takes no more than two lines of code.
+句法分析是NLP的核心任务，在许多硬派的学者和面试官看来，不懂句法分析的人称不上NLP研究者或工程师。然而通过HanLP，只需两行代码即可完成句法分析。
 
 ```python
 >>> syntactic_parser = hanlp.load(hanlp.pretrained.dep.PTB_BIAFFINE_DEP_EN)
@@ -135,7 +139,7 @@ Parsing lies in the core of NLP. Without parsing, one cannot claim to be a NLP r
 8	?	_	.	_	_	4	punct	_	_
 ```
 
-Parsers take both tokens and part-of-speech tags as input. The output is a tree in CoNLL-X format[^conllx], which can be manipulated through the `CoNLLSentence` class. Similar codes for Chinese:
+句法分析器的输入是单词列表及词性列表，输出是 CoNLL-X 格式[^conllx]的句法树，用户可通过 `CoNLLSentence` 类来操作句法树。一个中文例子:
 
 ```python
 >>> syntactic_parser = hanlp.load(hanlp.pretrained.dep.CTB7_BIAFFINE_DEP_ZH)
@@ -146,9 +150,11 @@ Parsers take both tokens and part-of-speech tags as input. The output is a tree 
 4	烧	_	VV	_	_	0	root	_	_
 ```
 
-### Semantic Dependency Parsing
+关于句法标签，请参考[《自然语言处理入门》](http://nlp.hankcs.com/book.php)第12章，或等待正式文档。注：当前版本暂未实现树和单源约束，已经在2.1版本里修复，敬请关注后续发布。
 
-A graph is a generalized tree, which conveys more information about the semantic relations between tokens. 
+### 语义依存分析
+
+语义分析结果为一个有向无环图，称为语义依存图（Semantic Dependency Graph）。图中的节点为单词，边为语义依存弧，边上的标签为语义关系。
 
 ```python
 >>> semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL15_PAS_BIAFFINE_EN)
@@ -166,7 +172,7 @@ A graph is a generalized tree, which conveys more information about the semantic
 8	?	_	.	_	_	0	ROOT	_	_
 ```
 
-HanLP implements the biaffine[^biaffine] model which delivers the SOTA performance.
+HanLP实现了最先进的biaffine[^biaffine] 模型，支持任意语种（需自行训练，或等待2.1发布预训练模型）的语义依存分析：
 
 ```python
 >>> semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL16_NEWS_BIAFFINE_ZH)
@@ -178,11 +184,11 @@ HanLP implements the biaffine[^biaffine] model which delivers the SOTA performan
 4	烧	_	VV	_	_	0	Root	_	_
 ```
 
-The output is a `CoNLLSentence` too. However, it's not a tree but a graph in which one node can have multiple heads, e.g. `蜡烛` has two heads (ID 3 and 4).
+输出依然是 `CoNLLSentence` 格式，只不过这次是一个图，图中每个单词可以有零个或任意多个中心词，比如 `蜡烛` 有两个中心词 (ID 3 和 4)。语义依存关系可参考《[中文语义依存分析语料库](https://www.hankcs.com/nlp/sdp-corpus.html)》，或等待正式文档。注：当前版本暂未实现单源连通等约束，悬孤节点将连接到ROOT上，已经在2.1版本里修复，敬请关注后续发布。
 
-### Pipelines
+### 流水线
 
-Since parsers require part-of-speech tagging and tokenization, while taggers expects tokenization to be done beforehand, wouldn't it be nice if we have a pipeline to connect the inputs and outputs, like a computation graph?
+既然句法和语义分析依赖于词性标注，而词性标注又依赖于分词。如果有一种类似于计算图的机制自动将这些模块串联起来就好了。HanLP设计的流水线可以灵活地将多个组件（统计模型或规则系统）组装起来：
 
 ```python
 pipeline = hanlp.pipeline() \
@@ -193,14 +199,14 @@ pipeline = hanlp.pipeline() \
     .append(semantic_parser, input_key=('tokens', 'part_of_speech_tags'), output_key='semantic_dependencies')
 ```
 
-Notice that the first pipe is an old-school Python function `split_sentence`, which splits the input text into a list of sentences. Then the later DL components can utilize the batch processing seamlessly. This results in a pipeline with one input (text) pipe, multiple flow pipes and one output (parsed document). You can print out the pipeline to check its structure.
+注意流水线的第一级管道是一个普通的Python函数 `split_sentence`，用来将文本拆分为句子。而`input_key`和`output_key`指定了这些管道的连接方式，你可以将这条流水线打印出来观察它的结构：
 
 ```python
 >>> pipeline
 [None->LambdaComponent->sentences, sentences->NgramConvTokenizer->tokens, tokens->RNNPartOfSpeechTagger->part_of_speech_tags, ('tokens', 'part_of_speech_tags')->BiaffineDependencyParser->syntactic_dependencies, ('tokens', 'part_of_speech_tags')->BiaffineSemanticDependencyParser->semantic_dependencies]
 ```
 
-This time, let's feed in a whole document `text`, which might be the scenario in your daily work.
+这次，就像你在日常工作中最常见的场景一样，我们一次性输入一整篇文章 `text`：
 
 ```python
 >>> print(pipeline(text))
@@ -228,7 +234,7 @@ This time, let's feed in a whole document `text`, which might be the scenario in
 }
 ```
 
-The output for Chinese looks similar to the English one.
+中文处理和英文一模一样，事实上，HanLP2.x认为所有人类语言都是统一的符号系统：
 
 ```python
 >>> print(pipeline(text))
@@ -261,14 +267,15 @@ The output for Chinese looks similar to the English one.
 }
 ```
 
-The output is a json `dict`, which most people are familiar with.
+输出为一个json化的 `dict`，大部分用户应当很熟悉。
 
-- Feel free to add more pre/post-processing to the pipeline, including cleaning, custom dictionary etc.
-- Use `pipeline.save('zh.json')` to save your pipeline and deploy it to your production server.
+- 请发挥你的想象力和创造力，在流水线中加入更多预处理和后处理管道（包括词典、正则等）。记住，任意普通的Python函数都可以作为一级管道。
+- 使用 `pipeline.save('zh.json')` 将流水线序列化并部署到生产服务器。
+- 流水线的优势在于可灵活组合所需组件，劣势在于误差传播和执行效率，2.1版本将提供联合学习框架。
 
-## Train Your Own Models
+## 训练你自己的模型
 
-To write DL models is not hard, the real hard thing is to write a model able to reproduce the score in papers. The snippet below shows how to train a 97% F1 cws model on MSR corpus.
+写深度学习模型一点都不难，难的是复现较高的准确率。下列代码展示了如何在MSR语料库上训练一个 97% F1 的中文分词模型。
 
 ```python
 tokenizer = NgramConvTokenizer()
@@ -292,7 +299,7 @@ tokenizer.fit(SIGHAN2005_MSR_TRAIN,
 tokenizer.evaluate(SIGHAN2005_MSR_TEST, save_dir=save_dir)
 ```
 
-The training and evaluation logs are as follows.
+训练日志（模型保存路径下的`train.log`）和评测（`test.log`）日志如下所示。
 
 ```
 Train for 783 steps, validate for 87 steps
@@ -305,7 +312,7 @@ Epoch 2/100
 19-12-28 20:56:06 INFO Evaluation results for msr_test_gold.utf8 - loss: 3.6579 - f1: 0.9715 - speed: 1173.80 sample/sec
 ```
 
-Similarly, you can train a sentiment classifier to classify the comments of hotels.
+类似地，你可以训练一个情感分析模型来判断酒店评论的情感极性。
 
 ```python
 save_dir = 'data/model/classification/chnsenticorp_bert_base'
@@ -317,13 +324,15 @@ print(classifier('前台客房服务态度非常好！早餐很丰富，房价�
 classifier.evaluate(CHNSENTICORP_ERNIE_TEST, save_dir=save_dir)
 ```
 
-Due to the size of models, and the fact that corpora are domain specific, HanLP has limited plan to distribute pretrained text classification models.
+由于语料库一般领域相关，且BERT模型体积较大，HanLP不准备发布那么多预训练文本分类模型。
 
-For more training scripts, please refer to [`tests/train`](https://github.com/hankcs/HanLP/tree/master/tests/train). We are also working hard to release more examples in [`tests/demo`](https://github.com/hankcs/HanLP/tree/master/tests/demo). Serving, documentations and more pretrained models are on the way too.
+欲了解更多训练脚本，请参考 [`tests/train`](https://github.com/hankcs/HanLP/tree/master/tests/train)。更多的使用案例可以在 [`tests/demo`](https://github.com/hankcs/HanLP/tree/master/tests/demo)中找到。文档，RESTful API都在开发中。
 
-## Citing
+alpha测试版本问题不少，欢迎大家热烈批评。2.1版本预计于年底发布，欢迎踊跃提出意见。谢谢支持。
 
-If you use HanLP in your research, please cite this repository. 
+## 引用
+
+如果你在研究中使用了HanLP，请按如下格式引用：
 
 ```latex
 @software{hanlp2,
@@ -336,7 +345,19 @@ If you use HanLP in your research, please cite this repository.
 
 ## License
 
-HanLP is licensed under **Apache License 2.0**. You can use HanLP in your commercial products for free. We would appreciate it if you add a link to HanLP on your website.
+HanLP 的授权协议为 **Apache License 2.0**，可免费用做商业用途。请在产品说明中附加HanLP的链接和授权协议。HanLP受版权法保护，侵权必究。
+
+##### 自然语义（青岛）科技有限公司
+
+HanLP从v1.7版起独立运作，由自然语义（青岛）科技有限公司作为项目主体，主导后续版本的开发，并拥有后续版本的版权。
+
+##### 大快搜索
+
+HanLP v1.3~v1.65版由大快搜索主导开发，继续完全开源，大快搜索拥有相关版权。
+
+##### 上海林原公司
+
+HanLP 早期得到了上海林原公司的大力支持，并拥有1.28及前序版本的版权，相关版本也曾在上海林原公司网站发布。
 
 ## References
 
