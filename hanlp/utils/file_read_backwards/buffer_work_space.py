@@ -30,8 +30,11 @@ class BufferWorkSpace:
         """Add additional bytes content as read from the read_position.
 
         Args:
-            content (bytes): data to be added to buffer working BufferWorkSpac.
-            read_position (int): where in the file pointer the data was read from.
+          content(bytes): data to be added to buffer working BufferWorkSpac.
+          read_position(int): where in the file pointer the data was read from.
+
+        Returns:
+
         """
         self.read_position = read_position
         if self.read_buffer is None:
@@ -40,7 +43,7 @@ class BufferWorkSpace:
             self.read_buffer = content + self.read_buffer
 
     def yieldable(self):
-        """Return True if there is a line that the buffer can return, False otherwise."""
+        """ """
         if self.read_buffer is None:
             return False
 
@@ -55,9 +58,13 @@ class BufferWorkSpace:
         return False
 
     def return_line(self):
-        """Return a new line if it is available.
+        """
 
-        Precondition: self.yieldable() must be True
+        Args:
+
+        Returns:
+          Precondition: self.yieldable() must be True
+
         """
         assert(self.yieldable())
 
@@ -82,7 +89,7 @@ class BufferWorkSpace:
             self.add_to_buffer(read_content, read_position)
 
     def has_returned_every_line(self):
-        """Return True if every single line in the file has been returned, False otherwise."""
+        """ """
         if self.read_position == 0 and self.read_buffer is None:
             return True
         return False
@@ -96,12 +103,13 @@ def _get_next_chunk(fp, previously_read_position, chunk_size):
     """Return next chunk of data that we would from the file pointer.
 
     Args:
-        fp: file-like object
-        previously_read_position: file pointer position that we have read from
-        chunk_size: desired read chunk_size
+      fp: file
+      previously_read_position: file pointer position that we have read from
+      chunk_size: desired read chunk_size
 
     Returns:
-        (bytestring, int): data that has been read in, the file pointer position where the data has been read from
+      (bytestring, int): data that has been read in, the file pointer position where the data has been read from
+
     """
     seek_position, read_size = _get_what_to_read_next(fp, previously_read_position, chunk_size)
     fp.seek(seek_position)
@@ -114,12 +122,14 @@ def _get_what_to_read_next(fp, previously_read_position, chunk_size):
     """Return information on which file pointer position to read from and how many bytes.
 
     Args:
-        fp
-        past_read_positon (int): The file pointer position that has been read previously
-        chunk_size(int): ideal io chunk_size
+      fp: 
+      past_read_positon: int
+      chunk_size: int
+      previously_read_position: 
 
     Returns:
-        (int, int): The next seek position, how many bytes to read next
+      (int, int): The next seek position, how many bytes to read next
+
     """
     seek_position = max(previously_read_position - chunk_size, 0)
     read_size = chunk_size
@@ -146,8 +156,12 @@ def _get_what_to_read_next(fp, previously_read_position, chunk_size):
 def _remove_trailing_new_line(l):
     """Remove a single instance of new line at the end of l if it exists.
 
+    Args:
+      l: 
+
     Returns:
-        bytestring
+      : bytestring
+
     """
     # replace only 1 instance of newline
     # match longest line first (hence the reverse=True), we want to match "\r\n" rather than "\n" if we can
@@ -162,10 +176,11 @@ def _find_furthest_new_line(read_buffer):
     """Return -1 if read_buffer does not contain new line otherwise the position of the rightmost newline.
 
     Args:
-        read_buffer (bytestring)
+      read_buffer: bytestring
 
     Returns:
-        int: The right most position of new line character in read_buffer if found, else -1
+      int: The right most position of new line character in read_buffer if found, else -1
+
     """
     new_line_positions = [read_buffer.rfind(n) for n in new_lines_bytes]
     return max(new_line_positions)
@@ -175,10 +190,11 @@ def _is_partially_read_new_line(b):
     """Return True when b is part of a new line separator found at index >= 1, False otherwise.
 
     Args:
-        b (bytestring)
+      b: bytestring
 
     Returns:
-        bool
+      bool
+
     """
     for n in new_lines_bytes:
         if n.find(b) >= 1:

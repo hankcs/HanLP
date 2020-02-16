@@ -5,12 +5,12 @@ from typing import Union, Tuple, Iterable, Any
 
 import tensorflow as tf
 
-from hanlp.common.structure import SerializableDict
-from hanlp.common.transform import Transform
-from hanlp.common.vocab import Vocab
+from hanlp_common.structure import SerializableDict
+from hanlp.common.transform_tf import Transform
+from hanlp.common.vocab_tf import VocabTF
 from hanlp.metrics.chunking.sequence_labeling import get_entities
 from hanlp.utils.file_read_backwards import FileReadBackwards
-from hanlp.utils.io_util import read_tsv
+from hanlp.utils.io_util import read_tsv_as_sents
 
 
 class TextTransform(Transform):
@@ -21,7 +21,7 @@ class TextTransform(Transform):
                  tokenizer='char',
                  config: SerializableDict = None, map_x=True, map_y=True, **kwargs) -> None:
         super().__init__(config, map_x, map_y, seq_len=seq_len, tokenizer=tokenizer, forward=forward, **kwargs)
-        self.vocab: Vocab = None
+        self.vocab: VocabTF = None
 
     def tokenize_func(self):
         if self.config.tokenizer == 'char':
@@ -32,7 +32,7 @@ class TextTransform(Transform):
             return lambda x: x.split(self.config.tokenizer)
 
     def fit(self, trn_path: str, **kwargs) -> int:
-        self.vocab = Vocab()
+        self.vocab = VocabTF()
         num_samples = 0
         for x, y in self.file_to_inputs(trn_path):
             self.vocab.update(x)
@@ -90,7 +90,7 @@ class TextTransform(Transform):
 
 def bmes_to_flat(inpath, outpath):
     with open(outpath, 'w', encoding='utf-8') as out:
-        for sent in read_tsv(inpath):
+        for sent in read_tsv_as_sents(inpath):
             chunks = get_entities([cells[1] for cells in sent])
             chars = [cells[0] for cells in sent]
             words = []

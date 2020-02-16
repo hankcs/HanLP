@@ -6,10 +6,10 @@ from typing import Tuple, Union
 import numpy as np
 import tensorflow as tf
 
-from hanlp.common.structure import SerializableDict
-from hanlp.common.transform import Transform
-from hanlp.common.constant import PAD
-from hanlp.common.vocab import create_label_vocab
+from hanlp_common.structure import SerializableDict
+from hanlp.common.transform_tf import Transform
+from hanlp_common.constant import PAD
+from hanlp.common.vocab_tf import create_label_vocab
 from hanlp.utils.io_util import read_cells
 from hanlp.utils.log_util import logger
 
@@ -28,8 +28,8 @@ class TableTransform(Transform, ABC):
         y_column = self.config.y_column
         num_features = self.config.get('num_features', None)
         for cells in read_cells(filepath, skip_header=self.config.skip_header, delimiter=self.config.delimiter):
-            #multi-label: Dataset in .tsv format: x_columns: at most 2 columns being a sentence pair while in most 
-            # cases just one column being the doc content. y_column being the single label, which shall be modified 
+            #multi-label: Dataset in .tsv format: x_columns: at most 2 columns being a sentence pair while in most
+            # cases just one column being the doc content. y_column being the single label, which shall be modified
             # to load a list of labels.
             if x_columns:
                 inputs = tuple(c for i, c in enumerate(cells) if i in x_columns), cells[y_column]

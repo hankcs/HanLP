@@ -5,15 +5,29 @@ import os
 import traceback
 from sys import exit
 
+from hanlp_common.constant import HANLP_VERBOSE
+
 from hanlp import pretrained
 from hanlp.common.component import Component
-from hanlp.utils.io_util import get_resource, load_json, eprint, get_latest_info_from_pypi
-from hanlp.utils.reflection import object_from_class_path, str_to_type
+from hanlp.utils.io_util import get_resource, get_latest_info_from_pypi
+from hanlp_common.io import load_json, eprint
+from hanlp_common.reflection import object_from_classpath, str_to_type
 from hanlp import version
 
 
-def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only=False, load_kwargs=None,
+def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only=False, verbose=HANLP_VERBOSE,
                         **kwargs) -> Component:
+    """
+
+    Args:
+        save_dir:
+        meta_filename (str): The meta file of that saved component, which stores the classpath and version.
+        transform_only:
+        **kwargs:
+
+    Returns:
+
+    """
     identifier = save_dir
     load_path = save_dir
     save_dir = get_resource(save_dir)
@@ -21,6 +35,11 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         meta_filename = os.path.basename(save_dir)
         save_dir = os.path.dirname(save_dir)
     metapath = os.path.join(save_dir, meta_filename)
+    if not os.path.isfile(metapath):
+        tf_model = False
+        metapath = os.path.join(save_dir, 'config.json')
+    else:
+        tf_model = True
     if not os.path.isfile(metapath):
         tips = ''
         if save_dir.isupper():
@@ -33,22 +52,36 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                    f'Tips: it might be one of {similar_keys}'
         raise FileNotFoundError(f'The identifier {save_dir} resolves to a non-exist meta file {metapath}. {tips}')
     meta: dict = load_json(metapath)
-    cls = meta.get('class_path', None)
-    assert cls, f'{meta_filename} doesn\'t contain class_path field'
+    cls = meta.get('classpath', None)
+    if not cls:
+        cls = meta.get('class_path', None)  # For older version
+    if tf_model:
+        # tf models are trained with version <= 2.0. To migrate them to 2.1, map their classpath to new locations
+        upgrade = {
+            'hanlp.components.tok.TransformerTokenizer': 'hanlp.components.tok_tf.TransformerTokenizerTF',
+            'hanlp.components.pos.RNNPartOfSpeechTagger': 'hanlp.components.pos_tf.RNNPartOfSpeechTaggerTF',
+            'hanlp.components.pos.CNNPartOfSpeechTagger': 'hanlp.components.pos_tf.CNNPartOfSpeechTaggerTF',
+            'hanlp.components.ner.TransformerNamedEntityRecognizer': 'hanlp.components.ner_tf.TransformerNamedEntityRecognizerTF',
+            'hanlp.components.parsers.biaffine_parser.BiaffineDependencyParser': 'hanlp.components.parsers.biaffine_parser_tf.BiaffineDependencyParserTF',
+            'hanlp.components.parsers.biaffine_parser.BiaffineSemanticDependencyParser': 'hanlp.components.parsers.biaffine_parser_tf.BiaffineSemanticDependencyParserTF',
+            'hanlp.components.tok.NgramConvTokenizer': 'hanlp.components.tok_tf.NgramConvTokenizerTF',
+            'hanlp.components.classifiers.transformer_classifier.TransformerClassifier': 'hanlp.components.classifiers.transformer_classifier_tf.TransformerClassifierTF',
+            'hanlp.components.taggers.transformers.transformer_tagger.TransformerTagger': 'hanlp.components.taggers.transformers.transformer_tagger_tf.TransformerTaggerTF',
+        }
+        cls = upgrade.get(cls, cls)
+    assert cls, f'{meta_filename} doesn\'t contain classpath field'
     try:
-        obj: Component = object_from_class_path(cls, **kwargs)
+        obj: Component = object_from_classpath(cls)
         if hasattr(obj, 'load'):
             if transform_only:
                 # noinspection PyUnresolvedReferences
                 obj.load_transform(save_dir)
             else:
-                if load_kwargs is None:
-                    load_kwargs = {}
                 if os.path.isfile(os.path.join(save_dir, 'config.json')):
-                    obj.load(save_dir, **load_kwargs)
+                    obj.load(save_dir, verbose=verbose, **kwargs)
                 else:
-                    obj.load(metapath, **load_kwargs)
-            obj.meta['load_path'] = load_path
+                    obj.load(metapath, **kwargs)
+            obj.config['load_path'] = load_path
         return obj
     except Exception as e:
         eprint(f'Failed to load {identifier}. See traceback below:')
@@ -82,7 +115,9 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
 
 
 def load_from_meta(meta: dict) -> Component:
-    cls = meta.get('class_path', None)
-    assert cls, f'{meta} doesn\'t contain class_path field'
+    if 'load_path' in meta:
+        return load_from_meta_file(meta['load_path'])
+    cls = meta.get('class_path', None) or meta.get('classpath', None)
+    assert cls, f'{meta} doesn\'t contain classpath field'
     cls = str_to_type(cls)
-    return cls.from_meta(meta)
+    return cls.from_config(meta)

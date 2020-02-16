@@ -1,297 +1,522 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
-# Date: 2019-10-27 14:22
-import inspect
+# Date: 2020-05-03 14:44
+import logging
+import os
 from abc import ABC, abstractmethod
-from typing import Generator, Tuple, Union, Iterable, Any
+from typing import Tuple, Union, List
 
-import tensorflow as tf
-
-from hanlp.common.structure import SerializableDict
+from hanlp_common.constant import EOS, PAD
+from hanlp_common.structure import SerializableDict
+from hanlp_common.configurable import Configurable
 from hanlp.common.vocab import Vocab
 from hanlp.utils.io_util import get_resource
-from hanlp.utils.log_util import logger
+from hanlp_common.io import load_json
+from hanlp_common.reflection import classpath_of, str_to_type
+from hanlp.utils.string_util import ispunct
 
 
-class Transform(ABC):
+class ToIndex(ABC):
 
-    def __init__(self, config: SerializableDict = None, map_x=True, map_y=True, **kwargs) -> None:
+    def __init__(self, vocab: Vocab = None) -> None:
         super().__init__()
-        self.map_y = map_y
-        self.map_x = map_x
-        if kwargs:
-            if not config:
-                config = SerializableDict()
-            for k, v in kwargs.items():
-                config[k] = v
-        self.config = config
-        self.output_types = None
-        self.output_shapes = None
-        self.padding_values = None
+        if vocab is None:
+            vocab = Vocab()
+        self.vocab = vocab
 
     @abstractmethod
-    def fit(self, trn_path: str, **kwargs) -> int:
-        """
-        Build the vocabulary from training file
+    def __call__(self, sample):
+        pass
 
-        Parameters
-        ----------
-        trn_path : path to training set
-        kwargs
+    def save_vocab(self, save_dir, filename='vocab.json'):
+        vocab = SerializableDict()
+        vocab.update(self.vocab.to_dict())
+        vocab.save_json(os.path.join(save_dir, filename))
 
-        Returns
-        -------
-        int
-            How many samples in the training set
-        """
-        raise NotImplementedError('%s.%s()' % (self.__class__.__name__, inspect.stack()[0][3]))
+    def load_vocab(self, save_dir, filename='vocab.json'):
+        save_dir = get_resource(save_dir)
+        vocab = SerializableDict()
+        vocab.load_json(os.path.join(save_dir, filename))
+        self.vocab.copy_from(vocab)
 
-    def build_config(self):
-        """
-        By default, call build_types_shapes_values, usually called in component's build method.
-        You can perform other building task here. Remember to call super().build_config
-        """
-        self.output_types, self.output_shapes, self.padding_values = self.create_types_shapes_values()
-        # We prefer list over shape here, as it's easier to type [] than ()
-        # if isinstance(self.output_shapes, tuple):
-        #     self.output_shapes = list(self.output_shapes)
-        # for i, shapes in enumerate(self.output_shapes):
-        #     if isinstance(shapes, tuple):
-        #         self.output_shapes[i] = list(shapes)
-        #     for j, shape in enumerate(shapes):
-        #         if isinstance(shape, tuple):
-        #             shapes[j] = list(shape)
 
-    @abstractmethod
-    def create_types_shapes_values(self) -> Tuple[Tuple, Tuple, Tuple]:
-        """
-        Create dataset related values,
-        """
-        raise NotImplementedError('%s.%s()' % (self.__class__.__name__, inspect.stack()[0][3]))
+class FieldToIndex(ToIndex):
 
-    @abstractmethod
-    def file_to_inputs(self, filepath: str, gold=True):
-        """
-        Transform file to inputs. The inputs are defined as raw features (e.g. words) to be processed into more
-        features (e.g. forms and characters)
+    def __init__(self, src, vocab: Vocab, dst=None) -> None:
+        super().__init__(vocab)
+        self.src = src
+        if not dst:
+            dst = f'{src}_id'
+        self.dst = dst
 
-        Parameters
-        ----------
-        filepath
-        gold
-        """
-        raise NotImplementedError('%s.%s()' % (self.__class__.__name__, inspect.stack()[0][3]))
+    def __call__(self, sample: dict):
+        sample[self.dst] = self.vocab(sample[self.src])
+        return sample
 
-    def inputs_to_samples(self, inputs, gold=False):
-        if gold:
-            yield from inputs
+    def save_vocab(self, save_dir, filename=None):
+        if not filename:
+            filename = f'{self.dst}_vocab.json'
+        super().save_vocab(save_dir, filename)
+
+    def load_vocab(self, save_dir, filename=None):
+        if not filename:
+            filename = f'{self.dst}_vocab.json'
+        super().load_vocab(save_dir, filename)
+
+
+class VocabList(list):
+
+    def __init__(self, *fields) -> None:
+        super().__init__()
+        for each in fields:
+            self.append(FieldToIndex(each))
+
+    def append(self, item: Union[str, Tuple[str, Vocab], Tuple[str, str, Vocab], FieldToIndex]) -> None:
+        if isinstance(item, str):
+            item = FieldToIndex(item)
+        elif isinstance(item, (list, tuple)):
+            if len(item) == 2:
+                item = FieldToIndex(src=item[0], vocab=item[1])
+            elif len(item) == 3:
+                item = FieldToIndex(src=item[0], dst=item[1], vocab=item[2])
+            else:
+                raise ValueError(f'Unsupported argument length: {item}')
+        elif isinstance(item, FieldToIndex):
+            pass
         else:
-            for x in inputs:
-                yield x, self.padding_values[-1]
+            raise ValueError(f'Unsupported argument type: {item}')
+        super(self).append(item)
 
-    def file_to_samples(self, filepath: str, gold=True):
+    def save_vocab(self, save_dir):
+        for each in self:
+            each.save_vocab(save_dir, None)
+
+    def load_vocab(self, save_dir):
+        for each in self:
+            each.load_vocab(save_dir, None)
+
+
+class VocabDict(SerializableDict):
+
+    def __init__(self, *args, **kwargs) -> None:
+        """A dict holding :class:`hanlp.common.vocab.Vocab` instances. When used a transform, it transforms the field
+        corresponding to each :class:`hanlp.common.vocab.Vocab` into indices.
+
+        Args:
+            *args: A list of vocab names.
+            **kwargs: Names and corresponding :class:`hanlp.common.vocab.Vocab` instances.
         """
-        Transform file to samples
-        Parameters
-        ----------
-        filepath
-        gold
+        vocabs = dict(kwargs)
+        for each in args:
+            vocabs[each] = Vocab()
+        super().__init__(vocabs)
+
+    def save_vocabs(self, save_dir, filename='vocabs.json'):
+        """Save vocabularies to a directory.
+
+        Args:
+            save_dir: The directory to save vocabularies.
+            filename:  The name for vocabularies.
         """
-        filepath = get_resource(filepath)
-        inputs = self.file_to_inputs(filepath, gold)
-        yield from self.inputs_to_samples(inputs, gold)
+        vocabs = SerializableDict()
+        for key, value in self.items():
+            if isinstance(value, Vocab):
+                vocabs[key] = value.to_dict()
+        vocabs.save_json(os.path.join(save_dir, filename))
 
-    def file_to_dataset(self, filepath: str, gold=True, map_x=None, map_y=None, batch_size=32, shuffle=None,
-                        repeat=None,
-                        drop_remainder=False,
-                        prefetch=1,
-                        cache=True,
-                        **kwargs) -> tf.data.Dataset:
+    def load_vocabs(self, save_dir, filename='vocabs.json', vocab_cls=Vocab):
+        """Load vocabularies from a directory.
+
+        Args:
+            save_dir: The directory to load vocabularies.
+            filename:  The name for vocabularies.
         """
-        Transform file to dataset
+        save_dir = get_resource(save_dir)
+        vocabs = SerializableDict()
+        vocabs.load_json(os.path.join(save_dir, filename))
+        self._load_vocabs(self, vocabs, vocab_cls)
 
-        Parameters
-        ----------
-        filepath
-        gold : bool
-            Whether it's processing gold data or not. Example: there is usually a column for gold answer
-            when gold = True.
-        map_x : bool
-            Whether call map_x or not. Default to self.map_x
-        map_y : bool
-            Whether call map_y or not. Default to self.map_y
-        batch_size
-        shuffle
-        repeat
-        prefetch
-        kwargs
-
-        Returns
-        -------
-
+    @staticmethod
+    def _load_vocabs(vd, vocabs: dict, vocab_cls=Vocab):
         """
 
-        # debug
-        # for sample in self.file_to_samples(filepath):
-        #     pass
+        Args:
+            vd:
+            vocabs:
+            vocab_cls: Default class for the new vocab
+        """
+        for key, value in vocabs.items():
+            if 'idx_to_token' in value:
+                cls = value.get('type', None)
+                if cls:
+                    cls = str_to_type(cls)
+                else:
+                    cls = vocab_cls
+                vocab = cls()
+                vocab.copy_from(value)
+                vd[key] = vocab
+            else:  # nested Vocab
+                # noinspection PyTypeChecker
+                vd[key] = nested = VocabDict()
+                VocabDict._load_vocabs(nested, value, vocab_cls)
 
-        def generator():
-            inputs = self.file_to_inputs(filepath, gold)
-            samples = self.inputs_to_samples(inputs, gold)
-            yield from samples
-
-        return self.samples_to_dataset(generator, map_x, map_y, batch_size, shuffle, repeat, drop_remainder, prefetch,
-                                       cache)
-
-    def inputs_to_dataset(self, inputs, gold=False, map_x=None, map_y=None, batch_size=32, shuffle=None, repeat=None,
-                          drop_remainder=False,
-                          prefetch=1, cache=False, **kwargs) -> tf.data.Dataset:
-        # debug
-        # for sample in self.inputs_to_samples(inputs):
-        #     pass
-
-        def generator():
-            samples = self.inputs_to_samples(inputs, gold)
-            yield from samples
-
-        return self.samples_to_dataset(generator, map_x, map_y, batch_size, shuffle, repeat, drop_remainder, prefetch,
-                                       cache)
-
-    def samples_to_dataset(self, samples: Generator, map_x=None, map_y=None, batch_size=32, shuffle=None, repeat=None,
-                           drop_remainder=False,
-                           prefetch=1, cache=True) -> tf.data.Dataset:
-        output_types, output_shapes, padding_values = self.output_types, self.output_shapes, self.padding_values
-        if not all(v for v in [output_shapes, output_shapes,
-                               padding_values]):
-            # print('Did you forget to call build_config() on your transform?')
-            self.build_config()
-            output_types, output_shapes, padding_values = self.output_types, self.output_shapes, self.padding_values
-        assert all(v for v in [output_shapes, output_shapes,
-                               padding_values]), 'Your create_types_shapes_values returns None, which is not allowed'
-        # if not callable(samples):
-        #     samples = Transform.generator_to_callable(samples)
-        dataset = tf.data.Dataset.from_generator(samples, output_types=output_types, output_shapes=output_shapes)
-        if cache:
-            logger.debug('Dataset cache enabled')
-            dataset = dataset.cache(cache if isinstance(cache, str) else '')
-        if shuffle:
-            if isinstance(shuffle, bool):
-                shuffle = 1024
-            dataset = dataset.shuffle(shuffle)
-        if repeat:
-            dataset = dataset.repeat(repeat)
-        if batch_size:
-            dataset = dataset.padded_batch(batch_size, output_shapes, padding_values, drop_remainder)
-        if prefetch:
-            dataset = dataset.prefetch(prefetch)
-        if map_x is None:
-            map_x = self.map_x
-        if map_y is None:
-            map_y = self.map_y
-        if map_x or map_y:
-            def mapper(X, Y):
-                if map_x:
-                    X = self.x_to_idx(X)
-                if map_y:
-                    Y = self.y_to_idx(Y)
-                return X, Y
-
-            dataset = dataset.map(mapper, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-        return dataset
-
-    @abstractmethod
-    def x_to_idx(self, x) -> Union[tf.Tensor, Tuple]:
-        raise NotImplementedError('%s.%s()' % (self.__class__.__name__, inspect.stack()[0][3]))
-
-    @abstractmethod
-    def y_to_idx(self, y) -> tf.Tensor:
-        raise NotImplementedError('%s.%s()' % (self.__class__.__name__, inspect.stack()[0][3]))
-
-    def lock_vocabs(self):
-        for key, value in vars(self).items():
+    def lock(self):
+        """
+        Lock each vocabs.
+        """
+        for key, value in self.items():
             if isinstance(value, Vocab):
                 value.lock()
 
-    def summarize_vocabs(self, logger=None, header='Vocab summary:'):
-        output = header + '\n'
-        vocabs = {}
-        for key, value in vars(self).items():
+    @property
+    def mutable(self):
+        status = [v.mutable for v in self.values() if isinstance(v, Vocab)]
+        return len(status) == 0 or any(status)
+
+    def __call__(self, sample: dict):
+        for key, value in self.items():
             if isinstance(value, Vocab):
-                vocabs[key] = value
-        # tag vocab comes last usually
-        for key, value in sorted(vocabs.items(), key=lambda kv: len(kv[1]), reverse=True):
-            output += f'{key}' + value.summary(verbose=False) + '\n'
-        output = output.strip()
-        if logger:
-            logger.info(output)
-        else:
-            print(output)
+                field = sample.get(key, None)
+                if field is not None:
+                    sample[f'{key}_id'] = value(field)
+        return sample
+
+    def __getattr__(self, key):
+        if key.startswith('__'):
+            return dict.__getattr__(key)
+        return self.__getitem__(key)
+
+    def __setattr__(self, key, value):
+        return self.__setitem__(key, value)
+
+    def __getitem__(self, k: str) -> Vocab:
+        return super().__getitem__(k)
+
+    def __setitem__(self, k: str, v: Vocab) -> None:
+        super().__setitem__(k, v)
+
+    def summary(self, logger: logging.Logger = None):
+        """Log a summary of vocabs using a given logger.
+
+        Args:
+            logger: The logger to use.
+        """
+        for key, value in self.items():
+            if isinstance(value, Vocab):
+                report = value.summary(verbose=False)
+                if logger:
+                    logger.info(f'{key}{report}')
+                else:
+                    print(f'{key}{report}')
+
+    def put(self, **kwargs):
+        """Put names and corresponding :class:`hanlp.common.vocab.Vocab` instances into self.
+
+        Args:
+            **kwargs: Names and corresponding :class:`hanlp.common.vocab.Vocab` instances.
+        """
+        for k, v in kwargs.items():
+            self[k] = v
+
+
+class NamedTransform(ABC):
+    def __init__(self, src: str, dst: str = None) -> None:
+        if dst is None:
+            dst = src
+        self.dst = dst
+        self.src = src
+
+    @abstractmethod
+    def __call__(self, sample: dict) -> dict:
+        return sample
+
+
+class ConfigurableTransform(Configurable, ABC):
+    @property
+    def config(self):
+        return dict([('classpath', classpath_of(self))] +
+                    [(k, v) for k, v in self.__dict__.items() if not k.startswith('_')])
+
+    @classmethod
+    def from_config(cls, config: dict):
+        """
+
+        Args:
+          config: 
+          kwargs: 
+          config: dict: 
+
+        Returns:
+
+        
+        """
+        cls = config.get('classpath', None)
+        assert cls, f'{config} doesn\'t contain classpath field'
+        cls = str_to_type(cls)
+        config = dict(config)
+        config.pop('classpath')
+        return cls(**config)
+
+
+class ConfigurableNamedTransform(NamedTransform, ConfigurableTransform, ABC):
+    pass
+
+
+class EmbeddingNamedTransform(ConfigurableNamedTransform, ABC):
+
+    def __init__(self, output_dim: int, src: str, dst: str) -> None:
+        super().__init__(src, dst)
+        self.output_dim = output_dim
+
+
+class RenameField(NamedTransform):
+
+    def __call__(self, sample: dict):
+        sample[self.dst] = sample.pop(self.src)
+        return sample
+
+
+class CopyField(object):
+    def __init__(self, src, dst) -> None:
+        self.dst = dst
+        self.src = src
+
+    def __call__(self, sample: dict) -> dict:
+        sample[self.dst] = sample[self.src]
+        return sample
+
+
+class FilterField(object):
+    def __init__(self, *keys) -> None:
+        self.keys = keys
+
+    def __call__(self, sample: dict):
+        sample = dict((k, sample[k]) for k in self.keys)
+        return sample
+
+
+class TransformList(list):
+    """Composes several transforms together.
+
+    Args:
+      transforms(list of ``Transform`` objects): list of transforms to compose.
+    Example:
+
+    Returns:
+
+    >>> transforms.TransformList(
+        >>>     transforms.CenterCrop(10),
+        >>>     transforms.ToTensor(),
+        >>> )
+    """
+
+    def __init__(self, *transforms) -> None:
+        super().__init__()
+        self.extend(transforms)
+
+    def __call__(self, sample):
+        for t in self:
+            sample = t(sample)
+        return sample
+
+    def index_by_type(self, t):
+        for i, trans in enumerate(self):
+            if isinstance(trans, t):
+                return i
+
+
+class LowerCase(object):
+    def __init__(self, src, dst=None) -> None:
+        if dst is None:
+            dst = src
+        self.src = src
+        self.dst = dst
+
+    def __call__(self, sample: dict) -> dict:
+        src = sample[self.src]
+        if isinstance(src, str):
+            sample[self.dst] = src.lower()
+        elif isinstance(src, list):
+            sample[self.dst] = [x.lower() for x in src]
+        return sample
+
+
+class ToChar(object):
+    def __init__(self, src, dst='char', max_word_length=None, min_word_length=None, pad=PAD) -> None:
+        if dst is None:
+            dst = src
+        self.src = src
+        self.dst = dst
+        self.max_word_length = max_word_length
+        self.min_word_length = min_word_length
+        self.pad = pad
+
+    def __call__(self, sample: dict) -> dict:
+        src = sample[self.src]
+        if isinstance(src, str):
+            sample[self.dst] = self.to_chars(src)
+        elif isinstance(src, list):
+            sample[self.dst] = [self.to_chars(x) for x in src]
+        return sample
+
+    def to_chars(self, word: str):
+        chars = list(word)
+        if self.min_word_length and len(chars) < self.min_word_length:
+            chars = chars + [self.pad] * (self.min_word_length - len(chars))
+        if self.max_word_length:
+            chars = chars[:self.max_word_length]
+        return chars
+
+
+class AppendEOS(NamedTransform):
+
+    def __init__(self, src: str, dst: str = None, eos=EOS) -> None:
+        super().__init__(src, dst)
+        self.eos = eos
+
+    def __call__(self, sample: dict) -> dict:
+        sample[self.dst] = sample[self.src] + [self.eos]
+        return sample
+
+
+class WhitespaceTokenizer(NamedTransform):
+
+    def __call__(self, sample: dict) -> dict:
+        src = sample[self.src]
+        if isinstance(src, str):
+            sample[self.dst] = self.tokenize(src)
+        elif isinstance(src, list):
+            sample[self.dst] = [self.tokenize(x) for x in src]
+        return sample
 
     @staticmethod
-    def generator_to_callable(generator: Generator):
-        return lambda: (x for x in generator)
+    def tokenize(text: str):
+        return text.split()
 
-    def str_to_idx(self, X, Y) -> Tuple[Union[tf.Tensor, Tuple], tf.Tensor]:
-        return self.x_to_idx(X), self.y_to_idx(Y)
 
-    def X_to_inputs(self, X: Union[tf.Tensor, Tuple[tf.Tensor]]) -> Iterable:
-        return [repr(x) for x in X]
+class NormalizeDigit(object):
+    def __init__(self, src, dst=None) -> None:
+        if dst is None:
+            dst = src
+        self.src = src
+        self.dst = dst
 
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None, batch=None) -> Iterable:
-        return [repr(y) for y in Y]
+    @staticmethod
+    def transform(word: str):
+        new_word = ""
+        for char in word:
+            if char.isdigit():
+                new_word += '0'
+            else:
+                new_word += char
+        return new_word
 
-    def XY_to_inputs_outputs(self, X: Union[tf.Tensor, Tuple[tf.Tensor]],
-                             Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False) -> Iterable:
+    def __call__(self, sample: dict) -> dict:
+        src = sample[self.src]
+        if isinstance(src, str):
+            sample[self.dst] = self.transform(src)
+        elif isinstance(src, list):
+            sample[self.dst] = [self.transform(x) for x in src]
+        return sample
+
+
+class Bigram(NamedTransform):
+
+    def __init__(self, src: str, dst: str = None) -> None:
+        if not dst:
+            dst = f'{src}_bigram'
+        super().__init__(src, dst)
+
+    def __call__(self, sample: dict) -> dict:
+        src: List = sample[self.src]
+        dst = src + [EOS]
+        dst = [dst[i] + dst[i + 1] for i in range(len(src))]
+        sample[self.dst] = dst
+        return sample
+
+
+class FieldLength(NamedTransform):
+
+    def __init__(self, src: str, dst: str = None, delta=0) -> None:
+        self.delta = delta
+        if not dst:
+            dst = f'{src}_length'
+        super().__init__(src, dst)
+
+    def __call__(self, sample: dict) -> dict:
+        sample[self.dst] = len(sample[self.src]) + self.delta
+        return sample
+
+
+class BMESOtoIOBES(object):
+    def __init__(self, field='tag') -> None:
+        self.field = field
+
+    def __call__(self, sample: dict) -> dict:
+        sample[self.field] = [self.convert(y) for y in sample[self.field]]
+        return sample
+
+    @staticmethod
+    def convert(y: str):
+        if y.startswith('M-'):
+            return 'I-'
+        return y
+
+
+class NormalizeToken(ConfigurableNamedTransform):
+
+    def __init__(self, mapper: Union[str, dict], src: str, dst: str = None) -> None:
+        super().__init__(src, dst)
+        self.mapper = mapper
+        if isinstance(mapper, str):
+            mapper = get_resource(mapper)
+        if isinstance(mapper, str):
+            self._table = load_json(mapper)
+        elif isinstance(mapper, dict):
+            self._table = mapper
+        else:
+            raise ValueError(f'Unrecognized mapper type {mapper}')
+
+    def __call__(self, sample: dict) -> dict:
+        src = sample[self.src]
+        if self.src == self.dst:
+            sample[f'{self.src}_'] = src
+        if isinstance(src, str):
+            src = self.convert(src)
+        else:
+            src = [self.convert(x) for x in src]
+        sample[self.dst] = src
+        return sample
+
+    def convert(self, token) -> str:
+        return self._table.get(token, token)
+
+
+class PunctuationMask(ConfigurableNamedTransform):
+    def __init__(self, src: str, dst: str = None) -> None:
+        """Mask out all punctuations (set mask of punctuations to False)
+
+        Args:
+          src:
+          dst:
+
+        Returns:
+
         """
-        Convert predicted tensors to outputs
+        if not dst:
+            dst = f'{src}_punct_mask'
+        super().__init__(src, dst)
 
-        Parameters
-        ----------
-        X : Union[tf.Tensor, Tuple[tf.Tensor]]
-            The inputs of model
-        Y : Union[tf.Tensor, Tuple[tf.Tensor]]
-            The outputs of model
+    def __call__(self, sample: dict) -> dict:
+        src = sample[self.src]
+        if isinstance(src, str):
+            dst = not ispunct(src)
+        else:
+            dst = [not ispunct(x) for x in src]
+        sample[self.dst] = dst
+        return sample
 
-        Returns
-        -------
 
-        """
-        return [(x, y) for x, y in zip(self.X_to_inputs(X), self.Y_to_outputs(Y, gold))]
-
-    def input_is_single_sample(self, input: Any) -> bool:
-        return False
-
-    def input_to_inputs(self, input: Any) -> Tuple[Any, bool]:
-        """
-        If input is one sample, convert it to a list which contains this unique sample
-
-        Parameters
-        ----------
-        input :
-            sample or samples
-
-        Returns
-        -------
-        (inputs, converted) : Tuple[Any, bool]
-
-        """
-        flat = self.input_is_single_sample(input)
-        if flat:
-            input = [input]
-        return input, flat
-
-    def input_truth_output_to_str(self, input, truth, output):
-        """
-        Convert input truth output to string representation, usually for writing to file during evaluation
-
-        Parameters
-        ----------
-        input
-        truth
-        output
-
-        Returns
-        -------
-
-        """
-        return '\t'.join([input, truth, output]) + '\n'
+class NormalizeCharacter(NormalizeToken):
+    def convert(self, token) -> str:
+        return ''.join([NormalizeToken.convert(self, c) for c in token])

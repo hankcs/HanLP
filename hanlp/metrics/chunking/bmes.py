@@ -2,14 +2,14 @@
 # Author: hankcs
 # Date: 2019-09-14 21:55
 
-from hanlp.common.vocab import Vocab
-from hanlp.metrics.chunking.f1 import ChunkingF1
+from hanlp.common.vocab_tf import VocabTF
+from hanlp.metrics.chunking.chunking_f1_tf import ChunkingF1_TF
 from hanlp.metrics.chunking.sequence_labeling import get_entities
 
 
-class BMES_F1(ChunkingF1):
+class BMES_F1_TF(ChunkingF1_TF):
 
-    def __init__(self, tag_vocab: Vocab, from_logits=True, suffix=False, name='f1', dtype=None, **kwargs):
+    def __init__(self, tag_vocab: VocabTF, from_logits=True, suffix=False, name='f1', dtype=None, **kwargs):
         super().__init__(tag_vocab, from_logits, name, dtype, **kwargs)
         self.nb_correct = 0
         self.nb_pred = 0

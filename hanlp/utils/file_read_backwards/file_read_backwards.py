@@ -14,12 +14,17 @@ supported_encodings = ["utf-8", "ascii", "latin-1"]  # any encodings that are ba
 class FileReadBackwards:
 
     """Class definition for `FileReadBackwards`.
-
+    
     A `FileReadBackwards` will spawn a `FileReadBackwardsIterator` and keep an opened file handler.
-
+    
     It can be used as a Context Manager. If done so, when exited, it will close its file handler.
-
+    
     In any mode, `close()` can be called to close the file handler..
+
+    Args:
+
+    Returns:
+
     """
 
     def __init__(self, path, encoding="utf-8", chunk_size=io.DEFAULT_BUFFER_SIZE):
@@ -57,7 +62,7 @@ class FileReadBackwards:
         self.iterator.close()
 
     def readline(self):
-        """Return a line content (with a trailing newline) if there are content. Return '' otherwise."""
+        """ """
 
         try:
             r = next(self.iterator) + os.linesep
@@ -68,8 +73,13 @@ class FileReadBackwards:
 
 class FileReadBackwardsIterator:
     """Iterator for `FileReadBackwards`.
-
+    
     This will read backwards line by line a file. It holds an opened file handler.
+
+    Args:
+
+    Returns:
+
     """
     def __init__(self, fp, encoding, chunk_size):
         """Constructor for FileReadBackwardsIterator
@@ -90,13 +100,18 @@ class FileReadBackwardsIterator:
 
     def next(self):
         """Returns unicode string from the last line until the beginning of file.
-
+        
         Gets exhausted if::
-
+        
             * already reached the beginning of the file on previous iteration
             * the file got closed
-
+        
         When it gets exhausted, it closes the file handler.
+
+        Args:
+
+        Returns:
+
         """
         # Using binary mode, because some encodings such as "utf-8" use variable number of
         # bytes to encode different Unicode points.
@@ -116,8 +131,13 @@ class FileReadBackwardsIterator:
     @property
     def closed(self):
         """The status of the file handler.
-
+        
         :return: True if the file handler is still opened. False otherwise.
+
+        Args:
+
+        Returns:
+
         """
         return self.__fp.closed
 

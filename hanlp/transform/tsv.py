@@ -7,18 +7,18 @@ from typing import Tuple, Union, Optional, Iterable, List
 
 import tensorflow as tf
 
-from hanlp.common.structure import SerializableDict
+from hanlp_common.structure import SerializableDict
 
-from hanlp.common.transform import Transform
-from hanlp.common.vocab import Vocab
-from hanlp.utils.io_util import generator_words_tags
+from hanlp.common.transform_tf import Transform
+from hanlp.common.vocab_tf import VocabTF
+from hanlp.utils.io_util import generate_words_tags_from_tsv
 from hanlp.utils.tf_util import str_tensor_to_str
-from hanlp.utils.util import merge_locals_kwargs
+from hanlp_common.util import merge_locals_kwargs
 
 
-def dataset_from_tsv(tsv_file_path, word_vocab: Vocab, char_vocab: Vocab, tag_vocab: Vocab, batch_size=32,
+def dataset_from_tsv(tsv_file_path, word_vocab: VocabTF, char_vocab: VocabTF, tag_vocab: VocabTF, batch_size=32,
                      shuffle=None, repeat=None, prefetch=1, lower=False, **kwargs):
-    generator = functools.partial(generator_words_tags, tsv_file_path, word_vocab, char_vocab, tag_vocab, lower)
+    generator = functools.partial(generate_words_tags_from_tsv, tsv_file_path, word_vocab, char_vocab, tag_vocab, lower)
     return dataset_from_generator(generator, word_vocab, tag_vocab, batch_size, shuffle, repeat, prefetch,
                                   **kwargs)
 
@@ -40,10 +40,10 @@ def dataset_from_generator(generator, word_vocab, tag_vocab, batch_size=32, shuf
 
 
 def vocab_from_tsv(tsv_file_path, lower=False, lock_word_vocab=False, lock_char_vocab=True, lock_tag_vocab=True) \
-        -> Tuple[Vocab, Vocab, Vocab]:
-    word_vocab = Vocab()
-    char_vocab = Vocab()
-    tag_vocab = Vocab(unk_token=None)
+        -> Tuple[VocabTF, VocabTF, VocabTF]:
+    word_vocab = VocabTF()
+    char_vocab = VocabTF()
+    tag_vocab = VocabTF(unk_token=None)
     with open(tsv_file_path, encoding='utf-8') as tsv_file:
         for line in tsv_file:
             cells = line.strip().split()
@@ -67,8 +67,8 @@ def vocab_from_tsv(tsv_file_path, lower=False, lock_word_vocab=False, lock_char_
 class TsvTaggingFormat(Transform, ABC):
     def file_to_inputs(self, filepath: str, gold=True):
         assert gold, 'TsvTaggingFormat does not support reading non-gold files'
-        yield from generator_words_tags(filepath, gold=gold, lower=self.config.get('lower', False),
-                                        max_seq_length=self.max_seq_length)
+        yield from generate_words_tags_from_tsv(filepath, gold=gold, lower=self.config.get('lower', False),
+                                                max_seq_length=self.max_seq_length)
 
     @property
     def max_seq_length(self):
@@ -78,20 +78,20 @@ class TsvTaggingFormat(Transform, ABC):
 class TSVTaggingTransform(TsvTaggingFormat, Transform):
     def __init__(self, config: SerializableDict = None, map_x=True, map_y=True, use_char=False, **kwargs) -> None:
         super().__init__(**merge_locals_kwargs(locals(), kwargs))
-        self.word_vocab: Optional[Vocab] = None
-        self.tag_vocab: Optional[Vocab] = None
-        self.char_vocab: Optional[Vocab] = None
+        self.word_vocab: Optional[VocabTF] = None
+        self.tag_vocab: Optional[VocabTF] = None
+        self.char_vocab: Optional[VocabTF] = None
 
     def fit(self, trn_path: str, **kwargs) -> int:
-        self.word_vocab = Vocab()
-        self.tag_vocab = Vocab(pad_token=None, unk_token=None)
+        self.word_vocab = VocabTF()
+        self.tag_vocab = VocabTF(pad_token=None, unk_token=None)
         num_samples = 0
         for words, tags in self.file_to_inputs(trn_path, True):
             self.word_vocab.update(words)
             self.tag_vocab.update(tags)
             num_samples += 1
         if self.char_vocab:
-            self.char_vocab = Vocab()
+            self.char_vocab = VocabTF()
             for word in self.word_vocab.token_to_idx.keys():
                 if word in (self.word_vocab.pad_token, self.word_vocab.unk_token):
                     continue

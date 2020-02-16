@@ -25,7 +25,7 @@ from hanlp.utils.tf_util import hanlp_register
 class WeightNormalization(tf.keras.layers.Wrapper):
     """This wrapper reparameterizes a layer by decoupling the weight's
     magnitude and direction.
-
+    
     This speeds up convergence by improving the
     conditioning of the optimization problem.
     Weight Normalization: A Simple Reparameterization to Accelerate
@@ -47,13 +47,18 @@ class WeightNormalization(tf.keras.layers.Wrapper):
           tf.keras.layers.Dense(n_classes),
           data_init=True)(net)
     ```
-    Arguments:
-      layer: a layer instance.
-      data_init: If `True` use data dependent variable initialization
+
+    Args:
+      layer: a layer instance
+      data_init: If
+
+    Returns:
+
     Raises:
-      ValueError: If not initialized with a `Layer` instance.
-      ValueError: If `Layer` does not contain a `kernel` of weights
-      NotImplementedError: If `data_init` is True and running graph execution
+      ValueError: If not initialized with a
+      ValueError: If
+      NotImplementedError: If
+
     """
 
     def __init__(self, layer, data_init=True, **kwargs):
@@ -64,7 +69,14 @@ class WeightNormalization(tf.keras.layers.Wrapper):
         self.is_rnn = isinstance(self.layer, tf.keras.layers.RNN)
 
     def build(self, input_shape):
-        """Build `Layer`"""
+        """Build `Layer`
+
+        Args:
+          input_shape: 
+
+        Returns:
+
+        """
         input_shape = tf.TensorShape(input_shape)
         self.input_spec = tf.keras.layers.InputSpec(
             shape=[None] + input_shape[1:])
@@ -114,7 +126,14 @@ class WeightNormalization(tf.keras.layers.Wrapper):
         self.built = True
 
     def call(self, inputs):
-        """Call `Layer`"""
+        """Call `Layer`
+
+        Args:
+          inputs: 
+
+        Returns:
+
+        """
 
         def _do_nothing():
             return tf.identity(self.g)
@@ -144,9 +163,15 @@ class WeightNormalization(tf.keras.layers.Wrapper):
 
     def _initialize_weights(self, inputs):
         """Initialize weight g.
-
+        
         The initial value of g could either from the initial value in v,
         or by the input value if self.data_init is True.
+
+        Args:
+          inputs: 
+
+        Returns:
+
         """
         with tf.control_dependencies([
             tf.debugging.assert_equal(  # pylint: disable=bad-continuation
@@ -170,7 +195,14 @@ class WeightNormalization(tf.keras.layers.Wrapper):
             return [g_tensor]
 
     def _data_dep_init(self, inputs):
-        """Data dependent initialization."""
+        """Data dependent initialization.
+
+        Args:
+          inputs: 
+
+        Returns:
+
+        """
         with tf.name_scope('data_dep_init'):
             # Generate data dependent init values
             x_init = self._naked_clone_layer(inputs)

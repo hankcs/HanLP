@@ -1,7 +1,5 @@
 import re
 
-from hanlp.utils.english_tokenizer import tokenize_english
-
 SEPARATOR = r'@'
 RE_SENTENCE = re.compile(r'(\S.+?[.!?])(?=\s+|$)|(\S.+?)(?=[\n]|$)', re.UNICODE)
 AB_SENIOR = re.compile(r'([A-Z][a-z]{1,2}\.)\s(\w)', re.UNICODE)

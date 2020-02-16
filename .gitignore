@@ -277,7 +277,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# Editor-based Rest Client
+# Editor-based Rest HanLPClient
 .idea/httpRequests
 
 # Android studio 3.1+ serialized cache file
@@ -285,4 +285,9 @@ fabric.properties
 .idea
 *.iml
 data
-.vscode/settings.json
+.vscode
+*.pkl
+*.pdf
+_static/
+_build/
+_templates/

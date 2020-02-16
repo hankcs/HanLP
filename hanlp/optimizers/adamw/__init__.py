@@ -33,7 +33,19 @@ from hanlp.optimizers.adamw.optimization import WarmUp, AdamWeightDecay
 
 
 def create_optimizer(init_lr, num_train_steps, num_warmup_steps, weight_decay_rate=0.01, epsilon=1e-6, clipnorm=None):
-    """Creates an optimizer with learning rate schedule."""
+    """Creates an optimizer with learning rate schedule.
+
+    Args:
+      init_lr: 
+      num_train_steps: 
+      num_warmup_steps: 
+      weight_decay_rate:  (Default value = 0.01)
+      epsilon:  (Default value = 1e-6)
+      clipnorm:  (Default value = None)
+
+    Returns:
+
+    """
     # Implements linear decay of the learning rate.
     learning_rate_fn = tf.keras.optimizers.schedules.PolynomialDecay(
         initial_learning_rate=init_lr,

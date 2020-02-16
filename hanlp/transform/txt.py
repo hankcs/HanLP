@@ -7,10 +7,11 @@ from typing import Tuple, Union, List, Iterable
 
 import tensorflow as tf
 
-from hanlp.common.transform import Transform
-from hanlp.common.vocab import Vocab
+from hanlp.common.transform_tf import Transform
+from hanlp.common.vocab_tf import VocabTF
 from hanlp.utils.io_util import get_resource
 from hanlp.utils.lang.zh.char_table import CharTable
+from hanlp.utils.span_util import bmes_of, bmes_to_words
 from hanlp.utils.string_util import split_long_sent
 
 
@@ -33,23 +34,6 @@ def words_to_bmes(words):
         else:
             tags.extend(['B'] + ['M'] * (len(w) - 2) + ['E'])
     return tags
-
-
-def bmes_to_words(chars, tags):
-    result = []
-    if len(chars) == 0:
-        return result
-    word = chars[0]
-
-    for c, t in zip(chars[1:], tags[1:]):
-        if t == 'B' or t == 'S':
-            result.append(word)
-            word = ''
-        word += c
-    if len(word) != 0:
-        result.append(word)
-
-    return result
 
 
 def extract_ngram_features_and_tags(sentence, bigram_only=False, window_size=4, segmented=True):
@@ -75,23 +59,6 @@ def extract_ngram_features_and_tags(sentence, bigram_only=False, window_size=4, 
     ret.extend(extract_ngram_features(chars, bigram_only, window_size))
     ret.append(tags)
     return tuple(ret[:-1]), ret[-1]  # x, y
-
-
-def bmes_of(sentence, segmented):
-    if segmented:
-        chars = []
-        tags = []
-        words = sentence.split()
-        for w in words:
-            chars.extend(list(w))
-            if len(w) == 1:
-                tags.append('S')
-            else:
-                tags.extend(['B'] + ['M'] * (len(w) - 2) + ['E'])
-    else:
-        chars = list(sentence)
-        tags = ['S'] * len(chars)
-    return chars, tags
 
 
 def extract_ngram_features(chars, bigram_only, window_size):
@@ -141,8 +108,8 @@ def generate_ngram_bmes(file_path, bigram_only=False, window_size=4, gold=True):
             yield extract_ngram_features_and_tags(sentence, bigram_only, window_size, gold)
 
 
-def vocab_from_txt(txt_file_path, bigram_only=False, window_size=4, **kwargs) -> Tuple[Vocab, Vocab, Vocab]:
-    char_vocab, ngram_vocab, tag_vocab = Vocab(), Vocab(), Vocab(pad_token=None, unk_token=None)
+def vocab_from_txt(txt_file_path, bigram_only=False, window_size=4, **kwargs) -> Tuple[VocabTF, VocabTF, VocabTF]:
+    char_vocab, ngram_vocab, tag_vocab = VocabTF(), VocabTF(), VocabTF(pad_token=None, unk_token=None)
     for X, Y in generate_ngram_bmes(txt_file_path, bigram_only, window_size, gold=True):
         char_vocab.update(X[0])
         for ngram in X[1:]:
@@ -151,7 +118,8 @@ def vocab_from_txt(txt_file_path, bigram_only=False, window_size=4, **kwargs) ->
     return char_vocab, ngram_vocab, tag_vocab
 
 
-def dataset_from_txt(txt_file_path: str, char_vocab: Vocab, ngram_vocab: Vocab, tag_vocab: Vocab, bigram_only=False,
+def dataset_from_txt(txt_file_path: str, char_vocab: VocabTF, ngram_vocab: VocabTF, tag_vocab: VocabTF,
+                     bigram_only=False,
                      window_size=4, segmented=True, batch_size=32, shuffle=None, repeat=None, prefetch=1):
     generator = functools.partial(generate_ngram_bmes, txt_file_path, bigram_only, window_size, segmented)
     return dataset_from_generator(generator, char_vocab, ngram_vocab, tag_vocab, bigram_only, window_size, batch_size,

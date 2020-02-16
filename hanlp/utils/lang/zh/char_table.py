@@ -4,8 +4,10 @@
 from typing import List
 
 from hanlp.utils.io_util import get_resource
+from hanlp_common.io import load_json
 
-HANLP_CHAR_TABLE = 'https://file.hankcs.com/corpus/char_table.zip#CharTable.txt'
+HANLP_CHAR_TABLE_TXT = 'https://file.hankcs.com/corpus/char_table.zip#CharTable.txt'
+HANLP_CHAR_TABLE_JSON = 'https://file.hankcs.com/corpus/char_table.json.zip'
 
 
 class CharTable:
@@ -27,10 +29,25 @@ class CharTable:
 
     @staticmethod
     def _init():
-        with open(get_resource(HANLP_CHAR_TABLE), encoding='utf-8') as src:
+        CharTable.convert = CharTable.load()
+
+    @staticmethod
+    def load():
+        mapper = {}
+        with open(get_resource(HANLP_CHAR_TABLE_TXT), encoding='utf-8') as src:
             for line in src:
                 cells = line.rstrip('\n')
                 if len(cells) != 3:
                     continue
                 a, _, b = cells
-                CharTable.convert[a] = b
+                mapper[a] = b
+        return mapper
+
+
+class JsonCharTable(CharTable):
+
+    @staticmethod
+    def load():
+        return load_json(get_resource(HANLP_CHAR_TABLE_JSON))
+
+
