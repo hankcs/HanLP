@@ -169,7 +169,7 @@ A graph is a generalized tree, which conveys more information about the semantic
 HanLP implements the biaffine[^biaffine] model which delivers the SOTA performance.
 
 ```python
->>> semantic_parser = hanlp.load(SEMEVAL16_NEWS_BIAFFINE_ZH)
+>>> semantic_parser = hanlp.load(hanlp.pretrained.sdp.SEMEVAL16_NEWS_BIAFFINE_ZH)
 >>> print(semantic_parser([('蜡烛', 'NN'), ('两', 'CD'), ('头', 'NN'), ('烧', 'VV')]))
 1	蜡烛	_	NN	_	_	3	Poss	_	_
 1	蜡烛	_	NN	_	_	4	Pat	_	_
