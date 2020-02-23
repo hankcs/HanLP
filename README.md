@@ -16,7 +16,7 @@ HanLP requires Python 3.6 or later. GPU/TPU is suggested but not mandatory.
 
 ### Tokenization
 
-For an end user, the basic workflow starts with loading some pretrained models from disk or Internet. Each model has an identifier, which could be one path on your computer or an URL to any public servers. Here, let's load a tokenizer called `CTB6_CONVSEG` with 2 lines of code.
+For an end user, the basic workflow starts with loading some pretrained models from disk or Internet. Each model has an identifier, which could be one path on your computer or an URL to any public servers. To tokenize Chinese, let's load a tokenizer called `CTB6_CONVSEG` with 2 lines of code.
 
 ```python
 >>> import hanlp
