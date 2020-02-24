@@ -27,11 +27,11 @@ class Serializable(object):
             if filename_is_json(path):
                 self.load_json(path)
             else:
-                self.load_json(path)
+                self.load_pickle(path)
         elif fmt in ['json', 'jsonl']:
             self.load_json(path)
         else:
-            self.load(path)
+            self.load_pickle(path)
 
     def save_pickle(self, path):
         """Save to path
