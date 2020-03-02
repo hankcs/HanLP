@@ -88,7 +88,7 @@ public class PerceptronNERecognizer extends PerceptronTagger implements NERecogn
      */
     public boolean learn(String segmentedTaggedNERSentence)
     {
-        return learn(NERInstance.create(segmentedTaggedNERSentence, model.featureMap));
+        return learn(new NERInstance(segmentedTaggedNERSentence, model.featureMap));
     }
 
     @Override
@@ -99,6 +99,6 @@ public class PerceptronNERecognizer extends PerceptronTagger implements NERecogn
             if (word instanceof CompoundWord && !tagSet.nerLabels.contains(word.getLabel()))
                 logger.warning("在线学习不可能学习新的标签: " + word + " ；请标注语料库后重新全量训练。");
         }
-        return NERInstance.create(sentence, featureMap);
+        return new NERInstance(sentence, featureMap);
     }
 }

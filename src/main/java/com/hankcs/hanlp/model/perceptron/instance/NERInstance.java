@@ -34,6 +34,11 @@ public class NERInstance extends Instance
         }
     }
 
+    public NERInstance(String[][] tuples, NERTagSet tagSet, FeatureMap featureMap)
+    {
+        this(tuples[0], tuples[1], tuples[2], tagSet, featureMap);
+    }
+
     public NERInstance(String[] wordArray, String[] posArray, FeatureMap featureMap)
     {
         initFeatureMatrix(wordArray, posArray, featureMap);
@@ -97,22 +102,25 @@ public class NERInstance extends Instance
         return toFeatureArray(featVec);
     }
 
-    public static NERInstance create(String segmentedTaggedNERSentence, FeatureMap featureMap)
+    public NERInstance(String segmentedTaggedNERSentence, FeatureMap featureMap)
     {
-        return create(Sentence.create(segmentedTaggedNERSentence), featureMap);
+        this(Sentence.create(segmentedTaggedNERSentence), featureMap);
     }
 
-    public static NERInstance create(Sentence sentence, FeatureMap featureMap)
+    public NERInstance(Sentence sentence, FeatureMap featureMap)
     {
-        if (sentence == null || featureMap == null) return null;
+        this(convertSentenceToArray(sentence, featureMap), (NERTagSet) featureMap.tagSet, featureMap);
+    }
 
+    private static String[][] convertSentenceToArray(Sentence sentence, FeatureMap featureMap)
+    {
         NERTagSet tagSet = (NERTagSet) featureMap.tagSet;
         List<String[]> collector = Utility.convertSentenceToNER(sentence, tagSet);
-        String[] wordArray = new String[collector.size()];
-        String[] posArray = new String[collector.size()];
-        String[] tagArray = new String[collector.size()];
+        String[][] tuples = new String[3][collector.size()];
+        String[] wordArray = tuples[0];
+        String[] posArray = tuples[1];
+        String[] tagArray = tuples[2];
         Utility.reshapeNER(collector, wordArray, posArray, tagArray);
-        return new NERInstance(wordArray, posArray, tagArray, tagSet, featureMap);
+        return tuples;
     }
-
 }

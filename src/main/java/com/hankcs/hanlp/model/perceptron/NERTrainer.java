@@ -62,6 +62,6 @@ public class NERTrainer extends PerceptronTrainer
     @Override
     protected Instance createInstance(Sentence sentence, FeatureMap featureMap)
     {
-        return NERInstance.create(sentence, featureMap);
+        return new NERInstance(sentence, featureMap);
     }
 }
