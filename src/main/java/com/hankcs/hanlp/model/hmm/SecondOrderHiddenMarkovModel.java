@@ -20,7 +20,7 @@ public class SecondOrderHiddenMarkovModel extends HiddenMarkovModel
     /**
      * 状态转移概率矩阵
      */
-    float[][][] transition_probability2;
+    public float[][][] transition_probability2;
 
     /**
      * 构造隐马模型
