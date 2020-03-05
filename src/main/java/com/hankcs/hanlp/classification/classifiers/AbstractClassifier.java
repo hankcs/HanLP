@@ -32,6 +32,7 @@ public abstract class AbstractClassifier implements IClassifier
     @Override
     public IClassifier enableProbability(boolean enable)
     {
+        configProbabilityEnabled = enable;
         return this;
     }
 

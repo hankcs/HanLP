@@ -444,4 +444,8 @@ public class CRFModel implements ICacheAble
     {
         return tag2id.get(tag);
     }
+    
+    public Map<String, Integer> getTag2id() {
+        return tag2id;
+    }
 }

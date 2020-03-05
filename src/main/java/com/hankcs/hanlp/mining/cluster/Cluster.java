@@ -271,7 +271,7 @@ public class Cluster<K> implements Comparable<Cluster<K>>
     void section(int nclusters)
     {
         if (size() < nclusters)
-            return;
+            throw new IllegalArgumentException("簇数目小于文档数目");
 
         sectioned_clusters_ = new ArrayList<Cluster<K>>(nclusters);
         List<Document> centroids = new ArrayList<Document>(nclusters);

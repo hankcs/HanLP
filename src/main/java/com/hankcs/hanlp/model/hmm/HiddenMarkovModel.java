@@ -25,15 +25,15 @@ public abstract class HiddenMarkovModel
     /**
      * 初始状态概率向量
      */
-    float[] start_probability;
+    public float[] start_probability;
     /**
      * 观测概率矩阵
      */
-    float[][] emission_probability;
+    public float[][] emission_probability;
     /**
      * 状态转移概率矩阵
      */
-    float[][] transition_probability;
+    public float[][] transition_probability;
 
     /**
      * 构造隐马模型

@@ -71,7 +71,7 @@ public class ClusterAnalyzer<K>
             Term term = listIterator.next();
             if (CoreStopWordDictionary.contains(term.word) ||
                 term.nature.startsWith("w")
-                )
+            )
             {
                 listIterator.remove();
             }
@@ -138,6 +138,11 @@ public class ClusterAnalyzer<K>
      */
     public List<Set<K>> kmeans(int nclusters)
     {
+        if (nclusters > size())
+        {
+            logger.err("传入聚类数目%d大于文档数量%d，已纠正为文档数量\n", nclusters, size());
+            nclusters = size();
+        }
         Cluster<K> cluster = new Cluster<K>();
         for (Document<K> document : documents_.values())
         {
@@ -152,6 +157,16 @@ public class ClusterAnalyzer<K>
             clusters_.add(s);
         }
         return toResult(clusters_);
+    }
+
+    /**
+     * 已向聚类分析器添加的文档数量
+     *
+     * @return 文档数量
+     */
+    public int size()
+    {
+        return this.documents_.size();
     }
 
     private List<Set<K>> toResult(List<Cluster<K>> clusters_)
@@ -200,6 +215,11 @@ public class ClusterAnalyzer<K>
      */
     public List<Set<K>> repeatedBisection(int nclusters, double limit_eval)
     {
+        if (nclusters > size())
+        {
+            logger.err("传入聚类数目%d大于文档数量%d，已纠正为文档数量\n", nclusters, size());
+            nclusters = size();
+        }
         Cluster<K> cluster = new Cluster<K>();
         List<Cluster<K>> clusters_ = new ArrayList<Cluster<K>>(nclusters > 0 ? nclusters : 16);
         for (Document<K> document : documents_.values())
@@ -271,7 +291,7 @@ public class ClusterAnalyzer<K>
         int loop_count = 0;
         while (loop_count++ < NUM_REFINE_LOOP)
         {
-            List<int[]> items = new ArrayList<int[]>(documents_.size());
+            List<int[]> items = new ArrayList<int[]>(size());
             for (int i = 0; i < clusters.size(); i++)
             {
                 for (int j = 0; j < clusters.get(i).documents().size(); j++)

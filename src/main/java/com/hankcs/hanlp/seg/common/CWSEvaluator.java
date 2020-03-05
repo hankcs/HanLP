@@ -246,7 +246,7 @@ public class CWSEvaluator
 
     public static class Result
     {
-        float P, R, F1, OOV_R, IV_R;
+        public float P, R, F1, OOV_R, IV_R;
 
         public Result(float p, float r, float f1, float OOV_R, float IV_R)
         {
