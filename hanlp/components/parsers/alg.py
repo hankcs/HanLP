@@ -49,7 +49,7 @@ def kmeans(x, k):
     y = tf.argmin(dists, axis=-1, output_type=tf.int32)
     dists = tf.gather_nd(dists, tf.transpose(tf.stack([tf.range(tf.shape(dists)[0], dtype=tf.int32), y])))
     # make sure number of datapoints is greater than that of clusters
-    assert len(d) >= k, f"unable to assign {len(d)} datapoints to {k} clusters"
+    assert len(x) >= k, f"unable to assign {len(x)} datapoints to {k} clusters"
 
     while old is None or not tf.reduce_all(c == old):
         # if an empty cluster is encountered,
