@@ -72,7 +72,10 @@ class NgramConvTokenizer(BMESTokenizer, NgramConvTagger):
 
 
 class TransformerTokenizerTransform(TxtBMESFormat, TransformerTransform):
-    pass
+
+    def inputs_to_samples(self, inputs, gold=False):
+        yield from TransformerTransform.inputs_to_samples(self, TxtBMESFormat.inputs_to_samples(self, inputs, gold),
+                                                          True)
 
 
 class TransformerTokenizer(BMESTokenizer, TransformerTagger):
