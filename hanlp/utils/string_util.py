@@ -33,3 +33,24 @@ def split_long_sentence_into(tokens: List[str], max_seq_length):
             start = offset + 1
     if start < punct_offset[-1]:
         yield tokens[start:]
+
+
+def split_long_sent(sent, delimiters, max_seq_length):
+    parts = []
+    offset = 0
+    for idx, char in enumerate(sent):
+        if char in delimiters:
+            parts.append(sent[offset:idx + 1])
+            offset = idx + 1
+    if not parts:
+        yield sent
+        return
+    short = []
+    for idx, part in enumerate(parts):
+        short += part
+        if idx == len(parts) - 1:
+            yield short
+        else:
+            if len(short) + len(parts[idx + 1]) > max_seq_length:
+                yield short
+                short = []

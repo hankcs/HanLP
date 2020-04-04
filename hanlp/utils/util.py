@@ -142,3 +142,5 @@ def collapse_json(text, indent=12):
                 out.append("".join(sublevel))
             out.append(line)
     return "\n".join(out)
+
+

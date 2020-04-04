@@ -11,6 +11,7 @@ from hanlp.common.transform import Transform
 from hanlp.common.vocab import Vocab
 from hanlp.utils.io_util import get_resource
 from hanlp.utils.lang.zh.char_table import CharTable
+from hanlp.utils.string_util import split_long_sent
 
 
 def generate_words_per_line(file_path):
@@ -193,22 +194,20 @@ class TxtFormat(Transform, ABC):
 
 class TxtBMESFormat(TxtFormat, ABC):
     def file_to_inputs(self, filepath: str, gold=True):
-        max_seq_len = self.config.get('max_seq_len', False)
-        if max_seq_len:
+        max_seq_length = self.config.get('max_seq_length', False)
+        if max_seq_length:
+            if 'transformer' in self.config:
+                max_seq_length -= 2  # allow for [CLS] and [SEP]
             delimiter = set()
             delimiter.update('。！？：；、，,;!?、,')
         for text in super().file_to_inputs(filepath, gold):
             chars, tags = bmes_of(text, gold)
-            if max_seq_len and len(chars) > max_seq_len:
-                short_chars, short_tags = [], []
-                for idx, (char, tag) in enumerate(zip(chars, tags)):
-                    short_chars.append(char)
-                    short_tags.append(tag)
-                    if len(short_chars) >= max_seq_len and char in delimiter:
-                        yield short_chars, short_tags
-                        short_chars, short_tags = [], []
-                if short_chars:
-                    yield short_chars, short_tags
+            if max_seq_length:
+                start = 0
+                for short_chars in split_long_sent(chars, delimiter, max_seq_length):
+                    end = start + len(short_chars)
+                    yield short_chars, tags[start:end]
+                    start = end
             else:
                 yield chars, tags
 
