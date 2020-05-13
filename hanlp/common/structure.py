@@ -89,6 +89,8 @@ class SerializableDict(Serializable, dict):
             self.update(item)
 
     def __getattr__(self, key):
+        if key.startswith('__'):
+            return dict.__getattr__(key)
         return self.__getitem__(key)
 
     def __setattr__(self, key, value):
