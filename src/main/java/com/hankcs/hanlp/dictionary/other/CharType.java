@@ -13,10 +13,10 @@ package com.hankcs.hanlp.dictionary.other;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.utility.TextUtility;
 
 import java.io.DataOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -131,7 +131,7 @@ public class CharType
             typeList.add(array);
         }
 //        System.out.print("int[" + typeList.size() + "][3] array = \n");
-        DataOutputStream out = new DataOutputStream(new FileOutputStream(HanLP.Config.CharTypePath));
+        DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(HanLP.Config.CharTypePath));
         for (int[] array : typeList)
         {
 //            System.out.printf("%d %d %d\n", array[0], array[1], array[2]);
