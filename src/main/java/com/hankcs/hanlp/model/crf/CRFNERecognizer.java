@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class CRFNERecognizer extends CRFTagger implements NERecognizer
 {
-    private NERTagSet tagSet;
+    public NERTagSet tagSet;
     /**
      * 复用感知机的解码模块
      */
