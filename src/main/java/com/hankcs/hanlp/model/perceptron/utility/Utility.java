@@ -452,7 +452,7 @@ public class Utility
             }
             prePos = NERTagSet.posOf(nerArray[i]);
         }
-        if (nerArray.length - 1 - begin > 1)
+        if (nerArray.length - 1 - begin >= 1)
         {
             result.add(String.format("%d\t%d\t%s", begin, nerArray.length, prePos));
         }
