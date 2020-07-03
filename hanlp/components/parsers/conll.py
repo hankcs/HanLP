@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-26 15:37
+from abc import abstractmethod
 from collections import Counter
 from typing import Generator, Tuple, Union, Iterable, Any, List
 
@@ -219,6 +220,86 @@ class CoNLLTransform(Transform):
     def input_is_single_sample(self, input: Any) -> bool:
         return isinstance(input[0][0], str) if len(input[0]) else False
 
+    def samples_to_dataset(self, samples: Generator, map_x=None, map_y=None, batch_size=5000, shuffle=None, repeat=None,
+                           drop_remainder=False, prefetch=1, cache=True) -> tf.data.Dataset:
+        if shuffle:
+            def generator():
+                # custom bucketing, load corpus into memory
+                corpus = list(x for x in (samples() if callable(samples) else samples))
+                lengths = [self.len_of_sent(i) for i in corpus]
+                if len(corpus) < 32:
+                    n_buckets = 1
+                else:
+                    n_buckets = min(self.config.n_buckets, len(corpus))
+                buckets = dict(zip(*kmeans(lengths, n_buckets)))
+                sizes, buckets = zip(*[
+                    (size, bucket) for size, bucket in buckets.items()
+                ])
+                # the number of chunks in each bucket, which is clipped by
+                # range [1, len(bucket)]
+                chunks = [min(len(bucket), max(round(size * len(bucket) / batch_size), 1)) for size, bucket in
+                          zip(sizes, buckets)]
+                range_fn = randperm if shuffle else arange
+                max_samples_per_batch = self.config.get('max_samples_per_batch', None)
+                for i in tolist(range_fn(len(buckets))):
+                    split_sizes = [(len(buckets[i]) - j - 1) // chunks[i] + 1
+                                   for j in range(chunks[i])]  # how many sentences in each batch
+                    for batch_indices in tf.split(range_fn(len(buckets[i])), split_sizes):
+                        indices = [buckets[i][j] for j in tolist(batch_indices)]
+                        if max_samples_per_batch:
+                            for j in range(0, len(indices), max_samples_per_batch):
+                                yield from self.batched_inputs_to_batches(corpus, indices[j:j + max_samples_per_batch],
+                                                                          shuffle)
+                        else:
+                            yield from self.batched_inputs_to_batches(corpus, indices, shuffle)
+
+        else:
+            def generator():
+                # custom bucketing, load corpus into memory
+                corpus = list(x for x in (samples() if callable(samples) else samples))
+                n_tokens = 0
+                batch = []
+                for idx, sent in enumerate(corpus):
+                    sent_len = self.len_of_sent(sent)
+                    if n_tokens + sent_len > batch_size and batch:
+                        yield from self.batched_inputs_to_batches(corpus, batch, shuffle)
+                        n_tokens = 0
+                        batch = []
+                    n_tokens += sent_len
+                    batch.append(idx)
+                if batch:
+                    yield from self.batched_inputs_to_batches(corpus, batch, shuffle)
+
+        # next(generator())
+        return Transform.samples_to_dataset(self, generator, False, False, 0, False, repeat, drop_remainder, prefetch,
+                                            cache)
+
+    def len_of_sent(self, sent):
+        return 1 + len(sent)  # take ROOT into account
+
+    @abstractmethod
+    def batched_inputs_to_batches(self, corpus, indices, shuffle):
+        """
+        Convert batched inputs to batches of samples
+
+        Parameters
+        ----------
+        corpus : list
+            A list of inputs
+        indices : list
+            A list of indices, each list belongs to a batch
+
+        Returns
+        -------
+        None
+
+        Yields
+        -------
+        tuple
+            tuple of tf.Tensor
+        """
+        pass
+
 
 class CoNLL_DEP_Transform(CoNLLTransform):
 
@@ -226,56 +307,49 @@ class CoNLL_DEP_Transform(CoNLLTransform):
                  n_tokens_per_batch=5000, min_freq=2, **kwargs) -> None:
         super().__init__(config, map_x, map_y, lower, n_buckets, n_tokens_per_batch, min_freq, **kwargs)
 
-    def samples_to_dataset(self, samples: Generator, map_x=None, map_y=None, batch_size=5000, shuffle=None, repeat=None,
-                           drop_remainder=False, prefetch=1, cache=True) -> tf.data.Dataset:
-        def generator():
-            # custom bucketing, load corpus into memory
-            corpus = list(x for x in (samples() if callable(samples) else samples))
-            lengths = [1 + len(i) for i in corpus]
-            if len(corpus) < 32:
-                n_buckets = 1
-            else:
-                n_buckets = min(self.config.n_buckets, len(corpus))
-            buckets = dict(zip(*kmeans(lengths, n_buckets)))
-            sizes, buckets = zip(*[
-                (size, bucket) for size, bucket in buckets.items()
-            ])
-            # the number of chunks in each bucket, which is clipped by
-            # range [1, len(bucket)]
-            chunks = [min(len(bucket), max(round(size * len(bucket) / batch_size), 1)) for size, bucket in
-                      zip(sizes, buckets)]
-            range_fn = randperm if shuffle else arange
-            for i in tolist(range_fn(len(buckets))):
-                split_sizes = [(len(buckets[i]) - j - 1) // chunks[i] + 1
-                               for j in range(chunks[i])]
-                for batch_indices in tf.split(range_fn(len(buckets[i])), split_sizes):
-                    indices = [buckets[i][j] for j in tolist(batch_indices)]
-                    raw_batch = [[], [], [], []]
-                    for idx in indices:
-                        for b in raw_batch:
-                            b.append([])
-                        for cells in corpus[idx]:
-                            for b, c, v in zip(raw_batch, cells,
-                                               [self.form_vocab, self.cpos_vocab, None, self.rel_vocab]):
-                                b[-1].append(v.get_idx_without_add(c) if v else c)
-                    batch = []
-                    for b, v in zip(raw_batch, [self.form_vocab, self.cpos_vocab, None, self.rel_vocab]):
-                        b = tf.keras.preprocessing.sequence.pad_sequences(b, padding='post',
-                                                                          value=v.safe_pad_token_idx if v else 0,
-                                                                          dtype='int64')
-                        batch.append(b)
-                    assert len(batch) == 4
-                    yield (batch[0], batch[1]), (batch[2], batch[3])
-
-        return super().samples_to_dataset(generator, False, False, 0, False, repeat, drop_remainder, prefetch,
-                                          cache)
-
     def create_types_shapes_values(self) -> Tuple[Tuple, Tuple, Tuple]:
         types = (tf.int64, tf.int64), (tf.int64, tf.int64)
         shapes = ([None, None], [None, None]), ([None, None], [None, None])
         values = (self.form_vocab.safe_pad_token_idx, self.cpos_vocab.safe_pad_token_idx), (
             0, self.rel_vocab.safe_pad_token_idx)
         return types, shapes, values
+
+    def batched_inputs_to_batches(self, corpus, indices, shuffle):
+        """
+        Convert batched inputs to batches of samples
+
+        Parameters
+        ----------
+        corpus : list
+            A list of inputs
+        indices : list
+            A list of indices, each list belongs to a batch
+
+        Returns
+        -------
+        None
+
+        Yields
+        -------
+        tuple
+            tuple of tf.Tensor
+        """
+        raw_batch = [[], [], [], []]
+        for idx in indices:
+            for b in raw_batch:
+                b.append([])
+            for cells in corpus[idx]:
+                for b, c, v in zip(raw_batch, cells,
+                                   [self.form_vocab, self.cpos_vocab, None, self.rel_vocab]):
+                    b[-1].append(v.get_idx_without_add(c) if v else c)
+        batch = []
+        for b, v in zip(raw_batch, [self.form_vocab, self.cpos_vocab, None, self.rel_vocab]):
+            b = tf.keras.preprocessing.sequence.pad_sequences(b, padding='post',
+                                                              value=v.safe_pad_token_idx if v else 0,
+                                                              dtype='int64')
+            batch.append(b)
+        assert len(batch) == 4
+        yield (batch[0], batch[1]), (batch[2], batch[3])
 
     def inputs_to_samples(self, inputs, gold=False):
         for sent in inputs:
@@ -416,65 +490,6 @@ class CoNLL_SDP_Transform(CoNLLTransform):
             sample.insert(0, [self.bos, self.bos, [0], deprel])
             yield sample
 
-    def samples_to_dataset(self, samples: Generator, map_x=None, map_y=None, batch_size=5000, shuffle=None, repeat=None,
-                           drop_remainder=False, prefetch=1, cache=True) -> tf.data.Dataset:
-        def generator():
-            # custom bucketing, load corpus into memory
-            corpus = list(x for x in (samples() if callable(samples) else samples))
-            lengths = [1 + len(i) for i in corpus]
-            if len(corpus) < 32:
-                n_buckets = 1
-            else:
-                n_buckets = min(self.config.n_buckets, len(corpus))
-            buckets = dict(zip(*kmeans(lengths, n_buckets)))
-            sizes, buckets = zip(*[
-                (size, bucket) for size, bucket in buckets.items()
-            ])
-            # the number of chunks in each bucket, which is clipped by
-            # range [1, len(bucket)]
-            chunks = [min(len(bucket), max(round(size * len(bucket) / batch_size), 1)) for size, bucket in
-                      zip(sizes, buckets)]
-            range_fn = randperm if shuffle else arange
-            for i in tolist(range_fn(len(buckets))):
-                split_sizes = [(len(buckets[i]) - j - 1) // chunks[i] + 1
-                               for j in range(chunks[i])]
-                for batch_indices in tf.split(range_fn(len(buckets[i])), split_sizes):
-                    indices = [buckets[i][j] for j in tolist(batch_indices)]
-                    raw_batch = [[], [], [], []]
-                    max_len = len(max([corpus[i] for i in indices], key=len))
-                    for idx in indices:
-                        arc = np.zeros((max_len, max_len), dtype=np.bool)
-                        rel = np.zeros((max_len, max_len), dtype=np.int64)
-                        for b in raw_batch[:2]:
-                            b.append([])
-                        for m, cells in enumerate(corpus[idx]):
-                            for b, c, v in zip(raw_batch, cells,
-                                               [self.form_vocab, self.cpos_vocab]):
-                                b[-1].append(v.get_idx_without_add(c))
-                            for n, r in zip(cells[2], cells[3]):
-                                arc[m, n] = True
-                                rid = self.rel_vocab.get_idx_without_add(r)
-                                if rid is None:
-                                    logger.warning(f'Relation OOV: {r} not exists in train')
-                                    continue
-                                rel[m, n] = rid
-                        raw_batch[-2].append(arc)
-                        raw_batch[-1].append(rel)
-                    batch = []
-                    for b, v in zip(raw_batch, [self.form_vocab, self.cpos_vocab]):
-                        b = tf.keras.preprocessing.sequence.pad_sequences(b, padding='post',
-                                                                          value=v.safe_pad_token_idx,
-                                                                          dtype='int64')
-                        batch.append(b)
-                    batch += raw_batch[2:]
-                    assert len(batch) == 4
-                    yield (batch[0], batch[1]), (batch[2], batch[3])
-
-        # for x in generator():
-        #     print(len(x[-1][-1]))
-        return super().samples_to_dataset(generator, False, False, 0, False, repeat, drop_remainder, prefetch,
-                                          cache)
-
     def create_types_shapes_values(self) -> Tuple[Tuple, Tuple, Tuple]:
         types = (tf.int64, tf.int64), (tf.bool, tf.int64)
         shapes = ([None, None], [None, None]), ([None, None, None], [None, None, None])
@@ -519,3 +534,53 @@ class CoNLL_SDP_Transform(CoNLLTransform):
                     sent.append([head, deprel])
             sents.append(sent)
         return sents
+
+    def batched_inputs_to_batches(self, corpus, indices, shuffle=False):
+        """
+        Convert batched inputs to batches of samples
+
+        Parameters
+        ----------
+        corpus : list
+            A list of inputs
+        indices : list
+            A list of indices, each list belongs to a batch
+
+        Returns
+        -------
+        None
+
+        Yields
+        -------
+        tuple
+            tuple of tf.Tensor
+        """
+        raw_batch = [[], [], [], []]
+        max_len = len(max([corpus[i] for i in indices], key=len))
+        for idx in indices:
+            arc = np.zeros((max_len, max_len), dtype=np.bool)
+            rel = np.zeros((max_len, max_len), dtype=np.int64)
+            for b in raw_batch[:2]:
+                b.append([])
+            for m, cells in enumerate(corpus[idx]):
+                for b, c, v in zip(raw_batch, cells,
+                                   [self.form_vocab, self.cpos_vocab]):
+                    b[-1].append(v.get_idx_without_add(c))
+                for n, r in zip(cells[2], cells[3]):
+                    arc[m, n] = True
+                    rid = self.rel_vocab.get_idx_without_add(r)
+                    if rid is None:
+                        logger.warning(f'Relation OOV: {r} not exists in train')
+                        continue
+                    rel[m, n] = rid
+            raw_batch[-2].append(arc)
+            raw_batch[-1].append(rel)
+        batch = []
+        for b, v in zip(raw_batch, [self.form_vocab, self.cpos_vocab]):
+            b = tf.keras.preprocessing.sequence.pad_sequences(b, padding='post',
+                                                              value=v.safe_pad_token_idx,
+                                                              dtype='int64')
+            batch.append(b)
+        batch += raw_batch[2:]
+        assert len(batch) == 4
+        yield (batch[0], batch[1]), (batch[2], batch[3])
