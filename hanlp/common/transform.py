@@ -261,7 +261,7 @@ class Transform(ABC):
     def input_is_single_sample(self, input: Any) -> bool:
         return False
 
-    def input_to_inputs(self, input: Any) -> Tuple[bool, Any]:
+    def input_to_inputs(self, input: Any) -> Tuple[Any, bool]:
         """
         If input is one sample, convert it to a list which contains this unique sample
 
@@ -272,7 +272,7 @@ class Transform(ABC):
 
         Returns
         -------
-        (inputs, converted) : Tuple[bool, Any]
+        (inputs, converted) : Tuple[Any, bool]
 
         """
         flat = self.input_is_single_sample(input)
