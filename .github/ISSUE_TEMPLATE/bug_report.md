@@ -10,7 +10,7 @@ assignees: hankcs
 <!--
 Thank you for reporting a possible bug in HanLP.
 Please fill in the template below to bypass our spam filter.  
-以下必填，否则直接关闭。
+以下必填，否则恕不受理。
 -->
 
 **Describe the bug**
