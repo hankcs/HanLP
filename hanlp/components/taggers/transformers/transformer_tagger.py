@@ -99,7 +99,7 @@ class TransformerTagger(TaggerComponent):
 
     def build_loss(self, loss, **kwargs):
         if not loss:
-            return SparseCategoricalCrossentropyOverBatchFirstDim()
+            return SparseCategoricalCrossentropyOverBatchFirstDim(self.transform.tag_vocab.pad_idx)
         return super().build_loss(loss, **kwargs)
 
     def load_transform(self, save_dir) -> Transform:

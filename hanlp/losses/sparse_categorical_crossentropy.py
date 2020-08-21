@@ -24,8 +24,15 @@ class SparseCategoricalCrossentropyOverNonzeroWeights(object):
 
 @hanlp_register
 class SparseCategoricalCrossentropyOverBatchFirstDim(object):
+
+    def __init__(self, pad_idx=None) -> None:
+        super().__init__()
+        self.pad_idx = pad_idx
+
     def __call__(self, y_true, y_pred, sample_weight=None, **kwargs):
         loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred, from_logits=True)
+        if self.pad_idx is not None:
+            sample_weight = tf.cast(y_true != self.pad_idx, tf.float32)
         if sample_weight is not None:
             loss = loss * sample_weight
         # could use sum of sample_weight[:,0] too
