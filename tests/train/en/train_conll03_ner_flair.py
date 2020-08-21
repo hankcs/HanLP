@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-10-25 21:34
-import os
 
 import tensorflow as tf
 
@@ -9,9 +8,9 @@ from hanlp.components.ner import RNNNamedEntityRecognizer
 from hanlp.datasets.ner.conll03 import CONLL03_EN_TRAIN, CONLL03_EN_TEST
 from hanlp.pretrained.glove import GLOVE_6B_100D
 from hanlp.pretrained.rnnlm import FLAIR_LM_FW_WMT11_EN, FLAIR_LM_BW_WMT11_EN
-from tests.resources import project_root
+from tests import cdroot
 
-os.chdir(project_root)
+cdroot()
 tagger = RNNNamedEntityRecognizer()
 save_dir = 'data/model/conll03-ner-rnn-flair'
 tagger.fit(CONLL03_EN_TRAIN, CONLL03_EN_TEST, save_dir, epochs=100,

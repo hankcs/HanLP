@@ -1,15 +1,14 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-10-25 21:34
-import os
 
 import tensorflow as tf
 
 from hanlp.components.pos import RNNPartOfSpeechTagger
 from hanlp.pretrained.fasttext import FASTTEXT_CC_300_EN
-from tests.resources import project_root
+from tests import cdroot
 
-os.chdir(project_root)
+cdroot()
 tagger = RNNPartOfSpeechTagger()
 save_dir = 'data/model/pos/ptb_pos_rnn_fasttext'
 optimizer = tf.keras.optimizers.SGD(lr=0.015)
