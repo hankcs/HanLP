@@ -27,7 +27,7 @@ from hanlp.utils.log_util import logger
 from hanlp.utils.string_util import split_long_sentence_into
 from hanlp.utils.time_util import now_filename
 from hanlp.common.constant import HANLP_URL
-from hanlp import version
+from hanlp.version import __version__
 
 
 def save_pickle(item, path):
@@ -196,7 +196,7 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             import socket
             socket.setdefaulttimeout(10)
             opener = urllib.request.build_opener()
-            opener.addheaders = [('User-agent', f'HanLP/{version.__version__}')]
+            opener.addheaders = [('User-agent', f'HanLP/{__version__}')]
             urllib.request.install_opener(opener)
             urlretrieve(url, tmp_path, reporthook)
             eprint()
@@ -573,3 +573,36 @@ def stdout_redirected(to=os.devnull, stdout=None):
             except:
                 # This is the best we can do
                 pass
+
+
+def check_outdated(package='hanlp', version=__version__, repository_url='https://pypi.python.org/pypi/%s/json'):
+    """
+    Given the name of a package on PyPI and a version (both strings), checks
+    if the given version is the latest version of the package available.
+    Returns a 2-tuple (is_outdated, latest_version) where
+    is_outdated is a boolean which is True if the given version is earlier
+    than the latest version, which is the string latest_version.
+    Attempts to cache on disk the HTTP call it makes for 24 hours. If this
+    somehow fails the exception is converted to a warning (OutdatedCacheFailedWarning)
+    and the function continues normally.
+    `repository_url` is a `%` style format string
+    to use a different repository PyPI repository URL,
+    e.g. test.pypi.org or a private repository.
+    The string is formatted with the package name.
+    Adopted from https://github.com/alexmojaki/outdated/blob/master/outdated/__init__.py
+    """
+
+    from pkg_resources import parse_version
+
+    installed_version = parse_version(version)
+
+    latest_info = get_latest_info_from_pypi(package, repository_url)
+    latest_version = parse_version(latest_info)
+
+    return installed_version, latest_version, latest_info
+
+
+def get_latest_info_from_pypi(package='hanlp', repository_url='https://pypi.python.org/pypi/%s/json'):
+    url = repository_url % package
+    response = urllib.request.urlopen(url).read()
+    return json.loads(response)['info']['version']
