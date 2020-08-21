@@ -10,7 +10,8 @@ cdroot()
 tokenizer = TransformerTokenizer()
 save_dir = 'data/model/cws_bert_albert_ctb6'
 tokenizer.fit(CTB6_CWS_TRAIN, CTB6_CWS_VALID, save_dir,
-              transformer='/home/ubuntu/hankcs/laser/data/transformer/albert_base_tf2',
+              transformer='albert_base_zh',
+              max_seq_length=32,
               metrics='f1', learning_rate=5e-5, epochs=3)
 tokenizer.load(save_dir)
 print(tokenizer.predict(['中央民族乐团离开北京前往维也纳', '商品和服务']))

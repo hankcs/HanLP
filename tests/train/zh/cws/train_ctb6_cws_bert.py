@@ -9,7 +9,8 @@ from tests import cdroot
 cdroot()
 tokenizer = TransformerTokenizer()
 save_dir = 'data/model/cws_bert_base_ctb6'
-tokenizer.fit(CTB6_CWS_TRAIN, CTB6_CWS_VALID, save_dir, transformer='bert-base-chinese',
+tokenizer.fit(CTB6_CWS_TRAIN, CTB6_CWS_VALID, save_dir, transformer='chinese_L-12_H-768_A-12',
+              epochs=1,
               metrics='f1')
 # tokenizer.load(save_dir)
 print(tokenizer.predict(['中央民族乐团离开北京前往维也纳', '商品和服务']))
