@@ -34,8 +34,8 @@ setup(
     keywords='corpus,machine-learning,NLU,NLP',
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
-    install_requires=['tensorflow==2.1.0', 'fasttext==0.9.1', 'bert-for-tf2==0.12.7', 'py-params==0.8.2',
-                      'params-flow==0.7.4', 'sentencepiece==0.1.85'],
+    install_requires=['tensorflow==2.1.0', 'fasttext==0.9.1', 'bert-for-tf2==0.14.5', 'py-params==0.8.2',
+                      'params-flow==0.9.7', 'sentencepiece==0.1.85'],
     python_requires='>=3.6',
     # entry_points={
     #     'console_scripts': [
