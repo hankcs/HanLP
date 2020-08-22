@@ -30,7 +30,8 @@ def build_embedding(embeddings: Union[str, int, dict], word_vocab: Vocab, transf
             embeddings['config']['word_vocab'] = word_vocab
             embeddings['config']['char_vocab'] = transform.char_vocab
             transform.map_x = False
-        layer: tf.keras.layers.Embedding = tf.keras.utils.deserialize_keras_object(embeddings)
+        layer: tf.keras.layers.Embedding = tf.keras.utils.deserialize_keras_object(embeddings,
+                                                                                   custom_objects=tf.keras.utils.get_custom_objects())
         # Embedding specific configuration
         if layer.__class__.__name__ == 'FastTextEmbedding':
             config.run_eagerly = True  # fasttext can only run in eager mode

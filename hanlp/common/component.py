@@ -285,7 +285,7 @@ class KerasComponent(Component, ABC):
         if isinstance(optimizer, (str, dict)):
             custom_objects = {'AdamWeightDecay': AdamWeightDecay}
             optimizer: tf.keras.optimizers.Optimizer = tf.keras.utils.deserialize_keras_object(optimizer,
-                                                                                               module_objects=tf.keras.optimizers,
+                                                                                               module_objects=vars(tf.keras.optimizers),
                                                                                                custom_objects=custom_objects)
         self.config.optimizer = tf.keras.utils.serialize_keras_object(optimizer)
         return optimizer
