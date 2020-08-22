@@ -43,7 +43,7 @@ class NgramConvTokenizerTransform(TxtFormat, NgramTransform):
 
     def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None,
                      **kwargs) -> Iterable:
-        yield from TxtBMESFormat.Y_to_tokens(self.tag_vocab, Y, gold, inputs)
+        yield from TxtBMESFormat.Y_to_tokens(self, self.tag_vocab, Y, gold, inputs)
 
 
 class NgramConvTokenizer(BMESTokenizer, NgramConvTagger):
@@ -76,6 +76,13 @@ class TransformerTokenizerTransform(TxtBMESFormat, TransformerTransform):
     def inputs_to_samples(self, inputs, gold=False):
         yield from TransformerTransform.inputs_to_samples(self, TxtBMESFormat.inputs_to_samples(self, inputs, gold),
                                                           True)
+
+    def Y_to_tokens(self, tag_vocab, Y, gold, inputs):
+        if not gold:
+            Y = tf.argmax(Y, axis=2)
+        for text, ys in zip(inputs, Y):
+            tags = [tag_vocab.idx_to_token[int(y)] for y in ys[1:len(text) + 1]]
+            yield bmes_to_words(list(text), tags)
 
 
 class TransformerTokenizer(BMESTokenizer, TransformerTagger):

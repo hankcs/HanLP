@@ -224,10 +224,9 @@ class TxtBMESFormat(TxtFormat, ABC):
     def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None) -> Iterable:
         yield from self.Y_to_tokens(self.tag_vocab, Y, gold, inputs)
 
-    @staticmethod
-    def Y_to_tokens(tag_vocab, Y, gold, inputs):
+    def Y_to_tokens(self, tag_vocab, Y, gold, inputs):
         if not gold:
             Y = tf.argmax(Y, axis=2)
         for text, ys in zip(inputs, Y):
-            tags = [tag_vocab.idx_to_token[int(y)] for y in ys[1:len(text) + 1]]
+            tags = [tag_vocab.idx_to_token[int(y)] for y in ys[:len(text)]]
             yield bmes_to_words(list(text), tags)
