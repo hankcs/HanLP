@@ -35,7 +35,7 @@ setup(
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
     install_requires=['tensorflow==2.3.0', 'fasttext==0.9.1', 'bert-for-tf2==0.14.5', 'py-params==0.9.7',
-                      'params-flow==0.8.2', 'sentencepiece==0.1.85'],
+                      'params-flow==0.8.2', 'sentencepiece==0.1.91'],
     python_requires='>=3.6',
     # entry_points={
     #     'console_scripts': [
