@@ -9,6 +9,6 @@ SIGHAN2005_MSR_CONVSEG = HANLP_URL + 'cws/convseg-msr-nocrf-noembed_20200110_153
 CTB6_CONVSEG = HANLP_URL + 'cws/ctb6_convseg_nowe_nocrf_20200110_004046.zip'
 # CTB6_BERT_BASE = HANLP_URL + 'cws/cws_bert_base_ctb6_20191230_185536.zip'
 PKU_NAME_MERGED_SIX_MONTHS_CONVSEG = HANLP_URL + 'cws/pku98_6m_conv_ngram_20200110_134736.zip'
-
+LARGE_ALBERT_BASE = HANLP_URL + 'cws/large_cws_albert_base_20200828_011451.zip'
 # Will be filled up during runtime
 ALL = {}

@@ -3,7 +3,7 @@
 # Date: 2019-12-28 21:25
 import hanlp
 
-tokenizer = hanlp.load(hanlp.pretrained.cws.PKU_NAME_MERGED_SIX_MONTHS_CONVSEG)
+tokenizer = hanlp.load(hanlp.pretrained.cws.LARGE_ALBERT_BASE)
 print(tokenizer('商品和服务'))
 print(tokenizer(['萨哈夫说，伊拉克将同联合国销毁伊拉克大规模杀伤性武器特别委员会继续保持合作。',
                  '上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。',

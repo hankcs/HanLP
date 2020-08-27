@@ -5,7 +5,7 @@ from hanlp.common.trie import Trie
 
 import hanlp
 
-tokenizer = hanlp.load('PKU_NAME_MERGED_SIX_MONTHS_CONVSEG')
+tokenizer = hanlp.load('LARGE_ALBERT_BASE')
 text = 'NLP统计模型没有加规则，聪明人知道自己加。英文、数字、自定义词典统统都是规则。'
 print(tokenizer(text))
 
