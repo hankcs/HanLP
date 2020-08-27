@@ -7,11 +7,11 @@ import os
 import bert
 import tensorflow as tf
 from bert import BertModelLayer, albert_models_tfhub, fetch_tfhub_albert_model
-from bert.loader import _checkpoint_exists, bert_prefix, bert_models_google
+from bert.loader import _checkpoint_exists, bert_prefix
 from bert.loader_albert import map_to_tfhub_albert_variable_name, albert_params
 from tensorflow import keras
 
-from hanlp.layers.transformers import zh_albert_models_google
+from hanlp.layers.transformers import zh_albert_models_google, bert_models_google
 from hanlp.utils.io_util import get_resource, stdout_redirected, hanlp_home
 
 
