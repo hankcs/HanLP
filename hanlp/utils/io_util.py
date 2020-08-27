@@ -206,9 +206,16 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             url = url.split('#')[0]
             if not windows():
                 hints_for_download = f'e.g. \nwget {url} -O {save_path}\n'
+            else:
+                hints_for_download = ' Use some decent downloading tools.\n'
+            if not url.startswith(HANLP_URL):
+                hints_for_download += 'For third party data, you may find it on our mirror site:\n' \
+                                      'https://od.hankcs.com/hanlp/data/\n'
+            installed_version, latest_version, latest_version_str = check_outdated()
+            if installed_version != latest_version:
+                hints_for_download += f'Or upgrade to the latest version({latest_version}):\npip install -U hanlp'
             eprint(f'Failed to download {url} due to {repr(e)}. Please download it to {save_path} by yourself. '
-                   f'{hints_for_download}'
-                   f'Or consider upgrading to a new version.\npip install -U hanlp')
+                   f'{hints_for_download}')
             exit(1)
         remove_file(save_path)
         os.rename(tmp_path, save_path)
@@ -596,10 +603,10 @@ def check_outdated(package='hanlp', version=__version__, repository_url='https:/
 
     installed_version = parse_version(version)
 
-    latest_info = get_latest_info_from_pypi(package, repository_url)
-    latest_version = parse_version(latest_info)
+    latest_version_str = get_latest_info_from_pypi(package, repository_url)
+    latest_version = parse_version(latest_version_str)
 
-    return installed_version, latest_version, latest_info
+    return installed_version, latest_version, latest_version_str
 
 
 def get_latest_info_from_pypi(package='hanlp', repository_url='https://pypi.python.org/pypi/%s/json'):
