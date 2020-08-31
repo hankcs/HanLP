@@ -31,7 +31,7 @@ class ChunkingF1(tf.keras.metrics.Metric, ABC):
         return self.update_the_state(y_true, y_pred, sample_weight)
 
     def update_state(self, y_true: tf.Tensor, y_pred: tf.Tensor, sample_weight: tf.Tensor = None, **kwargs):
-        pass
+        return self.update_the_state(y_true, y_pred, sample_weight)
 
     def to_tags(self, y: tf.Tensor, sample_weight: tf.Tensor):
         batch = []
