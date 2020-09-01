@@ -77,7 +77,7 @@ def build_transformer(transformer, max_seq_length, num_labels, tagging=True, tok
         model_url = zh_albert_models_google[transformer]
         albert = True
     elif transformer in albert_models_tfhub:
-        from hanlp.layers.transformers.albert_tokenization import FullTokenizer
+        from bert.tokenization.albert_tokenization import FullTokenizer
         with stdout_redirected(to=os.devnull):
             model_url = fetch_tfhub_albert_model(transformer,
                                                  os.path.join(hanlp_home(), 'thirdparty', 'tfhub.dev', 'google',
