@@ -3,9 +3,10 @@
 # Date: 2019-06-13 18:05
 import os
 
-if not os.environ.get('HANLP_SHOW_TF_LOG', None):
+if not int(os.environ.get('HANLP_SHOW_TF_LOG', 0)):
+    os.environ['VERBOSE'] = '0'
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-    os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '3'
+    os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '0'
     import absl.logging, logging
 
     logging.getLogger('tensorflow').setLevel(logging.ERROR)
