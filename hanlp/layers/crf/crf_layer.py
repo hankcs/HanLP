@@ -132,6 +132,7 @@ class CRFLoss(object):
         super().__init__()
         self.crf = crf
         self.dtype = dtype
+        self.__name__ = type(self).__name__
 
     def __call__(self, y_true, y_pred, sample_weight=None, **kwargs):
         assert sample_weight is not None, 'your model has to support masking'
