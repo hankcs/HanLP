@@ -57,12 +57,15 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         eprint(f'{"ERROR LOG ENDS":=^80}')
         from pkg_resources import parse_version
         model_version = meta.get("hanlp_version", "unknown")
-        installed_version = version.__version__
+        if model_version == '2.0.0':  # Quick fix: the first version used a wrong string
+            model_version = '2.0.0-alpha.0'
+        model_version = parse_version(model_version)
+        installed_version = parse_version(version.__version__)
         try:
             latest_version = get_latest_info_from_pypi()
         except:
             latest_version = None
-        if parse_version(model_version) > parse_version(installed_version):
+        if model_version > installed_version:
             eprint(f'{identifier} was created with hanlp-{model_version}, '
                    f'while you are running a lower version: {installed_version}. ')
         if installed_version != latest_version:

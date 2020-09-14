@@ -21,7 +21,7 @@ from urllib.parse import urlparse
 from urllib.request import urlretrieve
 from pathlib import Path
 import numpy as np
-
+from pkg_resources import parse_version
 from hanlp.utils import time_util
 from hanlp.utils.log_util import logger
 from hanlp.utils.string_util import split_long_sentence_into
@@ -586,12 +586,7 @@ def check_outdated(package='hanlp', version=__version__, repository_url='https:/
     """
     Given the name of a package on PyPI and a version (both strings), checks
     if the given version is the latest version of the package available.
-    Returns a 2-tuple (is_outdated, latest_version) where
-    is_outdated is a boolean which is True if the given version is earlier
-    than the latest version, which is the string latest_version.
-    Attempts to cache on disk the HTTP call it makes for 24 hours. If this
-    somehow fails the exception is converted to a warning (OutdatedCacheFailedWarning)
-    and the function continues normally.
+    Returns a 2-tuple (installed_version, latest_version)
     `repository_url` is a `%` style format string
     to use a different repository PyPI repository URL,
     e.g. test.pypi.org or a private repository.
@@ -599,17 +594,12 @@ def check_outdated(package='hanlp', version=__version__, repository_url='https:/
     Adopted from https://github.com/alexmojaki/outdated/blob/master/outdated/__init__.py
     """
 
-    from pkg_resources import parse_version
-
     installed_version = parse_version(version)
-
-    latest_version_str = get_latest_info_from_pypi(package, repository_url)
-    latest_version = parse_version(latest_version_str)
-
-    return installed_version, latest_version, latest_version_str
+    latest_version = get_latest_info_from_pypi(package, repository_url)
+    return installed_version, latest_version
 
 
 def get_latest_info_from_pypi(package='hanlp', repository_url='https://pypi.python.org/pypi/%s/json'):
     url = repository_url % package
     response = urllib.request.urlopen(url).read()
-    return json.loads(response)['info']['version']
+    return parse_version(json.loads(response)['info']['version'])
