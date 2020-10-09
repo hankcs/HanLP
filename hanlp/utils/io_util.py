@@ -211,7 +211,7 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             if not url.startswith(HANLP_URL):
                 hints_for_download += 'For third party data, you may find it on our mirror site:\n' \
                                       'https://od.hankcs.com/hanlp/data/\n'
-            installed_version, latest_version, latest_version_str = check_outdated()
+            installed_version, latest_version = check_outdated()
             if installed_version != latest_version:
                 hints_for_download += f'Or upgrade to the latest version({latest_version}):\npip install -U hanlp'
             eprint(f'Failed to download {url} due to {repr(e)}. Please download it to {save_path} by yourself. '
