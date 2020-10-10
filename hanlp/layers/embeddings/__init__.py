@@ -11,7 +11,6 @@ from hanlp.layers.embeddings.char_cnn import CharCNNEmbedding
 from hanlp.layers.embeddings.char_rnn import CharRNNEmbedding
 from hanlp.layers.embeddings.concat_embedding import ConcatEmbedding
 from hanlp.layers.embeddings.contextual_string_embedding import ContextualStringEmbedding
-from hanlp.layers.embeddings.fast_text import FastTextEmbedding
 from hanlp.layers.embeddings.word2vec import Word2VecEmbeddingV1, Word2VecEmbedding, StringWord2VecEmbedding
 
 
@@ -30,6 +29,8 @@ def build_embedding(embeddings: Union[str, int, dict], word_vocab: Vocab, transf
             embeddings['config']['word_vocab'] = word_vocab
             embeddings['config']['char_vocab'] = transform.char_vocab
             transform.map_x = False
+        elif embeddings['class_name'].split('>')[-1] == 'FastTextEmbedding':
+            from hanlp.layers.embeddings.fast_text import FastTextEmbedding
         layer: tf.keras.layers.Embedding = tf.keras.utils.deserialize_keras_object(embeddings,
                                                                                    custom_objects=tf.keras.utils.get_custom_objects())
         # Embedding specific configuration
@@ -57,7 +58,7 @@ def build_embedding(embeddings: Union[str, int, dict], word_vocab: Vocab, transf
 
 
 def any_embedding_in(embeddings, *cls):
-    names = set(x.__name__ for x in cls)
+    names = set(x if isinstance(x, str) else x.__name__ for x in cls)
     for embed in embeddings:
         if isinstance(embed, dict) and embed['class_name'].split('>')[-1] in names:
             return True
@@ -67,7 +68,7 @@ def any_embedding_in(embeddings, *cls):
 def embeddings_require_string_input(embeddings):
     if not isinstance(embeddings, list):
         embeddings = [embeddings]
-    return any_embedding_in(embeddings, CharRNNEmbedding, CharCNNEmbedding, FastTextEmbedding,
+    return any_embedding_in(embeddings, CharRNNEmbedding, CharCNNEmbedding, 'FastTextEmbedding',
                             ContextualStringEmbedding)
 
 
