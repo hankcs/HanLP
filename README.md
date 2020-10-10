@@ -79,7 +79,7 @@ Taggers take lists of tokens as input, then outputs one tag for each token.
 The language solely depends on which model you load.
 
 ```python
->>> tagger = hanlp.load(hanlp.pretrained.pos.CTB5_POS_RNN_FASTTEXT_ZH)
+>>> tagger = hanlp.load(hanlp.pretrained.pos.CTB9_POS_ALBERT_BASE)
 >>> tagger(['我', '的', '希望', '是', '希望', '和平'])
 ['PN', 'DEG', 'NN', 'VC', 'VV', 'NN']
 ```

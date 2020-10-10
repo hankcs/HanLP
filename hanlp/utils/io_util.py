@@ -214,7 +214,7 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             installed_version, latest_version = check_outdated()
             if installed_version != latest_version:
                 hints_for_download += f'Or upgrade to the latest version({latest_version}):\npip install -U hanlp'
-            eprint(f'Failed to download {url} due to {repr(e)}. Please download it to {save_path} by yourself. '
+            eprint(f'Download failed due to {repr(e)}. Please download it to {save_path} by yourself. '
                    f'{hints_for_download}')
             exit(1)
         remove_file(save_path)

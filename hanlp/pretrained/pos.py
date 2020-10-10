@@ -5,6 +5,7 @@ from hanlp.common.constant import HANLP_URL
 
 CTB5_POS_RNN = HANLP_URL + 'pos/ctb5_pos_rnn_20200113_235925.zip'
 CTB5_POS_RNN_FASTTEXT_ZH = HANLP_URL + 'pos/ctb5_pos_rnn_fasttext_20191230_202639.zip'
+CTB9_POS_ALBERT_BASE = HANLP_URL + 'pos/ctb9_albert_base_zh_epoch_20_20201011_090522.zip'
 
 PTB_POS_RNN_FASTTEXT_EN = HANLP_URL + 'pos/ptb_pos_rnn_fasttext_20200103_145337.zip'
 
