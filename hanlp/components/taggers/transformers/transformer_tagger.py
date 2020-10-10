@@ -1,12 +1,14 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-29 13:55
+import logging
 import math
 
 import tensorflow as tf
 
 from hanlp.common.transform import Transform
 from hanlp.components.taggers.tagger import TaggerComponent
+from hanlp.components.taggers.transformers.metrics import Accuracy
 from hanlp.components.taggers.transformers.transformer_transform import TransformerTransform
 from hanlp.layers.transformers.loader import build_transformer
 from hanlp.losses.sparse_categorical_crossentropy import MaskedSparseCategoricalCrossentropyOverBatchFirstDim
@@ -105,3 +107,6 @@ class TransformerTagger(TaggerComponent):
         self.transform.tokenizer = build_transformer(self.config.transformer, self.config.max_seq_length,
                                                      len(self.transform.tag_vocab), tagging=True, tokenizer_only=True)
         return self.transform
+
+    def build_metrics(self, metrics, logger: logging.Logger, **kwargs):
+        return Accuracy(self.transform.tag_vocab.pad_idx)
