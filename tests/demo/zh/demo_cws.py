@@ -12,7 +12,7 @@ print(tokenizer(['萨哈夫说，伊拉克将同联合国销毁伊拉克大规�
 text = 'NLP统计模型没有加规则，聪明人知道自己加。英文、数字、自定义词典统统都是规则。'
 print(tokenizer(text))
 
-dic = {'自定义': 'custom', '词典': 'dict', '聪明人': 'smart'}
+dic = {'自定义词典': 'custom_dict', '聪明人': 'smart'}
 
 
 def split_by_dic(text: str):

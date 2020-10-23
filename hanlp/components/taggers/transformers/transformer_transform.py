@@ -79,7 +79,7 @@ class TransformerTransform(TsvTaggingFormat, Transform):
             if gold:
                 words, tags = sample
             else:
-                words, tags = sample, [self.tag_vocab.pad_token] * len(sample)
+                words, tags = sample, [self.tag_vocab.idx_to_token[1]] * len(sample)
 
             input_ids, input_mask, segment_ids, label_ids = convert_examples_to_features(words, tags,
                                                                                          self.tag_vocab.token_to_idx,
@@ -115,14 +115,13 @@ class TransformerTransform(TsvTaggingFormat, Transform):
     def input_is_single_sample(self, input: Union[List[str], List[List[str]]]) -> bool:
         return isinstance(input[0], str)
 
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, X=None, inputs=None,
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, X=None, inputs=None, batch=None,
                      **kwargs) -> Iterable:
-        assert X is not None, 'Need the X to know actual length of Y'
-        input_ids, input_mask, segment_ids = X
+        assert batch is not None, 'Need the batch to know actual length of Y'
+        label_mask = batch[1]
 
-        mask = tf.reduce_all(tf.not_equal(tf.expand_dims(input_ids, axis=-1), self.special_token_ids), axis=-1)
         Y = tf.argmax(Y, axis=-1)
-        Y = Y[mask]
+        Y = Y[label_mask > 0]
         tags = [self.tag_vocab.idx_to_token[tid] for tid in Y]
         offset = 0
         for words in inputs:

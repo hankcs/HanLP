@@ -10,7 +10,7 @@ text = 'NLP统计模型没有加规则，聪明人知道自己加。英文、数
 print(tokenizer(text))
 
 trie = Trie()
-trie.update({'自定义': 'custom', '词典': 'dict', '聪明人': 'smart'})
+trie.update({'自定义词典': 'custom_dict', '聪明人': 'smart'})
 
 
 def split_sents(text: str, trie: Trie):

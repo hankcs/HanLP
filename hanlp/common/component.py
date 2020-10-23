@@ -469,7 +469,7 @@ class KerasComponent(Component, ABC):
     def predict_batch(self, batch, inputs=None, **kwargs):
         X = batch[0]
         Y = self.model.predict_on_batch(X)
-        for output in self.transform.Y_to_outputs(Y, X=X, inputs=inputs, **kwargs):
+        for output in self.transform.Y_to_outputs(Y, X=X, inputs=inputs, batch=batch, **kwargs):
             yield output
 
     @property

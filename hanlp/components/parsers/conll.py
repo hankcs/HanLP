@@ -404,7 +404,7 @@ class CoNLL_DEP_Transform(CoNLLTransform):
             self.form_vocab.add(token)
         return num_samples
 
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None) -> Iterable:
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None, batch=None) -> Iterable:
         arc_preds, rel_preds, mask = Y
         sents = []
 
@@ -497,7 +497,7 @@ class CoNLL_SDP_Transform(CoNLLTransform):
             False, self.rel_vocab.safe_pad_token_idx)
         return types, shapes, values
 
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None) -> Iterable:
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None, batch=None) -> Iterable:
         arc_preds, rel_preds, mask = Y
         sents = []
 

@@ -237,7 +237,7 @@ class Transform(ABC):
     def X_to_inputs(self, X: Union[tf.Tensor, Tuple[tf.Tensor]]) -> Iterable:
         return [repr(x) for x in X]
 
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None) -> Iterable:
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None, batch=None) -> Iterable:
         return [repr(y) for y in Y]
 
     def XY_to_inputs_outputs(self, X: Union[tf.Tensor, Tuple[tf.Tensor]],

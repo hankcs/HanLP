@@ -79,7 +79,7 @@ class TransformerTextTransform(TableTransform):
         logger.fatal('map_x should always be set to True')
         exit(1)
 
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None) -> Iterable:
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None, batch=None) -> Iterable:
         preds = tf.argmax(Y, axis=-1)
         for y in preds:
             yield self.label_vocab.idx_to_token[y]
