@@ -91,7 +91,10 @@ class BiaffineDependencyParser(KerasComponent):
         c: tf.keras.callbacks.Callback = None
         metric = self._build_metrics()
         for c in callbacks:
-            c.params['epochs'] = epochs
+            if not hasattr(c, 'params'):
+                params = {'verbose': 1, 'epochs': epochs, 'steps': train_steps_per_epoch}
+                c.params = params
+                c.set_params(params)
             c.params['metrics'] = ['loss'] + self.config.metrics
             c.params['metrics'] = c.params['metrics'] + [f'val_{k}' for k in c.params['metrics']]
             c.on_train_begin()
@@ -113,7 +116,7 @@ class BiaffineDependencyParser(KerasComponent):
                 if epoch == epochs - 1:
                     self.model.stop_training = True
                 for c in callbacks:
-                    c.on_batch_end(idx, logs)
+                    c.on_train_batch_end(idx, logs)
             # evaluate on dev
             metric.reset_states()
             logs = {}
@@ -220,7 +223,7 @@ class BiaffineDependencyParser(KerasComponent):
         if isinstance(metrics, tuple):
             metrics = list(metrics)
         callbacks.append(self.build_progbar(metrics))
-        params = {'verbose': 1}
+        params = {'verbose': 1, 'epochs': self.config.epochs}
         for c in callbacks:
             c.set_params(params)
             c.set_model(self.model)
