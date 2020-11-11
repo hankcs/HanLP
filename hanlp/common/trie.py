@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2020-01-04 23:46
-from typing import Dict, Any, List, Tuple, Union
+from typing import Dict, Any, List, Tuple, Iterable, Sequence, Union, Set
 
 
 class Node(object):
@@ -28,6 +28,15 @@ class Node(object):
 
 
 class Trie(Node):
+    def __init__(self, tokens: Union[Dict[str, Any], Set[str]] = None) -> None:
+        super().__init__()
+        if tokens:
+            if isinstance(tokens, set):
+                for k in tokens:
+                    self[k] = True
+            else:
+                for k, v in tokens.items():
+                    self[k] = v
 
     def __contains__(self, key):
         return self[key] is not None
@@ -56,9 +65,23 @@ class Trie(Node):
             self[k] = v
         return self
 
-    def parse_longest(self, text: str) -> List[Tuple[str, Any, int, int]]:
+    def parse(self, text: Sequence[str]) -> List[Tuple[Union[str, Sequence[str]], Any, int, int]]:
         found = []
         for i in range(len(text)):
+            state = self
+            for j in range(i, len(text)):
+                state = state.transit(text[j])
+                if state:
+                    if state._value is not None:
+                        found.append((text[i: j + 1], state._value, i, j + 1))
+                else:
+                    break
+        return found
+
+    def parse_longest(self, text: Sequence[str]) -> List[Tuple[Union[str, Sequence[str]], Any, int, int]]:
+        found = []
+        i = 0
+        while i < len(text):
             state = self.transit(text[i])
             if state:
                 to = i + 1
@@ -73,4 +96,6 @@ class Trie(Node):
                         end = to + 1
                 if value is not None:
                     found.append((text[i:end], value, i, end))
+                    i = end - 1
+            i += 1
         return found
