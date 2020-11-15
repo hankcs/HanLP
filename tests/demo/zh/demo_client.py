@@ -9,7 +9,7 @@ from tensorflow_serving.apis import predict_pb2, prediction_service_pb2_grpc
 import hanlp
 from hanlp.common.component import KerasComponent
 
-tagger: KerasComponent = hanlp.load(hanlp.pretrained.pos.CTB5_POS_RNN)
+tagger: KerasComponent = hanlp.load(hanlp.pretrained.pos.CTB5_POS_RNN, transform_only=True)
 transform = tagger.transform
 del tagger
 
