@@ -10,7 +10,7 @@ from hanlp.components.parsers.conll import CoNLLSentence, CoNLL_DEP_Transform, C
 from hanlp.layers.embeddings import build_embedding
 from hanlp.metrics.parsing.labeled_f1 import LabeledF1
 from hanlp.metrics.parsing.labeled_score import LabeledScore
-from hanlp.utils.util import merge_locals_kwargs
+from hanlp.utils.util import merge_locals_kwargs, merge_dict
 
 
 class BiaffineDependencyParser(KerasComponent):
@@ -219,7 +219,9 @@ class BiaffineDependencyParser(KerasComponent):
 
     # noinspection PyMethodOverriding
     def build_callbacks(self, save_dir, logger, metrics, **kwargs):
-        callbacks = super().build_callbacks(save_dir, logger, metrics=metrics, **kwargs)
+        callbacks = super().build_callbacks(save_dir,
+                                            **merge_dict(self.config, overwrite=True, logger=logger, metrics=metrics,
+                                                         **kwargs))
         if isinstance(metrics, tuple):
             metrics = list(metrics)
         callbacks.append(self.build_progbar(metrics))

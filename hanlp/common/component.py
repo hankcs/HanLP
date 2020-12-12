@@ -338,7 +338,7 @@ class KerasComponent(Component, ABC):
         self.save_meta(save_dir)
         trn_data = self.build_train_dataset(trn_data, batch_size, num_examples)
         dev_data = self.build_valid_dataset(dev_data, batch_size)
-        callbacks = self.build_callbacks(save_dir, logger, **self.config)
+        callbacks = self.build_callbacks(save_dir, **merge_dict(self.config, overwrite=True, logger=logger))
         # need to know #batches, otherwise progbar crashes
         dev_steps = math.ceil(size_of_dataset(dev_data) / batch_size)
         checkpoint = get_callback_by_class(callbacks, tf.keras.callbacks.ModelCheckpoint)
