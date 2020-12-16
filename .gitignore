@@ -285,3 +285,4 @@ fabric.properties
 .idea
 *.iml
 data
+.vscode/settings.json

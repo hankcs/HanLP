@@ -15,13 +15,14 @@ from hanlp.optimizers.adamw import create_optimizer
 from hanlp.transform.table import TableTransform
 from hanlp.utils.log_util import logger
 from hanlp.utils.util import merge_locals_kwargs
+import numpy as np
 
 
 class TransformerTextTransform(TableTransform):
 
     def __init__(self, config: SerializableDict = None, map_x=False, map_y=True, x_columns=None,
-                 y_column=-1, skip_header=True, delimiter='auto', **kwargs) -> None:
-        super().__init__(config, map_x, map_y, x_columns, y_column, skip_header, delimiter, **kwargs)
+                 y_column=-1, skip_header=True, delimiter='auto', multi_label=False, **kwargs) -> None:
+        super().__init__(config, map_x, map_y, x_columns, y_column, multi_label, skip_header, delimiter, **kwargs)
         self.tokenizer: FullTokenizer = None
 
     def inputs_to_samples(self, inputs, gold=False):
@@ -61,17 +62,17 @@ class TransformerTextTransform(TableTransform):
                 segment_ids += [0] * diff
 
             assert len(token_ids) == max_length, "Error with input length {} vs {}".format(len(token_ids), max_length)
-            assert len(attention_mask) == max_length, "Error with input length {} vs {}".format(len(attention_mask),
-                                                                                                max_length)
-            assert len(segment_ids) == max_length, "Error with input length {} vs {}".format(len(segment_ids),
-                                                                                             max_length)
+            assert len(attention_mask) == max_length, "Error with input length {} vs {}".format(len(attention_mask), max_length)
+            assert len(segment_ids) == max_length, "Error with input length {} vs {}".format(len(segment_ids), max_length)
+
+
             label = Y
             yield (token_ids, attention_mask, segment_ids), label
 
     def create_types_shapes_values(self) -> Tuple[Tuple, Tuple, Tuple]:
         max_length = self.config.max_length
         types = (tf.int32, tf.int32, tf.int32), tf.string
-        shapes = ([max_length], [max_length], [max_length]), []
+        shapes = ([max_length], [max_length], [max_length]), [None,] if self.config.multi_label else []
         values = (0, 0, 0), self.label_vocab.safe_pad_token
         return types, shapes, values
 
@@ -79,8 +80,22 @@ class TransformerTextTransform(TableTransform):
         logger.fatal('map_x should always be set to True')
         exit(1)
 
+    def y_to_idx(self, y) -> tf.Tensor:
+        if self.config.multi_label:
+            #need to change index to binary vector
+            mapped = tf.map_fn(fn=lambda x: tf.cast(self.label_vocab.lookup(x), tf.int32), elems=y, fn_output_signature=tf.TensorSpec(dtype=tf.dtypes.int32, shape=[None,]))
+            one_hots = tf.one_hot(mapped, len(self.label_vocab))
+            idx = tf.reduce_sum(one_hots, -2)
+        else:
+            idx = self.label_vocab.lookup(y)
+        return idx
+
     def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None, batch=None) -> Iterable:
-        preds = tf.argmax(Y, axis=-1)
+        # Prediction to be Y > 0:
+        if self.config.multi_label:
+            preds = Y
+        else:
+            preds = tf.argmax(Y, axis=-1)
         for y in preds:
             yield self.label_vocab.idx_to_token[y]
 
@@ -126,7 +141,14 @@ class TransformerClassifier(KerasComponent):
         return self.transform.label_vocab.idx_to_token[Y_pred.numpy()]
 
     def build_loss(self, loss, **kwargs):
-        loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        if loss:
+            assert isinstance(loss, tf.keras.losses.loss), 'Must specify loss as an instance in tf.keras.losses'
+            return loss
+        elif self.config.multi_label:
+        #Loss to be BinaryCrossentropy for multi-label:
+            loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+        else:
+            loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         return loss
 
     # noinspection PyMethodOverriding
@@ -158,3 +180,10 @@ class TransformerClassifier(KerasComponent):
         warmup_steps_per_epoch = math.ceil(train_examples * self.config.warmup_steps_ratio / self.config.batch_size)
         self.config.warmup_steps = warmup_steps_per_epoch * self.config.epochs
         return train_examples
+
+    def build_metrics(self, metrics, logger, **kwargs):
+        if self.config.multi_label:
+            metric = tf.keras.metrics.BinaryAccuracy('binary_accuracy')
+        else:
+            metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
+        return [metric]

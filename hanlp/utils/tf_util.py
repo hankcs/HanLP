@@ -11,9 +11,7 @@ from hanlp.common.constant import PAD
 
 
 def size_of_dataset(dataset: tf.data.Dataset) -> int:
-    count = 0
-    for element in dataset.unbatch().batch(1):
-        count += 1
+    count = len(list(dataset.unbatch().as_numpy_iterator()))
     return count
 
 
