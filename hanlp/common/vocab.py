@@ -79,7 +79,10 @@ class Vocab(Serializable):
             self.add(token)
 
     def get_idx(self, token: str) -> int:
-        idx = self.token_to_idx.get(token, None)
+        if type(token) is list:
+            idx = [self.get_idx(t) for t in token]
+        else:
+            idx = self.token_to_idx.get(token, None)
         if idx is None:
             if self.mutable:
                 idx = len(self.token_to_idx)

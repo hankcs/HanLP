@@ -3,7 +3,7 @@
 # Date: 2019-11-10 21:00
 from abc import ABC
 from typing import Tuple, Union
-
+import numpy as np
 import tensorflow as tf
 
 from hanlp.common.structure import SerializableDict
@@ -16,9 +16,9 @@ from hanlp.utils.log_util import logger
 
 class TableTransform(Transform, ABC):
     def __init__(self, config: SerializableDict = None, map_x=False, map_y=True, x_columns=None,
-                 y_column=-1,
+                 y_column=-1, multi_label=False,
                  skip_header=True, delimiter='auto', **kwargs) -> None:
-        super().__init__(config, map_x, map_y, x_columns=x_columns, y_column=y_column,
+        super().__init__(config, map_x, map_y, x_columns=x_columns, y_column=y_column, multi_label=multi_label,
                          skip_header=skip_header,
                          delimiter=delimiter, **kwargs)
         self.label_vocab = create_label_vocab()
@@ -28,6 +28,9 @@ class TableTransform(Transform, ABC):
         y_column = self.config.y_column
         num_features = self.config.get('num_features', None)
         for cells in read_cells(filepath, skip_header=self.config.skip_header, delimiter=self.config.delimiter):
+            #multi-label: Dataset in .tsv format: x_columns: at most 2 columns being a sentence pair while in most 
+            # cases just one column being the doc content. y_column being the single label, which shall be modified 
+            # to load a list of labels.
             if x_columns:
                 inputs = tuple(c for i, c in enumerate(cells) if i in x_columns), cells[y_column]
             else:
@@ -37,6 +40,15 @@ class TableTransform(Transform, ABC):
             if num_features is None:
                 num_features = len(inputs[0])
                 self.config.num_features = num_features
+            # multi-label support
+            if self.config.multi_label:
+                assert type(inputs[1]) is str, 'Y value has to be string'
+                if inputs[1][0] == '[':
+                    # multi-label is in literal form of a list
+                    labels = eval(inputs[1])
+                else:
+                    labels = inputs[1].strip().split(',')
+                inputs = inputs[0], labels
             else:
                 assert num_features == len(inputs[0]), f'Numbers of columns {num_features} ' \
                                                        f'inconsistent with current {len(inputs[0])}'
@@ -56,7 +68,11 @@ class TableTransform(Transform, ABC):
     def fit(self, trn_path: str, **kwargs):
         samples = 0
         for t in self.file_to_samples(trn_path, gold=True):
-            self.label_vocab.add(t[1])  # the second one regardless of t is pair or triple
+            if self.config.multi_label:
+                for l in t[1]:
+                    self.label_vocab.add(l)
+            else:
+                self.label_vocab.add(t[1])  # the second one regardless of t is pair or triple
             samples += 1
         return samples
 
