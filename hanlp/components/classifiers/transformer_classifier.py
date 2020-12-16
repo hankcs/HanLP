@@ -186,4 +186,4 @@ class TransformerClassifier(KerasComponent):
             metric = tf.keras.metrics.BinaryAccuracy('binary_accuracy')
         else:
             metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
-        return [metric]x
+        return [metric]
