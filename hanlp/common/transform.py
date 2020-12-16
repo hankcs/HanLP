@@ -196,7 +196,7 @@ class Transform(ABC):
                     Y = self.y_to_idx(Y)
                 return X, Y
 
-            dataset = dataset.map(mapper, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+dataset = dataset.map(mapper, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         return dataset
 
     @abstractmethod
