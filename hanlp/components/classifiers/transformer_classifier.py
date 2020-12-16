@@ -186,4 +186,4 @@ class TransformerClassifier(KerasComponent):
             metric = tf.keras.metrics.BinaryCrossentropy()
         else:
             metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
-        return [metric]x
+        return [metric]
