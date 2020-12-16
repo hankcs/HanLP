@@ -10,7 +10,7 @@ from typing import Any, Dict, Optional, List
 
 import numpy as np
 import tensorflow as tf
-
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 import hanlp
 import hanlp.version
 from hanlp.callbacks.fine_csv_logger import FineCSVLogger
@@ -331,6 +331,12 @@ class KerasComponent(Component, ABC):
         logger.info('Building...')
         train_steps_per_epoch = math.ceil(num_examples / batch_size) if num_examples else None
         self.config.train_steps = train_steps_per_epoch * epochs if num_examples else None
+        # mixed precision
+        if self.config.use_amp:
+            policy = mixed_precision.Policy('mixed_float16')
+            mixed_precision.set_policy(policy)
+            print('Compute dtype: %s' % policy.compute_dtype)
+            print('Variable dtype: %s' % policy.variable_dtype)
         model, optimizer, loss, metrics = self.build(**merge_dict(self.config, logger=logger, training=True))
         logger.info('Model built:\n' + summary_of_model(self.model))
         self.save_config(save_dir)
