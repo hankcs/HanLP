@@ -12,9 +12,6 @@ from bert.loader_albert import albert_params
 from hanlp.layers.transformers import zh_albert_models_google, bert_models_google
 from hanlp.utils.io_util import get_resource, stdout_redirected, hanlp_home
 
-gpu_devices = tf.config.experimental.list_physical_devices('GPU')
-if len(gpu_devices)>0:
-    tf.config.experimental.set_memory_growth(gpu_devices[0], True)
 
 def build_transformer(transformer, max_seq_length, num_labels, tagging=True, tokenizer_only=False):
     spm_model_file = None
