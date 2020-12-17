@@ -183,7 +183,7 @@ class TransformerClassifier(KerasComponent):
 
     def build_metrics(self, metrics, logger, **kwargs):
         if self.config.multi_label:
-            metric = tf.keras.metrics.BinaryCrossentropy()
+            metric = tf.keras.metrics.BinaryAccuracy('binary_accuracy')
         else:
             metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
         return [metric]x
