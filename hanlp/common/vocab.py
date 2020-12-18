@@ -30,7 +30,7 @@ class Vocab(Serializable):
         self.pad_token = pad_token
         self.unk_token = unk_token
         self.token_to_idx_table: tf.lookup.StaticHashTable = None
-        self.idx_to_token_table = None
+        # self.idx_to_token_table = None
 
     def __setitem__(self, token: str, idx: int):
         assert self.mutable, 'Update an immutable Vocab object is not allowed'
@@ -239,8 +239,8 @@ class Vocab(Serializable):
         """
         if self.pad_token:
             return self.pad_token
-        if self.first_token:
-            return self.first_token
+        # if self.first_token:
+        #     return self.first_token
         return PAD
 
     @property
@@ -259,8 +259,8 @@ class Vocab(Serializable):
         """
         if self.unk_token:
             return self.unk_token
-        if self.first_token:
-            return self.first_token
+        # if self.first_token:
+        #     return self.first_token
         return UNK
 
 
