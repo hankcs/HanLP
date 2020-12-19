@@ -259,7 +259,7 @@ class KerasComponent(Component, ABC):
         loss = self.build_loss(
             **self.config if 'loss' in self.config else dict(list(self.config.items()) + [('loss', None)]))
         # allow for different
-        metrics = self.build_metrics(**merge_dict(self.config, metrics=kwargs.get('metrics', 'accuracy'),
+        metrics = self.build_metrics(**merge_dict(self.config, metrics=kwargs.get('metrics', None),
                                                   logger=logger, overwrite=True))
         if not isinstance(metrics, list):
             if isinstance(metrics, tf.keras.metrics.Metric):
