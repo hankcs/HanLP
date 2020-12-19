@@ -259,7 +259,7 @@ class KerasComponent(Component, ABC):
         loss = self.build_loss(
             **self.config if 'loss' in self.config else dict(list(self.config.items()) + [('loss', None)]))
         # allow for different
-        metrics = self.build_metrics(**merge_dict(self.config, metrics=kwargs.get('metrics', 'accuracy'),
+        metrics = self.build_metrics(**merge_dict(self.config, metrics=kwargs.get('metrics', None),
                                                   logger=logger, overwrite=True))
         if not isinstance(metrics, list):
             if isinstance(metrics, tf.keras.metrics.Metric):
@@ -346,7 +346,7 @@ class KerasComponent(Component, ABC):
         self.save_meta(save_dir)
         trn_data = self.build_train_dataset(trn_data, batch_size, num_examples)
         dev_data = self.build_valid_dataset(dev_data, batch_size)
-        callbacks = self.build_callbacks(save_dir, **merge_dict(self.config, overwrite=True, logger=logger))
+        callbacks = self.build_callbacks(save_dir, **merge_dict(self.config, overwrite=True, logger=logger, metrics=metrics))
         # need to know #batches, otherwise progbar crashes
         dev_steps = math.ceil(size_of_dataset(dev_data) / batch_size)
         checkpoint = get_callback_by_class(callbacks, tf.keras.callbacks.ModelCheckpoint)
@@ -405,9 +405,11 @@ class KerasComponent(Component, ABC):
         return trn_data
 
     def build_callbacks(self, save_dir, logger, **kwargs):
-        metrics_names = [m.name for m in kwargs.get('metrics', 'accuracy')]
-        if isinstance(metrics_names, (list, tuple)):
-            metrics_names = metrics_names[-1]
+        metrics = kwargs.get('metrics', 'accuracy')
+        if isinstance(metrics, str):
+            metrics_names = metrics
+        else:
+            metrics_names = [m.name for m in metrics][-1]
         monitor = f'val_{metrics_names}'
         checkpoint = tf.keras.callbacks.ModelCheckpoint(
             os.path.join(save_dir, 'model.h5'),
