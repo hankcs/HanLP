@@ -133,7 +133,7 @@ class TransformerClassifier(KerasComponent):
                 # Y_gold = self.transform.label_vocab.idx_to_token[Y_gold]
                 out.write('{}\t{}\t{}\n'.format(feature, Y_pred, Y_gold))
                 total += 1
-                correct += sum([1 for y1 in Y_gold for y2 in Y_pred if y1==y2])/len(Y_gold) if self.config.multi_label else int(Y_pred == Y_gold)
+                correct += sum([1 for y1 in Y_gold for y2 in Y_pred if y1==y2])/max(len(Y_pred),len(Y_gold)) if self.config.multi_label else int(Y_pred == Y_gold)
             score = correct / total
             print('\r{}/{} {}: {:.2f}'.format(idx + 1, num_batches, metric, score * 100), end='')
         print()
@@ -150,8 +150,9 @@ class TransformerClassifier(KerasComponent):
 
     def build_loss(self, loss, **kwargs):
         if loss:
-            assert isinstance(loss, tf.keras.losses.loss), 'Must specify loss as an instance in tf.keras.losses'
-            return loss
+            # assert isinstance(loss, tf.keras.losses.Loss), 'Must specify loss as an instance in tf.keras.losses.Loss'
+            if not isinstance(loss, tf.keras.losses.Loss): 
+                logger.warn(f'loss function may not be compatible: {loss}')
         elif self.config.multi_label:
         #Loss to be BinaryCrossentropy for multi-label:
             loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
@@ -191,8 +192,13 @@ class TransformerClassifier(KerasComponent):
         return train_examples
 
     def build_metrics(self, metrics, logger, **kwargs):
+        if metrics:
+            for metric in metrics:
+                assert isinstance(metric, tf.keras.metrics.Metric), f'Metrics defined may not be compatible: {metric}'
+            return metrics
         if self.config.multi_label:
             metric = tf.keras.metrics.BinaryAccuracy('binary_accuracy')
         else:
             metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
-        return [metric]
+        self.config['metrics'] = [metric]
+        return [metrics]

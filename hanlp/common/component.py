@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional, List
 
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 
 import hanlp
 import hanlp.version
@@ -326,6 +327,13 @@ class KerasComponent(Component, ABC):
         if not logger:
             logger = init_logger(name='train', root_dir=save_dir, level=logging.INFO if verbose else logging.WARN)
         logger.info('Hyperparameter:\n' + self.config.to_json())
+        if self.config.use_amp:
+            policy = mixed_precision.Policy('mixed_float16')
+            mixed_precision.set_policy(policy)
+            logger.info(f'Global mixed precision policy has been set.')
+            logger.info('Compute dtype: %s' % policy.compute_dtype)
+            logger.info('Variable dtype: %s' % policy.variable_dtype)
+
         num_examples = self.build_vocab(trn_data, logger)
         # assert num_examples, 'You forgot to return the number of training examples in your build_vocab'
         logger.info('Building...')
@@ -397,16 +405,16 @@ class KerasComponent(Component, ABC):
         return trn_data
 
     def build_callbacks(self, save_dir, logger, **kwargs):
-        metrics = kwargs.get('metrics', 'accuracy')
-        if isinstance(metrics, (list, tuple)):
-            metrics = metrics[-1]
-        monitor = f'val_{metrics}'
+        metrics_names = [m.name for m in kwargs.get('metrics', 'accuracy')]
+        if isinstance(metrics_names, (list, tuple)):
+            metrics_names = metrics_names[-1]
+        monitor = f'val_{metrics_names}'
         checkpoint = tf.keras.callbacks.ModelCheckpoint(
             os.path.join(save_dir, 'model.h5'),
             # verbose=1,
             monitor=monitor, save_best_only=True,
             mode='max',
-            save_weights_only=True)
+            save_weights_only=False)
         logger.debug(f'Monitor {checkpoint.monitor} for checkpoint')
         tensorboard_callback = tf.keras.callbacks.TensorBoard(
             log_dir=io_util.makedirs(io_util.path_join(save_dir, 'logs')))
