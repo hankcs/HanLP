@@ -194,11 +194,12 @@ class TransformerClassifier(KerasComponent):
     def build_metrics(self, metrics, logger, **kwargs):
         if metrics:
             for metric in metrics:
-                assert isinstance(metric, tf.keras.metrics.Metric), f'Metrics defined may not be compatible: {metric}'
+                # assert isinstance(metric, tf.keras.metrics.Metric), f'Metrics defined may not be compatible: {metric}'
+                if not isinstance(metric, tf.keras.metrics.Metric): logger.warn(f'metric may not be compatible: {metric}')
             return metrics
         if self.config.multi_label:
             metric = tf.keras.metrics.BinaryAccuracy('binary_accuracy')
         else:
             metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
         self.config['metrics'] = [metric]
-        return [metrics]
+        return [metric]
