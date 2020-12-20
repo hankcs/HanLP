@@ -236,6 +236,7 @@ class KerasComponent(Component, ABC):
         self.save_config(save_dir)
         self.save_vocabs(save_dir)
         self.save_weights(save_dir)
+        self.model.save(save_dir)
 
     def load(self, save_dir: str, logger=hanlp.utils.log_util.logger, **kwargs):
         self.meta['load_path'] = save_dir
@@ -244,6 +245,7 @@ class KerasComponent(Component, ABC):
         self.load_vocabs(save_dir)
         self.build(**merge_dict(self.config, training=False, logger=logger, **kwargs, overwrite=True, inplace=True))
         self.load_weights(save_dir, **kwargs)
+        # tf.keras.models.load_model(save_dir)
         self.load_meta(save_dir)
 
     @property
@@ -341,9 +343,7 @@ class KerasComponent(Component, ABC):
         self.config.train_steps = train_steps_per_epoch * epochs if num_examples else None
         model, optimizer, loss, metrics = self.build(**merge_dict(self.config, logger=logger, training=True))
         logger.info('Model built:\n' + summary_of_model(self.model))
-        self.save_config(save_dir)
-        self.save_vocabs(save_dir)
-        self.save_meta(save_dir)
+        self.save(save_dir)
         trn_data = self.build_train_dataset(trn_data, batch_size, num_examples)
         dev_data = self.build_valid_dataset(dev_data, batch_size)
         callbacks = self.build_callbacks(save_dir, **merge_dict(self.config, overwrite=True, logger=logger, metrics=metrics))
@@ -361,7 +361,8 @@ class KerasComponent(Component, ABC):
         except KeyboardInterrupt:
             print()
             if not checkpoint or checkpoint.best in (np.Inf, -np.Inf):
-                self.save_weights(save_dir)
+                # self.save_weights(save_dir)
+                self.save(save_dir)
                 logger.info('Aborted with model saved')
             else:
                 logger.info(f'Aborted with model saved with best {checkpoint.monitor} = {checkpoint.best:.4f}')
@@ -413,10 +414,10 @@ class KerasComponent(Component, ABC):
         monitor = f'val_{metrics_names}'
         checkpoint = tf.keras.callbacks.ModelCheckpoint(
             os.path.join(save_dir, 'model.h5'),
-            # verbose=1,
+            verbose=1,
             monitor=monitor, save_best_only=True,
-            mode='max',
-            save_weights_only=False)
+            mode='auto',
+            save_weights_only=True)
         logger.debug(f'Monitor {checkpoint.monitor} for checkpoint')
         tensorboard_callback = tf.keras.callbacks.TensorBoard(
             log_dir=io_util.makedirs(io_util.path_join(save_dir, 'logs')))

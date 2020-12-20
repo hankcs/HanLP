@@ -192,7 +192,7 @@ class TransformerClassifier(KerasComponent):
         return train_examples
 
     def build_metrics(self, metrics, logger, **kwargs):
-        if metrics:
+        if metrics and type(metrics[0]) is not str:
             for metric in metrics:
                 # assert isinstance(metric, tf.keras.metrics.Metric), f'Metrics defined may not be compatible: {metric}'
                 if not isinstance(metric, tf.keras.metrics.Metric): logger.warn(f'metric may not be compatible: {metric}')
