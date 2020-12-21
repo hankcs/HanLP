@@ -62,7 +62,7 @@ class TableTransform(Transform, ABC):
             if gold:
                 yield cells
             else:
-                yield cells, pad
+                yield cells, [pad] if self.config.multi_label else pad
 
     def y_to_idx(self, y) -> tf.Tensor:
         return self.label_vocab.lookup(y)
