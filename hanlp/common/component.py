@@ -126,9 +126,7 @@ class KerasComponent(Component, ABC):
                                 format_scores(score) if isinstance(score, dict) else format_metrics(self.model.metrics),
                                 speed, extra_report))
         if output:
-            logger.info('Saving output to {}'.format(output))
-            with open(output, 'w', encoding='utf-8') as out:
-                self.evaluate_output(tst_data, out, num_batches, self.model.metrics)
+            self.evaluate_output(tst_data, output, num_batches, self.model.metrics)
 
         return loss, score, speed
 
