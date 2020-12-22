@@ -28,10 +28,7 @@ class TableTransform(Transform, ABC):
         y_column = self.config.y_column
         num_features = self.config.get('num_features', None)
         for cells in read_cells(filepath, skip_header=self.config.skip_header, delimiter=self.config.delimiter):
-            #multi-label: Dataset in .tsv format: x_columns: at most 2 columns being a sentence pair while in most 
-            # cases just one column being the doc content. y_column being the single label, which shall be modified 
-            # to load a list of labels.
-            if type(x_columns) is int:
+            if type(x_columns) is int: 
                 inputs = [cells[x_columns]], cells[y_column]
             elif type(x_columns) is list:
                 inputs = tuple(c for i, c in enumerate(cells) if i in x_columns), cells[y_column]

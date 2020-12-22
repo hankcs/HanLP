@@ -92,7 +92,7 @@ class KerasComponent(Component, ABC):
         if save_dir and not logger:
             logger = init_logger(name=name, root_dir=save_dir, level=logging.INFO if verbose else logging.WARN,
                                  mode='w')
-        tst_data = self.transform.file_to_dataset(input_path, batch_size=batch_size)
+        tst_data = self.transform.file_to_dataset(input_path, batch_size=batch_size) 
         samples = size_of_dataset(tst_data)
         num_batches = math.ceil(samples / batch_size)
         if warm_up:
@@ -126,7 +126,7 @@ class KerasComponent(Component, ABC):
                                 format_scores(score) if isinstance(score, dict) else format_metrics(self.model.metrics),
                                 speed, extra_report))
         if output:
-            self.evaluate_output(tst_data, output, num_batches, self.model.metrics)
+            self.evaluate_output(tst_data, input=input_path, output=output, num_batches=num_batches, metrics=self.model.metrics)
 
         return loss, score, speed
 
@@ -134,7 +134,7 @@ class KerasComponent(Component, ABC):
         loss, score = self.model.evaluate(tst_data, callbacks=callbacks, steps=num_batches)
         return loss, score, output
 
-    def evaluate_output(self, tst_data, out, num_batches, metrics: List[tf.keras.metrics.Metric]):
+    def evaluate_output(self, tst_data, input, output, num_batches, metrics: List[tf.keras.metrics.Metric]):
         # out.write('x\ty_true\ty_pred\n')
         for metric in metrics:
             metric.reset_states()
@@ -231,14 +231,15 @@ class KerasComponent(Component, ABC):
         return self.transform
 
     def save(self, save_dir: str, **kwargs):
+        self.save_meta(save_dir)
         self.save_config(save_dir)
         self.save_vocabs(save_dir)
         self.save_weights(save_dir)
         self.model.save(save_dir)
 
     def load(self, save_dir: str, logger=hanlp.utils.log_util.logger, **kwargs):
-        self.meta['load_path'] = save_dir
         save_dir = get_resource(save_dir)
+        self.meta['load_path'] = save_dir
         self.load_config(save_dir)
         self.load_vocabs(save_dir)
         self.build(**merge_dict(self.config, training=False, logger=logger, **kwargs, overwrite=True, inplace=True))
@@ -408,7 +409,10 @@ class KerasComponent(Component, ABC):
         if isinstance(metrics, str):
             metrics_names = metrics
         else:
-            metrics_names = [m.name for m in metrics][-1]
+            try:
+                metrics_names = metrics[-1].name
+            except:
+                metrics_names = 'accuracy'
         monitor = f'val_{metrics_names}'
         checkpoint = tf.keras.callbacks.ModelCheckpoint(
             os.path.join(save_dir, 'model.h5'),
