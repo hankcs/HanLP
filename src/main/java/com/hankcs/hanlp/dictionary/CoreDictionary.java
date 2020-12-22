@@ -407,4 +407,18 @@ public class CoreDictionary
     {
         return CoreDictionary.trie.exactMatchSearch(a);
     }
+
+    /**
+     * 热更新核心词典<br>
+     * 集群环境（或其他IOAdapter）需要自行删除缓存文件
+     *
+     * @return 是否成功
+     */
+    public static boolean reload()
+    {
+        String path = CoreDictionary.path;
+        IOUtil.deleteFile(path + ".table" + Predefine.BIN_EXT);
+
+        return load(path);
+    }
 }

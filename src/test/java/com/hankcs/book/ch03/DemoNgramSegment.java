@@ -85,6 +85,8 @@ public class DemoNgramSegment
 //        HanLP.Config.enableDebug();
         HanLP.Config.CoreDictionaryPath = modelPath + ".txt";
         HanLP.Config.BiGramDictionaryPath = modelPath + ".ngram.txt";
+        CoreDictionary.reload();
+        CoreBiGramTableDictionary.reload();
         // 以下部分为兼容新标注集，不感兴趣可以跳过
         HanLP.Config.CoreDictionaryTransformMatrixDictionaryPath = modelPath + ".tr.txt";
         if (!modelPath.equals(MSR_MODEL_PATH))
