@@ -5,6 +5,7 @@ import inspect
 import logging
 import math
 import os
+import warnings
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional, List
 
@@ -95,7 +96,9 @@ class KerasComponent(Component, ABC):
         samples = size_of_dataset(tst_data)
         num_batches = math.ceil(samples / batch_size)
         if warm_up:
-            self.model.predict_on_batch(list(tst_data.take(1))[0])
+            for x, y in tst_data:
+                self.model.predict_on_batch(x)
+                break
         if output:
             assert save_dir, 'Must pass save_dir in order to output'
             if isinstance(output, bool):

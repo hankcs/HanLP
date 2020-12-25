@@ -256,14 +256,14 @@ class BiaffineDependencyParser(KerasComponent):
         params = {'verbose': 1, 'epochs': 1, 'metrics': ['loss'] + self.config.metrics, 'steps': steps_per_epoch}
         for c in callbacks:
             c.set_params(params)
-            c.on_train_begin()  # otherwise AttributeError: 'ProgbarLogger' object has no attribute 'verbose'
-            c.on_epoch_begin(0)
+            c.on_test_begin()
+            c.on_epoch_end(0)
         logs = {}
         if output:
             output = open(output, 'w', encoding='utf-8')
         for idx, ((words, feats), (arcs, rels)) in enumerate(iter(tst_data)):
             for c in callbacks:
-                c.on_batch_begin(idx, logs)
+                c.on_test_batch_begin(idx, logs)
             arc_scores, rel_scores, loss, mask, arc_preds, rel_preds = self.evaluate_batch(words, feats, arcs, rels,
                                                                                            arc_loss, rel_loss, metric)
             if output:
@@ -273,7 +273,7 @@ class BiaffineDependencyParser(KerasComponent):
             logs['loss'] = loss
             logs.update(metric.to_dict())
             for c in callbacks:
-                c.on_batch_end(idx, logs)
+                c.on_test_batch_end(idx, logs)
         for c in callbacks:
             c.on_epoch_end(0)
             c.on_test_end()
