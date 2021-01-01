@@ -6,10 +6,10 @@ from typing import Tuple, Union
 import numpy as np
 import tensorflow as tf
 
-from hanlp.common.structure import SerializableDict
-from hanlp.common.transform import Transform
-from hanlp.common.constant import PAD
-from hanlp.common.vocab import create_label_vocab
+from hanlp_common.structure import SerializableDict
+from hanlp.common.transform_tf import Transform
+from hanlp_common.constant import PAD
+from hanlp.common.vocab_tf import create_label_vocab
 from hanlp.utils.io_util import read_cells
 from hanlp.utils.log_util import logger
 

@@ -2,19 +2,38 @@
 # Author: hankcs
 # Date: 2019-08-24 22:12
 import datetime
+import io
 import logging
 import os
 import sys
+from logging import LogRecord
+
+import termcolor
 
 
-def init_logger(name=datetime.datetime.now().strftime("%y-%m-%d_%H.%M.%S"), root_dir=None,
-                level=logging.INFO, mode='a') -> logging.Logger:
-    logFormatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s", datefmt='%y-%m-%d %H:%M:%S')
-    rootLogger = logging.getLogger(name)
+class ColoredFormatter(logging.Formatter):
+    def __init__(self, fmt=None, datefmt=None, style='%', enable=True):
+        super().__init__(fmt, datefmt, style)
+        self.enable = enable
+
+    def formatMessage(self, record: LogRecord) -> str:
+        message = super().formatMessage(record)
+        if self.enable:
+            return color_format(message)
+        else:
+            return remove_color_tag(message)
+
+
+def init_logger(name=None, root_dir=None, level=logging.INFO, mode='w',
+                fmt="%(asctime)s %(levelname)s %(message)s",
+                datefmt='%Y-%m-%d %H:%M:%S') -> logging.Logger:
+    if not name:
+        name = datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+    rootLogger = logging.getLogger(os.path.join(root_dir, name) if root_dir else name)
     rootLogger.propagate = False
 
-    consoleHandler = logging.StreamHandler()
-    consoleHandler.setFormatter(logFormatter)
+    consoleHandler = logging.StreamHandler(sys.stdout)  # stderr will be rendered as red which is bad
+    consoleHandler.setFormatter(ColoredFormatter(fmt, datefmt=datefmt))
     attached_to_std = False
     for handler in rootLogger.handlers:
         if isinstance(handler, logging.StreamHandler):
@@ -28,44 +47,125 @@ def init_logger(name=datetime.datetime.now().strftime("%y-%m-%d_%H.%M.%S"), root
 
     if root_dir:
         os.makedirs(root_dir, exist_ok=True)
-        fileHandler = logging.FileHandler("{0}/{1}.log".format(root_dir, name), mode=mode)
-        fileHandler.setFormatter(logFormatter)
+        log_path = "{0}/{1}.log".format(root_dir, name)
+        fileHandler = logging.FileHandler(log_path, mode=mode)
+        fileHandler.setFormatter(ColoredFormatter(fmt, datefmt=datefmt, enable=False))
         rootLogger.addHandler(fileHandler)
         fileHandler.setLevel(level)
 
     return rootLogger
 
 
-def set_tf_loglevel(level=logging.ERROR):
-    if level >= logging.FATAL:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-        os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '3'
-    if level >= logging.ERROR:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-        os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '2'
-    if level >= logging.WARNING:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
-        os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '1'
-    else:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
-        os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '0'
-    shut_up_python_logging()
-    logging.getLogger('tensorflow').setLevel(level)
-
-
-def shut_up_python_logging():
-    logging.getLogger('tensorflow').setLevel(logging.ERROR)
-    import absl.logging
-    logging.root.removeHandler(absl.logging._absl_handler)
-    absl.logging._warn_preinit_stderr = False
-
-
 logger = init_logger(name='hanlp', level=os.environ.get('HANLP_LOG_LEVEL', 'INFO'))
-# shut_up_python_logging()
-
-# shut up tensorflow
-# set_tf_loglevel()
 
 
 def enable_debug(debug=True):
     logger.setLevel(logging.DEBUG if debug else logging.ERROR)
+
+
+class ErasablePrinter(object):
+    def __init__(self):
+        self._last_print_width = 0
+
+    def erase(self):
+        if self._last_print_width:
+            sys.stdout.write("\b" * self._last_print_width)
+            sys.stdout.write(" " * self._last_print_width)
+            sys.stdout.write("\b" * self._last_print_width)
+            sys.stdout.write("\r")  # \r is essential when multi-lines were printed
+            self._last_print_width = 0
+
+    def print(self, msg: str, color=True):
+        self.erase()
+        if color:
+            msg, _len = color_format_len(msg)
+            self._last_print_width = _len
+        else:
+            self._last_print_width = len(msg)
+        sys.stdout.write(msg)
+        sys.stdout.flush()
+
+
+_printer = ErasablePrinter()
+
+
+def flash(line: str, color=True):
+    _printer.print(line, color)
+
+
+def color_format(msg: str):
+    for tag in termcolor.COLORS, termcolor.HIGHLIGHTS, termcolor.ATTRIBUTES:
+        for c, v in tag.items():
+            start, end = f'[{c}]', f'[/{c}]'
+            msg = msg.replace(start, '\033[%dm' % v).replace(end, termcolor.RESET)
+    return msg
+
+
+def remove_color_tag(msg: str):
+    for tag in termcolor.COLORS, termcolor.HIGHLIGHTS, termcolor.ATTRIBUTES:
+        for c, v in tag.items():
+            start, end = f'[{c}]', f'[/{c}]'
+            msg = msg.replace(start, '').replace(end, '')
+    return msg
+
+
+def color_format_len(msg: str):
+    _len = len(msg)
+    for tag in termcolor.COLORS, termcolor.HIGHLIGHTS, termcolor.ATTRIBUTES:
+        for c, v in tag.items():
+            start, end = f'[{c}]', f'[/{c}]'
+            msg, delta = _replace_color_offset(msg, start, '\033[%dm' % v)
+            _len -= delta
+            msg, delta = _replace_color_offset(msg, end, termcolor.RESET)
+            _len -= delta
+    return msg, _len
+
+
+def _replace_color_offset(msg: str, color: str, ctrl: str):
+    chunks = msg.split(color)
+    delta = (len(chunks) - 1) * len(color)
+    return ctrl.join(chunks), delta
+
+
+def cprint(*args, **kwargs):
+    out = io.StringIO()
+    print(*args, file=out, **kwargs)
+    text = out.getvalue()
+    out.close()
+    c_text = color_format(text)
+    print(c_text, end='')
+
+
+def main():
+    # cprint('[blink][yellow]...[/yellow][/blink]')
+    # show_colors_and_formats()
+    show_colors()
+    # print('previous', end='')
+    # for i in range(10):
+    #     flash(f'[red]{i}[/red]')
+
+
+def show_colors_and_formats():
+    msg = ''
+    for c in termcolor.COLORS.keys():
+        for h in termcolor.HIGHLIGHTS.keys():
+            for a in termcolor.ATTRIBUTES.keys():
+                msg += f'[{c}][{h}][{a}] {c}+{h}+{a} [/{a}][/{h}][/{c}]'
+    logger.info(msg)
+
+
+def show_colors():
+    msg = ''
+    for c in termcolor.COLORS.keys():
+        cprint(f'[{c}]"{c}",[/{c}]')
+
+
+# Generates tables for Doxygen flavored Markdown.  See the Doxygen
+# documentation for details:
+#   http://www.doxygen.nl/manual/markdown.html#md_tables
+
+# Translation dictionaries for table alignment
+
+
+if __name__ == '__main__':
+    main()

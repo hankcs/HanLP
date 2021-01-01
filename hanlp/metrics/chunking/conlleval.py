@@ -10,10 +10,13 @@
 # - raw tags (-r argument) not supported
 import io
 import sys
-import re
 
 from collections import defaultdict, namedtuple
-from typing import Tuple, Union
+from typing import Tuple, Union, List
+
+from alnlp.metrics.span_utils import bio_tags_to_spans
+
+from hanlp.metrics.metric import Metric
 
 ANY_SPACE = '<SPACE>'
 
@@ -52,17 +55,30 @@ class EvalCounts(object):
             state.clear()
 
 
-class CoNLLEval(object):
+class SpanF1(Metric):
 
-    def __init__(self) -> None:
+    def __init__(self, label_encoding='IOBES') -> None:
         super().__init__()
+        self.label_encoding = label_encoding
         self.count = EvalCounts()
+
+    def reset(self):
+        self.count = EvalCounts()
+
+    @property
+    def score(self):
+        return self.result(False, False).fscore
 
     def reset_state(self):
         self.count.reset_state()
 
-    def update_state(self, true_seqs, pred_seqs):
-        count = evaluate(true_seqs, pred_seqs)
+    def update_state(self, true_seqs: List[str], pred_seqs: List[str]):
+        if self.label_encoding == 'IOBES':
+            count = evaluate_iobes(true_seqs, pred_seqs)
+        elif self.label_encoding in ['IOB2', 'BIO']:
+            count = evaluate_iob2(true_seqs, pred_seqs)
+        else:
+            raise ValueError(f'Unrecognized label encoding {self.label_encoding}')
         self.count.correct_chunk += count.correct_chunk
         self.count.correct_tags += count.correct_tags
         self.count.found_correct += count.found_correct
@@ -71,6 +87,10 @@ class CoNLLEval(object):
         for s, n in zip(self.count.states, count.states):
             for k, v in n.items():
                 s[k] = s.get(k, 0) + v
+
+    def batch_update_state(self, true_seqs: List[List[str]], pred_seqs: List[List[str]]):
+        for t, p in zip(true_seqs, pred_seqs):
+            self.update_state(t, p)
 
     def result(self, full=True, verbose=True) -> Union[Tuple[Metrics, dict, str], Metrics]:
         if full:
@@ -84,6 +104,14 @@ class CoNLLEval(object):
         else:
             overall, _ = metrics(self.count)
             return overall
+
+    # torch convention: put pred before gold
+    def __call__(self, pred_seqs: List[List[str]], true_seqs: List[List[str]]):
+        return self.batch_update_state(true_seqs, pred_seqs)
+
+    def __repr__(self) -> str:
+        result = self.result(False, False)
+        return f"P: {result.prec:.2%} R: {result.rec:.2%} F: {result.fscore:.2%}"
 
 
 def parse_args(argv):
@@ -104,18 +132,23 @@ def parse_args(argv):
 
 
 def split_tag(chunk_tag):
-    """
-    split chunk tag into IOBES prefix and chunk_type
+    """split chunk tag into IOBES prefix and chunk_type
     e.g.
     B-PER -> (B, PER)
     O -> (O, None)
+
+    Args:
+      chunk_tag: 
+
+    Returns:
+
     """
     if chunk_tag == 'O':
         return ('O', None)
     return chunk_tag.split('-', maxsplit=1)
 
 
-def evaluate(true_seqs, pred_seqs):
+def evaluate_iobes(true_seqs, pred_seqs):
     counts = EvalCounts()
     in_correct = False  # currently processed chunks is correct until now
     last_correct = 'O'  # previous chunk tag in corpus
@@ -171,6 +204,16 @@ def evaluate(true_seqs, pred_seqs):
     return counts
 
 
+def evaluate_iob2(true_seqs, pred_seqs):
+    counts = EvalCounts()
+    gold = set(bio_tags_to_spans(true_seqs))
+    pred = set(bio_tags_to_spans(pred_seqs))
+    counts.correct_chunk = len(gold & pred)
+    counts.found_guessed = len(pred)
+    counts.found_correct = len(gold)
+    return counts
+
+
 def uniq(iterable):
     seen = set()
     return [i for i in iterable if not (i in seen or seen.add(i))]
@@ -178,16 +221,24 @@ def uniq(iterable):
 
 def calculate_metrics(correct, guessed, total):
     tp, fp, fn = correct, guessed - correct, total - correct
-    p = 0 if tp + fp == 0 else 1. * tp / (tp + fp)
-    r = 0 if tp + fn == 0 else 1. * tp / (tp + fn)
-    f = 0 if p + r == 0 else 2 * p * r / (p + r)
+    p = 0. if tp + fp == 0 else 1. * tp / (tp + fp)
+    r = 0. if tp + fn == 0 else 1. * tp / (tp + fn)
+    f = 0. if p + r == 0 else 2 * p * r / (p + r)
     return Metrics(tp, fp, fn, p, r, f)
 
 
 def calc_metrics(tp, p, t, percent=True):
-    """
-    compute overall precision, recall and FB1 (default values are 0.0)
+    """compute overall precision, recall and FB1 (default values are 0.0)
     if percent is True, return 100 * original decimal value
+
+    Args:
+      tp: 
+      p: 
+      t: 
+      percent:  (Default value = True)
+
+    Returns:
+
     """
     precision = tp / p if p else 0
     recall = tp / t if t else 0
@@ -282,10 +333,10 @@ def main(argv):
     args = parse_args(argv[1:])
 
     if args.file is None:
-        counts = evaluate(sys.stdin, args)
+        counts = evaluate_iobes(sys.stdin, args)
     else:
         with open(args.file, encoding='utf-8') as f:
-            counts = evaluate(f, args)
+            counts = evaluate_iobes(f, args)
     report(counts)
 
 

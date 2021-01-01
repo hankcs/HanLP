@@ -1,111 +1,99 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
-# Date: 2019-10-29 13:14
+# Date: 2020-05-27 15:06
 import os
 import sys
+from typing import Optional, Callable
 
 import fasttext
-import numpy as np
-import tensorflow as tf
-from tensorflow.python.keras.utils import tf_utils
+import torch
+from torch import nn
+from torch.nn.utils.rnn import pad_sequence
 
-from hanlp.common.constant import PAD
-from hanlp.utils import global_cache
+from hanlp_common.configurable import AutoConfigurable
+from hanlp.common.transform import EmbeddingNamedTransform
+from hanlp.layers.embeddings.embedding import Embedding
 from hanlp.utils.io_util import get_resource, stdout_redirected
-from hanlp.utils.log_util import logger
-from hanlp.utils.tf_util import hanlp_register
+from hanlp.utils.log_util import flash
 
 
-@hanlp_register
-class FastTextEmbedding(tf.keras.layers.Embedding):
-
-    def __init__(self, filepath: str, padding=PAD, name=None, **kwargs):
-        self.padding = padding.encode('utf-8')
+class FastTextTransform(EmbeddingNamedTransform):
+    def __init__(self, filepath: str, src, dst=None, **kwargs) -> None:
+        if not dst:
+            dst = src + '_fasttext'
         self.filepath = filepath
+        flash(f'Loading fasttext model {filepath} [blink][yellow]...[/yellow][/blink]')
         filepath = get_resource(filepath)
-        assert os.path.isfile(filepath), f'Resolved path {filepath} is not a file'
-        existed = global_cache.get(filepath, None)
-        if existed:
-            logger.debug('Use cached fasttext model [{}].'.format(filepath))
-            self.model = existed
+        with stdout_redirected(to=os.devnull, stdout=sys.stderr):
+            self._model = fasttext.load_model(filepath)
+        flash('')
+        output_dim = self._model['king'].size
+        super().__init__(output_dim, src, dst)
+
+    def __call__(self, sample: dict):
+        word = sample[self.src]
+        if isinstance(word, str):
+            vector = self.embed(word)
         else:
-            logger.debug('Loading fasttext model from [{}].'.format(filepath))
-            # fasttext print a blank line here
-            with stdout_redirected(to=os.devnull, stdout=sys.stderr):
-                self.model = fasttext.load_model(filepath)
-            global_cache[filepath] = self.model
-        kwargs.pop('input_dim', None)
-        kwargs.pop('output_dim', None)
-        kwargs.pop('mask_zero', None)
-        if not name:
-            name = os.path.splitext(os.path.basename(filepath))[0]
-        super().__init__(input_dim=len(self.model.words), output_dim=self.model['king'].size,
-                         mask_zero=padding is not None, trainable=False, dtype=tf.string, name=name, **kwargs)
-        embed_fn = np.frompyfunc(self.embed, 1, 1)
-        # vf = np.vectorize(self.embed, otypes=[np.ndarray])
-        self._embed_np = embed_fn
+            vector = torch.stack([self.embed(each) for each in word])
+        sample[self.dst] = vector
+        return sample
 
-    def embed(self, word):
-        return self.model[word]
+    def embed(self, word: str):
+        return torch.tensor(self._model[word])
 
-    def embed_np(self, words: np.ndarray):
-        output = self._embed_np(words)
-        if self.mask_zero:
-            mask = words != self.padding
-            output *= mask
-            output = np.stack(output.reshape(-1)).reshape(list(words.shape) + [self.output_dim])
-            return output, tf.constant(mask)
-        else:
-            output = np.stack(output.reshape(-1)).reshape(list(words.shape) + [self.output_dim])
-            return output
 
-    @tf_utils.shape_type_conversion
-    def build(self, input_shape):
-        self.built = True
+class PassThroughModule(torch.nn.Module):
+    def __init__(self, key) -> None:
+        super().__init__()
+        self.key = key
 
-    @tf_utils.shape_type_conversion
-    def compute_output_shape(self, input_shape):
-        return input_shape + (self.output_dim,)
+    def __call__(self, batch: dict, mask=None, **kwargs):
+        return batch[self.key]
 
-    def call(self, inputs: tf.Tensor):
-        if isinstance(inputs, list):
-            inputs = inputs[0]
-        if not hasattr(inputs, 'numpy'):  # placeholder tensor
-            inputs = tf.expand_dims(inputs, axis=-1)
-            inputs = tf.tile(inputs, [1] * (len(inputs.shape) - 1) + [self.output_dim])
-            inputs = tf.zeros_like(inputs, dtype=tf.float32)
-            return inputs
-            # seq_len = inputs.shape[-1]
-            # if not seq_len:
-            #     seq_len = 1
-            # return tf.zeros([1, seq_len, self.output_dim])
-        if self.mask_zero:
-            outputs, masks = self.embed_np(inputs.numpy())
-            outputs = tf.constant(outputs)
-            outputs._keras_mask = masks
-        else:
-            outputs = self.embed_np(inputs.numpy())
-            outputs = tf.constant(outputs)
+
+class FastTextEmbeddingModule(PassThroughModule):
+
+    def __init__(self, key, embedding_dim: int) -> None:
+        """An embedding layer for fastText (:cite:`bojanowski2017enriching`).
+
+        Args:
+            key: Field name.
+            embedding_dim: Size of this embedding layer
+        """
+        super().__init__(key)
+        self.embedding_dim = embedding_dim
+
+    def __call__(self, batch: dict, mask=None, **kwargs):
+        outputs = super().__call__(batch, **kwargs)
+        outputs = pad_sequence(outputs, True, 0).to(mask.device)
         return outputs
 
-    def compute_mask(self, inputs, mask=None):
-        if not self.mask_zero:
-            return None
-        return tf.not_equal(inputs, self.padding)
+    def __repr__(self):
+        s = self.__class__.__name__ + '('
+        s += f'key={self.key}, embedding_dim={self.embedding_dim}'
+        s += ')'
+        return s
 
-    def get_config(self):
-        config = {
-            'filepath': self.filepath,
-            'padding': self.padding.decode('utf-8')
-        }
-        base_config = super(FastTextEmbedding, self).get_config()
-        for junk in 'embeddings_initializer' \
-                , 'batch_input_shape' \
-                , 'embeddings_regularizer' \
-                , 'embeddings_constraint' \
-                , 'activity_regularizer' \
-                , 'trainable' \
-                , 'input_length' \
-                :
-            base_config.pop(junk)
-        return dict(list(base_config.items()) + list(config.items()))
+    def get_output_dim(self):
+        return self.embedding_dim
+
+
+class FastTextEmbedding(Embedding, AutoConfigurable):
+    def __init__(self, src: str, filepath: str) -> None:
+        """An embedding layer builder for fastText (:cite:`bojanowski2017enriching`).
+
+        Args:
+            src: Field name.
+            filepath: Filepath to pretrained fastText embeddings.
+        """
+        super().__init__()
+        self.src = src
+        self.filepath = filepath
+        self._fasttext = FastTextTransform(self.filepath, self.src)
+
+    def transform(self, **kwargs) -> Optional[Callable]:
+        return self._fasttext
+
+    def module(self, **kwargs) -> Optional[nn.Module]:
+        return FastTextEmbeddingModule(self._fasttext.dst, self._fasttext.output_dim)

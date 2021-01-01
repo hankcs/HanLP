@@ -16,7 +16,7 @@ def make(train):
         full = train.replace('_90.txt', '.utf8')
         logger.info(f'Splitting {full} into training set and valid set with 9:1 proportion')
         valid = train.replace('90.txt', '10.txt')
-        split_file(full, train=0.9, valid=0.1, test=0, names={'train': train, 'valid': valid})
+        split_file(full, train=0.9, dev=0.1, test=0, names={'train': train, 'dev': valid})
         assert os.path.isfile(train), f'Failed to make {train}'
         assert os.path.isfile(valid), f'Failed to make {valid}'
         logger.info(f'Successfully made {train} {valid}')

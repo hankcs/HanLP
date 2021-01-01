@@ -6,22 +6,22 @@ from typing import Union, Optional, Tuple, Any, Iterable, List
 
 import tensorflow as tf
 
-from hanlp.common.structure import SerializableDict
-from hanlp.components.taggers.tagger import TaggerComponent
+from hanlp_common.structure import SerializableDict
+from hanlp.components.taggers.tagger_tf import TaggerComponent
 from hanlp.transform.tsv import TSVTaggingTransform
-from hanlp.transform.txt import extract_ngram_features, bmes_to_words
-from hanlp.common.vocab import Vocab
-from hanlp.layers.embeddings import build_embedding
+from hanlp.transform.txt import bmes_to_words, extract_ngram_features
+from hanlp.common.vocab_tf import VocabTF
+from hanlp.layers.embeddings.util_tf import build_embedding
 from hanlp.layers.weight_normalization import WeightNormalization
-from hanlp.utils.util import merge_locals_kwargs
+from hanlp_common.util import merge_locals_kwargs
 
 
 class NgramTransform(TSVTaggingTransform):
 
     def __init__(self, config: SerializableDict = None, map_x=True, map_y=True, **kwargs) -> None:
         super().__init__(config, map_x, map_y, **kwargs)
-        self.ngram_vocab: Optional[Vocab] = None
-        self.tag_vocab: Optional[Vocab] = None
+        self.ngram_vocab: Optional[VocabTF] = None
+        self.tag_vocab: Optional[VocabTF] = None
 
     def inputs_to_samples(self, inputs, gold=False):
         for data in inputs:
@@ -57,7 +57,7 @@ class NgramTransform(TSVTaggingTransform):
         return types, shapes, defaults
 
     def fit(self, trn_path: str, **kwargs):
-        word_vocab, ngram_vocab, tag_vocab = Vocab(), Vocab(), Vocab(pad_token=None, unk_token=None)
+        word_vocab, ngram_vocab, tag_vocab = VocabTF(), VocabTF(), VocabTF(pad_token=None, unk_token=None)
         num_samples = 0
         for X, Y in self.file_to_samples(trn_path, gold=True):
             num_samples += 1
@@ -138,7 +138,7 @@ class NgramConvTaggingModel(tf.keras.models.Model):
         return logits
 
 
-class NgramConvTagger(TaggerComponent):
+class NgramConvTaggerTF(TaggerComponent):
 
     def __init__(self, transform: NgramTransform = None) -> None:
         if not transform:

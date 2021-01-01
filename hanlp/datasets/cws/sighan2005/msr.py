@@ -4,10 +4,16 @@
 from hanlp.datasets.cws.sighan2005 import SIGHAN2005, make
 
 SIGHAN2005_MSR_DICT = SIGHAN2005 + "#" + "gold/msr_training_words.utf8"
-SIGHAN2005_MSR_TRAIN_FULL = SIGHAN2005 + "#" + "training/msr_training.utf8"
+'''Dictionary built on trainings set.'''
+SIGHAN2005_MSR_TRAIN_ALL = SIGHAN2005 + "#" + "training/msr_training.utf8"
+'''Full training set.'''
 SIGHAN2005_MSR_TRAIN = SIGHAN2005 + "#" + "training/msr_training_90.txt"
-SIGHAN2005_MSR_VALID = SIGHAN2005 + "#" + "training/msr_training_10.txt"
+'''Training set (first 90% of the full official training set).'''
+SIGHAN2005_MSR_DEV = SIGHAN2005 + "#" + "training/msr_training_10.txt"
+'''Dev set (last 10% of full official training set).'''
 SIGHAN2005_MSR_TEST_INPUT = SIGHAN2005 + "#" + "testing/msr_test.utf8"
+'''Test input.'''
 SIGHAN2005_MSR_TEST = SIGHAN2005 + "#" + "gold/msr_test_gold.utf8"
+'''Test set.'''
 
 make(SIGHAN2005_MSR_TRAIN)

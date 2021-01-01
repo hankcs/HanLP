@@ -1,203 +1,383 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
-# Date: 2019-11-10 13:19
+# Date: 2020-06-08 16:31
+import logging
+from abc import ABC
+from typing import Callable, Union
+from typing import List
 
-import math, re
-from typing import Union, Tuple, List, Any, Iterable
+import torch
+from torch import nn
+from torch.utils.data import DataLoader
 
-import tensorflow as tf
-from bert.tokenization.bert_tokenization import FullTokenizer
-
-from hanlp.common.component import KerasComponent
-from hanlp.common.structure import SerializableDict
-from hanlp.layers.transformers.loader import build_transformer
-from hanlp.optimizers.adamw import create_optimizer
-from hanlp.transform.table import TableTransform
-from hanlp.utils.log_util import logger
-from hanlp.utils.util import merge_locals_kwargs
-import numpy as np
-
-
-class TransformerTextTransform(TableTransform):
-
-    def __init__(self, config: SerializableDict = None, map_x=False, map_y=True, x_columns=None,
-                 y_column=-1, skip_header=True, delimiter='auto', multi_label=False, **kwargs) -> None:
-        super().__init__(config, map_x, map_y, x_columns, y_column, multi_label, skip_header, delimiter, **kwargs)
-        self.tokenizer: FullTokenizer = None
-
-    def inputs_to_samples(self, inputs, gold=False):
-        tokenizer = self.tokenizer
-        max_length = self.config.max_length
-        num_features = None
-        pad_token = None if self.label_vocab.mutable else tokenizer.convert_tokens_to_ids(['[PAD]'])[0]
-        for (X, Y) in super().inputs_to_samples(inputs, gold):
-            if self.label_vocab.mutable:
-                yield None, Y
-                continue
-            if isinstance(X, str):
-                X = (X,)
-            if num_features is None:
-                num_features = self.config.num_features
-            assert num_features == len(X), f'Numbers of features {num_features} ' \
-                                           f'inconsistent with current {len(X)}={X}'
-            text_a = X[0]
-            text_b = X[1] if len(X) > 1 else None
-            tokens_a = self.tokenizer.tokenize(text_a)
-            tokens_b = self.tokenizer.tokenize(text_b) if text_b else None
-            tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
-            segment_ids = [0] * len(tokens)
-            if tokens_b:
-                tokens += tokens_b
-                segment_ids += [1] * len(tokens_b)
-            token_ids = self.tokenizer.convert_tokens_to_ids(tokens)
-            attention_mask = [1] * len(token_ids)
-            diff = max_length - len(token_ids)
-            if diff < 0:
-                token_ids = token_ids[:max_length]
-                attention_mask = attention_mask[:max_length]
-                segment_ids = segment_ids[:max_length]
-            elif diff > 0:
-                token_ids += [pad_token] * diff
-                attention_mask += [0] * diff
-                segment_ids += [0] * diff
-
-            assert len(token_ids) == max_length, "Error with input length {} vs {}".format(len(token_ids), max_length)
-            assert len(attention_mask) == max_length, "Error with input length {} vs {}".format(len(attention_mask), max_length)
-            assert len(segment_ids) == max_length, "Error with input length {} vs {}".format(len(segment_ids), max_length)
+from hanlp_common.constant import IDX
+from hanlp.common.dataset import TableDataset, SortingSampler, PadSequenceDataLoader, TransformableDataset
+from hanlp.common.torch_component import TorchComponent
+from hanlp.common.vocab import Vocab
+from hanlp.components.distillation.schedulers import LinearTeacherAnnealingScheduler
+from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
+from hanlp.layers.transformers.encoder import TransformerEncoder
+from hanlp.layers.transformers.pt_imports import PreTrainedModel, AutoTokenizer, BertTokenizer
+from hanlp.layers.transformers.utils import transformer_sliding_window, build_optimizer_scheduler_with_transformer
+from hanlp.metrics.accuracy import CategoricalAccuracy
+from hanlp.transform.transformer_tokenizer import TransformerTextTokenizer
+from hanlp.utils.time_util import CountdownTimer
+from hanlp_common.util import merge_locals_kwargs, merge_dict, isdebugging
 
 
-            label = Y
-            yield (token_ids, attention_mask, segment_ids), label
+class TransformerClassificationModel(nn.Module):
 
-    def create_types_shapes_values(self) -> Tuple[Tuple, Tuple, Tuple]:
-        max_length = self.config.max_length
-        types = (tf.int32, tf.int32, tf.int32), tf.string
-        shapes = ([max_length], [max_length], [max_length]), [None,] if self.config.multi_label else []
-        values = (0, 0, 0), self.label_vocab.safe_pad_token
-        return types, shapes, values
+    def __init__(self,
+                 transformer: PreTrainedModel,
+                 num_labels: int,
+                 max_seq_length=512) -> None:
+        super().__init__()
+        self.max_seq_length = max_seq_length
+        self.transformer = transformer
+        self.dropout = nn.Dropout(transformer.config.hidden_dropout_prob)
+        self.classifier = nn.Linear(transformer.config.hidden_size, num_labels)
 
-    def x_to_idx(self, x) -> Union[tf.Tensor, Tuple]:
-        logger.fatal('map_x should always be set to True')
-        exit(1)
-
-    def y_to_idx(self, y) -> tf.Tensor:
-        if self.config.multi_label:
-            #converrt index to binary vector
-            mapped = tf.map_fn(fn=lambda x: tf.cast(self.label_vocab.lookup(x), tf.int32), elems=y, fn_output_signature=tf.TensorSpec(dtype=tf.dtypes.int32, shape=[None,]))
-            one_hots = tf.one_hot(mapped, len(self.label_vocab), on_value=1, off_value=0)
-            idx = tf.reduce_sum(one_hots, -2)
+    def forward(self, input_ids, attention_mask, token_type_ids):
+        seq_length = input_ids.size(-1)
+        if seq_length > self.max_seq_length:
+            sequence_output = transformer_sliding_window(self.transformer, input_ids,
+                                                         max_pieces=self.max_seq_length, ret_cls='max')
         else:
-            idx = self.label_vocab.lookup(y)
-        return idx
-
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None, batch=None) -> Iterable:
-        # Prediction to be Y > 0:
-        if self.config.multi_label:
-            preds = [np.flatnonzero(y>0) for y in Y] if not gold else Y
-            for p in preds:
-                yield [self.label_vocab.idx_to_token[i] for i in p]
-        else:
-            preds = tf.argmax(Y, axis=-1) if not gold else Y
-            for y in preds:
-                yield self.label_vocab.idx_to_token[y]
-
-    def input_is_single_sample(self, input: Any) -> bool:
-        return isinstance(input, (str, tuple))
+            sequence_output = self.transformer(input_ids, attention_mask, token_type_ids)[0][:, 0, :]
+        sequence_output = self.dropout(sequence_output)
+        logits = self.classifier(sequence_output)
+        return logits
 
 
-class TransformerClassifier(KerasComponent):
+class TransformerComponent(TorchComponent, ABC):
+    def __init__(self, **kwargs) -> None:
+        """ The base class for transorfmer based components. If offers methods to build transformer tokenizers
+        , optimizers and models.
 
-    def __init__(self, bert_text_transform=None) -> None:
-        if not bert_text_transform:
-            bert_text_transform = TransformerTextTransform()
-        super().__init__(bert_text_transform)
-        self.model: tf.keras.Model
-        self.transform: TransformerTextTransform = bert_text_transform
+        Args:
+            **kwargs: Passed to config.
+        """
+        super().__init__(**kwargs)
+        self.transformer_tokenizer = None
 
-    # noinspection PyMethodOverriding
-    def fit(self, trn_data: Any, dev_data: Any, save_dir: str, transformer: str, max_length: int = 128,
-            optimizer='adamw', warmup_steps_ratio=0.1, use_amp=False, batch_size=32,
-            epochs=3, logger=None, verbose=1, **kwargs):
+    def build_optimizer(self,
+                        trn,
+                        epochs,
+                        lr,
+                        adam_epsilon,
+                        weight_decay,
+                        warmup_steps,
+                        transformer_lr=None,
+                        teacher=None,
+                        **kwargs):
+        num_training_steps = len(trn) * epochs // self.config.get('gradient_accumulation', 1)
+        if transformer_lr is None:
+            transformer_lr = lr
+        transformer = self.model.encoder.transformer
+        optimizer, scheduler = build_optimizer_scheduler_with_transformer(self.model, transformer,
+                                                                          lr, transformer_lr,
+                                                                          num_training_steps, warmup_steps,
+                                                                          weight_decay, adam_epsilon)
+        if teacher:
+            lambda_scheduler = LinearTeacherAnnealingScheduler(num_training_steps)
+            scheduler = (scheduler, lambda_scheduler)
+        return optimizer, scheduler
+
+    def fit(self, trn_data, dev_data, save_dir,
+            transformer=None,
+            lr=5e-5,
+            transformer_lr=None,
+            adam_epsilon=1e-8,
+            weight_decay=0,
+            warmup_steps=0.1,
+            batch_size=32,
+            gradient_accumulation=1,
+            grad_norm=5.0,
+            transformer_grad_norm=None,
+            average_subwords=False,
+            scalar_mix: Union[ScalarMixWithDropoutBuilder, int] = None,
+            word_dropout=None,
+            hidden_dropout=None,
+            max_sequence_length=None,
+            ret_raw_hidden_states=False,
+            batch_max_tokens=None,
+            epochs=3,
+            logger=None,
+            devices: Union[float, int, List[int]] = None,
+            **kwargs):
         return super().fit(**merge_locals_kwargs(locals(), kwargs))
 
-    def evaluate_output(self, tst_data, input, output, num_batches, metrics):
-        metric = metrics[-1]
-        try:
-            metric_name = metric.name
-        except:
-            metric_name = 'accuracy'
-        logger.info('Saving output to {}'.format(output))
-        with open(output, 'w', encoding='utf-8') as out:
-            total, correct, score = 0, 0, 0
-            prediction = []
-            for idx, batch in enumerate(tst_data):
-                Y_pred = self.model.predict_on_batch(batch[0])
-                Y_pred_str = self.transform.Y_to_outputs(Y_pred)
-                prediction += [y for y in Y_pred_str]
-                for y_pred, y_gold, in zip(Y_pred, batch[1]):
-                    total += 1
-                    correct += metric(y_gold, y_pred)
-                score = correct/total
-                logger.info(f'{idx + 1}/{num_batches} {metric_name}: {score * 100:.2f}%')
-            with open(input, 'r') as f:
-                out.write(f.readline().replace('\n', '')+'\tpred\n')
-                for i, y_pred in enumerate(prediction):
-                    out.write(f.readline().replace('\n', '')+f'\t{y_pred}\n')
-
-        return score
-
-    def build_loss(self, loss, **kwargs):
-        if loss:
-            # assert isinstance(loss, tf.keras.losses.Loss), 'Must specify loss as an instance in tf.keras.losses.Loss'
-            if not isinstance(loss, tf.keras.losses.Loss): 
-                logger.warn(f'loss function may not be compatible: {loss}')
-        elif self.config.multi_label:
-        #Loss to be BinaryCrossentropy for multi-label:
-            loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    def on_config_ready(self, **kwargs):
+        super().on_config_ready(**kwargs)
+        if 'albert_chinese' in self.config.transformer:
+            self.transformer_tokenizer = BertTokenizer.from_pretrained(self.config.transformer, use_fast=True)
         else:
-            loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+            self.transformer_tokenizer = AutoTokenizer.from_pretrained(self.config.transformer, use_fast=True)
+
+    def build_transformer(self, training=True):
+        transformer = TransformerEncoder(self.config.transformer, self.transformer_tokenizer,
+                                         self.config.average_subwords,
+                                         self.config.scalar_mix, self.config.word_dropout,
+                                         self.config.max_sequence_length, self.config.ret_raw_hidden_states,
+                                         training=training)
+        transformer_layers = self.config.get('transformer_layers', None)
+        if transformer_layers:
+            transformer.transformer.encoder.layer = transformer.transformer.encoder.layer[:-transformer_layers]
+        return transformer
+
+
+class TransformerClassifier(TransformerComponent):
+
+    def __init__(self, **kwargs) -> None:
+        """A classifier using transformer as encoder.
+
+        Args:
+            **kwargs: Passed to config.
+        """
+        super().__init__(**kwargs)
+        self.model: TransformerClassificationModel = None
+
+    def build_criterion(self, **kwargs):
+        criterion = nn.CrossEntropyLoss()
+        return criterion
+
+    def build_metric(self, **kwargs):
+        return CategoricalAccuracy()
+
+    def execute_training_loop(self, trn: DataLoader, dev: DataLoader, epochs, criterion, optimizer, metric, save_dir,
+                              logger: logging.Logger, devices, **kwargs):
+        best_epoch, best_metric = 0, -1
+        timer = CountdownTimer(epochs)
+        ratio_width = len(f'{len(trn)}/{len(trn)}')
+        for epoch in range(1, epochs + 1):
+            logger.info(f"[yellow]Epoch {epoch} / {epochs}:[/yellow]")
+            self.fit_dataloader(trn, criterion, optimizer, metric, logger)
+            if dev:
+                self.evaluate_dataloader(dev, criterion, metric, logger, ratio_width=ratio_width)
+            report = f'{timer.elapsed_human}/{timer.total_time_human}'
+            dev_score = metric.get_metric()
+            if dev_score > best_metric:
+                self.save_weights(save_dir)
+                best_metric = dev_score
+                report += ' [red]saved[/red]'
+            timer.log(report, ratio_percentage=False, newline=True, ratio=False)
+
+    @property
+    def label_vocab(self):
+        return self.vocabs[self.config.label_key]
+
+    def fit_dataloader(self, trn: DataLoader, criterion, optimizer, metric, logger: logging.Logger, **kwargs):
+        self.model.train()
+        timer = CountdownTimer(len(trn))
+        optimizer, scheduler = optimizer
+        total_loss = 0
+        metric.reset()
+        for batch in trn:
+            optimizer.zero_grad()
+            logits = self.feed_batch(batch)
+            target = batch['label_id']
+            loss = self.compute_loss(criterion, logits, target, batch)
+            loss.backward()
+            optimizer.step()
+            scheduler.step()
+            total_loss += loss.item()
+            self.update_metric(metric, logits, target)
+            timer.log(f'loss: {total_loss / (timer.current + 1):.4f} acc: {metric.get_metric():.2%}',
+                      ratio_percentage=None,
+                      logger=logger)
+            del loss
+        return total_loss / timer.total
+
+    def update_metric(self, metric, logits: torch.Tensor, target, output=None):
+        metric(logits, target)
+        if output:
+            label_ids = logits.argmax(-1)
+            return label_ids
+
+    def compute_loss(self, criterion, logits, target, batch):
+        loss = criterion(logits, target)
         return loss
 
-    # noinspection PyMethodOverriding
-    def build_optimizer(self, optimizer, use_amp, train_steps, warmup_steps, **kwargs):
-        if optimizer == 'adamw':
-            opt = create_optimizer(init_lr=5e-5, num_train_steps=train_steps, num_warmup_steps=warmup_steps)
-            # opt = tfa.optimizers.AdamW(learning_rate=3e-5, epsilon=1e-08, weight_decay=0.01)
-            # opt = tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08)
-            self.config.optimizer = tf.keras.utils.serialize_keras_object(opt)
-            lr_config = self.config.optimizer['config']['learning_rate']['config']
-            if hasattr(lr_config['decay_schedule_fn'], 'get_config'):
-                lr_config['decay_schedule_fn'] = dict(
-                    (k, v) for k, v in lr_config['decay_schedule_fn'].get_config().items() if not k.startswith('_'))
-        else:
-            opt = super().build_optimizer(optimizer)
-        if use_amp:
-            # loss scaling is currently required when using mixed precision
-            opt = tf.keras.mixed_precision.experimental.LossScaleOptimizer(opt, 'dynamic')
-        return opt
+    def feed_batch(self, batch) -> torch.LongTensor:
+        logits = self.model(*[batch[key] for key in ['input_ids', 'attention_mask', 'token_type_ids']])
+        return logits
 
     # noinspection PyMethodOverriding
-    def build_model(self, transformer, max_length, **kwargs):
-        model, self.transform.tokenizer = build_transformer(transformer, max_length, len(self.transform.label_vocab),
-                                                            tagging=False)
+    def evaluate_dataloader(self,
+                            data: DataLoader,
+                            criterion: Callable,
+                            metric,
+                            logger,
+                            ratio_width=None,
+                            filename=None,
+                            output=None,
+                            **kwargs):
+        self.model.eval()
+        timer = CountdownTimer(len(data))
+        total_loss = 0
+        metric.reset()
+        num_samples = 0
+        if output:
+            output = open(output, 'w')
+        for batch in data:
+            logits = self.feed_batch(batch)
+            target = batch['label_id']
+            loss = self.compute_loss(criterion, logits, target, batch)
+            total_loss += loss.item()
+            label_ids = self.update_metric(metric, logits, target, output)
+            if output:
+                labels = [self.vocabs[self.config.label_key].idx_to_token[i] for i in label_ids.tolist()]
+                for i, label in enumerate(labels):
+                    # text_a text_b pred gold
+                    columns = [batch[self.config.text_a_key][i]]
+                    if self.config.text_b_key:
+                        columns.append(batch[self.config.text_b_key][i])
+                    columns.append(label)
+                    columns.append(batch[self.config.label_key][i])
+                    output.write('\t'.join(columns))
+                    output.write('\n')
+            num_samples += len(target)
+            report = f'loss: {total_loss / (timer.current + 1):.4f} acc: {metric.get_metric():.2%}'
+            if filename:
+                report = f'{filename} {report} {num_samples / timer.elapsed:.0f} samples/sec'
+            timer.log(report, ratio_percentage=None, logger=logger, ratio_width=ratio_width)
+        if output:
+            output.close()
+        return total_loss / timer.total
+
+    # noinspection PyMethodOverriding
+    def build_model(self, transformer, training=True, **kwargs) -> torch.nn.Module:
+        # config: PretrainedConfig = AutoConfig.from_pretrained(transformer)
+        # config.num_labels = len(self.vocabs.label)
+        # config.hidden_dropout_prob = self.config.hidden_dropout_prob
+        transformer = self.build_transformer(training=training).transformer
+        model = TransformerClassificationModel(transformer, len(self.vocabs.label))
+        # truncated_normal_(model.classifier.weight, mean=0.02, std=0.05)
         return model
 
-    def build_vocab(self, trn_data, logger):
-        self.transform.label_vocab.unlock()
-        train_examples = super().build_vocab(trn_data, logger)
-        warmup_steps_per_epoch = math.ceil(train_examples * self.config.warmup_steps_ratio / self.config.batch_size)
-        self.config.warmup_steps = warmup_steps_per_epoch * self.config.epochs
-        return train_examples
+    # noinspection PyMethodOverriding
+    def build_dataloader(self, data, batch_size, shuffle, device, text_a_key, text_b_key,
+                         label_key,
+                         logger: logging.Logger = None,
+                         sorting=True,
+                         **kwargs) -> DataLoader:
+        if not batch_size:
+            batch_size = self.config.batch_size
+        dataset = self.build_dataset(data)
+        dataset.append_transform(self.vocabs)
+        if self.vocabs.mutable:
+            if not any([text_a_key, text_b_key]):
+                if len(dataset.headers) == 2:
+                    self.config.text_a_key = dataset.headers[0]
+                    self.config.label_key = dataset.headers[1]
+                elif len(dataset.headers) >= 3:
+                    self.config.text_a_key, self.config.text_b_key, self.config.label_key = dataset.headers[0], \
+                                                                                            dataset.headers[1], \
+                                                                                            dataset.headers[-1]
+                else:
+                    raise ValueError('Wrong dataset format')
+                report = {'text_a_key', 'text_b_key', 'label_key'}
+                report = dict((k, self.config[k]) for k in report)
+                report = [f'{k}={v}' for k, v in report.items() if v]
+                report = ', '.join(report)
+                logger.info(f'Guess [bold][blue]{report}[/blue][/bold] according to the headers of training dataset: '
+                            f'[blue]{dataset}[/blue]')
+            self.build_vocabs(dataset, logger)
+            dataset.purge_cache()
+        # if self.config.transform:
+        #     dataset.append_transform(self.config.transform)
+        dataset.append_transform(TransformerTextTokenizer(tokenizer=self.transformer_tokenizer,
+                                                          text_a_key=self.config.text_a_key,
+                                                          text_b_key=self.config.text_b_key,
+                                                          max_seq_length=self.config.max_seq_length,
+                                                          truncate_long_sequences=self.config.truncate_long_sequences,
+                                                          output_key=''))
+        batch_sampler = None
+        if sorting and not isdebugging():
+            if dataset.cache and len(dataset) > 1000:
+                timer = CountdownTimer(len(dataset))
+                lens = []
+                for idx, sample in enumerate(dataset):
+                    lens.append(len(sample['input_ids']))
+                    timer.log('Pre-processing and caching dataset [blink][yellow]...[/yellow][/blink]',
+                              ratio_percentage=None)
+            else:
+                lens = [len(sample['input_ids']) for sample in dataset]
+            batch_sampler = SortingSampler(lens, batch_size=batch_size, shuffle=shuffle,
+                                           batch_max_tokens=self.config.batch_max_tokens)
+        return PadSequenceDataLoader(dataset, batch_size, shuffle, batch_sampler=batch_sampler, device=device)
 
-    def build_metrics(self, metrics, logger, **kwargs):
-        if metrics and type(metrics[0]) is not str:
-            for metric in metrics:
-                # assert isinstance(metric, tf.keras.metrics.Metric), f'Metrics defined may not be compatible: {metric}'
-                if not isinstance(metric, tf.keras.metrics.Metric): logger.warn(f'metric may not be compatible: {metric}')
-            return metrics
-        if self.config.multi_label:
-            metric = tf.keras.metrics.BinaryAccuracy('binary_accuracy')
+    def build_dataset(self, data) -> TransformableDataset:
+        if isinstance(data, str):
+            dataset = TableDataset(data, cache=True)
+        elif isinstance(data, TableDataset):
+            dataset = data
+        elif isinstance(data, list):
+            dataset = TableDataset(data)
         else:
-            metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
-        self.config['metrics'] = [metric]
-        return [metric]
+            raise ValueError(f'Unsupported data {data}')
+        return dataset
+
+    def predict(self, data: Union[str, List[str]], batch_size: int = None, **kwargs):
+        if not data:
+            return []
+        flat = isinstance(data, str) or isinstance(data, tuple)
+        if flat:
+            data = [data]
+        samples = []
+        for idx, d in enumerate(data):
+            sample = {IDX: idx}
+            if self.config.text_b_key:
+                sample[self.config.text_a_key] = d[0]
+                sample[self.config.text_b_key] = d[1]
+            else:
+                sample[self.config.text_a_key] = d
+            samples.append(sample)
+        dataloader = self.build_dataloader(samples,
+                                           sorting=False,
+                                           **merge_dict(self.config,
+                                                        batch_size=batch_size,
+                                                        shuffle=False,
+                                                        device=self.device,
+                                                        overwrite=True)
+                                           )
+        labels = [None] * len(data)
+        vocab = self.vocabs.label
+        for batch in dataloader:
+            logits = self.feed_batch(batch)
+            pred = logits.argmax(-1)
+            pred = pred.tolist()
+            for idx, tag in zip(batch[IDX], pred):
+                labels[idx] = vocab.idx_to_token[tag]
+        if flat:
+            return labels[0]
+        return labels
+
+    def fit(self, trn_data, dev_data, save_dir,
+            text_a_key=None,
+            text_b_key=None,
+            label_key=None,
+            transformer=None,
+            max_seq_length=512,
+            truncate_long_sequences=True,
+            # hidden_dropout_prob=0.0,
+            lr=5e-5,
+            transformer_lr=None,
+            adam_epsilon=1e-6,
+            weight_decay=0,
+            warmup_steps=0.1,
+            batch_size=32,
+            batch_max_tokens=None,
+            epochs=3,
+            logger=None,
+            # transform=None,
+            devices: Union[float, int, List[int]] = None,
+            **kwargs):
+        return super().fit(**merge_locals_kwargs(locals(), kwargs))
+
+    def build_vocabs(self, trn, logger, **kwargs):
+        self.vocabs.label = Vocab(pad_token=None, unk_token=None)
+        for each in trn:
+            pass
+        self.vocabs.lock()
+        self.vocabs.summary(logger)

@@ -1,3 +1,24 @@
+# MIT License
+#
+# Copyright (c) 2018 chakki
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 """Metrics to assess performance on sequence labeling task given prediction
 Functions named as ``*_score`` return a scalar value to maximize: the higher
 the better
@@ -5,8 +26,6 @@ the better
 
 from collections import defaultdict
 import numpy as np
-
-from hanlp.metrics.chunking import conlleval
 
 
 def iobes_to_span(words, tags):
@@ -23,13 +42,14 @@ def get_entities(seq, suffix=False):
     """Gets entities from sequence.
 
     Args:
-        seq (list): sequence of labels.
+      seq(list): sequence of labels.
+      suffix:  (Default value = False)
 
     Returns:
-        list: list of (chunk_type, chunk_start, chunk_end).
+      list: list of (chunk_type, chunk_start, chunk_end).
+      Example:
 
-    Example:
-        >>> from seqeval.metrics.sequence_labeling import get_entities
+    >>> from seqeval.metrics.sequence_labeling import get_entities
         >>> seq = ['B-PER', 'I-PER', 'O', 'B-LOC']
         >>> get_entities(seq)
         [('PER', 0, 2), ('LOC', 3, 4)]
@@ -43,15 +63,12 @@ def get_entities(seq, suffix=False):
     begin_offset = 0
     chunks = []
     for i, chunk in enumerate(seq + ['O']):
-        cells = chunk.split('-')
         if suffix:
             tag = chunk[-1]
-            type_ = cells[0]
+            type_ = chunk[:-2]
         else:
             tag = chunk[0]
-            type_ = cells[-1]
-        if len(cells) == 1:
-            type_ = ''
+            type_ = chunk[2:]
 
         if end_of_chunk(prev_tag, tag, prev_type, type_):
             chunks.append((prev_type, begin_offset, i))
@@ -67,13 +84,14 @@ def end_of_chunk(prev_tag, tag, prev_type, type_):
     """Checks if a chunk ended between the previous and current word.
 
     Args:
-        prev_tag: previous chunk tag.
-        tag: current chunk tag.
-        prev_type: previous type.
-        type_: current type.
+      prev_tag: previous chunk tag.
+      tag: current chunk tag.
+      prev_type: previous type.
+      type_: current type.
 
     Returns:
-        chunk_end: boolean.
+      chunk_end: boolean.
+
     """
     chunk_end = False
 
@@ -97,13 +115,14 @@ def start_of_chunk(prev_tag, tag, prev_type, type_):
     """Checks if a chunk started between the previous and current word.
 
     Args:
-        prev_tag: previous chunk tag.
-        tag: current chunk tag.
-        prev_type: previous type.
-        type_: current type.
+      prev_tag: previous chunk tag.
+      tag: current chunk tag.
+      prev_type: previous type.
+      type_: current type.
 
     Returns:
-        chunk_start: boolean.
+      chunk_start: boolean.
+
     """
     chunk_start = False
 
@@ -125,23 +144,25 @@ def start_of_chunk(prev_tag, tag, prev_type, type_):
 
 def f1_score(y_true, y_pred, average='micro', suffix=False):
     """Compute the F1 score.
-
+    
     The F1 score can be interpreted as a weighted average of the precision and
     recall, where an F1 score reaches its best value at 1 and worst score at 0.
     The relative contribution of precision and recall to the F1 score are
     equal. The formula for the F1 score is::
-
+    
         F1 = 2 * (precision * recall) / (precision + recall)
 
     Args:
-        y_true : 2d array. Ground truth (correct) target values.
-        y_pred : 2d array. Estimated targets as returned by a tagger.
+      y_true: 2d array. Ground truth (correct) target values.
+      y_pred: 2d array. Estimated targets as returned by a tagger.
+      average:  (Default value = 'micro')
+      suffix:  (Default value = False)
 
     Returns:
-        score : float.
+      score: float.
+      Example:
 
-    Example:
-        >>> from seqeval.metrics import f1_score
+    >>> from seqeval.metrics import f1_score
         >>> y_true = [['O', 'O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> y_pred = [['O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> f1_score(y_true, y_pred)
@@ -163,20 +184,20 @@ def f1_score(y_true, y_pred, average='micro', suffix=False):
 
 def accuracy_score(y_true, y_pred):
     """Accuracy classification score.
-
+    
     In multilabel classification, this function computes subset accuracy:
     the set of labels predicted for a sample must *exactly* match the
     corresponding set of labels in y_true.
 
     Args:
-        y_true : 2d array. Ground truth (correct) target values.
-        y_pred : 2d array. Estimated targets as returned by a tagger.
+      y_true: 2d array. Ground truth (correct) target values.
+      y_pred: 2d array. Estimated targets as returned by a tagger.
 
     Returns:
-        score : float.
+      score: float.
+      Example:
 
-    Example:
-        >>> from seqeval.metrics import accuracy_score
+    >>> from seqeval.metrics import accuracy_score
         >>> y_true = [['O', 'O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> y_pred = [['O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> accuracy_score(y_true, y_pred)
@@ -196,22 +217,24 @@ def accuracy_score(y_true, y_pred):
 
 def precision_score(y_true, y_pred, average='micro', suffix=False):
     """Compute the precision.
-
+    
     The precision is the ratio ``tp / (tp + fp)`` where ``tp`` is the number of
     true positives and ``fp`` the number of false positives. The precision is
     intuitively the ability of the classifier not to label as positive a sample.
-
+    
     The best value is 1 and the worst value is 0.
 
     Args:
-        y_true : 2d array. Ground truth (correct) target values.
-        y_pred : 2d array. Estimated targets as returned by a tagger.
+      y_true: 2d array. Ground truth (correct) target values.
+      y_pred: 2d array. Estimated targets as returned by a tagger.
+      average:  (Default value = 'micro')
+      suffix:  (Default value = False)
 
     Returns:
-        score : float.
+      score: float.
+      Example:
 
-    Example:
-        >>> from seqeval.metrics import precision_score
+    >>> from seqeval.metrics import precision_score
         >>> y_true = [['O', 'O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> y_pred = [['O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> precision_score(y_true, y_pred)
@@ -230,22 +253,24 @@ def precision_score(y_true, y_pred, average='micro', suffix=False):
 
 def recall_score(y_true, y_pred, average='micro', suffix=False):
     """Compute the recall.
-
+    
     The recall is the ratio ``tp / (tp + fn)`` where ``tp`` is the number of
     true positives and ``fn`` the number of false negatives. The recall is
     intuitively the ability of the classifier to find all the positive samples.
-
+    
     The best value is 1 and the worst value is 0.
 
     Args:
-        y_true : 2d array. Ground truth (correct) target values.
-        y_pred : 2d array. Estimated targets as returned by a tagger.
+      y_true: 2d array. Ground truth (correct) target values.
+      y_pred: 2d array. Estimated targets as returned by a tagger.
+      average:  (Default value = 'micro')
+      suffix:  (Default value = False)
 
     Returns:
-        score : float.
+      score: float.
+      Example:
 
-    Example:
-        >>> from seqeval.metrics import recall_score
+    >>> from seqeval.metrics import recall_score
         >>> y_true = [['O', 'O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> y_pred = [['O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> recall_score(y_true, y_pred)
@@ -263,18 +288,17 @@ def recall_score(y_true, y_pred, average='micro', suffix=False):
 
 
 def performance_measure(y_true, y_pred):
-    """
-    Compute the performance metrics: TP, FP, FN, TN
+    """Compute the performance metrics: TP, FP, FN, TN
 
     Args:
-        y_true : 2d array. Ground truth (correct) target values.
-        y_pred : 2d array. Estimated targets as returned by a tagger.
+      y_true: 2d array. Ground truth (correct) target values.
+      y_pred: 2d array. Estimated targets as returned by a tagger.
 
     Returns:
-        performance_dict : dict
+      performance_dict: dict
+      Example:
 
-    Example:
-        >>> from seqeval.metrics import performance_measure
+    >>> from seqeval.metrics import performance_measure
         >>> y_true = [['O', 'O', 'O', 'B-MISC', 'I-MISC', 'O', 'B-ORG'], ['B-PER', 'I-PER', 'O']]
         >>> y_pred = [['O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'O', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> performance_measure(y_true, y_pred)
@@ -299,15 +323,16 @@ def classification_report(y_true, y_pred, digits=2, suffix=False):
     """Build a text report showing the main classification metrics.
 
     Args:
-        y_true : 2d array. Ground truth (correct) target values.
-        y_pred : 2d array. Estimated targets as returned by a classifier.
-        digits : int. Number of digits for formatting output floating point values.
+      y_true: 2d array. Ground truth (correct) target values.
+      y_pred: 2d array. Estimated targets as returned by a classifier.
+      digits: int. Number of digits for formatting output floating point values. (Default value = 2)
+      suffix:  (Default value = False)
 
     Returns:
-        report : string. Text summary of the precision, recall, F1 score for each class.
+      report: string. Text summary of the precision, recall, F1 score for each class.
+      Examples:
 
-    Examples:
-        >>> from seqeval.metrics import classification_report
+    >>> from seqeval.metrics import classification_report
         >>> y_true = [['O', 'O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> y_pred = [['O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
         >>> print(classification_report(y_true, y_pred))

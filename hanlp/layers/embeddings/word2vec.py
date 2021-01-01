@@ -1,195 +1,212 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
-# Date: 2019-08-24 21:49
-import os
-from typing import Tuple, Union, List
+# Date: 2020-05-09 13:38
+from typing import Optional, Callable, Union
 
-import numpy as np
-import tensorflow as tf
-from tensorflow.python.ops import math_ops
+import torch
+from torch import nn
 
+from hanlp_common.configurable import AutoConfigurable
+from hanlp.common.transform import VocabDict
 from hanlp.common.vocab import Vocab
-from hanlp.utils.io_util import load_word2vec, get_resource
-from hanlp.utils.tf_util import hanlp_register
+from hanlp.layers.dropout import WordDropout
+from hanlp.layers.embeddings.embedding import Embedding, EmbeddingDim
+from hanlp.layers.embeddings.util import build_word2vec_with_vocab
+from hanlp.utils.io_util import load_word2vec_as_vocab_tensor
+from hanlp_trie.trie import Trie
 
 
-class Word2VecEmbeddingV1(tf.keras.layers.Layer):
-    def __init__(self, path: str = None, vocab: Vocab = None, normalize: bool = False, load_all=True, mask_zero=True,
-                 trainable=False, name=None, dtype=None, dynamic=False, **kwargs):
-        super().__init__(trainable, name, dtype, dynamic, **kwargs)
-        if load_all and vocab and vocab.locked:
-            vocab.unlock()
-        self.vocab, self.array_np = self._load(path, vocab, normalize)
-        self.vocab.lock()
-        self.array_ks = tf.keras.layers.Embedding(input_dim=len(self.vocab), output_dim=self.dim, trainable=trainable,
-                                                  embeddings_initializer=tf.keras.initializers.Constant(self.array_np),
-                                                  mask_zero=mask_zero)
-        self.mask_zero = mask_zero
-        self.supports_masking = mask_zero
+class Word2VecEmbeddingModule(nn.Module, EmbeddingDim):
+    def __init__(self, field: str, embed: nn.Embedding, word_dropout: WordDropout = None, cpu=False,
+                 second_channel=False, num_tokens_in_trn=None, unk_idx=1) -> None:
+        """A word2vec style embedding module which maps a token to its embedding through looking up a pre-defined table.
 
-    def compute_mask(self, inputs, mask=None):
-        if not self.mask_zero:
-            return None
+        Args:
+            field: The field to work on. Usually some token fields.
+            embed: An ``Embedding`` layer.
+            word_dropout: The probability of randomly replacing a token with ``UNK``.
+            cpu: Reside on CPU instead of GPU.
+            second_channel: A trainable second channel for each token, which will be added to pretrained embeddings.
+            num_tokens_in_trn: The number of tokens in training set.
+            unk_idx: The index of ``UNK``.
+        """
+        super().__init__()
+        self.cpu = cpu
+        self.field = field
+        self.embed = embed
+        self.word_dropout = word_dropout
+        self.num_tokens_in_trn = num_tokens_in_trn
+        self.unk_idx = unk_idx
+        if second_channel:
+            n_words, n_embed = embed.weight.size()
+            if num_tokens_in_trn:
+                n_words = num_tokens_in_trn
+            second_channel = nn.Embedding(num_embeddings=n_words,
+                                          embedding_dim=n_embed)
+            nn.init.zeros_(second_channel.weight)
+        self.second_channel = second_channel
 
-        return math_ops.not_equal(inputs, self.vocab.pad_idx)
+    def forward(self, batch: dict, **kwargs):
+        x: torch.Tensor = batch[f'{self.field}_id']
+        if self.cpu:
+            device = x.device
+            x = x.cpu()
+        if self.word_dropout:
+            x = self.word_dropout(x)
+        if self.second_channel:
+            ext_mask = x.ge(self.second_channel.num_embeddings)
+            ext_words = x.masked_fill(ext_mask, self.unk_idx)
+            x = self.embed(x) + self.second_channel(ext_words)
+        else:
+            x = self.embed(x)
+        if self.cpu:
+            # noinspection PyUnboundLocalVariable
+            x = x.to(device)
+        return x
 
-    def call(self, inputs, **kwargs):
-        return self.array_ks(inputs, **kwargs)
+    @property
+    def embedding_dim(self) -> int:
+        return self.embed.embedding_dim
 
-    def compute_output_shape(self, input_shape):
-        return input_shape[0], self.dim
+    # noinspection PyMethodOverriding
+    # def to(self, device, **kwargs):
+    #     print(self.cpu)
+    #     exit(1)
+    #     if self.cpu:
+    #         return super(Word2VecEmbeddingModule, self).to(-1, **kwargs)
+    #     return super(Word2VecEmbeddingModule, self).to(device, **kwargs)
+
+    def _apply(self, fn):
+
+        if not self.cpu:  # This might block all fn not limiting to moving between devices.
+            return super(Word2VecEmbeddingModule, self)._apply(fn)
+
+
+class Word2VecEmbedding(Embedding, AutoConfigurable):
+    def __init__(self,
+                 field,
+                 embed: Union[int, str],
+                 extend_vocab=True,
+                 pad=None,
+                 unk=None,
+                 lowercase=False,
+                 trainable=False,
+                 second_channel=False,
+                 word_dropout: float = 0,
+                 normalize=False,
+                 cpu=False,
+                 init='zeros') -> None:
+        """A word2vec style embedding builder which maps a token to its embedding through looking up a pre-defined
+        table.
+
+        Args:
+            field: The field to work on. Usually some token fields.
+            embed: A path to pre-trained embedding file or an integer defining the size of randomly initialized
+                embedding.
+            extend_vocab: Unlock vocabulary of training set to add those tokens in pre-trained embedding file.
+            pad: The padding token.
+            unk: The unknown token.
+            lowercase: Convert words in pretrained embeddings into lowercase.
+            trainable: ``False`` to use static embeddings.
+            second_channel: A trainable second channel for each token, which will be added to pretrained embeddings.
+            word_dropout: The probability of randomly replacing a token with ``UNK``.
+            normalize: ``True`` or a method to normalize the embedding matrix.
+            cpu: Reside on CPU instead of GPU.
+            init: Indicate which initialization to use for oov tokens.
+        """
+        super().__init__()
+        self.pad = pad
+        self.second_channel = second_channel
+        self.cpu = cpu
+        self.normalize = normalize
+        self.word_dropout = word_dropout
+        self.init = init
+        self.lowercase = lowercase
+        self.unk = unk
+        self.extend_vocab = extend_vocab
+        self.trainable = trainable
+        self.embed = embed
+        self.field = field
+
+    def module(self, vocabs: VocabDict, **kwargs) -> Optional[nn.Module]:
+        vocab = vocabs[self.field]
+        num_tokens_in_trn = len(vocab)
+        embed = build_word2vec_with_vocab(self.embed,
+                                          vocab,
+                                          self.extend_vocab,
+                                          self.unk,
+                                          self.lowercase,
+                                          self.trainable,
+                                          normalize=self.normalize)
+        if self.word_dropout:
+            assert vocab.unk_token, f'unk_token of vocab {self.field} has to be set in order to ' \
+                                    f'make use of word_dropout'
+            padding = []
+            if vocab.pad_token:
+                padding.append(vocab.pad_idx)
+            word_dropout = WordDropout(self.word_dropout, vocab.unk_idx, exclude_tokens=padding)
+        else:
+            word_dropout = None
+        return Word2VecEmbeddingModule(self.field, embed, word_dropout=word_dropout, cpu=self.cpu,
+                                       second_channel=self.second_channel, num_tokens_in_trn=num_tokens_in_trn,
+                                       unk_idx=vocab.unk_idx)
+
+    def transform(self, vocabs: VocabDict = None, **kwargs) -> Optional[Callable]:
+        assert vocabs is not None
+        if self.field not in vocabs:
+            vocabs[self.field] = Vocab(pad_token=self.pad, unk_token=self.unk)
+        return super().transform(**kwargs)
+
+
+class GazetterTransform(object):
+    def __init__(self, field, words: dict) -> None:
+        super().__init__()
+        self.field = field
+        self.trie = Trie()
+        for word, idx in words.items():
+            self.trie[word] = idx
+
+    def __call__(self, sample: dict) -> dict:
+        tokens = sample[self.field]
+        lexicons = self.trie.parse(tokens)
+        skips_l2r = [[] for _ in range(len(tokens))]
+        skips_r2l = [[] for _ in range(len(tokens))]
+        for w, i, s, e in lexicons:
+            e = e - 1
+            skips_l2r[e].append((s, w, i))
+            skips_r2l[s].append((e, w, i))
+        for direction, value in zip(['skips_l2r', 'skips_r2l'], [skips_l2r, skips_r2l]):
+            sample[f'{self.field}_{direction}_offset'] = [list(map(lambda x: x[0], p)) for p in value]
+            sample[f'{self.field}_{direction}_id'] = [list(map(lambda x: x[-1], p)) for p in value]
+            sample[f'{self.field}_{direction}_count'] = list(map(len, value))
+        return sample
+
+
+class GazetteerEmbedding(Embedding, AutoConfigurable):
+    def __init__(self, embed: str, field='char', trainable=False) -> None:
+        self.trainable = trainable
+        self.embed = embed
+        self.field = field
+        vocab, matrix = load_word2vec_as_vocab_tensor(self.embed)
+        ids = []
+        _vocab = {}
+        for word, idx in vocab.items():
+            if len(word) > 1:
+                ids.append(idx)
+                _vocab[word] = len(_vocab)
+        ids = torch.tensor(ids)
+        _matrix = matrix.index_select(0, ids)
+        self._vocab = _vocab
+        self._matrix = _matrix
+
+    def transform(self, **kwargs) -> Optional[Callable]:
+        return GazetterTransform(self.field, self._vocab)
+
+    def module(self, **kwargs) -> Optional[nn.Module]:
+        embed = nn.Embedding.from_pretrained(self._matrix, freeze=not self.trainable)
+        return embed
 
     @staticmethod
-    def _load(path, vocab, normalize=False) -> Tuple[Vocab, Union[np.ndarray, None]]:
-        if not vocab:
-            vocab = Vocab()
-        if not path:
-            return vocab, None
-        assert vocab.unk_idx is not None
-
-        word2vec, dim = load_word2vec(path)
-        for word in word2vec:
-            vocab.get_idx(word)
-
-        pret_embs = np.zeros(shape=(len(vocab), dim), dtype=np.float32)
-        state = np.random.get_state()
-        np.random.seed(0)
-        bias = np.random.uniform(low=-0.001, high=0.001, size=dim).astype(dtype=np.float32)
-        scale = np.sqrt(3.0 / dim)
-        for word, idx in vocab.token_to_idx.items():
-            vec = word2vec.get(word, None)
-            if vec is None:
-                vec = word2vec.get(word.lower(), None)
-                # if vec is not None:
-                #     vec += bias
-            if vec is None:
-                # vec = np.random.uniform(-scale, scale, [dim])
-                vec = np.zeros([dim], dtype=np.float32)
-            pret_embs[idx] = vec
-        # noinspection PyTypeChecker
-        np.random.set_state(state)
-        return vocab, pret_embs
-
-    @property
-    def size(self):
-        if self.array_np is not None:
-            return self.array_np.shape[0]
-
-    @property
-    def dim(self):
-        if self.array_np is not None:
-            return self.array_np.shape[1]
-
-    @property
-    def shape(self):
-        if self.array_np is None:
-            return None
-        return self.array_np.shape
-
-    def get_vector(self, word: str) -> np.ndarray:
-        assert self.array_np is not None
-        return self.array_np[self.vocab.get_idx_without_add(word)]
-
-    def __getitem__(self, word: Union[str, List, tf.Tensor]) -> np.ndarray:
-        if isinstance(word, str):
-            return self.get_vector(word)
-        elif isinstance(word, list):
-            vectors = np.zeros(shape=(len(word), self.dim))
-            for idx, token in enumerate(word):
-                vectors[idx] = self.get_vector(token)
-            return vectors
-        elif isinstance(word, tf.Tensor):
-            if word.dtype == tf.string:
-                word_ids = self.vocab.token_to_idx_table.lookup(word)
-                return tf.nn.embedding_lookup(self.array_tf, word_ids)
-            elif word.dtype == tf.int32 or word.dtype == tf.int64:
-                return tf.nn.embedding_lookup(self.array_tf, word)
-
-
-@hanlp_register
-class Word2VecEmbedding(tf.keras.layers.Embedding):
-
-    def __init__(self, filepath: str = None, vocab: Vocab = None, expand_vocab=True, lowercase=True,
-                 input_dim=None, output_dim=None, unk=None, normalize=False,
-                 embeddings_initializer='VarianceScaling',
-                 embeddings_regularizer=None,
-                 activity_regularizer=None, embeddings_constraint=None, mask_zero=True, input_length=None,
-                 name=None, **kwargs):
-        filepath = get_resource(filepath)
-        word2vec, _output_dim = load_word2vec(filepath)
-        if output_dim:
-            assert output_dim == _output_dim, f'output_dim = {output_dim} does not match {filepath}'
-        output_dim = _output_dim
-        # if the `unk` token exists in the pretrained,
-        # then replace it with a self-defined one, usually the one in word vocab
-        if unk and unk in word2vec:
-            word2vec[vocab.safe_unk_token] = word2vec.pop(unk)
-        if vocab is None:
-            vocab = Vocab()
-            vocab.update(word2vec.keys())
-        if expand_vocab and vocab.mutable:
-            for word in word2vec:
-                vocab.get_idx(word.lower() if lowercase else word)
-        if input_dim:
-            assert input_dim == len(vocab), f'input_dim = {input_dim} does not match {filepath}'
-        input_dim = len(vocab)
-        # init matrix
-        self._embeddings_initializer = embeddings_initializer
-        embeddings_initializer = tf.keras.initializers.get(embeddings_initializer)
-        with tf.device('cpu:0'):
-            pret_embs = embeddings_initializer(shape=[input_dim, output_dim]).numpy()
-        # insert to pret_embs
-        for word, idx in vocab.token_to_idx.items():
-            vec = word2vec.get(word, None)
-            # Retry lower case
-            if vec is None and lowercase:
-                vec = word2vec.get(word.lower(), None)
-            if vec is not None:
-                pret_embs[idx] = vec
-        if normalize:
-            pret_embs /= np.std(pret_embs)
-        if not name:
-            name = os.path.splitext(os.path.basename(filepath))[0]
-        super().__init__(input_dim, output_dim, tf.keras.initializers.Constant(pret_embs), embeddings_regularizer,
-                         activity_regularizer, embeddings_constraint, mask_zero, input_length, name=name, **kwargs)
-        self.filepath = filepath
-        self.expand_vocab = expand_vocab
-        self.lowercase = lowercase
-
-    def get_config(self):
-        config = {
-            'filepath': self.filepath,
-            'expand_vocab': self.expand_vocab,
-            'lowercase': self.lowercase,
-        }
-        base_config = super(Word2VecEmbedding, self).get_config()
-        base_config['embeddings_initializer'] = self._embeddings_initializer
-        return dict(list(base_config.items()) + list(config.items()))
-
-
-@hanlp_register
-class StringWord2VecEmbedding(Word2VecEmbedding):
-
-    def __init__(self, filepath: str = None, vocab: Vocab = None, expand_vocab=True, lowercase=False, input_dim=None,
-                 output_dim=None, unk=None, normalize=False, embeddings_initializer='VarianceScaling',
-                 embeddings_regularizer=None, activity_regularizer=None, embeddings_constraint=None, mask_zero=True,
-                 input_length=None, name=None, **kwargs):
-        if vocab is None:
-            vocab = Vocab()
-        self.vocab = vocab
-        super().__init__(filepath, vocab, expand_vocab, lowercase, input_dim, output_dim, unk, normalize,
-                         embeddings_initializer, embeddings_regularizer, activity_regularizer, embeddings_constraint,
-                         mask_zero, input_length, name, **kwargs)
-
-    def call(self, inputs):
-        assert inputs.dtype == tf.string, \
-            f'Expect tf.string but got tf.{inputs.dtype.name}. {inputs}' \
-            f'Please pass tf.{inputs.dtype.name} in.'
-        inputs = self.vocab.lookup(inputs)
-        # inputs._keras_mask = tf.not_equal(inputs, self.vocab.pad_idx)
-        return super().call(inputs)
-
-    def compute_mask(self, inputs, mask=None):
-        if not self.mask_zero:
-            return None
-        return tf.not_equal(inputs, self.vocab.pad_token)
+    def _remove_short_tokens(word2vec):
+        word2vec = dict((w, v) for w, v in word2vec.items() if len(w) > 1)
+        return word2vec

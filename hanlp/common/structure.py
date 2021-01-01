@@ -1,99 +1,69 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-08-26 14:58
-import json
+from typing import Dict
 
-from hanlp.utils.io_util import save_json, save_pickle, load_pickle, load_json, filename_is_json
+from hanlp_common.configurable import Configurable
+from hanlp_common.reflection import classpath_of
+from hanlp_common.structure import SerializableDict
 
 
-class Serializable(object):
-    """
-    A super class for save/load operations.
-    """
+class ConfigTracker(Configurable):
 
-    def save(self, path, fmt=None):
-        if not fmt:
-            if filename_is_json(path):
-                self.save_json(path)
-            else:
-                self.save_pickle(path)
-        elif fmt in ['json', 'jsonl']:
-            self.save_json(path)
-        else:
-            self.save_pickle(path)
+    def __init__(self, locals_: Dict, exclude=('kwargs', 'self', '__class__', 'locals_')) -> None:
+        """This base class helps sub-classes to capture their arguments passed to ``__init__``, and also their types so
+        that they can be deserialized from a config in dict form.
 
-    def load(self, path, fmt=None):
-        if not fmt:
-            if filename_is_json(path):
-                self.load_json(path)
-            else:
-                self.load_pickle(path)
-        elif fmt in ['json', 'jsonl']:
-            self.load_json(path)
-        else:
-            self.load_pickle(path)
+        Args:
+            locals_: Obtained by :meth:`locals`.
+            exclude: Arguments to be excluded.
 
-    def save_pickle(self, path):
-        """Save to path
+        Examples:
+            >>> class MyClass(ConfigTracker):
+            >>>     def __init__(self, i_need_this='yes') -> None:
+            >>>         super().__init__(locals())
+            >>> obj = MyClass()
+            >>> print(obj.config)
+            {'i_need_this': 'yes', 'classpath': 'test_config_tracker.MyClass'}
 
-        Parameters
-        ----------
-        path : str
-            file path
         """
-        save_pickle(self, path)
+        if 'kwargs' in locals_:
+            locals_.update(locals_['kwargs'])
+        self.config = SerializableDict(
+            (k, v.config if hasattr(v, 'config') else v) for k, v in locals_.items() if k not in exclude)
+        self.config['classpath'] = classpath_of(self)
 
-    def load_pickle(self, path):
-        """Load from path
 
-        Parameters
-        ----------
-        path : str
-            file path
-
-        Returns
-        -------
-        Serializable
-            An object
+class History(object):
+    def __init__(self):
+        """ A history of training context. It records how many steps have passed and provides methods to decide whether
+        an update should be performed, and to caculate number of training steps given dataloader size and
+        ``gradient_accumulation``.
         """
-        item = load_pickle(path)
-        return self.copy_from(item)
+        self.num_mini_batches = 0
 
-    def save_json(self, path):
-        save_json(self.to_dict(), path)
+    def step(self, gradient_accumulation):
+        """ Whether the training procedure should perform an update.
 
-    def load_json(self, path):
-        item = load_json(path)
-        return self.copy_from(item)
+        Args:
+            gradient_accumulation: Number of batches per update.
 
-    # @abstractmethod
-    def copy_from(self, item):
-        self.__dict__ = item.__dict__
-        # raise NotImplementedError('%s.%s()' % (self.__class__.__name__, inspect.stack()[0][3]))
+        Returns:
+            bool: ``True`` to update.
+        """
+        self.num_mini_batches += 1
+        return self.num_mini_batches % gradient_accumulation == 0
 
-    def to_json(self, ensure_ascii=False, indent=2) -> str:
-        return json.dumps(self, ensure_ascii=ensure_ascii, indent=indent, default=lambda o: repr(o))
+    def num_training_steps(self, num_batches, gradient_accumulation):
+        """ Caculate number of training steps.
 
-    def to_dict(self) -> dict:
-        return self.__dict__
+        Args:
+            num_batches: Size of dataloader.
+            gradient_accumulation: Number of batches per update.
 
+        Returns:
 
-class SerializableDict(Serializable, dict):
-
-    def save_json(self, path):
-        save_json(self, path)
-
-    def copy_from(self, item):
-        if isinstance(item, dict):
-            self.clear()
-            self.update(item)
-
-    def __getattr__(self, key):
-        if key.startswith('__'):
-            return dict.__getattr__(key)
-        return self.__getitem__(key)
-
-    def __setattr__(self, key, value):
-        return self.__setitem__(key, value)
-
-
+        """
+        return len(
+            [i for i in range(self.num_mini_batches + 1, self.num_mini_batches + num_batches + 1) if
+             i % gradient_accumulation == 0])
