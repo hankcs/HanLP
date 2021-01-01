@@ -51,3 +51,11 @@ environment variable and HanLP will pick it up at the next startup.
 export HANLP_URL=http://mirrors-hk.miduchina.com/hanlp/
 ```
 
+## Control Verbosity
+
+By default, HanLP will print progressive message to console when you load a model. If you want to silence it, use the 
+following environment variable.
+
+```bash
+export HANLP_VERBOSE=0
+```

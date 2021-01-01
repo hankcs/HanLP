@@ -53,7 +53,7 @@ print(HanLP('In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techn
             '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。' \
             '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。'))
 ```
-````{margin} **But what does these annotations mean?**
+````{margin} **But what do these annotations mean?**
 ```{seealso}
 See our [data format](data_format) and [annotations](annotations/index) for details.
 ```
@@ -63,8 +63,8 @@ See our [data format](data_format) and [annotations](annotations/index) for deta
 ## Visualization
 
 ```{eval-rst}
-:class:`~hanlp_common.document.Document` has a handy method :meth:`~hanlp_common.document.Document.pretty_print` 
-which offsers visualization in any mono-width text environment. 
+The returned :class:`~hanlp_common.document.Document` has a handy method :meth:`~hanlp_common.document.Document.pretty_print` 
+which offers visualization in any mono-width text environment. 
 ```
 
 ````{margin} **Non-ASCII**
