@@ -10,7 +10,7 @@ For end users, HanLP offers light-weighted RESTful APIs and native Python APIs.
 
 ## RESTful APIs
 
-Tiny packages in several KBs for agile development and mobile applications. An auth key is required and [a free one can be applied here](https://bbs.hankcs.com/t/apply-for-free-hanlp-restful-apis/3178) under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
+Tiny packages in several KBs for agile development and mobile applications. An auth key is required and [a free one can be applied here](https://bbs.hankcs.com/t/apply-for-free-hanlp-restful-apis/3178) under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
 
  ### Python
 

@@ -86,9 +86,6 @@ HanLP('In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques 
 If you want to run our models locally or you want to implement your own RESTful server, you can call the native API
 and it behaves just like a RESTful one.
 
-```{eval-rst}
-Then initiate a :class:`~hanlp_restful.HanLPClient` with your auth key and send a document to have it parsed.
-```
 ````{margin} **Sentences Required**
 ```{seealso}
 As MTL doesn't predict sentence boundaries, inputs have to be split beforehand. 

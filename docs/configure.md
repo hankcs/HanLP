@@ -2,7 +2,10 @@
 
 ## Customize ``HANLP_HOME``
 
- `HANLP_HOME`  is an environment variable which you can customize to any path you like. By default, `HANLP_HOME` resolves to `~/.hanlp` and `%appdata%\hanlp` on *nix and Windows respectively. If you want to temporally redirect `HANLP_HOME` to a different location, say `/data/hanlp`, the following shell command can be very helpful.
+All resources HanLP use will be cached into a directory called `HANLP_HOME`. 
+It is an environment variable which you can customize to any path you like. 
+By default, `HANLP_HOME` resolves to `~/.hanlp` and `%appdata%\hanlp` on *nix and Windows respectively. 
+If you want to temporally redirect `HANLP_HOME` to a different location, say `/data/hanlp`, the following shell command can be very helpful.
 
 ```bash
 export HANLP_HOME=/data/hanlp
