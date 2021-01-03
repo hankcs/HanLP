@@ -45,7 +45,7 @@ curl -X POST "https://hanlp.hankcs.com/api/parse" \
 ### Model Input
 
 The input format to models is specified per model and per tasks. Generally speaking, if a model has no tokenizer built in, then its input is
-a sentence in `list[str]` form, or multiple such sentences nested in a `list`.
+a sentence in `list[str]` form (a list of tokens), or multiple such sentences nested in a `list`.
 
 If a model has a tokenizer built in, each sentence is in `str` form. 
 Additionally, you can use `skip_tasks='tok*'` to ask the model to use your tokenized inputs instead of tokenizing 

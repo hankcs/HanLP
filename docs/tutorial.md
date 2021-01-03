@@ -18,7 +18,7 @@ Natural Language Processing is an exciting field consists of many closely relate
 and parsing. Each task involves many datasets and models, both requiring a high degree of expertise. 
 Things get even more complex when dealing with multilingual text, as there's simply no datasets for some 
 low-resource languages. However, with HanLP 2.1, core NLP tasks have been made easy to access and efficient in 
-production environment. In this tutorial, we'll walk through the APIs in HanLP step by step. 
+production environments. In this tutorial, we'll walk through the APIs in HanLP step by step. 
 
 HanLP offers out-of-the-box RESTful API and native Python API which shares very similar interfaces 
 while they are designed for different scenes.
@@ -49,7 +49,7 @@ Then initiate a :class:`~hanlp_restful.HanLPClient` with your auth key and send 
 from hanlp_restful import HanLPClient
 HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul')  # Fill in your auth
 
-print(HanLP('In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environment. ' \
+print(HanLP('In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environments. ' \
             '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。' \
             '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。'))
 ```
@@ -76,7 +76,7 @@ Non-ASCII text might screw in which case copying it into a `.tsv` editor will al
 ```{code-cell} ipython3
 from hanlp_restful import HanLPClient
 HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul')  # Fill in your auth
-HanLP('In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environment. ' \
+HanLP('In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environments. ' \
       '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。' \
       '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。').pretty_print()
 ```
@@ -97,7 +97,7 @@ See our [data format](data_format) for details.
 :tags: [output_scroll]
 import hanlp
 HanLP = hanlp.load(hanlp.pretrained.mtl.UD_ONTONOTES_TOK_POS_LEM_FEA_NER_SRL_DEP_SDP_CON_XLMR_BASE)
-print(HanLP(['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environment.',
+print(HanLP(['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environments.',
             '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。',
             '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。']))
 ```
