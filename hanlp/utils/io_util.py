@@ -407,7 +407,7 @@ def human_bytes(file_size: int) -> str:
     return '%d KB' % file_size
 
 
-def read_cells(filepath: str, delimiter='auto', strip=True, skip_first_line=False):
+def read_cells(filepath: str, delimiter='auto', strip=True, skip_header=False):
     filepath = get_resource(filepath)
     if delimiter == 'auto':
         if filepath.endswith('.tsv'):
@@ -417,7 +417,7 @@ def read_cells(filepath: str, delimiter='auto', strip=True, skip_first_line=Fals
         else:
             delimiter = None
     with open(filepath, encoding='utf-8') as src:
-        if skip_first_line:
+        if skip_header:
             next(src)
         for line in src:
             line = line.strip()
