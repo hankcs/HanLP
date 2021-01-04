@@ -4,6 +4,7 @@
 import functools
 import itertools
 import logging
+import os
 from collections import defaultdict
 from copy import copy
 from typing import Union, List, Callable, Dict, Optional, Any, Iterable, Tuple, Set
@@ -162,8 +163,11 @@ class MultiTaskLearning(TorchComponent):
             #     logger.info(f'Pruned [yellow]{num_pruned} ({num_pruned / size_before:.1%})[/yellow] '
             #                 f'samples out of {size_before}.')
             if cache:
-                task_dataloader: CachedDataLoader = CachedDataLoader(task_dataloader)
-                task_dataloader.build()
+                task_dataloader: CachedDataLoader = CachedDataLoader(
+                    task_dataloader,
+                    f'{cache}/{os.getpid()}-{data}-{task_name.replace("/", "-")}-cache.pt' if isinstance(cache,
+                                                                                                         str) else None
+                )
             dataloader.dataloaders[task_name] = task_dataloader
         if data == 'trn':
             sampling_weights, total_size = dataloader.sampling_weights

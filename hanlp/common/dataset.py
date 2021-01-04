@@ -4,8 +4,7 @@
 import math
 import os
 import random
-import shutil
-import time
+import tempfile
 import warnings
 from abc import ABC, abstractmethod
 from copy import copy
@@ -14,19 +13,18 @@ from typing import Union, List, Callable, Iterable, Dict
 
 import torch
 import torch.multiprocessing as mp
-from hanlp.utils.time_util import now_filename, CountdownTimer
-from torch.nn.utils.rnn import pad_sequence
-from torch.utils.data import Dataset, DataLoader, Sampler
-from torch.utils.data.dataset import IterableDataset
-
-from hanlp_common.constant import IDX, HANLP_VERBOSE
-from hanlp_common.configurable import AutoConfigurable
 from hanlp.common.transform import TransformList, VocabDict, EmbeddingNamedTransform
 from hanlp.common.vocab import Vocab
 from hanlp.components.parsers.alg import kmeans
-from hanlp.utils.io_util import read_cells, get_resource, tempdir
+from hanlp.utils.io_util import read_cells, get_resource
+from hanlp.utils.time_util import CountdownTimer
 from hanlp.utils.torch_util import dtype_of
+from hanlp_common.configurable import AutoConfigurable
+from hanlp_common.constant import IDX, HANLP_VERBOSE
 from hanlp_common.util import isdebugging, merge_list_of_dict, k_fold
+from torch.nn.utils.rnn import pad_sequence
+from torch.utils.data import Dataset, DataLoader, Sampler
+from torch.utils.data.dataset import IterableDataset
 
 
 class Transformable(ABC):
@@ -506,34 +504,34 @@ class PadSequenceDataLoader(DataLoader):
         return merge_list_of_dict(samples)
 
 
-class CachedDataLoader(DataLoader):
-    def __init__(self, dataloader: torch.utils.data.DataLoader, root_dir=None):
-        super().__init__(dataset=dataloader)
-        if not root_dir:
-            root_dir = tempdir(f'hanlp_{os.getpid()}_{time.time()}')
-        self.root_dir = root_dir
+class CachedDataLoader(object):
+    def __init__(self, dataloader: torch.utils.data.DataLoader, filename=None):
+        if not filename:
+            filename = tempfile.NamedTemporaryFile(prefix='hanlp-cache-', delete=False).name
+        self.filename = filename
         self.size = len(dataloader)
+        self._build_cache(dataloader)
 
-    def build(self, del_dataloader_in_memory=True, verbose=HANLP_VERBOSE):
+    def _build_cache(self, dataset, verbose=HANLP_VERBOSE):
         timer = CountdownTimer(self.size)
-        for i, batch in enumerate(self.dataset):
-            filename = self._filename(i)
-            torch.save(batch, filename)
-            if verbose:
-                timer.log(f'Caching {filename} [blink][yellow]...[/yellow][/blink]')
-        if del_dataloader_in_memory:
-            del self.dataset
+        with open(self.filename, "wb") as f:
+            for i, batch in enumerate(dataset):
+                torch.save(batch, f, _use_new_zipfile_serialization=False)
+                if verbose:
+                    timer.log(f'Caching {self.filename} [blink][yellow]...[/yellow][/blink]')
 
     def close(self):
-        shutil.rmtree(self.root_dir)
-
-    def _filename(self, index: int):
-        return f'{self.root_dir}/{index}.pt'
+        if os.path.isfile(self.filename):
+            os.remove(self.filename)
 
     def __iter__(self):
-        for i in range(self.size):
-            batch = torch.load(self._filename(i))
-            yield batch
+        with open(self.filename, "rb") as f:
+            for i in range(self.size):
+                batch = torch.load(f)
+                yield batch
+
+    def __len__(self):
+        return self.size
 
 
 def _prefetch_generator(dataloader, queue, batchify=None):
