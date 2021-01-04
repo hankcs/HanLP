@@ -15,7 +15,7 @@ from toposort import toposort
 from torch.utils.data import DataLoader
 
 from hanlp_common.constant import IDX, BOS, EOS
-from hanlp.common.dataset import PadSequenceDataLoader, PrefetchDataLoader
+from hanlp.common.dataset import PadSequenceDataLoader, PrefetchDataLoader, CachedDataLoader
 from hanlp_common.document import Document
 from hanlp.common.structure import History
 from hanlp.common.torch_component import TorchComponent
@@ -121,6 +121,7 @@ class MultiTaskLearning(TorchComponent):
                          prune=None,
                          prefetch=None,
                          tasks_need_custom_eval=None,
+                         cache=False,
                          debug=False,
                          **kwargs) -> DataLoader:
         dataloader = MultiTaskDataLoader(training=shuffle, tau=tau)
@@ -160,6 +161,9 @@ class MultiTaskLearning(TorchComponent):
             #     num_pruned = size_before - size_after
             #     logger.info(f'Pruned [yellow]{num_pruned} ({num_pruned / size_before:.1%})[/yellow] '
             #                 f'samples out of {size_before}.')
+            if cache:
+                task_dataloader: CachedDataLoader = CachedDataLoader(task_dataloader)
+                task_dataloader.build()
             dataloader.dataloaders[task_name] = task_dataloader
         if data == 'trn':
             sampling_weights, total_size = dataloader.sampling_weights
@@ -181,8 +185,9 @@ class MultiTaskLearning(TorchComponent):
             rows[longest + 2] = '|'.join(cells)
             logger.info(f'[bold][yellow]{"Samples Distribution": ^{len(rows[0])}}[/yellow][/bold]')
             logger.info('\n'.join(rows))
-        if prefetch and isinstance(data, str) and (data == 'trn' or not tasks_need_custom_eval):
-            dataloader = PrefetchDataLoader(dataloader, prefetch=prefetch)
+        if isinstance(data, str):
+            if prefetch and (data == 'trn' or not tasks_need_custom_eval):
+                dataloader = PrefetchDataLoader(dataloader, prefetch=prefetch)
 
         return dataloader
 
@@ -292,12 +297,22 @@ class MultiTaskLearning(TorchComponent):
                     break
             timer.log(report, ratio_percentage=False, newline=True, ratio=False)
         for d in [trn, dev]:
-            if isinstance(d, PrefetchDataLoader):
-                d.close()
+            self._close_dataloader(d)
         if best_epoch != epoch:
             logger.info(f'Restoring best model saved [red]{epoch - best_epoch}[/red] epochs ago')
             self.load_weights(save_dir)
         return best_metric
+
+    def _close_dataloader(self, d):
+        if isinstance(d, PrefetchDataLoader):
+            d.close()
+            if hasattr(d.dataset, 'close'):
+                self._close_dataloader(d.dataset)
+        elif isinstance(d, CachedDataLoader):
+            d.close()
+        elif isinstance(d, MultiTaskDataLoader):
+            for d in d.dataloaders.values():
+                self._close_dataloader(d)
 
     # noinspection PyMethodOverriding
     def fit_dataloader(self,
@@ -598,6 +613,7 @@ class MultiTaskLearning(TorchComponent):
             prefetch=None,
             tasks_need_custom_eval=None,
             _device_placeholder=False,
+            cache=False,
             devices=None,
             logger=None,
             seed=None,
@@ -714,8 +730,7 @@ class MultiTaskLearning(TorchComponent):
     def evaluate(self, save_dir=None, logger: logging.Logger = None, batch_size=None, output=False, **kwargs):
         rets = super().evaluate('tst', save_dir, logger, batch_size, output, **kwargs)
         tst = rets[-1]
-        if isinstance(tst, PrefetchDataLoader):
-            tst.close()
+        self._close_dataloader(tst)
         return rets
 
     def save_vocabs(self, save_dir, filename='vocabs.json'):
