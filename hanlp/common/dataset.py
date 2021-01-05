@@ -713,8 +713,8 @@ class SortingSampler(Sampler):
             self.batch_indices.append(mini_batch)
 
     def __iter__(self):
-        # if self.shuffle:
-        #     random.shuffle(self.batch_indices)
+        if self.shuffle:
+            random.shuffle(self.batch_indices)
         for batch in self.batch_indices:
             yield batch
 
