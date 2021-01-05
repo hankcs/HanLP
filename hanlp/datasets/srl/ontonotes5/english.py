@@ -1,28 +1,46 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2020-12-25 18:48
-import glob
-import os
-
-from hanlp.utils.io_util import get_resource, merge_files
-
-_CONLL2012_EN_HOME = 'https://github.com/yuchenlin/OntoNotes-5.0-NER-BIO/archive/master.zip#conll-formatted-ontonotes-5.0/data'
-# These are v4 of OntoNotes, in .conll format
-CONLL2012_EN_TRAIN = _CONLL2012_EN_HOME + '/train/data/english/annotations'
-CONLL2012_EN_DEV = _CONLL2012_EN_HOME + '/development/data/english/annotations'
-CONLL2012_EN_TEST = _CONLL2012_EN_HOME + '/conll-2012-test/data/english/annotations'
 
 
-def conll_2012_en_combined():
-    home = get_resource(_CONLL2012_EN_HOME)
-    outputs = ['train', 'dev', 'test']
-    for i in range(len(outputs)):
-        outputs[i] = f'{home}/conll12_en/{outputs[i]}.conll'
-    if all(os.path.isfile(x) for x in outputs):
-        return outputs
-    os.makedirs(os.path.dirname(outputs[0]), exist_ok=True)
-    for in_path, out_path in zip([CONLL2012_EN_TRAIN, CONLL2012_EN_DEV, CONLL2012_EN_TEST], outputs):
-        in_path = get_resource(in_path)
-        files = sorted(glob.glob(f'{in_path}/**/*gold_conll', recursive=True))
-        merge_files(files, out_path)
-    return outputs
+from urllib.error import HTTPError
+
+from hanlp.datasets.srl.ontonotes5 import ONTONOTES5_HOME, CONLL12_HOME
+from hanlp.datasets.srl.ontonotes5._utils import make_gold_conll, make_ontonotes_language_jsonlines, \
+    batch_make_ner_tsv_if_necessary
+from hanlp.utils.io_util import get_resource, path_from_url
+from hanlp.utils.log_util import cprint
+
+_ONTONOTES5_ENGLISH_HOME = ONTONOTES5_HOME + 'files/data/english/'
+_ONTONOTES5_CONLL12_ENGLISH_HOME = CONLL12_HOME + 'english/'
+ONTONOTES5_CONLL12_ENGLISH_TRAIN = _ONTONOTES5_CONLL12_ENGLISH_HOME + 'train.english.conll12.jsonlines'
+'''Training set of English OntoNotes5 used in CoNLL12 (:cite:`pradhan-etal-2012-conll`).'''
+ONTONOTES5_CONLL12_ENGLISH_DEV = _ONTONOTES5_CONLL12_ENGLISH_HOME + 'development.english.conll12.jsonlines'
+'''Dev set of English OntoNotes5 used in CoNLL12 (:cite:`pradhan-etal-2012-conll`).'''
+ONTONOTES5_CONLL12_ENGLISH_TEST = _ONTONOTES5_CONLL12_ENGLISH_HOME + 'test.english.conll12.jsonlines'
+'''Test set of English OntoNotes5 used in CoNLL12 (:cite:`pradhan-etal-2012-conll`).'''
+
+ONTONOTES5_CONLL12_NER_ENGLISH_TRAIN = _ONTONOTES5_CONLL12_ENGLISH_HOME + 'train.english.conll12.ner.tsv'
+'''Training set of English OntoNotes5 used in CoNLL12 (:cite:`pradhan-etal-2012-conll`).'''
+ONTONOTES5_CONLL12_NER_ENGLISH_DEV = _ONTONOTES5_CONLL12_ENGLISH_HOME + 'development.english.conll12.ner.tsv'
+'''Dev set of English OntoNotes5 used in CoNLL12 (:cite:`pradhan-etal-2012-conll`).'''
+ONTONOTES5_CONLL12_NER_ENGLISH_TEST = _ONTONOTES5_CONLL12_ENGLISH_HOME + 'test.english.conll12.ner.tsv'
+'''Test set of English OntoNotes5 used in CoNLL12 (:cite:`pradhan-etal-2012-conll`).'''
+
+try:
+    get_resource(ONTONOTES5_HOME, verbose=False)
+except HTTPError:
+    intended_file_path = path_from_url(ONTONOTES5_HOME)
+    cprint('Ontonotes 5.0 is a [red][bold]copyright[/bold][/red] dataset owned by LDC which we cannot re-distribute. '
+           f'Please apply for a licence from LDC (https://catalog.ldc.upenn.edu/LDC2016T13) '
+           f'then download it to {intended_file_path}')
+    exit(1)
+
+try:
+    get_resource(ONTONOTES5_CONLL12_ENGLISH_TRAIN, verbose=False)
+except HTTPError:
+    make_gold_conll(ONTONOTES5_HOME + '..', 'english')
+    make_ontonotes_language_jsonlines(CONLL12_HOME + 'v4', language='english')
+
+batch_make_ner_tsv_if_necessary(
+    [ONTONOTES5_CONLL12_ENGLISH_TRAIN, ONTONOTES5_CONLL12_ENGLISH_DEV, ONTONOTES5_CONLL12_ENGLISH_TEST])

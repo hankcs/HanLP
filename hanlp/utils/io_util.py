@@ -206,7 +206,6 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             eprint()
         except BaseException as e:
             remove_file(tmp_path)
-            hints_for_download = ''
             url = url.split('#')[0]
             if not windows():
                 hints_for_download = f'e.g. \nwget {url} -O {save_path}\n'
@@ -218,9 +217,10 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             installed_version, latest_version = check_outdated()
             if installed_version != latest_version:
                 hints_for_download += f'Or upgrade to the latest version({latest_version}):\npip install -U hanlp'
-            eprint(f'Download failed due to {repr(e)}. Please download it to {save_path} by yourself. '
-                   f'{hints_for_download}')
-            exit(1)
+            if verbose:
+                eprint(f'Download failed due to {repr(e)}. Please download it to {save_path} by yourself. '
+                       f'{hints_for_download}')
+            raise e
         remove_file(save_path)
         os.rename(tmp_path, save_path)
     return save_path
@@ -344,7 +344,10 @@ def get_resource(path: str, save_dir=hanlp_home(), extract=True, prefix=HANLP_UR
                 # indicates the folder name has to be polished
                 anchor = anchor.lstrip('/')
                 parts = anchor.split('/')
-                realpath = str(Path(realpath).parent.joinpath(parts[0]))
+                renamed_realpath = str(Path(realpath).parent.joinpath(parts[0]))
+                if os.path.isfile(realpath + compressed):
+                    os.rename(realpath + compressed, renamed_realpath + compressed)
+                realpath = renamed_realpath
                 anchor = '/'.join(parts[1:])
             child = path_join(realpath, anchor)
             if os.path.exists(child):
