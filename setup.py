@@ -40,7 +40,7 @@ setup(
         'alnlp',
         'penman==0.6.2',
         'toposort==1.5',
-        'transformers',
+        'transformers>=4.1.1',
         'torch>=1.6.0',
         'hanlp-common',
         'hanlp-trie',
