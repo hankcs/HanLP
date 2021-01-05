@@ -307,22 +307,22 @@ def split_if_compressed(path: str, compressed_ext=('.zip', '.tgz', '.gz', 'bz2',
     return path, None
 
 
-def get_resource(path: str, save_dir=None, extract=True, prefix=HANLP_URL, append_location=True, verbose=HANLP_VERBOSE):
-    """Fetch real path for a resource (model, corpus, whatever) to :meth:`hanlp.utils.io_util.hanlp_home`.
+def get_resource(path: str, save_dir=hanlp_home(), extract=True, prefix=HANLP_URL, append_location=True,
+                 verbose=HANLP_VERBOSE):
+    """Fetch real (local) path for a resource (model, corpus, whatever) to ``save_dir``.
 
     Args:
-      path: the general path (can be a url or a real path)
-      extract: whether to unzip it if it's a zip file (Default value = True)
-      save_dir: return: the real path to the resource (Default value = None)
       path: A local path (which will returned as is) or a remote URL (which will be downloaded, decompressed then
         returned).
-      prefix: A prefix when matched with an URL (path), then that URL is considered to official. For official resources,
-        they will not go to a folder called ``thirdparty`` under :const:`~hanlp_common.constants.IDX`.
+      save_dir: Where to store the resource (Default value = :meth:`hanlp.utils.io_util.hanlp_home`)
+      extract: Whether to unzip it if it's a zip file (Default value = True)
+      prefix: A prefix when matched with an URL (path), then that URL is considered to be official. For official
+        resources, they will not go to a folder called ``thirdparty`` under :const:`~hanlp_common.constants.IDX`.
       append_location:  (Default value = True)
-      verbose: Whether print log messages.
+      verbose: Whether to print log messages.
 
     Returns:
-      the real path to the resource
+      The real path to the resource.
 
     """
     path = hanlp.pretrained.ALL.get(path, path)
