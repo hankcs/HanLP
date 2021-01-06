@@ -6,12 +6,12 @@ import json
 import os
 import re
 import sys
-import shutil
-from hanlp.utils.io_util import merge_files, get_resource, pushd, run_cmd
-from hanlp_common.io import eprint
 from pprint import pprint
 
+from hanlp.datasets.parsing._ctb_utils import remove_all_ec, convert_to_stanford_dependency_330
+from hanlp.utils.io_util import merge_files, get_resource, pushd, run_cmd, read_tsv_as_sents, replace_ext
 from hanlp.utils.log_util import flash
+from hanlp_common.io import eprint
 
 BEGIN_DOCUMENT_REGEX = re.compile(r"#begin document \((.*)\); part (\d+)")
 
@@ -435,6 +435,87 @@ def make_ner_tsv_if_necessary(json_file):
 def batch_make_ner_tsv_if_necessary(json_files):
     for each in json_files:
         make_ner_tsv_if_necessary(each)
+
+
+def make_pos_tsv_if_necessary(json_file):
+    json_file = get_resource(json_file)
+    output_file = os.path.splitext(json_file)[0] + '.pos.tsv'
+    if not os.path.isfile(output_file):
+        make_pos_tsv(json_file, output_file)
+    return output_file
+
+
+def make_pos_tsv(json_file, output_file):
+    with open(json_file) as src, open(output_file, 'w', encoding='utf-8') as out:
+        for line in src:
+            doc = json.loads(line)
+            for sent, pos in zip(doc['sentences'], doc['pos']):
+                for token, tag in zip(sent, pos):
+                    out.write(f'{token}\t{tag}\n')
+                out.write('\n')
+
+
+def batch_make_pos_tsv_if_necessary(json_files):
+    for each in json_files:
+        make_pos_tsv_if_necessary(each)
+
+
+def make_con_txt(conll_file, output_file):
+    with open(output_file, 'w') as out:
+        for sent in read_tsv_as_sents(conll_file):
+            tree = []
+            pos_per_sent = []
+            for cell in sent:
+                if cell[0] == '#begin' or cell[0] == '#end':
+                    continue
+                if len(cell) < 8:
+                    print(cell)
+                filename, sentence_id, token_id, word, POS, parse, framefile, roleset, *_ = cell
+                parse = parse.replace('*', f'({POS} {word})')
+                tree.append(parse)
+                pos_per_sent.append(POS)
+            bracketed = ' '.join(tree)
+            out.write(bracketed)
+            out.write('\n')
+
+
+def make_con_txt_if_necessary(json_file):
+    json_file = get_resource(json_file)
+    output_file = os.path.splitext(json_file)[0] + '.con.txt'
+    if not os.path.isfile(output_file):
+        make_con_txt(json_file, output_file)
+    return output_file
+
+
+def batch_make_con_txt_if_necessary(json_files):
+    for each in json_files:
+        make_con_txt_if_necessary(each)
+
+
+def batch_remove_empty_category_if_necessary(json_files):
+    for each in json_files:
+        src = get_resource(each)
+        dst = replace_ext(src, '.noempty.txt')
+        if not os.path.isfile(dst):
+            remove_all_ec(src)
+
+
+def make_dep_conllx(con_txt_file, output_file, language='en'):
+    con_txt_file = get_resource(con_txt_file)
+    convert_to_stanford_dependency_330(con_txt_file, output_file, language=language)
+
+
+def make_dep_conllx_if_necessary(con_txt_file: str, language='en'):
+    con_txt_file = get_resource(con_txt_file)
+    output_file = con_txt_file.replace('.con.txt', '.dep.conllx', 1)
+    if os.path.isfile(output_file):
+        return
+    make_dep_conllx(con_txt_file, output_file, language)
+
+
+def batch_make_dep_conllx_if_necessary(con_txt_files, language='en'):
+    for each in con_txt_files:
+        make_dep_conllx_if_necessary(each, language)
 
 
 def main():

@@ -73,14 +73,16 @@ from hanlp.utils.time_util import CountdownTimer
 # _make_splits(CTB9_ACADEMIA_SPLITS)
 
 
-def convert_to_stanford_dependency_330(src, dst):
+def convert_to_stanford_dependency_330(src, dst, language='zh'):
     cprint(f'Converting {os.path.basename(src)} to {os.path.basename(dst)} using Stanford Parser Version 3.3.0. '
            f'It might take a while [blink][yellow]...[/yellow][/blink]')
     sp_home = 'https://nlp.stanford.edu/software/stanford-parser-full-2013-11-12.zip'
     sp_home = get_resource(sp_home)
     # jar_path = get_resource(f'{sp_home}#stanford-parser.jar')
+    jclass = 'edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructure' if language == 'zh' \
+        else 'edu.stanford.nlp.trees.EnglishGrammaticalStructure'
     code, out, err = get_exitcode_stdout_stderr(
-        f'java -cp {sp_home}/* edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructure '
+        f'java -cp {sp_home}/* {jclass} '
         f'-basic -keepPunct -conllx '
         f'-treeFile {src}')
     with open(dst, 'w') as f:

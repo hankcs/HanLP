@@ -7,7 +7,8 @@ import shutil
 
 from hanlp.datasets.srl.ontonotes5 import ONTONOTES5_HOME, CONLL12_HOME
 from hanlp.datasets.srl.ontonotes5._utils import make_gold_conll, make_ontonotes_language_jsonlines, \
-    batch_make_ner_tsv_if_necessary
+    batch_make_ner_tsv_if_necessary, batch_make_pos_tsv_if_necessary, batch_make_con_txt_if_necessary, \
+    batch_make_dep_conllx_if_necessary
 from hanlp.utils.io_util import get_resource, path_from_url
 from hanlp.utils.log_util import cprint, flash
 
@@ -26,6 +27,35 @@ ONTONOTES5_CONLL12_NER_CHINESE_DEV = _ONTONOTES5_CONLL12_CHINESE_HOME + 'develop
 '''Dev set of OntoNotes5 used in CoNLL12 (:cite:`pradhan-etal-2012-conll`).'''
 ONTONOTES5_CONLL12_NER_CHINESE_TEST = _ONTONOTES5_CONLL12_CHINESE_HOME + 'test.chinese.conll12.ner.tsv'
 '''Test set of OntoNotes5 used in CoNLL12 (:cite:`pradhan-etal-2012-conll`).'''
+
+ONTONOTES5_CHINESE_TRAIN = _ONTONOTES5_CONLL12_CHINESE_HOME + 'train.chinese.v4.jsonlines'
+ONTONOTES5_CHINESE_DEV = _ONTONOTES5_CONLL12_CHINESE_HOME + 'development.chinese.v4.jsonlines'
+ONTONOTES5_CHINESE_TEST = _ONTONOTES5_CONLL12_CHINESE_HOME + 'test.chinese.v4.jsonlines'
+
+ONTONOTES5_CONLL_CHINESE_TRAIN = _ONTONOTES5_CONLL12_CHINESE_HOME + 'train.chinese.v4_gold_conll'
+ONTONOTES5_CONLL_CHINESE_DEV = _ONTONOTES5_CONLL12_CHINESE_HOME + 'development.chinese.v4_gold_conll'
+ONTONOTES5_CONLL_CHINESE_TEST = _ONTONOTES5_CONLL12_CHINESE_HOME + 'test.chinese.v4_gold_conll'
+
+ONTONOTES5_POS_CHINESE_TRAIN = _ONTONOTES5_CONLL12_CHINESE_HOME + 'train.chinese.v4.pos.tsv'
+ONTONOTES5_POS_CHINESE_DEV = _ONTONOTES5_CONLL12_CHINESE_HOME + 'development.chinese.v4.pos.tsv'
+ONTONOTES5_POS_CHINESE_TEST = _ONTONOTES5_CONLL12_CHINESE_HOME + 'test.chinese.v4.pos.tsv'
+
+ONTONOTES5_CON_CHINESE_TRAIN = _ONTONOTES5_CONLL12_CHINESE_HOME + 'train.chinese.con.txt'
+ONTONOTES5_CON_CHINESE_DEV = _ONTONOTES5_CONLL12_CHINESE_HOME + 'development.chinese.con.txt'
+ONTONOTES5_CON_CHINESE_TEST = _ONTONOTES5_CONLL12_CHINESE_HOME + 'test.chinese.con.txt'
+
+ONTONOTES5_DEP_CHINESE_TRAIN = _ONTONOTES5_CONLL12_CHINESE_HOME + 'train.chinese.dep.conllx'
+ONTONOTES5_DEP_CHINESE_DEV = _ONTONOTES5_CONLL12_CHINESE_HOME + 'development.chinese.dep.conllx'
+ONTONOTES5_DEP_CHINESE_TEST = _ONTONOTES5_CONLL12_CHINESE_HOME + 'test.chinese.dep.conllx'
+
+# ONTONOTES5_CON_CHINESE_NOEC_TRAIN = _ONTONOTES5_CONLL12_CHINESE_HOME + 'train.chinese.con.noempty.txt'
+# ONTONOTES5_CON_CHINESE_NOEC_DEV = _ONTONOTES5_CONLL12_CHINESE_HOME + 'development.chinese.con.noempty.txt'
+# ONTONOTES5_CON_CHINESE_NOEC_TEST = _ONTONOTES5_CONLL12_CHINESE_HOME + 'test.chinese.con.noempty.txt'
+
+
+ONTONOTES5_NER_CHINESE_TRAIN = _ONTONOTES5_CONLL12_CHINESE_HOME + 'train.chinese.v4.ner.tsv'
+ONTONOTES5_NER_CHINESE_DEV = _ONTONOTES5_CONLL12_CHINESE_HOME + 'development.chinese.v4.ner.tsv'
+ONTONOTES5_NER_CHINESE_TEST = _ONTONOTES5_CONLL12_CHINESE_HOME + 'test.chinese.v4.ner.tsv'
 
 try:
     get_resource(ONTONOTES5_HOME, verbose=False)
@@ -55,3 +85,21 @@ except HTTPError:
 
 batch_make_ner_tsv_if_necessary(
     [ONTONOTES5_CONLL12_CHINESE_TRAIN, ONTONOTES5_CONLL12_CHINESE_DEV, ONTONOTES5_CONLL12_CHINESE_TEST])
+
+batch_make_ner_tsv_if_necessary(
+    [ONTONOTES5_CONLL12_CHINESE_TRAIN, ONTONOTES5_CONLL12_CHINESE_DEV, ONTONOTES5_CONLL12_CHINESE_TEST])
+
+batch_make_ner_tsv_if_necessary(
+    [ONTONOTES5_CHINESE_TRAIN, ONTONOTES5_CHINESE_DEV, ONTONOTES5_CHINESE_TEST])
+
+batch_make_pos_tsv_if_necessary(
+    [ONTONOTES5_CHINESE_TRAIN, ONTONOTES5_CHINESE_DEV, ONTONOTES5_CHINESE_TEST])
+
+batch_make_con_txt_if_necessary(
+    [ONTONOTES5_CONLL_CHINESE_TRAIN, ONTONOTES5_CONLL_CHINESE_DEV, ONTONOTES5_CONLL_CHINESE_TEST])
+
+batch_make_dep_conllx_if_necessary(
+    [ONTONOTES5_CON_CHINESE_TRAIN, ONTONOTES5_CON_CHINESE_DEV, ONTONOTES5_CON_CHINESE_TEST], language='zh')
+
+# batch_remove_empty_category_if_necessary(
+#     [ONTONOTES5_CON_CHINESE_TRAIN, ONTONOTES5_CON_CHINESE_DEV, ONTONOTES5_CON_CHINESE_TEST])
