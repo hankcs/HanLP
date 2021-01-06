@@ -98,7 +98,7 @@ See also [Stanford typed dependencies manual](https://nlp.stanford.edu/software/
 |nsubj|nominal subject|名词性主语|梅花盛开|nsubj (盛开，梅花）|
 |conj|conjunct (links two conjuncts)|连接性状语|设备和原材料|conj(原材料，设备）|
 |dobj|direct object|直接宾语|浦东颁布了七十一件文件|dobj(颁布，文件）|
-|advmod|adverbial modifier|名词性状语|部门先送上文件|advmod(送上，先）|
+|advmod|adverbial modifier|副词性状语|部门先送上文件|advmod(送上，先）|
 |prep|prepositional modifier|介词性修饰语|在实践中逐步完善|prep(完善，在）|
 |nummod|number modifier|数词修饰语|七十一件文件|nummod(件，七十一）|
 |amod|adjectival modifier|形容词修饰语|跨世纪工程|amod(工程，跨世纪）|
