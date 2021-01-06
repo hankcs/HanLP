@@ -1,6 +1,11 @@
-import unittest
 import hanlp
+import unittest
+from multiprocessing.dummy import Pool
 from hanlp_common.document import Document
+
+
+def tokenize(mtl, text):
+    return mtl(text, tasks='tok')['tok']
 
 
 class TestMultiTaskLearning(unittest.TestCase):
@@ -27,6 +32,12 @@ class TestMultiTaskLearning(unittest.TestCase):
         ]
         doc: Document = self.mtl(pre_tokenized_sents, skip_tasks='tok*')
         self.assertSequenceEqual(doc['tok'], pre_tokenized_sents)
+
+    def test_threading(self):
+        num_proc = 8
+        with Pool(num_proc) as pool:
+            results = pool.starmap(tokenize, [(self.mtl, '商品和服务')] * num_proc)
+            self.assertSequenceEqual(results, [['商品', '和', '服务']] * num_proc)
 
 
 if __name__ == '__main__':
