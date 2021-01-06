@@ -8,7 +8,7 @@ from tests import cdroot
 
 cdroot()
 tokenizer = TransformerTaggingTokenizer()
-save_dir = 'data/model/cws/sighan2005_pku_bert_base_96.66'
+save_dir = 'data/model/cws/sighan2005_pku_bert_base_96.70'
 tokenizer.fit(
     SIGHAN2005_PKU_TRAIN_ALL,
     SIGHAN2005_PKU_TEST,  # Conventionally, no devset is used. See Tian et al. (2020).
@@ -23,7 +23,7 @@ tokenizer.fit(
     warmup_steps=0.1,
     weight_decay=0.01,
     word_dropout=0.1,
-    seed=1609422632,
+    seed=1609836303,
 )
 tokenizer.evaluate(SIGHAN2005_PKU_TEST, save_dir)
 print(f'Model saved in {save_dir}')
