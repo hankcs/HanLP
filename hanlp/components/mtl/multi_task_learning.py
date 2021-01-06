@@ -460,6 +460,18 @@ class MultiTaskLearning(TorchComponent):
                 tasks: Optional[Union[str, List[str]]] = None,
                 skip_tasks: Optional[Union[str, List[str]]] = None,
                 **kwargs) -> Document:
+        """Predict on data.
+
+        Args:
+            data: A sentence or a list of sentences.
+            batch_size: Decoding batch size.
+            tasks: The tasks to predict.
+            skip_tasks: The tasks to skip.
+            **kwargs: Not used.
+
+        Returns:
+            A :class:`~hanlp_common.document.Document`.
+        """
         doc = Document()
         if not data:
             return doc
@@ -755,6 +767,15 @@ class MultiTaskLearning(TorchComponent):
         return self.tasks[task_name]
 
     def __delitem__(self, task_name: str):
+        """Delete a task (and every resource it owns) from this component.
+
+        Args:
+            task_name: The name of the task to be deleted.
+
+        Examples:
+            >>> del mtl['dep']  # Delete dep from MTL
+
+        """
         del self.tasks[task_name]
         del self.model.decoders[task_name]
         del self._computation_graph[task_name]

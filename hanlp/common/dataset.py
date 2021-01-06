@@ -29,7 +29,7 @@ from torch.utils.data.dataset import IterableDataset
 
 class Transformable(ABC):
     def __init__(self, transform: Union[Callable, List] = None) -> None:
-        """An object which can be transformed with a list of functions. It can be imaged as an objected being passed
+        """An object which can be transformed with a list of functions. It can be treated as an objected being passed
         through a list of functions, while these functions are kept in a list.
 
         Args:
@@ -46,7 +46,8 @@ class Transformable(ABC):
         Args:
             transform: A new transform to be appended.
 
-        Returns: Itself.
+        Returns:
+            Itself.
 
         """
         assert transform is not None, 'None transform not allowed'
@@ -67,7 +68,8 @@ class Transformable(ABC):
             index: A certain position.
             transform: A new transform.
 
-        Returns: Dataset itself.
+        Returns:
+            Itself.
 
         """
         assert transform is not None, 'None transform not allowed'
@@ -95,7 +97,7 @@ class Transformable(ABC):
             then 2 ``BOS`` will be inserted which might not be an intended result.
 
         Returns:
-
+            Transformed sample.
         """
         if not inplace:
             sample = copy(sample)

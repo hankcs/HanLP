@@ -99,7 +99,7 @@ class VocabList(list):
 class VocabDict(SerializableDict):
 
     def __init__(self, *args, **kwargs) -> None:
-        """A dict holding :class:`hanlp.common.vocab.Vocab` instances. When used a transform, it transforms the field
+        """A dict holding :class:`hanlp.common.vocab.Vocab` instances. When used as a transform, it transforms the field
         corresponding to each :class:`hanlp.common.vocab.Vocab` into indices.
 
         Args:

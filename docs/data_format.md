@@ -31,7 +31,7 @@ field or a `tokens` field. The input to RESTful API is very flexible. It can be 
 ```{eval-rst}
 Additionally, fine-grained controls are performed with the arguments defined in 
 :meth:`hanlp_restful.HanLPClient.parse`.
-``` 
+```
 
 
 #### Examples
@@ -44,7 +44,7 @@ curl -X POST "https://hanlp.hankcs.com/api/parse" \
 
 ### Model Input
 
-The input format to models is specified per model and per tasks. Generally speaking, if a model has no tokenizer built in, then its input is
+The input format to models is specified per model and per task. Generally speaking, if a model has no tokenizer built in, then its input is
 a sentence in `list[str]` form (a list of tokens), or multiple such sentences nested in a `list`.
 
 If a model has a tokenizer built in, each sentence is in `str` form. 
@@ -74,8 +74,8 @@ HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None)  # Fill in your a
 print(HanLP('2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。英首相与特朗普通电话讨论华为与苹果公司。'))
 ```
 
-The outputs above is represented as a `json` dictionary where each key is a model name and its value is 
-the output of the corresponding model.
+The outputs above is represented as a `json` dictionary where each key is a task name and its value is 
+the output of the corresponding task.
 For each output, if it's a nested `list` then it contains multiple sentences otherwise it's just one single sentence.
 
 We make the following naming convention of NLP tasks, each consists of 3 letters.
@@ -95,10 +95,10 @@ Each NLP task can exploit multiple datasets with their annotations, see our [ann
 | lem  | Lemmatization. Each element is a lemma.                      | 词干提取     |
 | fea  | Features of Universal Dependencies. Each element is a feature. | 词法语法特征 |
 | ner  | Named Entity Recognition. Each element is a tuple of `(entity, type, begin, end)`, where `begin` and `end` are exclusive offsets. | 命名实体识别 |
-| dep  | Dependency Parsing. Each element is a tuple of `(head, relation)` where `head` starts with index `0` and `ROOT` has index `-1`. | 依存句法分析 |
+| dep  | Dependency Parsing. Each element is a tuple of `(head, relation)` where `head` starts with index `1` and `ROOT` has index `0`. | 依存句法分析 |
 | con  | Constituency Parsing. Each list is a bracketed constituent.  | 短语成分分析 |
 | srl  | Semantic Role Labeling. Similar to `ner`, each element is tuple (arg/pred, label, begin, end), where the predicate is labeled as `PRED`. | 语义角色标注 |
-| sdp  | Semantic Dependency Parsing. Similar to `dep`, however each token can have zero or zero or multiple heads and corresponding relations. | 语义依存分析 |
+| sdp  | Semantic Dependency Parsing. Similar to `dep`, however each token can have any number (including zero) of heads and corresponding relations. | 语义依存分析 |
 | amr  | Abstract Meaning Representation. Each AMR graph is represented as list of logical triples. See [AMR guidelines](https://github.com/amrisi/amr-guidelines/blob/master/amr.md#example). | 抽象意义表示 |
 
 When there are multiple models performing the same task, the keys are appended with a secondary identifier. For example, `tok/fine` and `tok/corase` means a fine-grained tokenization model and a coarse-grained one.

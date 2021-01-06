@@ -75,7 +75,7 @@ In particular, the Python `HanLPClient` can also be used as a callable function 
 
 ## Train Your Own Models
 
-To write DL models is not hard, the real hard thing is to write a model able to reproduce the scores in papers. The snippet below shows how to surpass the state-of-the-art tokenizer in 9 minutes.
+To write DL models is not hard, the real hard thing is to write a model able to reproduce the scores in papers. The snippet below shows how to surpass the state-of-the-art tokenizer in 6 minutes.
 
 ```python
 tokenizer = TransformerTaggingTokenizer()
