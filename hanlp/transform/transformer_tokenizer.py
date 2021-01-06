@@ -196,6 +196,13 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
             pad_on_left = xlnet
         if isinstance(tokenizer, str):
             tokenizer = AutoTokenizer.from_pretrained(tokenizer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize)
+        if use_fast:
+            # Dirty fix upstream bug: https://github.com/hankcs/HanLP/issues/1602
+            if hasattr(tokenizer, '_tokenizer') and hasattr(tokenizer._tokenizer, 'no_truncation'):
+                _t = tokenizer._tokenizer
+                _t.no_truncation()
+                _t.no_padding()
+                _t.no_truncation = _t.no_padding = lambda: None
         pad_token = tokenizer.pad_token
         self.pad_token_id = tokenizer.convert_tokens_to_ids([pad_token])[0]
         self.pad_token_segment_id = pad_token_segment_id
