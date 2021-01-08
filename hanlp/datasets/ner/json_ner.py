@@ -54,6 +54,9 @@ class JsonNERDataset(TransformableDataset):
         reader = TimingFileIterator(filepath)
         num_docs, num_sentences = 0, 0
         for line in reader:
+            line = line.strip()
+            if not line:
+                continue
             doc = json.loads(line)
             num_docs += 1
             num_tokens_in_doc = 0
