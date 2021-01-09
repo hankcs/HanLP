@@ -125,6 +125,7 @@ class MultiTaskLearning(TorchComponent):
                          cache=False,
                          debug=False,
                          **kwargs) -> DataLoader:
+        # This method is only called during training or evaluation but not prediction
         dataloader = MultiTaskDataLoader(training=shuffle, tau=tau)
         for i, (task_name, task) in enumerate(self.tasks.items()):
             encoder_transform, transform = self.build_transform(task)
@@ -162,7 +163,7 @@ class MultiTaskLearning(TorchComponent):
             #     num_pruned = size_before - size_after
             #     logger.info(f'Pruned [yellow]{num_pruned} ({num_pruned / size_before:.1%})[/yellow] '
             #                 f'samples out of {size_before}.')
-            if cache:
+            if cache and data in ('trn', 'dev'):
                 task_dataloader: CachedDataLoader = CachedDataLoader(
                     task_dataloader,
                     f'{cache}/{os.getpid()}-{data}-{task_name.replace("/", "-")}-cache.pt' if isinstance(cache,
@@ -189,9 +190,8 @@ class MultiTaskLearning(TorchComponent):
             rows[longest + 2] = '|'.join(cells)
             logger.info(f'[bold][yellow]{"Samples Distribution": ^{len(rows[0])}}[/yellow][/bold]')
             logger.info('\n'.join(rows))
-        if isinstance(data, str):
-            if prefetch and (data == 'trn' or not tasks_need_custom_eval):
-                dataloader = PrefetchDataLoader(dataloader, prefetch=prefetch)
+        if prefetch and (data == 'trn' or not tasks_need_custom_eval):
+            dataloader = PrefetchDataLoader(dataloader, prefetch=prefetch)
 
         return dataloader
 
