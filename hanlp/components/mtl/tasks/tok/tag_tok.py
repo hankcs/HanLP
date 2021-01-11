@@ -51,7 +51,10 @@ class TaggingTokenization(Task, TransformerTaggingTokenizer):
                  transform=None,
                  tagging_scheme='BMES',
                  crf=False,
-                 token_key='token', **kwargs) -> None:
+                 token_key='token',
+                 dict_force: Union[DictInterface, Union[Dict[str, Any], Set[str]]] = None,
+                 dict_combine: Union[DictInterface, Union[Dict[str, Any], Set[str]]] = None,
+                 **kwargs) -> None:
         """Tokenization which casts a chunking problem into a tagging problem.
         This task has to create batch of tokens containing both [CLS] and [SEP] since it's usually the first task
         and later tasks might need them.
@@ -82,9 +85,12 @@ class TaggingTokenization(Task, TransformerTaggingTokenizer):
             token_key: The key to tokens in dataset. This should always be set to ``token`` in MTL.
             **kwargs: Not used.
         """
-        super().__init__(**merge_locals_kwargs(locals(), kwargs))
+        super().__init__(**merge_locals_kwargs(locals(), kwargs, excludes=(
+            'self', 'kwargs', '__class__', 'dict_force', 'dict_combine')))  # avoid to config
         self.transform = transform
         self.vocabs = VocabDict()
+        self.dict_force = dict_force
+        self.dict_combine = dict_combine
 
     def build_dataloader(self, data, transform: TransformList = None, training=False, device=None,
                          logger: logging.Logger = None, cache=False, gradient_accumulation=1, **kwargs) -> DataLoader:
