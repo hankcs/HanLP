@@ -701,6 +701,8 @@ class MultiTaskLearning(TorchComponent):
             scalar_mix = model.scalar_mixes[task_name]
             h = scalar_mix(hidden_states)
         else:
+            if model.scalar_mixes:  # If any task enables scalar_mix, hidden_states will be a 4d tensor
+                hidden_states = hidden_states[-1, :, :, :]
             h = hidden_states
         # If the task doesn't need cls while h has cls, remove cls
         task = self.tasks[task_name]

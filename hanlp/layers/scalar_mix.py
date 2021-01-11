@@ -120,15 +120,15 @@ class ScalarMixWithDropout(torch.nn.Module):
             weights = torch.where(self.dropout_mask.uniform_() > self.dropout, weights, self.dropout_fill)
 
         normed_weights = torch.nn.functional.softmax(weights, dim=0)
-        normed_weights = torch.split(normed_weights, split_size_or_sections=1)
 
         if not self.do_layer_norm:
-            pieces = []
-            for weight, tensor in zip(normed_weights, tensors):
-                pieces.append(weight * tensor)
-            return self.gamma * sum(pieces)
-
+            return self.gamma * torch.einsum('i,ijkl->jkl', normed_weights, tensors)
+            # pieces = []
+            # for weight, tensor in zip(normed_weights, tensors):
+            #     pieces.append(weight * tensor)
+            # return self.gamma * sum(pieces)
         else:
+            normed_weights = torch.split(normed_weights, split_size_or_sections=1)
             mask_float = mask.float()
             broadcast_mask = mask_float.unsqueeze(-1)
             input_dim = tensors[0].size(-1)
