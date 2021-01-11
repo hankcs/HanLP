@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2020-11-29 17:53
 from abc import ABC, abstractmethod
-from typing import List, Tuple, Any, Dict, Union, Set, Sequence
+from typing import List, Tuple, Any, Dict, Union, Sequence, Iterable, Optional
 
 from hanlp_common.configurable import Configurable
 from hanlp_common.reflection import classpath_of
@@ -51,7 +51,7 @@ class DictInterface(ABC):
 
 
 class TrieDict(Trie, DictInterface, Configurable):
-    def __init__(self, dictionary: Union[Dict[str, Any], Set[str]]) -> None:
+    def __init__(self, dictionary: Optional[Union[Dict[str, Any], Iterable[str]]] = None) -> None:
         r"""
         A dict-like structure for fast custom dictionary strategies in tokenization and tagging. It is built with
         a dict of key-value pairs or a set of strings. When a set is passed in, it will be turned into a dict where each

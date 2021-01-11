@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2020-01-04 23:46
-from typing import Dict, Any, List, Tuple, Sequence, Union, Set
+from typing import Dict, Any, List, Tuple, Sequence, Union, Iterable, Optional
 
 
 class Node(object):
@@ -49,7 +49,7 @@ class Node(object):
 
 
 class Trie(Node):
-    def __init__(self, tokens: Union[Dict[str, Any], Set[str]] = None) -> None:
+    def __init__(self, tokens: Optional[Union[Dict[str, Any], Iterable[str]]] = None) -> None:
         """A referential implementation of the trie (:cite:`10.1145/1457838.1457895`) structure. It stores a dict by
         assigning each key/value pair a :class:`~hanlp_trie.trie.Node` in a trie tree. It provides get/set/del/items
         methods just like a :class:`dict` does. Additionally, it also provides longest-prefix-matching and keywords
@@ -60,12 +60,12 @@ class Trie(Node):
         """
         super().__init__()
         if tokens:
-            if isinstance(tokens, set):
-                for k in tokens:
-                    self[k] = True
-            else:
+            if isinstance(tokens, dict):
                 for k, v in tokens.items():
                     self[k] = v
+            else:
+                for k in tokens:
+                    self[k] = True
 
     def __contains__(self, key):
         return self[key] is not None
