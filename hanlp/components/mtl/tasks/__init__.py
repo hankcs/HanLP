@@ -9,6 +9,7 @@ from copy import copy
 from typing import Callable, Dict, Any, Union, Iterable, List
 
 import torch
+from hanlp_common.util import merge_locals_kwargs
 from torch.utils.data import DataLoader
 
 from hanlp_common.constant import BOS, EOS
@@ -53,9 +54,9 @@ class Task(ConfigTracker, TorchComponent, ABC):
             separate_optimizer: Use customized separate optimizer for this task.
             cls_is_bos: ``True`` to treat the first token as ``BOS``.
             sep_is_eos: ``True`` to treat the last token as ``EOS``.
-            **kwargs: Not used.
+            **kwargs: Additional config.
         """
-        ConfigTracker.__init__(self, locals())
+        ConfigTracker.__init__(self, merge_locals_kwargs(locals(), kwargs))
         for f, n in zip([trn, dev, tst], ['trn', 'dev', 'tst']):
             if f and os.path.isfile(f):  # anonymize local file names
                 self.config.pop(n)
