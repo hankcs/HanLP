@@ -64,7 +64,7 @@ def pretty_tree_horizontal(arrows, _do_print_debug_info=False):
         pprint(arrows_with_deps)
 
     # Render the arrows in characters. Some heights will be raised to make room for arrowheads.
-    sent_len = max([max(arrow['from'], arrow['to']) for arrow in arrows]) + 1
+    sent_len = (max([max(arrow['from'], arrow['to']) for arrow in arrows]) if arrows else 0) + 1
     lines = [[] for i in range(sent_len)]
     num_arrows_left = len(arrows)
     while num_arrows_left > 0:
