@@ -10,7 +10,7 @@ For end users, HanLP offers light-weighted RESTful APIs and native Python APIs.
 
 ## RESTful APIs
 
-Tiny packages in several KBs for agile development and mobile applications. An auth key is required and [a free one can be applied here](https://bbs.hankcs.com/t/apply-for-free-hanlp-restful-apis/3178) under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
+Tiny packages in several KBs for agile development and mobile applications. Although anonymous users are welcomed, an auth key is suggested and [a free one can be applied here](https://bbs.hankcs.com/t/apply-for-free-hanlp-restful-apis/3178) under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
 
  ### Python
 
@@ -22,7 +22,7 @@ Create a client with our API endpoint and your auth.
 
 ```python
 from hanlp_restful import HanLPClient
-HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth='your_auth', language='mul')
+HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul')
 ```
 
 ### Java
@@ -33,14 +33,14 @@ Insert the following dependency into your `pom.xml`.
 <dependency>
   <groupId>com.hankcs.hanlp.restful</groupId>
   <artifactId>hanlp-restful</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 
 Create a client with our API endpoint and your auth.
 
 ```java
-HanLPClient HanLP = new HanLPClient("https://hanlp.hankcs.com/api", "your_auth", "mul");
+HanLPClient HanLP = new HanLPClient("https://hanlp.hankcs.com/api", null, "mul");
 ```
 
 ### Quick Start

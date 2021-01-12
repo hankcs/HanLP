@@ -122,7 +122,10 @@ class HanLPClient(object):
         return urlopen(request, timeout=self._timeout).read().decode()
 
     def _send_post_json(self, url, form: Dict[str, Any]):
-        return json.loads(_post(url, form, {'Authorization': f'Basic {self._auth}'}, self._timeout))
+        headers = dict()
+        if self._auth:
+            headers['Authorization'] = f'Basic {self._auth}'
+        return json.loads(_post(url, form, headers, self._timeout))
 
     def _send_get(self, url, form: Dict[str, Any]):
         request = Request(url + '?' + urlencode(form))
