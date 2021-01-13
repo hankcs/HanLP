@@ -31,7 +31,7 @@ from pkg_resources import parse_version
 import hanlp
 from hanlp_common.constant import HANLP_URL, HANLP_VERBOSE
 from hanlp.utils import time_util
-from hanlp.utils.log_util import logger, flash
+from hanlp.utils.log_util import logger, flash, cprint, remove_color_tag
 from hanlp.utils.string_util import split_long_sentence_into
 from hanlp.utils.time_util import now_filename, CountdownTimer
 from hanlp.version import __version__
@@ -217,9 +217,12 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             installed_version, latest_version = check_outdated()
             if installed_version != latest_version:
                 hints_for_download += f'Or upgrade to the latest version({latest_version}):\npip install -U hanlp'
+            message = f'Download failed due to [red]{repr(e)}[/red]. Please download it to {save_path} by yourself. ' \
+                      f'[yellow]{hints_for_download}[/yellow]'
             if verbose:
-                eprint(f'Download failed due to {repr(e)}. Please download it to {save_path} by yourself. '
-                       f'{hints_for_download}')
+                cprint(message)
+            if hasattr(e, 'msg'):
+                e.msg += '\n' + remove_color_tag(message)
             raise e
         remove_file(save_path)
         os.rename(tmp_path, save_path)
