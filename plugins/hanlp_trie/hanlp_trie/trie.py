@@ -59,6 +59,7 @@ class Trie(Node):
             tokens: A set of keys or a dict mapping.
         """
         super().__init__()
+        self._size = 0
         if tokens:
             if isinstance(tokens, dict):
                 for k, v in tokens.items():
@@ -83,11 +84,13 @@ class Trie(Node):
                 state = state._add_child(char, None, False)
             else:
                 state = state._add_child(char, value, True)
+        self._size += 1
 
     def __delitem__(self, key):
         state = self.transit(key)
         if state is not None:
             state._value = None
+            self._size -= 1
 
     def update(self, dic: Dict[str, Any]):
         for k, v in dic.items():
@@ -154,3 +157,9 @@ class Trie(Node):
 
     def items(self, ordered=False):
         yield from self._walk('', ordered)
+
+    def __len__(self):
+        return self._size
+
+    def __bool__(self):
+        return bool(len(self))

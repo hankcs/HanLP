@@ -26,6 +26,14 @@ class TestTrieDict(unittest.TestCase):
         self.assertSequenceEqual(t.tokenize('2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。'),
                                  [(15, 19, True), (21, 24, True)])
 
+    def test_empty_dict(self):
+        trie_dict = TrieDict()
+        self.assertFalse(bool(trie_dict))
+        trie_dict['one'] = 1
+        self.assertTrue(bool(trie_dict))
+        del trie_dict['one']
+        self.assertFalse(bool(trie_dict))
+
 
 if __name__ == '__main__':
     unittest.main()
