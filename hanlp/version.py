@@ -2,5 +2,5 @@
 # Author: hankcs
 # Date: 2019-12-28 19:26
 
-__version__ = '2.1.0-alpha.9'
+__version__ = '2.1.0-alpha.10'
 """HanLP version"""

@@ -202,7 +202,7 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
 
     @dict_whitelist.setter
     def dict_whitelist(self, dictionary: Union[DictInterface, Union[Dict[str, Any], Set[str]]]):
-        if not isinstance(dictionary, DictInterface):
+        if dictionary is not None and not isinstance(dictionary, DictInterface):
             dictionary = TrieDict(dictionary)
         self.config.dict_whitelist = dictionary
 
@@ -212,6 +212,6 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
 
     @dict_blacklist.setter
     def dict_blacklist(self, dictionary: Union[DictInterface, Union[Dict[str, Any], Set[str]]]):
-        if not isinstance(dictionary, DictInterface):
+        if dictionary is not None and not isinstance(dictionary, DictInterface):
             dictionary = TrieDict(dictionary)
         self.config.dict_blacklist = dictionary

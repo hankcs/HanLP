@@ -61,7 +61,7 @@ class TransformerTaggingTokenizer(TransformerTagger):
 
     @dict_force.setter
     def dict_force(self, dictionary: Union[DictInterface, Union[Dict[str, Any], Set[str]]]):
-        if not isinstance(dictionary, DictInterface):
+        if dictionary is not None and not isinstance(dictionary, DictInterface):
             dictionary = TrieDict(dictionary)
         self.config.dict_force = dictionary
         self.tokenizer_transform.dict = dictionary
@@ -80,7 +80,7 @@ class TransformerTaggingTokenizer(TransformerTagger):
 
     @dict_combine.setter
     def dict_combine(self, dictionary: Union[DictInterface, Union[Dict[str, Any], Set[str]]]):
-        if not isinstance(dictionary, DictInterface):
+        if dictionary is not None and not isinstance(dictionary, DictInterface):
             dictionary = TrieDict(dictionary)
         self.config.dict_combine = dictionary
 
