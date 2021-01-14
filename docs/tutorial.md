@@ -20,7 +20,7 @@ Things get even more complex when dealing with multilingual text, as there's sim
 low-resource languages. However, with HanLP 2.1, core NLP tasks have been made easy to access and efficient in 
 production environments. In this tutorial, we'll walk through the APIs in HanLP step by step. 
 
-HanLP offers out-of-the-box RESTful API and native Python API which shares very similar interfaces 
+HanLP offers out-of-the-box RESTful API and native Python API which share very similar interfaces 
 while they are designed for different scenes.
 
 ## RESTful API
@@ -33,6 +33,13 @@ Once obtained such an auth key, you can parse your document with our RESTful cli
 ````{margin} **NonCommercial**
 ```{seealso}
 Our models and RESTful APIs are under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licence.
+```
+````
+
+````{margin} **Zero-Shot Learning**
+```{note}
+Although UD covers 104 languages, OntoNotes (NER, CON, SRL) covers only English, Chinese and Arabic.
+So NER/CON/SRL of languages other than the 3 are considered as Zero-Shot and their accuracy can be very low.  
 ```
 ````
 

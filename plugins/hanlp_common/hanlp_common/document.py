@@ -145,7 +145,7 @@ class Document(dict):
     def to_pretty(self, tok='tok', lem='lem', pos='pos', dep='dep', sdp='sdp', ner='ner', srl='srl', con='con',
                   show_header=True) -> str:
         """
-        Convert to a pretty text representation which can be printed to visualize linguistics structures.
+        Convert to a pretty text representation which can be printed to visualize linguistic structures.
 
         Args:
             tok: Token key.
@@ -328,7 +328,7 @@ class Document(dict):
     def pretty_print(self, tok='tok', lem='lem', pos='pos', dep='dep', sdp='sdp', ner='ner', srl='srl', con='con',
                      show_header=True):
         """
-        Print a pretty text representation which visualizes linguistics structures.
+        Print a pretty text representation which visualizes linguistic structures.
 
         Args:
             tok: Token key.
@@ -393,7 +393,7 @@ class Document(dict):
     def squeeze(self):
         r"""
         Squeeze the dimension of each field into one. It's intended to convert a nested document like ``[[sent1]]``
-        to ``[sent1]``. When there are multiple sentences, only the first one will be returned. Note this is not a
+        to ``[sent1]``. When there are multiple sentences, only the first one will be returned. Note this is not an
         inplace operation.
 
         Returns:
