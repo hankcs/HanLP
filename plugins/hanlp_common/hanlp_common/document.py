@@ -190,6 +190,12 @@ class Document(dict):
                 if flat:
                     ner_samples = [ner_samples]
                 ner_per_sample = ner_samples[i]
+                # For nested NER, use the longest span
+                start_offsets = [None for i in range(length)]
+                for ent, label, b, e in ner_per_sample:
+                    if not start_offsets[b] or e > start_offsets[b][-1]:
+                        start_offsets[b] = (ent, label, b, e)
+                ner_per_sample = [y for y in start_offsets if y]
                 header = ['Tok', 'NER', 'Type']
                 block = [[] for _ in range(length + 1)]
                 _ner = []
