@@ -272,7 +272,9 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                     input_ids = [input_ids[i] for i in non_blank_offsets]
                     if add_special_tokens:
                         non_blank_offsets = non_blank_offsets[1:-1]
-                    subtoken_offsets = [subtoken_offsets[i - 1] for i in non_blank_offsets]
+                        subtoken_offsets = [subtoken_offsets[i - 1] for i in non_blank_offsets]
+                    else:
+                        subtoken_offsets = [subtoken_offsets[i] for i in non_blank_offsets]
                 return input_tokens, input_ids, subtoken_offsets
 
             if self.dict:
