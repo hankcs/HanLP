@@ -355,7 +355,10 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         List<V> valueList = new ArrayList<V>(entrySet.size());
         for (Map.Entry<String, V> entry : entrySet)
         {
-            keyList.add(entry.getKey());
+            String key = entry.getKey();
+            if (key.isEmpty())
+                continue;
+            keyList.add(key);
             valueList.add(entry.getValue());
         }
 
