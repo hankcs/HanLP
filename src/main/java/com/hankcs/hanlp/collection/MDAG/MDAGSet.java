@@ -156,7 +156,8 @@ public class MDAGSet extends MDAG implements Set<String>
     {
         sourceNode = new MDAGNode(false);
         simplifiedSourceNode = null;
-        equivalenceClassMDAGNodeHashMap.clear();
+        if (equivalenceClassMDAGNodeHashMap != null)
+            equivalenceClassMDAGNodeHashMap.clear();
         mdagDataArray = null;
         charTreeSet.clear();
         transitionCount = 0;
