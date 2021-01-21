@@ -255,7 +255,7 @@ class Document(dict):
                 for j, t in enumerate(tree.pos()):
                     block[j + 1].extend(t)
 
-                for height in range(2, tree.height()):
+                for height in range(2, tree.height() + (0 if len(tree) == 1 else 1)):
                     offset = 0
                     spans = []
                     labels = []
