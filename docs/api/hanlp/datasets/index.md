@@ -21,6 +21,6 @@ pos/index
 ner/index
 dep/index
 srl/index
-con/index
+constituency/index
 ```
 

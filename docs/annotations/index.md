@@ -7,6 +7,6 @@ ner/index
 dep/index
 sdp/index
 srl/index
-con/index
+constituency/index
 ```
 

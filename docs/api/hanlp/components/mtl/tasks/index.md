@@ -4,7 +4,7 @@ Multi-Task Learning (MTL) tasks.
 
 ```{toctree}
 task
-con
+constituency
 dep
 sdp
 ud
