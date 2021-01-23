@@ -14,9 +14,9 @@ kernelspec:
 
 # Tutorial
 
-Natural Language Processing is an exciting field consists of many closely related tasks like lexical analysis 
-and parsing. Each task involves many datasets and models, both requiring a high degree of expertise. 
-Things get even more complex when dealing with multilingual text, as there's simply no datasets for some 
+Natural Language Processing is an exciting field consisting of many closely related tasks like lexical analysis 
+and parsing. Each task involves many datasets and models, all requiring a high degree of expertise. 
+Things become even more complex when dealing with multilingual text, as there's simply no datasets for some 
 low-resource languages. However, with HanLP 2.1, core NLP tasks have been made easy to access and efficient in 
 production environments. In this tutorial, we'll walk through the APIs in HanLP step by step. 
 

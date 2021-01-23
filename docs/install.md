@@ -2,7 +2,7 @@
 
 ## Install Native Package
 
-The native package runs locally which can be installed via pip.
+The native package running locally can be installed via pip.
 
 ```
 pip install hanlp

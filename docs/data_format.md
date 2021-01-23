@@ -49,7 +49,7 @@ a sentence in `list[str]` form (a list of tokens), or multiple such sentences ne
 
 If a model has a tokenizer built in, each sentence is in `str` form. 
 Additionally, you can use `skip_tasks='tok*'` to ask the model to use your tokenized inputs instead of tokenizing 
-them, in which case, each of your sentence needs to be in `list[str]` form, as if there is no tokenizer.
+them, in which case, each of your sentence needs to be in `list[str]` form, as if there was no tokenizer.
 
 ```{eval-rst}
 For any model, its input is of sentence level, which means you have to split a document into sentences beforehand. 
@@ -94,11 +94,12 @@ Each NLP task can exploit multiple datasets with their annotations, see our [ann
 | pos  | Part-of-Speech Tagging. Each element is a tag.               | 词性标注     |
 | lem  | Lemmatization. Each element is a lemma.                      | 词干提取     |
 | fea  | Features of Universal Dependencies. Each element is a feature. | 词法语法特征 |
-| ner  | Named Entity Recognition. Each element is a tuple of `(entity, type, begin, end)`, where `begin` and `end` are exclusive offsets. | 命名实体识别 |
-| dep  | Dependency Parsing. Each element is a tuple of `(head, relation)` where `head` starts with index `1` and `ROOT` has index `0`. | 依存句法分析 |
+| ner  | Named Entity Recognition. Each element is a tuple of `(entity, type, begin, end)`, where `end`s are exclusive offsets. | 命名实体识别 |
+| dep  | Dependency Parsing. Each element is a tuple of `(head, relation)` where `head` starts with index `0` (which is `ROOT`). | 依存句法分析 |
 | con  | Constituency Parsing. Each list is a bracketed constituent.  | 短语成分分析 |
-| srl  | Semantic Role Labeling. Similar to `ner`, each element is tuple (arg/pred, label, begin, end), where the predicate is labeled as `PRED`. | 语义角色标注 |
+| srl  | Semantic Role Labeling. Similar to `ner`, each element is a tuple of `(arg/pred, label, begin, end)`, where the predicate is labeled as `PRED`. | 语义角色标注 |
 | sdp  | Semantic Dependency Parsing. Similar to `dep`, however each token can have any number (including zero) of heads and corresponding relations. | 语义依存分析 |
 | amr  | Abstract Meaning Representation. Each AMR graph is represented as list of logical triples. See [AMR guidelines](https://github.com/amrisi/amr-guidelines/blob/master/amr.md#example). | 抽象意义表示 |
 
-When there are multiple models performing the same task, the keys are appended with a secondary identifier. For example, `tok/fine` and `tok/corase` means a fine-grained tokenization model and a coarse-grained one.
+When there are multiple models performing the same task, their keys are appended with a secondary identifier. 
+For example, `tok/fine` and `tok/corase` means a fine-grained tokenization model and a coarse-grained one respectively.

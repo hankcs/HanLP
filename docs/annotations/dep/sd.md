@@ -37,16 +37,16 @@ See also [Stanford typed dependencies manual](https://nlp.stanford.edu/software/
 |nummod|number modifier|数词修饰语|七十一件文件|nummod(件，七十一）|
 |amod|adjectival modifier|形容词修饰语|跨世纪工程|amod(工程，跨世纪）|
 |pobj|prepositional object|介词性宾语|根据有关规定|pobj (根据，规定）|
-|rcmod|relative clause modifier|相关关系|不曾遇到过的情况|rcmod(情况，遇到）|
+|rcmod|relative clause modifier|关系从句修饰语|不曾遇到过的情况|rcmod(情况，遇到）|
 |cpm|complementizer|补语|开发浦东的经济活动|cpm(开发，的）|
 |assm|associative marker|关联标记|企业的商品|assm(企业，的）|
 |assmod|associative modifier|关联修饰|企业的商品|assmod(商品，企业）|
 |cc|coordinating conjunction|并列关系|设备和原材料|cc(原材料，和）|
 |elf|classifier modifier|类别修饰|七十一件文件|elf(文件，件）|
 |ccomp|clausal complement|从句补充|银行决定先取得信用评级|ccomp(决定，取得）|
-|det|determiner|限定语|这些经济活动|det(洁动，这些）|
+|det|determiner|限定语|这些经济活动|det(活动，这些）|
 |lobj|localizer object|时间介词|近年来|lobj(来，近年）|
-|range|dative object that is a quantifier phrase|数量词间接宾语|成交药品一亿多元|range(成交，兀）|
+|range|dative object that is a quantifier phrase|数量词间接宾语|成交药品一亿多元|range(成交，元）|
 |asp|aspect marker|时态标记|发挥了作用|asp(发挥，了）|
 |tmod|temporal modifier|时间修饰语|以前不曾遇到过|tmod(遇到，以前）|
 |plmod|localizer modifier of a preposition|介词性地点修饰|在这片热土上|plmod(在，上）|
@@ -56,7 +56,7 @@ See also [Stanford typed dependencies manual](https://nlp.stanford.edu/software/
 |top|topic|主题|建筑是主要活动|top(是，建筑）|
 |pccomp|clausal complement of a preposition|介词补语|据有关部门介绍|pccomp(据，介绍）|
 |etc|etc modifier|省略关系|科技、文教等领域|etc(文教，等）|
-|lccomp|clausal complement of a localizer|位置补语|中国对外开放中升起的明星|lccomp(中，开方夂）|
+|lccomp|clausal complement of a localizer|位置补语|中国对外开放中升起的明星|lccomp(中，开放）|
 |ordmod|ordinal number modifier|量词修饰|第七个机构|ordmod(个，第七）|
 |xsubj|controlling subject|控制主语|银行决定先取得信用评级|xsubj (取得，银行）|
 |neg|negative modifier|否定修饰|以前不曾遇到过|neg(遇到，不）|
@@ -67,7 +67,7 @@ See also [Stanford typed dependencies manual](https://nlp.stanford.edu/software/
 |ba|“ba” construction|把字关系|把注意力转向市场|ba(转向，把）|
 |dvpm|manner DE(地）modifier|地字修饰|有效地防止流失|dvpm(有效，地）|
 |dvpmod|a "XP+DEV", phrase that modifies VP|地字动词短语|有效地防止流失|dvpmod(防止，有效）|
-|prnmod|parenthetical modifier|插入词修饰|八五期间（1990- 1995 )|pmmod(期间，1995)|
+|prnmod|parenthetical modifier|插入词修饰|八五期间（1990-1995 )|pmmod(期间，1995)|
 |cop|copular|系动词|原是自给自足的经济|cop(自给自足，是）|
 |pass|passive marker|被动标记|被认定为高技术产业|pass(认定，被）|
 |nsubjpass|nominal passive subject|被动名词主语|镍被称作现代工业的维生素|nsubjpass(称作，镍）|

@@ -24,8 +24,10 @@ class TransformerTaggingTokenizer(TransformerTagger):
         """ A tokenizer using transformer tagger for span prediction. It features with 2 high performance dictionaries
         to handle edge cases in real application.
 
-        - High priority dictionary: Perform longest-prefix-matching on input text which take higher priority over model predictions.
-        - Low priority dictionary: Perform longest-prefix-matching on model predictions and combing them.
+        - ``dict_force``: High priority dictionary performs longest-prefix-matching on input text which takes higher
+          priority over model predictions.
+        - ``dict_combine``: Low priority dictionary performs longest-prefix-matching on model predictions then
+          combines them.
 
         .. Note:: For algorithm beginners, longest-prefix-matching is the prerequisite to understand what dictionary can
             do and what it can't do. The tutorial in `this book <http://nlp.hankcs.com/book.php>`_ can be very helpful.
@@ -39,10 +41,8 @@ class TransformerTaggingTokenizer(TransformerTagger):
     def dict_force(self) -> DictInterface:
         r""" The high priority dictionary which perform longest-prefix-matching on inputs to split them into two subsets:
 
-        1. spans containing no keywords
-        2. keywords
-
-        These spans are then fed into tokenizer for further tokenization.
+        1. spans containing no keywords, which are then fed into tokenizer for further tokenization.
+        2. keywords, which will be outputed without furthur tokenization.
 
         .. Caution::
             Longest-prefix-matching **NEVER** guarantee the presence of any keywords. Abuse of
@@ -72,7 +72,7 @@ class TransformerTaggingTokenizer(TransformerTagger):
 
         Examples:
             >>> tok.dict_combine = {'和服', '服务行业'}
-            >>> tok("商品和服务行业")
+            >>> tok("商品和服务行业") # '和服' is not in the original results ['商品', '和', '服务']. '服务', '行业' are combined to '服务行业'
                 ['商品', '和', '服务行业']
 
         """

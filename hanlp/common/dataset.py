@@ -595,7 +595,7 @@ class PrefetchDataLoader(DataLoader):
 
     def close(self):
         """Close this dataloader and terminates internal processes and queue. It's recommended to call this method to
-            before a program can gracefully shutdown.
+            ensure a program can gracefully shutdown.
         """
         if self.prefetch:
             self.queue.close()
