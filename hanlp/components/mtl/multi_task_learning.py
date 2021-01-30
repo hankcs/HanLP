@@ -778,6 +778,7 @@ class MultiTaskLearning(TorchComponent):
             >>> del mtl['dep']  # Delete dep from MTL
 
         """
+        del self.config[task_name]
         del self.tasks[task_name]
         del self.model.decoders[task_name]
         del self._computation_graph[task_name]
