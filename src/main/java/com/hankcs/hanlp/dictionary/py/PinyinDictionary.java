@@ -180,15 +180,17 @@ public class PinyinDictionary
     protected static List<Pinyin> segLongest(char[] charArray, AhoCorasickDoubleArrayTrie<Pinyin[]> trie, boolean remainNone)
     {
         final Pinyin[][] wordNet = new Pinyin[charArray.length][];
+        final int[] lengths = new int[charArray.length];
         trie.parseText(charArray, new AhoCorasickDoubleArrayTrie.IHit<Pinyin[]>()
         {
             @Override
             public void hit(int begin, int end, Pinyin[] value)
             {
                 int length = end - begin;
-                if (wordNet[begin] == null || length > wordNet[begin].length)
+                if (length > lengths[begin])
                 {
-                    wordNet[begin] = length == 1 ? new Pinyin[]{value[0]} : value;
+                    wordNet[begin] = value;
+                    lengths[begin] = length;
                 }
             }
         });
@@ -208,7 +210,7 @@ public class PinyinDictionary
             {
                 pinyinList.add(pinyin);
             }
-            offset += wordNet[offset].length;
+            offset += lengths[offset];
         }
         return pinyinList;
     }

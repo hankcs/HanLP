@@ -30725,3 +30725,4 @@
 重启=chong2,qi3
 还款=huan2,kuan3
 侠传=xia2,zhuan4
+𩽾𩾌=an1,kang1
