@@ -18,6 +18,7 @@ import com.hankcs.hanlp.collection.trie.bintrie.BaseNode;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.DynamicCustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
 import com.hankcs.hanlp.seg.NShort.Path.AtomNode;
@@ -53,6 +54,11 @@ public abstract class Segment
     {
         config = new Config();
     }
+
+    /**
+     * 本分词器专用的词典，默认公用 CustomDictionary.DEFAULT
+     */
+    public DynamicCustomDictionary customDictionary = CustomDictionary.DEFAULT;
 
     /**
      * 原子分词
@@ -195,9 +201,9 @@ public abstract class Segment
      * @param vertexList 粗分结果
      * @return 合并后的结果
      */
-    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList)
+    protected List<Vertex> combineByCustomDictionary(List<Vertex> vertexList)
     {
-        return combineByCustomDictionary(vertexList, CustomDictionary.dat);
+        return combineByCustomDictionary(vertexList, customDictionary.dat);
     }
 
     /**
@@ -207,7 +213,7 @@ public abstract class Segment
      * @param dat        用户自定义词典
      * @return 合并后的结果
      */
-    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, DoubleArrayTrie<CoreDictionary.Attribute> dat)
+    protected  List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, DoubleArrayTrie<CoreDictionary.Attribute> dat)
     {
         assert vertexList.size() >= 2 : "vertexList至少包含 始##始 和 末##末";
         Vertex[] wordNet = new Vertex[vertexList.size()];
@@ -242,12 +248,12 @@ public abstract class Segment
             }
         }
         // BinTrie合并
-        if (CustomDictionary.trie != null)
+        if (customDictionary.trie != null)
         {
             for (int i = 1; i < length; ++i)
             {
                 if (wordNet[i] == null) continue;
-                BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
+                BaseNode<CoreDictionary.Attribute> state = customDictionary.trie.transition(wordNet[i].realWord.toCharArray(), 0);
                 if (state != null)
                 {
                     int to = i + 1;
@@ -287,9 +293,9 @@ public abstract class Segment
      * @param wordNetAll 收集用户词语到全词图中
      * @return 合并后的结果
      */
-    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, final WordNet wordNetAll)
+    protected List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, final WordNet wordNetAll)
     {
-        return combineByCustomDictionary(vertexList, CustomDictionary.dat, wordNetAll);
+        return combineByCustomDictionary(vertexList, customDictionary.dat, wordNetAll);
     }
 
     /**
@@ -300,7 +306,7 @@ public abstract class Segment
      * @param wordNetAll 收集用户词语到全词图中
      * @return 合并后的结果
      */
-    protected static List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, DoubleArrayTrie<CoreDictionary.Attribute> dat, final WordNet wordNetAll)
+    protected List<Vertex> combineByCustomDictionary(List<Vertex> vertexList, DoubleArrayTrie<CoreDictionary.Attribute> dat, final WordNet wordNetAll)
     {
         List<Vertex> outputList = combineByCustomDictionary(vertexList, dat);
         int line = 0;
@@ -310,7 +316,7 @@ public abstract class Segment
             final int currentLine = line;
             if (parentLength >= 3)
             {
-                CustomDictionary.parseText(vertex.realWord, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+                customDictionary.parseText(vertex.realWord, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
                 {
                     @Override
                     public void hit(int begin, int end, CoreDictionary.Attribute value)
@@ -726,6 +732,18 @@ public abstract class Segment
     public Segment enableCustomDictionary(boolean enable)
     {
         config.useCustomDictionary = enable;
+        return this;
+    }
+
+    /**
+     * 启用新的用户词典
+     *
+     * @param customDictionary 新的自定义词典
+     */
+    public Segment enableCustomDictionary(DynamicCustomDictionary customDictionary)
+    {
+        config.useCustomDictionary = true;
+        this.customDictionary = customDictionary;
         return this;
     }
 

@@ -56,7 +56,7 @@ public class DoubleArrayTrieTest extends TestCase
 
     public void testTransmit() throws Exception
     {
-        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
+        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.DEFAULT.dat;
         int index = dat.transition("龙", 1);
         assertNull(dat.output(index));
         index = dat.transition("窝", index);
