@@ -779,6 +779,7 @@ class MultiTaskLearning(TorchComponent):
 
         """
         del self.config[task_name]
+        self.config.task_names.remove(task_name)
         del self.tasks[task_name]
         del self.model.decoders[task_name]
         del self._computation_graph[task_name]
