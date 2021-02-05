@@ -11,7 +11,7 @@ If you want to temporally redirect `HANLP_HOME` to a different location, say `/d
 export HANLP_HOME=/data/hanlp
 ```
 
-## Using GPUs
+## Use GPUs
 
 By default, HanLP tries to use the least occupied GPU so that mostly you don't need to worry about it, HanLP makes the best choice for you. This behavior is very useful when you're using a public server shared across your lab or company with your collegues. 
 
@@ -42,7 +42,7 @@ resources.
 
 :::
 
-## Using mirror sites
+## Use Mirror Sites
 
 By default, we maintain a global CDN to host the models. However, in some regions the downloading speed can 
 be slow occasionally. If you happen to be in one of those regions, you can find some third party mirror sites 

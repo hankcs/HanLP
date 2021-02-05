@@ -21,7 +21,7 @@
 
 # ctb
 
-[The Part-Of-Speech Tagging Guidelines for the Penn Chinese Treebank (3.0)](https://repository.upenn.edu/cgi/viewcontent.cgi?article=1039&context=ircs_reports).
+ See also [The Part-Of-Speech Tagging Guidelines for the Penn Chinese Treebank (3.0)](https://repository.upenn.edu/cgi/viewcontent.cgi?article=1039&context=ircs_reports).
 
 | Tag  | Description                                                | Chinese      | Chinese Description                                                      | Examples               |
 |-----|-------------------------------------------------------|---------|---------------------------------------------------------|-------------------------|
@@ -45,9 +45,9 @@
 | M   | measure word                                          | 量词      | 量词                                                      | 个、群、公里                  |
 | MSP | other particle                                        | 其他小品词   | 其他虚词，包括“所”、“以”、“来”和“而”等出现在VP前的词                         | 所、以、来、而                 |
 | NN  | common noun                                           | 其他名词    | 除专有名词和时间名词外的所有名词                                        | 桌子、生活、经济                |
-| NOI | noise that  characters are written in the wrong order | 噪声      | 当“把”、“将”出现在结构“NP0 + BA + NP1+VP”时的词性                    | 事/NOI 类/NOI 各/NOI 故/NOI |
+| NOI | noise that  characters are written in the wrong order | 噪声      | 汉字顺序颠倒产生的噪声                    | 事/NOI 类/NOI 各/NOI 故/NOI |
 | NR  | proper noun                                           | 专有名词    | 专有名词，通常表示地名、人名、机构名等                                     | 北京、乔丹、微软                |
-| NT  | temporal noun                                         | 时间名词    | 表本时间概念的名词                                               | 一月、汉朝、当今                |
+| NT  | temporal noun                                         | 时间名词    | 表示时间概念的名词                                               | 一月、汉朝、当今                |
 | OD  | ordinal number                                        | 序数词     | 序列词                                                     | 第一百                     |
 | ON  | onomatopoeia                                          | 象声词     | 象声词                                                     | 哗哗、呼、咯吱               |
 | P   | preposition excl. XX and XX                           | 介词      | 介词                                                      | 从、对、根据                  |
@@ -57,6 +57,6 @@
 | SP  | sentence final particle                               | 句末助词    | 经常出现在句尾的词                                               | 吧、呢、啊、啊                 |
 | URL | web address                                           | 网址      | 网址                                                      | www.hankcs.com          |
 | VA  | predicative adjective                                 | 表语形容词   | 可以接在“很”后面的形容词谓语                                         | 雪白、厉害                   |
-| VC  | XX                                                    | 系动词     | 系词，表示“是”或“非”概念的动词                                       | 是、为、非                   |
+| VC  | XX                                                    | 系动词     | 系动词，表示“是”或“非”概念的动词                                       | 是、为、非                   |
 | VE  | XX as the main verb                                   | 动词有无    | 表示“有”或“无”概念的动词                                          | 有、没有、无                  |
 | VV  | other verb                                            | 其他动词    | 其他普通动词，包括情态词、控制动词、动作动词、心理动词等等                           | 可能、要、走、喜欢               |

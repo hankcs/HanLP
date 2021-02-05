@@ -57,6 +57,6 @@ These definitions are different from that of frameset `变化-1`:
 
 1.    ARG0: entity undergoing change
    
-Sometimes, the number of arguments and definations can vary a lot across framesets. In short, without word sense
-disambiguiation, the potential of SRL can not be fully exploited.
+Sometimes, the number of arguments and definitions can vary a lot across framesets. 
+In summary, word sense disambiguation is essential if SRL is to be used to best effect in practical applications  
 ```

@@ -38,7 +38,7 @@ It's hard to cover every API especially those of deep learning models, due to th
 
 :::
 
-## Repository structure
+## Repository Structure
 
 This repository is a split into a few critical folders:
 
