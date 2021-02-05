@@ -30,7 +30,7 @@ We are hosting a **non-commercial** API service and you are welcome to [apply fo
 An auth key is a password which gives you access to our API and protects our server from being abused. 
 Once obtained such an auth key, you can parse your document with our RESTful client which can be installed via:
 
-````{margin} **NonCommercial**
+````{margin} **Non-Commercial**
 ```{seealso}
 Our models and RESTful APIs are under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licence.
 ```
@@ -105,8 +105,8 @@ See our [data format](data_format) for details.
 import hanlp
 HanLP = hanlp.load(hanlp.pretrained.mtl.UD_ONTONOTES_TOK_POS_LEM_FEA_NER_SRL_DEP_SDP_CON_XLMR_BASE)
 print(HanLP(['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environments.',
-            '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。',
-            '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。']))
+             '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。',
+             '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。']))
 ```
 
 Due to the fact that the service provider is very likely running a different model or having different settings, the

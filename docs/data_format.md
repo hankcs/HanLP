@@ -44,6 +44,13 @@ curl -X POST "https://hanlp.hankcs.com/api/parse" \
 
 ### Model Input
 
+````{margin} **How about training inputs?**
+```{seealso}
+We mostly follow the conventional file format of each NLP task instead of re-inventing them. Thus, we use `.tsv` for tagging and 
+`.conllu` for parsing etc. For more details, refer to [datasets](https://hanlp.hankcs.com/docs/api/hanlp/datasets/index.html).   
+```
+````
+
 The input format to models is specified per model and per task. Generally speaking, if a model has no tokenizer built in, then its input is
 a sentence in `list[str]` form (a list of tokens), or multiple such sentences nested in a `list`.
 

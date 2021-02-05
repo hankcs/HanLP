@@ -1,11 +1,11 @@
 # Contributing Guide
 
-Thank you for being interested in contributing to the `HanLP`! You
+Thank you for being interested in contributing to `HanLP`! You
 are awesome ✨.
 
 This guideline contains information about our conventions around coding style, pull request workflow, commit messages and more.
 
-This page contains information to help you get started with development on this
+This page also contains information to help you get started with development on this
 project.
 
 ## Development
@@ -30,7 +30,7 @@ To work on this project, you need Python 3.6 or newer.
 This project has a test suite to ensure certain important APIs work properly. The tests can be run using:
 
 ```console
-$ python plugins/hanlp_trie/tests/test_trie.py
+$ python -m unittest discover ./tests
 ```
 
 :::{tip}
@@ -55,6 +55,6 @@ docs/
 tests/
 : Testing infrastructure that uses `unittest` to ensure the output of API is what we expect it to be.
 
-.github/workflows/
+.github/
 : Contains Continuous-integration (CI) workflows, run on commits/PRs to the GitHub repository.
 
