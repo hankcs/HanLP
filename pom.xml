@@ -4,7 +4,7 @@
 
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>1.7.8</version>
+    <version>1.8.0</version>
 
     <name>HanLP</name>
     <url>http://www.hankcs.com/</url>
@@ -25,7 +25,7 @@
     <developers>
         <developer>
             <name>hankcs</name>
-            <email>me@hankcs.com</email>
+            <email>hankcshe@gmail.com</email>
             <url>http://www.hankcs.com</url>
         </developer>
     </developers>
