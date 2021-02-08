@@ -113,6 +113,11 @@ class Document(dict):
             A :class:`~hanlp_common.conll.CoNLLSentence` representation.
 
         """
+        tok = prefix_match(tok, self)
+        lem = prefix_match(lem, self)
+        pos = prefix_match(pos, self)
+        dep = prefix_match(dep, self)
+        sdp = prefix_match(sdp, self)
         results = []
         if not self[tok]:
             return results
