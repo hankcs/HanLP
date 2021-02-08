@@ -16,7 +16,7 @@ def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Compon
     Args:
       save_dir (str): The identifier to the saved component. It could be a remote URL or a local path.
       verbose: ``True`` to print loading progress.
-      **kwargs: Arguments passed to `Component.load`
+      **kwargs: Arguments passed to :func:`hanlp.common.torch_component.TorchComponent.load`
 
     ``devices`` is a useful arguments to specify the GPU devices component will use.
 
@@ -25,7 +25,7 @@ def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Compon
         import hanlp
         # Load component onto the 0-th GPU.
         hanlp.load(..., devices=0)
-        # Load component onto the 0-th and 1-th GPU using data parallelization.
+        # Load component onto the 0-th and 1-st GPU using data parallelization.
         hanlp.load(..., devices=[0,1])
 
     .. Note::
@@ -33,7 +33,7 @@ def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Compon
         common to see multiple downloading per single load.
 
     Returns:
-      A pretrained component.
+      hanlp.common.component.Component: A pretrained component.
 
     """
     save_dir = hanlp.pretrained.ALL.get(save_dir, save_dir)

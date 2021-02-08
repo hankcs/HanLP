@@ -1,5 +1,37 @@
 # Install
 
+```{figure} _static/install-versions.svg
+---
+width: 100%
+figclass: caption
+alt: HanLP versions
+name: hanlp-versions
+---
+Choose your HanLP version
+```
+
+## Install RESTful Packages
+
+```{eval-rst}
+.. margin:: **Beginners Attention**
+
+    .. Hint:: New to NLP? Just install RESTful packages and call :meth:`~hanlp_restful.HanLPClient.parse` without pain.
+```
+
+For beginners, the recommended RESTful packages are easier to start with. 
+The only requirement is [an auth key](https://bbs.hankcs.com/t/apply-for-free-hanlp-restful-apis/3178). 
+We officially released the following language bindings:
+
+### Python
+
+```shell script
+pip install hanlp_restful
+```
+
+### Java
+
+See [Java instructions](https://hanlp.hankcs.com/docs/api/restful_java.html).
+
 ## Install Native Package
 
 The native package running locally can be installed via pip.
@@ -48,7 +80,7 @@ Some TensorFlow/fastText models will ask you to install the missing TensorFlow/f
 
 ```shell script
 pip install hanlp[full]
-```  
+```
 
 
 ```{caution}

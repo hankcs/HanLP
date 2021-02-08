@@ -42,7 +42,7 @@ setup(
         'toposort==1.5',
         'transformers>=4.1.1',
         'torch>=1.6.0',
-        'hanlp-common>=0.0.5',
+        'hanlp-common>=0.0.6',
         'hanlp-trie>=0.0.2',
     ],
     extras_require={

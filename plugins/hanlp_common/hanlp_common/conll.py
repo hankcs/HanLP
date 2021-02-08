@@ -324,6 +324,12 @@ class CoNLLSentence(list):
         return isprojective([x.head for x in self])
 
 
+class CoNLLSentenceList(list):
+
+    def __str__(self) -> str:
+        return '\n\n'.join(str(x) for x in self)
+
+
 def sanitize_conll_int_value(value: Union[str, int]):
     if value is None or isinstance(value, int):
         return value
