@@ -169,12 +169,13 @@ class TransformerTaggingTokenizer(TransformerTagger):
                     buffer.append(''.join(tokens[start:end]))
                     offset = end
                     if rebuild_span:
-                        delta += end - start - 1
                         start -= delta
                         end -= delta
                         combined_span = (spans_per_sent[start][0], spans_per_sent[end - 1][1])
                         del spans_per_sent[start:end]
-                        spans_per_sent.insert(start, combined_span)
+                        _delta = end - start - 1
+                        delta += _delta
+                        spans_per_sent.insert(start - _delta, combined_span)
                 if offset < len(tokens):
                     buffer.extend(tokens[offset:])
                 tokens = buffer
