@@ -459,6 +459,7 @@ class MultiTaskLearning(TorchComponent):
                 batch_size: int = None,
                 tasks: Optional[Union[str, List[str]]] = None,
                 skip_tasks: Optional[Union[str, List[str]]] = None,
+                resolved_tasks=None,
                 **kwargs) -> Document:
         """Predict on data.
 
@@ -467,6 +468,7 @@ class MultiTaskLearning(TorchComponent):
             batch_size: Decoding batch size.
             tasks: The tasks to predict.
             skip_tasks: The tasks to skip.
+            resolved_tasks: The resolved tasks to override ``tasks`` and ``resolved_tasks``.
             **kwargs: Not used.
 
         Returns:
@@ -476,7 +478,7 @@ class MultiTaskLearning(TorchComponent):
         if not data:
             return doc
 
-        target_tasks = self.resolve_tasks(tasks, skip_tasks)
+        target_tasks = resolved_tasks or self.resolve_tasks(tasks, skip_tasks)
         flatten_target_tasks = [self.tasks[t] for group in target_tasks for t in group]
         cls_is_bos = any([x.cls_is_bos for x in flatten_target_tasks])
         sep_is_eos = any([x.sep_is_eos for x in flatten_target_tasks])
