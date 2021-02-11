@@ -620,13 +620,13 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
      * @param vertexList 粗分结果
      * @return 合并后的结果
      */
-    protected static List<CoreDictionary.Attribute> combineWithCustomDictionary(List<String> vertexList)
+    protected List<CoreDictionary.Attribute> combineWithCustomDictionary(List<String> vertexList)
     {
         String[] wordNet = new String[vertexList.size()];
         vertexList.toArray(wordNet);
         CoreDictionary.Attribute[] attributeArray = new CoreDictionary.Attribute[wordNet.length];
         // DAT合并
-        DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.dat;
+        DoubleArrayTrie<CoreDictionary.Attribute> dat = customDictionary.dat;
         int length = wordNet.length;
         for (int i = 0; i < length; ++i)
         {
@@ -656,12 +656,12 @@ public class AbstractLexicalAnalyzer extends CharacterBasedSegment implements Le
             }
         }
         // BinTrie合并
-        if (CustomDictionary.trie != null)
+        if (customDictionary.trie != null)
         {
             for (int i = 0; i < length; ++i)
             {
                 if (wordNet[i] == null) continue;
-                BaseNode<CoreDictionary.Attribute> state = CustomDictionary.trie.transition(wordNet[i], 0);
+                BaseNode<CoreDictionary.Attribute> state = customDictionary.trie.transition(wordNet[i], 0);
                 if (state != null)
                 {
                     int to = i + 1;

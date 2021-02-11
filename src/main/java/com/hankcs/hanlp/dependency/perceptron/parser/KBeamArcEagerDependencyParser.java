@@ -55,9 +55,12 @@ public class KBeamArcEagerDependencyParser extends AbstractDependencyParser
 
     public KBeamArcEagerDependencyParser(String modelPath) throws IOException, ClassNotFoundException
     {
-        this(new PerceptronLexicalAnalyzer(HanLP.Config.PerceptronCWSModelPath,
-                                           HanLP.Config.PerceptronPOSModelPath.replaceFirst("data.*?.bin", "data/model/perceptron/ctb/pos.bin")
-        ).enableCustomDictionary(false), new KBeamArcEagerParser(modelPath));
+        this(modelPath, HanLP.Config.PerceptronCWSModelPath, HanLP.Config.PerceptronPOSModelPath.replaceFirst("data/model/.*?.bin", "data/model/perceptron/ctb/pos.bin"));
+    }
+
+    public KBeamArcEagerDependencyParser(String modelPath, String cwsModelPath, String posModelPath) throws IOException, ClassNotFoundException
+    {
+        this(new PerceptronLexicalAnalyzer(cwsModelPath, posModelPath).enableCustomDictionary(false), new KBeamArcEagerParser(modelPath));
     }
 
     /**

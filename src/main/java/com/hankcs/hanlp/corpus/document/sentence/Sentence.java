@@ -221,7 +221,7 @@ public class Sentence implements Serializable, Iterable<IWord>
         {
             return null;
         }
-        Pattern pattern = Pattern.compile("(\\[(([^\\s]+/[0-9a-zA-Z]+)\\s+)+?([^\\s]+/[0-9a-zA-Z]+)]/?[0-9a-zA-Z]+)|([^\\s]+/[0-9a-zA-Z]+)");
+        Pattern pattern = Pattern.compile("(\\[(([^\\s\\]]+/[0-9a-zA-Z]+)\\s+)+?([^\\s\\]]+/[0-9a-zA-Z]+)]/?[0-9a-zA-Z]+)|([^\\s]+/[0-9a-zA-Z]+)");
         Matcher matcher = pattern.matcher(param);
         List<IWord> wordList = new LinkedList<IWord>();
         while (matcher.find())

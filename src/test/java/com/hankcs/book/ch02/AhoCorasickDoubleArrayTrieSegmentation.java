@@ -42,7 +42,7 @@ public class AhoCorasickDoubleArrayTrieSegmentation
         }
     }
 
-    private static void classicDemo() throws IOException
+    private static void classicDemo()
     {
         String[] keyArray = new String[]{"hers", "his", "she", "he"};
         TreeMap<String, String> map = new TreeMap<String, String>();

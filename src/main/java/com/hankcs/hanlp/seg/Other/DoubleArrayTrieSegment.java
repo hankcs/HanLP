@@ -78,10 +78,10 @@ public class DoubleArrayTrieSegment extends DictionaryBasedSegment
         matchLongest(sentence, wordNet, natureArray, trie);
         if (config.useCustomDictionary)
         {
-            matchLongest(sentence, wordNet, natureArray, CustomDictionary.dat);
-            if (CustomDictionary.trie != null)
+            matchLongest(sentence, wordNet, natureArray, customDictionary.dat);
+            if (customDictionary.trie != null)
             {
-                CustomDictionary.trie.parseLongestText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
+                customDictionary.trie.parseLongestText(charArray, new AhoCorasickDoubleArrayTrie.IHit<CoreDictionary.Attribute>()
                 {
                     @Override
                     public void hit(int begin, int end, CoreDictionary.Attribute value)

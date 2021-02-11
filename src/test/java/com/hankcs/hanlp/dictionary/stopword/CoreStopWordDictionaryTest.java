@@ -59,5 +59,7 @@ public class CoreStopWordDictionaryTest extends TestCase
     {
         CoreStopWordDictionary.reload();
         assertTrue(CoreStopWordDictionary.contains("这里"));
+        CoreStopWordDictionary.dictionary.clear();
+        assertFalse(CoreStopWordDictionary.contains("这里"));
     }
 }

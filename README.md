@@ -9,7 +9,7 @@ HanLP: Han Language Processing
 
 ------
 
-HanLP是一系列模型与算法组成的NLP工具包，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。内部算法经过工业界和学术界考验，配套书籍[《自然语言处理入门》](http://nlp.hankcs.com/book.php)已经出版。目前，基于深度学习的[HanLP 2.0](https://github.com/hankcs/HanLP/tree/doc-zh)正处于alpha测试阶段，未来将实现知识图谱、问答系统、自动摘要、文本语义相似度、指代消解、三元组抽取、实体链接等功能。
+HanLP是一系列模型与算法组成的NLP工具包，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。内部算法经过工业界和学术界考验，配套书籍[《自然语言处理入门》](http://nlp.hankcs.com/book.php)已经出版。目前，基于深度学习的[HanLP 2.x](https://github.com/hankcs/HanLP/tree/doc-zh)已正式发布，次世代最先进的NLP技术，支持包括简繁中英日俄法德在内的104种语言上的联合任务。
 
 HanLP提供下列功能：
 
@@ -78,7 +78,7 @@ HanLP提供下列功能：
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.7.8</version>
+    <version>portable-1.8.0</version>
 </dependency>
 ```
 

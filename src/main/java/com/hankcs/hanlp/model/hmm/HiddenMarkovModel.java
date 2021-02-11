@@ -12,6 +12,7 @@ package com.hankcs.hanlp.model.hmm;
 
 import com.hankcs.hanlp.utility.MathUtility;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,9 +45,9 @@ public abstract class HiddenMarkovModel
      */
     public HiddenMarkovModel(float[] start_probability, float[][] transition_probability, float[][] emission_probability)
     {
-        this.start_probability = start_probability;
-        this.transition_probability = transition_probability;
-        this.emission_probability = emission_probability;
+        this.start_probability = (float[]) deepCopy(start_probability);
+        this.transition_probability = (float[][]) deepCopy(transition_probability);
+        this.emission_probability = (float[][]) deepCopy(emission_probability);
     }
 
     /**
@@ -297,5 +298,30 @@ public abstract class HiddenMarkovModel
         for (int i = 0; i < A.length; i++)
             if (Math.abs(A[i] - B[i]) > eta) return false;
         return true;
+    }
+
+    protected static Object deepCopy(Object object)
+    {
+        if (object == null)
+        {
+            return null;
+        }
+        try
+        {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(object);
+            oos.flush();
+            oos.close();
+            bos.close();
+
+            byte[] byteData = bos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+            return new ObjectInputStream(bais).readObject();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

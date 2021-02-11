@@ -16,6 +16,8 @@ import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.BaseSearcher;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.DynamicCustomDictionary;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
 import java.util.Map;
 
@@ -63,5 +65,12 @@ public class DemoCustomDictionary
         // Note:动态增删不会影响词典文件
         // 目前CustomDictionary使用DAT储存词典文件中的词语，用BinTrie储存动态加入的词语，前者性能高，后者性能低
         // 之所以保留动态增删功能，一方面是历史遗留特性，另一方面是调试用；未来可能会去掉动态增删特性。
+
+        // 系统默认的词典
+        DynamicCustomDictionary dictionary = CustomDictionary.DEFAULT;
+        // 每个分词器都有一份词典，默认公用 CustomDictionary.DEFAULT，你可以为任何分词器指定一份不同的词典
+        DynamicCustomDictionary myDictionary = new DynamicCustomDictionary("data/dictionary/custom/CustomDictionary.txt", "data/dictionary/custom/机构名词典.txt");
+        StandardTokenizer.SEGMENT.enableCustomDictionary(myDictionary);
+        StandardTokenizer.SEGMENT.customDictionary.insert("插入到该分词器专用的词典中");
     }
 }
