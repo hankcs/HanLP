@@ -2,11 +2,10 @@
 # Author: hankcs
 # Date: 2020-08-11 02:48
 import functools
+from copy import copy
 from typing import TextIO, Union, List, Dict, Any, Set
-from bisect import bisect
 
 import torch
-
 from hanlp.common.dataset import SamplerBuilder
 from hanlp.common.transform import TransformList
 from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
@@ -162,6 +161,7 @@ class TransformerTaggingTokenizer(TransformerTagger):
                         offset += sum(len(x) for x in sub_tokens[start:end])
                 buffer = []
                 offset = 0
+                delta = 0
                 for start, end, label in dict_combine.tokenize(tokens):
                     # batch['raw_token'][0][start:end]
                     if offset < start:
@@ -169,6 +169,9 @@ class TransformerTaggingTokenizer(TransformerTagger):
                     buffer.append(''.join(tokens[start:end]))
                     offset = end
                     if rebuild_span:
+                        delta += end - start - 1
+                        start -= delta
+                        end -= delta
                         combined_span = (spans_per_sent[start][0], spans_per_sent[end - 1][1])
                         del spans_per_sent[start:end]
                         spans_per_sent.insert(start, combined_span)
