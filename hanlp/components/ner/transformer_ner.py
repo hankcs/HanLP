@@ -56,6 +56,7 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
         sents = batch[self.config.token_key]
         dict_whitelist = self.dict_whitelist
         dict_blacklist = self.dict_blacklist
+        merge_types = self.config.get('merge_types', None)
         for tags, tokens in zip(batch_tags, sents):
             if dict_whitelist:
                 for start, end, label in dict_whitelist.tokenize(tokens):
@@ -69,6 +70,17 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
                                 tags[i] = 'I-' + label
                             tags[end - 1] = 'E-' + label
             entities = get_entities(tags)
+            if merge_types and len(entities) > 1:
+                merged_entities = []
+                begin = 0
+                for i in range(1, len(entities)):
+                    if entities[begin][0] != entities[i][0] or entities[i - 1][2] != entities[i][1] \
+                            or entities[i][0] not in merge_types:
+                        merged_entities.append((entities[begin][0], entities[begin][1], entities[i - 1][2]))
+                        begin = i
+                merged_entities.append((entities[begin][0], entities[begin][1], entities[-1][2]))
+                entities = merged_entities
+
             if dict_blacklist:
                 pruned = []
                 delimiter_in_entity = self.config.get('delimiter_in_entity', ' ')
@@ -101,6 +113,7 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
 
     def fit(self, trn_data, dev_data, save_dir, transformer,
             delimiter_in_entity=None,
+            merge_types: List[str] = None,
             average_subwords=False,
             word_dropout: float = 0.2,
             hidden_dropout=None,
@@ -138,6 +151,7 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
             transformer: An identifier of a pre-trained transformer.
             delimiter_in_entity: The delimiter between tokens in entity, which is used to rebuild entity by joining
                 tokens during decoding.
+            merge_types: The types of consecutive entities to be merged.
             average_subwords: ``True`` to average subword representations.
             word_dropout: Dropout rate to randomly replace a subword with MASK.
             hidden_dropout: Dropout rate applied to hidden states.

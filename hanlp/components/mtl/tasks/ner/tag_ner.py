@@ -55,6 +55,7 @@ class TaggingNamedEntityRecognition(Task, TransformerNamedEntityRecognizer):
                  tagging_scheme=None,
                  crf=False,
                  delimiter_in_entity=None,
+                 merge_types: List[str] = None,
                  secondary_encoder=None,
                  token_key='token',
                  dict_whitelist: Union[DictInterface, Union[Dict[str, Any], Set[str]]] = None,
@@ -89,6 +90,7 @@ class TaggingNamedEntityRecognition(Task, TransformerNamedEntityRecognizer):
             crf: ``True`` to enable CRF (:cite:`lafferty2001conditional`).
             delimiter_in_entity: The delimiter between tokens in entity, which is used to rebuild entity by joining
                 tokens during decoding.
+            merge_types: The types of consecutive entities to be merged.
             secondary_encoder: An optional secondary encoder to provide enhanced representation by taking the hidden
                 states from the main encoder as input.
             token_key: The key to tokens in dataset. This should always be set to ``token`` in MTL.
