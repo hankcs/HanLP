@@ -21,7 +21,7 @@
 
 # SemEval2016
 
-See also [SemEval-2016 Task 9](https://www.hankcs.com/nlp/sdp-corpus.html).
+See also [SemEval-2016 Task 9](https://www.hankcs.com/nlp/sdp-corpus.html) and [CSDP](https://csdp-doc.readthedocs.io/zh_CN/latest/%E9%99%84%E5%BD%95/).
 
 | 关系类型   | Tag           | Description        | Example                     |
 |--------|---------------|--------------------|-----------------------------|

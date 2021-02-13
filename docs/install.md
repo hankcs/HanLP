@@ -12,6 +12,8 @@ Choose your HanLP version
 
 ## Install RESTful Packages
 
+[![Downloads](https://pepy.tech/badge/hanlp-restful)](https://pepy.tech/project/hanlp-restful) [![Downloads](https://pepy.tech/badge/hanlp-restful/month)](https://pepy.tech/project/hanlp-restful) [![Downloads](https://pepy.tech/badge/hanlp-restful/week)](https://pepy.tech/project/hanlp-restful) 
+
 ```{eval-rst}
 .. margin:: **Beginners Attention**
 
@@ -33,6 +35,8 @@ pip install hanlp_restful
 See [Java instructions](https://hanlp.hankcs.com/docs/api/restful_java.html).
 
 ## Install Native Package
+
+[![Downloads](https://pepy.tech/badge/hanlp)](https://pepy.tech/project/hanlp) [![Downloads](https://pepy.tech/badge/hanlp/month)](https://pepy.tech/project/hanlp) [![Downloads](https://pepy.tech/badge/hanlp/week)](https://pepy.tech/project/hanlp)  
 
 The native package running locally can be installed via pip.
 
