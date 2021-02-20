@@ -20,10 +20,10 @@ def gpus_available() -> dict:
         nvmlInit()
         gpus = {}
         visible_devices = os.environ.get('CUDA_VISIBLE_DEVICES', None)
-        if visible_devices:
-            visible_devices = {int(x.strip()) for x in visible_devices.split(',')}
-        else:
+        if visible_devices is None:
             visible_devices = list(range(nvmlDeviceGetCount()))
+        else:
+            visible_devices = {int(x.strip()) for x in visible_devices.split(',')}
         for i, real_id in enumerate(visible_devices):
             h = nvmlDeviceGetHandleByIndex(real_id)
             info = nvmlDeviceGetMemoryInfo(h)
@@ -38,11 +38,12 @@ def gpus_available() -> dict:
             # c = torch.cuda.memory_cached(0)
             # a = torch.cuda.memory_allocated(0)
             # print(t, c, a)
-        nvmlShutdown()
         return dict(sorted(gpus.items(), key=lambda x: x[1], reverse=True))
     except Exception as e:
         logger.debug(f'Failed to get gpu info due to {e}')
         return {}
+    finally:
+        nvmlShutdown()
 
 
 def visuable_devices():
