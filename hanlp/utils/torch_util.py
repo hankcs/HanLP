@@ -38,12 +38,11 @@ def gpus_available() -> dict:
             # c = torch.cuda.memory_cached(0)
             # a = torch.cuda.memory_allocated(0)
             # print(t, c, a)
+        nvmlShutdown()
         return dict(sorted(gpus.items(), key=lambda x: x[1], reverse=True))
     except Exception as e:
         logger.debug(f'Failed to get gpu info due to {e}')
         return {}
-    finally:
-        nvmlShutdown()
 
 
 def visuable_devices():
