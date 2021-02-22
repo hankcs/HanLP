@@ -5,8 +5,11 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import junit.framework.TestCase;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CharTableTest extends TestCase
 {
@@ -15,10 +18,38 @@ public class CharTableTest extends TestCase
         System.out.println(CharTable.convert('？'));
         assertEquals('(', CharTable.convert('（'));
     }
-    public void testNormalizeSpace() throws Exception{
-        assertEquals(CharTable.convert('\t'),' ');
-        assertEquals(CharTable.convert('\n'),' ');
-        assertEquals(CharTable.convert('\f'),' ');
+
+    public void testNormalizeSpace() throws Exception
+    {
+        assertEquals(CharTable.convert('\t'), ' ');
+        assertEquals(CharTable.convert('\n'), ' ');
+        assertEquals(CharTable.convert('\f'), ' ');
+    }
+
+    public void testIssue1615()
+    {
+        new File("data/dictionary/other/CharTable.txt.bin").delete();
+        Map<String, String> normalizationBadCase = new HashMap<String, String>();
+        normalizationBadCase.put("猛", "猛");
+        normalizationBadCase.put("蜺", "蜺");
+        normalizationBadCase.put("脊", "脊");
+        normalizationBadCase.put("骼", "骼");
+        normalizationBadCase.put("拾", "拾");
+        normalizationBadCase.put("劈", "劈");
+        normalizationBadCase.put("溜", "溜");
+        normalizationBadCase.put("呱", "呱");
+        normalizationBadCase.put("怵", "怵");
+        normalizationBadCase.put("糸", "丝");
+        normalizationBadCase.put("乾", "乾");
+        normalizationBadCase.put("艸", "草");
+        for (Map.Entry<String, String> entry : normalizationBadCase.entrySet())
+        {
+            String input = entry.getKey();
+            String result = CharTable.convert(input);
+            String expected = entry.getValue();
+            System.out.println(input + "=" + expected);
+            assert result.equals(expected);
+        }
     }
 //    public void testConvert() throws Exception
 //    {
