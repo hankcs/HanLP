@@ -32,7 +32,6 @@ class RelativeSinusoidalPositionalEmbedding(nn.Module):
             padding_idx,
         )
         self.register_buffer('weights', weights)
-        self.register_buffer('_float_tensor', torch.as_tensor(1))
 
     def get_embedding(self, num_embeddings, embedding_dim, padding_idx=None):
         """Build sinusoidal embeddings.
@@ -78,7 +77,7 @@ class RelativeSinusoidalPositionalEmbedding(nn.Module):
                 self.embedding_dim,
                 self.padding_idx,
             )
-            weights = weights.to(self._float_tensor)
+            weights = weights.to(self.weights.device)
             del self.weights
             self.origin_shift = weights.size(0) // 2
             self.register_buffer('weights', weights)
