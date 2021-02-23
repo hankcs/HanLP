@@ -327,8 +327,8 @@ class Vocab(Serializable):
         """
         if self.pad_token:
             return self.pad_token
-        if self.first_token:
-            return self.first_token
+        # if self.first_token:
+        #     return self.first_token
         return PAD
 
     @property
@@ -345,8 +345,8 @@ class Vocab(Serializable):
         """
         if self.unk_token:
             return self.unk_token
-        if self.first_token:
-            return self.first_token
+        # if self.first_token:
+        #     return self.first_token
         return UNK
 
     def __repr__(self) -> str:

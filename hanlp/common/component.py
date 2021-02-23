@@ -4,7 +4,9 @@
 import inspect
 from abc import ABC, abstractmethod
 from typing import Any
-
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 from hanlp_common.configurable import Configurable
 
 
