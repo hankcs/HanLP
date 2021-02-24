@@ -12,6 +12,8 @@ from bert.loader_albert import albert_params
 from hanlp.layers.transformers.tf_imports import zh_albert_models_google, bert_models_google
 from hanlp.utils.io_util import get_resource, stdout_redirected, hanlp_home
 
+bert.loader.trace = bert.loader_albert.trace = lambda *a, **k: None
+
 
 def build_transformer(transformer, max_seq_length, num_labels, tagging=True, tokenizer_only=False):
     spm_model_file = None
