@@ -310,7 +310,7 @@ def cky(scores, mask):
         return [(i, j)] + ltree + rtree
 
     p = p.permute(2, 0, 1).tolist()
-    trees = [backtrack(p[i], 0, length) for i, length in enumerate(lens.tolist())]
+    trees = [backtrack(p[i], 0, length) if length else [] for i, length in enumerate(lens.tolist())]
 
     return trees
 

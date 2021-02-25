@@ -188,6 +188,8 @@ def build_tree(tokens: List[str], sequence):
             (VP (_ enjoys) (S (VP (_ playing) (NP (_ tennis)))))
             (_ .)))
     """
+    if not tokens:  # User passed in [], which is the tokenized result of ''
+        return Tree('TOP', [])
     tree = Tree('TOP', [Tree('_', [t]) for t in tokens])
     root = tree.label()
     leaves = [subtree for subtree in tree.subtrees() if not isinstance(subtree[0], Tree)]
