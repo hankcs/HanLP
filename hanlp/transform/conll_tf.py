@@ -112,42 +112,57 @@ class CoNLLTransform(Transform):
 
     def samples_to_dataset(self, samples: Generator, map_x=None, map_y=None, batch_size=5000, shuffle=None, repeat=None,
                            drop_remainder=False, prefetch=1, cache=True) -> tf.data.Dataset:
-        def generator():
-            # custom bucketing, load corpus into memory
-            corpus = list(x for x in (samples() if callable(samples) else samples))
-            lengths = [self.len_of_sent(i) for i in corpus]
-            if len(corpus) < 32:
-                n_buckets = 1
-            else:
-                n_buckets = min(self.config.n_buckets, len(corpus))
-            buckets = dict(zip(*kmeans(lengths, n_buckets)))
-            # buckets = dict(zip(*kmeans(lengths, n_buckets, 233)))
-            sizes, buckets = zip(*[
-                (size, bucket) for size, bucket in buckets.items()
-            ])
-            # the number of chunks in each bucket, which is clipped by
-            # range [1, len(bucket)]. Thus how many batches of batch_size in each bucket
-            chunks = [min(len(bucket), max(round(size * len(bucket) / batch_size), 1)) for size, bucket in
-                      zip(sizes, buckets)]
-            range_fn = randperm if shuffle else arange
-            max_samples_per_batch = self.config.get('max_samples_per_batch', None)
-            # range_fn = arange
-            for i in tolist(range_fn(len(buckets))):
-                split_sizes = [(len(buckets[i]) - j - 1) // chunks[i] + 1
-                               for j in range(chunks[i])]  # how many sentences in each batch
-                for batch_indices in tf.split(range_fn(len(buckets[i])), split_sizes):
-                    indices = [buckets[i][j] for j in tolist(batch_indices)]
-                    if max_samples_per_batch:
-                        for j in range(0, len(indices), max_samples_per_batch):
-                            yield from self.batched_inputs_to_batches(corpus, indices[j:j + max_samples_per_batch],
-                                                                      shuffle)
-                    else:
-                        yield from self.batched_inputs_to_batches(corpus, indices, shuffle)
+        if shuffle:
+            def generator():
+                # custom bucketing, load corpus into memory
+                corpus = list(x for x in (samples() if callable(samples) else samples))
+                lengths = [self.len_of_sent(i) for i in corpus]
+                if len(corpus) < 32:
+                    n_buckets = 1
+                else:
+                    n_buckets = min(self.config.n_buckets, len(corpus))
+                buckets = dict(zip(*kmeans(lengths, n_buckets)))
+                sizes, buckets = zip(*[
+                    (size, bucket) for size, bucket in buckets.items()
+                ])
+                # the number of chunks in each bucket, which is clipped by
+                # range [1, len(bucket)]
+                chunks = [min(len(bucket), max(round(size * len(bucket) / batch_size), 1)) for size, bucket in
+                          zip(sizes, buckets)]
+                range_fn = randperm if shuffle else arange
+                max_samples_per_batch = self.config.get('max_samples_per_batch', None)
+                for i in tolist(range_fn(len(buckets))):
+                    split_sizes = [(len(buckets[i]) - j - 1) // chunks[i] + 1
+                                   for j in range(chunks[i])]  # how many sentences in each batch
+                    for batch_indices in tf.split(range_fn(len(buckets[i])), split_sizes):
+                        indices = [buckets[i][j] for j in tolist(batch_indices)]
+                        if max_samples_per_batch:
+                            for j in range(0, len(indices), max_samples_per_batch):
+                                yield from self.batched_inputs_to_batches(corpus, indices[j:j + max_samples_per_batch],
+                                                                          shuffle)
+                        else:
+                            yield from self.batched_inputs_to_batches(corpus, indices, shuffle)
 
-        # debug for CoNLLTransform
+        else:
+            def generator():
+                # custom bucketing, load corpus into memory
+                corpus = list(x for x in (samples() if callable(samples) else samples))
+                n_tokens = 0
+                batch = []
+                for idx, sent in enumerate(corpus):
+                    sent_len = self.len_of_sent(sent)
+                    if n_tokens + sent_len > batch_size and batch:
+                        yield from self.batched_inputs_to_batches(corpus, batch, shuffle)
+                        n_tokens = 0
+                        batch = []
+                    n_tokens += sent_len
+                    batch.append(idx)
+                if batch:
+                    yield from self.batched_inputs_to_batches(corpus, batch, shuffle)
+
         # next(generator())
-        return super().samples_to_dataset(generator, False, False, 0, False, repeat, drop_remainder, prefetch,
-                                          cache)
+        return Transform.samples_to_dataset(self, generator, False, False, 0, False, repeat, drop_remainder, prefetch,
+                                            cache)
 
 
 class CoNLL_DEP_Transform(CoNLLTransform):
@@ -162,11 +177,11 @@ class CoNLL_DEP_Transform(CoNLLTransform):
         Args:
           corpus(list): A list of inputs
           indices(list): A list of indices, each list belongs to a batch
-          shuffle: 
+          shuffle:
 
         Returns:
 
-        
+
         """
         raw_batch = [[], [], [], []]
         for idx in indices:
