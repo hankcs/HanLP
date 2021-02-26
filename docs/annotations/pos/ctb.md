@@ -36,7 +36,7 @@
 | DER | XX in V-de const. and V-de-R                          | 表结果的“得” | 当“得”出现在结构“V-得-R”时的词性，如，他跑得很快                            | 得                       |
 | DEV | XX bevore VP                                          | 表方式的“地” | 当“地”出现在结构“X-地-VP”时的词性，如，高兴地说                            | 地                       |
 | DT  | determiner                                            | 限定词     | 代冠词，通常用来修饰名词                                            | 这、那、该、每、各               |
-| ETC | for words XX, XX XX                                   | 表示省略    | “等”、“等等”的词性                                             | 绝 咕咕 寸、寸寸               |
+| ETC | for words XX, XX XX                                   | 表示省略    | “等”、“等等”的词性                                             | 等、等等               |
 | FW  | foreign words                                         | 外来语     | 外来词                                                     | 卡拉、A型                   |
 | IJ  | interjection                                          | 句首感叹词   | 感叹词，通常出现在句子首部                                           | 啊                       |
 | JJ  | other noun-modifier                                   | 其他名词修饰语 | 形容词                                                     | 共同、新                    |

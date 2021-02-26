@@ -103,7 +103,7 @@ thebe_config = {
 }
 
 html_theme_options = {
-    "theme_dev_mode": True,
+    "theme_dev_mode": False,
     "path_to_docs": "docs",
     "repository_url": "https://github.com/hankcs/HanLP",
     # "repository_branch": "gh-pages",  # For testing
@@ -124,12 +124,12 @@ html_theme_options = {
     # "extra_footer": "<a href='https://google.com'>Test</a>",  # DEPRECATED KEY
     # "extra_navbar": "<a href='https://google.com'>Test</a>",
 }
-html_baseurl = "https://sphinx-book-theme.readthedocs.io/en/latest/"
+html_baseurl = "https://hanlp.hankcs.com/docs/"
 
 # -- ABlog config -------------------------------------------------
 blog_path = "reference/blog"
 blog_post_pattern = "reference/blog/*.md"
-blog_baseurl = "https://sphinx-book-theme.readthedocs.io"
+blog_baseurl = "https://hanlp.hankcs.com/docs/"
 fontawesome_included = True
 post_auto_image = 1
 post_auto_excerpt = 2

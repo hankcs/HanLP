@@ -21,7 +21,7 @@ configure
 data_format
 annotations/index
 contributing
-GitHub Repository <https://github.com/hankcs/HanLP>
+Live Demo <https://hanlp.hankcs.com/>
 ```
 
 ## Python API
