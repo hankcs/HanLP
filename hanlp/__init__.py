@@ -16,9 +16,8 @@ def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Compon
     Args:
       save_dir (str): The identifier to the saved component. It could be a remote URL or a local path.
       verbose: ``True`` to print loading progress.
-      **kwargs: Arguments passed to :func:`hanlp.common.torch_component.TorchComponent.load`
-
-    ``devices`` is a useful arguments to specify the GPU devices component will use.
+      **kwargs: Arguments passed to :func:`hanlp.common.torch_component.TorchComponent.load`, e.g.,
+        ``devices`` is a useful argument to specify which GPU devices a PyTorch component will use.
 
     Examples::
 
@@ -30,7 +29,7 @@ def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Compon
 
     .. Note::
         A component can have dependencies on other components or resources, which will be recursively loaded. So it's
-        common to see multiple downloading per single load.
+        common to see multiple downloading messages per single load.
 
     Returns:
       hanlp.common.component.Component: A pretrained component.
@@ -45,7 +44,7 @@ def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Compon
 
 
 def pipeline(*pipes) -> hanlp.components.pipeline.Pipeline:
-    """Creates a pipeline of components. It's made for bundling KerasComponents. For TorchComponent, use
+    """Creates a pipeline of components. It's made for bundling `KerasComponents`. For `TorchComponent`, use
     :class:`~hanlp.components.mtl.multi_task_learning.MultiTaskLearning` instead.
 
     Args:
