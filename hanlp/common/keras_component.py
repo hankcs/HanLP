@@ -288,7 +288,7 @@ class KerasComponent(Component, ABC):
         pass
 
     def fit(self, trn_data, dev_data, save_dir, batch_size, epochs, run_eagerly=False, logger=None, verbose=True,
-            **kwargs):
+            finetune: str = None, **kwargs):
         self._capture_config(locals())
         self.transform = self.build_transform(**self.config)
         if not save_dir:
@@ -303,6 +303,12 @@ class KerasComponent(Component, ABC):
         self.config.train_steps = train_steps_per_epoch * epochs if num_examples else None
         model, optimizer, loss, metrics = self.build(**merge_dict(self.config, logger=logger, training=True))
         logger.info('Model built:\n' + summary_of_model(self.model))
+        if finetune:
+            finetune = get_resource(finetune)
+            if os.path.isdir(finetune):
+                finetune = os.path.join(finetune, 'model.h5')
+            model.load_weights(finetune, by_name=True, skip_mismatch=True)
+            logger.info(f'Loaded pretrained weights from {finetune} for finetuning')
         self.save_config(save_dir)
         self.save_vocabs(save_dir)
         self.save_meta(save_dir)
