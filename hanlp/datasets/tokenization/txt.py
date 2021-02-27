@@ -105,6 +105,10 @@ def offsets_to_subtokens(tokens, token_subtoken_offsets, token_input_tokens_grou
             for b, e in subtokens:
                 results.append(token[b:e])
     else:
+        offset = -1  # BERT produces 'ᄒ', '##ᅡ', '##ᆫ' for '한' and they share the same span
         for b, e in token_subtoken_offsets:
+            if b < offset:
+                continue
+            offset = e
             results.append(tokens[b:e])
     return results
