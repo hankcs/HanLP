@@ -321,11 +321,12 @@ class TorchComponent(Component, ABC):
         """
         pass
 
-    def build_vocabs(self, **kwargs):
+    def build_vocabs(self, trn: torch.utils.data.Dataset, logger: logging.Logger):
         """Override this method to build vocabs.
 
         Args:
-            **kwargs: The subclass decides the method signature.
+            trn: Training set.
+            logger: Logger for reporting progress.
         """
         pass
 

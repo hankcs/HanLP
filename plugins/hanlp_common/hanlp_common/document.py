@@ -148,7 +148,7 @@ class Document(dict):
         return results
 
     def to_pretty(self, tok='tok', lem='lem', pos='pos', dep='dep', sdp='sdp', ner='ner', srl='srl', con='con',
-                  show_header=True) -> str:
+                  show_header=True) -> Union[str, List[str]]:
         """
         Convert to a pretty text representation which can be printed to visualize linguistic structures.
 
