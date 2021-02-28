@@ -275,6 +275,10 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                         subtoken_offsets = [subtoken_offsets[i - 1] for i in non_blank_offsets]
                     else:
                         subtoken_offsets = [subtoken_offsets[i] for i in non_blank_offsets]
+                    # MT5 generates tokens like ▁of, which is bad for the tokenizer. So we want to remove the prefix.
+                    for i, token in enumerate(input_tokens[1:-1] if add_special_tokens else input_tokens):
+                        if token.startswith('▁'):
+                            subtoken_offsets[i] = (subtoken_offsets[i][0] + 1, subtoken_offsets[i][1])
                 if not input_ids:  # This chunk might be some control chars getting removed by tokenizer
                     input_tokens = [input_str]
                     input_ids = [tokenizer.unk_token_id]
