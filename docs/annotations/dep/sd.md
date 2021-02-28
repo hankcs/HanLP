@@ -71,6 +71,7 @@ See also [Stanford typed dependencies manual](https://nlp.stanford.edu/software/
 |cop|copular|系动词|原是自给自足的经济|cop(自给自足，是）|
 |pass|passive marker|被动标记|被认定为高技术产业|pass(认定，被）|
 |nsubjpass|nominal passive subject|被动名词主语|镍被称作现代工业的维生素|nsubjpass(称作，镍）|
+|dep|dependent|其他依赖关系|新华社北京二月十二日电|dep(电，新华社）|
 
 ## English
 

@@ -1,6 +1,6 @@
 # hanlp
 
-Core API for `hanlp`.
+Core APIs for `hanlp`.
 
 ```{toctree}
 hanlp

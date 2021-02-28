@@ -11,7 +11,7 @@ hanlp.utils.ls_resource_in_module(hanlp.pretrained)
 
 
 def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Component:
-    """Load pretrained component from an identifier.
+    """Load a pretrained component from an identifier.
 
     Args:
       save_dir (str): The identifier to the saved component. It could be a remote URL or a local path.
