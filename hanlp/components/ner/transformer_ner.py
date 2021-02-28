@@ -60,8 +60,8 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
         for tags, tokens in zip(batch_tags, sents):
             if dict_whitelist:
                 for start, end, label in dict_whitelist.tokenize(tokens):
-                    if (tags[start].startswith('B') and tags[end - 1].startswith('E')) or all(
-                            x.startswith('S') for x in tags[start:end]):
+                    if (tags[start].startswith('B') or tags[start].startswith('S')) and (
+                            tags[end - 1].startswith('E') or tags[end - 1].startswith('S')):
                         if end - start == 1:
                             tags[start] = 'S-' + label
                         else:
