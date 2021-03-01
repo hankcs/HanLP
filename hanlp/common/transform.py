@@ -341,6 +341,14 @@ class LowerCase(object):
         return sample
 
 
+class LowerCase3D(LowerCase):
+
+    def __call__(self, sample: dict) -> dict:
+        src = sample[self.src]
+        sample[self.dst] = [[y.lower() for y in x] for x in src]
+        return sample
+
+
 class ToChar(object):
     def __init__(self, src, dst='char', max_word_length=None, min_word_length=None, pad=PAD) -> None:
         if dst is None:
