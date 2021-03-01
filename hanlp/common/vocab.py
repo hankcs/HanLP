@@ -471,5 +471,36 @@ class VocabCounter(CustomVocab):
         return d
 
 
+class Vocab3D(CustomVocab):
+    def __call__(self, some_token: Union[str, Iterable[str], Iterable[Iterable[str]]]) \
+            -> Union[int, List[int], List[List[int]]]:
+        """It supports 3D arrays of tokens.
+
+        Args:
+            some_token: Tokens of 1D to 3D
+
+        Returns:
+            A list of indices.
+
+        """
+        if isinstance(some_token, (list, tuple, set)):
+            indices = []
+            if len(some_token) and isinstance(some_token[0], (list, tuple, set)):
+                for sent in some_token:
+                    inside = []
+                    for token in sent:
+                        inside.append(self.get_idx(token))
+                    indices.append(inside)
+                return indices
+            for token in some_token:
+                if isinstance(token, str):
+                    indices.append(self.get_idx(token))
+                else:
+                    indices.append([self.get_idx(x) for x in token])
+            return indices
+        else:
+            return self.get_idx(some_token)
+
+
 def create_label_vocab() -> Vocab:
     return Vocab(pad_token=None, unk_token=None)
