@@ -187,6 +187,15 @@ def merge_list_of_dict(samples: List[Dict]) -> dict:
     return batch
 
 
+def split_dict(batch: Dict[str, Any]) -> List[Dict[str, Any]]:
+    samples = []
+    batch = dict((k, v) for k, v in batch.items() if isinstance(v, list))
+    num_samples = len(max(batch.values(), key=len))
+    for i in range(num_samples):
+        samples.append(dict((k, v[i]) for k, v in batch.items()))
+    return samples
+
+
 def reorder(samples: List, order: List[int]) -> List:
     return [samples[i] for i in sorted(range(len(order)), key=lambda k: order[k])]
 
