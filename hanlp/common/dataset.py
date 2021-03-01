@@ -9,7 +9,7 @@ import warnings
 from abc import ABC, abstractmethod
 from copy import copy
 from logging import Logger
-from typing import Union, List, Callable, Iterable, Dict
+from typing import Union, List, Callable, Iterable, Dict, Any
 
 import torch
 import torch.multiprocessing as mp
@@ -427,37 +427,41 @@ class PadSequenceDataLoader(DataLoader):
 
     def __iter__(self):
         for raw_batch in super(PadSequenceDataLoader, self).__iter__():
+            yield self.tensorize(raw_batch, vocabs=self.vocabs, pad_dict=self.pad, device=self.device)
+
+    @staticmethod
+    def tensorize(raw_batch: Dict[str, Any], vocabs: VocabDict, pad_dict: Dict[str, int] = None, device=None):
+        for field, data in raw_batch.items():
+            if isinstance(data, torch.Tensor):
+                continue
+            vocab_key = field[:-len('_id')] if field.endswith('_id') else None
+            vocab: Vocab = vocabs.get(vocab_key, None) if vocabs and vocab_key else None
+            if vocab:
+                pad = vocab.safe_pad_token_idx
+                dtype = torch.long
+            elif pad_dict is not None and field in pad_dict:
+                pad = pad_dict[field]
+                dtype = dtype_of(pad)
+            elif field.endswith('_offset') or field.endswith('_id') or field.endswith(
+                    '_count') or field.endswith('_ids') or field.endswith('_score') or field.endswith(
+                '_length') or field.endswith('_span'):
+                # guess some common fields to pad
+                pad = 0
+                dtype = torch.long
+            elif field.endswith('_mask'):
+                pad = False
+                dtype = torch.bool
+            else:
+                # no need to pad
+                continue
+            data = PadSequenceDataLoader.pad_data(data, pad, dtype)
+            raw_batch[field] = data
+        if device is not None:
             for field, data in raw_batch.items():
                 if isinstance(data, torch.Tensor):
-                    continue
-                vocab_key = field[:-len('_id')] if field.endswith('_id') else None
-                vocab: Vocab = self.vocabs.get(vocab_key, None) if self.vocabs and vocab_key else None
-                if vocab:
-                    pad = vocab.safe_pad_token_idx
-                    dtype = torch.long
-                elif self.pad is not None and field in self.pad:
-                    pad = self.pad[field]
-                    dtype = dtype_of(pad)
-                elif field.endswith('_offset') or field.endswith('_id') or field.endswith(
-                        '_count') or field.endswith('_ids') or field.endswith('_score') or field.endswith(
-                    '_length') or field.endswith('_span'):
-                    # guess some common fields to pad
-                    pad = 0
-                    dtype = torch.long
-                elif field.endswith('_mask'):
-                    pad = False
-                    dtype = torch.bool
-                else:
-                    # no need to pad
-                    continue
-                data = self.pad_data(data, pad, dtype)
-                raw_batch[field] = data
-            if self.device is not None:
-                for field, data in raw_batch.items():
-                    if isinstance(data, torch.Tensor):
-                        data = data.to(self.device)
-                        raw_batch[field] = data
-            yield raw_batch
+                    data = data.to(device)
+                    raw_batch[field] = data
+        return raw_batch
 
     @staticmethod
     def pad_data(data: Union[torch.Tensor, Iterable], pad, dtype=None, device=None):
