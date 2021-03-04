@@ -111,8 +111,7 @@ class TransformerTaggingTokenizer(TransformerTagger):
                 S = 'B'
                 M = 'I'
                 E = 'I'
-            for tags, subwords, custom_words in zip(batch_tags, batch['token_subtoken_offsets'], batch['custom_words']):
-                assert len(tags) == len(subwords)
+            for tags, custom_words in zip(batch_tags, batch['custom_words']):
                 # [batch['raw_token'][0][x[0]:x[1]] for x in subwords]
                 if custom_words:
                     for start, end, label in custom_words:
