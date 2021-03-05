@@ -38,7 +38,6 @@ setup(
         'termcolor',
         'pynvml',
         'alnlp',
-        'penman==0.6.2',
         'toposort==1.5',
         'transformers>=4.1.1',
         'sentencepiece>=0.1.91'
@@ -54,6 +53,7 @@ setup(
             'bert-for-tf2==0.14.6',
             'py-params==0.9.7',
             'params-flow==0.8.2',
+            'penman==0.6.2',
         ],
     },
     python_requires='>=3.6',
