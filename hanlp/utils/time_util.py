@@ -63,8 +63,8 @@ class HumanTimeDelta(object):
 
 class CountdownTimer(ErasablePrinter):
 
-    def __init__(self, total: int) -> None:
-        super().__init__()
+    def __init__(self, total: int, out=sys.stdout) -> None:
+        super().__init__(out=out)
         self.total = total
         self.current = 0
         self.start = time.time()
