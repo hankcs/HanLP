@@ -14,7 +14,6 @@ import shutil
 import sys
 import tarfile
 import tempfile
-import time
 import urllib
 import zipfile
 from contextlib import contextmanager
@@ -26,11 +25,12 @@ from urllib.request import urlretrieve
 
 import numpy as np
 import torch
+from hanlp_downloader import Downloader
+from hanlp_downloader.log import DownloadCallback
 from pkg_resources import parse_version
 
 import hanlp
 from hanlp_common.constant import HANLP_URL, HANLP_VERBOSE
-from hanlp.utils import time_util
 from hanlp.utils.log_util import logger, flash, cprint, remove_color_tag
 from hanlp.utils.string_util import split_long_sentence_into
 from hanlp.utils.time_util import now_filename, CountdownTimer
@@ -173,37 +173,11 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
         tmp_path = '{}.downloading'.format(save_path)
         remove_file(tmp_path)
         try:
-            def reporthook(count, block_size, total_size):
-                global start_time, progress_size
-                if count == 0:
-                    start_time = time.time()
-                    progress_size = 0
-                    return
-                duration = time.time() - start_time
-                duration = max(1e-8, duration)
-                progress_size = int(count * block_size)
-                if progress_size > total_size:
-                    progress_size = total_size
-                speed = int(progress_size / duration)
-                ratio = progress_size / total_size
-                ratio = max(1e-8, ratio)
-                percent = ratio * 100
-                eta = duration / ratio * (1 - ratio)
-                speed = human_bytes(speed)
-                progress_size = human_bytes(progress_size)
-                if verbose:
-                    sys.stderr.write("\r%.2f%%, %s/%s, %s/s, ETA %s      " %
-                                     (percent, progress_size, human_bytes(total_size), speed,
-                                      time_util.report_time_delta(eta)))
-                    sys.stderr.flush()
-
-            import socket
-            socket.setdefaulttimeout(10)
-            opener = urllib.request.build_opener()
-            opener.addheaders = [('User-agent', f'HanLP/{__version__}')]
-            urllib.request.install_opener(opener)
-            urlretrieve(url, tmp_path, reporthook)
-            eprint()
+            downloader = Downloader(url, tmp_path, 4, headers={
+                'User-agent': f'HanLP/{__version__} ({platform.platform()})'})
+            if verbose:
+                downloader.subscribe(DownloadCallback(show_header=False))
+            downloader.start_sync()
         except BaseException as e:
             remove_file(tmp_path)
             url = url.split('#')[0]
