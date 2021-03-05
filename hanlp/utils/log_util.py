@@ -64,15 +64,16 @@ def enable_debug(debug=True):
 
 
 class ErasablePrinter(object):
-    def __init__(self):
+    def __init__(self, out=sys.stderr):
         self._last_print_width = 0
+        self.out = out
 
     def erase(self):
         if self._last_print_width:
-            sys.stdout.write("\b" * self._last_print_width)
-            sys.stdout.write(" " * self._last_print_width)
-            sys.stdout.write("\b" * self._last_print_width)
-            sys.stdout.write("\r")  # \r is essential when multi-lines were printed
+            self.out.write("\b" * self._last_print_width)
+            self.out.write(" " * self._last_print_width)
+            self.out.write("\b" * self._last_print_width)
+            self.out.write("\r")  # \r is essential when multi-lines were printed
             self._last_print_width = 0
 
     def print(self, msg: str, color=True):
@@ -82,8 +83,8 @@ class ErasablePrinter(object):
             self._last_print_width = _len
         else:
             self._last_print_width = len(msg)
-        sys.stdout.write(msg)
-        sys.stdout.flush()
+        self.out.write(msg)
+        self.out.flush()
 
 
 _printer = ErasablePrinter()
