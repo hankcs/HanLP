@@ -4,7 +4,7 @@
 import os
 import random
 import time
-from typing import List, Union
+from typing import List, Union, Dict
 
 import numpy as np
 import torch
@@ -15,7 +15,7 @@ from torch.nn.utils.rnn import pad_sequence
 from hanlp.utils.log_util import logger
 
 
-def gpus_available() -> dict:
+def gpus_available() -> Dict[int, float]:
     try:
         nvmlInit()
         gpus = {}
@@ -42,16 +42,7 @@ def gpus_available() -> dict:
         return dict(sorted(gpus.items(), key=lambda x: x[1], reverse=True))
     except Exception as e:
         logger.debug(f'Failed to get gpu info due to {e}')
-        return {}
-
-
-def visuable_devices():
-    visible_devices = os.environ.get('CUDA_VISIBLE_DEVICES', None)
-    if visible_devices:
-        visible_devices = {int(x.strip()) for x in visible_devices.split(',')}
-    else:
-        visible_devices = list(range(torch.cuda.device_count()))
-    return visible_devices
+        return dict((i, 1.0) for i in range(torch.cuda.device_count()))
 
 
 def cuda_devices(query=None) -> List[int]:
@@ -157,7 +148,7 @@ def mean_model(model: torch.nn.Module):
 
 def main():
     start = time.time()
-    print(visuable_devices())
+    print(gpus_available())
     print(time.time() - start)
     # print(gpus_available())
     # print(cuda_devices())
