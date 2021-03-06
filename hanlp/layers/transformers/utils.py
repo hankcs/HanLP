@@ -152,7 +152,7 @@ def transformer_sliding_window(transformer: PreTrainedModel,
     # before calling the BERT model and then reshape back at the end.
     outputs = transformer(input_ids=util.combine_initial_dims_to_1d_or_2d(input_ids),
                           # token_type_ids=util.combine_initial_dims_to_1d_or_2d(token_type_ids),
-                          attention_mask=util.combine_initial_dims_to_1d_or_2d(input_mask))
+                          attention_mask=util.combine_initial_dims_to_1d_or_2d(input_mask)).to_tuple()
     if len(outputs) == 3:
         all_encoder_layers = outputs.hidden_states
         all_encoder_layers = torch.stack(all_encoder_layers)
