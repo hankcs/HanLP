@@ -551,7 +551,7 @@ class TorchComponent(Component, ABC):
                 flash('')
         else:
             if logger:
-                logger.info('Using CPU')
+                logger.info('Using [red]CPU[/red]')
 
     def parallelize(self, devices: List[Union[int, torch.device]]):
         return nn.DataParallel(self.model, device_ids=devices)
