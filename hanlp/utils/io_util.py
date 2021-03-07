@@ -210,7 +210,7 @@ def parse_url_path(url):
 
 
 def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
-    """uncompress a file
+    """Uncompress a file and clean up uncompressed files once an error is triggered.
 
     Args:
       path: The path to a compressed file
@@ -228,11 +228,16 @@ def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
     file_is_zip = ext == '.zip'
     root_of_folder = None
     if ext == '.gz':
-        with gzip.open(path, 'rb') as f_in, open(prefix, 'wb') as f_out:
-            shutil.copyfileobj(f_in, f_out)
+        try:
+            with gzip.open(path, 'rb') as f_in, open(prefix, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        except Exception as e:
+            remove_file(prefix)
+            remove_file(path)
+            raise e
     else:
-        with zipfile.ZipFile(path, "r") if ext == '.zip' else tarfile.open(path, 'r:*') as archive:
-            try:
+        try:
+            with zipfile.ZipFile(path, "r") if ext == '.zip' else tarfile.open(path, 'r:*') as archive:
                 if not dest:
                     namelist = sorted(archive.namelist() if file_is_zip else archive.getnames())
                     if namelist[0] == '.':
@@ -249,7 +254,7 @@ def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
                         dest = os.path.dirname(path)  # only one folder, unzip to the same dir
                     else:
                         root_of_folder = None
-                        dest = prefix  # assume zip contains more than one files or folders
+                        dest = prefix  # assume zip contains more than one file or folder
                 if verbose:
                     eprint('Extracting {} to {}'.format(path, dest))
                 archive.extractall(dest)
@@ -260,14 +265,14 @@ def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
                     dest = path_join(dest, folder_name)
                 elif len(namelist) == 1:
                     dest = path_join(dest, namelist[0])
-            except (RuntimeError, KeyboardInterrupt) as e:
-                remove = False
-                if os.path.exists(dest):
-                    if os.path.isfile(dest):
-                        os.remove(dest)
-                    else:
-                        shutil.rmtree(dest)
-                raise e
+        except Exception as e:
+            remove_file(path)
+            if os.path.exists(prefix):
+                if os.path.isfile(prefix):
+                    os.remove(prefix)
+                elif os.path.isdir(prefix):
+                    shutil.rmtree(prefix)
+            raise e
     if remove:
         remove_file(path)
     return dest
