@@ -277,7 +277,8 @@ class TorchComponent(Component, ABC):
         optimizer = self.build_optimizer(**merge_dict(config, trn=trn, criterion=criterion))
         metric = self.build_metric(**self.config)
         if hasattr(trn, 'dataset') and dev and hasattr(dev, 'dataset'):
-            logger.info(f'{len(trn.dataset)}/{len(dev.dataset)} samples in trn/dev set.')
+            if trn.dataset and dev.dataset:
+                logger.info(f'{len(trn.dataset)}/{len(dev.dataset)} samples in trn/dev set.')
         if hasattr(trn, '__len__') and dev and hasattr(dev, '__len__'):
             trn_size = len(trn) // self.config.get('gradient_accumulation', 1)
             ratio_width = len(f'{trn_size}/{trn_size}')
