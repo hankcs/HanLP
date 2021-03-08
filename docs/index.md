@@ -1,6 +1,6 @@
 # HanLP: Han Language Processing
 
-[![GitHub stars](https://img.shields.io/github/stars/hankcs/HanLP)](https://github.com/hankcs/HanLP/stargazers) [![GitHub forks](https://img.shields.io/github/forks/hankcs/HanLP)](https://github.com/hankcs/HanLP/network) ![pypi](https://img.shields.io/pypi/v/HanLP) [![Downloads](https://pepy.tech/badge/HanLP)](https://pepy.tech/project/HanLP) [![GitHub license](https://img.shields.io/github/license/hankcs/HanLP)](https://github.com/hankcs/HanLP/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/hankcs/HanLP)](https://github.com/hankcs/HanLP/stargazers) [![GitHub forks](https://img.shields.io/github/forks/hankcs/HanLP)](https://github.com/hankcs/HanLP/network) ![pypi](https://img.shields.io/pypi/v/HanLP) [![Downloads](https://pepy.tech/badge/HanLP)](https://pepy.tech/project/HanLP) [![GitHub license](https://img.shields.io/github/license/hankcs/HanLP)](https://github.com/hankcs/HanLP/blob/master/LICENSE) [![Open In Colab](https://file.hankcs.com/img/colab-badge.svg)](https://colab.research.google.com/drive/1KPX6t1y36TOzRIeB4Kt3uJ1twuj6WuFv?usp=sharing)
 
 The multilingual NLP library for researchers and companies, built on PyTorch and TensorFlow 2.x, for advancing 
 state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be 
