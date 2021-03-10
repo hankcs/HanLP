@@ -33,7 +33,7 @@ Insert the following dependency into your `pom.xml`.
 <dependency>
   <groupId>com.hankcs.hanlp.restful</groupId>
   <artifactId>hanlp-restful</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 

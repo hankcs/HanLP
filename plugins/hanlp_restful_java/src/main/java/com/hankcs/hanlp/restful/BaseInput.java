@@ -16,13 +16,13 @@ package com.hankcs.hanlp.restful;
 public class BaseInput
 {
     public String[] tasks;
-    public String[] skipTasks;
+    public String[] skip_tasks;
     public String language;
 
     public BaseInput(String[] tasks, String[] skipTasks, String language)
     {
         this.tasks = tasks;
-        this.skipTasks = skipTasks;
+        this.skip_tasks = skipTasks;
         this.language = language;
     }
 }

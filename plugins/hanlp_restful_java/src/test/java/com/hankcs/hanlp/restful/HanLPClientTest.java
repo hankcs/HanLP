@@ -3,6 +3,7 @@ package com.hankcs.hanlp.restful;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,6 +43,16 @@ class HanLPClientTest
                 new String[]{"2021年", "HanLPv2.1", "为", "生产", "环境", "带来", "次", "世代", "最", "先进", "的", "多语种", "NLP", "技术", "。"},
                 new String[]{"英", "首相", "与", "特朗普", "通", "电话", "讨论", "华为", "与", "苹果", "公司", "。"},
         });
+        prettyPrint(doc);
+    }
+
+    @Test
+    void parseCoarse() throws IOException
+    {
+        Map<String, List> doc = client.parse(
+                "阿婆主来到北京立方庭参观自然语义科技公司。",
+                new String[]{"tok/coarse", "pos", "dep"},
+                new String[]{"tok/fine"});
         prettyPrint(doc);
     }
 
