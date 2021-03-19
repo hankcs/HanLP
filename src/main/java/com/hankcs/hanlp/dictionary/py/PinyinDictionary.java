@@ -187,6 +187,10 @@ public class PinyinDictionary
             public void hit(int begin, int end, Pinyin[] value)
             {
                 int length = end - begin;
+                if (length == 1 && value.length > 1)
+                {
+                    value = new Pinyin[]{value[0]};
+                }
                 if (length > lengths[begin])
                 {
                     wordNet[begin] = value;

@@ -16,4 +16,9 @@ public class HanLPTest extends TestCase
     {
         System.out.println(HanLP.segment("大数据是一个新词汇！"));
     }
+
+    public void testConvertToPinyinList()
+    {
+        System.out.println(HanLP.convertToPinyinString("你好", " ", false));
+    }
 }
