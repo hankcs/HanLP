@@ -40,7 +40,7 @@ func (h *hanlp) Parse(text string, opts ...Option) (string, error) {
 
 	req := &HanReq{
 		Text:      text,
-		Language:  options.Language, // (zh,mnt)
+		Language:  options.Language, // (zh,mnl)
 		Tasks:     options.Tasks,
 		SkipTasks: options.SkipTasks,
 	}
@@ -62,7 +62,7 @@ func (h *hanlp) ParseObj(text string, opts ...Option) (*HanResp, error) {
 
 	req := &HanReq{
 		Text:      text,
-		Language:  options.Language, // (zh,mnt)
+		Language:  options.Language, // (zh,mnl)
 		Tasks:     options.Tasks,
 		SkipTasks: options.SkipTasks,
 	}
@@ -89,7 +89,7 @@ func (h *hanlp) ParseAny(text string, resp interface{}, opts ...Option) error {
 
 	req := &HanReq{
 		Text:      text,
-		Language:  options.Language, // (zh,mnt)
+		Language:  options.Language, // (zh,mnl)
 		Tasks:     options.Tasks,
 		SkipTasks: options.SkipTasks,
 	}

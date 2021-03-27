@@ -5,7 +5,7 @@ package hanlp
 // HanReq hanlp
 type HanReq struct {
 	Text      string   `json:"text,omitempty"`
-	Language  string   `json:"language,omitempty"` // (zh,mnt)
+	Language  string   `json:"language,omitempty"` // (zh,mnl)
 	Tokens    []string `json:"tokens,omitempty"`
 	Tasks     []string `json:"tasks,omitempty"`
 	SkipTasks []string `json:"skip_tasks"`
