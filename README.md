@@ -51,6 +51,15 @@ HanLPClient HanLP = new HanLPClient("https://www.hanlp.com/api", null, "zh"); //
 HanLP.parse("2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。阿婆主来到北京立方庭参观自然语义科技公司。")
 ```
 
+#### golang
+
+安装 `go get -u github.com/xxjwxc/gohanlp@master`
+
+```go
+	HanLP := hanlp.HanLPClient(hanlp.WithAuth(""),hanlp.WithLanguage("zh")) // 你申请到的auth,auth不填则匿名
+	HanLP.Parse("2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。阿婆主来到北京立方庭参观自然语义科技公司。")
+```
+
 ### 海量级native API
 
 依赖PyTorch、TensorFlow等深度学习技术，适合专业NLP工程师、研究者以及本地海量数据场景。要求Python 3.6以上，支持Windows，推荐*nix。可以在CPU上运行，推荐GPU/TPU。
