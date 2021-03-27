@@ -19,42 +19,42 @@ type Options struct {
 // Option opts list func
 type Option func(*Options)
 
-// WithURL 设置hanlp地址
+// WithURL set hanlp address
 func WithURL(url string) Option {
 	return func(o *Options) {
 		o.URL = url
 	}
 }
 
-// WithAuth 设置授权码
+// WithAuth set auth
 func WithAuth(auth string) Option {
 	return func(o *Options) {
 		o.Auth = auth
 	}
 }
 
-// WithLanguage 设置语言
+// WithLanguage set language
 func WithLanguage(language string) Option {
 	return func(o *Options) {
 		o.Language = language
 	}
 }
 
-// WithTimeout 调用超时设置
+// WithTimeout set timeout
 func WithTimeout(timeout time.Time) Option {
 	return func(o *Options) {
 		o.Timeout = timeout
 	}
 }
 
-// WithTasks 设置任务列表("tok","ud","ner","srl","sdp/dm","sdp/pas","sdp/psd","con")
+// WithTasks set tasks list("tok","ud","ner","srl","sdp/dm","sdp/pas","sdp/psd","con")
 func WithTasks(tasks ...string) Option {
 	return func(o *Options) {
 		o.Tasks = append(o.Tasks, tasks...)
 	}
 }
 
-// WithSkipTasks 设置忽略的任务列表("tok","ud","ner","srl","sdp/dm","sdp/pas","sdp/psd","con")
+// WithSkipTasks set skip tasks list("tok","ud","ner","srl","sdp/dm","sdp/pas","sdp/psd","con")
 func WithSkipTasks(skipTasks ...string) Option {
 	return func(o *Options) {
 		o.SkipTasks = append(o.SkipTasks, skipTasks...)
