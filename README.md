@@ -25,6 +25,14 @@ from hanlp_restful import HanLPClient
 HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul')
 ```
 
+#### golang
+
+install `go get -u github.com/xxjwxc/gohanlp@master`
+
+```go
+HanLP := hanlp.HanLPClient(hanlp.WithAuth(""),hanlp.WithLanguage("mul")) // The auth you applied for
+HanLP.Parse("In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environments.")
+```
 ### Java
 
 Insert the following dependency into your `pom.xml`.
