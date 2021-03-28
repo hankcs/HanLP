@@ -25,6 +25,15 @@ from hanlp_restful import HanLPClient
 HanLP = HanLPClient('https://www.hanlp.com/api', auth=None, language='zh') # auth不填则匿名，zh中文，mul多语种
 ```
 
+#### golang
+
+安装 `go get -u github.com/xxjwxc/gohanlp@master`
+
+```go
+HanLP := hanlp.HanLPClient(hanlp.WithAuth(""),hanlp.WithLanguage("zh")) // 你申请到的auth,auth不填则匿名
+HanLP.Parse("2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。阿婆主来到北京立方庭参观自然语义科技公司。")
+```
+
 #### Java
 
 在`pom.xml`中添加依赖：
@@ -51,14 +60,6 @@ HanLPClient HanLP = new HanLPClient("https://www.hanlp.com/api", null, "zh"); //
 HanLP.parse("2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。阿婆主来到北京立方庭参观自然语义科技公司。")
 ```
 
-#### golang
-
-安装 `go get -u github.com/xxjwxc/gohanlp@master`
-
-```go
-HanLP := hanlp.HanLPClient(hanlp.WithAuth(""),hanlp.WithLanguage("zh")) // 你申请到的auth,auth不填则匿名
-HanLP.Parse("2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。阿婆主来到北京立方庭参观自然语义科技公司。")
-```
 
 ### 海量级native API
 
