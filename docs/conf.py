@@ -81,16 +81,16 @@ html_copy_source = True
 html_sourcelink_suffix = ""
 
 html_sidebars = {
-    "reference/blog/*": [
-        "sidebar-search-bs.html",
-        "postcard.html",
-        "recentposts.html",
-        "tagcloud.html",
-        "categories.html",
-        "archives.html",
-        "sbt-sidebar-nav.html",
-        "sbt-sidebar-footer.html",
-    ]
+    # "reference/blog/*": [
+    #     "sidebar-search-bs.html",
+    #     "postcard.html",
+    #     "recentposts.html",
+    #     "tagcloud.html",
+    #     "categories.html",
+    #     "archives.html",
+    #     "sbt-sidebar-nav.html",
+    #     "sbt-sidebar-footer.html",
+    # ]
 }
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

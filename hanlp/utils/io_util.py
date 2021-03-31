@@ -256,7 +256,7 @@ def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
                         root_of_folder = None
                         dest = prefix  # assume zip contains more than one file or folder
                 if verbose:
-                    eprint('Extracting {} to {}'.format(path, dest))
+                    eprint('Decompressing {} to {}'.format(path, dest))
                 archive.extractall(dest)
                 if root_of_folder:
                     if root_of_folder != folder_name:

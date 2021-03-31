@@ -46,6 +46,15 @@ api/trie/index
 api/restful_java
 ```
 
+## Golang API
+
+```{toctree}
+:maxdepth: 1
+:caption: Golang API
+
+api/restful_golang
+```
+
 ## References
 
 ```{toctree}

@@ -468,7 +468,7 @@ class MultiTaskLearning(TorchComponent):
             batch_size: Decoding batch size.
             tasks: The tasks to predict.
             skip_tasks: The tasks to skip.
-            resolved_tasks: The resolved tasks to override ``tasks`` and ``resolved_tasks``.
+            resolved_tasks: The resolved tasks to override ``tasks`` and ``skip_tasks``.
             **kwargs: Not used.
 
         Returns:

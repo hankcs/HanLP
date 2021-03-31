@@ -34,6 +34,10 @@ pip install hanlp_restful
 
 See [Java instructions](https://hanlp.hankcs.com/docs/api/restful_java.html).
 
+### Golang
+
+See [Golang instructions](https://hanlp.hankcs.com/docs/api/restful_golang.html).
+
 ## Install Native Package
 
 [![Downloads](https://pepy.tech/badge/hanlp)](https://pepy.tech/project/hanlp) [![Downloads](https://pepy.tech/badge/hanlp/month)](https://pepy.tech/project/hanlp) [![Downloads](https://pepy.tech/badge/hanlp/week)](https://pepy.tech/project/hanlp)  
@@ -73,9 +77,9 @@ If the auto-download fails, you can either:
 
 ### Server without Internet
 
-If your server has no Internet access at all, just debug your codes on your local PC and copy the following directory to your server via a USB disk.
+If your server has no Internet access at all, just debug your codes on your local PC and copy the following directories to your server via a USB disk.
 
-1. `~/.hanlp`: the home directory for HanLP models.
+1. `~/.hanlp`: the home directories for HanLP models.
 1. `~/.cache/huggingface`: the home directory for Hugging Face 🤗 Transformers.
 
 ### Import Error

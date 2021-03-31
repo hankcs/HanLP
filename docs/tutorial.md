@@ -39,7 +39,7 @@ Our models and RESTful APIs are under the [CC BY-NC-SA 4.0](https://creativecomm
 ````{margin} **Zero-Shot Learning**
 ```{note}
 Although UD covers 104 languages, OntoNotes (NER, CON, SRL) covers only English, Chinese and Arabic.
-So NER/CON/SRL of languages other than the 3 are considered as Zero-Shot and their accuracy can be very low.  
+So NER/CON/SRL of languages other than the 3 are considered as Zero-Shot and their accuracies can be very low.  
 ```
 ````
 
