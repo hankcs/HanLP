@@ -80,3 +80,18 @@ def bmes_of(sentence, segmented):
         chars = list(sentence)
         tags = ['S'] * len(chars)
     return chars, tags
+
+
+def iobes_to_bilou(src, dst):
+    with open(src) as src, open(dst, 'w') as out:
+        for line in src:
+            line = line.strip()
+            if not line:
+                out.write('\n')
+                continue
+            word, tag = line.split('\t')
+            if tag.startswith('E-'):
+                tag = 'L-' + tag[2:]
+            elif tag.startswith('S-'):
+                tag = 'U-' + tag[2:]
+            out.write(f'{word}\t{tag}\n')
