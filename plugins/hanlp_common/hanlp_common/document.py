@@ -302,6 +302,11 @@ class Document(dict):
                                     block[j + 1][-2] = '────'
                                 if not block[j + 1][-4]:
                                     block[j + 1][-4] = '────'
+                # If the root label is shorter than the level number, extend it to the same length
+                level_len = len(block[0][-1])
+                for row in block[1:]:
+                    if row[-1] and len(row[-1]) < level_len:
+                        row[-1] = row[-1] + ' ' * (level_len - len(row[-1]))
 
                 text = condense(block)
                 # Cosmetic issues
