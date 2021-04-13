@@ -102,6 +102,8 @@ class BiaffineDependencyParserTF(KerasComponent):
         c: tf.keras.callbacks.Callback = None
         metric = self._build_metrics()
         for c in callbacks:
+            if not hasattr(c, 'params'):
+                c.params = dict()
             c.params['epochs'] = epochs
             c.params['trn_data'] = trn_data
             c.params['metrics'] = ['loss'] + self.config.metrics
