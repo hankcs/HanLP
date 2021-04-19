@@ -24,6 +24,7 @@ import com.hankcs.hanlp.model.perceptron.tagset.TagSet;
 import com.hankcs.hanlp.utility.Predefine;
 
 import java.io.DataOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -112,6 +113,13 @@ public class LogLinearModel extends LinearModel
     {
         super(null, null);
         convert(txtFile, binFile);
+    }
+    
+    public LogLinearModel(InputStream is) throws IOException
+    {
+        super(null, null);
+        ByteArrayStream byteArray = ByteArrayOtherStream.createByteArrayOtherStream(inputStream);
+        load(byteArray);
     }
 
     private void convert(String txtFile, String binFile) throws IOException
