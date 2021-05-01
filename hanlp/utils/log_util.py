@@ -128,13 +128,13 @@ def _replace_color_offset(msg: str, color: str, ctrl: str):
     return ctrl.join(chunks), delta
 
 
-def cprint(*args, **kwargs):
+def cprint(*args, file=None, **kwargs):
     out = io.StringIO()
     print(*args, file=out, **kwargs)
     text = out.getvalue()
     out.close()
     c_text = color_format(text)
-    print(c_text, end='')
+    print(c_text, end='', file=file)
 
 
 def main():
