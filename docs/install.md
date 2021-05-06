@@ -79,7 +79,7 @@ If the auto-download fails, you can either:
 
 If your server has no Internet access at all, just debug your codes on your local PC and copy the following directories to your server via a USB disk.
 
-1. `~/.hanlp`: the home directories for HanLP models.
+1. `~/.hanlp`: the home directory for HanLP models.
 1. `~/.cache/huggingface`: the home directory for Hugging Face 🤗 Transformers.
 
 ### Import Error
