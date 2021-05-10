@@ -110,7 +110,14 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                 f'pip install --upgrade hanlp\n')
         eprint(
             'If the problem still persists, please submit an issue to https://github.com/hankcs/HanLP/issues\n'
-            'When reporting an issue, make sure to paste the FULL ERROR LOG above.')
+            'When reporting an issue, make sure to paste the FULL ERROR LOG above and the system info below.')
+
+        import platform
+        eprint(f'OS: {platform.platform()}')
+        eprint(f'Python: {platform.python_version()}')
+        import torch
+        eprint(f'PyTorch: {torch.__version__}')
+        eprint(f'HanLP: {version}')
         exit(1)
 
 
