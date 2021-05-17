@@ -1,9 +1,14 @@
 # Named Entity Recognition
 
+## Chinese
 
 ```{toctree}
 pku
 msra
-ontonotes
 ```
 
+## Multilingual
+
+```{toctree}
+ontonotes
+```
