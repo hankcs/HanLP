@@ -39,6 +39,13 @@ class TestMultiTaskLearning(unittest.TestCase):
             results = pool.starmap(tokenize, [(self.mtl, '商品和服务')] * num_proc)
             self.assertSequenceEqual(results, [['商品', '和', '服务']] * num_proc)
 
+    def test_emoji(self):
+        self.assertSequenceEqual(self.mtl('( ͡° ͜ʖ ͡ °)你好', tasks='tok/fine')['tok/fine'],
+                                 ["(", " ͡", "°", " ͜", "ʖ", " ͡ ", "°", ")", "你", "好"])
+        self.mtl['tok/fine'].dict_combine = {'( ͡° ͜ʖ ͡ °)'}
+        self.assertSequenceEqual(self.mtl('( ͡° ͜ʖ ͡ °)你好', tasks='tok/fine')['tok/fine'],
+                                 ["( ͡° ͜ʖ ͡ °)", "你", "好"])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -251,10 +251,32 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                                                      return_offsets_mapping=True,
                                                      add_special_tokens=add_special_tokens).encodings[0]
                     subtoken_offsets = encoding.offsets
-                    if add_special_tokens:
-                        subtoken_offsets = subtoken_offsets[1 if self.has_cls else 0:-1]
                     input_tokens = encoding.tokens
                     input_ids = encoding.ids
+
+                    # Fill up missing non-blank characters swallowed by HF tokenizer
+                    offset = 0
+                    fixed_offsets = []
+                    fixed_tokens = []
+                    fixed_ids = []
+                    for token, id, (b, e) in zip(input_tokens, input_ids, subtoken_offsets):
+                        if b > offset:
+                            missing_token = input_str[offset: b]
+                            if not missing_token.isspace():  # In the future, we may want space back
+                                fixed_tokens.append(missing_token)
+                                fixed_ids.append(tokenizer.unk_token_id)
+                                fixed_offsets.append((offset, b))
+                        fixed_tokens.append(token)
+                        fixed_ids.append(id)
+                        fixed_offsets.append((b, e))
+                        offset = e
+                    subtoken_offsets = fixed_offsets
+                    input_tokens = fixed_tokens
+                    input_ids = fixed_ids
+
+                    if add_special_tokens:
+                        subtoken_offsets = subtoken_offsets[1 if self.has_cls else 0:-1]
+
                     if not self.has_cls:
                         input_tokens = [self.cls_token] + input_tokens
                         input_ids = [self.cls_token_id] + input_ids
