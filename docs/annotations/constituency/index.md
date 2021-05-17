@@ -3,8 +3,6 @@
 ## Chinese
 ```{toctree}
 ctb
-ptb
-npcmj
 ```
 
 ## English
@@ -14,8 +12,6 @@ ptb
 
 ## Japanese
 ```{toctree}
-ctb
-ptb
 npcmj
 ```
 

@@ -3,7 +3,13 @@
 ## Chinese
 
 ```{toctree}
-sd
+sd_zh
+```
+
+## English
+
+```{toctree}
+sd_en
 ```
 
 ## Multilingual

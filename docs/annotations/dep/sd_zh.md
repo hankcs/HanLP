@@ -19,9 +19,8 @@
 # ========================================================================
 -->
 
-# Stanford Dependencies
+# Stanford Dependencies Chinese
 
-## Chinese
 
 ```{eval-rst}
 
@@ -76,71 +75,3 @@ See also :cite:`chang-etal-2009-discriminative`.
 |pass|passive marker|被动标记|被认定为高技术产业|pass(认定，被）|
 |nsubjpass|nominal passive subject|被动名词主语|镍被称作现代工业的维生素|nsubjpass(称作，镍）|
 |dep|dependent|其他依赖关系|新华社北京二月十二日电|dep(电，新华社）|
-
-## English
-
-See also [Stanford typed dependencies manual](https://nlp.stanford.edu/software/dependencies_manual.pdf).
-
-| Tag        | Description                       |
-|------------|-----------------------------------|
-| abbrev     | abbreviation modifier             |
-| acomp      | adjectival complement             |
-| advcl      | adverbial clause modifier         |
-| advmod     | adverbial modifier                |
-| agent      | agent                             |
-| amod       | adjectival modifier               |
-| appos      | appositional modifier             |
-| arg        | argument                          |
-| attr       | attributive                       |
-| aux        | auxiliary                         |
-| auxpass    | passive auxiliary                 |
-| cc         | coordination                      |
-| ccomp      | clausal complement                |
-| comp       | complement                        |
-| complm     | complementizer                    |
-| conj       | conjunct                          |
-| cop        | copula                            |
-| csubj      | clausal subject                   |
-| csubjpass  | clausal passive subject           |
-| dep        | dependent                         |
-| det        | determiner                        |
-| discourse  | discourse element                 |
-| dobj       | direct object                     |
-| expl       | expletive                         |
-| goeswith   | goes with                         |
-| iobj       | indirect object                   |
-| mark       | marker                            |
-| mod        | modifier                          |
-| mwe        | multi-word expression             |
-| neg        | negation modifier                 |
-| nn         | noun compound modifier            |
-| npadvmod   | noun phrase as adverbial modifier |
-| nsubj      | nominal subject                   |
-| nsubjpass  | passive nominal subject           |
-| num        | numeric modifier                  |
-| number     | element of compound number        |
-| obj        | object                            |
-| parataxis  | parataxis                         |
-| pcomp      | prepositional complement          |
-| pobj       | object of a preposition           |
-| poss       | possession modifier               |
-| possessive | possessive modifier               |
-| preconj    | preconjunct                       |
-| pred       | predicate                         |
-| predet     | predeterminer                     |
-| prep       | prepositional modifier            |
-| prepc      | prepositional clausal modifier    |
-| prt        | phrasal verb particle             |
-| punct      | punctuation                       |
-| purpcl     | purpose clause modifier           |
-| quantmod   | quantifier phrase modifier        |
-| rcmod      | relative clause modifier          |
-| ref        | referent                          |
-| rel        | relative                          |
-| root       | root                              |
-| sdep       | semantic dependent                |
-| subj       | subject                           |
-| tmod       | temporal modifier                 |
-| vmod       | verb modifier                     |
-| xcomp      | open clausal complement           |
-| xsubj      | controlling subject               |
