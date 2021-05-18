@@ -2,14 +2,14 @@
 # Author: hankcs
 # Date: 2020-06-22 21:06
 import warnings
-from typing import Union, Dict, Any, Sequence
+from typing import Union, Dict, Any, Sequence, Tuple, Optional
 
 import torch
 from torch import nn
-
 from hanlp.layers.dropout import WordDropout
 from hanlp.layers.scalar_mix import ScalarMixWithDropout, ScalarMixWithDropoutBuilder
-from hanlp.layers.transformers.pt_imports import PreTrainedModel, PreTrainedTokenizer, AutoTokenizer, AutoModel_
+from hanlp.layers.transformers.pt_imports import PreTrainedModel, PreTrainedTokenizer, AutoTokenizer, AutoModel_, \
+    BertTokenizer
 from hanlp.layers.transformers.utils import transformer_encode
 
 
@@ -24,7 +24,7 @@ class TransformerEncoder(nn.Module):
                  max_sequence_length=None,
                  ret_raw_hidden_states=False,
                  transformer_args: Dict[str, Any] = None,
-                 trainable=True,
+                 trainable=Union[bool, Optional[Tuple[int, int]]],
                  training=True) -> None:
         """A pre-trained transformer encoder.
 
@@ -77,6 +77,14 @@ class TransformerEncoder(nn.Module):
         self.transformer = transformer
         if not trainable:
             transformer.requires_grad_(False)
+        elif isinstance(trainable, tuple):
+            layers = []
+            if hasattr(transformer, 'embeddings'):
+                layers.append(transformer.embeddings)
+            layers.extend(transformer.encoder.layer)
+            for i, layer in enumerate(layers):
+                if i < trainable[0] or i >= trainable[1]:
+                    layer.requires_grad_(False)
 
         if isinstance(scalar_mix, ScalarMixWithDropoutBuilder):
             self.scalar_mix: ScalarMixWithDropout = scalar_mix.build()
@@ -121,4 +129,19 @@ class TransformerEncoder(nn.Module):
             transformer = config_or_str.transformer
         if use_fast and not do_basic_tokenize:
             warnings.warn('`do_basic_tokenize=False` might not work when `use_fast=True`')
-        return AutoTokenizer.from_pretrained(transformer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize)
+        additional_config = dict()
+        if transformer.startswith('voidful/albert_chinese_'):
+            cls = BertTokenizer
+        elif transformer == 'cl-tohoku/bert-base-japanese-char':
+            # Since it's char level model, it's OK to use char level tok instead of fugashi
+            # from hanlp.utils.lang.ja.bert_tok import BertJapaneseTokenizerFast
+            # cls = BertJapaneseTokenizerFast
+            from transformers import BertJapaneseTokenizer
+            cls = BertJapaneseTokenizer
+            # from transformers import BertTokenizerFast
+            # cls = BertTokenizerFast
+            additional_config['word_tokenizer_type'] = 'basic'
+        else:
+            cls = AutoTokenizer
+        return cls.from_pretrained(transformer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize,
+                                   **additional_config)

@@ -229,11 +229,11 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
         if self.ret_token_span or not self.truncate_long_sequences:
             assert not self.cls_token_at_end
             assert not self.pad_on_left
-        if self.ret_subtokens:
-            if not use_fast:
-                raise NotImplementedError(
-                    'ret_subtokens is not available when using Python tokenizers. '
-                    'To use this feature, set use_fast = True.')
+        # if self.ret_subtokens:
+        #     if not use_fast:
+        #         raise NotImplementedError(
+        #             'ret_subtokens is not available when using Python tokenizers. '
+        #             'To use this feature, set use_fast = True.')
         self.dict: Optional[DictInterface] = dict_force  # For tokenization of raw text
         self.strip_cls_sep = strip_cls_sep
 
@@ -282,7 +282,11 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                         input_ids = [self.cls_token_id] + input_ids
                 else:
                     input_tokens = tokenizer.tokenize(input_str)
-                    subtoken_offsets = input_tokens
+                    subtoken_offsets = []
+                    _o = 0
+                    for each in input_tokens:
+                        subtoken_offsets.append((_o, _o + len(each)))
+                        _o += len(each)
                     if add_special_tokens:
                         input_tokens = [self.cls_token] + input_tokens + [self.sep_token]
                     input_ids = tokenizer.convert_tokens_to_ids(input_tokens)
@@ -372,7 +376,16 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                     if return_offsets_mapping:
                         offsets_mapping = [encoding.offsets for encoding in encodings.encodings]
                     else:
-                        offsets_mapping = [None for encoding in encodings.encodings]
+                        offsets_mapping = []
+                        for token, subtoken_ids in zip(input_tokens, encodings.data['input_ids']):
+                            if len(subtoken_ids) > len(token):  # … --> ...
+                                del subtoken_ids[len(token):]
+                            char_per_subtoken = -(-len(token) // len(subtoken_ids))
+                            bes = list(zip(range(0, len(token), char_per_subtoken),
+                                           range(char_per_subtoken, len(token) + char_per_subtoken, char_per_subtoken)))
+                            if bes[-1][-1] != len(token):
+                                bes[-1] = (bes[-1][0], len(token))
+                            offsets_mapping.append(bes)
                 else:
                     encodings = SerializableDict()
                     encodings.data = {'input_ids': []}

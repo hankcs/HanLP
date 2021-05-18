@@ -244,7 +244,7 @@ class Document(dict):
                         _srl[p_index] = '╟──►'
                         # _type[j] = 'V'
                         if len(block) != len(_srl) + 1:
-                            warnings.warn(f'Unable to visualize overlapped spans: {pas}')
+                            # warnings.warn(f'Unable to visualize overlapped spans: {pas}')
                             continue
                         block[0].extend(header)
                         for j, (_s, _t) in enumerate(zip(_srl, _type)):

@@ -5,7 +5,7 @@
 The multilingual NLP library for researchers and companies, built on PyTorch and TensorFlow 2.x, for advancing 
 state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be 
 efficient, user friendly and extendable. It comes with pretrained models for various human languages 
-including English, Chinese and many others.
+including English, Chinese, Japanese and many others.
 
 
 
