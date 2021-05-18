@@ -373,13 +373,16 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                         return_offsets_mapping=return_offsets_mapping,
                         add_special_tokens=False
                     )
+                    subtoken_ids_per_token = encodings.data['input_ids']
                     if return_offsets_mapping:
                         offsets_mapping = [encoding.offsets for encoding in encodings.encodings]
                     else:
                         offsets_mapping = []
-                        for token, subtoken_ids in zip(input_tokens, encodings.data['input_ids']):
+                        for token, subtoken_ids in zip(input_tokens, subtoken_ids_per_token):
                             if len(subtoken_ids) > len(token):  # … --> ...
                                 del subtoken_ids[len(token):]
+                            if not subtoken_ids:
+                                subtoken_ids = [tokenizer.unk_token_id]
                             char_per_subtoken = -(-len(token) // len(subtoken_ids))
                             bes = list(zip(range(0, len(token), char_per_subtoken),
                                            range(char_per_subtoken, len(token) + char_per_subtoken, char_per_subtoken)))
@@ -388,8 +391,8 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                             offsets_mapping.append(bes)
                 else:
                     encodings = SerializableDict()
-                    encodings.data = {'input_ids': []}
-                subtoken_ids_per_token = encodings.data['input_ids']
+                    subtoken_ids_per_token = []
+                    encodings.data = {'input_ids': subtoken_ids_per_token}
                 if self.check_space_before:
                     # noinspection PyUnboundLocalVariable
                     for token, subtokens, mapping, encoding in zip(input_tokens, subtoken_ids_per_token,
