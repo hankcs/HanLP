@@ -10,7 +10,7 @@ from hanlp_common.configurable import AutoConfigurable
 from hanlp.layers.embeddings.embedding import Embedding
 from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
 from hanlp.layers.transformers.encoder import TransformerEncoder
-from hanlp.layers.transformers.pt_imports import PreTrainedTokenizer, AutoConfig
+from hanlp.layers.transformers.pt_imports import PreTrainedTokenizer, AutoConfig_, AutoTokenizer_
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer
 
 
@@ -138,9 +138,9 @@ class ContextualWordEmbedding(Embedding, AutoConfigurable):
         self.average_subwords = average_subwords
         self.transformer = transformer
         self.field = field
-        self._transformer_tokenizer = TransformerEncoder.build_transformer_tokenizer(self.transformer,
-                                                                                     use_fast=use_fast,
-                                                                                     do_basic_tokenize=do_basic_tokenize)
+        self._transformer_tokenizer = AutoTokenizer_.from_pretrained(self.transformer,
+                                                                     use_fast=use_fast,
+                                                                     do_basic_tokenize=do_basic_tokenize)
         self._tokenizer_transform = TransformerSequenceTokenizer(self._transformer_tokenizer,
                                                                  field,
                                                                  truncate_long_sequences=truncate_long_sequences,
@@ -170,7 +170,7 @@ class ContextualWordEmbedding(Embedding, AutoConfigurable):
                                              training=training)
 
     def get_output_dim(self):
-        config = AutoConfig.from_pretrained(self.transformer)
+        config = AutoConfig_.from_pretrained(self.transformer)
         return config.hidden_size
 
     def get_tokenizer(self):

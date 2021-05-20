@@ -6,7 +6,7 @@ from typing import Union, Optional
 
 from hanlp_common.constant import BOS, EOS
 from hanlp_common.structure import SerializableDict
-from hanlp.layers.transformers.pt_imports import PreTrainedTokenizer, PretrainedConfig, AutoTokenizer
+from hanlp.layers.transformers.pt_imports import PreTrainedTokenizer, PretrainedConfig, AutoTokenizer_
 from hanlp_trie import DictInterface
 
 
@@ -60,7 +60,7 @@ class TransformerTextTokenizer(TransformerTokenizer):
             output_key = [f'{output_key}_{key}' for key in self._KEY]
         self.output_key = output_key
         if isinstance(tokenizer, str):
-            tokenizer = AutoTokenizer.from_pretrained(tokenizer)
+            tokenizer = AutoTokenizer_.from_pretrained(tokenizer)
         self.tokenizer = tokenizer
 
     def __call__(self, sample: dict):
@@ -195,7 +195,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
             cls_token_at_end = xlnet
             pad_on_left = xlnet
         if isinstance(tokenizer, str):
-            tokenizer = AutoTokenizer.from_pretrained(tokenizer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize)
+            tokenizer = AutoTokenizer_.from_pretrained(tokenizer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize)
         if use_fast:
             # Dirty fix upstream bug: https://github.com/hankcs/HanLP/issues/1602
             if hasattr(tokenizer, '_tokenizer') and hasattr(tokenizer._tokenizer, 'no_truncation'):
@@ -665,7 +665,7 @@ def convert_examples_to_features(
 
 def main():
     transformer = 'bert-base-uncased'
-    tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(transformer)
+    tokenizer: PreTrainedTokenizer = AutoTokenizer_.from_pretrained(transformer)
     # _test_text_transform(tokenizer)
     _test_sequence_transform(tokenizer)
 

@@ -437,7 +437,8 @@ class MultiTaskLearning(TorchComponent):
     def build_model(self, training=False, **kwargs) -> torch.nn.Module:
         tasks = self.tasks
         encoder: ContextualWordEmbedding = self.config.encoder
-        encoder_size = encoder.get_output_dim()
+        transformer_module = encoder.module(training=training)
+        encoder_size = transformer_module.get_output_dim()
         scalar_mixes = torch.nn.ModuleDict()
         decoders = torch.nn.ModuleDict()
         use_raw_hidden_states = dict()
@@ -452,7 +453,7 @@ class MultiTaskLearning(TorchComponent):
                 encoder.scalar_mix = 0
             use_raw_hidden_states[task_name] = task.use_raw_hidden_states
         encoder.ret_raw_hidden_states = any(use_raw_hidden_states.values())
-        return MultiTaskModel(encoder.module(training=training), scalar_mixes, decoders, use_raw_hidden_states)
+        return MultiTaskModel(transformer_module, scalar_mixes, decoders, use_raw_hidden_states)
 
     def predict(self,
                 data: Union[str, List[str]],

@@ -8,8 +8,9 @@ import torch
 from torch import nn
 from hanlp.layers.dropout import WordDropout
 from hanlp.layers.scalar_mix import ScalarMixWithDropout, ScalarMixWithDropoutBuilder
+from hanlp.layers.transformers.resource import get_mirror
 from hanlp.layers.transformers.pt_imports import PreTrainedModel, PreTrainedTokenizer, AutoTokenizer, AutoModel_, \
-    BertTokenizer
+    BertTokenizer, AutoTokenizer_
 from hanlp.layers.transformers.utils import transformer_encode
 
 
@@ -123,25 +124,4 @@ class TransformerEncoder(nn.Module):
 
     @staticmethod
     def build_transformer_tokenizer(config_or_str, use_fast=True, do_basic_tokenize=True) -> PreTrainedTokenizer:
-        if isinstance(config_or_str, str):
-            transformer = config_or_str
-        else:
-            transformer = config_or_str.transformer
-        if use_fast and not do_basic_tokenize:
-            warnings.warn('`do_basic_tokenize=False` might not work when `use_fast=True`')
-        additional_config = dict()
-        if transformer.startswith('voidful/albert_chinese_'):
-            cls = BertTokenizer
-        elif transformer == 'cl-tohoku/bert-base-japanese-char':
-            # Since it's char level model, it's OK to use char level tok instead of fugashi
-            # from hanlp.utils.lang.ja.bert_tok import BertJapaneseTokenizerFast
-            # cls = BertJapaneseTokenizerFast
-            from transformers import BertJapaneseTokenizer
-            cls = BertJapaneseTokenizer
-            # from transformers import BertTokenizerFast
-            # cls = BertTokenizerFast
-            additional_config['word_tokenizer_type'] = 'basic'
-        else:
-            cls = AutoTokenizer
-        return cls.from_pretrained(transformer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize,
-                                   **additional_config)
+        return AutoTokenizer_.from_pretrained(config_or_str, use_fast, do_basic_tokenize)

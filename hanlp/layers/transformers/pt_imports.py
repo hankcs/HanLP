@@ -2,6 +2,9 @@
 # Author: hankcs
 # Date: 2020-05-09 11:25
 import os
+import warnings
+
+from hanlp.layers.transformers.resource import get_mirror
 
 if os.environ.get('USE_TF', None) is None:
     os.environ["USE_TF"] = 'NO'  # saves time loading transformers
@@ -20,7 +23,45 @@ class AutoModel_(AutoModel):
             return super().from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
         else:
             if isinstance(pretrained_model_name_or_path, str):
+                pretrained_model_name_or_path = get_mirror(pretrained_model_name_or_path)
                 return super().from_config(AutoConfig.from_pretrained(pretrained_model_name_or_path, **kwargs))
             else:
                 assert not kwargs
                 return super().from_config(pretrained_model_name_or_path)
+
+
+class AutoConfig_(AutoConfig):
+    @classmethod
+    def from_pretrained(cls, pretrained_model_name_or_path, **kwargs):
+        pretrained_model_name_or_path = get_mirror(pretrained_model_name_or_path)
+        return super().from_pretrained(pretrained_model_name_or_path, **kwargs)
+
+
+class AutoTokenizer_(AutoTokenizer):
+
+    @classmethod
+    def from_pretrained(cls, pretrained_model_name_or_path, use_fast=True,
+                        do_basic_tokenize=True) -> PreTrainedTokenizer:
+        if isinstance(pretrained_model_name_or_path, str):
+            transformer = pretrained_model_name_or_path
+        else:
+            transformer = pretrained_model_name_or_path.transformer
+        transformer = get_mirror(transformer)
+        if use_fast and not do_basic_tokenize:
+            warnings.warn('`do_basic_tokenize=False` might not work when `use_fast=True`')
+        additional_config = dict()
+        if transformer.startswith('voidful/albert_chinese_'):
+            cls = BertTokenizer
+        elif transformer == 'cl-tohoku/bert-base-japanese-char':
+            # Since it's char level model, it's OK to use char level tok instead of fugashi
+            # from hanlp.utils.lang.ja.bert_tok import BertJapaneseTokenizerFast
+            # cls = BertJapaneseTokenizerFast
+            from transformers import BertJapaneseTokenizer
+            cls = BertJapaneseTokenizer
+            # from transformers import BertTokenizerFast
+            # cls = BertTokenizerFast
+            additional_config['word_tokenizer_type'] = 'basic'
+        else:
+            cls = AutoTokenizer
+        return cls.from_pretrained(transformer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize,
+                                   **additional_config)
