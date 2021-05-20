@@ -117,7 +117,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         eprint(f'Python: {platform.python_version()}')
         import torch
         eprint(f'PyTorch: {torch.__version__}')
-        eprint(f'HanLP: {version}')
+        eprint(f'HanLP: {version.__version__}')
         exit(1)
 
 
