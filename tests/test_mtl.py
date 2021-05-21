@@ -11,10 +11,6 @@ def tokenize(mtl, text):
 
 
 class TestMultiTaskLearning(unittest.TestCase):
-
-    def setUp(self) -> None:
-        super().setUp()
-
     def test_mtl_single_sent(self):
         doc: Document = mtl('商品和服务')
         self.assertSequenceEqual(doc['tok/fine'], ["商品", "和", "服务"])
@@ -46,6 +42,9 @@ class TestMultiTaskLearning(unittest.TestCase):
         mtl['tok/fine'].dict_combine = {'( ͡° ͜ʖ ͡ °)'}
         self.assertSequenceEqual(mtl('( ͡° ͜ʖ ͡ °)你好', tasks='tok/fine')['tok/fine'],
                                  ["( ͡° ͜ʖ ͡ °)", "你", "好"])
+
+    def test_unicode_removed_by_hf(self):
+        self.assertSequenceEqual(mtl('͡', tasks='tok/fine')['tok/fine'], ['͡'])
 
     def test_space(self):
         doc: Document = mtl('商品 和服务')

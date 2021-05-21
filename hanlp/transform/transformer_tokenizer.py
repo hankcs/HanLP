@@ -195,7 +195,8 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
             cls_token_at_end = xlnet
             pad_on_left = xlnet
         if isinstance(tokenizer, str):
-            tokenizer = AutoTokenizer_.from_pretrained(tokenizer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize)
+            tokenizer = AutoTokenizer_.from_pretrained(tokenizer, use_fast=use_fast,
+                                                       do_basic_tokenize=do_basic_tokenize)
         if use_fast:
             # Dirty fix upstream bug: https://github.com/hankcs/HanLP/issues/1602
             if hasattr(tokenizer, '_tokenizer') and hasattr(tokenizer._tokenizer, 'no_truncation'):
@@ -276,6 +277,13 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
 
                     if add_special_tokens:
                         subtoken_offsets = subtoken_offsets[1 if self.has_cls else 0:-1]
+
+                    # Edge case that the input_str is swallowed in whole
+                    if not subtoken_offsets and not input_str.isspace():
+                        __index = 1 if add_special_tokens and self.has_cls else 0
+                        input_tokens.insert(__index, input_str)
+                        input_ids.insert(__index, tokenizer.unk_token_id)
+                        subtoken_offsets.append((0, len(input_str)))
 
                     if not self.has_cls:
                         input_tokens = [self.cls_token] + input_tokens
