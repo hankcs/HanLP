@@ -13,6 +13,7 @@ from hanlp.pretrained import classifiers
 from hanlp.pretrained import fasttext
 from hanlp.pretrained import mtl
 from hanlp.pretrained import eos
+from hanlp.pretrained import sts
 
 # Will be filled up during runtime
 ALL = {}

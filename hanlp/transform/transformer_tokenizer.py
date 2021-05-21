@@ -68,11 +68,13 @@ class TransformerTextTokenizer(TransformerTokenizer):
         text_b = sample[self.text_b] if self.text_b else None
         max_seq_length = self.max_seq_length if self.truncate_long_sequences else None
         encoding = self.tokenizer.encode_plus(text_a, text_b, max_length=max_seq_length)
-        input_ids = encoding.data['input_ids']
-        if not self.truncate_long_sequences and len(input_ids) > self.max_seq_length:
-            input_ids = self.sliding_window(input_ids)
-            encoding.data['input_ids'] = input_ids  # TODO: other fields should be properly handled too
-        for k, v in zip(self.output_key, [encoding.data[_] for _ in self._KEY]):
+        results = dict((k, encoding.data.get(k, None)) for k in self._KEY)
+        if not self.truncate_long_sequences and len(results['input_ids']) > self.max_seq_length:
+            # TODO: other fields should be properly handled too
+            results['input_ids'] = self.sliding_window(results['input_ids'])
+        if not results['token_type_ids']:
+            results['token_type_ids'] = encoding[0].type_ids
+        for k, v in zip(self.output_key, [results[_] for _ in self._KEY]):
             sample[k] = v
         return sample
 
