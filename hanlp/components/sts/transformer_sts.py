@@ -174,6 +174,8 @@ class TransformerSemanticTextualSimilarity(TorchComponent):
             predictions.extend(prediction.tolist())
             orders.extend(batch[IDX])
         predictions = reorder(predictions, orders)
+        if flat:
+            return predictions[0]
         return predictions
 
     # noinspection PyMethodOverriding
