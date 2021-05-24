@@ -14,6 +14,7 @@ pos
 ner
 dep
 sdp
+sts
 word2vec
 glove
 fasttext

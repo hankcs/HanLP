@@ -12,5 +12,6 @@ taggers/index
 ner/index
 parsers/index
 srl/index
+sts
 ```
 

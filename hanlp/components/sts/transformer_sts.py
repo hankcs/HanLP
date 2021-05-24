@@ -23,6 +23,13 @@ from hanlp_common.constant import IDX
 class TransformerSemanticTextualSimilarity(TorchComponent):
 
     def __init__(self, **kwargs) -> None:
+        """
+        A simple Semantic Textual Similarity (STS) baseline which fine-tunes a transformer with a regression layer on
+        top of it.
+
+        Args:
+            **kwargs: Predefined config.
+        """
         super().__init__(**kwargs)
         self._tokenizer = None
 
@@ -157,7 +164,18 @@ class TransformerSemanticTextualSimilarity(TorchComponent):
         model = AutoModelForSequenceClassification.from_pretrained(transformer, config=config)
         return model
 
-    def predict(self, data: Union[List[str], List[List[str]]], batch_size: int = None, **kwargs):
+    def predict(self, data: Union[List[str], List[List[str]]], batch_size: int = None, **kwargs) -> Union[
+        float, List[float]]:
+        """ Predict the similarity between sentence pairs.
+
+        Args:
+            data: Sentence pairs.
+            batch_size: The number of samples in a batch.
+            **kwargs: Not used.
+
+        Returns:
+            Similarities between sentences.
+        """
         if not data:
             return []
         flat = isinstance(data[0], str)
