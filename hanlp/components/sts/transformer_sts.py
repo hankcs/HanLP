@@ -161,7 +161,10 @@ class TransformerSemanticTextualSimilarity(TorchComponent):
     # noinspection PyMethodOverriding
     def build_model(self, transformer, training=True, **kwargs) -> torch.nn.Module:
         config = AutoConfig_.from_pretrained(transformer, num_labels=1)
-        model = AutoModelForSequenceClassification.from_pretrained(transformer, config=config)
+        if training:
+            model = AutoModelForSequenceClassification.from_pretrained(transformer, config=config)
+        else:
+            model = AutoModelForSequenceClassification.from_config(config)
         return model
 
     def predict(self, data: Union[List[str], List[List[str]]], batch_size: int = None, **kwargs) -> Union[
