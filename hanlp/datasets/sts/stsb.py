@@ -29,8 +29,6 @@ class SemanticTextualSimilarityDataset(TransformableDataset):
 
     def load_file(self, filepath: str):
         for i, cells in enumerate(read_cells(filepath, strip=True, delimiter=self.delimiter)):
-            if len(cells) != 3:
-                print(i, cells)
             yield {
                 'sent_a': cells[self.sent_a_col],
                 'sent_b': cells[self.sent_b_col],
