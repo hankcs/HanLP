@@ -19,3 +19,9 @@ HANLP_VERBOSE = os.environ.get('HANLP_VERBOSE', '1').lower() in ('1', 'true', 'y
 '''Enable verbose or not.'''
 NULL = '<null>'
 PRED = 'PRED'
+try:
+    # noinspection PyUnresolvedReferences,PyStatementEffect
+    get_ipython
+    IPYTHON = True
+except NameError:
+    IPYTHON = False

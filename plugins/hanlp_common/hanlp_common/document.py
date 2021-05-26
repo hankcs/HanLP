@@ -9,7 +9,7 @@ from typing import List, Union
 from phrasetree.tree import Tree
 
 from hanlp_common.conll import CoNLLUWord, CoNLLSentence, CoNLLSentenceList
-from hanlp_common.constant import PRED
+from hanlp_common.constant import PRED, IPYTHON
 from hanlp_common.util import collapse_json, prefix_match
 from hanlp_common.visualization import tree_to_list, list_to_tree, render_labeled_span, make_table
 
@@ -148,7 +148,7 @@ class Document(dict):
         return results
 
     def to_pretty(self, tok='tok', lem='lem', pos='pos', dep='dep', sdp='sdp', ner='ner', srl='srl', con='con',
-                  show_header=True) -> Union[str, List[str]]:
+                  show_header=True, html=False) -> Union[str, List[str]]:
         """
         Convert to a pretty text representation which can be printed to visualize linguistic structures.
 
@@ -161,7 +161,8 @@ class Document(dict):
             ner: Named entity key.
             srl: Semantic role labeling key.
             con: Constituency parsing key.
-            show_header: ``True`` to print a header which indicates each field with its name.
+            show_header: ``True`` to include a header which indicates each field with its name.
+            html: ``True`` to output HTML format so that non-ASCII characters can align correctly.
 
         Returns:
             A pretty string.
@@ -331,12 +332,39 @@ class Document(dict):
                 results.append(make_table(extras, insert_header=True))
             else:
                 results.append(' '.join(['/'.join(str(f) for f in x.nonempty_fields) for x in conll]))
+        if html:
+            def to_html(pretty_text: str) -> str:
+                lines = [x for x in pretty_text.split('\n') if x]
+                cells = []
+                for line in lines:
+                    cells.append(line.split('\t'))
+
+                num_cols = len(cells[0])
+                cols = []
+
+                for i in range(num_cols):
+                    cols.append([])
+                    for row in cells:
+                        cols[-1].append(row[i])
+
+                html = '<div style="display: table; line-height: 128%;">'
+                for i, each in enumerate(cols):
+                    html += '<pre style="display: table-cell; font-family: SFMono-Regular,Menlo,Monaco,Consolas,' \
+                            'Liberation Mono,Courier New,monospace; white-space: nowrap;">'
+                    if i != len(cols) - 1:
+                        each = [x + ' ' for x in each]
+                    html += '<br>'.join([x.replace(' ', '&nbsp;') for x in each])
+                    html += '</pre>'
+                html += '</div>'
+                return html
+
+            results = [to_html(x) for x in results]
         if flat:
             return results[0]
         return results
 
     def pretty_print(self, tok='tok', lem='lem', pos='pos', dep='dep', sdp='sdp', ner='ner', srl='srl', con='con',
-                     show_header=True):
+                     show_header=True, html=IPYTHON):
         """
         Print a pretty text representation which visualizes linguistic structures.
 
@@ -350,13 +378,18 @@ class Document(dict):
             srl: Semantic role labeling key.
             con: Constituency parsing key.
             show_header: ``True`` to print a header which indicates each field with its name.
+            html: ``True`` to output HTML format so that non-ASCII characters can align correctly.
 
         """
-        results = self.to_pretty(tok, lem, pos, dep, sdp, ner, srl, con, show_header)
+        results = self.to_pretty(tok, lem, pos, dep, sdp, ner, srl, con, show_header, html=html)
         if isinstance(results, str):
             results = [results]
-        sent_new_line = '\n\n' if any('\n' in x for x in results) else '\n'
-        print(sent_new_line.join(results))
+        if IPYTHON:
+            from IPython.core.display import display, HTML
+            display(HTML('<br>'.join(results)))
+        else:
+            sent_new_line = '\n\n' if any('\n' in x for x in results) else '\n'
+            print(sent_new_line.join(results))
 
     def translate(self, lang, tok='tok', pos='pos', dep='dep', sdp='sdp', ner='ner', srl='srl'):
         """

@@ -42,7 +42,7 @@ setup(
         'transformers>=4.1.1',
         'sentencepiece>=0.1.91'
         'torch>=1.6.0',
-        'hanlp-common>=0.0.6',
+        'hanlp-common>=0.0.9',
         'hanlp-trie>=0.0.2',
         'hanlp-downloader',
     ],

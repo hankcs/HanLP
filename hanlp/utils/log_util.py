@@ -10,6 +10,8 @@ from logging import LogRecord
 
 import termcolor
 
+from hanlp_common.constant import IPYTHON
+
 
 class ColoredFormatter(logging.Formatter):
     def __init__(self, fmt=None, datefmt=None, style='%', enable=True):
@@ -70,16 +72,24 @@ class ErasablePrinter(object):
 
     def erase(self):
         if self._last_print_width:
-            self.out.write("\b" * self._last_print_width)
-            self.out.write(" " * self._last_print_width)
-            self.out.write("\b" * self._last_print_width)
+            if IPYTHON:
+                self.out.write("\r")
+                self.out.write(" " * self._last_print_width)
+            else:
+                self.out.write("\b" * self._last_print_width)
+                self.out.write(" " * self._last_print_width)
+                self.out.write("\b" * self._last_print_width)
             self.out.write("\r")  # \r is essential when multi-lines were printed
             self._last_print_width = 0
 
     def print(self, msg: str, color=True):
         self.erase()
         if color:
-            msg, _len = color_format_len(msg)
+            if IPYTHON:
+                msg, _len = color_format_len(msg)
+                _len = len(msg)
+            else:
+                msg, _len = color_format_len(msg)
             self._last_print_width = _len
         else:
             self._last_print_width = len(msg)
