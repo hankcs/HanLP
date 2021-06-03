@@ -155,11 +155,11 @@ class Tagger(DistillableComponent, ABC):
     def input_is_flat(self, tokens):
         return isinstance(tokens, list) and isinstance(tokens[0], str)
 
-    def predict_data(self, data, batch_size, **kwargs):
+    def predict_data(self, data, batch_size, sampler_builder=None, **kwargs):
         samples = self.build_samples(data, **kwargs)
         if not batch_size:
             batch_size = self.config.get('batch_size', 32)
-        dataloader = self.build_dataloader(samples, batch_size, False, self.device)
+        dataloader = self.build_dataloader(samples, batch_size, False, self.device, sampler_builder=sampler_builder)
         outputs = []
         orders = []
         vocab = self.vocabs['tag'].idx_to_token
