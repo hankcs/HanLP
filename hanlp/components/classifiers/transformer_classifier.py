@@ -17,7 +17,7 @@ from hanlp.common.vocab import Vocab
 from hanlp.components.distillation.schedulers import LinearTeacherAnnealingScheduler
 from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
 from hanlp.layers.transformers.encoder import TransformerEncoder
-from hanlp.layers.transformers.pt_imports import PreTrainedModel, AutoTokenizer, BertTokenizer
+from hanlp.layers.transformers.pt_imports import PreTrainedModel, AutoTokenizer, BertTokenizer, AutoTokenizer_
 from hanlp.layers.transformers.utils import transformer_sliding_window, build_optimizer_scheduler_with_transformer
 from hanlp.metrics.accuracy import CategoricalAccuracy
 from hanlp.transform.transformer_tokenizer import TransformerTextTokenizer
@@ -112,7 +112,7 @@ class TransformerComponent(TorchComponent, ABC):
         if 'albert_chinese' in self.config.transformer:
             self.transformer_tokenizer = BertTokenizer.from_pretrained(self.config.transformer, use_fast=True)
         else:
-            self.transformer_tokenizer = AutoTokenizer.from_pretrained(self.config.transformer, use_fast=True)
+            self.transformer_tokenizer = AutoTokenizer_.from_pretrained(self.config.transformer, use_fast=True)
 
     def build_transformer(self, training=True):
         transformer = TransformerEncoder(self.config.transformer, self.transformer_tokenizer,
