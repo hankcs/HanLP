@@ -66,7 +66,7 @@ class Tagger(DistillableComponent, ABC):
 
     def execute_training_loop(self, trn: DataLoader, dev: DataLoader, epochs, criterion, optimizer, metric, save_dir,
                               logger: logging.Logger, devices, ratio_width=None, patience=5, teacher=None,
-                              kd_criterion=None,
+                              kd_criterion=None, eval_trn=True,
                               **kwargs):
         best_epoch, best_metric = 0, -1
         timer = CountdownTimer(epochs)
@@ -74,7 +74,7 @@ class Tagger(DistillableComponent, ABC):
         for epoch in range(1, epochs + 1):
             logger.info(f"[yellow]Epoch {epoch} / {epochs}:[/yellow]")
             self.fit_dataloader(trn, criterion, optimizer, metric, logger, history=history, ratio_width=ratio_width,
-                                **self.config)
+                                eval_trn=eval_trn, **self.config)
             loss, dev_metric = self.evaluate_dataloader(dev, criterion, logger=logger, ratio_width=ratio_width)
             timer.update()
             report = f"{timer.elapsed_human} / {timer.total_time_human} ETA: {timer.eta_human}"

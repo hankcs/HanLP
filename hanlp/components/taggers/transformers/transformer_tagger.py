@@ -92,6 +92,7 @@ class TransformerTagger(TransformerComponent, Tagger):
                        kd_criterion=None,
                        temperature_scheduler=None,
                        ratio_width=None,
+                       eval_trn=True,
                        **kwargs):
         optimizer, scheduler = optimizer
         if teacher:
@@ -116,11 +117,12 @@ class TransformerTagger(TransformerComponent, Tagger):
                 loss = _lambda * loss + (1 - _lambda) * kd_loss
             loss.backward()
             total_loss += loss.item()
-            prediction = self.decode_output(out, mask, batch)
-            self.update_metrics(metric, out, y, mask, batch, prediction)
+            if eval_trn:
+                prediction = self.decode_output(out, mask, batch)
+                self.update_metrics(metric, out, y, mask, batch, prediction)
             if history.step(gradient_accumulation):
                 self._step(optimizer, scheduler, grad_norm, transformer_grad_norm, lambda_scheduler)
-                report = f'loss: {total_loss / (idx + 1):.4f} {metric}'
+                report = f'loss: {total_loss / (idx + 1):.4f} {metric if eval_trn else ""}'
                 timer.log(report, logger=logger, ratio_percentage=False, ratio_width=ratio_width)
             del loss
             del out

@@ -226,7 +226,7 @@ class TransformerTaggingTokenizer(TransformerTagger):
 
     def fit(self, trn_data, dev_data, save_dir, transformer, average_subwords=False, word_dropout: float = 0.2,
             hidden_dropout=None, layer_dropout=0, scalar_mix=None, grad_norm=5.0,
-            transformer_grad_norm=None, lr=5e-5,
+            transformer_grad_norm=None, lr=5e-5, eval_trn=True,
             transformer_lr=None, transformer_layers=None, gradient_accumulation=1,
             adam_epsilon=1e-8, weight_decay=0, warmup_steps=0.1, crf=False, reduction='sum',
             batch_size=32, sampler_builder: SamplerBuilder = None, epochs=30, patience=5, token_key=None,
