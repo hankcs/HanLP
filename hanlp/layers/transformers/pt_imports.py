@@ -46,9 +46,6 @@ class AutoTokenizer_(AutoTokenizer):
             transformer = pretrained_model_name_or_path
         else:
             transformer = pretrained_model_name_or_path.transformer
-        transformer = get_mirror(transformer)
-        if use_fast and not do_basic_tokenize:
-            warnings.warn('`do_basic_tokenize=False` might not work when `use_fast=True`')
         additional_config = dict()
         if transformer.startswith('voidful/albert_chinese_'):
             cls = BertTokenizer
@@ -63,5 +60,9 @@ class AutoTokenizer_(AutoTokenizer):
             additional_config['word_tokenizer_type'] = 'basic'
         else:
             cls = AutoTokenizer
-        return cls.from_pretrained(transformer, use_fast=use_fast, do_basic_tokenize=do_basic_tokenize,
-                                   **additional_config)
+        if use_fast and not do_basic_tokenize:
+            warnings.warn('`do_basic_tokenize=False` might not work when `use_fast=True`')
+        tokenizer = cls.from_pretrained(get_mirror(transformer), use_fast=use_fast, do_basic_tokenize=do_basic_tokenize,
+                                        **additional_config)
+        tokenizer.name_or_path = transformer
+        return tokenizer
