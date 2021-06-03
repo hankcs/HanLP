@@ -131,8 +131,8 @@ class TransformerTagger(TransformerComponent, Tagger):
         temperature = temperature_scheduler(logits_S, logits_T)
         return kd_criterion(logits_S, logits_T, temperature)
 
-    def build_model(self, **kwargs) -> torch.nn.Module:
-        model = TransformerTaggingModel(self.build_transformer(),
+    def build_model(self, training=True, **kwargs) -> torch.nn.Module:
+        model = TransformerTaggingModel(self.build_transformer(training=training),
                                         len(self.vocabs.tag),
                                         self.config.crf,
                                         self.config.get('secondary_encoder', None),
