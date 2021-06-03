@@ -31,6 +31,8 @@ class TransformerTaggingTokenizer(TransformerTagger):
         .. Note:: For algorithm beginners, longest-prefix-matching is the prerequisite to understand what dictionary can
             do and what it can't do. The tutorial in `this book <http://nlp.hankcs.com/book.php>`_ can be very helpful.
 
+        It also supports outputting the span of each token by setting ``config.output_spans = True``.
+
         Args:
             **kwargs: Predefined config.
         """
@@ -184,7 +186,18 @@ class TransformerTaggingTokenizer(TransformerTagger):
         return super().generate_prediction_filename(tst_data.replace('.tsv', '.txt'), save_dir)
 
     def prediction_to_human(self, pred, vocab, batch, rebuild_span=False):
-        return self.spans_to_tokens(pred, batch, rebuild_span)
+        output_spans = self.config.get('output_spans', None)
+        tokens = self.spans_to_tokens(pred, batch, rebuild_span)
+        if output_spans:
+            subtoken_spans = batch['token_subtoken_offsets']
+            results = []
+            for toks, offs, subs in zip(tokens, pred, subtoken_spans):
+                r = []
+                results.append(r)
+                for t, (b, e) in zip(toks, offs):
+                    r.append([t, subs[b][0], subs[e - 1][-1]])
+            return results
+        return tokens
 
     def input_is_flat(self, tokens):
         return isinstance(tokens, str)

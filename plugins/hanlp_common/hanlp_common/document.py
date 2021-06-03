@@ -121,6 +121,7 @@ class Document(dict):
         results = CoNLLSentenceList()
         if not self[tok]:
             return results
+        self = self._to_doc_without_spans(tok)
         flat = isinstance(self[tok][0], str)
         if flat:
             d = Document((k, [v]) for k, v in self.items())
@@ -447,3 +448,28 @@ class Document(dict):
         for k, v in self.items():
             sq[k] = v[0] if isinstance(v, list) else v
         return sq
+
+    def _to_doc_without_spans(self, tok: str):
+        """
+        Remove the spans attached to tokens and return a new document.
+
+        Args:
+            tok: The key to tokens.
+
+        Returns:
+            A new document or itself.
+
+        """
+        tokens: Union[List[str], List[List[str]], List[str, int, int],
+                      List[List[str, int, int]]] = self[tok]
+        if isinstance(tokens[0], str):
+            return self
+        elif isinstance(tokens[0][-1], int):
+            tokens = [x[0] for x in tokens]
+        elif isinstance(tokens[0][-1], str):
+            return self
+        else:
+            tokens = [[t[0] for t in x] for x in tokens]
+        d = Document(**self)
+        d[tok] = tokens
+        return d

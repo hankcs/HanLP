@@ -518,8 +518,11 @@ class MultiTaskLearning(TorchComponent):
                     if first_task_name.startswith('tok'):
                         spans = []
                         tokens = []
+                        output_spans = first_task.config.get('output_spans', None)
                         for span_per_sent, token_per_sent in zip(output_dict[first_task_name]['prediction'],
                                                                  results[first_task_name][-len(batch[IDX]):]):
+                            if output_spans:
+                                token_per_sent = [x[0] for x in token_per_sent]
                             if cls_is_bos:
                                 span_per_sent = [(-1, 0)] + span_per_sent
                                 token_per_sent = [BOS] + token_per_sent
