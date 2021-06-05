@@ -175,7 +175,7 @@ class TorchComponent(Component, ABC):
         if verbose:
             flash('Building model [blink][yellow]...[/yellow][/blink]')
         self.model = self.build_model(
-            **merge_dict(self.config, training=False, **kwargs, overwrite=True,
+            **merge_dict(self.config, training=False, **kwargs, overwrite=True, save_dir=save_dir,
                          inplace=True))
         if verbose:
             flash('')
