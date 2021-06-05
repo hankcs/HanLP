@@ -123,7 +123,7 @@ class TorchComponent(Component, ABC):
         for k, v in self.config.items():
             if isinstance(v, dict) and 'classpath' in v:
                 self.config[k] = Configurable.from_config(v)
-        self.on_config_ready(**self.config)
+        self.on_config_ready(**self.config, save_dir=save_dir)
 
     def save_vocabs(self, save_dir, filename='vocabs.json'):
         """Save vocabularies to a directory.
@@ -251,7 +251,7 @@ class TorchComponent(Component, ABC):
             logger.info(
                 f'Finetune model loaded with {sum(p.numel() for p in self.model.parameters() if p.requires_grad)}'
                 f'/{sum(p.numel() for p in self.model.parameters())} trainable/total parameters.')
-        self.on_config_ready(**self.config)
+        self.on_config_ready(**self.config, save_dir=save_dir)
         trn = self.build_dataloader(**merge_dict(config, data=trn_data, batch_size=batch_size, shuffle=True,
                                                  training=True, device=first_device, logger=logger, vocabs=self.vocabs,
                                                  overwrite=True))
