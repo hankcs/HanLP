@@ -417,7 +417,7 @@ public class CoreDictionary
     public static boolean reload()
     {
         String path = CoreDictionary.path;
-        IOUtil.deleteFile(path + ".table" + Predefine.BIN_EXT);
+        IOUtil.deleteFile(path + Predefine.BIN_EXT);
 
         return load(path);
     }
