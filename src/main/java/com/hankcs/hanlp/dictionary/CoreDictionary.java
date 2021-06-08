@@ -16,10 +16,8 @@ import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.ByteArray;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.utility.LexiconUtility;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
-
 import java.io.*;
 import java.util.*;
 
@@ -27,13 +25,13 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 使用DoubleArrayTrie实现的核心词典
+ *
  * @author hankcs
  */
 public class CoreDictionary
 {
     public static DoubleArrayTrie<Attribute> trie = new DoubleArrayTrie<Attribute>();
     public final static String path = HanLP.Config.CoreDictionaryPath;
-    public static final int totalFrequency = 221894;
 
     // 自动加载词典
     static
@@ -68,7 +66,7 @@ public class CoreDictionary
         {
             br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
-            int MAX_FREQUENCY = 0;
+            int totalFrequency = 0;
             long start = System.currentTimeMillis();
             while ((line = br.readLine()) != null)
             {
@@ -82,9 +80,9 @@ public class CoreDictionary
                     attribute.totalFrequency += attribute.frequency[i];
                 }
                 map.put(param[0], attribute);
-                MAX_FREQUENCY += attribute.totalFrequency;
+                totalFrequency += attribute.totalFrequency;
             }
-            logger.info("核心词典读入词条" + map.size() + " 全部频次" + MAX_FREQUENCY + "，耗时" + (System.currentTimeMillis() - start) + "ms");
+            logger.info("核心词典读入词条" + map.size() + " 全部频次" + totalFrequency + "，耗时" + (System.currentTimeMillis() - start) + "ms");
             br.close();
             trie.build(map);
             logger.info("核心词典加载成功:" + trie.size() + "个词条，下面将写入缓存……");
@@ -104,6 +102,8 @@ public class CoreDictionary
                     }
                 }
                 trie.save(out);
+                out.writeInt(totalFrequency);
+                Predefine.setTotalFrequency(totalFrequency);
                 out.close();
             }
             catch (Exception e)
@@ -154,7 +154,20 @@ public class CoreDictionary
                     attributes[i].frequency[j] = byteArray.nextInt();
                 }
             }
-            if (!trie.load(byteArray, attributes) || byteArray.hasMore()) return false;
+            if (!trie.load(byteArray, attributes)) return false;
+            int totalFrequency = 0;
+            if (byteArray.hasMore()) // 自从1.8.2起，ngram模型最后一个整型为总词频
+            {
+                totalFrequency = byteArray.nextInt();
+            }
+            else
+            {
+                for (Attribute attribute : attributes)
+                {
+                    totalFrequency += attribute.totalFrequency;
+                }
+            }
+            Predefine.setTotalFrequency(totalFrequency);
         }
         catch (Exception e)
         {
@@ -166,6 +179,7 @@ public class CoreDictionary
 
     /**
      * 获取条目
+     *
      * @param key
      * @return
      */
@@ -176,6 +190,7 @@ public class CoreDictionary
 
     /**
      * 获取条目
+     *
      * @param wordID
      * @return
      */
@@ -199,6 +214,7 @@ public class CoreDictionary
 
     /**
      * 是否包含词语
+     *
      * @param key
      * @return
      */
@@ -292,6 +308,7 @@ public class CoreDictionary
 
         /**
          * 从字节流中加载
+         *
          * @param byteArray
          * @param natureIndexArray
          * @return
@@ -353,6 +370,7 @@ public class CoreDictionary
 
         /**
          * 是否有某个词性
+         *
          * @param nature
          * @return
          */
@@ -363,6 +381,7 @@ public class CoreDictionary
 
         /**
          * 是否有以某个前缀开头的词性
+         *
          * @param prefix 词性前缀，比如u会查询是否有ude, uzhe等等
          * @return
          */
@@ -400,8 +419,9 @@ public class CoreDictionary
 
     /**
      * 获取词语的ID
+     *
      * @param a 词语
-     * @return ID,如果不存在,则返回-1
+     * @return ID, 如果不存在, 则返回-1
      */
     public static int getWordID(String a)
     {
