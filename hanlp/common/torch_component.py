@@ -506,7 +506,7 @@ class TorchComponent(Component, ABC):
         return output
 
     def to(self,
-           devices=Union[int, float, List[int], Dict[str, Union[int, torch.device]]],
+           devices: Union[int, float, List[int], Dict[str, Union[int, torch.device]]] = None,
            logger: logging.Logger = None, verbose=HANLP_VERBOSE):
         """Move this component to devices.
 
