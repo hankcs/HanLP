@@ -98,7 +98,7 @@ class TransformerComponent(TorchComponent, ABC):
             scalar_mix: Union[ScalarMixWithDropoutBuilder, int] = None,
             word_dropout=None,
             hidden_dropout=None,
-            max_sequence_length=None,
+            max_seq_len=None,
             ret_raw_hidden_states=False,
             batch_max_tokens=None,
             epochs=3,
@@ -118,7 +118,7 @@ class TransformerComponent(TorchComponent, ABC):
         transformer = TransformerEncoder(self.config.transformer, self.transformer_tokenizer,
                                          self.config.average_subwords,
                                          self.config.scalar_mix, self.config.word_dropout,
-                                         self.config.max_sequence_length, self.config.ret_raw_hidden_states,
+                                         self.config.max_seq_len, self.config.ret_raw_hidden_states,
                                          training=training)
         transformer_layers = self.config.get('transformer_layers', None)
         if transformer_layers:
@@ -358,7 +358,7 @@ class TransformerClassifier(TransformerComponent):
             text_b_key=None,
             label_key=None,
             transformer=None,
-            max_seq_length=512,
+            max_seq_len=512,
             truncate_long_sequences=True,
             # hidden_dropout_prob=0.0,
             lr=5e-5,
