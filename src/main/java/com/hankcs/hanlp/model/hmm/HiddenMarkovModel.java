@@ -90,7 +90,15 @@ public abstract class HiddenMarkovModel
      */
     protected static int drawFrom(double[] cdf)
     {
-        return -Arrays.binarySearch(cdf, Math.random()) - 1;
+        int index = Arrays.binarySearch(cdf, Math.random());
+        if (index >= 0)
+        {
+            return index;
+        }
+        else
+        {
+            return -index - 1;
+        }
     }
 
     /**
