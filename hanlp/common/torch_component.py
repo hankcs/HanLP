@@ -180,7 +180,7 @@ class TorchComponent(Component, ABC):
         if verbose:
             flash('')
         self.load_weights(save_dir, **kwargs)
-        self.to(devices)
+        self.to(devices, verbose=verbose)
         self.model.eval()
 
     def fit(self,
