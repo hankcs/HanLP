@@ -386,7 +386,7 @@ public class DynamicCustomDictionary
     {
         try
         {
-            if (isDicNeedUpdate(path, customDicPath))
+            if (HanLP.Config.CustomDictionaryAutoRefreshCache && isDicNeedUpdate(path, customDicPath))
             {
                 return false;
             }
