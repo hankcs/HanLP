@@ -30,6 +30,7 @@ import static com.hankcs.hanlp.utility.Predefine.logger;
 /**
  * 用户自定义词典<br>
  * 注意自定义词典的动态增删改不是线程安全的。
+ * CustomDictionary bin文件主动根据文件变更时间更新配置项位于hanlp.properties中，通过CustomDictionaryBinUpdate=false来关闭，默认开启
  *
  * @author hankcs
  */
@@ -386,9 +387,10 @@ public class DynamicCustomDictionary
     {
         try
         {
-            if (isDicNeedUpdate(path, customDicPath))
-            {
-                return false;
+            if (HanLP.Config.CustomDictionaryBinUpdate) {
+                if (isDicNeedUpdate(path, customDicPath)) {
+                    return false;
+                }
             }
             ByteArray byteArray = ByteArray.createByteArray(path + Predefine.BIN_EXT);
             if (byteArray == null) return false;

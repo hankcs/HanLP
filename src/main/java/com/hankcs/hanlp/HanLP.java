@@ -24,8 +24,6 @@ import com.hankcs.hanlp.mining.word.NewWordDiscover;
 import com.hankcs.hanlp.mining.word.WordInfo;
 import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
 import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
-import com.hankcs.hanlp.seg.CRF.CRFSegment;
-import com.hankcs.hanlp.seg.HMM.HMMSegment;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
@@ -210,6 +208,10 @@ public class HanLP
          */
         public static boolean Normalization = false;
         /**
+         * 自定义词典bin是否主动根据文件变更时间更新，默认true
+         */
+        public static boolean CustomDictionaryBinUpdate = true;
+        /**
          * IO适配器（默认null，表示从本地文件系统读取），实现com.hankcs.hanlp.corpus.io.IIOAdapter接口
          * 以在不同的平台（Hadoop、Redis等）上运行HanLP
          */
@@ -300,6 +302,7 @@ public class HanLP
                 PerceptronNERModelPath = root + p.getProperty("PerceptronNERModelPath", PerceptronNERModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
                 Normalization = "true".equals(p.getProperty("Normalization", "false"));
+                CustomDictionaryBinUpdate = "true".equals(p.getProperty("CustomDictionaryBinUpdate", "true"));
                 String ioAdapterClassName = p.getProperty("IOAdapter");
                 if (ioAdapterClassName != null)
                 {
