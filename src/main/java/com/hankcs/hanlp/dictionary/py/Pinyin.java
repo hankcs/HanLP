@@ -699,7 +699,7 @@ public enum Pinyin
     lv3(Shengmu.l, Yunmu.v, 3, "lǚ", "lv", Head.l, 'l'),
     lv4(Shengmu.l, Yunmu.v, 4, "lǜ", "lv", Head.l, 'l'),
     lve3(Shengmu.l, Yunmu.ve, 3, "lüě", "lve", Head.l, 'l'),
-    lve4(Shengmu.l, Yunmu.ue, 4, "lüè", "lve", Head.l, 'l'),
+    lve4(Shengmu.l, Yunmu.ve, 4, "lüè", "lve", Head.l, 'l'),
     ma1(Shengmu.m, Yunmu.a, 1, "mā", "ma", Head.m, 'm'),
     ma2(Shengmu.m, Yunmu.a, 2, "má", "ma", Head.m, 'm'),
     ma3(Shengmu.m, Yunmu.a, 3, "mǎ", "ma", Head.m, 'm'),

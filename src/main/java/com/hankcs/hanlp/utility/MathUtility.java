@@ -17,17 +17,18 @@ import com.hankcs.hanlp.seg.common.Vertex;
 import java.util.Map;
 import java.util.Set;
 
-import static com.hankcs.hanlp.utility.Predefine.MAX_FREQUENCY;
-import static com.hankcs.hanlp.utility.Predefine.dSmoothingPara;
-import static com.hankcs.hanlp.utility.Predefine.dTemp;
+import static com.hankcs.hanlp.utility.Predefine.TOTAL_FREQUENCY;
+import static com.hankcs.hanlp.utility.Predefine.lambda;
+import static com.hankcs.hanlp.utility.Predefine.myu;
 
 /**
  * 一些数学小工具
+ *
  * @author hankcs
  */
 public class MathUtility
 {
-    public static int sum(int ... var)
+    public static int sum(int... var)
     {
         int sum = 0;
         for (int x : var)
@@ -38,7 +39,7 @@ public class MathUtility
         return sum;
     }
 
-    public static float sum(float ... var)
+    public static float sum(float... var)
     {
         float sum = 0;
         for (float x : var)
@@ -129,20 +130,11 @@ public class MathUtility
      */
     public static double calculateWeight(Vertex from, Vertex to)
     {
-        int frequency = from.getAttribute().totalFrequency;
-        if (frequency == 0)
-        {
-            frequency = 1;  // 防止发生除零错误
-        }
-//        int nTwoWordsFreq = BiGramDictionary.getBiFrequency(from.word, to.word);
-        int nTwoWordsFreq = CoreBiGramTableDictionary.getBiFrequency(from.wordID, to.wordID);
-        double value = -Math.log(dSmoothingPara * frequency / (MAX_FREQUENCY) + (1 - dSmoothingPara) * ((1 - dTemp) * nTwoWordsFreq / frequency + dTemp));
-        if (value < 0.0)
-        {
-            value = -value;
-        }
-//        logger.info(String.format("%5s frequency:%6d, %s nTwoWordsFreq:%3d, weight:%.2f", from.word, frequency, from.word + "@" + to.word, nTwoWordsFreq, value));
-        return value;
+        int fFrom = from.getAttribute().totalFrequency;
+        int fBigram = CoreBiGramTableDictionary.getBiFrequency(from.wordID, to.wordID);
+        int fTo = to.getAttribute().totalFrequency;
+        //        logger.info(String.format("%5s frequency:%6d, %s fBigram:%3d, weight:%.2f", from.word, frequency, from.word + "@" + to.word, fBigram, value));
+        return -Math.log(lambda * (myu * fBigram / (fFrom + 1) + 1 - myu) + (1 - lambda) * fTo / TOTAL_FREQUENCY);
     }
 
 }

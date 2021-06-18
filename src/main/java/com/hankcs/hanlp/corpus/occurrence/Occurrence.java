@@ -298,7 +298,7 @@ public class Occurrence
 
     public double computeMutualInformation(PairFrequency pair)
     {
-        return Math.log(Math.max(Predefine.MIN_PROBABILITY, pair.getValue() / totalPair) / Math.max(Predefine.MIN_PROBABILITY, (CoreDictionary.getTermFrequency(pair.first) / (double) CoreDictionary.totalFrequency * CoreDictionary.getTermFrequency(pair.second) / (double) CoreDictionary.totalFrequency)));
+        return Math.log(Math.max(Predefine.MIN_PROBABILITY, pair.getValue() / totalPair) / Math.max(Predefine.MIN_PROBABILITY, (CoreDictionary.getTermFrequency(pair.first) / (double) Predefine.TOTAL_FREQUENCY * CoreDictionary.getTermFrequency(pair.second) / (double) Predefine.TOTAL_FREQUENCY)));
     }
 
     /**

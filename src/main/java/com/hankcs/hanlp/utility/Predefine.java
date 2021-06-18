@@ -55,15 +55,15 @@ public class Predefine
 
     public static int MAX_SEGMENT_NUM = 10;
 
-    public static final int MAX_FREQUENCY = 25146057; // 现在总词频25146057
+    public static int TOTAL_FREQUENCY = 25146057; // 现在总词频25146057
     /**
-     * Smoothing 平滑因子
+     * Bigram 平滑因子
      */
-    public static final double dTemp = (double) 1 / MAX_FREQUENCY + 0.00001;
+    public static double myu = 1 - (double) 1 / TOTAL_FREQUENCY + 0.00001;
     /**
-     * 平滑参数
+     * Unigram 平滑因子
      */
-    public static final double dSmoothingPara = 0.1;
+    public static final double lambda = 0.9;
     /**
      * 地址 ns
      */
@@ -136,4 +136,10 @@ public class Predefine
      * 二进制文件后缀
      */
     public final static String BIN_EXT = ".bin";
+
+    public static void setTotalFrequency(int totalFrequency)
+    {
+        TOTAL_FREQUENCY = totalFrequency;
+        myu = 1 - ((double) 1 / TOTAL_FREQUENCY + 0.00001);
+    }
 }

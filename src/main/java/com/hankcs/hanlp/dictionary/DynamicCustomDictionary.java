@@ -101,6 +101,7 @@ public class DynamicCustomDictionary
         else
         {
             logger.info("自定义词典加载成功:" + dat.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
+            this.path = path;
             return true;
         }
     }
@@ -385,7 +386,7 @@ public class DynamicCustomDictionary
     {
         try
         {
-            if (isDicNeedUpdate(path, customDicPath))
+            if (HanLP.Config.CustomDictionaryAutoRefreshCache && isDicNeedUpdate(path, customDicPath))
             {
                 return false;
             }
