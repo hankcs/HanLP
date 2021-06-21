@@ -164,4 +164,4 @@ class BiaffineDependencyParsing(Task, BiaffineDependencyParser):
             yield result
 
     def build_samples(self, inputs, cls_is_bos=False, sep_is_eos=False):
-        return [{'FORM': token + [EOS] if sep_is_eos else []} for token in inputs]
+        return [{'FORM': token + ([EOS] if sep_is_eos else [])} for token in inputs]
