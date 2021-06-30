@@ -75,7 +75,7 @@ class TransformerTextTransform(TableTransform):
     def create_types_shapes_values(self) -> Tuple[Tuple, Tuple, Tuple]:
         max_length = self.config.max_length
         types = (tf.int32, tf.int32, tf.int32), tf.string
-        shapes = ([max_length], [max_length], [max_length]), [None, ] if self.config.multi_label else []
+        shapes = ([max_length], [max_length], [max_length]), [None, ] if self.config.get('multi_label', None) else []
         values = (0, 0, 0), self.label_vocab.safe_pad_token
         return types, shapes, values
 
@@ -84,7 +84,7 @@ class TransformerTextTransform(TableTransform):
         exit(1)
 
     def y_to_idx(self, y) -> tf.Tensor:
-        if self.config.multi_label:
+        if self.config.get('multi_label', None):
             # need to change index to binary vector
             mapped = tf.map_fn(fn=lambda x: tf.cast(self.label_vocab.lookup(x), tf.int32), elems=y,
                                fn_output_signature=tf.TensorSpec(dtype=tf.dtypes.int32, shape=[None, ]))
@@ -97,7 +97,7 @@ class TransformerTextTransform(TableTransform):
     def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None,
                      batch=None) -> Iterable:
         # Prediction to be Y > 0:
-        if self.config.multi_label:
+        if self.config.get('multi_label', None):
             preds = Y
         else:
             preds = tf.argmax(Y, axis=-1)
@@ -149,7 +149,7 @@ class TransformerClassifierTF(KerasComponent):
         if loss:
             assert isinstance(loss, tf.keras.losses.loss), 'Must specify loss as an instance in tf.keras.losses'
             return loss
-        elif self.config.multi_label:
+        elif self.config.get('multi_label', None):
             # Loss to be BinaryCrossentropy for multi-label:
             loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         else:
@@ -187,7 +187,7 @@ class TransformerClassifierTF(KerasComponent):
         return train_examples
 
     def build_metrics(self, metrics, logger, **kwargs):
-        if self.config.multi_label:
+        if self.config.get('multi_label', None):
             metric = tf.keras.metrics.BinaryAccuracy('binary_accuracy')
         else:
             metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')

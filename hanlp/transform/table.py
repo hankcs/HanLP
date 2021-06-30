@@ -41,7 +41,7 @@ class TableTransform(Transform, ABC):
                 num_features = len(inputs[0])
                 self.config.num_features = num_features
             # multi-label support
-            if self.config.multi_label:
+            if self.config.get('multi_label', None):
                 assert type(inputs[1]) is str, 'Y value has to be string'
                 if inputs[1][0] == '[':
                     # multi-label is in literal form of a list
@@ -68,7 +68,7 @@ class TableTransform(Transform, ABC):
     def fit(self, trn_path: str, **kwargs):
         samples = 0
         for t in self.file_to_samples(trn_path, gold=True):
-            if self.config.multi_label:
+            if self.config.get('multi_label', None):
                 for l in t[1]:
                     self.label_vocab.add(l)
             else:
