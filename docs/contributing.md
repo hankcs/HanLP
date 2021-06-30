@@ -15,7 +15,7 @@ project.
 Get the source code of this project using git:
 
 ```bash
-git clone https://github.com/hankcs/HanLP
+git clone https://github.com/hankcs/HanLP --branch master
 cd HanLP
 pip install -e plugins/hanlp_trie
 pip install -e plugins/hanlp_common
@@ -30,7 +30,7 @@ To work on this project, you need Python 3.6 or newer.
 This project has a test suite to ensure certain important APIs work properly. The tests can be run using:
 
 ```console
-$ python -m unittest discover ./tests
+python -m unittest discover ./tests
 ```
 
 :::{tip}

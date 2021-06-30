@@ -44,6 +44,12 @@ See [Golang instructions](https://hanlp.hankcs.com/docs/api/restful_golang.html)
 
 The native package running locally can be installed via pip.
 
+````{margin} **Install from Source**
+```{note}
+See [development guideline](https://hanlp.hankcs.com/docs/contributing.html#development).
+```
+````
+
 ```
 pip install hanlp
 ```
