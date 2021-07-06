@@ -5,9 +5,9 @@ from hanlp.utils.io_util import get_resource
 from hanlp_common.constant import HANLP_URL
 
 mirrors = {
-    'hfl/chinese-electra-180g-base-discriminator': HANLP_URL + 'transformers/electra_zh_base_20210520_124523.zip',
-    'hfl/chinese-electra-180g-small-discriminator': HANLP_URL + 'transformers/electra_zh_small_20210520_124451.zip',
-    'xlm-roberta-base': HANLP_URL + 'transformers/xlm-roberta-base_20210526_112208.zip',
+    'hfl/chinese-electra-180g-base-discriminator': HANLP_URL + 'transformers/electra_zh_base_20210706_125233.zip',
+    'hfl/chinese-electra-180g-small-discriminator': HANLP_URL + 'transformers/electra_zh_small_20210706_125427.zip',
+    'xlm-roberta-base': HANLP_URL + 'transformers/xlm-roberta-base_20210706_125502.zip',
     'cl-tohoku/bert-base-japanese-char': HANLP_URL + 'transformers/bert-base-japanese-char_20210602_215445.zip',
 }
 
