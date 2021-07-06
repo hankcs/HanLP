@@ -12,10 +12,11 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
@@ -31,7 +32,6 @@ jobs:
         python -m pip install -e plugins/hanlp_common
         python -m pip install -e .
         python -m pip install pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 #    - name: Lint with flake8
 #      run: |
 #        # stop the build if there are Python syntax errors or undefined names
