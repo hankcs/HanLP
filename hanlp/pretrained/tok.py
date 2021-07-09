@@ -18,8 +18,8 @@ LARGE_ALBERT_BASE = HANLP_URL + 'tok/large_cws_albert_base_20200828_011451.zip'
 SIGHAN2005_PKU_BERT_BASE_ZH = HANLP_URL + 'tok/sighan2005_pku_bert_base_zh_20201231_141130.zip'
 'BERT model (:cite:`devlin-etal-2019-bert`) trained on sighan2005 pku dataset.'
 COARSE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/coarse_electra_small_zh_20210603_112321.zip'
-'Electra small model trained on coarse-grained CWS corpora. Its performance is much higher than that of MTL ' \
-'model: P: 97.08% R: 96.94% F1: 97.01%'
+'Electra small model trained on coarse-grained CWS corpora. Its performance is P=97.08% R=96.94% F1=97.01% which is ' \
+'much higher than that of MTL model '
 
 # Will be filled up during runtime
 ALL = {}

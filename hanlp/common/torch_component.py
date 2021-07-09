@@ -579,7 +579,7 @@ class TorchComponent(Component, ABC):
         return devices[0]
 
     def on_config_ready(self, **kwargs):
-        """Called when config is ready, either during ``fit`` ot ``load``. Subclass can perform extra initialization
+        """Called when config is ready, either during ``fit`` or ``load``. Subclass can perform extra initialization
         tasks in this callback.
 
         Args:

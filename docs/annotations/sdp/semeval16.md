@@ -21,7 +21,73 @@
 
 # SemEval2016
 
-See also [SemEval-2016 Task 9](https://www.hankcs.com/nlp/sdp-corpus.html) and [CSDP](https://csdp-doc.readthedocs.io/zh_CN/latest/%E9%99%84%E5%BD%95/).
+## CSDP
+
+SemEval2016 adopts the CSDP guideline listed as follows.
+
+### 语义关系标注标签集
+
+| 分类         |              |                 |                                                              |
+| ------------ | ------------ | --------------- | ------------------------------------------------------------ |
+| 语义周边角色 | 主体角色     | 施事AGT；       | 施事Agt；感事Aft                                             |
+|              |              | 当事EXP；       | 当事Exp；领事Poss                                            |
+|              | 客体角色     | 受事PAT；       | 受事Pat                                                      |
+|              |              | 客事CONT；      | 客事Cont；成事Prod；结局Cons                                 |
+|              |              | 涉事DATV；      | 涉事Datv；比较Comp；源事Orig                                 |
+|              |              | 系事LINK；      | 类事Clas；属事Belg                                           |
+|              | 情境角色     | 工具TOOL；      | 工具Tool                                                     |
+|              |              | 材料MATL；      | 材料Matl                                                     |
+|              |              | 方式MANN；      | 方式Mann；依据Accd                                           |
+|              |              | 范围SCO；       | 范围Sco                                                      |
+|              |              | 缘由REAS；      | 缘故Reas；意图Int                                            |
+|              |              | 时间TIME；      | 时间Time；时间起点Tini；时间终点Tfin；时段Tdur；时距Trang    |
+|              |              | 空间LOC；       | 空间Loc；原处所Lini；终处所Lfin；通过处所Lthru；趋向Dir      |
+|              |              | 度量MEAS；      | 数量Quan；起始量Nini；终止量Nfin；数量短语Qp；频率Freq；顺序Seq；变化量Nvar |
+|              |              | 状态STAT；      | 状态Stat；起始状态Sini；终止状态Sfin；历经状态Sproc          |
+|              |              | 修饰FEAT；      | 描写Desc；宿主Host；名词修饰语Nmod；时间修饰语Tmod           |
+| 语义结构关系 | 反关系       | 反施事rAGT；    | 反施事rAgt；反感事rAft                                       |
+|              |              | 反当事rEXP。    | 反当事rExp；反领事rPoss                                      |
+|              |              | 反受事rPAT；    | 反受事rPat                                                   |
+|              |              | 反客事rCONT；   | 反客事rCont；反成事rProd；反结局rCons                        |
+|              |              | 反涉事rDATV；   | 反涉事rDatv；反比较rComp；反源事rOrig                        |
+|              |              | 反系事rLINK。   | 反类事rClas；反属事rBelg                                     |
+|              |              | 反工具rTOOL；   | 反工具rTool                                                  |
+|              |              | 反材料rMATL；   | 反材料rMatl                                                  |
+|              |              | 反方式RMANN；   | 反方式rMann；反依据rAccd                                     |
+|              |              | 反范围rSCO；    | 反范围rSco                                                   |
+|              |              | 反缘由rREAS；   | 反缘故rReas；反意图rInt                                      |
+|              |              | 反时间rTIME；   | 反时间rTime；反时间起点rTini；反时间终点rTfin；反时段rTdur；反时距rTrang |
+|              |              | 反空间rLOC；    | 反空间rLoc；反原处所rLini；反终处所rLfin；反通过处所rLthru；反趋向rDir |
+|              |              | 反度量rMEAS；   | 反数量rQuan；反起始量rNini；反终止量rNfin；反数量短语rQp；反频率rFreq；反顺序rSeq；反变化量rNvar |
+|              |              | 反状态rSTAT；   | 反状态rStat；反起始状态rSini；反终止状态rSfin；反历经状态rSproc |
+|              |              | 反修饰rFEAT；   | 反描写rDesc；反宿主rHost; 反名词修饰语rNmod; 反时间修饰语rTmod |
+|              | 嵌套事件关系 | 嵌套施事dAGT；  | 嵌套施事dAgt；嵌套感事dAft                                   |
+|              |              | 嵌套当事dEXP。  | 嵌套当事dExp；嵌套领事dPoss                                  |
+|              |              | 嵌套受事dPAT；  | 嵌套受事dPat                                                 |
+|              |              | 嵌套客事dCONT； | 嵌套客事dCont；嵌套成事dProd；嵌套结局dCons                  |
+|              |              | 嵌套涉事dDATV； | 嵌套涉事dDatv；嵌套比较dComp；嵌套源事dOrig                  |
+|              |              | 嵌套系事dLINK。 | 嵌套类事dClas；嵌套属事dBelg                                 |
+|              |              | 嵌套工具dTOOL； | 嵌套工具dTool                                                |
+|              |              | 嵌套材料dMATL； | 嵌套材料dMatl                                                |
+|              |              | 嵌套方式dMANN； | 嵌套方式dMann；嵌套依据dAccd                                 |
+|              |              | 嵌套范围dSCO；  | 嵌套范围dSco                                                 |
+|              |              | 嵌套缘由dREAS； | 嵌套缘故dReas；嵌套意图dInt                                  |
+|              |              | 嵌套时间dTIME； | 嵌套时间dTime；嵌套时间起点dTini；嵌套时间终点dTfin；嵌套时段dTdur；嵌套时距dTrang |
+|              |              | 嵌套空间dLOC；  | 嵌套空间dLoc；嵌套原处所dLini；嵌套终处所dLfin；嵌套通过处所dLthru；嵌套趋向dDir |
+|              |              | 嵌套度量dMEAS； | 嵌套数量dQuan；嵌套起始量dNini；嵌套终止量dNfin；嵌套数量短语dQp；嵌套频率dFreq；嵌套顺序dSeq；嵌套变化量dNvar |
+|              |              | 嵌套状态dSTAT； | 嵌套状态dStat；嵌套起始状态dSini；嵌套终止状态dSfin；嵌套历经状态dSproc |
+|              |              | 嵌套修饰dFEAT； | 嵌套描写dDesc；嵌套宿主dHost; 嵌套名词修饰语dNmod; 嵌套时间修饰语dTmod |
+|              | 事件关系     | 并列关系eCOO；  | 并列eCoo；等同eEqu；分叙eRect；选择eSelt;割舍eAban；选取ePref；总括eSum |
+|              |              | 先行关系ePREC； | 先行ePrec；原因eCau；条件eCond；假设eSupp；手段eMetd；让步eConc |
+|              |              | 后继关系eSUCC； | 后继eSucc；递进eProg；转折 eAdvt；目的ePurp；结果eResu；推论eInf |
+| 语义依附标记 | 标点标记     | 标点标记mPUNC； | 标点标记mPunc                                                |
+|              | 依附标记     | 否定标记mNEG；  | 否定标记mNeg                                                 |
+|              |              | 关系标记mRELA； | 连词标记mConj；介词标记mPrep                                 |
+|              |              | 依附标记mDEPD； | 语气标记mTone；时间标记mTime;范围标记mRang；情态标记mMod； 频率标记mFreq；程度标记mDegr；趋向标记mDir；的字标记mAux； 多数标记mMaj；插入语标记mPars；离合标记mSepa；实词虚化标记mVain 重复标记mRept |
+
+## SemEval2016
+
+The following table is a subset of CSDP but offers some examples to illustrate the idea.
 
 | 关系类型   | Tag           | Description        | Example                     |
 |--------|---------------|--------------------|-----------------------------|
@@ -96,3 +162,5 @@ See also [SemEval-2016 Task 9](https://www.hankcs.com/nlp/sdp-corpus.html) and [
 | 实词虚化标记 | mVain         | Vain Marker        |                             |
 | 离合标记   | mSepa         | Seperation Marker  | 吃了个饭 (吃 –> 饭) 洗了个澡 (洗 –> 澡) |
 | 根节点    | Root          | Root               | 全句核心节点                      |
+
+See also [SemEval-2016 Task 9](https://www.hankcs.com/nlp/sdp-corpus.html) and [CSDP](https://csdp-doc.readthedocs.io/zh_CN/latest/%E9%99%84%E5%BD%95/).
