@@ -4,7 +4,7 @@
 import os
 import warnings
 
-from hanlp.layers.transformers.resource import get_mirror
+from hanlp.layers.transformers.resource import get_tokenizer_mirror, get_model_mirror
 
 if os.environ.get('USE_TF', None) is None:
     os.environ["USE_TF"] = 'NO'  # saves time loading transformers
@@ -19,11 +19,12 @@ from transformers import BertTokenizer, BertConfig, PretrainedConfig, \
 class AutoModel_(AutoModel):
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path, *model_args, training=True, **kwargs):
+        pretrained_model_name_or_path = get_model_mirror(pretrained_model_name_or_path)
         if training:
             return super().from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
         else:
             if isinstance(pretrained_model_name_or_path, str):
-                pretrained_model_name_or_path = get_mirror(pretrained_model_name_or_path)
+                pretrained_model_name_or_path = get_tokenizer_mirror(pretrained_model_name_or_path)
                 return super().from_config(AutoConfig.from_pretrained(pretrained_model_name_or_path, **kwargs))
             else:
                 assert not kwargs
@@ -33,7 +34,7 @@ class AutoModel_(AutoModel):
 class AutoConfig_(AutoConfig):
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path, **kwargs):
-        pretrained_model_name_or_path = get_mirror(pretrained_model_name_or_path)
+        pretrained_model_name_or_path = get_tokenizer_mirror(pretrained_model_name_or_path)
         return super().from_pretrained(pretrained_model_name_or_path, **kwargs)
 
 
@@ -62,7 +63,7 @@ class AutoTokenizer_(AutoTokenizer):
             cls = AutoTokenizer
         if use_fast and not do_basic_tokenize:
             warnings.warn('`do_basic_tokenize=False` might not work when `use_fast=True`')
-        tokenizer = cls.from_pretrained(get_mirror(transformer), use_fast=use_fast, do_basic_tokenize=do_basic_tokenize,
+        tokenizer = cls.from_pretrained(get_tokenizer_mirror(transformer), use_fast=use_fast, do_basic_tokenize=do_basic_tokenize,
                                         **additional_config)
         tokenizer.name_or_path = transformer
         return tokenizer

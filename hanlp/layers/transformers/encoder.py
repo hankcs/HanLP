@@ -8,7 +8,7 @@ import torch
 from torch import nn
 from hanlp.layers.dropout import WordDropout
 from hanlp.layers.scalar_mix import ScalarMixWithDropout, ScalarMixWithDropoutBuilder
-from hanlp.layers.transformers.resource import get_mirror
+from hanlp.layers.transformers.resource import get_tokenizer_mirror
 from hanlp.layers.transformers.pt_imports import PreTrainedModel, PreTrainedTokenizer, AutoTokenizer, AutoModel_, \
     BertTokenizer, AutoTokenizer_
 from hanlp.layers.transformers.utils import transformer_encode
