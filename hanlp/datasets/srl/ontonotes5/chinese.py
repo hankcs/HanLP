@@ -68,6 +68,7 @@ except HTTPError:
            'which will be used for demonstration purpose.')
     unofficial_chinese = get_resource('https://github.com/GuocaiL/Coref_Resolution/archive/master.zip#data/')
     intended_home, _ = os.path.splitext(intended_file_path)
+    intended_home = os.path.join(os.path.dirname(intended_home), 'ontonotes-release-5.0')
     intended_chinese = f'{intended_home}/data/files/data/chinese/'
     # print(os.path.dirname(intended_chinese))
     # print(unofficial_chinese)
