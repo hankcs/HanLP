@@ -16,6 +16,8 @@ from hanlp.utils.log_util import logger
 
 
 def gpus_available() -> Dict[int, float]:
+    if not torch.cuda.is_available():
+        return dict()
     try:
         nvmlInit()
         gpus = {}
