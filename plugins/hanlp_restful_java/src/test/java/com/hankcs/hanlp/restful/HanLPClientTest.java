@@ -56,6 +56,13 @@ class HanLPClientTest
         prettyPrint(doc);
     }
 
+    @Test
+    void textStyleTransfer() throws IOException
+    {
+        String doc = client.textStyleTransfer("国家对中石油抱有很大的期望.", "gov_doc");
+        prettyPrint(doc);
+    }
+
     void prettyPrint(Object object) throws JsonProcessingException
     {
         ObjectMapper mapper = new ObjectMapper();

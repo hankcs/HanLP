@@ -162,3 +162,28 @@ class HanLPClient(object):
 
     def _send_get_json(self, url, form: Dict[str, Any]):
         return json.loads(self._send_get(url, form))
+
+    def text_style_transfer(self, text: Union[str, List[str]], target_style: str, language: str = None) \
+            -> Union[str, List[str]]:
+        """ Text style transfer aims to change the style of the input text to the target style while preserving its
+        content.
+
+        Args:
+            text: Source text.
+            target_style: Target style.
+            language: The language of input text. ``None`` to use the default language on server.
+
+        Examples::
+
+            HanLP.text_style_transfer(['国家对中石油抱有很大的期望.', '要用创新去推动高质量的发展。'],
+                                      target_style='gov_doc')
+            # Output: ['国家对中石油寄予厚望。', '要以创新驱动高质量发展。']
+
+        Returns:
+            Text or a list of text of the target style.
+
+        """
+        response = self._send_post_json(self._url + '/text_style_transfer',
+                                        {'text': text, 'target_style': target_style,
+                                         'language': language or self._language})
+        return response

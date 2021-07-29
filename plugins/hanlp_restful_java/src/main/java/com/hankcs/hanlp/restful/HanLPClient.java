@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -154,7 +155,40 @@ public class HanLPClient
         return parse(tokens, null, null);
     }
 
-    private String post(String api, BaseInput input_) throws IOException
+    /**
+     * Text style transfer aims to change the style of the input text to the target style while preserving its content.
+     *
+     * @param text        Source text.
+     * @param targetStyle Target style.
+     * @return Text of the target style.
+     */
+    public List<String> textStyleTransfer(List<String> text, String targetStyle) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("target_style", targetStyle);
+        input.put("language", language);
+        //noinspection unchecked
+        return mapper.readValue(post("/text_style_transfer", input), List.class);
+    }
+
+    /**
+     * Text style transfer aims to change the style of the input text to the target style while preserving its content.
+     *
+     * @param text        Source text.
+     * @param targetStyle Target style.
+     * @return Text of the target style.
+     */
+    public String textStyleTransfer(String text, String targetStyle) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("target_style", targetStyle);
+        input.put("language", language);
+        return mapper.readValue(post("/text_style_transfer", input), String.class);
+    }
+
+    private String post(String api, Object input_) throws IOException
     {
         URL url = new URL(this.url + api);
 
