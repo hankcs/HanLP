@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2020-12-03 14:24
-
+import hanlp_demo.block_windows
 from hanlp.common.dataset import SortingSamplerBuilder
 from hanlp.common.transform import NormalizeCharacter
 from hanlp.components.mtl.multi_task_learning import MultiTaskLearning
