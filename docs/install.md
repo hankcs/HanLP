@@ -46,7 +46,7 @@ The native package running locally can be installed via pip.
 
 ````{margin} **Install from Source**
 ```{note}
-See [development guideline](https://hanlp.hankcs.com/docs/contributing.html#development).
+See [developer guideline](https://hanlp.hankcs.com/docs/contributing.html#development).
 ```
 ````
 
@@ -66,7 +66,8 @@ Installation on Windows is **perfectly** supported. The full version `hanlp[full
 | Flavor  | Description                                                  |
 | ------- | ------------------------------------------------------------ |
 | default | This installs the default version which delivers the most commonly used functionalities. However, some heavy dependencies like TensorFlow are not installed. |
-| full    | For experts who seek to maximize the efficiency via TensorFlow and C++ extensions, `pip install hanlp[full]` installs every dependency HanLP will use in production. |
+| full    | For experts who seek to maximize the efficiency via TensorFlow and C++ extensions, `pip install hanlp[full]` installs every dependency HanLP will use in production. `hanlp[full]` requires `Python<=3.8` due to `tensorflow==2.3.0`, which can be easily installed through conda: `conda install python=3.8 -y` |
+
 
 ## Install Models
 
@@ -88,6 +89,12 @@ If your server has no Internet access at all, just debug your codes on your loca
 1. `~/.hanlp`: the home directory for HanLP models.
 1. `~/.cache/huggingface`: the home directory for Hugging Face 🤗 Transformers.
 
+````{margin} **Thirdparty Versions**
+```{danger}
+NEVER install TensorFlow/fastText by yourself, as higher or lower versions of TensorFlow have not been tested and might not work properly. 
+```
+````
+
 ### Import Error
 
 Some TensorFlow/fastText models will ask you to install the missing TensorFlow/fastText modules, in which case you'll need to install the full version:
@@ -97,6 +104,3 @@ pip install hanlp[full]
 ```
 
 
-```{caution}
-DO NOT install TensorFlow/fastText by yourself, as higher or lower versions of TensorFlow have not been tested and might not work properly. 
-```
