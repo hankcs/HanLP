@@ -188,6 +188,38 @@ public class HanLPClient
         return mapper.readValue(post("/text_style_transfer", input), String.class);
     }
 
+    /**
+     * Semantic textual similarity deals with determining how similar two pieces of texts are.
+     *
+     * @param textA The first text.
+     * @param textB The second text.
+     * @return Their similarity.
+     * @throws IOException HTTP errors.
+     */
+    public Float semanticTextualSimilarity(String textA, String textB) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", new String[]{textA, textB});
+        input.put("language", language);
+        return mapper.readValue(post("/semantic_textual_similarity", input), Float.class);
+    }
+
+    /**
+     * Semantic textual similarity deals with determining how similar two pieces of texts are.
+     *
+     * @param text The pairs of text.
+     * @return Their similarities.
+     * @throws IOException HTTP errors.
+     */
+    public List<Float> semanticTextualSimilarity(String[][] text) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("language", language);
+        //noinspection unchecked
+        return mapper.readValue(post("/semantic_textual_similarity", input), List.class);
+    }
+
     private String post(String api, Object input_) throws IOException
     {
         URL url = new URL(this.url + api);

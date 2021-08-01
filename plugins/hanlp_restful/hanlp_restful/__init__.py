@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2020-11-29 17:48
 import json
-from typing import Union, List, Optional, Dict, Any
+from typing import Union, List, Optional, Dict, Any, Tuple
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -171,7 +171,7 @@ class HanLPClient(object):
         Args:
             text: Source text.
             target_style: Target style.
-            language: The language of input text. ``None`` to use the default language on server.
+            language: The language of input text. ``None`` to use the default language.
 
         Examples::
 
@@ -186,4 +186,29 @@ class HanLPClient(object):
         response = self._send_post_json(self._url + '/text_style_transfer',
                                         {'text': text, 'target_style': target_style,
                                          'language': language or self._language})
+        return response
+
+    def semantic_textual_similarity(self, text: Union[Tuple[str, str], List[Tuple[str, str]]], language: str = None) \
+            -> Union[float, List[float]]:
+        """ Semantic textual similarity deals with determining how similar two pieces of texts are.
+
+        Args:
+            text: A pair or pairs of text.
+            language: The language of input text. ``None`` to use the default language.
+
+        Examples::
+
+            HanLP.semantic_textual_similarity([
+                ('看图猜一电影名', '看图猜电影'),
+                ('无线路由器怎么无线上网', '无线上网卡和无线路由器怎么用'),
+                ('北京到上海的动车票', '上海到北京的动车票'),
+            ])
+            # Output: [0.9764469861984253, 0.0, 0.003458738327026367]
+
+        Returns:
+            Similarities.
+
+        """
+        response = self._send_post_json(self._url + '/semantic_textual_similarity',
+                                        {'text': text, 'language': language or self._language})
         return response

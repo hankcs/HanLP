@@ -63,6 +63,13 @@ class HanLPClientTest
         prettyPrint(doc);
     }
 
+    @Test
+    void semanticTextualSimilarity() throws IOException
+    {
+        Float similarity = client.semanticTextualSimilarity("看图猜一电影名", "看图猜电影");
+        prettyPrint(similarity);
+    }
+
     void prettyPrint(Object object) throws JsonProcessingException
     {
         ObjectMapper mapper = new ObjectMapper();
