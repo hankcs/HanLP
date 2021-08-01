@@ -100,30 +100,7 @@ class HanLPClient(object):
                  language: str = None,
                  ) -> Document:
         """
-        Parse a piece of text.
-
-        Args:
-            text: A paragraph (str), or a list of sentences (List[str]).
-            tokens: A list of sentences where each sentence is a list of tokens.
-            tasks: The tasks to predict.
-            skip_tasks: The tasks to skip.
-            language: The language of input text or tokens. ``None`` to use the default language on server.
-
-        Returns:
-            A :class:`~hanlp_common.document.Document`.
-
-        Raises:
-            HTTPError: Any errors happening on the Internet side or the server side. Refer to the ``code`` and ``msg``
-                of the exception for more details. A list of common errors :
-
-        - ``400 Bad Request`` indicates that the server cannot process the request due to a client
-          fault (e.g., text too long, language unsupported).
-        - ``401 Unauthorized`` indicates that the request lacks **valid** ``auth`` credentials for the API.
-        - ``422 Unprocessable Entity`` indicates that the content type of the request entity is not in
-          proper json format.
-        - ``429 Too Many Requests`` indicates the user has sent too many requests in a given
-          amount of time ("rate limiting").
-
+        A shortcut of :meth:`~hanlp_restful.HanLPClient.parse`.
         """
         return self.parse(text, tokens, tasks, skip_tasks)
 
