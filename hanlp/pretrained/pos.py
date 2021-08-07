@@ -9,6 +9,14 @@ CTB5_POS_RNN_FASTTEXT_ZH = HANLP_URL + 'pos/ctb5_pos_rnn_fasttext_20191230_20263
 'An old school BiLSTM tagging model with FastText (:cite:`bojanowski2017enriching`) embeddings trained on CTB5.'
 CTB9_POS_ALBERT_BASE = HANLP_URL + 'pos/ctb9_albert_base_zh_epoch_20_20201011_090522.zip'
 'ALBERT model (:cite:`Lan2020ALBERT:`) trained on CTB9.'
+CTB9_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_ctb_electra_small_20210807_185126.zip'
+'Electra small model (:cite:`clark2020electra:`) trained on CTB9. Accuracy = `96.75`.'
+
+C863_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_863_electra_small_20210808_124848.zip'
+'Electra small model (:cite:`clark2020electra:`) trained on CTB9. Accuracy = `95.22`.'
+
+PKU98_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_pku_electra_small_20210808_125158.zip'
+'Electra small model (:cite:`clark2020electra:`) trained on CTB9. Accuracy = `97.60`.'
 
 PTB_POS_RNN_FASTTEXT_EN = HANLP_URL + 'pos/ptb_pos_rnn_fasttext_20200103_145337.zip'
 'An old school BiLSTM tagging model with FastText (:cite:`bojanowski2017enriching`) embeddings trained on PTB.'
