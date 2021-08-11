@@ -21322,7 +21322,7 @@
 莋=zuo2
 莌=tuo1
 莍=qiu2
-莎=suo1,sha1
+莎=sha1,suo1
 莎草=suo1,cao3
 莏=suo1
 莐=chen2
