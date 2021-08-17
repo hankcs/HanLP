@@ -192,7 +192,8 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             if installed_version != latest_version:
                 hints_for_download += f'Or upgrade to the latest version({latest_version}):\npip install -U hanlp'
             message = f'Download failed due to [red]{repr(e)}[/red]. Please download it to {save_path} by yourself. ' \
-                      f'[yellow]{hints_for_download}[/yellow]'
+                      f'[yellow]{hints_for_download}[/yellow]'\
+                      'See https://hanlp.hankcs.com/docs/install.html#install-models for instructions.'
             if verbose:
                 cprint(message)
             if hasattr(e, 'msg'):

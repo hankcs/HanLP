@@ -83,14 +83,14 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                     obj.load(metapath, **kwargs)
             obj.config['load_path'] = load_path
         return obj
+    except ModuleNotFoundError:
+        raise ModuleNotFoundError('Some modules required by this model are missing. Please install the full version:'
+                                  '\n\n\tpip install hanlp[full]') from None
     except Exception as e:
         eprint(f'Failed to load {identifier}. See traceback below:')
         eprint(f'{"ERROR LOG BEGINS":=^80}')
         traceback.print_exc()
         eprint(f'{"ERROR LOG ENDS":=^80}')
-        if isinstance(e, ModuleNotFoundError):
-            eprint('Some modules required by this model are missing. Please install the full version:\n'
-                   'pip install hanlp[full]')
         from pkg_resources import parse_version
         model_version = meta.get("hanlp_version", "unknown")
         if model_version == '2.0.0':  # Quick fix: the first version used a wrong string
@@ -118,7 +118,8 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         import torch
         eprint(f'PyTorch: {torch.__version__}')
         eprint(f'HanLP: {version.__version__}')
-        exit(1)
+        # noinspection PyUnresolvedReferences,PyProtectedMember
+        os._exit(1)  # avoid printing lots of duplicated tracebacks
 
 
 def load_from_meta(meta: dict) -> Component:
