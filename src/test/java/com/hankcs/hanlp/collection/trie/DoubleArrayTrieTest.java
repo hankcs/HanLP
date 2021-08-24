@@ -54,6 +54,37 @@ public class DoubleArrayTrieTest extends TestCase
         }
     }
 
+    public void testLongestSearcherWithNullValue() {
+        TreeMap<String, String> buildFrom = new TreeMap<String, String>();
+        TreeMap<String, String> buildFromValueNull = new TreeMap<String, String>();
+        String[] keys = new String[]{"he", "her", "his"};
+        for (String key : keys) {
+            buildFrom.put(key, key);
+            buildFromValueNull.put(key, null);
+        }
+        DoubleArrayTrie<String> trie = new DoubleArrayTrie<String>(buildFrom);
+        DoubleArrayTrie<String> trieValueNull = new DoubleArrayTrie<String>(buildFromValueNull);
+
+        String text = "her3he6his-hers! ";
+
+        DoubleArrayTrie<String>.LongestSearcher searcher = trie.getLongestSearcher(text.toCharArray(), 0);
+        DoubleArrayTrie<String>.LongestSearcher searcherValueNull = trieValueNull.getLongestSearcher(text.toCharArray(), 0);
+
+        while (true) {
+            boolean next = searcher.next();
+            boolean nextValueNull = searcherValueNull.next();
+
+            if (next && nextValueNull) {
+                assertTrue(searcher.begin == searcherValueNull.begin && searcher.length == searcherValueNull.length);
+            } else if (next || nextValueNull) {
+                assert false;
+                break;
+            } else {
+                break;
+            }
+        }
+    }
+
     public void testTransmit() throws Exception
     {
         DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.DEFAULT.dat;

@@ -1299,7 +1299,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
          */
         public boolean next()
         {
-            value = null;
+            length = 0;
             begin = i;
             int b = base[0];
             int n;
@@ -1309,7 +1309,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             {
                 if (i >= arrayLength)               // 指针到头了，将起点往前挪一个，重新开始，状态归零
                 {
-                    return value != null;
+                    return length > 0;
                 }
                 p = b + (int) (charArray[i]) + 1;   // 状态转移 p = base[char[i-1]] + char[i] + 1
                 if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
@@ -1317,7 +1317,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
                 else
                 {
                     if (begin == arrayLength) break;
-                    if (value != null)
+                    if (length > 0)
                     {
                         i = begin + length;         // 输出最长词后，从该词语的下一个位置恢复扫描
                         return true;
