@@ -30,6 +30,24 @@ class TestMultiTaskLearning(unittest.TestCase):
         doc: Document = mtl(pre_tokenized_sents, skip_tasks='tok*')
         self.assertSequenceEqual(doc['tok'], pre_tokenized_sents)
 
+    def test_sdp_as_the_first_task(self):
+        doc: Document = mtl(['人', '吃', '鱼'], tasks='sdp', skip_tasks='tok*')
+        self.assertDictEqual(
+            doc.to_dict(),
+            {
+                "sdp": [
+                    [(2, "Agt")],
+                    [(0, "Root")],
+                    [(2, "Pat")]
+                ],
+                "tok": [
+                    "人",
+                    "吃",
+                    "鱼"
+                ]
+            }
+        )
+
     def test_threading(self):
         num_proc = 8
         with Pool(num_proc) as pool:

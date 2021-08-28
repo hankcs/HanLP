@@ -112,19 +112,20 @@ class BiaffineSemanticDependencyParsing(Task, BiaffineSemanticDependencyParser):
 
     def build_dataloader(self, data, transform: TransformList = None, training=False, device=None,
                          logger: logging.Logger = None, gradient_accumulation=1, **kwargs) -> DataLoader:
-        if isinstance(data, list):
-            data = BiaffineSemanticDependencyParser.build_samples(self, data, self.config.use_pos)
         dataset = BiaffineSemanticDependencyParser.build_dataset(self, data, transform)
         if isinstance(data, str):
             dataset.purge_cache()
+            length_field = 'token'
+        else:
+            length_field = 'FORM'
         if self.vocabs.mutable:
             BiaffineSemanticDependencyParser.build_vocabs(self, dataset, logger, transformer=True)
         if dataset.cache:
             timer = CountdownTimer(len(dataset))
             BiaffineSemanticDependencyParser.cache_dataset(self, dataset, timer, training, logger)
         return PadSequenceDataLoader(
-            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset), shuffle=training,
-                                                     gradient_accumulation=gradient_accumulation),
+            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset, length_field=length_field),
+                                                     shuffle=training, gradient_accumulation=gradient_accumulation),
             device=device,
             dataset=dataset,
             pad=self.get_pad_dict())
@@ -167,3 +168,6 @@ class BiaffineSemanticDependencyParsing(Task, BiaffineSemanticDependencyParser):
                 deprels = [vocab[r[i]] for i in range(sent_len + 1) if a[i]]
                 result.append(list(zip(heads, deprels)))
             yield result
+
+    def build_samples(self, inputs, cls_is_bos=False, sep_is_eos=False):
+        return BiaffineSemanticDependencyParser.build_samples(self, inputs, self.config.use_pos)
