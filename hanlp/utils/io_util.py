@@ -181,7 +181,7 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
 
 def parse_url_path(url):
     parsed: urllib.parse.ParseResult = urlparse(url)
-    path = os.path.join(*parsed.path.strip('/').split('/'))
+    path = parsed.path.strip('/')
     return parsed.netloc, path
 
 
