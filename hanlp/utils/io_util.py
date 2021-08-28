@@ -192,7 +192,7 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
             if installed_version != latest_version:
                 hints_for_download += f'Or upgrade to the latest version({latest_version}):\npip install -U hanlp'
             message = f'Download failed due to [red]{repr(e)}[/red]. Please download it to {save_path} by yourself. ' \
-                      f'[yellow]{hints_for_download}[/yellow]'\
+                      f'[yellow]{hints_for_download}[/yellow]' \
                       'See https://hanlp.hankcs.com/docs/install.html#install-models for instructions.'
             if verbose:
                 cprint(message)
@@ -300,8 +300,8 @@ def get_resource(path: str, save_dir=hanlp_home(), extract=True, prefix=HANLP_UR
       save_dir: Where to store the resource (Default value = :meth:`hanlp.utils.io_util.hanlp_home`)
       extract: Whether to unzip it if it's a zip file (Default value = True)
       prefix: A prefix when matched with an URL (path), then that URL is considered to be official. For official
-        resources, they will not go to a folder called ``thirdparty`` under :const:`~hanlp_common.constants.IDX`.
-      append_location:  (Default value = True)
+        resources, they will not go to a folder called ``thirdparty`` under :const:`~hanlp_common.constants.HANLP_HOME`.
+      append_location: Whether to put unofficial files in a ``thirdparty`` folder.
       verbose: Whether to print log messages.
 
     Returns:
@@ -365,6 +365,17 @@ def get_resource(path: str, save_dir=hanlp_home(), extract=True, prefix=HANLP_UR
 
 
 def path_from_url(url, save_dir=hanlp_home(), prefix=HANLP_URL, append_location=True):
+    """Map a URL to a local path.
+
+    Args:
+        url: Remote URL.
+        save_dir: The root folder to save this file.
+        prefix: The prefix of official website. Any URLs starting with this prefix will be considered official.
+        append_location: Whether to put unofficial files in a ``thirdparty`` folder.
+
+    Returns:
+        The real path that this URL is mapped to.
+    """
     if not save_dir:
         save_dir = hanlp_home()
     domain, relative_path = parse_url_path(url)
