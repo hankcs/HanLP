@@ -19,23 +19,21 @@ import zipfile
 from contextlib import contextmanager
 from pathlib import Path
 from subprocess import Popen, PIPE
-from typing import Dict, Tuple, Optional, Union, List
+from typing import Tuple, Optional, Union, List
 from urllib.parse import urlparse
 from urllib.request import urlretrieve
 
-import numpy as np
-import torch
 from hanlp_downloader import Downloader
 from hanlp_downloader.log import DownloadCallback
 from pkg_resources import parse_version
 
 import hanlp
 from hanlp_common.constant import HANLP_URL, HANLP_VERBOSE
-from hanlp.utils.log_util import logger, flash, cprint, remove_color_tag
+from hanlp.utils.log_util import logger, cprint, remove_color_tag
 from hanlp.utils.string_util import split_long_sentence_into
 from hanlp.utils.time_util import now_filename, CountdownTimer
 from hanlp.version import __version__
-from hanlp_common.io import save_pickle, load_pickle, eprint
+from hanlp_common.io import eprint
 
 
 def load_jsonl(path, verbose=False):
@@ -90,29 +88,6 @@ def tempdir(name=None):
 
 def tempdir_human():
     return tempdir(now_filename())
-
-
-class NumpyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        """Special json encoder for numpy types
-        See https://interviewbubble.com/typeerror-object-of-type-float32-is-not-json-serializable/
-
-        Args:
-            obj: Object to be json encoded.
-
-        Returns:
-            Json string.
-        """
-        if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
-                            np.int16, np.int32, np.int64, np.uint8,
-                            np.uint16, np.uint32, np.uint64)):
-            return int(obj)
-        elif isinstance(obj, (np.float_, np.float16, np.float32,
-                              np.float64)):
-            return float(obj)
-        elif isinstance(obj, (np.ndarray,)):  #### This is the fix
-            return obj.tolist()
-        return json.JSONEncoder.default(self, obj)
 
 
 def hanlp_home_default():
@@ -438,73 +413,6 @@ def replace_ext(filepath, ext) -> str:
     """
     file_prefix, _ = os.path.splitext(filepath)
     return file_prefix + ext
-
-
-def load_word2vec(path, delimiter=' ', cache=True) -> Tuple[Dict[str, np.ndarray], int]:
-    realpath = get_resource(path)
-    binpath = replace_ext(realpath, '.pkl')
-    if cache:
-        try:
-            flash('Loading word2vec from cache [blink][yellow]...[/yellow][/blink]')
-            word2vec, dim = load_pickle(binpath)
-            flash('')
-            return word2vec, dim
-        except IOError:
-            pass
-
-    dim = None
-    word2vec = dict()
-    f = TimingFileIterator(realpath)
-    for idx, line in enumerate(f):
-        f.log('Loading word2vec from text file [blink][yellow]...[/yellow][/blink]')
-        line = line.rstrip().split(delimiter)
-        if len(line) > 2:
-            if dim is None:
-                dim = len(line)
-            else:
-                if len(line) != dim:
-                    logger.warning('{}#{} length mismatches with {}'.format(path, idx + 1, dim))
-                    continue
-            word, vec = line[0], line[1:]
-            word2vec[word] = np.array(vec, dtype=np.float32)
-    dim -= 1
-    if cache:
-        flash('Caching word2vec [blink][yellow]...[/yellow][/blink]')
-        save_pickle((word2vec, dim), binpath)
-        flash('')
-    return word2vec, dim
-
-
-def load_word2vec_as_vocab_tensor(path, delimiter=' ', cache=True) -> Tuple[Dict[str, int], torch.Tensor]:
-    realpath = get_resource(path)
-    vocab_path = replace_ext(realpath, '.vocab')
-    matrix_path = replace_ext(realpath, '.pt')
-    if cache:
-        try:
-            flash('Loading vocab and matrix from cache [blink][yellow]...[/yellow][/blink]')
-            vocab = load_pickle(vocab_path)
-            matrix = torch.load(matrix_path, map_location='cpu')
-            flash('')
-            return vocab, matrix
-        except IOError:
-            pass
-
-    word2vec, dim = load_word2vec(path, delimiter, cache)
-    vocab = dict((k, i) for i, k in enumerate(word2vec.keys()))
-    matrix = torch.Tensor(list(word2vec.values()))
-    if cache:
-        flash('Caching vocab and matrix [blink][yellow]...[/yellow][/blink]')
-        save_pickle(vocab, vocab_path)
-        torch.save(matrix, matrix_path)
-        flash('')
-    return vocab, matrix
-
-
-def save_word2vec(word2vec: dict, filepath, delimiter=' '):
-    with open(filepath, 'w', encoding='utf-8') as out:
-        for w, v in word2vec.items():
-            out.write(f'{w}{delimiter}')
-            out.write(f'{delimiter.join(str(x) for x in v)}\n')
 
 
 def read_tsv_as_sents(tsv_file_path, ignore_prefix=None, delimiter=None):

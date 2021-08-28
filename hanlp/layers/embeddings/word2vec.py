@@ -12,7 +12,7 @@ from hanlp.common.vocab import Vocab
 from hanlp.layers.dropout import WordDropout
 from hanlp.layers.embeddings.embedding import Embedding, EmbeddingDim
 from hanlp.layers.embeddings.util import build_word2vec_with_vocab
-from hanlp.utils.io_util import load_word2vec_as_vocab_tensor
+from hanlp.utils.torch_util import load_word2vec_as_vocab_tensor
 from hanlp_trie.trie import Trie
 
 

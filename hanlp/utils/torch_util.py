@@ -4,7 +4,7 @@
 import os
 import random
 import time
-from typing import List, Union, Dict
+from typing import List, Union, Dict, Tuple
 
 import numpy as np
 import torch
@@ -12,7 +12,9 @@ from pynvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetMemoryInfo, nvmlInit
 from torch import nn
 from torch.nn.utils.rnn import pad_sequence
 
-from hanlp.utils.log_util import logger
+from hanlp.utils.io_util import get_resource, replace_ext, TimingFileIterator
+from hanlp.utils.log_util import logger, flash
+from hanlp_common.io import load_pickle, save_pickle
 
 
 def gpus_available() -> Dict[int, float]:
@@ -178,3 +180,70 @@ def clip_grad_norm(model: nn.Module, grad_norm, transformer: nn.Module = None, t
                 non_transformer.append(p)
         nn.utils.clip_grad_norm_(non_transformer, grad_norm)
         nn.utils.clip_grad_norm_(is_transformer, transformer_grad_norm)
+
+
+def load_word2vec(path, delimiter=' ', cache=True) -> Tuple[Dict[str, np.ndarray], int]:
+    realpath = get_resource(path)
+    binpath = replace_ext(realpath, '.pkl')
+    if cache:
+        try:
+            flash('Loading word2vec from cache [blink][yellow]...[/yellow][/blink]')
+            word2vec, dim = load_pickle(binpath)
+            flash('')
+            return word2vec, dim
+        except IOError:
+            pass
+
+    dim = None
+    word2vec = dict()
+    f = TimingFileIterator(realpath)
+    for idx, line in enumerate(f):
+        f.log('Loading word2vec from text file [blink][yellow]...[/yellow][/blink]')
+        line = line.rstrip().split(delimiter)
+        if len(line) > 2:
+            if dim is None:
+                dim = len(line)
+            else:
+                if len(line) != dim:
+                    logger.warning('{}#{} length mismatches with {}'.format(path, idx + 1, dim))
+                    continue
+            word, vec = line[0], line[1:]
+            word2vec[word] = np.array(vec, dtype=np.float32)
+    dim -= 1
+    if cache:
+        flash('Caching word2vec [blink][yellow]...[/yellow][/blink]')
+        save_pickle((word2vec, dim), binpath)
+        flash('')
+    return word2vec, dim
+
+
+def load_word2vec_as_vocab_tensor(path, delimiter=' ', cache=True) -> Tuple[Dict[str, int], torch.Tensor]:
+    realpath = get_resource(path)
+    vocab_path = replace_ext(realpath, '.vocab')
+    matrix_path = replace_ext(realpath, '.pt')
+    if cache:
+        try:
+            flash('Loading vocab and matrix from cache [blink][yellow]...[/yellow][/blink]')
+            vocab = load_pickle(vocab_path)
+            matrix = torch.load(matrix_path, map_location='cpu')
+            flash('')
+            return vocab, matrix
+        except IOError:
+            pass
+
+    word2vec, dim = load_word2vec(path, delimiter, cache)
+    vocab = dict((k, i) for i, k in enumerate(word2vec.keys()))
+    matrix = torch.Tensor(list(word2vec.values()))
+    if cache:
+        flash('Caching vocab and matrix [blink][yellow]...[/yellow][/blink]')
+        save_pickle(vocab, vocab_path)
+        torch.save(matrix, matrix_path)
+        flash('')
+    return vocab, matrix
+
+
+def save_word2vec(word2vec: dict, filepath, delimiter=' '):
+    with open(filepath, 'w', encoding='utf-8') as out:
+        for w, v in word2vec.items():
+            out.write(f'{w}{delimiter}')
+            out.write(f'{delimiter.join(str(x) for x in v)}\n')

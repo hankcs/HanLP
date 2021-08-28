@@ -22,7 +22,7 @@ from hanlp.utils import io_util
 from hanlp.utils.io_util import get_resource, tempdir_human
 from hanlp.utils.log_util import init_logger, logger
 from hanlp.utils.string_util import format_scores
-from hanlp.utils.tf_util import format_metrics, size_of_dataset, summary_of_model, get_callback_by_class
+from hanlp.utils.tf_util import format_metrics, size_of_dataset, summary_of_model, get_callback_by_class, NumpyEncoder
 from hanlp.utils.time_util import Timer, now_datetime
 from hanlp_common.reflection import str_to_type, classpath_of
 from hanlp_common.structure import SerializableDict
@@ -341,7 +341,7 @@ class KerasComponent(Component, ABC):
             trained_epoch = len(history.epoch)
             logger.info('Trained {} epochs in {}, each epoch takes {}'.
                         format(trained_epoch, delta_time, delta_time / trained_epoch if trained_epoch else delta_time))
-            save_json(history.history, io_util.path_join(save_dir, 'history.json'), cls=io_util.NumpyEncoder)
+            save_json(history.history, io_util.path_join(save_dir, 'history.json'), cls=NumpyEncoder)
             monitor_history: List = history.history.get(checkpoint.monitor, None)
             if monitor_history:
                 best_epoch_ago = len(monitor_history) - monitor_history.index(checkpoint.best)

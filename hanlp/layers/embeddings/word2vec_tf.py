@@ -9,7 +9,8 @@ import tensorflow as tf
 from tensorflow.python.ops import math_ops
 
 from hanlp.common.vocab_tf import VocabTF
-from hanlp.utils.io_util import load_word2vec, get_resource
+from hanlp.utils.io_util import get_resource
+from hanlp.utils.torch_util import load_word2vec
 from hanlp.utils.tf_util import hanlp_register
 from hanlp_common.util import DummyContext
 

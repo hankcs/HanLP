@@ -8,7 +8,7 @@ from torch import nn
 
 from hanlp.common.vocab import Vocab
 from hanlp.utils.init_util import embedding_uniform
-from hanlp.utils.io_util import load_word2vec, load_word2vec_as_vocab_tensor
+from hanlp.utils.torch_util import load_word2vec, load_word2vec_as_vocab_tensor
 
 
 def index_word2vec_with_vocab(filepath: str,
