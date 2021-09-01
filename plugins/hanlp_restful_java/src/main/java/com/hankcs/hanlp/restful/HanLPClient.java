@@ -156,6 +156,43 @@ public class HanLPClient
     }
 
     /**
+     * Split a document into sentences and tokenize them.
+     *
+     * @param text   A document.
+     * @param coarse Whether to perform coarse-grained or fine-grained tokenization.
+     * @return A list of tokenized sentences.
+     * @throws IOException HTTP exception.
+     */
+    public List<List<String>> tokenize(String text, Boolean coarse) throws IOException
+    {
+        String[] tasks;
+        if (coarse != null)
+        {
+            if (coarse)
+                tasks = new String[]{"tok/coarse"};
+            else
+                tasks = new String[]{"tok/fine"};
+        }
+        else
+            tasks = new String[]{"tok"};
+        Map<String, List> doc = parse(text, tasks, null);
+        //noinspection unchecked
+        return doc.values().iterator().next();
+    }
+
+    /**
+     * Split a document into sentences and tokenize them using fine-grained standard.
+     *
+     * @param text A document.
+     * @return A list of tokenized sentences.
+     * @throws IOException HTTP exception.
+     */
+    public List<List<String>> tokenize(String text) throws IOException
+    {
+        return tokenize(text, null);
+    }
+
+    /**
      * Text style transfer aims to change the style of the input text to the target style while preserving its content.
      *
      * @param text        Source text.
@@ -245,7 +282,25 @@ public class HanLPClient
         int code = con.getResponseCode();
         if (code != 200)
         {
-            throw new IOException(String.format("Request failed, status code = %d, error = %s", code, con.getResponseMessage()));
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getErrorStream(), StandardCharsets.UTF_8)))
+            {
+                String responseLine;
+                while ((responseLine = br.readLine()) != null)
+                {
+                    response.append(responseLine.trim());
+                }
+            }
+            String error = String.format("Request failed, status code = %d, error = %s", code, con.getResponseMessage());
+            try
+            {
+                Map detail = mapper.readValue(response.toString(), Map.class);
+                error = (String) detail.get("detail");
+            }
+            catch (Exception ignored)
+            {
+            }
+            throw new IOException(error);
         }
 
         StringBuilder response = new StringBuilder();
