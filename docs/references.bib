@@ -1,12 +1,90 @@
 %% This BibTeX bibliography file was created using BibDesk.
 %% https://bibdesk.sourceforge.io/
 
-%% Created for hankcs at 2021-08-07 15:53:27 -0400 
+%% Created for hankcs at 2021-09-01 13:10:59 -0400 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@inproceedings{akbik-etal-2018-contextual,
+	abstract = {Recent advances in language modeling using recurrent neural networks have made it viable to model language as distributions over characters. By learning to predict the next character on the basis of previous characters, such models have been shown to automatically internalize linguistic concepts such as words, sentences, subclauses and even sentiment. In this paper, we propose to leverage the internal states of a trained character language model to produce a novel type of word embedding which we refer to as contextual string embeddings. Our proposed embeddings have the distinct properties that they (a) are trained without any explicit notion of words and thus fundamentally model words as sequences of characters, and (b) are contextualized by their surrounding text, meaning that the same word will have different embeddings depending on its contextual use. We conduct a comparative evaluation against previous embeddings and find that our embeddings are highly useful for downstream tasks: across four classic sequence labeling tasks we consistently outperform the previous state-of-the-art. In particular, we significantly outperform previous work on English and German named entity recognition (NER), allowing us to report new state-of-the-art F1-scores on the CoNLL03 shared task. We release all code and pre-trained language models in a simple-to-use framework to the research community, to enable reproduction of these experiments and application of our proposed embeddings to other tasks: https://github.com/zalandoresearch/flair},
+	address = {Santa Fe, New Mexico, USA},
+	author = {Akbik, Alan and Blythe, Duncan and Vollgraf, Roland},
+	booktitle = {Proceedings of the 27th International Conference on Computational Linguistics},
+	date-added = {2021-09-01 13:10:59 -0400},
+	date-modified = {2021-09-01 13:10:59 -0400},
+	month = aug,
+	pages = {1638--1649},
+	publisher = {Association for Computational Linguistics},
+	title = {Contextual String Embeddings for Sequence Labeling},
+	url = {https://aclanthology.org/C18-1139},
+	year = {2018},
+	Bdsk-Url-1 = {https://aclanthology.org/C18-1139}}
+
+@inproceedings{he-choi-2021-levi,
+	abstract = {Coupled with biaffine decoders, transformers have been effectively adapted to text-to-graph transduction and achieved state-of-the-art performance on AMR parsing. Many prior works, however, rely on the biaffine decoder for either or both arc and label predictions although most features used by the decoder may be learned by the transformer already. This paper presents a novel approach to AMR parsing by combining heterogeneous data (tokens, concepts, labels) as one input to a transformer to learn attention, and use only attention matrices from the transformer to predict all elements in AMR graphs (concepts, arcs, labels). Although our models use significantly fewer parameters than the previous state-of-the-art graph parser, they show similar or better accuracy on AMR 2.0 and 3.0.},
+	address = {Online},
+	author = {He, Han and Choi, Jinho D.},
+	booktitle = {Proceedings of the 17th International Conference on Parsing Technologies and the IWPT 2021 Shared Task on Parsing into Enhanced Universal Dependencies (IWPT 2021)},
+	date-added = {2021-09-01 13:09:14 -0400},
+	date-modified = {2021-09-01 13:09:14 -0400},
+	doi = {10.18653/v1/2021.iwpt-1.5},
+	month = aug,
+	pages = {50--57},
+	publisher = {Association for Computational Linguistics},
+	title = {Levi Graph {AMR} Parser using Heterogeneous Attention},
+	url = {https://aclanthology.org/2021.iwpt-1.5},
+	year = {2021},
+	Bdsk-Url-1 = {https://aclanthology.org/2021.iwpt-1.5},
+	Bdsk-Url-2 = {https://doi.org/10.18653/v1/2021.iwpt-1.5}}
+
+@inproceedings{conneau-etal-2020-unsupervised,
+	abstract = {This paper shows that pretraining multilingual language models at scale leads to significant performance gains for a wide range of cross-lingual transfer tasks. We train a Transformer-based masked language model on one hundred languages, using more than two terabytes of filtered CommonCrawl data. Our model, dubbed XLM-R, significantly outperforms multilingual BERT (mBERT) on a variety of cross-lingual benchmarks, including +14.6{\%} average accuracy on XNLI, +13{\%} average F1 score on MLQA, and +2.4{\%} F1 score on NER. XLM-R performs particularly well on low-resource languages, improving 15.7{\%} in XNLI accuracy for Swahili and 11.4{\%} for Urdu over previous XLM models. We also present a detailed empirical analysis of the key factors that are required to achieve these gains, including the trade-offs between (1) positive transfer and capacity dilution and (2) the performance of high and low resource languages at scale. Finally, we show, for the first time, the possibility of multilingual modeling without sacrificing per-language performance; XLM-R is very competitive with strong monolingual models on the GLUE and XNLI benchmarks. We will make our code and models publicly available.},
+	address = {Online},
+	author = {Conneau, Alexis and Khandelwal, Kartikay and Goyal, Naman and Chaudhary, Vishrav and Wenzek, Guillaume and Guzm{\'a}n, Francisco and Grave, Edouard and Ott, Myle and Zettlemoyer, Luke and Stoyanov, Veselin},
+	booktitle = {Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics},
+	date-added = {2021-09-01 12:41:50 -0400},
+	date-modified = {2021-09-01 12:41:50 -0400},
+	doi = {10.18653/v1/2020.acl-main.747},
+	month = jul,
+	pages = {8440--8451},
+	publisher = {Association for Computational Linguistics},
+	title = {Unsupervised Cross-lingual Representation Learning at Scale},
+	url = {https://aclanthology.org/2020.acl-main.747},
+	year = {2020},
+	Bdsk-Url-1 = {https://aclanthology.org/2020.acl-main.747},
+	Bdsk-Url-2 = {https://doi.org/10.18653/v1/2020.acl-main.747}}
+
+@inproceedings{xue-etal-2021-mt5,
+	abstract = {The recent {``}Text-to-Text Transfer Transformer{''} (T5) leveraged a unified text-to-text format and scale to attain state-of-the-art results on a wide variety of English-language NLP tasks. In this paper, we introduce mT5, a multilingual variant of T5 that was pre-trained on a new Common Crawl-based dataset covering 101 languages. We detail the design and modified training of mT5 and demonstrate its state-of-the-art performance on many multilingual benchmarks. We also describe a simple technique to prevent {``}accidental translation{''} in the zero-shot setting, where a generative model chooses to (partially) translate its prediction into the wrong language. All of the code and model checkpoints used in this work are publicly available.},
+	address = {Online},
+	author = {Xue, Linting and Constant, Noah and Roberts, Adam and Kale, Mihir and Al-Rfou, Rami and Siddhant, Aditya and Barua, Aditya and Raffel, Colin},
+	booktitle = {Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+	date-added = {2021-09-01 12:40:34 -0400},
+	date-modified = {2021-09-01 12:40:34 -0400},
+	doi = {10.18653/v1/2021.naacl-main.41},
+	month = jun,
+	pages = {483--498},
+	publisher = {Association for Computational Linguistics},
+	title = {m{T}5: A Massively Multilingual Pre-trained Text-to-Text Transformer},
+	url = {https://aclanthology.org/2021.naacl-main.41},
+	year = {2021},
+	Bdsk-Url-1 = {https://aclanthology.org/2021.naacl-main.41},
+	Bdsk-Url-2 = {https://doi.org/10.18653/v1/2021.naacl-main.41}}
+
+@misc{https://doi.org/10.35111/gvd0-xk91,
+	author = {Xue, Nianwen and {Zhang, Xiuhong} and {Jiang, Zixin} and {Palmer, Martha} and {Xia, Fei} and {Chiou, Fu-Dong} and {Chang, Meiyu}},
+	date-added = {2021-09-01 12:32:05 -0400},
+	date-modified = {2021-09-01 12:36:22 -0400},
+	doi = {10.35111/GVD0-XK91},
+	publisher = {Linguistic Data Consortium},
+	title = {Chinese Treebank 9.0},
+	url = {https://catalog.ldc.upenn.edu/LDC2016T13},
+	year = {2016},
+	Bdsk-Url-1 = {https://catalog.ldc.upenn.edu/LDC2016T13},
+	Bdsk-Url-2 = {https://doi.org/10.35111/GVD0-XK91}}
 
 @inproceedings{clark2020electra,
 	author = {Kevin Clark and Minh-Thang Luong and Quoc V. Le and Christopher D. Manning},
