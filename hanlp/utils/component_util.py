@@ -87,10 +87,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         raise ModuleNotFoundError('Some modules required by this model are missing. Please install the full version:'
                                   '\n\n\tpip install hanlp[full]') from None
     except Exception as e:
-        eprint(f'Failed to load {identifier}. See traceback below:')
-        eprint(f'{"ERROR LOG BEGINS":=^80}')
-        traceback.print_exc()
-        eprint(f'{"ERROR LOG ENDS":=^80}')
+        eprint(f'Failed to load {identifier}.')
         from pkg_resources import parse_version
         model_version = meta.get("hanlp_version", "unknown")
         if model_version == '2.0.0':  # Quick fix: the first version used a wrong string
@@ -106,20 +103,27 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                    f'while you are running a lower version: {installed_version}. ')
         if installed_version != latest_version:
             eprint(
-                f'Please upgrade hanlp with:\n'
-                f'pip install --upgrade hanlp\n')
+                f'Please upgrade HanLP with:\n'
+                f'\n\tpip install --upgrade hanlp\n')
         eprint(
             'If the problem still persists, please submit an issue to https://github.com/hankcs/HanLP/issues\n'
-            'When reporting an issue, make sure to paste the FULL ERROR LOG above and the system info below.')
+            'When reporting an issue, make sure to paste the FULL ERROR LOG below.')
 
+        eprint(f'{"ERROR LOG BEGINS":=^80}')
         import platform
         eprint(f'OS: {platform.platform()}')
         eprint(f'Python: {platform.python_version()}')
         import torch
         eprint(f'PyTorch: {torch.__version__}')
         eprint(f'HanLP: {version.__version__}')
-        # noinspection PyUnresolvedReferences,PyProtectedMember
-        os._exit(1)  # avoid printing lots of duplicated tracebacks
+        import sys
+        sys.stderr.flush()
+        try:
+            if e.args and isinstance(e.args, tuple) and isinstance(e.args[0], str):
+                e.args = (e.args[0] + f'\n{"ERROR LOG ENDS":=^80}',) + e.args[1:]
+        except:
+            pass
+        raise e from None
 
 
 def load_from_meta(meta: dict) -> Component:
