@@ -174,9 +174,9 @@ class TorchComponent(Component, ABC):
         self.load_vocabs(save_dir)
         if verbose:
             flash('Building model [blink][yellow]...[/yellow][/blink]')
+        self.config.pop('training', None)  # Some legacy versions accidentally put training into config file
         self.model = self.build_model(
-            **merge_dict(self.config, training=False, **kwargs, overwrite=True, save_dir=save_dir,
-                         inplace=True))
+            **merge_dict(self.config, **kwargs, overwrite=True, inplace=True), training=False, save_dir=save_dir)
         if verbose:
             flash('')
         self.load_weights(save_dir, **kwargs)
