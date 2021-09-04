@@ -9,10 +9,13 @@ tokenizer_mirrors = {
     'hfl/chinese-electra-180g-small-discriminator': HANLP_URL + 'transformers/electra_zh_small_20210706_125427.zip',
     'xlm-roberta-base': HANLP_URL + 'transformers/xlm-roberta-base_20210706_125502.zip',
     'cl-tohoku/bert-base-japanese-char': HANLP_URL + 'transformers/bert-base-japanese-char_20210602_215445.zip',
+    'bart5-chinese-small': HANLP_URL + 'transformers/bart5-chinese-small_tok_20210723_180743.zip',
+    'ernie-gram': HANLP_URL + 'transformers/ernie-gram_20210810_012004.zip',
 }
 
 model_mirrors = {
-    'bart5-chinese-small': HANLP_URL + 'transformers/bart5-chinese-small_20210723_174940.zip',
+    'bart5-chinese-small': HANLP_URL + 'transformers/bart5-chinese-small_20210723_203923.zip',
+    'ernie-gram': HANLP_URL + 'transformers/ernie-gram_20210810_012004.zip',
 }
 
 

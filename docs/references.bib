@@ -1,12 +1,29 @@
 %% This BibTeX bibliography file was created using BibDesk.
 %% https://bibdesk.sourceforge.io/
 
-%% Created for hankcs at 2021-09-01 13:10:59 -0400 
+%% Created for hankcs at 2021-09-04 14:09:53 -0400 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@inproceedings{xiao-etal-2021-ernie,
+	abstract = {Coarse-grained linguistic information, such as named entities or phrases, facilitates adequately representation learning in pre-training. Previous works mainly focus on extending the objective of BERT{'}s Masked Language Modeling (MLM) from masking individual tokens to contiguous sequences of n tokens. We argue that such contiguously masking method neglects to model the intra-dependencies and inter-relation of coarse-grained linguistic information. As an alternative, we propose ERNIE-Gram, an explicitly n-gram masking method to enhance the integration of coarse-grained information into pre-training. In ERNIE-Gram, n-grams are masked and predicted directly using explicit n-gram identities rather than contiguous sequences of n tokens. Furthermore, ERNIE-Gram employs a generator model to sample plausible n-gram identities as optional n-gram masks and predict them in both coarse-grained and fine-grained manners to enable comprehensive n-gram prediction and relation modeling. We pre-train ERNIE-Gram on English and Chinese text corpora and fine-tune on 19 downstream tasks. Experimental results show that ERNIE-Gram outperforms previous pre-training models like XLNet and RoBERTa by a large margin, and achieves comparable results with state-of-the-art methods. The source codes and pre-trained models have been released at https://github.com/PaddlePaddle/ERNIE.},
+	address = {Online},
+	author = {Xiao, Dongling and Li, Yu-Kun and Zhang, Han and Sun, Yu and Tian, Hao and Wu, Hua and Wang, Haifeng},
+	booktitle = {Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+	date-added = {2021-09-04 14:09:52 -0400},
+	date-modified = {2021-09-04 14:09:52 -0400},
+	doi = {10.18653/v1/2021.naacl-main.136},
+	month = jun,
+	pages = {1702--1715},
+	publisher = {Association for Computational Linguistics},
+	title = {{ERNIE}-Gram: Pre-Training with Explicitly N-Gram Masked Language Modeling for Natural Language Understanding},
+	url = {https://aclanthology.org/2021.naacl-main.136},
+	year = {2021},
+	Bdsk-Url-1 = {https://aclanthology.org/2021.naacl-main.136},
+	Bdsk-Url-2 = {https://doi.org/10.18653/v1/2021.naacl-main.136}}
 
 @inproceedings{akbik-etal-2018-contextual,
 	abstract = {Recent advances in language modeling using recurrent neural networks have made it viable to model language as distributions over characters. By learning to predict the next character on the basis of previous characters, such models have been shown to automatically internalize linguistic concepts such as words, sentences, subclauses and even sentiment. In this paper, we propose to leverage the internal states of a trained character language model to produce a novel type of word embedding which we refer to as contextual string embeddings. Our proposed embeddings have the distinct properties that they (a) are trained without any explicit notion of words and thus fundamentally model words as sequences of characters, and (b) are contextualized by their surrounding text, meaning that the same word will have different embeddings depending on its contextual use. We conduct a comparative evaluation against previous embeddings and find that our embeddings are highly useful for downstream tasks: across four classic sequence labeling tasks we consistently outperform the previous state-of-the-art. In particular, we significantly outperform previous work on English and German named entity recognition (NER), allowing us to report new state-of-the-art F1-scores on the CoNLL03 shared task. We release all code and pre-trained language models in a simple-to-use framework to the research community, to enable reproduction of these experiments and application of our proposed embeddings to other tasks: https://github.com/zalandoresearch/flair},
