@@ -682,13 +682,15 @@ class KMeansSampler(BucketSampler):
 
 class SortingSampler(Sampler):
     # noinspection PyMissingConstructor
-    def __init__(self, lengths: List[int], batch_size=None, batch_max_tokens=None, shuffle=False) -> None:
+    def __init__(self, lengths: List[int], batch_size=None, batch_max_tokens=None, use_effective_tokens=False,
+                 shuffle=False) -> None:
         """A sampler which sort samples according to their lengths. It takes a continuous chunk of sorted samples to
         make a batch.
 
         Args:
             lengths: Lengths of each sample, usually measured by number of tokens.
             batch_max_tokens: Maximum tokens per batch.
+            use_effective_tokens: Whether to calculate effective number of tokens when applying the `batch_max_tokens`.
             batch_size: Maximum samples per batch.
             shuffle: ``True`` to shuffle batches and samples in a batch.
         """
@@ -701,10 +703,11 @@ class SortingSampler(Sampler):
         mini_batch = []
         for i in torch.argsort(torch.tensor(lengths), descending=True).tolist():
             # if batch_max_tokens:
-            if (batch_max_tokens is None or num_tokens + lengths[i] <= batch_max_tokens) and (
+            effective_tokens = lengths[i] if (not mini_batch or not use_effective_tokens) else lengths[mini_batch[0]]
+            if (batch_max_tokens is None or num_tokens + effective_tokens <= batch_max_tokens) and (
                     batch_size is None or len(mini_batch) < batch_size):
                 mini_batch.append(i)
-                num_tokens += lengths[i]
+                num_tokens += effective_tokens
             else:
                 if not mini_batch:  # this sequence is longer than  batch_max_tokens
                     mini_batch.append(i)
@@ -714,9 +717,10 @@ class SortingSampler(Sampler):
                 else:
                     self.batch_indices.append(mini_batch)
                     mini_batch = [i]
-                    num_tokens = lengths[i]
+                    num_tokens = effective_tokens
         if mini_batch:
             self.batch_indices.append(mini_batch)
+        # print(len(max(self.batch_indices, key=len)))
 
     def __iter__(self):
         if self.shuffle:
@@ -766,13 +770,15 @@ class SamplerBuilder(AutoConfigurable, ABC):
 
 class SortingSamplerBuilder(SortingSampler, SamplerBuilder):
     # noinspection PyMissingConstructor
-    def __init__(self, batch_size=None, batch_max_tokens=None) -> None:
+    def __init__(self, batch_size=None, batch_max_tokens=None, use_effective_tokens=False) -> None:
         """Builds a :class:`~hanlp.common.dataset.SortingSampler`.
 
         Args:
             batch_max_tokens: Maximum tokens per batch.
+            use_effective_tokens: Whether to calculate effective number of tokens when applying the `batch_max_tokens`.
             batch_size: Maximum samples per batch.
         """
+        self.use_effective_tokens = use_effective_tokens
         self.batch_max_tokens = batch_max_tokens
         self.batch_size = batch_size
 
