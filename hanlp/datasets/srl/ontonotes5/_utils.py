@@ -9,7 +9,8 @@ import sys
 from pprint import pprint
 
 from hanlp.datasets.parsing._ctb_utils import remove_all_ec, convert_to_stanford_dependency_330
-from hanlp.utils.io_util import merge_files, get_resource, pushd, run_cmd, read_tsv_as_sents, replace_ext
+from hanlp.utils.io_util import merge_files, get_resource, pushd, run_cmd, read_tsv_as_sents, replace_ext, \
+    get_exitcode_stdout_stderr
 from hanlp.utils.log_util import flash
 from hanlp_common.io import eprint
 
@@ -380,7 +381,15 @@ def make_ontonotes_language_jsonlines(conll12_ontonotes_path, output_path=None, 
         filter_data(v5_json_file, id_file, conll12_json_file)
 
 
+def ensure_python_points_to_python2():
+    exitcode, out, version = get_exitcode_stdout_stderr('python --version')
+    if not version.startswith('Python 2'):
+        raise EnvironmentError(f'Your python command needs to be Python2, not {version.strip()}. Try:\n\n\t'
+                               'ln -sf "$(which python2)" "$(which python)"')
+
+
 def make_gold_conll(ontonotes_path, language):
+    ensure_python_points_to_python2()
     ontonotes_path = os.path.abspath(get_resource(ontonotes_path))
     to_conll = get_resource(
         'https://gist.githubusercontent.com/hankcs/46b9137016c769e4b6137104daf43a92/raw/66369de6c24b5ec47696ae307591f0d72c6f3f02/ontonotes_to_conll.sh')
