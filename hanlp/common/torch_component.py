@@ -42,26 +42,26 @@ class TorchComponent(Component, ABC):
 
     def _capture_config(self, locals_: Dict,
                         exclude=(
-                                'trn_data', 'dev_data', 'save_dir', 'kwargs', 'self', 'logger', 'verbose',
-                                'dev_batch_size', '__class__', 'devices', 'eval_trn')):
+                            'trn_data', 'dev_data', 'save_dir', 'kwargs', 'self', 'logger', 'verbose',
+                            'dev_batch_size', '__class__', 'devices', 'eval_trn')):
         """Save arguments to config
 
         Args:
-          locals_: Dict: 
+          locals_: Dict:
           exclude:  (Default value = ('trn_data')
-          'dev_data': 
-          'save_dir': 
-          'kwargs': 
-          'self': 
-          'logger': 
-          'verbose': 
-          'dev_batch_size': 
-          '__class__': 
-          'devices'): 
+          'dev_data':
+          'save_dir':
+          'kwargs':
+          'self':
+          'logger':
+          'verbose':
+          'dev_batch_size':
+          '__class__':
+          'devices'):
 
         Returns:
 
-        
+
         """
         if 'kwargs' in locals_:
             locals_.update(locals_['kwargs'])
@@ -224,7 +224,7 @@ class TorchComponent(Component, ABC):
         config = self._capture_config(locals())
         if not logger:
             logger = self.build_logger('train', save_dir)
-        if not seed:
+        if seed is None:
             self.config.seed = 233 if isdebugging() else int(time.time())
         set_seed(self.config.seed)
         logger.info(self._savable_config.to_json(sort=True))
