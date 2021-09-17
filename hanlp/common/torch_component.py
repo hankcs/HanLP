@@ -224,7 +224,7 @@ class TorchComponent(Component, ABC):
         config = self._capture_config(locals())
         if not logger:
             logger = self.build_logger('train', save_dir)
-        if not seed:
+        if seed is None:
             self.config.seed = 233 if isdebugging() else int(time.time())
         set_seed(self.config.seed)
         logger.info(self._savable_config.to_json(sort=True))
