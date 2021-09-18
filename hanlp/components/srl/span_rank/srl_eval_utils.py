@@ -217,7 +217,7 @@ def compute_srl_f1(sentences, gold_srl, predictions, gold_path=None) -> SRLScore
     print_to_conll(sentences, predictions, temp_output, gold_predicates)
 
     # Evaluate twice with official script.
-    conll_recall, conll_precision, conll_f1 = official_conll_05_evaluate(temp_output, gold_path)
+    conll_precision, conll_recall, conll_f1 = official_conll_05_evaluate(temp_output, gold_path)
     return SRLScores(unlabeled_precision, unlabeled_recall, unlabeled_f1, precision, recall, f1, conll_precision,
                      conll_recall, conll_f1, label_confusions, num_sents)
 
