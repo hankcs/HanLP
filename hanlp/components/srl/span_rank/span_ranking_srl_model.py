@@ -237,7 +237,7 @@ class SpanRankingSRLDecoder(nn.Module):
         flatten_emb = self.flatten_emb(emb)
         offset = (torch.arange(0, num_sentences, device=emb.device) * max_sent_length).unsqueeze(1)
         return torch.index_select(flatten_emb, 0, (indices + offset).view(-1)) \
-            .view(indices.size()[0], indices.size()[1], -1)
+            .view(indices.size()[0], indices.size()[1], emb.size(-1))
 
     def get_batch_topk(self, candidate_starts: torch.Tensor, candidate_ends, candidate_scores, topk_ratio, text_len,
                        max_sentence_length, sort_spans=False, enforce_non_crossing=True):
@@ -335,7 +335,7 @@ class SpanRankingSRLDecoder(nn.Module):
         flat_pair_emb = pair_emb.view(num_sentences * num_args * num_preds, pair_emb_size)
         # get unary scores
         flat_srl_scores = self.get_srl_unary_scores(flat_pair_emb)
-        srl_scores = flat_srl_scores.view(num_sentences, num_args, num_preds, -1)
+        srl_scores = flat_srl_scores.view(num_sentences, num_args, num_preds, flat_srl_scores.size(-1))
         if self.config.use_biaffine:
             srl_scores += self.biaffine(arg_emb, self.predicate_scale(pred_emb)).permute([0, 2, 3, 1])
         unsqueezed_arg_scores, unsqueezed_pred_scores = \
@@ -409,8 +409,8 @@ class SpanRankingSRLDecoder(nn.Module):
         candidate_pred_scores = candidate_pred_scores + torch.log(masks.to(torch.float).unsqueeze(2))
         candidate_pred_scores = candidate_pred_scores.squeeze(2)
         if self.use_gold_predicates is True:
-            predicates = gold_predicates[0]
-            num_preds = gold_predicates[1]
+            predicates = gold_predicates
+            num_preds = (gold_arg_labels > 0).sum(dim=-1)
             pred_scores = torch.zeros_like(predicates)
             top_pred_indices = predicates
         else:
@@ -452,7 +452,8 @@ class SpanRankingSRLDecoder(nn.Module):
             "pred_scores": pred_scores,
             "num_args": num_args,
             "num_preds": num_preds,
-            "arg_labels": torch.max(srl_scores, 1)[1],  # [num_sentences, num_args, num_preds]
+            # [num_sentences, num_args, num_preds] avoid max on empty tensor
+            # "arg_labels": torch.max(srl_scores, 1)[1] if srl_scores.numel() else srl_scores[:, :, :, 0],
             "srl_scores": srl_scores,
         })
         return predict_dict

@@ -127,7 +127,10 @@ class SpanRankingSemanticRoleLabeler(TorchComponent):
             self.update_metrics(batch, output_dict, metric)
             loss = output_dict['loss']
             loss = loss.sum()  # For data parallel
-            loss.backward()
+            if torch.isnan(loss):  # w/ gold pred, some batches do not have PAs at all, resulting in empty scores
+                loss = torch.zeros((1,), device=loss.device)
+            else:
+                loss.backward()
             if gradient_accumulation and gradient_accumulation > 1:
                 loss /= gradient_accumulation
             if self.config.grad_norm:
@@ -386,8 +389,10 @@ class SpanRankingSemanticRoleLabeler(TorchComponent):
             top_predicate_indices = output_dict['predicates'].tolist()
             top_spans = torch.stack([output_dict['arg_starts'], output_dict['arg_ends']], dim=-1).tolist()
             srl_mask = output_dict['srl_mask'].tolist()
+            srl_scores = output_dict['srl_scores']
+            pal_list = srl_scores.argmax(-1).tolist() if srl_scores.numel() else []
             for n, (pal, predicate_indices, argument_spans) in enumerate(
-                    zip(output_dict['srl_scores'].argmax(-1).tolist(), top_predicate_indices, top_spans)):
+                    zip(pal_list, top_predicate_indices, top_spans)):
                 srl_per_sentence = {}
                 for p, (al, predicate_index) in enumerate(zip(pal, predicate_indices)):
                     for a, (l, argument_span) in enumerate(zip(al, argument_spans)):
