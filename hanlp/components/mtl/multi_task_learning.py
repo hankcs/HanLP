@@ -457,7 +457,6 @@ class MultiTaskLearning(TorchComponent):
 
     def predict(self,
                 data: Union[str, List[str]],
-                batch_size: int = None,
                 tasks: Optional[Union[str, List[str]]] = None,
                 skip_tasks: Optional[Union[str, List[str]]] = None,
                 resolved_tasks=None,
@@ -466,7 +465,6 @@ class MultiTaskLearning(TorchComponent):
 
         Args:
             data: A sentence or a list of sentences.
-            batch_size: Decoding batch size.
             tasks: The tasks to predict.
             skip_tasks: The tasks to skip.
             resolved_tasks: The resolved tasks to override ``tasks`` and ``skip_tasks``.
