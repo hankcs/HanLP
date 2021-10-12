@@ -684,13 +684,15 @@ class SortingSampler(Sampler):
     # noinspection PyMissingConstructor
     def __init__(self, lengths: List[int], batch_size=None, batch_max_tokens=None, use_effective_tokens=False,
                  shuffle=False) -> None:
-        """A sampler which sort samples according to their lengths. It takes a continuous chunk of sorted samples to
-        make a batch.
+        """A sampler which sorts samples according to their lengths. It takes a continuous chunk of sorted samples to
+        make a batch. The effective batch size is determined by ``batch_size``, ``batch_max_tokens`` and
+        ``use_effective_tokens``.
 
         Args:
             lengths: Lengths of each sample, usually measured by number of tokens.
             batch_max_tokens: Maximum tokens per batch.
-            use_effective_tokens: Whether to calculate effective number of tokens when applying the `batch_max_tokens`.
+            use_effective_tokens: Whether to calculate the effective number of tokens after padding when applying the
+                ``batch_max_tokens``.
             batch_size: Maximum samples per batch.
             shuffle: ``True`` to shuffle batches and samples in a batch.
         """
