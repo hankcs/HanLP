@@ -31,12 +31,17 @@ class TestClient(unittest.TestCase):
         doc = self.HanLP.parse(text, language='mul')
 
     def test_tokenize(self):
-        print(self.HanLP.tokenize('阿婆主来到北京立方庭参观自然语义科技公司'))
-        print(self.HanLP.tokenize('阿婆主来到北京立方庭参观自然语义科技公司', coarse=True))
-        print(self.HanLP.tokenize(['商品和服务', '当下雨天地面积水分外严重']))
+        print(self.HanLP.tokenize('商品和服务。阿婆主来到北京立方庭参观自然语义科技公司'))
+        print(self.HanLP.tokenize('商品和服务。阿婆主来到北京立方庭参观自然语义科技公司', coarse=True))
+        print(self.HanLP.tokenize(['商品和服务。', '当下雨天地面积水分外严重']))
 
     def test_coreference_resolution(self):
         print(self.HanLP.coreference_resolution('我姐送我她的猫。我很喜欢它。'))
+
+    def test_text_style_transfer(self):
+        print(self.HanLP.text_style_transfer('国家对中石油抱有很大的期望.', target_style='gov_doc'))
+        print(self.HanLP.text_style_transfer('打工人，打工魂，打工都是人上人', target_style='gov_doc'))
+        print(self.HanLP.text_style_transfer('我看到了窗户外面有白色的云和绿色的森林', target_style='modern_poetry'))
 
 
 if __name__ == '__main__':

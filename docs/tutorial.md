@@ -23,6 +23,14 @@ production environments. In this tutorial, we'll walk through the APIs in HanLP 
 HanLP offers out-of-the-box RESTful API and native Python API which share very similar interfaces 
 while they are designed for different scenes.
 
+```{code-cell} ipython3
+:tags: [remove_cell]
+
+import hanlp_common.constant
+
+hanlp_common.constant.IPYTHON = False  # Avoid pretty_print prints html which doesn't play well with this theme
+```
+
 ## RESTful API
 
 RESTful API is an endpoint where you send your documents to then get the parsed annotations back. 

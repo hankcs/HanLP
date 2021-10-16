@@ -154,7 +154,15 @@ class HanLPClient(object):
 
             HanLP.text_style_transfer(['国家对中石油抱有很大的期望.', '要用创新去推动高质量的发展。'],
                                       target_style='gov_doc')
-            # Output: ['国家对中石油寄予厚望。', '要以创新驱动高质量发展。']
+            # Output:
+            [
+                '国家对中石油寄予厚望。',
+                '要以创新驱动高质量发展。'
+            ]
+
+            HanLP.text_style_transfer('我看到了窗户外面有白色的云和绿色的森林', target_style='modern_poetry')
+            # Output:
+            '我看见窗外的白云绿林'
 
         Returns:
             Text or a list of text of the target style.
@@ -180,7 +188,12 @@ class HanLPClient(object):
                 ('无线路由器怎么无线上网', '无线上网卡和无线路由器怎么用'),
                 ('北京到上海的动车票', '上海到北京的动车票'),
             ])
-            # Output: [0.9764469861984253, 0.0, 0.003458738327026367]
+            # Output:
+            [
+                0.9764469861984253,   # Similarity of ('看图猜一电影名', '看图猜电影')
+                0.0,                  # Similarity of ('无线路由器怎么无线上网', '无线上网卡和无线路由器怎么用')
+                0.003458738327026367  # Similarity of ('北京到上海的动车票', '上海到北京的动车票')
+            ]
 
         Returns:
             Similarities.
@@ -219,7 +232,7 @@ class HanLPClient(object):
                           [['她的猫', 4, 7], ['它', 11, 12]]],        # 指代说话人的姐姐的猫
 
         .. image:: https://file.hankcs.com/img/coref_demo_small.png
-            :alt: my-picture1
+            :alt: Coreference resolution visualization
 
         Returns:
             When ``text`` is specified, return the clusters and tokens. Otherwise just the clusters, In this case, you need to ``sum(tokens, [])`` in order to match the span indices with tokens
@@ -230,11 +243,36 @@ class HanLPClient(object):
         return response
 
     def tokenize(self, text: Union[str, List[str]], coarse: Optional[bool] = None) -> List[List[str]]:
-        """ Split a document into sentences and tokenize them.
+        """ Split a document into sentences and tokenize them. Note that it is always faster to tokenize a whole
+        document than to tokenize each sentence one by one. So avoid calling this method sentence by sentence but put
+        sentences into a ``list`` and pass them to the ``text`` argument.
 
         Args:
-            text: A document (str), or a list of sentences (List[str]).
+            text: A document (``str``), or a list of sentences (``List[str]``).
             coarse: Whether to perform coarse-grained or fine-grained tokenization.
+
+        Examples::
+
+            # Avoid tokenizing sentence by sentence, it is expensive:
+            HanLP.tokenize('商品和服务。')
+            [['商品', '和', '服务', '。']]
+            HanLP.tokenize('阿婆主来到北京立方庭参观自然语义科技公司')
+            [['阿婆主', '来到', '北京', '立方庭', '参观', '自然', '语义', '科技', '公司']]
+
+            # Instead, the following codes are much faster:
+            HanLP.tokenize('商品和服务。阿婆主来到北京立方庭参观自然语义科技公司')
+            [['商品', '和', '服务', '。'],
+             ['阿婆主', '来到', '北京', '立方庭', '参观', '自然', '语义', '科技', '公司']]
+
+            # To tokenize with coarse-grained standard:
+            HanLP.tokenize('商品和服务。阿婆主来到北京立方庭参观自然语义科技公司', coarse=True)
+            [['商品', '和', '服务', '。'],
+             ['阿婆主', '来到', '北京', '立方庭', '参观', '自然语义科技公司']]
+
+            # To tokenize pre-segmented sentences:
+            HanLP.tokenize(['商品和服务。', '当下雨天地面积水分外严重'])
+            [['商品', '和', '服务', '。'],
+             ['当', '下雨天', '地面', '积水', '分', '外', '严重']]
 
         Returns:
             A list of tokenized sentences.

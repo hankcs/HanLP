@@ -19,8 +19,9 @@ from hanlp_common.util import merge_locals_kwargs
 
 class BiaffineSemanticDependencyParser(BiaffineDependencyParser):
     def __init__(self) -> None:
-        """Implementation of "Stanford's graph-based neural dependency parser at
-        the conll 2017 shared task" (:cite:`dozat2017stanford`).
+        r"""Implementation of "Stanford's graph-based neural dependency parser at
+        the conll 2017 shared task" (:cite:`dozat2017stanford`) and "Establishing Strong Baselines for the New Decade"
+        (:cite:`he-choi-2019`).
         """
         super().__init__()
 

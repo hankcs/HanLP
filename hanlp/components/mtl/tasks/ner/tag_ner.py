@@ -64,7 +64,7 @@ class TaggingNamedEntityRecognition(Task, TransformerNamedEntityRecognizer):
         r"""A simple tagger using a linear layer with an optional CRF (:cite:`lafferty2001conditional`) layer for
         NER task. It can utilize whitelist gazetteers which is dict mapping from entity name to entity type.
         During decoding, it performs longest-prefix-matching of these words to override the prediction from
-        underlining statistical model. It also uses a blacklist to mask out mis-predicted  entities.
+        underlying statistical model. It also uses a blacklist to mask out mis-predicted  entities.
 
         .. Note:: For algorithm beginners, longest-prefix-matching is the prerequisite to understand what dictionary can
             do and what it can't do. The tutorial in `this book <http://nlp.hankcs.com/book.php>`_ can be very helpful.

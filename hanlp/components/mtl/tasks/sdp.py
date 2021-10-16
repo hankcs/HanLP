@@ -49,7 +49,8 @@ class BiaffineSemanticDependencyParsing(Task, BiaffineSemanticDependencyParser):
                  use_pos=False,
                  **kwargs) -> None:
         r"""Implementation of "Stanford's graph-based neural dependency parser at
-        the conll 2017 shared task" (:cite:`dozat2017stanford`).
+        the conll 2017 shared task" (:cite:`dozat2017stanford`) and "Establishing Strong Baselines for the New Decade"
+        (:cite:`he-choi-2019`).
 
         Args:
             trn: Path to training set.
