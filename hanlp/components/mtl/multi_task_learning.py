@@ -766,8 +766,8 @@ class MultiTaskLearning(TorchComponent):
     def parallelize(self, devices: List[Union[int, torch.device]]):
         raise NotImplementedError('Parallelization is not implemented yet.')
 
-    def __call__(self, data, batch_size=None, **kwargs) -> Document:
-        return super().__call__(data, batch_size, **kwargs)
+    def __call__(self, data, **kwargs) -> Document:
+        return super().__call__(data, **kwargs)
 
     def __getitem__(self, task_name: str) -> Task:
         return self.tasks[task_name]
