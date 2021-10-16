@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 class HanLPClientTest
 {
@@ -78,6 +79,35 @@ class HanLPClientTest
         Float similarity = client.semanticTextualSimilarity("看图猜一电影名", "看图猜电影");
         prettyPrint(similarity);
     }
+
+    @Test
+    void coreferenceResolutionText() throws IOException
+    {
+        CoreferenceResolutionOutput clusters = client.coreferenceResolution("我姐送我她的猫。我很喜欢它。");
+        prettyPrint(clusters);
+    }
+
+    @Test
+    void coreferenceResolutionTokens() throws IOException
+    {
+        List<Set<Span>> clusters = client.coreferenceResolution(
+                new String[][]{
+                        new String[]{"我", "姐", "送", "我", "她", "的", "猫", "。"},
+                        new String[]{"我", "很", "喜欢", "它", "。"}});
+        prettyPrint(clusters);
+    }
+
+    @Test
+    void coreferenceResolutionTokensWithSpeakers() throws IOException
+    {
+        List<Set<Span>> clusters = client.coreferenceResolution(
+                new String[][]{
+                        new String[]{"我", "姐", "送", "我", "她", "的", "猫", "。"},
+                        new String[]{"我", "很", "喜欢", "它", "。"}},
+                new String[]{"张三", "张三"});
+        prettyPrint(clusters);
+    }
+
 
     void prettyPrint(Object object) throws JsonProcessingException
     {

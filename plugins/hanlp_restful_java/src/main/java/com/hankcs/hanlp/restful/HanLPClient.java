@@ -20,9 +20,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A RESTful client implementing the data format specification of HanLP.
@@ -255,6 +253,76 @@ public class HanLPClient
         input.put("language", language);
         //noinspection unchecked
         return mapper.readValue(post("/semantic_textual_similarity", input), List.class);
+    }
+
+    /**
+     * Coreference resolution is the task of clustering mentions in text that refer to the same underlying real world entities.
+     *
+     * @param text A piece of text, usually a document without tokenization.
+     * @return Coreference resolution clusters and tokens.
+     * @throws IOException HTTP errors.
+     */
+    public CoreferenceResolutionOutput coreferenceResolution(String text) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("language", language);
+        //noinspection unchecked
+        Map<String, List> response = mapper.readValue(post("/coreference_resolution", input), Map.class);
+        //noinspection unchecked
+        List<List<List>> clusters = response.get("clusters");
+        return new CoreferenceResolutionOutput(_convert_clusters(clusters), (ArrayList<String>) response.get("tokens"));
+    }
+
+    /**
+     * Coreference resolution is the task of clustering mentions in text that refer to the same underlying real world entities.
+     *
+     * @param tokens   A list of sentences where each sentence is a list of tokens.
+     * @param speakers A list of speakers where each speaker is a String representing the speaker's ID, e.g., "Tom".
+     * @return Coreference resolution clusters.
+     * @throws IOException HTTP errors.
+     */
+    public List<Set<Span>> coreferenceResolution(String[][] tokens, String[] speakers) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("tokens", tokens);
+        input.put("speakers", speakers);
+        input.put("language", language);
+        //noinspection unchecked
+        List<List<List>> clusters = mapper.readValue(post("/coreference_resolution", input), List.class);
+        return _convert_clusters(clusters);
+    }
+
+    /**
+     * Coreference resolution is the task of clustering mentions in text that refer to the same underlying real world entities.
+     *
+     * @param tokens A list of sentences where each sentence is a list of tokens.
+     * @return Coreference resolution clusters.
+     * @throws IOException HTTP errors.
+     */
+    public List<Set<Span>> coreferenceResolution(String[][] tokens) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("tokens", tokens);
+        input.put("language", language);
+        //noinspection unchecked
+        List<List<List>> clusters = mapper.readValue(post("/coreference_resolution", input), List.class);
+        return _convert_clusters(clusters);
+    }
+
+    private static List<Set<Span>> _convert_clusters(List<List<List>> clusters)
+    {
+        List<Set<Span>> results = new ArrayList<>(clusters.size());
+        for (List<List> cluster : clusters)
+        {
+            Set<Span> spans = new LinkedHashSet<>();
+            for (List span : cluster)
+            {
+                spans.add(new Span((String) span.get(0), (Integer) span.get(1), (Integer) span.get(2)));
+            }
+            results.add(spans);
+        }
+        return results;
     }
 
     private String post(String api, Object input_) throws IOException

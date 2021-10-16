@@ -60,7 +60,7 @@ class HanLPClient(object):
         Parse a piece of text.
 
         Args:
-            text: A paragraph (str), or a list of sentences (List[str]).
+            text: A document (str), or a list of sentences (List[str]).
             tokens: A list of sentences where each sentence is a list of tokens.
             tasks: The tasks to predict.
             skip_tasks: The tasks to skip.
@@ -189,3 +189,55 @@ class HanLPClient(object):
         response = self._send_post_json(self._url + '/semantic_textual_similarity',
                                         {'text': text, 'language': language or self._language})
         return response
+
+    def coreference_resolution(self, text: Optional[str] = None, tokens: Optional[List[List[str]]] = None,
+                               speakers: Optional[List[str]] = None, language: Optional[str] = None) -> Union[
+        Dict[str, Union[List[str], List[List[Tuple[str, int, int]]]]], List[List[Tuple[str, int, int]]]]:
+        r""" Coreference resolution is the task of clustering mentions in text that refer to the same underlying
+        real world entities.
+
+        Args:
+            text: A piece of text, usually a document without tokenization.
+            tokens: A list of sentences where each sentence is a list of tokens.
+            speakers: A list of speakers where each speaker is a ``str`` representing the speaker's ID, e.g., ``Tom``.
+            language: The language of input text. ``None`` to use the default language.
+
+        Examples::
+
+            HanLP.coreference_resolution('我姐送我她的猫。我很喜欢它。')
+            {'clusters': [
+                          [['我', 0, 1], ['我', 3, 4], ['我', 8, 9]], # 指代说话人
+                          [['我姐', 0, 2], ['她', 4, 5]],             # 指代说话人的姐姐
+                          [['她的猫', 4, 7], ['它', 11, 12]]],        # 指代说话人的姐姐的猫
+             'tokens': ['我', '姐', '送', '我', '她', '的', '猫', '。', '我', '很', '喜欢', '它', '。']}
+
+            HanLP.coreference_resolution(tokens=[['我', '姐', '送', '我', '她', '的', '猫', '。'],
+                                                 ['我', '很', '喜欢', '它', '。']])
+                         [
+                          [['我', 0, 1], ['我', 3, 4], ['我', 8, 9]], # 指代说话人
+                          [['我姐', 0, 2], ['她', 4, 5]],             # 指代说话人的姐姐
+                          [['她的猫', 4, 7], ['它', 11, 12]]],        # 指代说话人的姐姐的猫
+
+        .. image:: https://file.hankcs.com/img/coref_demo_small.png
+            :alt: my-picture1
+
+        Returns:
+            When ``text`` is specified, return the clusters and tokens. Otherwise just the clusters, In this case, you need to ``sum(tokens, [])`` in order to match the span indices with tokens
+        """
+        response = self._send_post_json(self._url + '/coreference_resolution',
+                                        {'text': text, 'tokens': tokens, 'speakers': speakers,
+                                         'language': language or self._language})
+        return response
+
+    def tokenize(self, text: Union[str, List[str]], coarse: Optional[bool] = None) -> List[List[str]]:
+        """ Split a document into sentences and tokenize them.
+
+        Args:
+            text: A document (str), or a list of sentences (List[str]).
+            coarse: Whether to perform coarse-grained or fine-grained tokenization.
+
+        Returns:
+            A list of tokenized sentences.
+        """
+        doc = self.parse(text=text, tasks='tok/coarse' if coarse is True else 'tok')
+        return next(iter(doc.values()))
