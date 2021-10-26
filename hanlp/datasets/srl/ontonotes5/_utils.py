@@ -7,12 +7,16 @@ import os
 import re
 import sys
 from pprint import pprint
+from typing import List, Dict, Union
 
+from hanlp_common.io import eprint, save_json
+
+from hanlp.common.transform import NormalizeToken
 from hanlp.datasets.parsing.loaders._ctb_utils import remove_all_ec, convert_to_stanford_dependency_330
+from hanlp.datasets.parsing.ptb import PTB_TOKEN_MAPPING
 from hanlp.utils.io_util import merge_files, get_resource, pushd, run_cmd, read_tsv_as_sents, replace_ext, \
     get_exitcode_stdout_stderr
 from hanlp.utils.log_util import flash
-from hanlp_common.io import eprint
 
 BEGIN_DOCUMENT_REGEX = re.compile(r"#begin document \((.*)\); part (\d+)")
 
@@ -140,41 +144,51 @@ class DocumentState(object):
         }
 
 
-def filter_data(v5_input_file, doc_ids_file, output_file):
+def filter_data(input_json_file, output_json_file, doc_ids_file=None, annotation=None):
     """Filter OntoNotes5 data based on CoNLL2012 (coref) doc ids.
     https://github.com/bcmi220/unisrl/blob/master/scripts/filter_conll2012_data.py
 
     Args:
-      v5_input_file: param doc_ids_file:
-      output_file: 
-      doc_ids_file: 
+      input_json_file: All documents.
+      output_json_file:
+      doc_ids_file:
 
     Returns:
 
     """
+    assert doc_ids_file or annotation
     doc_count = 0
     sentence_count = 0
     srl_count = 0
     ner_count = 0
     cluster_count = 0
     word_count = 0
+    missing_count = 0
     doc_ids = []
-    doc_ids_to_keys = {}
+    doc_ids_to_keys = collections.defaultdict(list)
     filtered_examples = {}
+    ontonotes_root = os.path.abspath(os.path.join(os.path.dirname(input_json_file), *['..'] * 2))
+    language = os.path.basename(input_json_file).split('.')[1]
 
-    with open(doc_ids_file, "r") as f:
-        for line in f:
-            doc_id = line.strip().split("annotations/")[1]
-            doc_ids.append(doc_id)
-            doc_ids_to_keys[doc_id] = []
-        f.close()
+    if doc_ids_file:
+        with open(doc_ids_file, "r") as f:
+            for line in f:
+                doc_id = line.strip().split("annotations/")[1]
+                doc_ids.append(doc_id)
+                doc_ids_to_keys[doc_id] = []
+            f.close()
 
-    with codecs.open(v5_input_file, "r", "utf8") as f:
+    with codecs.open(input_json_file, "r", "utf8") as f:
         for jsonline in f:
             example = json.loads(jsonline)
             doc_key = example["doc_key"]
             dk_prefix = "_".join(doc_key.split("_")[:-1])
-            if dk_prefix not in doc_ids_to_keys:
+            if doc_ids_file and dk_prefix not in doc_ids_to_keys:
+                continue
+            if annotation and not os.path.isfile(
+                    os.path.join(ontonotes_root, 'data/files/data', language, 'annotations', dk_prefix) + annotation):
+                print(os.path.join(ontonotes_root, 'data/files/data', language, 'annotations', dk_prefix) + annotation)
+                missing_count += 1
                 continue
             doc_ids_to_keys[dk_prefix].append(doc_key)
             filtered_examples[doc_key] = example
@@ -189,15 +203,22 @@ def filter_data(v5_input_file, doc_ids_file, output_file):
             doc_count += 1
         f.close()
 
-    print(("Documents: {}\nSentences: {}\nWords: {}\nNER: {}, PAS: {}, Clusters: {}".format(
-        doc_count, sentence_count, word_count, ner_count, srl_count, cluster_count)))
+    print(("Documents: {}\nSentences: {}\nWords: {}\nNER: {}, PAS: {}, Clusters: {}, No annotations: {}".format(
+        doc_count, sentence_count, word_count, ner_count, srl_count, cluster_count, missing_count)))
 
-    with codecs.open(output_file, "w", "utf8") as f:
-        for doc_id in doc_ids:
-            for key in doc_ids_to_keys[doc_id]:
-                f.write(json.dumps(filtered_examples[key], ensure_ascii=False))
+    if doc_ids_file:
+        with codecs.open(output_json_file, "w", "utf8") as f:
+            for doc_id in doc_ids:  # Arrange the files in order of id files
+                for key in doc_ids_to_keys[doc_id]:
+                    f.write(json.dumps(filtered_examples[key], ensure_ascii=False))
+                    f.write("\n")
+            f.close()
+    else:
+        with codecs.open(output_json_file, "w", "utf8") as f:
+            for doc in filtered_examples.values():
+                f.write(json.dumps(doc, ensure_ascii=False))
                 f.write("\n")
-        f.close()
+            f.close()
 
 
 def normalize_word(word, language):
@@ -376,13 +397,15 @@ def make_ontonotes_language_jsonlines(conll12_ontonotes_path, output_path=None, 
         pprint(stats)
         conll12_json_file = f'{lang_dir}/{split}.{language}.conll12.jsonlines'
         print(f'Applying CoNLL 12 official splits on {v5_json_file} to {conll12_json_file}')
-        id_file = get_resource(f'http://conll.cemantix.org/2012/download/ids/'
+        id_file = get_resource(f'https://od.hankcs.com/research/emnlp2021/conll.cemantix.org.zip#2012/download/ids/'
                                f'{language}/coref/{split}.id')
-        filter_data(v5_json_file, id_file, conll12_json_file)
+        filter_data(v5_json_file, conll12_json_file, id_file)
 
 
 def ensure_python_points_to_python2():
     exitcode, out, version = get_exitcode_stdout_stderr('python --version')
+    if not version:
+        version = out
     if not version.startswith('Python 2'):
         raise EnvironmentError(f'Your python command needs to be Python2, not {version.strip()}. Try:\n\n\t'
                                'ln -sf "$(which python2)" "$(which python)"')
@@ -406,15 +429,19 @@ def make_gold_conll(ontonotes_path, language):
             raise e
 
 
-def convert_jsonlines_to_IOBES(json_file, output_file=None, doc_level_offset=True):
+def convert_jsonlines_to_IOBES(json_file, output_file=None, doc_level_offset=True, normalize_token=False):
     json_file = get_resource(json_file)
     if not output_file:
         output_file = os.path.splitext(json_file)[0] + '.ner.tsv'
+    if normalize_token:
+        transform = NormalizeToken(PTB_TOKEN_MAPPING, 'token')
     with open(json_file) as src, open(output_file, 'w', encoding='utf-8') as out:
         for line in src:
             doc = json.loads(line)
             offset = 0
             for sent, ner in zip(doc['sentences'], doc['ner']):
+                if normalize_token:
+                    sent = transform({'token': sent})['token']
                 tags = ['O'] * len(sent)
                 for start, end, label in ner:
                     if doc_level_offset:
@@ -525,6 +552,116 @@ def make_dep_conllx_if_necessary(con_txt_file: str, language='en'):
 def batch_make_dep_conllx_if_necessary(con_txt_files, language='en'):
     for each in con_txt_files:
         make_dep_conllx_if_necessary(each, language)
+
+
+def make_ner_json_if_necessary(json_file):
+    json_file = get_resource(json_file)
+    output_file = os.path.splitext(json_file)[0] + '.ner.jsonlines'
+    if not os.path.isfile(output_file):
+        make_ner_json(json_file, output_file)
+    return output_file
+
+
+def batch_make_ner_json_if_necessary(json_files):
+    for each in json_files:
+        make_ner_json_if_necessary(each)
+
+
+def make_ner_json(json_file, output_file):
+    filter_data(json_file, output_file, doc_ids_file=None, annotation='.name')
+
+
+def make_srl_json_if_necessary(json_file):
+    json_file = get_resource(json_file)
+    output_file = os.path.splitext(json_file)[0] + '.srl.jsonlines'
+    if not os.path.isfile(output_file):
+        make_srl_json(json_file, output_file)
+    return output_file
+
+
+def make_coref_json_if_necessary(json_file):
+    json_file = get_resource(json_file)
+    output_file = os.path.splitext(json_file)[0] + '.coref.jsonlines'
+    if not os.path.isfile(output_file):
+        make_coref_json(json_file, output_file)
+    return output_file
+
+
+def batch_make_srl_json_if_necessary(json_files):
+    for each in json_files:
+        make_srl_json_if_necessary(each)
+
+
+def make_srl_json(json_file, output_file):
+    filter_data(json_file, output_file, doc_ids_file=None, annotation='.prop')
+
+
+def batch_make_coref_json_if_necessary(json_files):
+    for each in json_files:
+        make_coref_json_if_necessary(each)
+
+
+def make_coref_json(json_file, output_file):
+    filter_data(json_file, output_file, doc_ids_file=None, annotation='.coref')
+
+
+def load_raw_text(onf_file) -> List[str]:
+    with open(onf_file) as src:
+        sents = []
+        expect_sent = False
+        expect_sent_line = False
+        sent_parts = []
+        for line in src:
+            line = line.strip()
+            if line == 'Plain sentence:':
+                expect_sent_line = True
+            elif expect_sent_line:
+                expect_sent_line = False
+                expect_sent = True
+                continue
+            elif expect_sent:
+                if not line:
+                    sents.append(' '.join(sent_parts))
+                    expect_sent = False
+                    sent_parts = []
+                else:
+                    sent_parts.append(line)
+
+        return sents
+
+
+def batch_load_raw_text(root: str) -> Dict[str, List[str]]:
+    onf_files = sorted(glob.glob(os.path.join(root, '**/*.onf'), recursive=True))
+    sents = dict()
+    for path in onf_files:
+        filename = path.split('annotations/')[1][:-len('.onf')]
+        sents[filename] = load_raw_text(path)
+    return sents
+
+
+def make_raw_text_if_necessary(home: str):
+    home = get_resource(home)
+    jsonpath = os.path.join(home, 'text.jsonlines')
+    if os.path.isfile(jsonpath):
+        return
+    sents = batch_load_raw_text(home)
+    save_json(sents, jsonpath)
+
+
+class RestoreToken(NormalizeToken):
+    def __init__(self, src: str, mapper: Union[str, dict] = None, dst: str = None) -> None:
+        if not mapper:
+            mapper = {
+                '/-': '-',
+                '/.': '.',
+            }
+        super().__init__(mapper, src, dst)
+
+    def __call__(self, sample: dict) -> dict:
+        src = sample[self.src]
+        src = [[self.convert(y) for y in x] for x in src]
+        sample[self.dst] = src
+        return sample
 
 
 def main():

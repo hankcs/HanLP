@@ -25,31 +25,31 @@ class FormatError(Exception):
     pass
 
 
-Metrics = namedtuple('Metrics', 'tp fp fn prec rec fscore')
+DetailedF1 = namedtuple('Metrics', 'tp fp fn prec rec fscore')
 
 
 class EvalCounts(object):
     def __init__(self):
         self.correct_chunk = 0  # number of correctly identified chunks
         self.correct_tags = 0  # number of correct chunk tags
-        self.found_correct = 0  # number of chunks in corpus
-        self.found_guessed = 0  # number of identified chunks
+        self.total_gold = 0  # number of chunks in corpus
+        self.total_pred = 0  # number of identified chunks
         self.token_counter = 0  # token counter (ignores sentence breaks)
 
         # counts by type
         self.t_correct_chunk = defaultdict(int)
-        self.t_found_correct = defaultdict(int)
-        self.t_found_guessed = defaultdict(int)
+        self.t_total_gold = defaultdict(int)
+        self.t_total_pred = defaultdict(int)
 
     @property
     def states(self):
-        return (self.t_correct_chunk, self.t_found_correct, self.t_found_guessed)
+        return (self.t_correct_chunk, self.t_total_gold, self.t_total_pred)
 
     def reset_state(self):
         self.correct_chunk = 0  # number of correctly identified chunks
         self.correct_tags = 0  # number of correct chunk tags
-        self.found_correct = 0  # number of chunks in corpus
-        self.found_guessed = 0  # number of identified chunks
+        self.total_gold = 0  # number of chunks in corpus
+        self.total_pred = 0  # number of identified chunks
         self.token_counter = 0  # token counter (ignores sentence breaks)
         for state in self.states:
             state.clear()
@@ -81,8 +81,8 @@ class SpanF1(Metric):
             raise ValueError(f'Unrecognized label encoding {self.label_encoding}')
         self.count.correct_chunk += count.correct_chunk
         self.count.correct_tags += count.correct_tags
-        self.count.found_correct += count.found_correct
-        self.count.found_guessed += count.found_guessed
+        self.count.total_gold += count.total_gold
+        self.count.total_pred += count.total_pred
         self.count.token_counter += count.token_counter
         for s, n in zip(self.count.states, count.states):
             for k, v in n.items():
@@ -92,7 +92,7 @@ class SpanF1(Metric):
         for t, p in zip(true_seqs, pred_seqs):
             self.update_state(t, p)
 
-    def result(self, full=True, verbose=True) -> Union[Tuple[Metrics, dict, str], Metrics]:
+    def result(self, full=True, verbose=True) -> Union[Tuple[DetailedF1, dict, str], DetailedF1]:
         if full:
             out = io.StringIO()
             overall, by_type = report(self.count, out)
@@ -183,11 +183,11 @@ def evaluate_iobes(true_seqs, pred_seqs):
             in_correct = True
 
         if start_correct:
-            counts.found_correct += 1
-            counts.t_found_correct[correct_type] += 1
+            counts.total_gold += 1
+            counts.t_total_gold[correct_type] += 1
         if start_guessed:
-            counts.found_guessed += 1
-            counts.t_found_guessed[guessed_type] += 1
+            counts.total_pred += 1
+            counts.t_total_pred[guessed_type] += 1
         if correct == guessed and guessed_type == correct_type:
             counts.correct_tags += 1
         counts.token_counter += 1
@@ -209,8 +209,8 @@ def evaluate_iob2(true_seqs, pred_seqs):
     gold = set(bio_tags_to_spans(true_seqs))
     pred = set(bio_tags_to_spans(pred_seqs))
     counts.correct_chunk = len(gold & pred)
-    counts.found_guessed = len(pred)
-    counts.found_correct = len(gold)
+    counts.total_pred = len(pred)
+    counts.total_gold = len(gold)
     return counts
 
 
@@ -224,7 +224,7 @@ def calculate_metrics(correct, guessed, total):
     p = 0. if tp + fp == 0 else 1. * tp / (tp + fp)
     r = 0. if tp + fn == 0 else 1. * tp / (tp + fn)
     f = 0. if p + r == 0 else 2 * p * r / (p + r)
-    return Metrics(tp, fp, fn, p, r, f)
+    return DetailedF1(tp, fp, fn, p, r, f)
 
 
 def calc_metrics(tp, p, t, percent=True):
@@ -252,12 +252,12 @@ def calc_metrics(tp, p, t, percent=True):
 def metrics(counts):
     c = counts
     overall = calculate_metrics(
-        c.correct_chunk, c.found_guessed, c.found_correct
+        c.correct_chunk, c.total_pred, c.total_gold
     )
     by_type = {}
-    for t in uniq(list(c.t_found_correct.keys()) + list(c.t_found_guessed.keys())):
+    for t in uniq(list(c.t_total_gold.keys()) + list(c.t_total_pred.keys())):
         by_type[t] = calculate_metrics(
-            c.t_correct_chunk[t], c.t_found_guessed[t], c.t_found_correct[t]
+            c.t_correct_chunk[t], c.t_total_pred[t], c.t_total_gold[t]
         )
     return overall, by_type
 
@@ -270,9 +270,9 @@ def report(counts, out=None):
 
     c = counts
     out.write('processed %d tokens with %d phrases; ' %
-              (c.token_counter, c.found_correct))
+              (c.token_counter, c.total_gold))
     out.write('found: %d phrases; correct: %d.\n' %
-              (c.found_guessed, c.correct_chunk))
+              (c.total_pred, c.correct_chunk))
 
     if c.token_counter > 0:
         out.write('accuracy: %6.2f%%; ' %
@@ -285,7 +285,7 @@ def report(counts, out=None):
         out.write('%17s: ' % i)
         out.write('precision: %6.2f%%; ' % (100. * m.prec))
         out.write('recall: %6.2f%%; ' % (100. * m.rec))
-        out.write('FB1: %6.2f  %d\n' % (100. * m.fscore, c.t_found_guessed[i]))
+        out.write('FB1: %6.2f  %d\n' % (100. * m.fscore, c.t_total_pred[i]))
     return overall, by_type
 
 
