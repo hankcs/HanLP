@@ -40,9 +40,9 @@ class Node(object):
                 break
         return state
 
-    def _walk(self, prefix: str, ordered=False):
+    def _walk(self, prefix: Union[str, tuple], ordered=False):
         for char, child in sorted(self._children.items()) if ordered else self._children.items():
-            prefix_new = prefix + char
+            prefix_new = prefix + (char if isinstance(prefix, str) else (char,))
             if child._value:
                 yield prefix_new, child._value
             yield from child._walk(prefix_new)
@@ -155,8 +155,8 @@ class Trie(Node):
             i += 1
         return found
 
-    def items(self, ordered=False):
-        yield from self._walk('', ordered)
+    def items(self, ordered=False, prefix=''):
+        yield from self._walk(prefix, ordered)
 
     def __len__(self):
         return self._size

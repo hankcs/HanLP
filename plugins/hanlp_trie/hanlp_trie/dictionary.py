@@ -51,7 +51,7 @@ class DictInterface(ABC):
 
 
 class TrieDict(Trie, DictInterface, Configurable):
-    def __init__(self, dictionary: Optional[Union[Dict[str, Any], Iterable[str]]] = None) -> None:
+    def __init__(self, dictionary: Optional[Union[Dict[Iterable[str], Any], Iterable[str]]] = None) -> None:
         r"""
         A dict-like structure for fast custom dictionary strategies in tokenization and tagging. It is built with
         a dict of key-value pairs or a set of strings. When a set is passed in, it will be turned into a dict where each
@@ -154,3 +154,63 @@ class TrieDict(Trie, DictInterface, Configurable):
             'classpath': classpath_of(self),
             'dictionary': dict(self.items())
         }
+
+
+class TupleTrieDict(TrieDict):
+    def __init__(self, dictionary: Optional[Union[Dict[Iterable[str], Any], Iterable[str]]] = None) -> None:
+        r"""
+        A dict-like structure for fast custom dictionary strategies in tokenization and tagging. It is built with
+        a dict of key-value pairs or a set of strings. When a set is passed in, it will be turned into a dict where each
+        key is assigned with a boolean value ``True``. In comparison to ``TrieDict``, ``TupleTrieDict`` additionally
+        supports serializing/deserializing tuple-as-keys dict.
+
+        Args:
+            dictionary: A custom dictionary of string-value pairs.
+        """
+        if isinstance(dictionary, list) and dictionary and isinstance(dictionary[0], (list, tuple)):
+            _d = dict()
+            for k, v in dictionary:
+                _d[tuple(k)] = v
+            dictionary = _d
+        super().__init__(dictionary)
+
+    @property
+    def config(self):
+        return {
+            'classpath': classpath_of(self),
+            'dictionary': list(self.items(prefix=()))
+        }
+
+    def parse_longest(self, text: Sequence[str]) -> List[Tuple[int, int, Any]]:
+        """Longest-prefix-matching which tries to match the longest keyword sequentially from the head of the text till
+        its tail. By definition, the matches won't overlap with each other.
+
+        Args:
+            text: A piece of text. In HanLP's design, it doesn't really matter whether this is a str or a list of str.
+                The trie will transit on either types properly, which means a list of str simply defines a list of
+                transition criteria while a str defines each criterion as a character.
+
+        Returns:
+            A tuple of ``(begin, end, value)``.
+
+        """
+        found = []
+        i = 0
+        while i < len(text):
+            state = self.transit(text[i:i + 1])
+            if state:
+                to = i + 1
+                end = to
+                value = state._value
+                for to in range(i + 1, len(text)):
+                    state = state.transit(text[to:to + 1])
+                    if not state:
+                        break
+                    if state._value is not None:
+                        value = state._value
+                        end = to + 1
+                if value is not None:
+                    found.append((i, end, value))
+                    i = end - 1
+            i += 1
+        return found
