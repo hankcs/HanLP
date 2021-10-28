@@ -1,5 +1,4 @@
 # -- Project information -----------------------------------------------------
-import os
 import sys
 import os
 
@@ -74,7 +73,7 @@ panels_add_bootstrap_css = False
 # a list of builtin themes.
 #
 html_theme = "sphinx_book_theme"
-html_title = "HanLP documentation"
+html_title = "HanLP Documentation"
 html_logo = "_static/logo.png"
 html_favicon = "_static/favicon.png"
 html_copy_source = True

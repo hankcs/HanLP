@@ -242,7 +242,7 @@ class HanLPClient(object):
                                          'language': language or self._language})
         return response
 
-    def tokenize(self, text: Union[str, List[str]], coarse: Optional[bool] = None) -> List[List[str]]:
+    def tokenize(self, text: Union[str, List[str]], coarse: Optional[bool] = None, language=None) -> List[List[str]]:
         """ Split a document into sentences and tokenize them. Note that it is always faster to tokenize a whole
         document than to tokenize each sentence one by one. So avoid calling this method sentence by sentence but put
         sentences into a ``list`` and pass them to the ``text`` argument.
@@ -250,6 +250,7 @@ class HanLPClient(object):
         Args:
             text: A document (``str``), or a list of sentences (``List[str]``).
             coarse: Whether to perform coarse-grained or fine-grained tokenization.
+            language: The language of input text. ``None`` to use the default language.
 
         Examples::
 
@@ -274,8 +275,21 @@ class HanLPClient(object):
             [['商品', '和', '服务', '。'],
              ['当', '下雨天', '地面', '积水', '分', '外', '严重']]
 
+            # Multilingual tokenization by specifying language='mul':
+            HanLP.tokenize(
+                ['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques
+                 'to production environment.',
+                 '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。',
+                 '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。'], language='mul')
+            [['In', '2021', ',', 'HanLPv2.1', 'delivers', 'state-of-the-art', 'multilingual',
+              'NLP', 'techniques', 'to', 'production', 'environment', '.'],
+             ['2021', '年', '、', 'HanLPv2.1', 'は', '次', '世代', 'の', '最', '先端', '多',
+              '言語', 'NLP', '技術', 'を', '本番', '環境', 'に', '導入', 'します', '。'],
+             ['2021', '年', 'HanLPv2.1', '为', '生产', '环境', '带来', '次世代', '最', '先进的',
+              '多', '语种', 'NLP', '技术', '。']]
+
         Returns:
             A list of tokenized sentences.
         """
-        doc = self.parse(text=text, tasks='tok/coarse' if coarse is True else 'tok')
+        doc = self.parse(text=text, tasks='tok/coarse' if coarse is True else 'tok', language=language)
         return next(iter(doc.values()))

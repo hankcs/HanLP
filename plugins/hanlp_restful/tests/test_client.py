@@ -34,6 +34,10 @@ class TestClient(unittest.TestCase):
         print(self.HanLP.tokenize('商品和服务。阿婆主来到北京立方庭参观自然语义科技公司'))
         print(self.HanLP.tokenize('商品和服务。阿婆主来到北京立方庭参观自然语义科技公司', coarse=True))
         print(self.HanLP.tokenize(['商品和服务。', '当下雨天地面积水分外严重']))
+        print(self.HanLP.tokenize(
+            ['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environment.',
+             '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。',
+             '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。'], language='mul'))
 
     def test_coreference_resolution(self):
         print(self.HanLP.coreference_resolution('我姐送我她的猫。我很喜欢它。'))

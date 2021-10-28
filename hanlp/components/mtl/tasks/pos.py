@@ -76,7 +76,7 @@ class TransformerTagging(Task, TransformerTagger):
                  **kwargs) -> None:
         """A simple tagger using a linear layer with an optional CRF (:cite:`lafferty2001conditional`) layer for
         any tagging tasks including PoS tagging and many others. It also features with a custom dictionary ``dict_tags``
-        to perform ``longest-prefix-matching`` and replaced matched tokens with given tags.
+        to perform ``longest-prefix-matching`` which replaces matched tokens with given tags.
 
 
         .. Note:: For algorithm beginners, longest-prefix-matching is the prerequisite to understand what dictionary can

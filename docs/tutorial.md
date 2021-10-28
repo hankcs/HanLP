@@ -85,7 +85,7 @@ which offers visualization in any mono-width text environment.
 
 ````{margin} **Non-ASCII**
 ```{note}
-Non-ASCII text might screw in which case copying it into a `.tsv` editor will align it correctly. 
+Non-ASCII text might screw in terminals but in Jupyter Notebook it will align correctly. 
 You can also use our [live demo](https://hanlp.hankcs.com/).
 ```
 ````
