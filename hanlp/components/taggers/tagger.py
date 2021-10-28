@@ -4,7 +4,7 @@
 import logging
 import warnings
 from abc import ABC, abstractmethod
-from typing import List, TextIO, Any
+from typing import List, TextIO, Any, Union, Dict, Tuple, Sequence
 
 import torch
 from torch import optim, nn
@@ -18,6 +18,8 @@ from hanlp.layers.crf.crf import CRF
 from hanlp.metrics.accuracy import CategoricalAccuracy
 from hanlp.utils.time_util import CountdownTimer
 from hanlp_common.util import reorder
+from hanlp_trie import DictInterface, TrieDict
+from hanlp_trie.dictionary import TupleTrieDict
 
 
 class Tagger(DistillableComponent, ABC):
@@ -166,8 +168,6 @@ class Tagger(DistillableComponent, ABC):
         for batch in dataloader:
             out, mask = self.feed_batch(batch)
             pred = self.decode_output(out, mask, batch)
-            if isinstance(pred, torch.Tensor):
-                pred = pred.tolist()
             outputs.extend(self.prediction_to_human(pred, vocab, batch))
             orders.extend(batch[IDX])
         outputs = reorder(outputs, orders)
@@ -176,14 +176,17 @@ class Tagger(DistillableComponent, ABC):
     def build_samples(self, data: List[str], **kwargs):
         return [{self.config.token_key: sent} for sent in data]
 
-    def prediction_to_human(self, pred, vocab: List[str], batch):
-        lengths = batch.get(f'{self.config.token_key}_length', None)
-        if lengths is None:
-            lengths = torch.sum(batch['mask'], dim=1)
-        if isinstance(lengths, torch.Tensor):
-            lengths = lengths.tolist()
-        for each, l in zip(pred, lengths):
-            yield [vocab[id] for id in each[:l]]
+    def prediction_to_human(self, pred_ids, vocab: List[str], batch):
+        if isinstance(pred_ids, torch.Tensor):
+            pred_ids = pred_ids.tolist()
+        sents = batch[self.config.token_key]
+        dict_tags: DictInterface = self.dict_tags
+        for each, sent in zip(pred_ids, sents):
+            tags = [vocab[id] for id in each[:len(sent)]]
+            if dict_tags:
+                for begin, end, label in dict_tags.tokenize(sent):
+                    tags[begin:end] = label
+            yield tags
 
     @property
     def tagging_scheme(self):
@@ -195,3 +198,31 @@ class Tagger(DistillableComponent, ABC):
                               f'but we are using IOB2 by default. Please set tagging_scheme="IOB1" or tagging_scheme="BIO" '
                               f'to get rid of this warning.')
         return tagging_scheme
+
+    @property
+    def dict_tags(self) -> DictInterface:
+        r""" A custom dictionary to override predicted tags by performing longest-prefix-matching.
+
+        Examples:
+            >>> pos.dict_tags = {'HanLP': 'state-of-the-art-tool'} # Force 'HanLP' to be 'state-of-the-art-tool'
+            >>> tagger("HanLP为生产环境带来次世代最先进的多语种NLP技术。")
+                # HanLP/state-of-the-art-tool 为/P 生产/NN 环境/NN 带来/VV 次世代/NN 最/AD 先进/VA 的/DEC 多语种/NN NLP/NR 技术/NN 。/PU
+            >>> pos.dict_tags = {('的', '希望'): ('补语成分', '名词'), '希望': '动词'} # Conditional matching
+            >>> tagger("我的希望是希望张晚霞的背影被晚霞映红。")
+                # 我/PN 的/补语成分 希望/名词 是/VC 希望/动词 张晚霞/NR 的/DEG 背影/NN 被/LB 晚霞/NN 映红/VV 。/PU
+        """
+        return self.config.get('dict_tags', None)
+
+    @dict_tags.setter
+    def dict_tags(self,
+                  dictionary: Union[DictInterface, Union[Dict[Union[str, Sequence[str]], Union[str, Sequence[str]]]]]):
+        if dictionary is not None and not isinstance(dictionary, DictInterface):
+            _d = dict()
+            for k, v in dictionary.items():
+                if isinstance(k, str):
+                    k = (k,)
+                if isinstance(v, str):
+                    v = (v,) * len(k)
+                _d[k] = v
+            dictionary = TupleTrieDict(_d)
+        self.config.dict_tags = dictionary

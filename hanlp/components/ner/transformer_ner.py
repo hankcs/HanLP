@@ -46,9 +46,7 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
     # noinspection PyMethodOverriding
     def decode_output(self, logits, mask, batch, model=None):
         output = super().decode_output(logits, mask, batch, model)
-        if isinstance(output, torch.Tensor):
-            output = output.tolist()
-        prediction = self.id_to_tags(output, [len(x) for x in batch['token']])
+        prediction = super().prediction_to_human(output, self.vocabs['tag'].idx_to_token, batch)
         return self.tag_to_span(prediction, batch)
 
     def tag_to_span(self, batch_tags, batch):

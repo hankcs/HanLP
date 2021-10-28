@@ -43,7 +43,7 @@ setup(
         'sentencepiece>=0.1.91'
         'torch>=1.6.0',
         'hanlp-common>=0.0.9',
-        'hanlp-trie>=0.0.2',
+        'hanlp-trie>=0.0.4',
         'hanlp-downloader',
     ],
     extras_require={

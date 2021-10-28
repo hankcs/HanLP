@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2020-10-19 18:56
 import logging
-from typing import Dict, Any, Union, Iterable, Callable, List
+from typing import Dict, Any, Union, Iterable, Callable, List, Tuple, Sequence
 
 import torch
 from torch.utils.data import DataLoader
@@ -16,6 +16,7 @@ from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
 from hanlp.metrics.metric import Metric
 from hanlp.metrics.mtl import MetricDict
 from hanlp_common.util import merge_locals_kwargs
+from hanlp_trie import DictInterface, TrieDict
 
 
 class LinearCRFDecoder(torch.nn.Module):
@@ -69,9 +70,17 @@ class TransformerTagging(Task, TransformerTagger):
                  char_level=False,
                  hard_constraint=False,
                  crf=False,
-                 token_key='token', **kwargs) -> None:
+                 token_key='token',
+                 dict_tags: Union[
+                     DictInterface, Union[Dict[Union[str, Sequence[str]], Union[str, Sequence[str]]]]] = None,
+                 **kwargs) -> None:
         """A simple tagger using a linear layer with an optional CRF (:cite:`lafferty2001conditional`) layer for
-        any tagging tasks including PoS tagging and many others.
+        any tagging tasks including PoS tagging and many others. It also features with a custom dictionary ``dict_tags``
+        to perform ``longest-prefix-matching`` and replaced matched tokens with given tags.
+
+
+        .. Note:: For algorithm beginners, longest-prefix-matching is the prerequisite to understand what dictionary can
+            do and what it can't do. The tutorial in `this book <http://nlp.hankcs.com/book.php>`_ can be very helpful.
 
         Args:
             trn: Path to training set.
@@ -94,10 +103,12 @@ class TransformerTagging(Task, TransformerTagger):
                 in a sentence, it will be split at a token anyway.
             crf: ``True`` to enable CRF (:cite:`lafferty2001conditional`).
             token_key: The key to tokens in dataset. This should always be set to ``token`` in MTL.
+            dict_tags: A custom dictionary to override predicted tags by performing longest-prefix-matching.
             **kwargs: Not used.
         """
         super().__init__(**merge_locals_kwargs(locals(), kwargs))
         self.vocabs = VocabDict()
+        self.dict_tags = dict_tags
 
     def build_dataloader(self,
                          data,

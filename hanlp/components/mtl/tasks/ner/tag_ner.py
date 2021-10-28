@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2020-12-03 14:35
 import logging
-from typing import Union, List, Dict, Any, Iterable, Callable, Set
+from typing import Union, List, Dict, Any, Iterable, Callable, Set, Sequence
 
 import torch
 from hanlp_trie import DictInterface
@@ -60,6 +60,8 @@ class TaggingNamedEntityRecognition(Task, TransformerNamedEntityRecognizer):
                  token_key='token',
                  dict_whitelist: Union[DictInterface, Union[Dict[str, Any], Set[str]]] = None,
                  dict_blacklist: Union[DictInterface, Union[Dict[str, Any], Set[str]]] = None,
+                 dict_tags: Union[
+                     DictInterface, Union[Dict[Union[str, Sequence[str]], Union[str, Sequence[str]]]]] = None,
                  **kwargs) -> None:
         r"""A simple tagger using a linear layer with an optional CRF (:cite:`lafferty2001conditional`) layer for
         NER task. It can utilize whitelist gazetteers which is dict mapping from entity name to entity type.
@@ -105,6 +107,7 @@ class TaggingNamedEntityRecognition(Task, TransformerNamedEntityRecognizer):
         self.secondary_encoder = secondary_encoder
         self.dict_whitelist = dict_whitelist
         self.dict_blacklist = dict_blacklist
+        self.dict_tags = dict_tags
 
     def build_dataloader(self,
                          data,
