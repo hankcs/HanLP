@@ -56,9 +56,13 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
         dict_blacklist = self.dict_blacklist
         merge_types = self.config.get('merge_types', None)
         for tags, tokens in zip(batch_tags, sents):
+            entities = get_entities(tags)
             if dict_whitelist:
-                for start, end, label in dict_whitelist.tokenize(tokens):
-                    if (not tags[start][0] in 'ME') and (not tags[end - 1][0] in 'BM'):
+                matches = dict_whitelist.tokenize(tokens)
+                if matches:
+                    # Fix O E-LOC O like predictions
+                    entities = get_entities(tags)
+                    for label, start, end in entities:
                         if end - start == 1:
                             tags[start] = 'S-' + label
                         else:
@@ -66,7 +70,16 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
                             for i in range(start + 1, end - 1):
                                 tags[i] = 'I-' + label
                             tags[end - 1] = 'E-' + label
-            entities = get_entities(tags)
+                    for start, end, label in matches:
+                        if (not tags[start][0] in 'ME') and (not tags[end - 1][0] in 'BM'):
+                            if end - start == 1:
+                                tags[start] = 'S-' + label
+                            else:
+                                tags[start] = 'B-' + label
+                                for i in range(start + 1, end - 1):
+                                    tags[i] = 'I-' + label
+                                tags[end - 1] = 'E-' + label
+                    entities = get_entities(tags)
             if merge_types and len(entities) > 1:
                 merged_entities = []
                 begin = 0
