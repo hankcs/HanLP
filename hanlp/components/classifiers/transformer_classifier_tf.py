@@ -50,11 +50,11 @@ class TransformerTextTransform(TableTransform):
             attention_mask = [1] * len(token_ids)
             diff = max_length - len(token_ids)
             if diff < 0:
-                logger.warning(
-                    f'Input tokens {tokens} exceed the max sequence length of {max_length - 2}. '
-                    f'The exceeded part will be truncated and ignored. '
-                    f'You are recommended to split your long text into several sentences within '
-                    f'{max_length - 2} tokens beforehand.')
+                # logger.warning(
+                #     f'Input tokens {tokens} exceed the max sequence length of {max_length - 2}. '
+                #     f'The exceeded part will be truncated and ignored. '
+                #     f'You are recommended to split your long text into several sentences within '
+                #     f'{max_length - 2} tokens beforehand.')
                 token_ids = token_ids[:max_length]
                 attention_mask = attention_mask[:max_length]
                 segment_ids = segment_ids[:max_length]

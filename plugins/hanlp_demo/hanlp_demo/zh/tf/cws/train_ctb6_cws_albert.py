@@ -3,7 +3,7 @@
 # Date: 2019-12-28 22:22
 
 from hanlp.components.tok_tf import TransformerTokenizerTF
-from hanlp.datasets.cws.ctb import CTB6_CWS_TRAIN, CTB6_CWS_DEV, CTB6_CWS_TEST
+from hanlp.datasets.cws.ctb6 import CTB6_CWS_TRAIN, CTB6_CWS_DEV, CTB6_CWS_TEST
 from tests import cdroot
 
 cdroot()

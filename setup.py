@@ -49,8 +49,8 @@ setup(
     extras_require={
         'full': [
             'fasttext==0.9.1',
-            'tensorflow==2.3.0',
-            'bert-for-tf2==0.14.6',
+            'tensorflow==2.6.0',
+            'bert-for-tf2-mod==0.14.10',
             'py-params==0.9.7',
             'params-flow==0.8.2',
             'penman==0.6.2',

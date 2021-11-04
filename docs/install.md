@@ -63,10 +63,16 @@ Installation on Windows is **perfectly** supported. The full version `hanlp[full
 ```
 ````
 
+````{margin} **Apple Silicon**
+```{note}
+HanLP also perfectly supports accelerating on Apple Silicon M1 chips, see [tutorial](https://www.hankcs.com/nlp/hanlp-official-m1-support.html).
+```
+````
+
 | Flavor  | Description                                                  |
 | ------- | ------------------------------------------------------------ |
 | default | This installs the default version which delivers the most commonly used functionalities. However, some heavy dependencies like TensorFlow are not installed. |
-| full    | For experts who seek to maximize the efficiency via TensorFlow and C++ extensions, `pip install hanlp[full]` installs every dependency HanLP will use in production. `hanlp[full]` requires `Python<=3.8` due to `tensorflow==2.3.0`, which can be easily installed through conda: `conda install python=3.8 -y` |
+| full    | For experts who seek to maximize the efficiency via TensorFlow and C++ extensions, `pip install hanlp[full]` installs every dependency HanLP will use in production. |
 
 
 ## Install Models
@@ -102,5 +108,4 @@ Some TensorFlow/fastText models will ask you to install the missing TensorFlow/f
 ```shell script
 pip install hanlp[full]
 ```
-
 
