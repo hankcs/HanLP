@@ -283,7 +283,7 @@ public class WordNet
                     break;
             }
             // 这些通用符的量级都在10万左右
-            add(line + offset, new Vertex(sWord, atomNode.sWord, new CoreDictionary.Attribute(nature, 10000), id));
+            add(line + offset, new Vertex(sWord, atomNode.sWord, new CoreDictionary.Attribute(nature, Predefine.OOV_DEFAULT_FREQUENCY), id));
             offset += atomNode.sWord.length();
         }
     }
