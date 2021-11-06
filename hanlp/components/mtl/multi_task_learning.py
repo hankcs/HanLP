@@ -97,7 +97,7 @@ class MultiTaskLearning(TorchComponent):
         can have dependencies on each other which will be properly handled during decoding. To integrate a component
         into this MTL framework, a component needs to implement the :class:`~hanlp.components.mtl.tasks.Task` interface.
 
-        This framework mostly follows the architecture of :cite:`clark-etal-2019-bam`, with additional scalar mix
+        This framework mostly follows the architecture of :cite:`clark-etal-2019-bam` and :cite:`he-choi-2021-stem`, with additional scalar mix
         tricks (:cite:`kondratyuk-straka-2019-75`) allowing each task to attend to any subset of layers. We also
         experimented with knowledge distillation on single tasks, the performance gain was nonsignificant on a large
         dataset. In the near future, we have no plan to invest more efforts in distillation, since most datasets HanLP
