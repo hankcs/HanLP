@@ -77,7 +77,7 @@ HanLP also perfectly supports accelerating on Apple Silicon M1 chips, see [tutor
 
 ## Install Models
 
-In short, you don't need to manually install any model. Instead, they are automatically downloaded to a directory called `HANLP_HOME` when you call `hanlp.load`.
+In short, you don't need to manually install any model. Instead, they are automatically downloaded to a directory called [`HANLP_HOME`](https://hanlp.hankcs.com/docs/configure.html#customize-hanlp-home) when you call `hanlp.load`.
 Occasionally, some errors might occur the first time you load a model, in which case you can refer to the following tips.
 
 ### Download Error
@@ -90,7 +90,7 @@ If the auto-download fails, you can either:
 
 ### Server without Internet
 
-If your server has no Internet access at all, just debug your codes on your local PC and copy the following directories to your server via a USB disk.
+If your server has no Internet access at all, just debug your codes on your local PC and copy the following directories to your server via a USB disk or something.
 
 1. `~/.hanlp`: the home directory for HanLP models.
 1. `~/.cache/huggingface`: the home directory for Hugging Face 🤗 Transformers.
