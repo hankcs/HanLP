@@ -156,23 +156,32 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
         except BaseException as e:
             remove_file(tmp_path)
             url = url.split('#')[0]
-            if not windows():
-                hints_for_download = f'e.g. \nwget {url} -O {save_path}\n'
-            else:
-                hints_for_download = ' Use some decent downloading tools.\n'
-            if not url.startswith(HANLP_URL):
-                hints_for_download += 'For third party data, you may find it on our mirror site:\n' \
-                                      'https://od.hankcs.com/hanlp/data/\n'
-            installed_version, latest_version = check_outdated()
+            try:
+                installed_version, latest_version = check_outdated()
+            except:
+                installed_version, latest_version = None, None  # No Internet
             if installed_version != latest_version:
-                hints_for_download += f'Or upgrade to the latest version({latest_version}):\npip install -U hanlp'
-            message = f'Download failed due to [red]{repr(e)}[/red]. Please download it to {save_path} by yourself. ' \
-                      f'[yellow]{hints_for_download}[/yellow]' \
-                      'See https://hanlp.hankcs.com/docs/install.html#install-models for instructions.'
+                # Always prompt user to upgrade whenever a new version is available
+                hints = f'[green]Please upgrade to the latest version ({latest_version}) with:[/green]' \
+                        f'\n\n\t[yellow]pip install -U hanlp[/yellow]\n'
+            else:  # Otherwise prompt user to re-try
+                hints = f'[green]Please re-try or download it to {save_path} by yourself '
+                if not windows():
+                    hints += f'with:[/green]\n\n\t[yellow]wget {url} -O {save_path}[/yellow]\n\n'
+                else:
+                    hints += 'using some decent downloading tools.[/green]\n'
+                if not url.startswith(HANLP_URL):
+                    hints += 'For third party data, you may find it on our mirror site:\n' \
+                             'https://od.hankcs.com/hanlp/data/\n'
+                hints += 'See also https://hanlp.hankcs.com/docs/install.html#install-models for instructions.'
+            message = f'Download failed due to [red]{repr(e)}[/red].\n' \
+                      f'{hints}'
             if verbose:
                 cprint(message)
             if hasattr(e, 'msg'):
                 e.msg += '\n' + remove_color_tag(message)
+            elif hasattr(e, 'args') and e.args and isinstance(e.args, tuple) and isinstance(e.args[0], str):
+                e.args = (e.args[0] + '\n' + remove_color_tag(message),) + e.args[1:]
             raise e
         remove_file(save_path)
         os.rename(tmp_path, save_path)
