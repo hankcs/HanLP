@@ -203,7 +203,7 @@ class Document(dict):
                     if not start_offsets[b] or e > start_offsets[b][-1]:
                         start_offsets[b] = (ent, label, b, e)
                 ner_per_sample = [y for y in start_offsets if y]
-                header = ['Tok', 'NER', 'Type']
+                header = ['Token', 'NER', 'Type']
                 block = [[] for _ in range(length + 1)]
                 _ner = []
                 _type = []
@@ -229,7 +229,7 @@ class Document(dict):
                     if not pas:
                         continue
                     block = [[] for _ in range(length + 1)]
-                    header = ['Tok', 'SRL', f'PA{k + 1}']
+                    header = ['Token', 'SRL', f'PA{k + 1}']
                     _srl = []
                     _type = []
                     offset = 0
@@ -258,7 +258,7 @@ class Document(dict):
                     con_samples: List[Tree] = [con_samples]
                 tree = con_samples[i]
                 block = [[] for _ in range(length + 1)]
-                block[0].extend(('Tok', 'PoS'))
+                block[0].extend(('Token', 'PoS'))
                 for j, t in enumerate(tree.pos()):
                     block[j + 1].extend(t)
 
