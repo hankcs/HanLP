@@ -172,7 +172,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             resize(pos + 1);
 
         outer:
-        // 此循环体的目标是找出满足base[begin + a1...an]  == 0的n个空闲空间,a1...an是siblings中的n个节点
+        // 此循环体的目标是找出满足check[begin + a1...an]  == 0的n个空闲空间,a1...an是siblings中的n个节点
         while (true)
         {
             pos++;
