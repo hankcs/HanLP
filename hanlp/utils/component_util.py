@@ -2,17 +2,15 @@
 # Author: hankcs
 # Date: 2019-12-31 19:24
 import os
-import traceback
-from sys import exit
 
 from hanlp_common.constant import HANLP_VERBOSE
-
-from hanlp import pretrained
-from hanlp.common.component import Component
-from hanlp.utils.io_util import get_resource, get_latest_info_from_pypi
 from hanlp_common.io import load_json, eprint
 from hanlp_common.reflection import object_from_classpath, str_to_type
+
+from hanlp import pretrained
 from hanlp import version
+from hanlp.common.component import Component
+from hanlp.utils.io_util import get_resource, get_latest_info_from_pypi
 
 
 def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only=False, verbose=HANLP_VERBOSE,

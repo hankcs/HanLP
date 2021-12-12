@@ -4,14 +4,13 @@
 import os
 from typing import Union, Callable, List
 
+import hanlp_common.io
 import torch
 
-import hanlp_common.io
 from hanlp.common.dataset import TransformSequentialDataset
 from hanlp.common.transform import ToChar, WhitespaceTokenizer, AppendEOS, FieldToIndex
 from hanlp.common.vocab import Vocab
 from hanlp.utils.io_util import file_cache, get_resource, TimingFileIterator
-from hanlp.utils.log_util import flash, ErasablePrinter
 
 
 class LanguageModelDataset(TransformSequentialDataset):
