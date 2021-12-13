@@ -4,7 +4,7 @@
 import os
 
 from hanlp_common.constant import HANLP_VERBOSE
-from hanlp_common.io import load_json, eprint
+from hanlp_common.io import load_json, eprint, save_json
 from hanlp_common.reflection import object_from_classpath, str_to_type
 
 from hanlp import pretrained
@@ -38,6 +38,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         metapath = os.path.join(save_dir, 'config.json')
     else:
         tf_model = True
+    cls = None
     if not os.path.isfile(metapath):
         tips = ''
         if save_dir.isupper():
@@ -48,9 +49,19 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             tips = f'Check its spelling based on the available keys:\n' + \
                    f'{sorted(pretrained.ALL.keys())}\n' + \
                    f'Tips: it might be one of {similar_keys}'
-        raise FileNotFoundError(f'The identifier {save_dir} resolves to a non-exist meta file {metapath}. {tips}')
+        # These components are not intended to be loaded in this way, but I'm tired to repeat explaining again and again
+        if identifier in pretrained.word2vec.ALL.values():
+            save_dir = os.path.dirname(save_dir)
+            metapath = os.path.join(save_dir, 'config.json')
+            save_json({'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbeddingComponent',
+                       'embed': {'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbedding',
+                                 'embed': identifier, 'field': 'token'}}, metapath)
+        elif identifier in pretrained.fasttext:
+            cls = 'hanlp.layers.embeddings.fast_text_tf.FastTextEmbeddingTF'
+        else:
+            raise FileNotFoundError(f'The identifier {save_dir} resolves to a non-exist meta file {metapath}. {tips}')
     meta: dict = load_json(metapath)
-    cls = meta.get('classpath', None)
+    cls = meta.get('classpath', cls)
     if not cls:
         cls = meta.get('class_path', None)  # For older version
     if tf_model:

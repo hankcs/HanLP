@@ -1,18 +1,22 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2020-05-09 13:38
+import logging
 from typing import Optional, Callable, Union
 
 import torch
 from torch import nn
+from torch.utils.data import DataLoader
 
-from hanlp_common.configurable import AutoConfigurable
+from hanlp.common.dataset import TransformableDataset, PadSequenceDataLoader
+from hanlp.common.torch_component import TorchComponent
 from hanlp.common.transform import VocabDict
 from hanlp.common.vocab import Vocab
 from hanlp.layers.dropout import WordDropout
 from hanlp.layers.embeddings.embedding import Embedding, EmbeddingDim
 from hanlp.layers.embeddings.util import build_word2vec_with_vocab
 from hanlp.utils.torch_util import load_word2vec_as_vocab_tensor
+from hanlp_common.configurable import AutoConfigurable
 from hanlp_trie.trie import Trie
 
 
@@ -156,6 +160,63 @@ class Word2VecEmbedding(Embedding, AutoConfigurable):
         if self.field not in vocabs:
             vocabs[self.field] = Vocab(pad_token=self.pad, unk_token=self.unk)
         return super().transform(**kwargs)
+
+
+class Word2VecDataset(TransformableDataset):
+
+    def load_file(self, filepath: str):
+        raise NotImplementedError('Not supported.')
+        pass
+
+
+class Word2VecEmbeddingComponent(TorchComponent):
+
+    def __init__(self, **kwargs) -> None:
+        """ Toy example of Word2VecEmbedding. It simply returns the embedding of a given word
+
+        Args:
+            **kwargs:
+        """
+        super().__init__(**kwargs)
+
+    def build_dataloader(self, data, shuffle=False, device=None, logger: logging.Logger = None,
+                         **kwargs) -> DataLoader:
+        dataset = Word2VecDataset([{'token': data}], transform=self.vocabs)
+        return PadSequenceDataLoader(dataset, device=device)
+
+    def build_optimizer(self, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def build_criterion(self, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def build_metric(self, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def execute_training_loop(self, trn: DataLoader, dev: DataLoader, epochs, criterion, optimizer, metric, save_dir,
+                              logger: logging.Logger, devices, ratio_width=None, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def fit_dataloader(self, trn: DataLoader, criterion, optimizer, metric, logger: logging.Logger, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def evaluate_dataloader(self, data: DataLoader, criterion: Callable, metric=None, output=False, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def load_vocabs(self, save_dir, filename='vocabs.json'):
+        self.vocabs['token'] = Vocab()
+
+    def load_weights(self, save_dir, filename='model.pt', **kwargs):
+        pass
+
+    def build_model(self, training=True, **kwargs) -> torch.nn.Module:
+        embed: Word2VecEmbedding = self.config.embed
+        return embed.module(self.vocabs)
+
+    def predict(self, data: str, **kwargs):
+        dataloader = self.build_dataloader(data, device=self.device)
+        for batch in dataloader:  # It's a toy so doesn't really do batching
+            return self.model(batch)[0]
 
 
 class GazetterTransform(object):
