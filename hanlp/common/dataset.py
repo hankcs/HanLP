@@ -29,7 +29,7 @@ from torch.utils.data.dataset import IterableDataset
 
 class Transformable(ABC):
     def __init__(self, transform: Union[Callable, List] = None) -> None:
-        """An object which can be transformed with a list of functions. It can be treated as an objected being passed
+        """An object which can be transformed with a list of functions. It is the final result of an object being passed
         through a list of functions, while these functions are kept in a list.
 
         Args:

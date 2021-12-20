@@ -12,9 +12,11 @@ HanLP: MultiTaskLearning = hanlp.load(hanlp.pretrained.mtl.CLOSE_TOK_POS_NER_SRL
 
 # Demonstrates custom dict in part-of-speech tagging
 pos: TransformerTagging = HanLP['pos/ctb']
-pos.dict_tags = {'HanLP': 'state-of-the-art-tool'}
+
 print(f'自定义单个词性:')
+pos.dict_tags = {'HanLP': 'state-of-the-art-tool'}
 HanLP("HanLP为生产环境带来次世代最先进的多语种NLP技术。", tasks='pos/ctb').pretty_print()
+
 print(f'根据上下文自定义词性:')
 pos.dict_tags = {('的', '希望'): ('补语成分', '名词'), '希望': '动词'}
 HanLP("我的希望是希望张晚霞的背影被晚霞映红。", tasks='pos/ctb').pretty_print()
