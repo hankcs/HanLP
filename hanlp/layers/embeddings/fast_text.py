@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2020-05-27 15:06
+import logging
 import os
 import sys
 from typing import Optional, Callable
@@ -11,7 +12,12 @@ from torch import nn
 from torch.nn.utils.rnn import pad_sequence
 
 from hanlp_common.configurable import AutoConfigurable
+from torch.utils.data import DataLoader
+
+from hanlp.common.dataset import PadSequenceDataLoader, TransformableDataset
+from hanlp.common.torch_component import TorchComponent
 from hanlp.common.transform import EmbeddingNamedTransform
+from hanlp.common.vocab import Vocab
 from hanlp.layers.embeddings.embedding import Embedding
 from hanlp.utils.io_util import get_resource, stdout_redirected
 from hanlp.utils.log_util import flash
@@ -43,7 +49,7 @@ class FastTextTransform(EmbeddingNamedTransform):
         return torch.tensor(self._model[word])
 
 
-class PassThroughModule(torch.nn.Module):
+class SelectFromBatchModule(torch.nn.Module):
     def __init__(self, key) -> None:
         super().__init__()
         self.key = key
@@ -52,7 +58,7 @@ class PassThroughModule(torch.nn.Module):
         return batch[self.key]
 
 
-class FastTextEmbeddingModule(PassThroughModule):
+class FastTextEmbeddingModule(SelectFromBatchModule):
 
     def __init__(self, key, embedding_dim: int) -> None:
         """An embedding layer for fastText (:cite:`bojanowski2017enriching`).
@@ -66,7 +72,9 @@ class FastTextEmbeddingModule(PassThroughModule):
 
     def __call__(self, batch: dict, mask=None, **kwargs):
         outputs = super().__call__(batch, **kwargs)
-        outputs = pad_sequence(outputs, True, 0).to(mask.device)
+        outputs = pad_sequence(outputs, True, 0)
+        if mask is not None:
+            outputs = outputs.to(mask.device)
         return outputs
 
     def __repr__(self):
@@ -97,3 +105,63 @@ class FastTextEmbedding(Embedding, AutoConfigurable):
 
     def module(self, **kwargs) -> Optional[nn.Module]:
         return FastTextEmbeddingModule(self._fasttext.dst, self._fasttext.output_dim)
+
+
+class FastTextDataset(TransformableDataset):
+
+    def load_file(self, filepath: str):
+        raise NotImplementedError('Not supported.')
+
+
+class FastTextEmbeddingComponent(TorchComponent):
+    def __init__(self, **kwargs) -> None:
+        """ Toy example of Word2VecEmbedding. It simply returns the embedding of a given word
+
+        Args:
+            **kwargs:
+        """
+        super().__init__(**kwargs)
+
+    def build_dataloader(self, data, shuffle=False, device=None, logger: logging.Logger = None,
+                         **kwargs) -> DataLoader:
+        embed: FastTextEmbedding = self.config.embed
+        dataset = FastTextDataset([{'token': data}], transform=embed.transform())
+        return PadSequenceDataLoader(dataset, device=device)
+
+    def build_optimizer(self, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def build_criterion(self, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def build_metric(self, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def execute_training_loop(self, trn: DataLoader, dev: DataLoader, epochs, criterion, optimizer, metric, save_dir,
+                              logger: logging.Logger, devices, ratio_width=None, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def fit_dataloader(self, trn: DataLoader, criterion, optimizer, metric, logger: logging.Logger, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def evaluate_dataloader(self, data: DataLoader, criterion: Callable, metric=None, output=False, **kwargs):
+        raise NotImplementedError('Not supported.')
+
+    def load_vocabs(self, save_dir, filename='vocabs.json'):
+        pass
+
+    def load_weights(self, save_dir, filename='model.pt', **kwargs):
+        pass
+
+    def build_model(self, training=True, **kwargs) -> torch.nn.Module:
+        embed: FastTextEmbedding = self.config.embed
+        return embed.module()
+
+    def predict(self, data: str, **kwargs):
+        dataloader = self.build_dataloader(data, device=self.device)
+        for batch in dataloader:  # It's a toy so doesn't really do batching
+            return self.model(batch)[0]
+
+    @property
+    def devices(self):
+        return [torch.device('cpu')]

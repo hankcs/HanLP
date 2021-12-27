@@ -166,7 +166,6 @@ class Word2VecDataset(TransformableDataset):
 
     def load_file(self, filepath: str):
         raise NotImplementedError('Not supported.')
-        pass
 
 
 class Word2VecEmbeddingComponent(TorchComponent):

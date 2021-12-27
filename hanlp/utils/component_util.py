@@ -57,8 +57,12 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             save_json({'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbeddingComponent',
                        'embed': {'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbedding',
                                  'embed': identifier, 'field': 'token'}}, metapath)
-        elif identifier in pretrained.fasttext:
-            cls = 'hanlp.layers.embeddings.fast_text_tf.FastTextEmbeddingTF'
+        elif identifier in pretrained.fasttext.ALL.values():
+            save_dir = os.path.dirname(save_dir)
+            metapath = os.path.join(save_dir, 'config.json')
+            save_json({'classpath': 'hanlp.layers.embeddings.fast_text.FastTextEmbeddingComponent',
+                       'embed': {'classpath': 'hanlp.layers.embeddings.fast_text.FastTextEmbedding',
+                                 'filepath': identifier, 'src': 'token'}}, metapath)
         else:
             raise FileNotFoundError(f'The identifier {save_dir} resolves to a non-exist meta file {metapath}. {tips}')
     meta: dict = load_json(metapath)
@@ -93,7 +97,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                     obj.load(metapath, **kwargs)
             obj.config['load_path'] = load_path
         return obj
-    except ModuleNotFoundError:
+    except ModuleNotFoundError as e:
         raise ModuleNotFoundError('Some modules required by this model are missing. Please install the full version:'
                                   '\n\n\tpip install hanlp[full]') from None
     except Exception as e:
