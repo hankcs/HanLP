@@ -125,13 +125,13 @@ class TransformableDataset(Transformable, Dataset, ABC):
         super().__init__(transform)
         if generate_idx is None:
             generate_idx = isinstance(data, list)
-        data = self.load_data(data, generate_idx)
-        assert data, 'No samples loaded'
-        assert isinstance(data[0],
-                          dict), f'TransformDataset expects each sample to be a dict but got {type(data[0])} instead.'
-        self.data = data
+        data_ = self.load_data(data, generate_idx)
+        assert data_, f'No samples loaded from {data}'
+        assert isinstance(data_[0],
+                          dict), f'TransformDataset expects each sample to be a dict but got {type(data_[0])} instead.'
+        self.data = data_
         if cache:
-            self.cache = [None] * len(data)
+            self.cache = [None] * len(data_)
         else:
             self.cache = None
 
