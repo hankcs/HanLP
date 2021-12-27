@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2020-06-01 00:31
 from typing import List, Tuple
-from alnlp.modules.conditional_random_field import allowed_transitions
+from hanlp.utils.span_util import allowed_transitions
 
 
 def guess_tagging_scheme(labels: List[str]) -> str:

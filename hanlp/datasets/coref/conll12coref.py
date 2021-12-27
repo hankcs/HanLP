@@ -5,8 +5,8 @@ import collections
 import os
 from typing import Union, List, Callable, DefaultDict, Tuple, Optional, Iterator
 
-from alnlp.data.ontonotes import Ontonotes as _Ontonotes, OntonotesSentence
-from alnlp.data.util import make_coref_instance
+from hanlp.datasets.srl.ontonotes5.ontonotes_loader import Ontonotes as _Ontonotes, OntonotesSentence, \
+    make_coref_instance
 
 from hanlp.common.dataset import TransformableDataset
 from hanlp.utils.io_util import TimingFileIterator

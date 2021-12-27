@@ -5,7 +5,6 @@ from typing import List
 
 from hanlp.metrics.chunking.sequence_labeling import get_entities
 from hanlp.metrics.f1 import F1
-from hanlp.metrics.metric import Metric
 
 
 class ChunkingF1(F1):

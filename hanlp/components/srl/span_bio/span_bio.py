@@ -7,7 +7,6 @@ from typing import Union, List, Callable, Dict, Any
 from bisect import bisect
 import torch
 import torch.nn.functional as F
-from alnlp.modules.util import lengths_to_mask
 from torch import nn
 from torch.utils.data import DataLoader
 
@@ -27,7 +26,7 @@ from hanlp.metrics.chunking.sequence_labeling import get_entities
 from hanlp.metrics.f1 import F1
 from hanlp.utils.string_util import guess_delimiter
 from hanlp.utils.time_util import CountdownTimer
-from hanlp.utils.torch_util import clip_grad_norm
+from hanlp.utils.torch_util import clip_grad_norm, lengths_to_mask
 from hanlp_common.util import merge_locals_kwargs, reorder
 
 

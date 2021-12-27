@@ -3,7 +3,6 @@
 # Date: 2020-03-08 22:35
 import tempfile
 
-from hanlp.components.parsers.conll import read_conll
 from hanlp.utils.io_util import get_resource, get_exitcode_stdout_stderr
 
 CONLLX_EVAL = get_resource(

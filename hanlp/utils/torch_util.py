@@ -247,3 +247,37 @@ def save_word2vec(word2vec: dict, filepath, delimiter=' '):
         for w, v in word2vec.items():
             out.write(f'{w}{delimiter}')
             out.write(f'{delimiter.join(str(x) for x in v)}\n')
+
+
+def lengths_to_mask(seq_len, max_len=None):
+    r"""
+    .. code-block::
+
+        >>> seq_len = torch.arange(2, 16)
+        >>> mask = lengths_to_mask(seq_len)
+        >>> print(mask.size())
+        torch.Size([14, 15])
+        >>> seq_len = np.arange(2, 16)
+        >>> mask = lengths_to_mask(seq_len)
+        >>> print(mask.shape)
+        (14, 15)
+        >>> seq_len = torch.arange(2, 16)
+        >>> mask = lengths_to_mask(seq_len, max_len=100)
+        >>>print(mask.size())
+        torch.Size([14, 100])
+
+    :param torch.LongTensor seq_len: (B,)
+    :param int max_len: max sequence length。
+    :return:  torch.Tensor  (B, max_len)
+    """
+    assert seq_len.dim() == 1, f"seq_len can only have one dimension, got {seq_len.dim() == 1}."
+    batch_size = seq_len.size(0)
+    max_len = int(max_len) if max_len else seq_len.max().long()
+    broad_cast_seq_len = torch.arange(max_len).expand(batch_size, -1).to(seq_len)
+    mask = broad_cast_seq_len.lt(seq_len.unsqueeze(1))
+
+    return mask
+
+
+def activation_from_name(name: str):
+    return getattr(torch.nn, name)

@@ -6,7 +6,7 @@ import json
 import os
 from typing import Union, List, Callable
 
-from alnlp.metrics.span_utils import enumerate_spans
+from hanlp.utils.span_util import enumerate_spans
 
 from hanlp.common.dataset import TransformableDataset
 from hanlp.common.transform import NamedTransform

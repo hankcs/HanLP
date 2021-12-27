@@ -19,9 +19,8 @@ from hanlp.layers.crf.crf import CRF
 from hanlp.layers.transformers.encoder import TransformerEncoder
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer
 from hanlp.utils.time_util import CountdownTimer
-from hanlp.utils.torch_util import clip_grad_norm
+from hanlp.utils.torch_util import clip_grad_norm, lengths_to_mask
 from hanlp_common.util import merge_locals_kwargs
-from alnlp.modules.util import lengths_to_mask
 
 
 # noinspection PyAbstractClass

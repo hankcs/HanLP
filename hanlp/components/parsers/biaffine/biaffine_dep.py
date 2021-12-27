@@ -7,7 +7,7 @@ from typing import Union, Any, List
 
 from hanlp.layers.transformers.pt_imports import AutoTokenizer, PreTrainedTokenizer, AutoModel_
 import torch
-from alnlp.modules.util import lengths_to_mask
+from hanlp.utils.torch_util import lengths_to_mask
 from torch import nn
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ExponentialLR

@@ -4,8 +4,8 @@
 from typing import Union, Tuple, Optional, Callable
 import torch
 from torch import nn
-from alnlp.modules.cnn_encoder import CnnEncoder
-from alnlp.modules.time_distributed import TimeDistributed
+from hanlp.layers.cnn_encoder import CnnEncoder
+from hanlp.layers.time_distributed import TimeDistributed
 from hanlp_common.configurable import AutoConfigurable
 from hanlp.common.transform import VocabDict, ToChar
 from hanlp.common.vocab import Vocab

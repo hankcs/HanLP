@@ -30,7 +30,6 @@ from typing import Dict
 import numpy
 import torch
 import torch.nn.functional as F
-from alnlp.metrics import CategoricalAccuracy
 from torch.nn.modules.adaptive import AdaptiveLogSoftmaxWithLoss
 from torch.nn.modules.linear import Linear
 

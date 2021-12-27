@@ -2,6 +2,8 @@
 # Author: hankcs
 # Date: 2020-04-02 23:20
 from collections import defaultdict
+
+import hanlp.utils.span_util
 from hanlp.components.parsers.chu_liu_edmonds import decode_mst
 import numpy as np
 
@@ -173,7 +175,7 @@ def tarjan(parse_probs, length, tokens_to_keep, ensure_tree=True):
 
 
 def chu_liu_edmonds(parse_probs, length):
-    tree = decode_mst(parse_probs.T, length, False)[0]
+    tree = decode_mst(hanlp.utils.span_util.T, length, False)[0]
     tree[0] = 0
     return tree
 

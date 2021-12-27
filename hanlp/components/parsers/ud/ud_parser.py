@@ -6,7 +6,6 @@ from copy import deepcopy
 from typing import Union, List, Callable
 
 import torch
-from alnlp.modules.util import lengths_to_mask
 from torch.utils.data import DataLoader
 
 from hanlp_common.constant import IDX
@@ -28,7 +27,7 @@ from hanlp.metrics.metric import Metric
 from hanlp.metrics.mtl import MetricDict
 from hanlp.metrics.parsing.attachmentscore import AttachmentScore
 from hanlp.utils.time_util import CountdownTimer
-from hanlp.utils.torch_util import clip_grad_norm
+from hanlp.utils.torch_util import clip_grad_norm, lengths_to_mask
 from hanlp_common.util import merge_locals_kwargs, merge_dict, reorder
 
 

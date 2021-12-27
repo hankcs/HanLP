@@ -5,7 +5,7 @@ from typing import Union, List
 
 import torch
 import torch.nn.functional as F
-from alnlp.modules.util import lengths_to_mask
+from hanlp.utils.torch_util import lengths_to_mask
 from torch import nn
 
 from hanlp.common.torch_component import TorchComponent

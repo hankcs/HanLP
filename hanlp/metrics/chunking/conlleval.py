@@ -14,7 +14,7 @@ import sys
 from collections import defaultdict, namedtuple
 from typing import Tuple, Union, List
 
-from alnlp.metrics.span_utils import bio_tags_to_spans
+from hanlp.utils.span_util import bio_tags_to_spans
 
 from hanlp.metrics.metric import Metric
 

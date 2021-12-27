@@ -1,11 +1,11 @@
 from typing import Dict
 
-from alnlp.modules.feedforward import FeedForward
-from alnlp.modules.time_distributed import TimeDistributed
+import hanlp.utils.torch_util
+from hanlp.layers.feedforward import FeedForward
+from hanlp.layers.time_distributed import TimeDistributed
 
 from .highway_variational_lstm import *
 import torch
-from alnlp.modules import util
 
 from ...parsers.biaffine.biaffine import Biaffine
 
@@ -164,7 +164,7 @@ class SpanRankingSRLDecoder(nn.Module):
         # if torch.cuda.is_available():
         flatted_span_indices = flatted_span_indices
         span_text_emb = flatted_context_emb.index_select(0, flatted_span_indices).view(num_spans, spans_width, -1)
-        span_indices_mask = util.lengths_to_mask(span_width, max_len=max_arg_width)
+        span_indices_mask = hanlp.utils.torch_util.lengths_to_mask(span_width, max_len=max_arg_width)
         # project context output to num head
         # head_scores = self.context_projective_layer.forward(flatted_context_emb)
         # get span attention
@@ -356,8 +356,8 @@ class SpanRankingSRLDecoder(nn.Module):
         max_num_arg = srl_scores.size()[1]
         max_num_pred = srl_scores.size()[2]
         # num_predicted_args, 1D tensor; max_num_arg: a int variable means the gold ans's max arg number
-        args_mask = util.lengths_to_mask(num_predicted_args, max_num_arg)
-        pred_mask = util.lengths_to_mask(num_predicted_preds, max_num_pred)
+        args_mask = hanlp.utils.torch_util.lengths_to_mask(num_predicted_args, max_num_arg)
+        pred_mask = hanlp.utils.torch_util.lengths_to_mask(num_predicted_preds, max_num_pred)
         srl_loss_mask = args_mask.unsqueeze(2) & pred_mask.unsqueeze(1)
         return srl_loss_mask
 
@@ -495,7 +495,7 @@ class SpanRankingSRLModel(nn.Module):
         sent_lengths, gold_predicates, gold_arg_starts, gold_arg_ends, gold_arg_labels = [batch.get(k, None) for k in
                                                                                           keys]
         if mask is None:
-            mask = util.lengths_to_mask(sent_lengths)
+            mask = hanlp.utils.torch_util.lengths_to_mask(sent_lengths)
         # elif not training:
         #     sent_lengths = mask.sum(dim=1)
         return gold_arg_ends, gold_arg_labels, gold_arg_starts, gold_predicates, mask, sent_lengths

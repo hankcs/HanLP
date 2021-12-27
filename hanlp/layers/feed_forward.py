@@ -3,7 +3,7 @@
 # Date: 2020-07-06 14:37
 from typing import Union, List
 
-from alnlp.modules import feedforward
+from hanlp.layers import feedforward
 
 from hanlp.common.structure import ConfigTracker
 

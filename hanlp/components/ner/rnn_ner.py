@@ -4,11 +4,11 @@
 from typing import Any
 
 import torch
-from alnlp.metrics import span_utils
+from hanlp_common.util import merge_locals_kwargs
 
+import hanlp.utils.span_util
 from hanlp.components.taggers.rnn_tagger import RNNTagger
 from hanlp.metrics.chunking.conlleval import SpanF1
-from hanlp_common.util import merge_locals_kwargs
 
 
 class RNNNamedEntityRecognizer(RNNTagger):
@@ -51,11 +51,11 @@ class RNNNamedEntityRecognizer(RNNTagger):
         outputs = super().predict_data(data, batch_size)
         tagging_scheme = self.tagging_scheme
         if tagging_scheme == 'IOBES':
-            entities = [span_utils.iobes_tags_to_spans(y) for y in outputs]
+            entities = [hanlp.utils.span_util.iobes_tags_to_spans(y) for y in outputs]
         elif tagging_scheme == 'BIO':
-            entities = [span_utils.bio_tags_to_spans(y) for y in outputs]
+            entities = [hanlp.utils.span_util.bio_tags_to_spans(y) for y in outputs]
         elif tagging_scheme == 'BIOUL':
-            entities = [span_utils.bioul_tags_to_spans(y) for y in outputs]
+            entities = [hanlp.utils.span_util.bioul_tags_to_spans(y) for y in outputs]
         else:
             raise ValueError(f'Unrecognized tag scheme {tagging_scheme}')
         for i, (tokens, es) in enumerate(zip(data, entities)):

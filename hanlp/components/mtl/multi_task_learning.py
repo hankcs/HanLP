@@ -7,17 +7,20 @@ import logging
 import os
 from collections import defaultdict
 from copy import copy
-from typing import Union, List, Callable, Dict, Optional, Any, Iterable, Tuple, Set
 from itertools import chain
+from typing import Union, List, Callable, Dict, Optional, Any, Iterable, Tuple
+
 import numpy as np
 import torch
-from alnlp.modules import util
+from hanlp_common.constant import IDX, BOS, EOS
+from hanlp_common.document import Document
+from hanlp_common.util import merge_locals_kwargs, topological_sort, reorder, prefix_match
+from hanlp_common.visualization import markdown_table
 from toposort import toposort
 from torch.utils.data import DataLoader
 
-from hanlp_common.constant import IDX, BOS, EOS
+import hanlp.utils.torch_util
 from hanlp.common.dataset import PadSequenceDataLoader, PrefetchDataLoader, CachedDataLoader
-from hanlp_common.document import Document
 from hanlp.common.structure import History
 from hanlp.common.torch_component import TorchComponent
 from hanlp.common.transform import FieldLength, TransformList
@@ -29,10 +32,8 @@ from hanlp.layers.transformers.utils import pick_tensor_for_each_token
 from hanlp.metrics.metric import Metric
 from hanlp.metrics.mtl import MetricDict
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer
-from hanlp_common.visualization import markdown_table
 from hanlp.utils.time_util import CountdownTimer
 from hanlp.utils.torch_util import clip_grad_norm
-from hanlp_common.util import merge_locals_kwargs, topological_sort, reorder, prefix_match
 
 
 class MultiTaskModel(torch.nn.Module):
@@ -679,7 +680,7 @@ class MultiTaskLearning(TorchComponent):
         task = self.tasks[task_name]
         if run_transform:
             batch = task.transform_batch(batch, results=results, cls_is_bos=cls_is_bos, sep_is_eos=sep_is_eos)
-        batch['mask'] = mask = util.lengths_to_mask(batch['token_length'])
+        batch['mask'] = mask = hanlp.utils.torch_util.lengths_to_mask(batch['token_length'])
         output_dict[task_name] = {
             'output': task.feed_batch(h,
                                       batch=batch,

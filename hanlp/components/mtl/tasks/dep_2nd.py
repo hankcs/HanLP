@@ -5,8 +5,10 @@ import logging
 from typing import Dict, Any, Union, Iterable, Callable, List
 
 import torch
+from hanlp_common.util import merge_locals_kwargs
 from torch.utils.data import DataLoader
 
+import hanlp.utils.torch_util
 from hanlp.common.dataset import SamplerBuilder, PadSequenceDataLoader
 from hanlp.common.transform import VocabDict
 from hanlp.components.mtl.tasks import Task
@@ -15,8 +17,6 @@ from hanlp.components.parsers.biaffine.biaffine_2nd_dep import BiaffineSecondary
 from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
 from hanlp.metrics.metric import Metric
 from hanlp.metrics.mtl import MetricDict
-from hanlp_common.util import merge_locals_kwargs
-from alnlp.modules import util
 
 
 class BiaffineSecondaryDependencyDecoder(torch.nn.Module):
@@ -27,7 +27,7 @@ class BiaffineSecondaryDependencyDecoder(torch.nn.Module):
 
     def forward(self, contextualized_embeddings: torch.FloatTensor, batch: Dict[str, torch.Tensor], mask=None):
         if mask is None:
-            mask = util.lengths_to_mask(batch['token_length'])
+            mask = hanlp.utils.torch_util.lengths_to_mask(batch['token_length'])
         else:
             mask = mask.clone()
         scores = self.decoder(contextualized_embeddings, mask)

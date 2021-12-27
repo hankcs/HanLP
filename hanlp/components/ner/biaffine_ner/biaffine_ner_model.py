@@ -2,10 +2,10 @@ from typing import Dict
 
 import torch
 import torch.nn.functional as F
-from alnlp.modules import util
-from alnlp.modules.time_distributed import TimeDistributed
 from torch import nn
 
+import hanlp.utils.torch_util
+from hanlp.layers.time_distributed import TimeDistributed
 from ...parsers.biaffine.biaffine import Biaffine
 
 
@@ -39,7 +39,7 @@ class BiaffineNamedEntityRecognitionModel(nn.Module):
                 ):
         keys = 'token_length', 'begin_offset', 'end_offset', 'label_id'
         sent_lengths, gold_starts, gold_ends, gold_labels = [batch.get(k, None) for k in keys]
-        masks = util.lengths_to_mask(sent_lengths)
+        masks = hanlp.utils.torch_util.lengths_to_mask(sent_lengths)
         num_sentences, max_sent_length = masks.size()
         raw_embeddings = self.embed(batch, mask=masks)
 
@@ -77,7 +77,7 @@ class BiaffineNamedEntityRecognitionDecoder(nn.Module):
         keys = 'token_length', 'begin_offset', 'end_offset', 'label_id'
         sent_lengths, gold_starts, gold_ends, gold_labels = [batch.get(k, None) for k in keys]
         if mask is None:
-            mask = util.lengths_to_mask(sent_lengths)
+            mask = hanlp.utils.torch_util.lengths_to_mask(sent_lengths)
         num_sentences, max_sent_length = mask.size()
         return self.decode(contextualized_embeddings, gold_starts, gold_ends, gold_labels, mask,
                            max_sent_length,
@@ -110,7 +110,7 @@ class BiaffineNamedEntityRecognitionDecoder(nn.Module):
         candidate_scores_mask = masks.unsqueeze(1) & masks.unsqueeze(2)
         device = sent_lengths.device
         sentence_ends_leq_starts = (
-            ~util.lengths_to_mask(torch.arange(max_sent_length, device=device), max_sent_length)) \
+            ~hanlp.utils.torch_util.lengths_to_mask(torch.arange(max_sent_length, device=device), max_sent_length)) \
             .unsqueeze_(0).expand(num_sentences, -1, -1)
         candidate_scores_mask &= sentence_ends_leq_starts
         candidate_ner_scores = candidate_ner_scores[candidate_scores_mask]

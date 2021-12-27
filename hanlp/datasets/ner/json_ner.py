@@ -1,13 +1,14 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2020-07-21 16:26
+import json
 import os
 from typing import Union, List, Callable, Dict
 
 from hanlp_common.constant import NULL
+
+import hanlp.utils.span_util
 from hanlp.common.dataset import TransformableDataset
-import json
-from alnlp.metrics import span_utils
 from hanlp.utils.io_util import TimingFileIterator, read_tsv_as_sents
 
 
@@ -110,7 +111,7 @@ def convert_conll03_to_json(file_path):
             offset = 0
         sentence = [x[0] for x in cells]
         ner = [x[-1] for x in cells]
-        ner = span_utils.iobes_tags_to_spans(ner)
+        ner = hanlp.utils.span_util.iobes_tags_to_spans(ner)
         adjusted_ner = []
         for label, (span_start, span_end) in ner:
             adjusted_ner.append([span_start + offset, span_end + offset, label])

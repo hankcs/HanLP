@@ -5,10 +5,11 @@ import logging
 from typing import Union, List, Dict, Any, Iterable, Tuple
 
 import torch
-from alnlp.modules import util
+from hanlp_common.util import merge_locals_kwargs
 from torch import Tensor
 from torch.utils.data import DataLoader
 
+import hanlp.utils.torch_util
 from hanlp.common.dataset import SamplerBuilder, PadSequenceDataLoader
 from hanlp.common.transform import FieldLength, TransformList
 from hanlp.components.mtl.tasks import Task
@@ -17,7 +18,6 @@ from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
 from hanlp.layers.transformers.pt_imports import PreTrainedTokenizer
 from hanlp.metrics.chunking.binary_chunking_f1 import BinaryChunkingF1
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer
-from hanlp_common.util import merge_locals_kwargs
 
 
 def generate_token_span_tuple(sample: dict):
@@ -105,5 +105,5 @@ class RegressionTokenization(Task):
 
     def compute_loss(self, batch: Dict[str, Any],
                      output: Union[torch.Tensor, Dict[str, torch.Tensor], Iterable[torch.Tensor], Any], criterion):
-        mask = util.lengths_to_mask(batch['text_input_ids_length'])
+        mask = hanlp.utils.torch_util.lengths_to_mask(batch['text_input_ids_length'])
         return criterion(output[mask], batch['text_prefix_mask'][:, 1:-1][mask].to(torch.float))
