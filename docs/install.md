@@ -58,8 +58,7 @@ HanLP requires Python 3.6 or later. GPU/TPU is suggested but not mandatory. Depe
 
 ````{margin} **Windows Support**
 ```{note}
-Installation on Windows is **perfectly** supported. The full version `hanlp[full]` additionally requires 
-[Microsoft Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) to compile C++ extensions. 
+Installation on Windows is **perfectly** supported. No need to install Microsoft Visual C++ Build Tools anymore. 
 ```
 ````
 

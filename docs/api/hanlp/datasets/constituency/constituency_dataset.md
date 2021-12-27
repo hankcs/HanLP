@@ -2,7 +2,7 @@
 
 ```{eval-rst}
 
-.. autoclass:: hanlp.components.parsers.constituency.constituency_dataset.ConstituencyDataset
+.. autoclass:: hanlp.datasets.parsing.loaders.constituency_dataset.ConstituencyDataset
 	:members:
 
 ```

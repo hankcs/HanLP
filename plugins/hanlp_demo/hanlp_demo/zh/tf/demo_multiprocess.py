@@ -4,7 +4,7 @@
 import multiprocessing
 import hanlp
 
-tokenizer = hanlp.load(hanlp.pretrained.tok.PKU_NAME_MERGED_SIX_MONTHS_CONVSEG)
+tokenizer = hanlp.load(hanlp.pretrained.tok.LARGE_ALBERT_BASE)
 
 
 def worker(job):

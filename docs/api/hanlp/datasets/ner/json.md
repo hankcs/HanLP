@@ -1,7 +1,7 @@
 # json
 
 ```{eval-rst}
-.. currentmodule:: hanlp.datasets.ner.json_ner
+.. currentmodule:: hanlp.datasets.ner.loaders.json_ner
 
 .. autoclass:: JsonNERDataset
 	:members:

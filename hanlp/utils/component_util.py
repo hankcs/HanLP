@@ -17,15 +17,17 @@ from hanlp.utils.io_util import get_resource, get_latest_info_from_pypi
 def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only=False, verbose=HANLP_VERBOSE,
                         **kwargs) -> Component:
     """
+    Load a component from a ``meta.json`` (legacy TensorFlow component) or a ``config.json`` file.
 
     Args:
-        save_dir:
+        save_dir: The identifier.
         meta_filename (str): The meta file of that saved component, which stores the classpath and version.
-        transform_only:
-        **kwargs:
+        transform_only: Load and return only the transform.
+        **kwargs: Extra parameters passed to ``component.load()``.
 
     Returns:
 
+        A component.
     """
     identifier = save_dir
     load_path = save_dir

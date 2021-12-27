@@ -51,7 +51,7 @@ def pipeline(*pipes) -> hanlp.components.pipeline.Pipeline:
       *pipes: Components if pre-defined any.
 
     Returns:
-      A pipeline, which is list of components in order.
+      A pipeline, which is a list of components in order.
 
     """
     return hanlp.components.pipeline.Pipeline(*pipes)

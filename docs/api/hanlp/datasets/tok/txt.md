@@ -1,7 +1,7 @@
 # txt
 
 ```{eval-rst}
-.. currentmodule:: hanlp.datasets.tokenization.txt
+.. currentmodule:: hanlp.datasets.tokenization.loaders.txt
 
 .. autoclass:: TextTokenizingDataset
 	:members:

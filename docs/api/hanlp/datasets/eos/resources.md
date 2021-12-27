@@ -4,7 +4,7 @@
 
 ```{eval-rst}
 
-.. automodule:: hanlp.datasets.eos.nn_eos
+.. automodule:: hanlp.datasets.eos.loaders.nn_eos
     :members:
 
 ```

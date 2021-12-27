@@ -8,7 +8,7 @@
 
 ```{eval-rst}
 
-.. automodule:: hanlp.datasets.cws.sighan2005.pku
+.. automodule:: hanlp.datasets.tokenization.sighan2005.pku
     :members:
 
 ```
@@ -17,7 +17,7 @@
 
 ```{eval-rst}
 
-.. automodule:: hanlp.datasets.cws.sighan2005.msr
+.. automodule:: hanlp.datasets.tokenization.sighan2005.msr
     :members:
 
 ```
@@ -26,7 +26,7 @@
 
 ```{eval-rst}
 
-.. automodule:: hanlp.datasets.cws.sighan2005.as_
+.. automodule:: hanlp.datasets.tokenization.sighan2005.as_
     :members:
 
 ```
@@ -35,7 +35,7 @@
 
 ```{eval-rst}
 
-.. automodule:: hanlp.datasets.cws.sighan2005.cityu
+.. automodule:: hanlp.datasets.tokenization.sighan2005.cityu
     :members:
 
 ```
@@ -44,7 +44,7 @@
 
 ```{eval-rst}
 
-.. automodule:: hanlp.datasets.cws.ctb6
+.. automodule:: hanlp.datasets.tokenization.ctb6
     :members:
 
 ```

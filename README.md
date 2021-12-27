@@ -22,7 +22,7 @@ Create a client with our API endpoint and your auth.
 
 ```python
 from hanlp_restful import HanLPClient
-HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul')
+HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul') # mul: multilingual, zh: Chinese
 ```
 
 ### Java
@@ -40,7 +40,7 @@ Insert the following dependency into your `pom.xml`.
 Create a client with our API endpoint and your auth.
 
 ```java
-HanLPClient HanLP = new HanLPClient("https://hanlp.hankcs.com/api", null, "mul");
+HanLPClient HanLP = new HanLPClient("https://hanlp.hankcs.com/api", null, "mul"); // mul: multilingual, zh: Chinese
 ```
 
 ### Quick Start
@@ -71,7 +71,8 @@ print(HanLP(['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP tech
              '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。']))
 ```
 
-In particular, the Python `HanLPClient` can also be used as a callable function following the same semantics. See [docs](https://hanlp.hankcs.com/docs/tutorial.html) for visualization, annotation guidelines and more details.
+- In particular, the Python `HanLPClient` can also be used as a callable function following the same semantics. See [docs](https://hanlp.hankcs.com/docs/tutorial.html) for visualization, annotation guidelines and more details.
+- To process Chinese or Japanese, HanLP provides mono-lingual models in each language which significantly outperform the multi-lingual model. See [docs](https://hanlp.hankcs.com/docs/api/hanlp/pretrained/mtl.html) for the list of models.
 
 ## Train Your Own Models
 

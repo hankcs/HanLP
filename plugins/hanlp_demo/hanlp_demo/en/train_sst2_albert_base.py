@@ -14,7 +14,7 @@ cdroot()
 save_dir = os.path.join('data', 'model', 'sst', 'sst2_albert_base')
 classifier = TransformerClassifierTF()
 classifier.fit(STANFORD_SENTIMENT_TREEBANK_2_TRAIN, STANFORD_SENTIMENT_TREEBANK_2_DEV, save_dir,
-               transformer='albert_base')
+               transformer='albert-base-v2')
 classifier.load(save_dir)
 print(classifier('it\' s a charming and often affecting journey'))
 classifier.evaluate(STANFORD_SENTIMENT_TREEBANK_2_TEST, save_dir=save_dir)
