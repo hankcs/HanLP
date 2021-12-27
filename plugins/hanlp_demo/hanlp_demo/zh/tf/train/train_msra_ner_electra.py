@@ -7,11 +7,12 @@ from tests import cdroot
 
 cdroot()
 recognizer = TransformerNamedEntityRecognizerTF()
-save_dir = 'data/model/ner/ner_albert_base_zh_msra_sparse_categorical_crossentropy'
-recognizer.fit(MSRA_NER_CHAR_LEVEL_TRAIN, MSRA_NER_CHAR_LEVEL_DEV, save_dir, transformer='albert_base_zh',
+save_dir = 'data/model/ner/ner_electra_small_zh_msra_sparse_categorical_crossentropy'
+recognizer.fit(MSRA_NER_CHAR_LEVEL_TRAIN, MSRA_NER_CHAR_LEVEL_DEV, save_dir,
+               transformer='hfl/chinese-electra-small-discriminator',
                learning_rate=5e-5,
-               metrics='f1')
-recognizer.load(save_dir)
+               metrics='accuracy')  # Use accuracy to speed up training
+recognizer.load(save_dir, metrics='f1')
 print(recognizer.predict(list('上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。')))
 recognizer.evaluate(MSRA_NER_CHAR_LEVEL_TEST, save_dir=save_dir)
 print(f'Model saved in {save_dir}')

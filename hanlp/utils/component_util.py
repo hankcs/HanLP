@@ -2,6 +2,7 @@
 # Author: hankcs
 # Date: 2019-12-31 19:24
 import os
+import traceback
 
 from hanlp_common.constant import HANLP_VERBOSE
 from hanlp_common.io import load_json, eprint, save_json

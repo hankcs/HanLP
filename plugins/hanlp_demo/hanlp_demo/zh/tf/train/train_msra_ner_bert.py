@@ -7,8 +7,8 @@ from tests import cdroot
 
 cdroot()
 recognizer = TransformerNamedEntityRecognizerTF()
-save_dir = 'data/model/ner/ner_bert_base_msra_2'
-recognizer.fit(MSRA_NER_CHAR_LEVEL_TRAIN, MSRA_NER_CHAR_LEVEL_DEV, save_dir, transformer='chinese_L-12_H-768_A-12',
+save_dir = 'data/model/ner/ner_bert_base_msra_1'
+recognizer.fit(MSRA_NER_CHAR_LEVEL_TRAIN, MSRA_NER_CHAR_LEVEL_DEV, save_dir, transformer='bert-base-chinese',
                metrics='accuracy')  # accuracy is faster
 recognizer.load(save_dir, metrics='f1')
 print(recognizer.predict(list('上海华安工业（集团）公司董事长谭旭光和秘书张晚霞来到美国纽约现代艺术博物馆参观。')))

@@ -48,7 +48,7 @@ class AutoTokenizer_(AutoTokenizer):
         else:
             transformer = pretrained_model_name_or_path.transformer
         additional_config = dict()
-        if transformer.startswith('voidful/albert_chinese_'):
+        if transformer.startswith('voidful/albert_chinese_') or transformer.startswith('uer/albert'):
             cls = BertTokenizer
         elif transformer == 'cl-tohoku/bert-base-japanese-char':
             # Since it's char level model, it's OK to use char level tok instead of fugashi
@@ -63,7 +63,8 @@ class AutoTokenizer_(AutoTokenizer):
             cls = AutoTokenizer
         if use_fast and not do_basic_tokenize:
             warnings.warn('`do_basic_tokenize=False` might not work when `use_fast=True`')
-        tokenizer = cls.from_pretrained(get_tokenizer_mirror(transformer), use_fast=use_fast, do_basic_tokenize=do_basic_tokenize,
+        tokenizer = cls.from_pretrained(get_tokenizer_mirror(transformer), use_fast=use_fast,
+                                        do_basic_tokenize=do_basic_tokenize,
                                         **additional_config)
         tokenizer.name_or_path = transformer
         return tokenizer

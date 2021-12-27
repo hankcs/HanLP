@@ -7,8 +7,8 @@ from tests import cdroot
 
 cdroot()
 tagger = TransformerNamedEntityRecognizerTF()
-save_dir = 'data/model/ner/ner_conll03_bert_base_uncased_en'
-tagger.fit(CONLL03_EN_TRAIN, CONLL03_EN_DEV, save_dir, transformer='uncased_L-12_H-768_A-12',
+save_dir = 'data/model/ner/ner_conll03_bert_base_cased_en'
+tagger.fit(CONLL03_EN_TRAIN, CONLL03_EN_DEV, save_dir, transformer='bert-base-cased',
            metrics='accuracy')
 tagger.load(save_dir, metrics='f1')
 print(tagger.predict('West Indian all-rounder Phil Simmons eats apple .'.split()))

@@ -16,8 +16,14 @@ class ChunkingF1_TF(tf.keras.metrics.Metric, ABC):
         self.from_logits = from_logits
 
     def update_the_state(self, y_true: tf.Tensor, y_pred: tf.Tensor, sample_weight: tf.Tensor = None, **kwargs):
-        mask = y_pred._keras_mask if sample_weight is None else sample_weight
-        if self.tag_vocab.pad_idx is not None and sample_weight is None:
+        if sample_weight is None:
+            if hasattr(y_pred, '_keras_mask'):
+                mask = y_pred._keras_mask
+            else:
+                mask = None
+        else:
+            mask = sample_weight
+        if self.tag_vocab.pad_idx is not None and mask is None:
             # in this case, the model doesn't compute mask but provide a masking index, it's ok to
             mask = y_true != self.tag_vocab.pad_idx
         assert mask is not None, 'ChunkingF1 requires masking, check your _keras_mask or compute_mask'

@@ -115,6 +115,10 @@ class CategoricalAccuracy(Metric):
         # Check if it's actually a tensor in case something else was passed.
         return (x.detach() if isinstance(x, torch.Tensor) else x for x in tensors)
 
+    def reset(self):
+        self.correct_count = 0.0
+        self.total_count = 0.0
+
 
 class BooleanAccuracy(Metric):
     """
