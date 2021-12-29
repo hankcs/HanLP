@@ -24,7 +24,7 @@ setup(
     classifiers=[
         'Intended Audience :: Science/Research',
         'Intended Audience :: Developers',
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         'Operating System :: OS Independent',
         "License :: OSI Approved :: Apache Software License",
         'Programming Language :: Python :: 3 :: Only',
@@ -39,7 +39,6 @@ setup(
         'pynvml',
         'toposort==1.5',
         'transformers>=4.1.1',
-        'sentencepiece>=0.1.91',
         'torch>=1.6.0',
         'hanlp-common>=0.0.9',
         'hanlp-trie>=0.0.4',
