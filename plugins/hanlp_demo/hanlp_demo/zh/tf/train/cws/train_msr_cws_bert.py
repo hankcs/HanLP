@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-21 15:39
-from hanlp.components.tok_tf import TransformerTokenizerTF
-from hanlp.datasets.cws.sighan2005.msr import SIGHAN2005_MSR_TRAIN, SIGHAN2005_MSR_DEV, SIGHAN2005_MSR_TEST
+from hanlp.components.tokenizers.tok_tf import TransformerTokenizerTF
+from hanlp.datasets.tokenization.sighan2005.msr import SIGHAN2005_MSR_TRAIN, SIGHAN2005_MSR_DEV, SIGHAN2005_MSR_TEST
 from tests import cdroot
 
 cdroot()

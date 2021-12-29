@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-10-25 21:34
-from hanlp.components.ner_tf import TransformerNamedEntityRecognizerTF
+from hanlp.components.ner.ner_tf import TransformerNamedEntityRecognizerTF
 from hanlp.datasets.ner.conll03 import CONLL03_EN_TRAIN, CONLL03_EN_DEV, CONLL03_EN_TEST
 from tests import cdroot
 

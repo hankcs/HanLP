@@ -5,7 +5,7 @@ from typing import List
 
 import tensorflow as tf
 import numpy as np
-from hanlp.components.rnn_language_model import RNNLanguageModel
+from hanlp.components.rnn_language_model_tf import RNNLanguageModel
 from hanlp_common.constant import PAD
 from hanlp.utils.io_util import get_resource
 from hanlp.utils.tf_util import copy_mask, hanlp_register, str_tensor_2d_to_list

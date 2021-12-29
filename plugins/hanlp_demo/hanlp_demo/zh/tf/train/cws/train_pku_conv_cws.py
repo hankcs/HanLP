@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-21 15:39
-from hanlp.datasets.cws.sighan2005.pku import SIGHAN2005_PKU_TRAIN, SIGHAN2005_PKU_DEV, SIGHAN2005_PKU_TEST
+from hanlp.datasets.tokenization.sighan2005 import SIGHAN2005_PKU_TRAIN, SIGHAN2005_PKU_DEV, SIGHAN2005_PKU_TEST
 from hanlp.pretrained.word2vec import CONVSEG_W2V_NEWS_TENSITE_CHAR
 from hanlp.utils.tf_util import nice
 from tests import cdroot
@@ -9,7 +9,7 @@ import tensorflow as tf
 
 nice()
 cdroot()
-from hanlp.components.tok_tf import NgramConvTokenizerTF
+from hanlp.components.tokenizers.tok_tf import NgramConvTokenizerTF
 
 tokenizer = NgramConvTokenizerTF()
 save_dir = 'data/model/cws/sighan2005-pku-convseg'

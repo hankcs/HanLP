@@ -14,7 +14,7 @@ from hanlp.common.transform import FieldLength, TransformList
 from hanlp.common.vocab import Vocab
 from hanlp.components.classifiers.transformer_classifier import TransformerComponent
 from hanlp.components.taggers.tagger import Tagger
-from hanlp.datasets.ner.tsv import TSVTaggingDataset
+from hanlp.datasets.ner.loaders.tsv import TSVTaggingDataset
 from hanlp.layers.crf.crf import CRF
 from hanlp.layers.transformers.encoder import TransformerEncoder
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer

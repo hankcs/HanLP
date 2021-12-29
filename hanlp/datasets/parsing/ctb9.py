@@ -3,7 +3,7 @@
 # Date: 2020-10-14 20:54
 from urllib.error import HTTPError
 
-from hanlp.datasets.parsing._ctb_utils import make_ctb
+from hanlp.datasets.parsing.loaders._ctb_utils import make_ctb
 from hanlp.utils.io_util import get_resource, path_from_url
 
 _CTB9_HOME = 'https://catalog.ldc.upenn.edu/LDC2016T13/ctb9.0_LDC2016T13.tgz#data/'

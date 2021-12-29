@@ -4,7 +4,7 @@
 
 import tensorflow as tf
 
-from hanlp.components.tok_tf import NgramConvTokenizerTF
+from hanlp.components.tokenizers.tok_tf import NgramConvTokenizerTF
 from hanlp.datasets.cws.ctb import CTB6_CWS_TRAIN, CTB6_CWS_DEV, CTB6_CWS_TEST
 from hanlp.pretrained.word2vec import CONVSEG_W2V_NEWS_TENSITE_CHAR
 from tests import cdroot

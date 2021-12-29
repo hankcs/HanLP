@@ -7,7 +7,7 @@ from typing import Union, List, Callable, Dict, Any
 from hanlp_common.constant import IDX
 from hanlp.common.structure import History
 from hanlp.components.ner.biaffine_ner.biaffine_ner_model import BiaffineNamedEntityRecognitionModel
-from hanlp.datasets.ner.json_ner import JsonNERDataset, unpack_ner
+from hanlp.datasets.ner.loaders.json_ner import JsonNERDataset, unpack_ner
 from hanlp.layers.transformers.utils import build_optimizer_scheduler_with_transformer
 import torch
 from torch.utils.data import DataLoader

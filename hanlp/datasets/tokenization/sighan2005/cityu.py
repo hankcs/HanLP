@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-21 15:42
-from hanlp.datasets.cws.sighan2005 import SIGHAN2005, make
+from hanlp.datasets.tokenization.sighan2005 import SIGHAN2005, make
 
 SIGHAN2005_CITYU_DICT = SIGHAN2005 + "#" + "gold/cityu_training_words.utf8"
 '''Dictionary built on trainings set.'''

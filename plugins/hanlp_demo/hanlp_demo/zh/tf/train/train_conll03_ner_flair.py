@@ -4,7 +4,7 @@
 
 import tensorflow as tf
 
-from hanlp.components.ner_tf import RNNNamedEntityRecognizerTF
+from hanlp.components.ner.ner_tf import RNNNamedEntityRecognizerTF
 from hanlp.datasets.ner.conll03 import CONLL03_EN_TRAIN, CONLL03_EN_TEST
 from hanlp.pretrained.glove import GLOVE_6B_100D
 from hanlp.pretrained.rnnlm import FLAIR_LM_FW_WMT11_EN_TF, FLAIR_LM_BW_WMT11_EN_TF

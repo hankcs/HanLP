@@ -6,7 +6,7 @@ from typing import List, Union
 from hanlp.common.dataset import SamplerBuilder
 from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
 from hanlp.components.tokenizers.transformer import TransformerTaggingTokenizer
-from hanlp.datasets.cws.multi_criteria_cws.mcws_dataset import MultiCriteriaTextTokenizingDataset, append_criteria_token
+from hanlp.datasets.tokenization.loaders.multi_criteria_cws.mcws_dataset import MultiCriteriaTextTokenizingDataset, append_criteria_token
 import functools
 
 from hanlp.metrics.f1 import F1

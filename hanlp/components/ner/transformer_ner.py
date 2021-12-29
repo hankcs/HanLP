@@ -4,14 +4,13 @@
 import functools
 from typing import Union, List, Dict, Any, Set
 
-import torch
 from hanlp_trie import DictInterface, TrieDict
 
 from hanlp.common.dataset import SamplerBuilder
 from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
 from hanlp.metrics.chunking.sequence_labeling import get_entities
 from hanlp.metrics.f1 import F1
-from hanlp.datasets.ner.json_ner import prune_ner_tagset
+from hanlp.datasets.ner.loaders.json_ner import prune_ner_tagset
 from hanlp.utils.string_util import guess_delimiter
 from hanlp_common.util import merge_locals_kwargs
 

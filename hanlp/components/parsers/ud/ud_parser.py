@@ -20,7 +20,7 @@ from hanlp_common.conll import CoNLLUWord, CoNLLSentence
 from hanlp.components.parsers.ud.ud_model import UniversalDependenciesModel
 from hanlp.components.parsers.ud.util import generate_lemma_rule, append_bos, sample_form_missing
 from hanlp.components.parsers.ud.lemma_edit import apply_lemma_rule
-from hanlp.datasets.parsing.conll_dataset import CoNLLParsingDataset
+from hanlp.datasets.parsing.loaders.conll_dataset import CoNLLParsingDataset
 from hanlp.layers.embeddings.contextual_word_embedding import ContextualWordEmbedding
 from hanlp.metrics.accuracy import CategoricalAccuracy
 from hanlp.metrics.metric import Metric

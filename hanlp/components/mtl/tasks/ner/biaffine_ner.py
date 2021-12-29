@@ -13,7 +13,7 @@ from hanlp.common.transform import VocabDict, TransformList
 from hanlp.components.mtl.tasks import Task
 from hanlp.components.ner.biaffine_ner.biaffine_ner import BiaffineNamedEntityRecognizer
 from hanlp.components.ner.biaffine_ner.biaffine_ner_model import BiaffineNamedEntityRecognitionDecoder
-from hanlp.datasets.ner.json_ner import unpack_ner
+from hanlp.datasets.ner.loaders.json_ner import unpack_ner
 from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
 from hanlp.metrics.metric import Metric
 from hanlp.metrics.mtl import MetricDict

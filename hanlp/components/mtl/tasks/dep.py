@@ -14,7 +14,7 @@ from hanlp.common.transform import VocabDict, TransformList
 from hanlp.components.mtl.tasks import Task
 from hanlp.components.parsers.biaffine.biaffine_dep import BiaffineDependencyParser
 from hanlp.components.parsers.biaffine.biaffine_model import BiaffineDecoder
-from hanlp.datasets.parsing.conll_dataset import append_bos
+from hanlp.datasets.parsing.loaders.conll_dataset import append_bos
 from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
 from hanlp.metrics.metric import Metric
 from hanlp.metrics.mtl import MetricDict

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-28 23:15
-from hanlp.components.ner_tf import TransformerNamedEntityRecognizerTF
+from hanlp.components.ner.ner_tf import TransformerNamedEntityRecognizerTF
 from hanlp.datasets.ner.msra import MSRA_NER_CHAR_LEVEL_TRAIN, MSRA_NER_CHAR_LEVEL_DEV, MSRA_NER_CHAR_LEVEL_TEST
 from tests import cdroot
 

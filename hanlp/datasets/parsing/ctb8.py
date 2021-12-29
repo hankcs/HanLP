@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2020-10-14 20:54
 
-from hanlp.datasets.parsing._ctb_utils import make_ctb
+from hanlp.datasets.parsing.loaders._ctb_utils import make_ctb
 
 _CTB8_HOME = 'https://wakespace.lib.wfu.edu/bitstream/handle/10339/39379/LDC2013T21.tgz#data/'
 

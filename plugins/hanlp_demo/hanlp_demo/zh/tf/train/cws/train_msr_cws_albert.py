@@ -2,9 +2,9 @@
 # Author: hankcs
 # Date: 2019-12-28 22:22
 
-from hanlp.components.tok import TransformerTokenizer
-from hanlp.datasets.cws.ctb import CTB6_CWS_TRAIN, CTB6_CWS_VALID, CTB6_CWS_TEST
-from hanlp.datasets.cws.sighan2005.msr import SIGHAN2005_MSR_VALID, SIGHAN2005_MSR_TRAIN
+from hanlp.components.tokenizers.tok import TransformerTokenizer
+from hanlp.datasets.cws.ctb import CTB6_CWS_TEST
+from hanlp.datasets.tokenization.sighan2005.msr import SIGHAN2005_MSR_VALID, SIGHAN2005_MSR_TRAIN
 from tests import cdroot
 
 cdroot()

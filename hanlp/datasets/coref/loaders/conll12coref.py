@@ -5,7 +5,7 @@ import collections
 import os
 from typing import Union, List, Callable, DefaultDict, Tuple, Optional, Iterator
 
-from hanlp.datasets.srl.ontonotes5.ontonotes_loader import Ontonotes as _Ontonotes, OntonotesSentence, \
+from hanlp.datasets.srl.loaders.ontonotes_loader import Ontonotes as _Ontonotes, OntonotesSentence, \
     make_coref_instance
 
 from hanlp.common.dataset import TransformableDataset

@@ -21,7 +21,7 @@ from hanlp.common.vocab import Vocab
 from hanlp.components.parsers.alg import decode_dep
 from hanlp.components.parsers.biaffine.biaffine_model import BiaffineDependencyModel
 from hanlp_common.conll import CoNLLWord, CoNLLSentence
-from hanlp.datasets.parsing.conll_dataset import CoNLLParsingDataset, append_bos
+from hanlp.datasets.parsing.loaders.conll_dataset import CoNLLParsingDataset, append_bos
 from hanlp.layers.embeddings.util import index_word2vec_with_vocab
 from hanlp.layers.transformers.utils import build_optimizer_scheduler_with_transformer
 from hanlp.metrics.parsing.attachmentscore import AttachmentScore

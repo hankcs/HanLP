@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-21 15:39
-from hanlp.components.tok_tf import TransformerTokenizerTF
-from hanlp.datasets.cws.ctb6 import CTB6_CWS_DEV, CTB6_CWS_TEST
+from hanlp.components.tokenizers.tok_tf import TransformerTokenizerTF
+from hanlp.datasets.tokenization.ctb6 import CTB6_CWS_DEV, CTB6_CWS_TEST
 from tests import cdroot
 
 cdroot()

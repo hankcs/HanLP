@@ -15,7 +15,7 @@ from hanlp.components.parsers.biaffine.biaffine_dep import BiaffineDependencyPar
 from hanlp.components.parsers.biaffine.biaffine_sdp import BiaffineSemanticDependencyParser
 from hanlp_common.conll import CoNLLUWord, CoNLLSentence
 from hanlp.components.parsers.parse_alg import add_secondary_arcs_by_preds
-from hanlp.datasets.parsing.conll_dataset import append_bos
+from hanlp.datasets.parsing.loaders.conll_dataset import append_bos
 from hanlp.datasets.parsing.semeval15 import unpack_deps_to_head_deprel, merge_head_deprel_with_2nd
 from hanlp.metrics.mtl import MetricDict
 from hanlp_common.util import merge_locals_kwargs

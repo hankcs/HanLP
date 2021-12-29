@@ -17,7 +17,7 @@ from hanlp.common.torch_component import TorchComponent
 from hanlp.common.transform import FieldLength
 from hanlp.common.vocab import Vocab
 from hanlp.components.srl.span_bio.baffine_tagging import SpanBIOSemanticRoleLabelingModel
-from hanlp.datasets.srl.conll2012 import CoNLL2012SRLBIODataset
+from hanlp.datasets.srl.loaders.conll2012 import CoNLL2012SRLBIODataset
 from hanlp.layers.crf.crf import CRF
 from hanlp.layers.embeddings.contextual_word_embedding import find_transformer
 from hanlp.layers.embeddings.embedding import Embedding

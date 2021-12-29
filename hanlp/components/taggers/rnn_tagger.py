@@ -14,7 +14,7 @@ from hanlp.common.transform import EmbeddingNamedTransform
 from hanlp.common.vocab import Vocab
 from hanlp.components.taggers.rnn.rnntaggingmodel import RNNTaggingModel
 from hanlp.components.taggers.tagger import Tagger
-from hanlp.datasets.ner.tsv import TSVTaggingDataset
+from hanlp.datasets.ner.loaders.tsv import TSVTaggingDataset
 from hanlp.layers.embeddings.embedding import Embedding
 from hanlp.layers.embeddings.util import build_word2vec_with_vocab
 from hanlp.utils.time_util import CountdownTimer

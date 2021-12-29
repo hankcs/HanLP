@@ -4,7 +4,7 @@
 
 import tensorflow as tf
 
-from hanlp.components.pos_tf import RNNPartOfSpeechTaggerTF
+from hanlp.components.taggers.pos_tf import RNNPartOfSpeechTaggerTF
 from hanlp.pretrained.fasttext import FASTTEXT_CC_300_EN
 from tests import cdroot
 

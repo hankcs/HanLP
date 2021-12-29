@@ -13,7 +13,7 @@ import hanlp.utils.torch_util
 from hanlp.common.dataset import SamplerBuilder, PadSequenceDataLoader
 from hanlp.common.transform import FieldLength, TransformList
 from hanlp.components.mtl.tasks import Task
-from hanlp.datasets.tokenization.txt import TextTokenizingDataset
+from hanlp.datasets.tokenization.loaders.txt import TextTokenizingDataset
 from hanlp.layers.scalar_mix import ScalarMixWithDropoutBuilder
 from hanlp.layers.transformers.pt_imports import PreTrainedTokenizer
 from hanlp.metrics.chunking.binary_chunking_f1 import BinaryChunkingF1

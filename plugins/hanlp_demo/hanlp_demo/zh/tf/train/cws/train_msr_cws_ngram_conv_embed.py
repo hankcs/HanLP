@@ -3,8 +3,8 @@
 # Date: 2019-12-21 15:39
 import tensorflow as tf
 
-from hanlp.components.tok import NgramConvTokenizer
-from hanlp.datasets.cws.sighan2005.msr import SIGHAN2005_MSR_TRAIN, SIGHAN2005_MSR_VALID, SIGHAN2005_MSR_TEST
+from hanlp.components.tokenizers.tok import NgramConvTokenizer
+from hanlp.datasets.tokenization.sighan2005.msr import SIGHAN2005_MSR_TRAIN, SIGHAN2005_MSR_VALID, SIGHAN2005_MSR_TEST
 from hanlp.pretrained.word2vec import CONVSEG_W2V_NEWS_TENSITE_CHAR, CONVSEG_W2V_NEWS_TENSITE_WORD_MSR
 from tests import cdroot
 

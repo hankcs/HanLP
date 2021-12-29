@@ -8,7 +8,7 @@ import re
 import sys
 from pprint import pprint
 
-from hanlp.datasets.parsing._ctb_utils import remove_all_ec, convert_to_stanford_dependency_330
+from hanlp.datasets.parsing.loaders._ctb_utils import remove_all_ec, convert_to_stanford_dependency_330
 from hanlp.utils.io_util import merge_files, get_resource, pushd, run_cmd, read_tsv_as_sents, replace_ext, \
     get_exitcode_stdout_stderr
 from hanlp.utils.log_util import flash

@@ -1,10 +1,9 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-28 22:46
-from hanlp.components.pos_tf import RNNPartOfSpeechTaggerTF
-from hanlp.datasets.parsing.ctb5 import CIP_W2V_100_CN
+from hanlp.components.taggers.pos_tf import RNNPartOfSpeechTaggerTF
 from hanlp.datasets.pos.ctb5 import CTB5_POS_TRAIN, CTB5_POS_DEV, CTB5_POS_TEST
-from hanlp.pretrained.fasttext import FASTTEXT_CC_300_EN, FASTTEXT_WIKI_300_ZH
+from hanlp.pretrained.fasttext import FASTTEXT_WIKI_300_ZH
 from tests import cdroot
 
 cdroot()

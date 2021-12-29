@@ -7,7 +7,7 @@ from hanlp.components.classifiers.transformer_classifier_tf import TransformerCl
 
 from tests import cdroot
 
-from hanlp.datasets.glue import STANFORD_SENTIMENT_TREEBANK_2_DEV, STANFORD_SENTIMENT_TREEBANK_2_TRAIN, \
+from hanlp.datasets.glu.glue import STANFORD_SENTIMENT_TREEBANK_2_DEV, STANFORD_SENTIMENT_TREEBANK_2_TRAIN, \
     STANFORD_SENTIMENT_TREEBANK_2_TEST
 
 cdroot()

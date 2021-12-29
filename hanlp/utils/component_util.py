@@ -12,6 +12,7 @@ from hanlp import pretrained
 from hanlp import version
 from hanlp.common.component import Component
 from hanlp.utils.io_util import get_resource, get_latest_info_from_pypi
+from hanlp_common.util import isdebugging
 
 
 def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only=False, verbose=HANLP_VERBOSE,
@@ -74,13 +75,13 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
     if tf_model:
         # tf models are trained with version <= 2.0. To migrate them to 2.1, map their classpath to new locations
         upgrade = {
-            'hanlp.components.tok.TransformerTokenizer': 'hanlp.components.tok_tf.TransformerTokenizerTF',
-            'hanlp.components.pos.RNNPartOfSpeechTagger': 'hanlp.components.pos_tf.RNNPartOfSpeechTaggerTF',
-            'hanlp.components.pos.CNNPartOfSpeechTagger': 'hanlp.components.pos_tf.CNNPartOfSpeechTaggerTF',
-            'hanlp.components.ner.TransformerNamedEntityRecognizer': 'hanlp.components.ner_tf.TransformerNamedEntityRecognizerTF',
+            'hanlp.components.tok_tf.TransformerTokenizerTF': 'hanlp.components.tokenizers.tok_tf.TransformerTokenizerTF',
+            'hanlp.components.pos_tf.RNNPartOfSpeechTaggerTF': 'hanlp.components.taggers.pos_tf.RNNPartOfSpeechTaggerTF',
+            'hanlp.components.pos_tf.CNNPartOfSpeechTaggerTF': 'hanlp.components.taggers.pos_tf.CNNPartOfSpeechTaggerTF',
+            'hanlp.components.ner_tf.TransformerNamedEntityRecognizerTF': 'hanlp.components.ner.ner_tf.TransformerNamedEntityRecognizerTF',
             'hanlp.components.parsers.biaffine_parser.BiaffineDependencyParser': 'hanlp.components.parsers.biaffine_parser_tf.BiaffineDependencyParserTF',
             'hanlp.components.parsers.biaffine_parser.BiaffineSemanticDependencyParser': 'hanlp.components.parsers.biaffine_parser_tf.BiaffineSemanticDependencyParserTF',
-            'hanlp.components.tok.NgramConvTokenizer': 'hanlp.components.tok_tf.NgramConvTokenizerTF',
+            'hanlp.components.tok_tf.NgramConvTokenizerTF': 'hanlp.components.tokenizers.tok_tf.NgramConvTokenizerTF',
             'hanlp.components.classifiers.transformer_classifier.TransformerClassifier': 'hanlp.components.classifiers.transformer_classifier_tf.TransformerClassifierTF',
             'hanlp.components.taggers.transformers.transformer_tagger.TransformerTagger': 'hanlp.components.taggers.transformers.transformer_tagger_tf.TransformerTaggerTF',
         }
@@ -100,8 +101,12 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             obj.config['load_path'] = load_path
         return obj
     except ModuleNotFoundError as e:
-        raise ModuleNotFoundError('Some modules required by this model are missing. Please install the full version:'
-                                  '\n\n\tpip install hanlp[full]') from None
+        if isdebugging():
+            raise e from None
+        else:
+            raise ModuleNotFoundError(
+                'Some modules required by this model are missing. Please install the full version:'
+                '\n\n\tpip install hanlp[full]') from None
     except Exception as e:
         eprint(f'Failed to load {identifier}.')
         from pkg_resources import parse_version

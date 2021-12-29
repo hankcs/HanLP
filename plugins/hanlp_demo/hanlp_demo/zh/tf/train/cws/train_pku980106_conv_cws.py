@@ -3,7 +3,7 @@
 # Date: 2019-12-21 15:39
 import tensorflow as tf
 
-from hanlp.components.tok_tf import NgramConvTokenizerTF
+from hanlp.components.tokenizers.tok_tf import NgramConvTokenizerTF
 from hanlp.pretrained.word2vec import RADICAL_CHAR_EMBEDDING_100
 from tests import cdroot
 

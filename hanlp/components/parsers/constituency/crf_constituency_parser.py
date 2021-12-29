@@ -15,7 +15,7 @@ from hanlp.common.torch_component import TorchComponent
 from hanlp.common.transform import FieldLength, TransformList
 from hanlp.common.vocab import VocabWithNone
 from hanlp.components.classifiers.transformer_classifier import TransformerComponent
-from hanlp.components.parsers.constituency.constituency_dataset import ConstituencyDataset, unpack_tree_to_features, \
+from hanlp.datasets.parsing.loaders.constituency_dataset import ConstituencyDataset, unpack_tree_to_features, \
     build_tree, factorize, remove_subcategory
 from hanlp.components.parsers.constituency.crf_constituency_model import CRFConstituencyDecoder, CRFConstituencyModel
 from hanlp.metrics.parsing.span import SpanMetric

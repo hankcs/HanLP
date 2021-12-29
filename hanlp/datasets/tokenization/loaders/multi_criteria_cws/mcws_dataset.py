@@ -4,7 +4,7 @@
 import os
 from typing import Union, List, Callable, Dict, Iterable
 
-from hanlp.datasets.tokenization.txt import TextTokenizingDataset
+from hanlp.datasets.tokenization.loaders.txt import TextTokenizingDataset
 from hanlp.utils.io_util import get_resource
 
 

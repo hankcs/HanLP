@@ -2,14 +2,13 @@
 # Author: hankcs
 # Date: 2020-08-11 02:48
 import functools
-from copy import copy
 from typing import TextIO, Union, List, Dict, Any, Set
 
 import torch
 from hanlp.common.dataset import SamplerBuilder
 from hanlp.common.transform import TransformList
 from hanlp.components.taggers.transformers.transformer_tagger import TransformerTagger
-from hanlp.datasets.tokenization.txt import TextTokenizingDataset, generate_tags_for_subtokens
+from hanlp.datasets.tokenization.loaders.txt import TextTokenizingDataset, generate_tags_for_subtokens
 from hanlp.metrics.f1 import F1
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer
 from hanlp.utils.span_util import bmes_to_spans

@@ -16,7 +16,7 @@ from hanlp.common.vocab import Vocab
 from hanlp.components.srl.span_rank.inference_utils import srl_decode
 from hanlp.components.srl.span_rank.span_ranking_srl_model import SpanRankingSRLModel
 from hanlp.components.srl.span_rank.srl_eval_utils import compute_srl_f1
-from hanlp.datasets.srl.conll2012 import CoNLL2012SRLDataset, filter_v_args, unpack_srl, \
+from hanlp.datasets.srl.loaders.conll2012 import CoNLL2012SRLDataset, filter_v_args, unpack_srl, \
     group_pa_by_p
 from hanlp.layers.embeddings.embedding import Embedding
 from hanlp.metrics.f1 import F1

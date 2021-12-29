@@ -4,7 +4,7 @@
 from typing import Any, Callable
 
 from hanlp.components.taggers.rnn_tagger import RNNTagger
-from hanlp.datasets.cws.chunking_dataset import ChunkingDataset
+from hanlp.datasets.tokenization.loaders.chunking_dataset import ChunkingDataset
 from hanlp.metrics.chunking.chunking_f1 import ChunkingF1
 from hanlp.utils.span_util import bmes_to_words
 from hanlp_common.util import merge_locals_kwargs
