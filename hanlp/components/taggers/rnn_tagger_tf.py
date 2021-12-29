@@ -7,7 +7,7 @@ import tensorflow as tf
 
 from hanlp.common.transform_tf import Transform
 from hanlp.components.taggers.tagger_tf import TaggerComponent
-from hanlp.transform.tsv import TSVTaggingTransform
+from hanlp.transform.tsv_tf import TSVTaggingTransform
 from hanlp.common.vocab_tf import VocabTF
 from hanlp.layers.embeddings.util_tf import build_embedding, embeddings_require_string_input, \
     embeddings_require_char_input

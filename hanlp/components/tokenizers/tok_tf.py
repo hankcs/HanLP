@@ -13,8 +13,8 @@ from hanlp.components.taggers.transformers.transformer_tagger_tf import Transfor
 from hanlp.components.taggers.transformers.transformer_transform_tf import TransformerTransform
 from hanlp.losses.sparse_categorical_crossentropy import SparseCategoricalCrossentropyOverBatchFirstDim
 from hanlp.metrics.chunking.bmes_tf import BMES_F1_TF
-from hanlp.transform.tsv import TSVTaggingTransform
-from hanlp.transform.txt import TxtFormat, TxtBMESFormat, extract_ngram_features_and_tags, bmes_to_words
+from hanlp.transform.tsv_tf import TSVTaggingTransform
+from hanlp.transform.txt_tf import TxtFormat, TxtBMESFormat, extract_ngram_features_and_tags, bmes_to_words
 from hanlp_common.util import merge_locals_kwargs
 
 

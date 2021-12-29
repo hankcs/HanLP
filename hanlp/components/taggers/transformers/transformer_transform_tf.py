@@ -9,7 +9,7 @@ from hanlp_common.structure import SerializableDict
 from hanlp.common.transform_tf import Transform
 from hanlp.common.vocab_tf import VocabTF
 from hanlp.layers.transformers.utils_tf import convert_examples_to_features
-from hanlp.transform.tsv import TsvTaggingFormat
+from hanlp.transform.tsv_tf import TsvTaggingFormat
 
 
 class TransformerTransform(TsvTaggingFormat, Transform):

@@ -8,8 +8,8 @@ import tensorflow as tf
 
 from hanlp_common.structure import SerializableDict
 from hanlp.components.taggers.tagger_tf import TaggerComponent
-from hanlp.transform.tsv import TSVTaggingTransform
-from hanlp.transform.txt import bmes_to_words, extract_ngram_features
+from hanlp.transform.tsv_tf import TSVTaggingTransform
+from hanlp.transform.txt_tf import bmes_to_words, extract_ngram_features
 from hanlp.common.vocab_tf import VocabTF
 from hanlp.layers.embeddings.util_tf import build_embedding
 from hanlp.layers.weight_normalization import WeightNormalization

@@ -6,7 +6,7 @@ from typing import List, Union
 import tensorflow as tf
 
 from hanlp.common.keras_component import KerasComponent
-from hanlp.transform.text import TextTransform
+from hanlp.transform.text_tf import TextTransform
 
 
 class RNNLanguageModel(KerasComponent):

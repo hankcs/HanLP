@@ -9,7 +9,7 @@ from hanlp.common.keras_component import KerasComponent
 from hanlp_common.structure import SerializableDict
 from hanlp.layers.transformers.loader_tf import build_transformer
 from hanlp.optimizers.adamw import create_optimizer
-from hanlp.transform.table import TableTransform
+from hanlp.transform.table_tf import TableTransform
 from hanlp.utils.log_util import logger
 from hanlp_common.util import merge_locals_kwargs
 from transformers.tokenization_utils import PreTrainedTokenizer

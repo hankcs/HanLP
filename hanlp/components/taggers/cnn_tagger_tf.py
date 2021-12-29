@@ -7,7 +7,7 @@ from typing import Union, Tuple, Any, List, Iterable
 import tensorflow as tf
 
 from hanlp.components.taggers.tagger_tf import TaggerComponent
-from hanlp.transform.tsv import TSVTaggingTransform
+from hanlp.transform.tsv_tf import TSVTaggingTransform
 from hanlp.common.vocab_tf import VocabTF
 from hanlp.layers.embeddings.util_tf import build_embedding
 

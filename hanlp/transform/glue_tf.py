@@ -3,7 +3,7 @@
 # Date: 2020-05-08 16:34
 from hanlp_common.structure import SerializableDict
 from hanlp.datasets.glu.glue import STANFORD_SENTIMENT_TREEBANK_2_TRAIN, MICROSOFT_RESEARCH_PARAPHRASE_CORPUS_DEV
-from hanlp.transform.table import TableTransform
+from hanlp.transform.table_tf import TableTransform
 
 
 class StanfordSentimentTreebank2Transorm(TableTransform):
