@@ -28,6 +28,8 @@ class Transform(ABC):
         self.output_types = None
         self.output_shapes = None
         self.padding_values = None
+        # Fix tf memory leak: https://github.com/tensorflow/tensorflow/issues/37653#issuecomment-1000517720
+        self.py_func_set_to_cleanup = set()
 
     @abstractmethod
     def fit(self, trn_path: str, **kwargs) -> int:
@@ -170,6 +172,9 @@ class Transform(ABC):
                                padding_values]), 'Your create_types_shapes_values returns None, which is not allowed'
         # if not callable(samples):
         #     samples = Transform.generator_to_callable(samples)
+        if not hasattr(tf.compat.v1.get_default_graph(), '_py_funcs_used_in_graph'):
+            tf.compat.v1.get_default_graph()._py_funcs_used_in_graph = []
+        py_func_set_before = set(tf.compat.v1.get_default_graph()._py_funcs_used_in_graph)
         dataset = tf.data.Dataset.from_generator(samples, output_types=output_types, output_shapes=output_shapes)
         if cache:
             logger.debug('Dataset cache enabled')
@@ -197,6 +202,8 @@ class Transform(ABC):
                 return X, Y
 
             dataset = dataset.map(mapper, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        py_func_set_after = set(tf.compat.v1.get_default_graph()._py_funcs_used_in_graph) - py_func_set_before
+        self.py_func_set_to_cleanup |= py_func_set_after
         return dataset
 
     @abstractmethod
@@ -237,7 +244,8 @@ class Transform(ABC):
     def X_to_inputs(self, X: Union[tf.Tensor, Tuple[tf.Tensor]]) -> Iterable:
         return [repr(x) for x in X]
 
-    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None, batch=None) -> Iterable:
+    def Y_to_outputs(self, Y: Union[tf.Tensor, Tuple[tf.Tensor]], gold=False, inputs=None, X=None,
+                     batch=None) -> Iterable:
         return [repr(y) for y in Y]
 
     def XY_to_inputs_outputs(self, X: Union[tf.Tensor, Tuple[tf.Tensor]],
@@ -295,3 +303,8 @@ class Transform(ABC):
 
         """
         return '\t'.join([input, truth, output]) + '\n'
+
+    def cleanup(self):
+        new_py_funcs = set(tf.compat.v1.get_default_graph()._py_funcs_used_in_graph) - self.py_func_set_to_cleanup
+        tf.compat.v1.get_default_graph()._py_funcs_used_in_graph = list(new_py_funcs)
+        self.py_func_set_to_cleanup = set()

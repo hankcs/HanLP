@@ -11,7 +11,7 @@ import numpy as np
 import tensorflow as tf
 
 import hanlp.utils
-from hanlp_common.io import save_json,load_json
+from hanlp_common.io import save_json, load_json
 from hanlp.callbacks.fine_csv_logger import FineCSVLogger
 from hanlp.common.component import Component
 from hanlp.common.transform_tf import Transform
@@ -255,7 +255,8 @@ class KerasComponent(Component, ABC):
         if isinstance(optimizer, (str, dict)):
             custom_objects = {'AdamWeightDecay': AdamWeightDecay}
             optimizer: tf.keras.optimizers.Optimizer = tf.keras.utils.deserialize_keras_object(optimizer,
-                                                                                               module_objects=vars(tf.keras.optimizers),
+                                                                                               module_objects=vars(
+                                                                                                   tf.keras.optimizers),
                                                                                                custom_objects=custom_objects)
         self.config.optimizer = tf.keras.utils.serialize_keras_object(optimizer)
         return optimizer
@@ -437,6 +438,7 @@ class KerasComponent(Component, ABC):
             for output in self.predict_batch(batch, inputs=inputs, **kwargs):
                 results.append(output)
             num_samples += samples_in_batch
+        self.transform.cleanup()
 
         if flat:
             return results[0]
