@@ -64,7 +64,9 @@ class Pipe(Component):
         return output
 
     def __repr__(self):
-        return f'{self.input_key}->{self.component.__class__.__name__}->{self.output_key}'
+        name = self.component.function.__name__ if isinstance(self.component, LambdaComponent) \
+            else self.component.__class__.__name__
+        return f'{self.input_key}->{name}->{self.output_key}'
 
     @staticmethod
     def from_config(meta: dict, **kwargs):
