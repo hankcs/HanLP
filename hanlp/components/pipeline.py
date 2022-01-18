@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2019-12-31 00:22
 import types
-from typing import Callable, Union, Iterable
+from typing import Callable, Union, Iterable, Any
 from hanlp.components.lambda_wrapper import LambdaComponent
 from hanlp.common.component import Component
 from hanlp_common.document import Document
@@ -88,7 +88,9 @@ class Pipeline(Component, list):
 
         Args:
             component: A callable function.
-            input_key: The input key indicating which fields will be inputted to the pipe.
+            input_key: The input key indicating which fields will be inputted to the pipe. ``None``: inherit from
+                previous pipe; ``*``: use all the outputs from previous pipes wrapped in a
+                :class:`~hanlp_common.document.Document`.
             output_key: The output key indicating where to store the outputs
             **kwargs: Extra arguments passed to the ``Pipe`` constructor.
 
@@ -102,14 +104,42 @@ class Pipeline(Component, list):
     def insert(self, index: int, component: Callable, input_key: Union[str, Iterable[str]] = None,
                output_key: Union[str, Iterable[str]] = None,
                **kwargs):
-        if not input_key and len(self):
-            input_key = self[-1].output_key
+        """
+
+        Args:
+            index: The index of the new pipe.
+            input_key: The input key indicating which fields will be inputted to the pipe. ``None``: inherit from
+                previous pipe; ``*``: use all the outputs from previous pipes wrapped in a
+                :class:`~hanlp_common.document.Document`.
+            output_key: The output key indicating where to store the outputs
+            **kwargs: Extra arguments passed to the ``Pipe`` constructor.
+
+        Returns:
+
+            Pipeline: A pipeline.
+        """
+        if input_key == '*':
+            input_key = None
+        elif not input_key and len(self) and index:
+            input_key = self[index - 1].output_key
         if not isinstance(component, Component):
             component = LambdaComponent(component)
         super().insert(index, Pipe(component, input_key, output_key, **kwargs))
         return self
 
-    def __call__(self, doc: Document, **kwargs) -> Document:
+    def __call__(self, doc: Union[Document, Any] = None, **kwargs) -> Document:
+        """Run the pipeline as a function.
+
+        Args:
+            doc: A :class:`~hanlp_common.document.Document` or other data types.
+            **kwargs: If `doc` is set to None then create a :class:`~hanlp_common.document.Document` as the
+                input to the first pipe using all the parameters in ``kwargs``.
+
+        Returns:
+            A :class:`~hanlp_common.document.Document`.
+        """
+        if doc is None:
+            doc = Document(**kwargs)
         for component in self:
             doc = component(doc)
         return doc
