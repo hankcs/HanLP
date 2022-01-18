@@ -312,12 +312,13 @@ class Document(dict):
 
                 text = condense(block)
                 # Cosmetic issues
-                for row in text:
+                for row in text[1:]:
                     while '  ─' in row[1]:
                         row[1] = row[1].replace('  ─', ' ──')
+                    row[1] = row[1].replace('─ ─', '───')
                     row[1] = row[1].replace('─  │', '───┤')
                     row[1] = row[1].replace('─  ├', '───┼')
-                    row[1] = re.sub(r'►(\w+)(\s+)([│├])', lambda
+                    row[1] = re.sub(r'►([\w-]+)(\s+)([│├])', lambda
                         m: f'►{m.group(1)}{"─" * len(m.group(2))}{"┤" if m.group(3) == "│" else "┼"}', row[1])
                     row[1] = re.sub(r'►(─+)►', r'─\1►', row[1])
                 for r, s in zip(extras, text):
