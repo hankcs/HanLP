@@ -15,7 +15,7 @@ export HANLP_HOME=/data/hanlp
 
 By default, HanLP tries to use the least occupied GPU so that mostly you don't need to worry about it, HanLP makes the best choice for you. This behavior is very useful when you're using a public server shared across your lab or company with your colleagues. 
 
-HanLP also honors the ``CUDA_VISIBLE_DEVICES`` used by PyTorch and TensorFlow to limit which devices HanLP can choose from. For example, the following command will only keep the `0`th and `1`st GPU.
+HanLP also honors the ``CUDA_VISIBLE_DEVICES`` used by PyTorch and TensorFlow to limit which devices HanLP can choose from. For example, the following command will only keep the `0`th and `1`st GPUs.
 
 ```bash
 export CUDA_VISIBLE_DEVICES=0,1
@@ -39,6 +39,10 @@ resources.
 - Cloud servers
     - There are many cloud services providing out-of-the-box deep learning images. HanLP works fine on these platforms. 
         They could save your time and efforts.
+- Google Colab
+    - Colab allows you to write excutable notebooks with full GPU support. PyTorch and TensorFlow have been pre-installed and configured to the best state.
+    - In fact, you can click [![Open In Colab](https://file.hankcs.com/img/colab-badge.svg)](https://colab.research.google.com/drive/1KPX6t1y36TOzRIeB4Kt3uJ1twuj6WuFv?usp=sharing) to play with the GPU-enabled HanLP tutorial right now.
+
 
 :::
 

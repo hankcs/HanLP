@@ -2,7 +2,6 @@
 # Author: hankcs
 # Date: 2022-01-18 11:09
 from hanlp_common.document import Document
-
 import hanlp
 
 con = hanlp.load(hanlp.pretrained.constituency.CTB9_FULL_TAG_ELECTRA_SMALL)
@@ -38,7 +37,7 @@ doc = nlp(tok=["2021年", "HanLPv2.1", "带来", "最", "先进", "的", "多", 
 print(doc)
 doc.pretty_print()
 
-# If you need to parse raw text, simply add a tokenizer into this pipeline
+# If you need to parse raw text, simply add a tokenizer into this pipeline.
 tok = hanlp.load(hanlp.pretrained.tok.COARSE_ELECTRA_SMALL_ZH)
 nlp.insert(0, tok, output_key='tok')
 print(f'The pipeline looks like this: {nlp}')

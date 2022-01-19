@@ -24,8 +24,8 @@ def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Compon
         import hanlp
         # Load component onto the 0-th GPU.
         hanlp.load(..., devices=0)
-        # Load component onto the 0-th and 1-st GPU using data parallelization.
-        hanlp.load(..., devices=[0,1])
+        # Load component onto the 0-th and 1-st GPUs using data parallelization.
+        hanlp.load(..., devices=[0, 1])
 
     .. Note::
         A component can have dependencies on other components or resources, which will be recursively loaded. So it's
@@ -51,7 +51,7 @@ def pipeline(*pipes) -> hanlp.components.pipeline.Pipeline:
       *pipes: Components if pre-defined any.
 
     Returns:
-      A pipeline, which is a list of components in order.
+      hanlp.components.pipeline.Pipeline: A pipeline, which is a list of components in order.
 
     """
     return hanlp.components.pipeline.Pipeline(*pipes)
