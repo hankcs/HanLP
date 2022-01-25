@@ -15,6 +15,7 @@ constituency
 ner
 dep
 sdp
+amr
 sts
 word2vec
 glove

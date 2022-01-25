@@ -49,6 +49,8 @@ setup(
             'fasttext-wheel==0.9.2',
             'tensorflow==2.6.0',
             'keras==2.6.0',
+            'penman==1.2.1',
+            'networkx==2.6.3',
         ],
     },
     python_requires='>=3.6',
