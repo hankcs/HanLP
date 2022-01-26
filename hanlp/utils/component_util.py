@@ -2,16 +2,13 @@
 # Author: hankcs
 # Date: 2019-12-31 19:24
 import os
-import traceback
-
 from hanlp_common.constant import HANLP_VERBOSE
 from hanlp_common.io import load_json, eprint, save_json
 from hanlp_common.reflection import object_from_classpath, str_to_type
-
 from hanlp import pretrained
 from hanlp import version
 from hanlp.common.component import Component
-from hanlp.utils.io_util import get_resource, get_latest_info_from_pypi
+from hanlp.utils.io_util import get_resource, get_latest_info_from_pypi, check_version_conflicts
 from hanlp_common.util import isdebugging
 
 
@@ -109,6 +106,15 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                 'Some modules required by this model are missing. Please install the full version:'
                 '\n\n\tpip install hanlp[full]') from None
     except Exception as e:
+        # Some users often install an incompatible tf and put the blame on HanLP. Teach them the basics.
+        try:
+            you_installed_wrong_versions, extras = check_version_conflicts(extras=('full',) if tf_model else None)
+        except:
+            you_installed_wrong_versions, extras = None, None
+        if you_installed_wrong_versions:
+            raise version.NotCompatible(you_installed_wrong_versions + '\nPlease reinstall HanLP in the right way:' +
+                                        '\n\n\tpip install --upgrade hanlp' + (
+                                            f'[{",".join(extras)}]' if extras else '')) from None
         eprint(f'Failed to load {identifier}.')
         from pkg_resources import parse_version
         model_version = meta.get("hanlp_version", "unknown")
