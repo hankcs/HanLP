@@ -102,6 +102,8 @@ doc.pretty_print()
 
 ## Native API
 
+### Multi-Task Learning
+
 If you want to run our models locally or you want to implement your own RESTful server, 
 you can [install the native API](https://hanlp.hankcs.com/docs/install.html#install-native-package) 
 and call it just like the RESTful one.
@@ -123,4 +125,10 @@ print(HanLP(['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP tech
 ```
 
 Due to the fact that the service provider is very likely running a different model or having different settings, the
-RESTful and native results might be slightly different.
+RESTful and native results might be slightly different. 
+
+To process Chinese or Japanese, HanLP provides mono-lingual models in each language which significantly outperform the multi-lingual model. See [docs](https://hanlp.hankcs.com/docs/api/hanlp/pretrained/mtl.html) for the list of models.
+
+### Single-Task Learning
+
+HanLP also provides a full spectrum of single-task learning models for core NLP tasks including tagging and parsing. Please refer to the documentations of  [`pretrained`](https://hanlp.hankcs.com/docs/api/hanlp/pretrained/index.html) models for details.

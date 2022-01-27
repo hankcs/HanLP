@@ -17,6 +17,13 @@ AMR captures “who is doing what to whom” in a sentence. Each sentence is rep
 
 To parse a raw sentence into AMR:
 
+```{eval-rst}
+.. margin:: Batching is Faster
+
+    .. Hint:: Parse multiple sentences at once for faster speed! 
+```
+
+
 ```{code-cell} ipython3
 :tags: [output_scroll]
 import hanlp
@@ -26,7 +33,7 @@ amr = amr_parser('The boy wants the girl to believe him.')
 print(amr)
 ```
 
-A list of pre-trained parsers and their scores are listed below.
+All the pre-trained parsers and their scores are listed below.
 
 ```{eval-rst}
 
