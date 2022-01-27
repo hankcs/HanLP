@@ -26,7 +26,7 @@ If you need fine grained control over each component, ``hanlp.load(..., devices=
 See documents for :meth:`hanlp.load`.
 ```
 
-:::{seealso}
+### External Resources
 
 For deep learning beginners, you might need to learn how to set up a working GPU environment first. Here are some 
 resources.
@@ -43,8 +43,6 @@ resources.
     - Colab allows you to write excutable notebooks with full GPU support. PyTorch and TensorFlow have been pre-installed and configured to the best state.
     - In fact, you can click [![Open In Colab](https://file.hankcs.com/img/colab-badge.svg)](https://colab.research.google.com/drive/1KPX6t1y36TOzRIeB4Kt3uJ1twuj6WuFv?usp=sharing) to play with the GPU-enabled HanLP tutorial right now.
 
-
-:::
 
 ## Use Mirror Sites
 
