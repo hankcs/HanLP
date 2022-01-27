@@ -105,6 +105,13 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             raise ModuleNotFoundError(
                 'Some modules required by this model are missing. Please install the full version:'
                 '\n\n\tpip install hanlp[full]') from None
+    except ValueError as e:
+        if e.args and isinstance(e.args[0], str) and 'Internet connection' in e.args[0]:
+            raise ConnectionError(
+                'Hugging Face 🤗 Transformers failed to download because your Internet connection is either off or bad.\n'
+                'See https://hanlp.hankcs.com/docs/install.html#server-without-internet for solutions.') \
+                from None
+        raise e from None
     except Exception as e:
         # Some users often install an incompatible tf and put the blame on HanLP. Teach them the basics.
         try:

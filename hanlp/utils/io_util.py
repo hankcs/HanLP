@@ -182,7 +182,7 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
                 e.msg += '\n' + remove_color_tag(message)
             elif hasattr(e, 'args') and e.args and isinstance(e.args, tuple) and isinstance(e.args[0], str):
                 e.args = (e.args[0] + '\n' + remove_color_tag(message),) + e.args[1:]
-            raise e
+            raise e from None
         remove_file(save_path)
         os.rename(tmp_path, save_path)
     return save_path
