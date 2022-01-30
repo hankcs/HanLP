@@ -56,7 +56,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             metapath = os.path.join(save_dir, 'config.json')
             save_json({'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbeddingComponent',
                        'embed': {'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbedding',
-                                 'embed': identifier, 'field': 'token'}}, metapath)
+                                 'embed': identifier, 'field': 'token', 'normalize': 'norm'}}, metapath)
         elif identifier in pretrained.fasttext.ALL.values():
             save_dir = os.path.dirname(save_dir)
             metapath = os.path.join(save_dir, 'config.json')

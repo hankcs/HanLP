@@ -65,7 +65,7 @@ def index_word2vec_with_vocab(filepath: str,
     ids = torch.LongTensor(ids)
     embedding = pret_matrix.index_select(0, ids)
     if normalize == 'norm':
-        embedding /= (torch.norm(embedding, dim=1, keepdim=True) + 1e-12)
+        embedding = torch.nn.functional.normalize(embedding, p=2, dim=1)
     elif normalize == 'std':
         embedding /= torch.std(embedding)
     return embedding
