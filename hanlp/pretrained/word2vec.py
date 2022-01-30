@@ -15,13 +15,13 @@ SEMEVAL16_EMBEDDINGS_300_TEXT_CN = SEMEVAL16_EMBEDDINGS_CN + '#text.fasttext.300
 CTB5_FASTTEXT_300_CN = HANLP_URL + 'embeddings/ctb.fasttext.300.txt.zip'
 
 TENCENT_AILAB_EMBEDDING_SMALL_200 = 'https://ai.tencent.com/ailab/nlp/en/data/tencent-ailab-embedding-zh-d200-v0.2.0-s.tar.gz#tencent-ailab-embedding-zh-d200-v0.2.0-s.txt'
-'Chinese word embeddings with small vocabulary size and 200 dimension provided by Tencent AI lab.'
+'Chinese word embeddings (:cite:`NIPS2013_9aa42b31`) with small vocabulary size and 200 dimension provided by Tencent AI lab.'
 TENCENT_AILAB_EMBEDDING_LARGE_200 = 'https://ai.tencent.com/ailab/nlp/en/data/tencent-ailab-embedding-zh-d200-v0.2.0.tar.gz#tencent-ailab-embedding-zh-d200-v0.2.0.txt'
-'Chinese word embeddings with large vocabulary size and 200 dimension provided by Tencent AI lab.'
+'Chinese word embeddings (:cite:`NIPS2013_9aa42b31`) with large vocabulary size and 200 dimension provided by Tencent AI lab.'
 TENCENT_AILAB_EMBEDDING_SMALL_100 = 'https://ai.tencent.com/ailab/nlp/en/data/tencent-ailab-embedding-zh-d100-v0.2.0-s.tar.gz#tencent-ailab-embedding-zh-d100-v0.2.0-s.txt'
-'Chinese word embeddings with small vocabulary size and 100 dimension provided by Tencent AI lab.'
+'Chinese word embeddings (:cite:`NIPS2013_9aa42b31`) with small vocabulary size and 100 dimension provided by Tencent AI lab.'
 TENCENT_AILAB_EMBEDDING_LARGE_100 = 'https://ai.tencent.com/ailab/nlp/en/data/tencent-ailab-embedding-zh-d100-v0.2.0.tar.gz#tencent-ailab-embedding-zh-d100-v0.2.0.txt'
-'Chinese word embeddings with large vocabulary size and 100 dimension provided by Tencent AI lab.'
+'Chinese word embeddings (:cite:`NIPS2013_9aa42b31`) with large vocabulary size and 100 dimension provided by Tencent AI lab.'
 
 RADICAL_CHAR_EMBEDDING_100 = HANLP_URL + 'embeddings/radical_char_vec_20191229_013849.zip#character.vec.txt'
 'Chinese character embedding enhanced with rich radical information (:cite:`he2018dual`).'

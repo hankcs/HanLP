@@ -4,8 +4,6 @@
 import hanlp
 import torch
 
-# word2vec is either a `tf.keras.layers.Embedding` or a `torch.nn.Module`. Unless you know how to code in Keras or
-# PyTorch, otherwise don't bother to use this.
 word2vec = hanlp.load(hanlp.pretrained.word2vec.CONVSEG_W2V_NEWS_TENSITE_WORD_PKU)
 vec = word2vec('先进')
 print(vec)
