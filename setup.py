@@ -53,7 +53,7 @@ setup(
             'tensorflow==2.6.0',
             'keras==2.6.0',
             'penman==1.2.1',
-            'networkx==2.6.3',
+            'networkx>=2.5.1',
         ],
     },
     python_requires='>=3.6',
