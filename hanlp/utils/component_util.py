@@ -56,13 +56,15 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             metapath = os.path.join(save_dir, 'config.json')
             save_json({'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbeddingComponent',
                        'embed': {'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbedding',
-                                 'embed': identifier, 'field': 'token', 'normalize': 'l2'}}, metapath)
+                                 'embed': identifier, 'field': 'token', 'normalize': 'l2'},
+                       'hanlp_version': version.__version__}, metapath)
         elif identifier in pretrained.fasttext.ALL.values():
             save_dir = os.path.dirname(save_dir)
             metapath = os.path.join(save_dir, 'config.json')
             save_json({'classpath': 'hanlp.layers.embeddings.fast_text.FastTextEmbeddingComponent',
                        'embed': {'classpath': 'hanlp.layers.embeddings.fast_text.FastTextEmbedding',
-                                 'filepath': identifier, 'src': 'token'}}, metapath)
+                                 'filepath': identifier, 'src': 'token'},
+                       'hanlp_version': version.__version__}, metapath)
         else:
             raise FileNotFoundError(f'The identifier {save_dir} resolves to a non-exist meta file {metapath}. {tips}')
     meta: dict = load_json(metapath)
@@ -124,7 +126,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                                             f'[{",".join(extras)}]' if extras else '')) from None
         eprint(f'Failed to load {identifier}.')
         from pkg_resources import parse_version
-        model_version = meta.get("hanlp_version", "unknown")
+        model_version = meta.get("hanlp_version", '2.0.0-alpha.0')
         if model_version == '2.0.0':  # Quick fix: the first version used a wrong string
             model_version = '2.0.0-alpha.0'
         model_version = parse_version(model_version)
