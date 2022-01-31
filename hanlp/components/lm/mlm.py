@@ -2,6 +2,7 @@
 # Author: hankcs
 # Date: 2022-01-29 21:07
 import logging
+import math
 from typing import Callable, Union, List
 
 import torch
@@ -84,6 +85,7 @@ class MaskedLanguageModel(TorchComponent):
             if mask.any():
                 num_masks = mask.sum(dim=-1).tolist()
                 masked_logits = outputs.logits[mask]
+                masked_logits[:, self.tokenizer.all_special_ids] = -math.inf
                 probs, indices = torch.nn.functional.softmax(masked_logits, dim=-1).topk(topk)
                 br = []
                 for p, index in zip(probs.tolist(), indices.tolist()):
