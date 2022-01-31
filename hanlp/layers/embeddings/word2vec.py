@@ -254,7 +254,7 @@ class Word2VecEmbeddingComponent(TorchComponent):
                 embeddings = embeddings.sum(1)
                 embeddings = embeddings / lens.unsqueeze(1)
                 block_word_id = batch['block_word_id']
-                token_is_unk = lens == 1 & token_id[:, 0] == vocab.unk_idx
+                token_is_unk = (lens == 1) & (token_id[:, 0] == vocab.unk_idx)
             else:
                 block_word_id = token_id
                 token_is_unk = token_id == vocab.unk_idx
