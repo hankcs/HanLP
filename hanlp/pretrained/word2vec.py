@@ -23,6 +23,9 @@ TENCENT_AILAB_EMBEDDING_SMALL_100 = 'https://ai.tencent.com/ailab/nlp/en/data/te
 TENCENT_AILAB_EMBEDDING_LARGE_100 = 'https://ai.tencent.com/ailab/nlp/en/data/tencent-ailab-embedding-zh-d100-v0.2.0.tar.gz#tencent-ailab-embedding-zh-d100-v0.2.0.txt'
 'Chinese word embeddings (:cite:`NIPS2013_9aa42b31`) with large vocabulary size and 100 dimension provided by Tencent AI lab.'
 
+MERGE_SGNS_BIGRAM_CHAR_300_ZH = 'http://download.hanlp.com/embeddings/extra/merge_sgns_bigram_char300_20220130_214613.txt.zip'
+'Chinese word embeddings trained with context features (word, ngram, character, and more) using Skip-Gram with Negative Sampling (SGNS) (:cite:`li-etal-2018-analogical`).'
+
 RADICAL_CHAR_EMBEDDING_100 = HANLP_URL + 'embeddings/radical_char_vec_20191229_013849.zip#character.vec.txt'
 'Chinese character embedding enhanced with rich radical information (:cite:`he2018dual`).'
 
