@@ -5,6 +5,7 @@ import json
 import os
 import pickle
 import sys
+from typing import Union
 
 
 def save_pickle(item, path):
@@ -17,7 +18,8 @@ def load_pickle(path):
         return pickle.load(f)
 
 
-def save_json(item: dict, path: str, ensure_ascii=False, cls=None, default=lambda o: repr(o), indent=2):
+def save_json(item: Union[dict, list, str, int, float], path: str, ensure_ascii=False, cls=None,
+              default=lambda o: repr(o), indent=2):
     dirname = os.path.dirname(path)
     if dirname:
         os.makedirs(dirname, exist_ok=True)
