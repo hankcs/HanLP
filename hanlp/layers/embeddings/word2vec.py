@@ -3,6 +3,7 @@
 # Date: 2020-05-09 13:38
 import logging
 import math
+import os.path
 from typing import Optional, Callable, Union, List, Dict
 
 import torch
@@ -117,7 +118,7 @@ class Word2VecEmbedding(Embedding, AutoConfigurable):
             trainable: ``False`` to use static embeddings.
             second_channel: A trainable second channel for each token, which will be added to pretrained embeddings.
             word_dropout: The probability of randomly replacing a token with ``UNK``.
-            normalize: ``True`` or a method to normalize the embedding matrix.
+            normalize: ``l2`` or ``std`` to normalize the embedding matrix.
             cpu: Reside on CPU instead of GPU.
             init: Indicate which initialization to use for oov tokens.
         """
@@ -290,6 +291,13 @@ class Word2VecEmbeddingComponent(TorchComponent):
             if HANLP_VERBOSE:
                 flash('')
         return self._tokenizer
+
+    def load_config(self, save_dir, filename='config.json', **kwargs):
+        if os.path.isfile(save_dir):
+            self.config.update({'classpath': 'hanlp.layers.embeddings.word2vec.Word2VecEmbeddingComponent',
+                                'embed': Word2VecEmbedding(field='token', embed=save_dir, normalize='l2')})
+            return
+        super().load_config(save_dir, filename, **kwargs)
 
 
 class GazetterTransform(object):
