@@ -184,9 +184,9 @@ class Word2VecEmbeddingComponent(TorchComponent):
         self._tokenizer: Trie = None
 
     def build_dataloader(self, data: List[str], shuffle=False, device=None, logger: logging.Logger = None,
-                         doc2vec=False, **kwargs) -> DataLoader:
+                         doc2vec=False, batch_size=32, **kwargs) -> DataLoader:
         dataset = Word2VecDataset([{'token': x} for x in data], transform=self._tokenize if doc2vec else self.vocabs)
-        return PadSequenceDataLoader(dataset, device=device)
+        return PadSequenceDataLoader(dataset, device=device, batch_size=batch_size)
 
     def build_optimizer(self, **kwargs):
         raise NotImplementedError('Not supported.')
@@ -228,8 +228,8 @@ class Word2VecEmbeddingComponent(TorchComponent):
             return embeddings
 
     @torch.no_grad()
-    def most_similar(self, words: Union[str, List[str]], topk=10, doc2vec=False, similarity_less_than=None) \
-            -> Union[Dict[str, float], List[Dict[str, float]]]:
+    def most_similar(self, words: Union[str, List[str]], topk=10, doc2vec=False, similarity_less_than=None,
+                     batch_size=32) -> Union[Dict[str, float], List[Dict[str, float]]]:
         """Find the `topk` most similar words of a given word or phrase.
 
         Args:
@@ -237,6 +237,7 @@ class Word2VecEmbeddingComponent(TorchComponent):
             topk: Number of top similar words.
             doc2vec: Enable doc2vec model for processing OOV and phrases.
             similarity_less_than: Only return words with a similarity less than this value.
+            batch_size: Number of words or phrases per batch.
 
         Returns:
             Similar words and similarities stored in a dict.
@@ -244,7 +245,7 @@ class Word2VecEmbeddingComponent(TorchComponent):
         flat = isinstance(words, str)
         if flat:
             words = [words]
-        dataloader = self.build_dataloader(words, device=self.device, doc2vec=doc2vec)
+        dataloader = self.build_dataloader(words, device=self.device, doc2vec=doc2vec, batch_size=batch_size)
         results = []
         vocab = self.vocabs['token']
         for batch in dataloader:
