@@ -386,7 +386,7 @@ class Document(dict):
         results = self.to_pretty(tok, lem, pos, dep, sdp, ner, srl, con, show_header, html=html)
         if isinstance(results, str):
             results = [results]
-        if IPYTHON:
+        if html and IPYTHON:
             from IPython.core.display import display, HTML
             display(HTML('<br>'.join(results)))
         else:
