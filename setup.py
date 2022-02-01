@@ -43,7 +43,7 @@ setup(
         'toposort==1.5',
         'transformers>=4.1.1',
         'torch>=1.6.0',
-        'hanlp-common>=0.0.12',
+        'hanlp-common>=0.0.13',
         'hanlp-trie>=0.0.4',
         'hanlp-downloader',
     ],
