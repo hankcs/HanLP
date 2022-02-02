@@ -3,9 +3,7 @@
 # Date: 2019-12-26 23:04
 import tensorflow as tf
 from hanlp.layers.transformers.tf_imports import TFPreTrainedModel
-
-from hanlp.components.parsers.biaffine_tf.layers import IndependentDropout, SharedDropout, Biaffine, \
-    MLP, StructuralAttentionLayer
+from hanlp.components.parsers.biaffine_tf.layers import IndependentDropout, SharedDropout, Biaffine, MLP
 
 
 class BiaffineModelTF(tf.keras.Model):
@@ -150,86 +148,3 @@ class BiaffineModelTF(tf.keras.Model):
         feats = tf.keras.Input(shape=[None], dtype=tf.int64, name='feats')
         s_arc, s_rel = self.call([words, feats], mask_inf=False)
         return tf.keras.Model(inputs=[words, feats], outputs=[s_arc, s_rel])
-
-
-class StructuralAttentionModel(tf.keras.Model):
-    def __init__(self, config, transformer: TFPreTrainedModel = None, masked_lm_embed=None, **kwargs):
-        super().__init__(**kwargs)
-        self.transformer = transformer
-        transformer_dropout = config.get('transformer_dropout', None)
-        if transformer_dropout:
-            self.transformer_dropout = SharedDropout(p=config.transformer_dropout, name='transformer_dropout')
-        d_positional = config.get('d_positional', None)
-        if d_positional:
-            max_seq_length = config.get('max_seq_length', 256)
-            self.position_table = self.add_weight(shape=(max_seq_length, d_positional),
-                                                  initializer='random_normal',
-                                                  trainable=True)
-        self.sa = [StructuralAttentionLayer(config, config.num_heads, transformer.config.hidden_size) for _ in
-                   range(config.num_decoder_layers)]
-        self.pad_index = tf.constant(config.pad_index, dtype=tf.int64)
-        masked_lm_dropout = config.get('masked_lm_dropout', None)
-        if masked_lm_dropout:
-            self.masked_lm_dropout = tf.keras.layers.Dropout(masked_lm_dropout, name='masked_lm_dropout')
-        self.use_pos = config.get('use_pos', None)
-        if masked_lm_embed is not None:
-            word_dim, vocab_size = tf.shape(masked_lm_embed)
-            self.projection = tf.keras.layers.Dense(word_dim, name='projection')
-            self.dense = tf.keras.layers.Dense(vocab_size, use_bias=False,
-                                               kernel_initializer=tf.keras.initializers.constant(
-                                                   masked_lm_embed.numpy()),
-                                               trainable=False, name='masked_lm')
-        else:
-            self.dense = tf.keras.layers.Dense(config.n_pos if self.use_pos else config.n_words, name='masked_lm')
-
-    def call(self, inputs, training=None, mask=None):
-        if self.use_pos:
-            words, (input_ids, input_mask, prefix_offset, pos) = inputs
-        else:
-            words, (input_ids, input_mask, prefix_offset) = inputs
-
-        x = BiaffineModelTF.run_transformer(self, input_ids, input_mask, prefix_offset)
-        # return None, None, self.dense(x)
-        arcs, rels = [], []
-        mask = tf.not_equal(words, self.pad_index)
-        mask = StructuralAttentionModel.create_attention_mask(tf.shape(x), mask)
-        for sa in self.sa:
-            s_arc, s_rel, x = sa(x, mask=mask)
-            arcs.append(s_arc)
-            rels.append(s_rel)
-
-        if len(self.sa) > 1:
-            arc_scores = tf.reduce_mean(tf.stack(arcs), axis=0)
-            rel_scores = tf.reduce_mean(tf.stack(rels), axis=0)
-        else:
-            arc_scores = arcs[0]
-            rel_scores = rels[0]
-        if training or not self.dense.built:
-            if hasattr(self, 'masked_lm_dropout'):
-                x = self.masked_lm_dropout(x)
-            if hasattr(self, 'projection'):
-                x = self.projection(x)
-                ids = self.dense(x)
-            else:
-                ids = self.dense(x)
-            return arc_scores, rel_scores, ids
-        return arc_scores, rel_scores
-
-    @staticmethod
-    def create_attention_mask(from_shape, input_mask):
-        """Creates 3D attention.
-
-        Args:
-          from_shape: batch_size, from_seq_len, ...]
-          input_mask: batch_size, seq_len]
-
-        Returns:
-          batch_size, from_seq_len, seq_len]
-
-        """
-
-        mask = tf.cast(tf.expand_dims(input_mask, axis=1), tf.float32)  # [B, 1, T]
-        ones = tf.expand_dims(tf.ones(shape=from_shape[:2], dtype=tf.float32), axis=-1)  # [B, F, 1]
-        mask = ones * mask  # broadcast along two dimensions
-
-        return mask  # [B, F, T]
