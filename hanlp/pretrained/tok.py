@@ -18,6 +18,9 @@ SIGHAN2005_PKU_BERT_BASE_ZH = HANLP_URL + 'tok/sighan2005_pku_bert_base_zh_20201
 COARSE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/coarse_electra_small_zh_20210603_112321.zip'
 'Electra (:cite:`clark2020electra`) small model trained on coarse-grained CWS corpora. Its performance is P=97.08% R=96.94% F1=97.01% which is ' \
 'much higher than that of MTL model '
+CTB9_TOK_ELECTRA_SMALL = HANLP_URL + 'tok/ctb9_electra_small_20220204_184813.zip'
+'Electra (:cite:`clark2020electra`) small model trained on CTB9. Its performance is  P=97.23% R=97.38% F1=97.31% which is ' \
+'much higher than that of MTL model '
 
 # Will be filled up during runtime
 ALL = {}
