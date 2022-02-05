@@ -4,7 +4,7 @@
 from hanlp_common.document import Document
 import hanlp
 
-con = hanlp.load(hanlp.pretrained.constituency.CTB9_FULL_TAG_ELECTRA_SMALL)
+con = hanlp.load(hanlp.pretrained.constituency.CTB9_CON_FULL_TAG_ELECTRA_SMALL)
 # To speed up, parse multiple sentences at once, and use a GPU.
 print(con(["2021年", "HanLPv2.1", "带来", "最", "先进", "的", "多", "语种", "NLP", "技术", "。"]))
 
