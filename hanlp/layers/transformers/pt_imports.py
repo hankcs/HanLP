@@ -59,6 +59,8 @@ class AutoTokenizer_(AutoTokenizer):
             # from transformers import BertTokenizerFast
             # cls = BertTokenizerFast
             additional_config['word_tokenizer_type'] = 'basic'
+        elif transformer == "Langboat/mengzi-bert-base":
+            cls = BertTokenizerFast if use_fast else BertTokenizer
         else:
             cls = AutoTokenizer
         if use_fast and not do_basic_tokenize:
