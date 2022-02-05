@@ -38,7 +38,7 @@ class BiaffineDependencyParser(TorchComponent):
         self.model: BiaffineDependencyModel = None
         self.transformer_tokenizer: PreTrainedTokenizer = None
 
-    def predict(self, data: Any, batch_size=None, batch_max_tokens=None, output_format='conllx', **kwargs):
+    def predict(self, data: Any, batch_size=None, batch_max_tokens=None, conll=None, **kwargs):
         if not data:
             return []
         use_pos = self.use_pos
@@ -47,7 +47,7 @@ class BiaffineDependencyParser(TorchComponent):
             data = [data]
         samples = self.build_samples(data, use_pos)
         if not batch_max_tokens:
-            batch_max_tokens = self.config.batch_max_tokens
+            batch_max_tokens = self.config.get('batch_max_tokens', None)
         if not batch_size:
             batch_size = self.config.batch_size
         dataloader = self.build_dataloader(samples,
@@ -62,7 +62,7 @@ class BiaffineDependencyParser(TorchComponent):
             arc_scores, rel_scores, mask, puncts = self.feed_batch(batch)
             self.collect_outputs(arc_scores, rel_scores, mask, batch, predictions, order, data, use_pos,
                                  build_data)
-        outputs = self.post_outputs(predictions, data, order, use_pos, build_data)
+        outputs = self.post_outputs(predictions, data, order, use_pos, build_data, conll=conll)
         if flat:
             return outputs[0]
         return outputs
@@ -97,24 +97,31 @@ class BiaffineDependencyParser(TorchComponent):
             data = []
         return predictions, build_data, data, order
 
-    def post_outputs(self, predictions, data, order, use_pos, build_data):
+    def post_outputs(self, predictions, data, order, use_pos, build_data, conll=True):
         predictions = reorder(predictions, order)
         if build_data:
             data = reorder(data, order)
         outputs = []
-        self.predictions_to_human(predictions, outputs, data, use_pos)
+        self.predictions_to_human(predictions, outputs, data, use_pos, conll=conll)
         return outputs
 
-    def predictions_to_human(self, predictions, outputs, data, use_pos):
-        for d, (arcs, rels) in zip(data, predictions):
-            sent = CoNLLSentence()
-            for idx, (cell, a, r) in enumerate(zip(d, arcs, rels)):
-                if use_pos:
-                    token, pos = cell
-                else:
-                    token, pos = cell, None
-                sent.append(CoNLLWord(idx + 1, token, cpos=pos, head=a, deprel=self.vocabs['rel'][r]))
-            outputs.append(sent)
+    def predictions_to_human(self, predictions, outputs, data, use_pos, conll=True):
+        if conll:
+            for d, (arcs, rels) in zip(data, predictions):
+                sent = CoNLLSentence()
+                for idx, (cell, a, r) in enumerate(zip(d, arcs, rels)):
+                    if use_pos:
+                        token, pos = cell
+                    else:
+                        token, pos = cell, None
+                    sent.append(CoNLLWord(idx + 1, token, cpos=pos, head=a, deprel=self.vocabs['rel'][r]))
+                outputs.append(sent)
+        else:
+            for d, (arcs, rels) in zip(data, predictions):
+                sent = []
+                for idx, (a, r) in enumerate(zip(arcs, rels)):
+                    sent.append((a, self.vocabs['rel'][r]))
+                outputs.append(sent)
 
     def collect_outputs(self, arc_scores, rel_scores, mask, batch, predictions, order, data, use_pos,
                         build_data):
@@ -315,7 +322,6 @@ class BiaffineDependencyParser(TorchComponent):
         loader = PadSequenceDataLoader(dataset=dataset,
                                        batch_sampler=sampler,
                                        batch_size=batch_size,
-                                       num_workers=0 if isdebugging() else 2,
                                        pad=self.get_pad_dict(),
                                        device=device,
                                        vocabs=self.vocabs)

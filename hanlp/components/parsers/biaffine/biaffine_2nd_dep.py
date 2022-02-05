@@ -197,7 +197,7 @@ class BiaffineSecondaryParser(BiaffineDependencyParser):
     def collect_outputs_extend(self, predictions: list, arc_preds, rel_preds, lens, mask):
         predictions.extend(rel_preds[1])
 
-    def predictions_to_human(self, predictions, outputs, data, use_pos):
+    def predictions_to_human(self, predictions, outputs, data, use_pos, conll=True):
         rel_vocab = self.vocabs['rel'].idx_to_token
         for d, graph in zip(data, predictions):
             sent = CoNLLSentence()

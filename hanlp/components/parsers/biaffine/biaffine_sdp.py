@@ -134,7 +134,7 @@ class BiaffineSemanticDependencyParser(BiaffineDependencyParser):
         # all_arcs.extend(seq.tolist() for seq in arc_preds[mask].split([x * x for x in lens]))
         # all_rels.extend(seq.tolist() for seq in rel_preds[mask].split([x * x for x in lens]))
 
-    def predictions_to_human(self, predictions, outputs, data, use_pos):
+    def predictions_to_human(self, predictions, outputs, data, use_pos, conll=True):
         for d, (arcs, rels, masks) in zip(data, predictions):
             sent = CoNLLSentence()
             for idx, (cell, a, r) in enumerate(zip(d, arcs[1:], rels[1:])):
