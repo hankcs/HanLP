@@ -45,7 +45,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         if save_dir.isupper():
             from difflib import SequenceMatcher
             similar_keys = sorted(pretrained.ALL.keys(),
-                                  key=lambda k: SequenceMatcher(None, save_dir, metapath).ratio(),
+                                  key=lambda k: SequenceMatcher(None, k, identifier).ratio(),
                                   reverse=True)[:5]
             tips = f'Check its spelling based on the available keys:\n' + \
                    f'{sorted(pretrained.ALL.keys())}\n' + \
