@@ -380,7 +380,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                     return_offsets_mapping = tokenizer.is_fast and self.ret_subtokens
                     encodings = tokenizer.batch_encode_plus(
                         input_tokens,
-                        return_offsets_mapping=return_offsets_mapping,
+                        return_offsets_mapping=return_offsets_mapping,  # Many tokenizers do not offer fast version
                         add_special_tokens=False
                     )
                     subtoken_ids_per_token = encodings.data['input_ids']
@@ -393,11 +393,12 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                                 del subtoken_ids[len(token):]
                             if not subtoken_ids:
                                 subtoken_ids = [tokenizer.unk_token_id]
-                            char_per_subtoken = -(-len(token) // len(subtoken_ids))
-                            bes = list(zip(range(0, len(token), char_per_subtoken),
-                                           range(char_per_subtoken, len(token) + char_per_subtoken, char_per_subtoken)))
-                            if bes[-1][-1] != len(token):
-                                bes[-1] = (bes[-1][0], len(token))
+                            # Since non-fast tok generates no mapping, we have to guess
+                            char_per_subtoken = max(len(token) // len(subtoken_ids), 1)
+                            bes = [(b, b + char_per_subtoken) for b in range(0, len(token), char_per_subtoken)]
+                            if len(bes) != len(subtoken_ids):
+                                bes[len(subtoken_ids) - 1] = (bes[len(subtoken_ids) - 1][0], len(token))
+                                del bes[len(subtoken_ids):]
                             offsets_mapping.append(bes)
                 else:
                     encodings = SerializableDict()
