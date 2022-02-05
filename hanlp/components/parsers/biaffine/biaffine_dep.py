@@ -38,7 +38,7 @@ class BiaffineDependencyParser(TorchComponent):
         self.model: BiaffineDependencyModel = None
         self.transformer_tokenizer: PreTrainedTokenizer = None
 
-    def predict(self, data: Any, batch_size=None, batch_max_tokens=None, conll=None, **kwargs):
+    def predict(self, data: Any, batch_size=None, batch_max_tokens=None, conll=True, **kwargs):
         if not data:
             return []
         use_pos = self.use_pos
