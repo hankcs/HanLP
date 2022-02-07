@@ -10,7 +10,7 @@ tokenizer_mirrors = {
     'xlm-roberta-base': HANLP_URL + 'transformers/xlm-roberta-base_20210706_125502.zip',
     'cl-tohoku/bert-base-japanese-char': HANLP_URL + 'transformers/bert-base-japanese-char_20210602_215445.zip',
     'bart5-chinese-small': HANLP_URL + 'transformers/bart5-chinese-small_tok_20210723_180743.zip',
-    'ernie-gram': HANLP_URL + 'transformers/ernie-gram_20210810_012004.zip',
+    'ernie-gram': HANLP_URL + 'transformers/ernie-gram_20220207_103518.zip',
 }
 
 model_mirrors = {
