@@ -17,10 +17,10 @@ def replace_with_separator(text, separator, regexs):
 
 
 def split_sentence(text, best=True):
-    text = re.sub('([。！？\?])([^”’])', r"\1\n\2", text)
-    text = re.sub('(\.{6})([^”’])', r"\1\n\2", text)
-    text = re.sub('(\…{2})([^”’])', r"\1\n\2", text)
-    text = re.sub('([。！？\?][”’])([^，。！？\?])', r'\1\n\2', text)
+    text = re.sub(r'([。！？?])([^”’])', r"\1\n\2", text)
+    text = re.sub(r'(\.{6})([^”’])', r"\1\n\2", text)
+    text = re.sub(r'(…{2})([^”’])', r"\1\n\2", text)
+    text = re.sub(r'([。！？?][”’])([^，。！？?])', r'\1\n\2', text)
     for chunk in text.split("\n"):
         chunk = chunk.strip()
         if not chunk:
