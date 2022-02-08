@@ -1,6 +1,6 @@
 # hanlp_common
 
-Common API shared between `hanlp` and `restful`.
+Common APIs shared between `hanlp` and `restful`.
 
 ```{toctree}
 document

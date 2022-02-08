@@ -94,11 +94,6 @@ If your server has no Internet access at all, just debug your codes on your loca
 1. `~/.hanlp`: the home directory for HanLP models.
 1. `~/.cache/huggingface`: the home directory for Hugging Face 🤗 Transformers.
 
-````{margin} **Thirdparty Versions**
-```{danger}
-NEVER install TensorFlow/fastText by yourself, as higher or lower versions of TensorFlow have not been tested and might not work properly. 
-```
-````
 
 ### Import Error
 
@@ -108,3 +103,6 @@ Some TensorFlow/fastText models will ask you to install the missing TensorFlow/f
 pip install hanlp[full]
 ```
 
+```{danger}
+NEVER install thirdparty packages (TensorFlow/fastText etc.) by yourself, as higher or lower versions of thirparty packages have not been tested and might not work properly.
+```
