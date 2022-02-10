@@ -168,7 +168,8 @@ class CoNLLUWord(SerializableDict):
 class CoNLLSentence(list):
     def __init__(self, words=None):
         """
-        Create from a list of :class:`~hanlp_common.conll.CoNLLWord` or :class:`~hanlp_common.conll.CoNLLUWord`
+        A list of :class:`~hanlp_common.conll.CoNLLWord` or :class:`~hanlp_common.conll.CoNLLUWord`. It is a sub-class
+        of :class:`list` and its words can be accessed in the same way as accessing list elements.
 
         Args:
             words (list[Union[CoNLLWord, CoNLLUWord]]): A list of words.

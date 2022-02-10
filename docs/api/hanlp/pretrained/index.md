@@ -11,9 +11,10 @@ mtl
 eos
 tok
 pos
-constituency
 ner
 dep
+constituency
+srl
 sdp
 amr
 sts

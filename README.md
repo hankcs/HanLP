@@ -116,7 +116,7 @@ print(HanLP(['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP tech
 - In particular, the Python `HanLPClient` can also be used as a callable function following the same semantics.
   See [docs](https://hanlp.hankcs.com/docs/tutorial.html) for visualization, annotation guidelines and more details.
 - To process Chinese or Japanese, HanLP provides mono-lingual models in each language which significantly outperform the
-  multi-lingual model. See [docs](https://hanlp.hankcs.com/docs/api/hanlp/pretrained/mtl.html) for the list of models.
+  multi-lingual model. See [docs](https://hanlp.hankcs.com/docs/api/hanlp/pretrained/index.html) for the list of models.
 
 ## Train Your Own Models
 

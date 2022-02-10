@@ -86,7 +86,7 @@ class Pipeline(Component, list):
     def append(self, component: Callable, input_key: Union[str, Iterable[str]] = None,
                output_key: Union[str, Iterable[str]] = None, **kwargs):
         """
-        Append a pipe io the tail of this pipeline.
+        Append a pipe to the tail of this pipeline.
 
         Args:
             component: A callable function.

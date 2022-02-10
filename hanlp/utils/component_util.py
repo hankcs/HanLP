@@ -50,7 +50,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             tips = f'Check its spelling based on the available keys:\n' + \
                    f'{sorted(pretrained.ALL.keys())}\n' + \
                    f'Tips: it might be one of {similar_keys}'
-        # These components are not intended to be loaded in this way, but I'm tired to repeat explaining again and again
+        # These components are not intended to be loaded in this way, but I'm tired of explaining it again and again
         if identifier in pretrained.word2vec.ALL.values():
             save_dir = os.path.dirname(save_dir)
             metapath = os.path.join(save_dir, 'config.json')
@@ -66,13 +66,13 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                                  'filepath': identifier, 'src': 'token'},
                        'hanlp_version': version.__version__}, metapath)
         else:
-            raise FileNotFoundError(f'The identifier {save_dir} resolves to a non-exist meta file {metapath}. {tips}')
+            raise FileNotFoundError(f'The identifier {save_dir} resolves to a nonexistent meta file {metapath}. {tips}')
     meta: dict = load_json(metapath)
     cls = meta.get('classpath', cls)
     if not cls:
         cls = meta.get('class_path', None)  # For older version
     if tf_model:
-        # tf models are trained with version <= 2.0. To migrate them to 2.1, map their classpath to new locations
+        # tf models are trained with version < 2.1. To migrate them to 2.1, map their classpath to new locations
         upgrade = {
             'hanlp.components.tok_tf.TransformerTokenizerTF': 'hanlp.components.tokenizers.tok_tf.TransformerTokenizerTF',
             'hanlp.components.pos_tf.RNNPartOfSpeechTaggerTF': 'hanlp.components.taggers.pos_tf.RNNPartOfSpeechTaggerTF',
