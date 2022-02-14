@@ -16,6 +16,7 @@ from hanlp.components.classifiers.transformer_classifier import TransformerCompo
 from hanlp.components.taggers.tagger import Tagger
 from hanlp.datasets.ner.loaders.tsv import TSVTaggingDataset
 from hanlp.layers.crf.crf import CRF
+from hanlp.layers.embeddings.embedding import EmbeddingDim, Embedding
 from hanlp.layers.transformers.encoder import TransformerEncoder
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer
 from hanlp.utils.time_util import CountdownTimer
@@ -29,27 +30,36 @@ class TransformerTaggingModel(nn.Module):
                  encoder: TransformerEncoder,
                  num_labels,
                  crf=False,
-                 secondary_encoder=None) -> None:
+                 secondary_encoder=None,
+                 extra_embeddings: EmbeddingDim = None) -> None:
         """
         A shallow tagging model use transformer as decoder.
         Args:
             encoder: A pretrained transformer.
             num_labels: Size of tagset.
             crf: True to enable CRF.
-            crf_constraints: The allowed transitions (from_label_id, to_label_id).
+            extra_embeddings: Extra embeddings which will be concatenated to the encoder outputs.
         """
         super().__init__()
         self.encoder = encoder
         self.secondary_encoder = secondary_encoder
+        self.extra_embeddings = extra_embeddings
         # noinspection PyUnresolvedReferences
-        self.classifier = nn.Linear(encoder.transformer.config.hidden_size, num_labels)
+        feature_size = encoder.transformer.config.hidden_size
+        if extra_embeddings:
+            feature_size += extra_embeddings.get_output_dim()
+        self.classifier = nn.Linear(feature_size, num_labels)
         self.crf = CRF(num_labels) if crf else None
 
-    def forward(self, lens: torch.LongTensor, input_ids, token_span, token_type_ids=None):
+    def forward(self, lens: torch.LongTensor, input_ids, token_span, token_type_ids=None, batch=None):
         mask = lengths_to_mask(lens)
         x = self.encoder(input_ids, token_span=token_span, token_type_ids=token_type_ids)
         if self.secondary_encoder:
             x = self.secondary_encoder(x, mask=mask)
+        if self.extra_embeddings:
+            # noinspection PyCallingNonCallable
+            embed = self.extra_embeddings(batch, mask=mask)
+            x = torch.cat([x, embed], dim=-1)
         x = self.classifier(x)
         return x, mask
 
@@ -130,17 +140,20 @@ class TransformerTagger(TransformerComponent, Tagger):
         temperature = temperature_scheduler(logits_S, logits_T)
         return kd_criterion(logits_S, logits_T, temperature)
 
-    def build_model(self, training=True, **kwargs) -> torch.nn.Module:
-        model = TransformerTaggingModel(self.build_transformer(training=training),
-                                        len(self.vocabs.tag),
-                                        self.config.crf,
-                                        self.config.get('secondary_encoder', None),
-                                        )
+    def build_model(self, training=True, extra_embeddings: Embedding = None, **kwargs) -> torch.nn.Module:
+        model = TransformerTaggingModel(
+            self.build_transformer(training=training),
+            len(self.vocabs.tag),
+            self.config.crf,
+            self.config.get('secondary_encoder', None),
+            extra_embeddings=extra_embeddings.module(self.vocabs) if extra_embeddings else None,
+        )
         return model
 
     # noinspection PyMethodOverriding
     def build_dataloader(self, data, batch_size, shuffle, device, logger: logging.Logger = None,
-                         sampler_builder: SamplerBuilder = None, gradient_accumulation=1, **kwargs) -> DataLoader:
+                         sampler_builder: SamplerBuilder = None, gradient_accumulation=1,
+                         extra_embeddings: Embedding = None, transform=None, **kwargs) -> DataLoader:
         if isinstance(data, TransformableDataset):
             dataset = data
         else:
@@ -152,6 +165,10 @@ class TransformerTagger(TransformerComponent, Tagger):
             logger.info(
                 f'Guess [bold][blue]token_key={self.config.token_key}[/blue][/bold] according to the '
                 f'training dataset: [blue]{dataset}[/blue]')
+        if transform:
+            dataset.append_transform(transform)
+        if extra_embeddings:
+            dataset.append_transform(extra_embeddings.transform(self.vocabs))
         dataset.append_transform(self.tokenizer_transform)
         dataset.append_transform(self.last_transform())
         if not isinstance(data, list):
@@ -169,7 +186,8 @@ class TransformerTagger(TransformerComponent, Tagger):
         return TSVTaggingDataset(data, transform=transform, **kwargs)
 
     def last_transform(self):
-        return TransformList(self.vocabs, FieldLength(self.config.token_key))
+        transforms = TransformList(self.vocabs, FieldLength(self.config.token_key))
+        return transforms
 
     @property
     def tokenizer_transform(self) -> TransformerSequenceTokenizer:
@@ -213,6 +231,7 @@ class TransformerTagger(TransformerComponent, Tagger):
             weight_decay=0,
             warmup_steps=0.1,
             secondary_encoder=None,
+            extra_embeddings: Embedding = None,
             crf=False,
             reduction='sum',
             batch_size=32,
@@ -234,7 +253,8 @@ class TransformerTagger(TransformerComponent, Tagger):
         else:
             input_ids, token_span = features[0], None
         lens = batch[f'{self.config.token_key}_length']
-        x, mask = self.model(lens, input_ids, token_span, batch.get(f'{self.config.token_key}_token_type_ids'))
+        x, mask = self.model(lens, input_ids, token_span, batch.get(f'{self.config.token_key}_token_type_ids'),
+                             batch=batch)
         return x, mask
 
     # noinspection PyMethodOverriding

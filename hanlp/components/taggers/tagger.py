@@ -161,7 +161,8 @@ class Tagger(DistillableComponent, ABC):
         samples = self.build_samples(data, **kwargs)
         if not batch_size:
             batch_size = self.config.get('batch_size', 32)
-        dataloader = self.build_dataloader(samples, batch_size, False, self.device, sampler_builder=sampler_builder)
+        dataloader = self.build_dataloader(samples, batch_size, False, self.device, sampler_builder=sampler_builder,
+                                           **kwargs)
         outputs = []
         orders = []
         vocab = self.vocabs['tag'].idx_to_token

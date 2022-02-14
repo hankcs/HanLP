@@ -70,6 +70,8 @@ def index_word2vec_with_vocab(filepath: str,
         embedding = torch.nn.functional.normalize(embedding, p=2, dim=1)
     elif normalize == 'std':
         embedding /= torch.std(embedding)
+    else:
+        raise ValueError(f'Unsupported normalization method {normalize}')
     return embedding
 
 

@@ -53,8 +53,8 @@ class CharRNN(nn.Module, EmbeddingDim):
         char_mask = lens.gt(0)
 
         # [n, fix_len, n_embed]
-        x = self.embed(x[char_mask])
-        x = pack_padded_sequence(x, lens[char_mask], True, False)
+        x = self.embed(batch) if isinstance(self.embed, EmbeddingDim) else self.embed(x[char_mask])
+        x = pack_padded_sequence(x[char_mask], lens[char_mask].cpu(), True, False)
         x, (h, _) = self.lstm(x)
         # [n, fix_len, n_out]
         h = torch.cat(torch.unbind(h), -1)
