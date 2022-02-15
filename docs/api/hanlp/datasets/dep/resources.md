@@ -1,5 +1,17 @@
 # resources
 
+## PKU Multiview Treebank
+
+PKU Multi-view Chinese Treebank, released by PKU-ICL. It contains the sentences from People's Daily(19980101-19980110).
+The number of sentences in it is 14463.
+
+```{eval-rst}
+
+.. automodule:: hanlp.datasets.parsing.pmt1
+    :members:
+
+```
+
 ## Chinese Treebank
 
 ### CTB5
@@ -65,7 +77,6 @@ We have a discussion on [our forum](https://bbs.hankcs.com/t/topic/3024).
     Similar preprocessing and splits with CTB8 are applied. See the notice above.
     
 ```
-
 
 ```{eval-rst}
 
