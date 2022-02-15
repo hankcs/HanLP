@@ -73,18 +73,30 @@ from hanlp.utils.time_util import CountdownTimer
 # _make_splits(CTB9_ACADEMIA_SPLITS)
 
 
-def convert_to_stanford_dependency_330(src, dst, language='zh'):
-    cprint(f'Converting {os.path.basename(src)} to {os.path.basename(dst)} using Stanford Parser Version 3.3.0. '
+def convert_to_dependency(src, dst, language='zh', version='3.3.0', conllx=True, ud=False):
+    cprint(f'Converting {os.path.basename(src)} to {os.path.basename(dst)} using Stanford Parser Version {version}. '
            f'It might take a while [blink][yellow]...[/yellow][/blink]')
-    sp_home = 'https://nlp.stanford.edu/software/stanford-parser-full-2013-11-12.zip'
+    if version == '3.3.0':
+        sp_home = 'https://nlp.stanford.edu/software/stanford-parser-full-2013-11-12.zip'
+    elif version == '4.2.0':
+        sp_home = 'https://nlp.stanford.edu/software/stanford-parser-4.2.0.zip'
+    else:
+        raise ValueError(f'Unsupported version {version}')
     sp_home = get_resource(sp_home)
     # jar_path = get_resource(f'{sp_home}#stanford-parser.jar')
-    jclass = 'edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructure' if language == 'zh' \
-        else 'edu.stanford.nlp.trees.EnglishGrammaticalStructure'
-    code, out, err = get_exitcode_stdout_stderr(
-        f'java -cp {sp_home}/* {jclass} '
-        f'-basic -keepPunct -conllx '
-        f'-treeFile {src}')
+    if ud:
+        jclass = 'edu.stanford.nlp.trees.international.pennchinese.UniversalChineseGrammaticalStructure' if language == 'zh' \
+            else 'edu.stanford.nlp.trees.ud.UniversalDependenciesConverter'
+    else:
+        jclass = 'edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructure' if language == 'zh' \
+            else 'edu.stanford.nlp.trees.EnglishGrammaticalStructure'
+    cmd = f'java -cp {sp_home}/* {jclass} ' \
+          f'-treeFile {src}'
+    if conllx:
+        cmd += ' -conllx'
+    if not ud:
+        cmd += f' -basic -keepPunct'
+    code, out, err = get_exitcode_stdout_stderr(cmd)
     with open(dst, 'w') as f:
         f.write(out)
     if code:
@@ -180,7 +192,7 @@ def make_ctb_tasks(chtbs, out_root, part):
                       erase=False)
     remove_all_ec(par_path)
     dep_path = join(out_root, 'dep', f'{part}.conllx')
-    convert_to_stanford_dependency_330(par_path, dep_path)
+    convert_to_dependency(par_path, dep_path)
     sents = list(read_conll(dep_path))
     with open(dep_path, 'w') as out:
         for sent in sents:

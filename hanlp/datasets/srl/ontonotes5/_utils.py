@@ -12,7 +12,7 @@ from typing import List, Dict, Union
 from hanlp_common.io import eprint, save_json
 
 from hanlp.common.transform import NormalizeToken
-from hanlp.datasets.parsing.loaders._ctb_utils import remove_all_ec, convert_to_stanford_dependency_330
+from hanlp.datasets.parsing.loaders._ctb_utils import remove_all_ec, convert_to_dependency
 from hanlp.datasets.parsing.ptb import PTB_TOKEN_MAPPING
 from hanlp.utils.io_util import merge_files, get_resource, pushd, run_cmd, read_tsv_as_sents, replace_ext, \
     get_exitcode_stdout_stderr
@@ -538,7 +538,7 @@ def batch_remove_empty_category_if_necessary(json_files):
 
 def make_dep_conllx(con_txt_file, output_file, language='en'):
     con_txt_file = get_resource(con_txt_file)
-    convert_to_stanford_dependency_330(con_txt_file, output_file, language=language)
+    convert_to_dependency(con_txt_file, output_file, language=language)
 
 
 def make_dep_conllx_if_necessary(con_txt_file: str, language='en'):
