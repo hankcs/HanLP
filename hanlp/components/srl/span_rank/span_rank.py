@@ -227,14 +227,14 @@ class SpanRankingSemanticRoleLabeler(TorchComponent):
 
     # noinspection PyMethodOverriding
     def build_dataloader(self, data, batch_size, shuffle, device, logger: logging.Logger,
-                         generate_idx=False, **kwargs) -> DataLoader:
+                         generate_idx=False, transform=None, **kwargs) -> DataLoader:
         batch_max_tokens = self.config.batch_max_tokens
         gradient_accumulation = self.config.get('gradient_accumulation', 1)
         if batch_size:
             batch_size //= gradient_accumulation
         if batch_max_tokens:
             batch_max_tokens //= gradient_accumulation
-        dataset = self.build_dataset(data, generate_idx, logger)
+        dataset = self.build_dataset(data, generate_idx, logger, transform)
 
         sampler = SortingSampler([x['token_length'] for x in dataset],
                                  batch_size=batch_size,
@@ -343,6 +343,7 @@ class SpanRankingSemanticRoleLabeler(TorchComponent):
             grad_norm=5.0,
             gradient_accumulation=1,
             loss_reduction='sum',
+            transform=None,
             devices=None,
             logger=None,
             seed=None,
