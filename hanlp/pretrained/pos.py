@@ -16,8 +16,10 @@ CTB9_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_ctb_electra_small_20220215_111944.
 CTB9_POS_RADICAL_ELECTRA_SMALL = HANLP_URL + 'pos/pos_ctb_radical_electra_small_20220215_111932.zip'
 'Electra small model (:cite:`clark2020electra`) with radical embeddings (:cite:`he2018dual`) trained on CTB9 (:cite:`https://doi.org/10.35111/gvd0-xk91`). Accuracy = `96.14`.'
 
-C863_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_863_electra_small_20210808_124848.zip'
-'Electra small model (:cite:`clark2020electra`) trained on Chinese 863 corpus. Accuracy = `95.22`.'
+C863_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_863_electra_small_20220217_101958.zip'
+'Electra small model (:cite:`clark2020electra`) trained on Chinese 863 corpus. Accuracy = `95.19`.'
+PKU_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_pku_electra_small_20220217_142436.zip'
+'Electra small model (:cite:`clark2020electra`) trained on Chinese PKU corpus. Accuracy = `97.55`.'
 
 PKU98_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_pku_electra_small_20210808_125158.zip'
 'Electra small model (:cite:`clark2020electra`) trained on CTB9 (:cite:`https://doi.org/10.35111/gvd0-xk91`). Accuracy = `97.60`.'

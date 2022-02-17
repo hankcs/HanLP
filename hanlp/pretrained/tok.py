@@ -15,11 +15,11 @@ LARGE_ALBERT_BASE = HANLP_URL + 'tok/large_corpus_cws_albert_base_20211228_16092
 'ALBERT model (:cite:`Lan2020ALBERT:`) trained on the largest CWS dataset in the world.'
 SIGHAN2005_PKU_BERT_BASE_ZH = HANLP_URL + 'tok/sighan2005_pku_bert_base_zh_20201231_141130.zip'
 'BERT model (:cite:`devlin-etal-2019-bert`) trained on sighan2005 pku dataset.'
-COARSE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/coarse_electra_small_zh_20210603_112321.zip'
-'Electra (:cite:`clark2020electra`) small model trained on coarse-grained CWS corpora. Its performance is P=97.08% R=96.94% F1=97.01% which is ' \
+COARSE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/coarse_electra_small_20220218_100557.zip'
+'Electra (:cite:`clark2020electra`) small model trained on coarse-grained CWS corpora. Its performance is P=96.97% R=96.87% F1=96.92% which is ' \
 'much higher than that of MTL model '
-FINE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/fine_tok_electra_small_20220205_185926.zip'
-'Electra (:cite:`clark2020electra`) small model trained on fine-grained CWS corpora. Its performance is P=97.72% R=97.67% F1=97.69%  which is ' \
+FINE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/fine_electra_small_20220217_190117.zip'
+'Electra (:cite:`clark2020electra`) small model trained on fine-grained CWS corpora. Its performance is P=97.44% R=97.40% F1=97.42% which is ' \
 'much higher than that of MTL model '
 CTB9_TOK_ELECTRA_SMALL = HANLP_URL + 'tok/ctb9_electra_small_20220215_205427.zip'
 'Electra (:cite:`clark2020electra`) small model trained on CTB9. Its performance is P=97.15% R=97.36% F1=97.26% which is ' \
