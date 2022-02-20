@@ -15,7 +15,7 @@ LARGE_ALBERT_BASE = HANLP_URL + 'tok/large_corpus_cws_albert_base_20211228_16092
 'ALBERT model (:cite:`Lan2020ALBERT:`) trained on the largest CWS dataset in the world.'
 SIGHAN2005_PKU_BERT_BASE_ZH = HANLP_URL + 'tok/sighan2005_pku_bert_base_zh_20201231_141130.zip'
 'BERT model (:cite:`devlin-etal-2019-bert`) trained on sighan2005 pku dataset.'
-COARSE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/coarse_electra_small_20220218_100557.zip'
+COARSE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/coarse_electra_small_20220220_013548.zip'
 'Electra (:cite:`clark2020electra`) small model trained on coarse-grained CWS corpora. Its performance is P=96.97% R=96.87% F1=96.92% which is ' \
 'much higher than that of MTL model '
 FINE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/fine_electra_small_20220217_190117.zip'
