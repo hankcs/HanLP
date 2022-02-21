@@ -57,6 +57,10 @@ public class Predefine
 
     public static int TOTAL_FREQUENCY = 25146057; // 现在总词频25146057
     /**
+     * 未登录词的默认词频
+     */
+    public static int OOV_DEFAULT_FREQUENCY = 10000;
+    /**
      * Bigram 平滑因子
      */
     public static double myu = 1 - (double) 1 / TOTAL_FREQUENCY + 0.00001;
@@ -141,5 +145,6 @@ public class Predefine
     {
         TOTAL_FREQUENCY = totalFrequency;
         myu = 1 - ((double) 1 / TOTAL_FREQUENCY + 0.00001);
+        OOV_DEFAULT_FREQUENCY = Math.max(1, Math.min(OOV_DEFAULT_FREQUENCY / 100, TOTAL_FREQUENCY)); // 默认百分之一
     }
 }

@@ -448,19 +448,19 @@ public class AhoCorasickDoubleArrayTrie<V>
     /**
      * c转移，如果是根节点则返回自己
      *
-     * @param nodePos
+     * @param from
      * @param c
      * @return
      */
-    protected int transitionWithRoot(int nodePos, char c)
+    protected int transitionWithRoot(int from, char c)
     {
-        int b = base[nodePos];
+        int b = base[from];
         int p;
 
         p = b + c + 1;
         if (b != check[p])
         {
-            if (nodePos == 0) return 0;
+            if (from == 0) return 0;
             return -1;
         }
 
@@ -817,7 +817,6 @@ public class AhoCorasickDoubleArrayTrie<V>
         private void constructFailureStates()
         {
             fail = new int[size + 1];
-            fail[1] = base[0];
             output = new int[size + 1][];
             Queue<State> queue = new LinkedBlockingDeque<State>();
 
@@ -881,7 +880,10 @@ public class AhoCorasickDoubleArrayTrie<V>
 
             List<Map.Entry<Integer, State>> siblings = new ArrayList<Map.Entry<Integer, State>>(root_node.getSuccess().entrySet().size());
             fetch(root_node, siblings);
-            insert(siblings);
+            if (siblings.isEmpty())
+                Arrays.fill(check, -1); // fill -1 such that no transition is allowed
+            else
+                insert(siblings);
         }
 
         /**
@@ -1009,7 +1011,7 @@ public class AhoCorasickDoubleArrayTrie<V>
             base = nbase;
 
             int ncheck[] = new int[size + 65535];
-            System.arraycopy(check, 0, ncheck, 0, size);
+            System.arraycopy(check, 0, ncheck, 0, Math.min(check.length, ncheck.length));
             check = ncheck;
         }
     }

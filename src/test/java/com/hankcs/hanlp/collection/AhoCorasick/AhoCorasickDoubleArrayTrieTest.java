@@ -45,6 +45,15 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
         }
     }
 
+    public void testBuildEmptyTrie()
+    {
+        AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
+        TreeMap<String, String> map = new TreeMap<String, String>();
+        acdat.build(map);
+        assertEquals(0, acdat.size());
+        assertEquals(0, acdat.parseText("uhers").size());
+    }
+
     /**
      * 测试构建和匹配，使用《我的团长我的团》.txt作为测试数据，并且判断匹配是否正确
      * @throws Exception
