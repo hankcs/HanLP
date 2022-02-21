@@ -3,7 +3,7 @@
 # Date: 2020-08-11 02:47
 from hanlp.common.dataset import SortingSamplerBuilder
 from hanlp.components.tokenizers.transformer import TransformerTaggingTokenizer
-from hanlp.datasets.tokenization.sighan2005 import SIGHAN2005_PKU_TRAIN_ALL, SIGHAN2005_PKU_TEST
+from hanlp.datasets.tokenization.sighan2005.pku import SIGHAN2005_PKU_TRAIN_ALL, SIGHAN2005_PKU_TEST
 from tests import cdroot
 
 cdroot()

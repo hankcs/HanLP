@@ -28,7 +28,7 @@ To parse a tokenized sentence into constituency tree, first load a parser:
 :tags: [output_scroll]
 import hanlp
 
-con = hanlp.load(hanlp.pretrained.constituency.CTB9_FULL_TAG_ELECTRA_SMALL)
+con = hanlp.load(hanlp.pretrained.constituency.CTB9_CON_FULL_TAG_ELECTRA_SMALL)
 ```
 
 Then parse a sequence or multiple sequences of tokens to it. 

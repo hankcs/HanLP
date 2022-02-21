@@ -1,6 +1,7 @@
 # -- Project information -----------------------------------------------------
 import sys
 import os
+from datetime import datetime
 
 sys.path.append(os.path.abspath('..'))
 sys.path.append(os.path.abspath('../plugins/hanlp_common'))
@@ -9,7 +10,7 @@ sys.path.append(os.path.abspath('../plugins/hanlp_restful'))
 import hanlp
 
 project = 'HanLP'
-copyright = '2020, hankcs'
+copyright = f'2020-{datetime.now().year}, hankcs'
 author = 'hankcs'
 
 # The short X.Y version.
