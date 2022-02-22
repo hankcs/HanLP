@@ -473,7 +473,7 @@ class SpanRankingSRLModel(nn.Module):
         self.embed = embed
         # Initialize context layer
         self.context_layer = context_layer
-        context_layer_output_dim = context_layer.get_output_dim()
+        context_layer_output_dim = context_layer.get_output_dim() if context_layer else self.word_embedding_dim
         self.decoder = SpanRankingSRLDecoder(context_layer_output_dim, label_space_size, config)
 
     def forward(self,
@@ -484,9 +484,10 @@ class SpanRankingSRLModel(nn.Module):
 
         context_embeddings = self.embed(batch)
         context_embeddings = F.dropout(context_embeddings, self.lexical_dropout, self.training)
-        contextualized_embeddings = self.context_layer(context_embeddings, masks)
+        if self.context_layer:
+            context_embeddings = self.context_layer(context_embeddings, masks)
 
-        return self.decoder.decode(contextualized_embeddings, sent_lengths, masks, gold_arg_starts, gold_arg_ends,
+        return self.decoder.decode(context_embeddings, sent_lengths, masks, gold_arg_starts, gold_arg_ends,
                                    gold_arg_labels, gold_predicates)
 
     @staticmethod
