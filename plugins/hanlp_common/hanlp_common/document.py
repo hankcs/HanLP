@@ -119,7 +119,7 @@ class Document(dict):
         dep = prefix_match(dep, self)
         sdp = prefix_match(sdp, self)
         results = CoNLLSentenceList()
-        if not self[tok]:
+        if not tok or not self[tok]:
             return results
         self = self._to_doc_without_spans(tok)
         flat = isinstance(self[tok][0], str)
