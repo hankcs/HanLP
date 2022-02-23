@@ -15,7 +15,6 @@ tokenizer_mirrors = {
 
 model_mirrors = {
     'bart5-chinese-small': HANLP_URL + 'transformers/bart5-chinese-small_20210723_203923.zip',
-    'ernie-gram': HANLP_URL + 'transformers/ernie-gram_20210810_012004.zip',
 }
 
 
