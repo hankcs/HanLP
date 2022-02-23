@@ -315,10 +315,16 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                     for i, token in enumerate(input_tokens[1:-1] if add_special_tokens else input_tokens):
                         if input_str[subtoken_offsets[i][0]] == ' ':
                             subtoken_offsets[i] = (subtoken_offsets[i][0] + 1, subtoken_offsets[i][1])
-                if not input_ids:  # This chunk might be some control chars getting removed by tokenizer
-                    input_tokens = [input_str]
-                    input_ids = [tokenizer.unk_token_id]
-                    subtoken_offsets = [(0, len(input_str))]
+                if add_special_tokens:
+                    if len(input_tokens) == 2:  # bos and eos, meaning that the text contains only some spaces
+                        input_tokens.insert(1, input_str)
+                        input_ids.insert(1, tokenizer.unk_token_id)
+                        subtoken_offsets.append((0, len(input_str)))
+                else:
+                    if not input_ids:  # This chunk might be some control chars getting removed by tokenizer
+                        input_tokens = [input_str]
+                        input_ids = [tokenizer.unk_token_id]
+                        subtoken_offsets = [(0, len(input_str))]
                 return input_tokens, input_ids, subtoken_offsets
 
             if self.dict:

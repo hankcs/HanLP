@@ -22,6 +22,14 @@ class TestMultiTaskLearning(unittest.TestCase):
             ["研究", "生命"]
         ])
 
+    def test_mtl_empty_str(self):
+        mtl('')
+        mtl(' ')
+        mtl([''])
+        mtl([' '])
+        mtl(['', ' '])
+        mtl(['', ' ', 'good'])
+
     def test_skip_tok(self):
         pre_tokenized_sents = [
             ["商品和服务", '一个', '词'],
