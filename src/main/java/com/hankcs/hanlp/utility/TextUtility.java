@@ -50,7 +50,7 @@ public class TextUtility
             if (ub1 < 128)
             {
                 if (ub1 <= 32) return CT_OTHER; // NON PRINTABLE CHARACTERS
-                if ("*\"!,.?()[]{}+=/\\;:|".indexOf((char) b1) != -1)
+                if ("*\"!,.?()<>[]{}+=/\\;:|".indexOf((char) b1) != -1)
                     return CT_DELIMITER;
                 if ("0123456789".indexOf((char)b1) != -1)
                     return CT_NUM;
