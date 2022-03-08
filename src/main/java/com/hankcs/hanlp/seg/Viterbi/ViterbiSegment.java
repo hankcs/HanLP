@@ -14,7 +14,7 @@ package com.hankcs.hanlp.seg.Viterbi;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.dictionary.CustomDictionary;
+import com.hankcs.hanlp.dictionary.DynamicCustomDictionary;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
 import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
@@ -211,7 +211,7 @@ public class ViterbiSegment extends WordBasedSegment
         File file = new File(mainPath);
         mainPath = file.getParent() + "/" + Math.abs(combinePath.toString().hashCode());
         mainPath = mainPath.replace("\\", "/");
-        customDictionary.loadMainDictionary(mainPath, path, dat, isCache);
+        DynamicCustomDictionary.loadMainDictionary(mainPath, path, dat, isCache, config.normalization);
     }
 
     /**

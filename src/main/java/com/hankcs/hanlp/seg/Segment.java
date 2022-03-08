@@ -506,7 +506,7 @@ public abstract class Segment
     public List<Term> seg(String text)
     {
         char[] charArray = text.toCharArray();
-        if (HanLP.Config.Normalization)
+        if (config.normalization)
         {
             CharTable.normalization(charArray);
         }
@@ -602,7 +602,7 @@ public abstract class Segment
     public List<Term> seg(char[] text)
     {
         assert text != null;
-        if (HanLP.Config.Normalization)
+        if (config.normalization)
         {
             CharTable.normalization(text);
         }
@@ -879,6 +879,16 @@ public abstract class Segment
     public Segment enableMultithreading(int threadNumber)
     {
         config.threadNumber = threadNumber;
+        return this;
+    }
+
+    /**
+     * 是否执行字符正规化（繁体->简体，全角->半角，大写->小写），切换配置后必须删CustomDictionary.txt.bin缓存
+     */
+    public Segment enableNormalization(boolean normalization)
+    {
+
+        config.normalization = normalization;
         return this;
     }
 }

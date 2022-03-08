@@ -11,6 +11,8 @@
  */
 package com.hankcs.hanlp.seg;
 
+import com.hankcs.hanlp.HanLP;
+
 /**
  * 分词器配置项
  */
@@ -86,4 +88,9 @@ public class Config
     {
         return indexMode > 0;
     }
+
+    /**
+     * 是否执行字符正规化（繁体->简体，全角->半角，大写->小写），切换配置后必须删CustomDictionary.txt.bin缓存
+     */
+    public boolean normalization = HanLP.Config.Normalization;
 }

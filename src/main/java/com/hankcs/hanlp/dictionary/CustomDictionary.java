@@ -45,7 +45,7 @@ public class CustomDictionary
      */
     public static boolean loadMainDictionary(String mainPath, String path[], DoubleArrayTrie<CoreDictionary.Attribute> dat, boolean isCache)
     {
-        return DynamicCustomDictionary.loadMainDictionary(mainPath, path, dat, isCache);
+        return DynamicCustomDictionary.loadMainDictionary(mainPath, path, dat, isCache, HanLP.Config.Normalization);
     }
 
 
@@ -59,7 +59,7 @@ public class CustomDictionary
      */
     public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map, LinkedHashSet<Nature> customNatureCollector)
     {
-        return DynamicCustomDictionary.load(path, defaultNature, map, customNatureCollector);
+        return DynamicCustomDictionary.load(path, defaultNature, map, customNatureCollector, HanLP.Config.Normalization);
     }
 
 
