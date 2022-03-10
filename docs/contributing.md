@@ -29,14 +29,13 @@ To work on this project, you need Python 3.6 or newer.
 
 This project has a test suite to ensure certain important APIs work properly. The tests can be run using:
 
-```console
+```bash
 python -m unittest discover ./tests
 ```
 
-:::{tip}
+```{tip}
 It's hard to cover every API especially those of deep learning models, due to the limited computation resource of CI. However, we suggest all inference APIs to be tested at least.
-
-:::
+```
 
 ## Repository Structure
 
