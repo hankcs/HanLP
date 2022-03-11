@@ -144,7 +144,7 @@ The following table is a subset of CSDP but offers some examples to illustrate t
 | 选取关系   | ePref         | event Preference   | 不如，宁愿                       |
 | 总括关系   | eSum          | event Summary      | 总而言之                        |
 | 分叙关系   | eRect         | event Recount      | 例如，比方说                      |
-| 连词标记   | mConj         | Recount Marker     | 和，或                         |
+| 连词标记   | mConj         | Conjunction        | 和，或                         |
 | 的字标记   | mAux          | Auxiliary          | 的，地，得                       |
 | 介词标记   | mPrep         | Preposition        | 把，被                         |
 | 语气标记   | mTone         | Tone               | 吗，呢                         |
