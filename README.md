@@ -4,7 +4,7 @@
 
 <div align="center">
     <a href="https://github.com/hankcs/HanLP/actions">
-       <img alt="Run Tests" src="https://github.com/hankcs/hanlp/actions/workflows/python-package.yml/badge.svg?branch=master">
+       <img alt="Run Tests" src="https://github.com/hankcs/hanlp/actions/workflows/unit-tests.yml/badge.svg?branch=master">
     </a>
     <a href="https://pypi.org/project/hanlp/">
         <img alt="PyPI Version" src="https://img.shields.io/pypi/v/hanlp?color=blue">
