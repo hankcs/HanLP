@@ -25,3 +25,9 @@ print(f'合并模式:\n{HanLP("商品和服务项目")["tok/fine"]}')
 
 # 需要算法基础才能理解，初学者可参考 http://nlp.hankcs.com/book.php
 # See also https://hanlp.hankcs.com/docs/api/hanlp/components/tokenizers/transformer.html
+
+# 含有空格、制表符等（Transformer tokenizer去掉的字符）的词语需要用tuple的形式提供
+tok.dict_combine = {('iPad', 'Pro'), '2个空格'}
+print(f'空格匹配：\n{HanLP("如何评价iPad Pro ？iPad  Pro有2个空格", tasks="tok/fine")["tok/fine"]}')
+# 聪明的用户请继续阅读：tuple词典中的字符串其实等价于该字符串的所有可能的切分方式
+print(f'词典内容：\n{dict(tok.dict_combine.config["dictionary"]).keys()}')

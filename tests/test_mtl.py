@@ -73,8 +73,12 @@ class TestMultiTaskLearning(unittest.TestCase):
         self.assertSequenceEqual(mtl('͡', tasks='tok/fine')['tok/fine'], ['͡'])
 
     def test_space(self):
-        doc: Document = mtl('商品 和服务')
-        self.assertSequenceEqual(doc['tok/fine'], ["商品", "和", "服务"])
+        task = 'tok/fine'
+        doc: Document = mtl('商品 和服务', tasks=task)
+        self.assertSequenceEqual(doc[task], ["商品", "和", "服务"])
+        mtl[task].dict_combine = {('iPad', 'Pro'), '2个空格'}
+        self.assertSequenceEqual(mtl("如何评价iPad Pro ？iPad  Pro有2个空格", tasks=task)[task],
+                                 ['如何', '评价', 'iPad Pro', '？', 'iPad  Pro', '有', '2个空格'])
 
 
 if __name__ == '__main__':

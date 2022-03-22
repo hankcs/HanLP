@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2019-08-25 00:19
 import unicodedata
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 
 def format_scores(results: Dict[str, float]) -> str:
@@ -94,3 +94,24 @@ def split_long_sent(sent, delimiters, max_seq_length):
             if len(short) + len(parts[idx + 1]) > max_seq_length:
                 yield short
                 short = []
+
+
+def possible_tokenization(text: str) -> List[Tuple[str]]:
+    """Enumerate all possible tokenizations of a text.
+
+    Args:
+        text: A text.
+
+    Returns: All possible tokenizations.
+
+    """
+    states = [((), ())]
+    for c in text:
+        new_states = []
+        for t, b in states:
+            # to split
+            new_states.append((t + (''.join(b + (c,)),), ()))
+            # not to split
+            new_states.append((t, b + (c,)))
+        states = new_states
+    return [t for t, b in states if not b]

@@ -12,8 +12,10 @@ from hanlp.datasets.tokenization.loaders.txt import TextTokenizingDataset, gener
 from hanlp.metrics.f1 import F1
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer
 from hanlp.utils.span_util import bmes_to_spans
+from hanlp.utils.string_util import possible_tokenization
 from hanlp_common.util import merge_locals_kwargs
 from hanlp_trie import DictInterface, TrieDict
+from hanlp_trie.dictionary import TupleTrieDict
 
 
 class TransformerTaggingTokenizer(TransformerTagger):
@@ -81,7 +83,16 @@ class TransformerTaggingTokenizer(TransformerTagger):
     @dict_combine.setter
     def dict_combine(self, dictionary: Union[DictInterface, Union[Dict[str, Any], Set[str]]]):
         if dictionary is not None and not isinstance(dictionary, DictInterface):
-            dictionary = TrieDict(dictionary)
+            if all(isinstance(k, str) for k in dictionary):
+                dictionary = TrieDict(dictionary)
+            else:
+                _d = set()
+                for k in dictionary:
+                    if isinstance(k, str):
+                        _d.update(possible_tokenization(k))
+                    else:
+                        _d.add(k)
+                dictionary = TupleTrieDict(_d)
         self.config.dict_combine = dictionary
 
     def build_metric(self, **kwargs):
@@ -150,8 +161,14 @@ class TransformerTaggingTokenizer(TransformerTagger):
     def spans_to_tokens(self, spans, batch, rebuild_span=False):
         batch_tokens = []
         dict_combine = self.dict_combine
-        for spans_per_sent, sub_tokens in zip(spans, batch[self.config.token_key]):
-            tokens = [''.join(sub_tokens[span[0]:span[1]]) for span in spans_per_sent]
+        raw_text = batch.get('token_', None)  # Use raw text to rebuild the token according to its offset
+        for b, (spans_per_sent, sub_tokens) in enumerate(zip(spans, batch[self.config.token_key])):
+            if raw_text:  # This will restore iPhone X as a whole
+                text = raw_text[b]
+                offsets = batch['token_subtoken_offsets'][b]
+                tokens = [text[offsets[b][0]:offsets[e - 1][-1]] for b, e in spans_per_sent]
+            else:  # This will merge iPhone X into iPhoneX
+                tokens = [''.join(sub_tokens[span[0]:span[1]]) for span in spans_per_sent]
             if dict_combine:
                 if rebuild_span:
                     char_to_span = []
@@ -163,10 +180,15 @@ class TransformerTaggingTokenizer(TransformerTagger):
                 offset = 0
                 delta = 0
                 for start, end, label in dict_combine.tokenize(tokens):
-                    # batch['raw_token'][0][start:end]
                     if offset < start:
                         buffer.extend(tokens[offset:start])
-                    buffer.append(''.join(tokens[start:end]))
+                    if raw_text:
+                        # noinspection PyUnboundLocalVariable
+                        combined = text[offsets[spans_per_sent[start - delta][0]][0]:
+                                        offsets[spans_per_sent[end - delta - 1][1] - 1][1]]
+                    else:
+                        combined = tokens[start:end]
+                    buffer.append(''.join(combined))
                     offset = end
                     if rebuild_span:
                         start -= delta
