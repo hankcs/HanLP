@@ -328,7 +328,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                 return input_tokens, input_ids, subtoken_offsets
 
             if self.dict:
-                chunks = self.dict.split(input_tokens)
+                chunks = self.dict.split(sample.get(f'{self.input_key}_', input_tokens))  # Match original text directly
                 _input_tokens, _input_ids, _subtoken_offsets = [self.cls_token], [self.cls_token_id], []
                 _offset = 0
                 custom_words = sample['custom_words'] = []

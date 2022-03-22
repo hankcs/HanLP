@@ -80,6 +80,12 @@ class TestMultiTaskLearning(unittest.TestCase):
         self.assertSequenceEqual(mtl("如何评价iPad Pro ？iPad  Pro有2个空格", tasks=task)[task],
                                  ['如何', '评价', 'iPad Pro', '？', 'iPad  Pro', '有', '2个空格'])
 
+    def test_transform(self):
+        task = 'tok/fine'
+        mtl[task].dict_force = {'用户ID'}
+        self.assertSequenceEqual(mtl("我的用户ID跟你的用户id不同", tasks=task)[task],
+                                 ['我', '的', '用户ID', '跟', '你', '的', '用户', 'id', '不同'])
+
 
 if __name__ == '__main__':
     unittest.main()
