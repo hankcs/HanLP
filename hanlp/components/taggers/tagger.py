@@ -218,6 +218,7 @@ class Tagger(DistillableComponent, ABC):
     def dict_tags(self,
                   dictionary: Union[DictInterface, Union[Dict[Union[str, Sequence[str]], Union[str, Sequence[str]]]]]):
         if dictionary is not None and not isinstance(dictionary, DictInterface):
+            assert isinstance(dictionary, dict), f'Expected dictionary to be `dict` but got {type(dictionary)}.'
             _d = dict()
             for k, v in dictionary.items():
                 if isinstance(k, str):
