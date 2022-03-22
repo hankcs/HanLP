@@ -170,12 +170,6 @@ class TransformerTaggingTokenizer(TransformerTagger):
             else:  # This will merge iPhone X into iPhoneX
                 tokens = [''.join(sub_tokens[span[0]:span[1]]) for span in spans_per_sent]
             if dict_combine:
-                if rebuild_span:
-                    char_to_span = []
-                    offset = 0
-                    for start, end in spans_per_sent:
-                        char_to_span.append(offset)
-                        offset += sum(len(x) for x in sub_tokens[start:end])
                 buffer = []
                 offset = 0
                 delta = 0
