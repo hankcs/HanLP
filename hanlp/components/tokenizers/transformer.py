@@ -181,8 +181,8 @@ class TransformerTaggingTokenizer(TransformerTagger):
                         combined = text[offsets[spans_per_sent[start - delta][0]][0]:
                                         offsets[spans_per_sent[end - delta - 1][1] - 1][1]]
                     else:
-                        combined = tokens[start:end]
-                    buffer.append(''.join(combined))
+                        combined = ''.join(tokens[start:end])
+                    buffer.append(combined)
                     offset = end
                     if rebuild_span:
                         start -= delta
