@@ -102,7 +102,7 @@ class HanLPClient(object):
         """
         A shortcut of :meth:`~hanlp_restful.HanLPClient.parse`.
         """
-        return self.parse(text, tokens, tasks, skip_tasks)
+        return self.parse(text, tokens, tasks, skip_tasks, language)
 
     def about(self) -> Dict[str, Any]:
         """Get the information about server and your client.
