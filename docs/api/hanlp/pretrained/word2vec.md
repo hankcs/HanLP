@@ -42,8 +42,8 @@ These vectors have already been normalized to facilitate similarity computation:
 ```{code-cell} ipython3
 :tags: [output_scroll]
 import torch
-torch.nn.functional.cosine_similarity(word2vec('先进'), word2vec('优秀'), dim=0)
-torch.nn.functional.cosine_similarity(word2vec('先进'), word2vec('水果'), dim=0)
+print(torch.nn.functional.cosine_similarity(word2vec('先进'), word2vec('优秀'), dim=0))
+print(torch.nn.functional.cosine_similarity(word2vec('先进'), word2vec('水果'), dim=0))
 ```
 
 Using these similarity scores, the most similar words can be found:
