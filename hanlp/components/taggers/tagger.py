@@ -29,10 +29,10 @@ class Tagger(DistillableComponent, ABC):
         elif optimizer == 'sgd':
             return torch.optim.SGD(self.model.parameters(), lr=lr)
 
-    def build_criterion(self, model=None, reduction='mean', **kwargs):
+    def build_criterion(self, model=None, reduction='mean', decoder=None, **kwargs):
         if self.config.get('crf', False):
             if not model:
-                model = self.model
+                model = decoder or self.model
             if isinstance(model, nn.DataParallel):
                 raise ValueError('DataParallel not supported when CRF is used')
                 return self.model_from_config.module.crf
@@ -60,8 +60,7 @@ class Tagger(DistillableComponent, ABC):
             if model is None:
                 model = self.model
             crf: CRF = model.crf
-            outputs = crf.decode(logits, mask)
-            return [y[0] for y in outputs]
+            return crf.decode(logits, mask)
         else:
             return logits.argmax(-1)
 
