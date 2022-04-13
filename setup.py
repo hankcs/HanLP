@@ -11,6 +11,20 @@ version = {}
 with open(join(this_dir, "hanlp", "version.py")) as fp:
     exec(fp.read(), version)
 
+extras_require = {
+    'amr': [
+        'penman==1.2.1',
+        'networkx>=2.5.1',
+        'perin-parser==0.0.2',
+    ],
+    'tf': [
+        'fasttext-wheel==0.9.2',
+        'tensorflow==2.6.0',
+        'keras==2.6.0',
+    ]
+}
+extras_require['full'] = sum(extras_require.values(), [])
+
 setup(
     name='hanlp',
     version=version['__version__'],
@@ -47,15 +61,7 @@ setup(
         'hanlp-trie>=0.0.4',
         'hanlp-downloader',
     ],
-    extras_require={
-        'full': [
-            'fasttext-wheel==0.9.2',
-            'tensorflow==2.6.0',
-            'keras==2.6.0',
-            'penman==1.2.1',
-            'networkx>=2.5.1',
-        ],
-    },
+    extras_require=extras_require,
     python_requires='>=3.6',
     # entry_points={
     #     'console_scripts': [

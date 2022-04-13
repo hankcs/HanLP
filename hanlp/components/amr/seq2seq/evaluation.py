@@ -10,7 +10,7 @@ def write_predictions(predictions_path, tokenizer, graphs):
 
 
 def compute_smatch(pred, gold):
-    import smatch
+    from perin_parser.thirdparty.mtool import smatch
     with Path(pred).open() as p, Path(gold).open() as g:
         score = next(smatch.score_amr_pairs(p, g))
     return score[2]

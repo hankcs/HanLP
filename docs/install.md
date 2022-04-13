@@ -68,10 +68,12 @@ HanLP also perfectly supports accelerating on Apple Silicon M1 chips, see [tutor
 ```
 ````
 
-| Flavor  | Description                                                  |
-| ------- | ------------------------------------------------------------ |
+| Flavor  | Description                                                                                                                                                  |
+|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | default | This installs the default version which delivers the most commonly used functionalities. However, some heavy dependencies like TensorFlow are not installed. |
-| full    | For experts who seek to maximize the efficiency via TensorFlow and C++ extensions, `pip install hanlp[full]` installs every dependency HanLP will use in production. |
+| tf      | This installs the TensorFlow and fastText.                                                                                                                   |
+| amr     | To support Abstract Meaning Representation (AMR) models, this installs AMR related dependencies like `penman`.                                               |
+| full    | For experts who seek to maximize the efficiency via TensorFlow and C++ extensions, `pip install hanlp[full]` installs all the above dependencies.            |
 
 
 ## Install Models

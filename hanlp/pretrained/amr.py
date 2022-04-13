@@ -27,5 +27,12 @@ Meaning Representation 3.0 (:cite:`knight2014abstract`). Its performance is
 Note this parser does NOT perform wikification.
 '''
 
+MRP2020_AMR_ENG_ZHO_XLM_BASE = 'http://download.hanlp.com/amr/extra/amr-eng-zho-xlm-roberta-base_20220412_223756.zip'
+'''A wrapper for the Permutation-invariant Semantic Parser (:cite:`samuel-straka-2020-ufal`) trained on MRP2020 English 
+and Chinese AMR corpus. It was ranked the top in the MRP2020 competition, while this release is a base version. 
+See the original paper for the detailed performance. Note this model requires tokens and lemmas (for English) to be 
+provided as inputs. 
+'''
+
 # Will be filled up during runtime
 ALL = {}
