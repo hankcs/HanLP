@@ -20,7 +20,7 @@ import java.util.Objects;
 public class Span
 {
     /**
-     * The raw form of a span, which can be either a token, an entitiy or a mention etc.
+     * The raw form of a span, which can be either a token, an entity or a mention etc.
      */
     public String form;
     /**

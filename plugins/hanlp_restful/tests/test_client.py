@@ -47,6 +47,13 @@ class TestClient(unittest.TestCase):
         print(self.HanLP.text_style_transfer('打工人，打工魂，打工都是人上人', target_style='gov_doc'))
         print(self.HanLP.text_style_transfer('我看到了窗户外面有白色的云和绿色的森林', target_style='modern_poetry'))
 
+    def test_abstract_meaning_representation(self):
+        print(self.HanLP.abstract_meaning_representation('男孩希望女孩相信他。'))
+        print(self.HanLP.abstract_meaning_representation('男孩希望女孩相信他。', visualization='dot'))
+        print(self.HanLP.abstract_meaning_representation('男孩希望女孩相信他。', visualization='svg'))
+        print(self.HanLP.abstract_meaning_representation(tokens=[['男孩', '希望', '女孩', '相信', '他', '。']]))
+        print(self.HanLP.abstract_meaning_representation('The boy wants the girl to believe him.', language='en'))
+
 
 if __name__ == '__main__':
     unittest.main()

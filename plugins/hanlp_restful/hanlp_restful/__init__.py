@@ -13,13 +13,13 @@ try:
     import requests
 
 
-    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=5) -> str:
+    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10) -> str:
         response = requests.post(url, json=form, headers=headers, timeout=timeout)
         if response.status_code != 200:
             raise HTTPError(url, response.status_code, response.text, response.headers, None)
         return response.text
 except ImportError:
-    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=5) -> str:
+    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10) -> str:
         request = Request(url, json.dumps(form).encode())
         for k, v in headers.items():
             request.add_header(k, v)
@@ -28,7 +28,7 @@ except ImportError:
 
 class HanLPClient(object):
 
-    def __init__(self, url: str, auth: str = None, language=None, timeout=5) -> None:
+    def __init__(self, url: str, auth: str = None, language=None, timeout=10) -> None:
         """
 
         Args:
@@ -293,3 +293,42 @@ class HanLPClient(object):
         """
         doc = self.parse(text=text, tasks='tok/coarse' if coarse is True else 'tok', language=language)
         return next(iter(doc.values()))
+
+    def abstract_meaning_representation(self,
+                                        text: Union[str, List[str]] = None,
+                                        tokens: List[List[str]] = None,
+                                        language: str = None,
+                                        visualization: str = None,
+                                        ) -> List[Dict]:
+        """Abstract Meaning Representation (AMR) captures “who is doing what to whom” in a sentence. Each sentence is
+        represented as a rooted, directed, acyclic graph consisting of nodes (concepts) and edges (relations).
+
+        Args:
+            text: A document (str), or a list of sentences (List[str]).
+            tokens: A list of sentences where each sentence is a list of tokens.
+            language: The language of input text or tokens. ``None`` to use the default language on server.
+            visualization: Set to `dot` or `svg` to obtain coresspodning visualization.
+
+        Returns:
+            Graphs in meaning represenation format.
+
+        Examples::
+
+            HanLP.abstract_meaning_representation('男孩希望女孩相信他。')
+            HanLP.abstract_meaning_representation('The boy wants the girl to believe him.',
+                                                  language='en')
+
+        .. image:: https://hanlp.hankcs.com/proxy/amr?tok=%E7%94%B7%E5%AD%A9%20%E5%B8%8C%E6%9C%9B%20%E5%A5%B3%E5%AD%A9%20%E7%9B%B8%E4%BF%A1%20%E4%BB%96%20%E3%80%82&language=zh&scale=1
+            :alt: Abstract Meaning Representation
+
+        .. image:: https://hanlp.hankcs.com/proxy/amr?tok=The%20boy%20wants%20the%20girl%20to%20believe%20him%20.&language=en&scale=1
+            :alt: Abstract Meaning Representation
+
+        """
+        assert text or tokens, 'At least one of text or tokens has to be specified.'
+        return self._send_post_json(self._url + '/abstract_meaning_representation', {
+            'text': text,
+            'tokens': tokens,
+            'language': language or self._language,
+            'visualization': visualization,
+        })

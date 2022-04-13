@@ -49,46 +49,46 @@ the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licens
   <summary>Click to expand tutorials for RESTful APIs</summary>
 
   ### Python
-  
+
   ```bash
   pip install hanlp_restful
   ```
-  
+
   Create a client with our API endpoint and your auth.
-  
+
   ```python
   from hanlp_restful import HanLPClient
   HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul') # mul: multilingual, zh: Chinese
   ```
-  
+
   ### Java
-  
+
   Insert the following dependency into your `pom.xml`.
-  
+
   ```xml
   <dependency>
     <groupId>com.hankcs.hanlp.restful</groupId>
     <artifactId>hanlp-restful</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
   </dependency>
   ```
-  
+
   Create a client with our API endpoint and your auth.
-  
+
   ```java
   HanLPClient HanLP = new HanLPClient("https://hanlp.hankcs.com/api", null, "mul"); // mul: multilingual, zh: Chinese
 
   ```
 
   ### Quick Start
-  
+
   No matter which language you use, the same interface can be used to parse a document.
-  
+
   ```python
   HanLP.parse(
       "In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environments. 2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。")
   ```
-  
+
   See [docs](https://hanlp.hankcs.com/docs/tutorial.html) for visualization, annotation guidelines and more details.
 
 </details>

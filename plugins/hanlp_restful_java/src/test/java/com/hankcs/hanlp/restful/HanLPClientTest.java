@@ -108,6 +108,19 @@ class HanLPClientTest
         prettyPrint(clusters);
     }
 
+    @Test
+    void abstractMeaningRepresentationText() throws IOException
+    {
+        prettyPrint(client.abstractMeaningRepresentation("男孩希望女孩相信他。阿婆主来到北京立方庭参观自然语义科技公司。"));
+    }
+
+    @Test
+    void abstractMeaningRepresentationTokens() throws IOException
+    {
+        prettyPrint(client.abstractMeaningRepresentation(new String[][]{
+                new String[]{"2021年", "HanLPv2.1", "为", "生产", "环境", "带来", "次", "世代", "最", "先进", "的", "多语种", "NLP", "技术", "。"},
+                new String[]{"英", "首相", "与", "特朗普", "通", "电话", "讨论", "华为", "与", "苹果", "公司", "。"}}));
+    }
 
     void prettyPrint(Object object) throws JsonProcessingException
     {

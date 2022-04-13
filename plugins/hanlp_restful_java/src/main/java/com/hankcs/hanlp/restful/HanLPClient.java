@@ -12,6 +12,7 @@ package com.hankcs.hanlp.restful;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hankcs.hanlp.restful.mrp.MeaningRepresentation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -323,6 +324,38 @@ public class HanLPClient
             results.add(spans);
         }
         return results;
+    }
+
+    /**
+     * Abstract Meaning Representation (AMR) captures “who is doing what to whom” in a sentence. Each sentence is
+     * represented as a rooted, directed, acyclic graph consisting of nodes (concepts) and edges (relations).
+     *
+     * @param text A piece of text, usually a document without tokenization.
+     * @return AMR graphs.
+     * @throws IOException HTTP errors.
+     */
+    public MeaningRepresentation[] abstractMeaningRepresentation(String text) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("language", language);
+        return mapper.readValue(post("/abstract_meaning_representation", input), MeaningRepresentation[].class);
+    }
+
+    /**
+     * Abstract Meaning Representation (AMR) captures “who is doing what to whom” in a sentence. Each sentence is
+     * represented as a rooted, directed, acyclic graph consisting of nodes (concepts) and edges (relations).
+     *
+     * @param tokens A list of sentences where each sentence is a list of tokens.
+     * @return AMR graphs.
+     * @throws IOException HTTP errors.
+     */
+    public MeaningRepresentation[] abstractMeaningRepresentation(String[][] tokens) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("tokens", tokens);
+        input.put("language", language);
+        return mapper.readValue(post("/abstract_meaning_representation", input), MeaningRepresentation[].class);
     }
 
     private String post(String api, Object input_) throws IOException
