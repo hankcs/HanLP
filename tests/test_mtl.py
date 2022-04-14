@@ -29,6 +29,7 @@ class TestMultiTaskLearning(unittest.TestCase):
         mtl([' '])
         mtl(['', ' '])
         mtl(['', ' ', 'good'])
+        mtl([[]], skip_tasks='tok*')
 
     def test_skip_tok(self):
         pre_tokenized_sents = [

@@ -475,7 +475,7 @@ class MultiTaskLearning(TorchComponent):
             A :class:`~hanlp_common.document.Document`.
         """
         doc = Document()
-        if not data:
+        if not data or not any(data):
             return doc
 
         target_tasks = resolved_tasks or self.resolve_tasks(tasks, skip_tasks)
