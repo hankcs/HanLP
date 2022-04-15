@@ -15,7 +15,7 @@ extras_require = {
     'amr': [
         'penman==1.2.1',
         'networkx>=2.5.1',
-        'perin-parser>=0.0.10',
+        'perin-parser>=0.0.12',
     ],
     'tf': [
         'fasttext-wheel==0.9.2',

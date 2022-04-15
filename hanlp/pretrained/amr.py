@@ -34,5 +34,13 @@ See the original paper for the detailed performance. Note this model requires to
 provided as inputs. 
 '''
 
+MRP2020_AMR_ZHO_MENGZI_BASE = 'http://download.hanlp.com/amr/extra/amr-zho-mengzi-base_20220415_101941.zip'
+'''A Chinese Permutation-invariant Semantic Parser (:cite:`samuel-straka-2020-ufal`) trained on MRP2020  
+Chinese AMR corpus using Mengzi BERT base (:cite:`zhang2021mengzi`). Its performance on dev set is 
+``{amr-zho [tops F1: 85.43%][anchors F1: 93.41%][labels F1: 87.68%][properties F1: 82.02%][edges F1: 73.17%]
+[attributes F1: 0.00%][all F1: 84.11%]}``. Test set performance is unknown since the test set is not released to the 
+public. 
+'''
+
 # Will be filled up during runtime
 ALL = {}
