@@ -54,6 +54,11 @@ class TestClient(unittest.TestCase):
         print(self.HanLP.abstract_meaning_representation(tokens=[['男孩', '希望', '女孩', '相信', '他', '。']]))
         print(self.HanLP.abstract_meaning_representation('The boy wants the girl to believe him.', language='en'))
 
+    def test_keyphrase_extraction(self):
+        print(self.HanLP.keyphrase_extraction(
+            '自然语言处理是一门博大精深的学科，掌握理论才能发挥出HanLP的全部性能。 '
+            '《自然语言处理入门》是一本配套HanLP的NLP入门书，助你零起点上手自然语言处理。', topk=3))
+
 
 if __name__ == '__main__':
     unittest.main()

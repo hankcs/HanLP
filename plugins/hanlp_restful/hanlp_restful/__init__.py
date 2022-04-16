@@ -332,3 +332,26 @@ class HanLPClient(object):
             'language': language or self._language,
             'visualization': visualization,
         })
+
+    def keyphrase_extraction(
+            self,
+            text: str,
+            topk: int = 10,
+            language: str = None,
+    ) -> Dict[str, float]:
+        """ Keyphrase extraction aims to identify keywords or phrases reflecting the main topics of a document.
+
+        Args:
+            text: The text content of the document. Preferably the concatenation of the title and the content.
+            topk: The number of top-K ranked keywords or keyphrases.
+            language: The language of input text or tokens. ``None`` to use the default language on server.
+
+        Returns:
+            A dictionary containing each keyword or keyphrase and its ranking score :math:`s`, :math:`s \in [0, 1]`.
+        """
+        assert text, 'Text has to be specified.'
+        return self._send_post_json(self._url + '/keyphrase_extraction', {
+            'text': text,
+            'language': language or self._language,
+            'topk': topk,
+        })
