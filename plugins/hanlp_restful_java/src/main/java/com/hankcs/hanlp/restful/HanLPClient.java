@@ -358,6 +358,36 @@ public class HanLPClient
         return mapper.readValue(post("/abstract_meaning_representation", input), MeaningRepresentation[].class);
     }
 
+    /**
+     * Keyphrase extraction aims to identify keywords or phrases reflecting the main topics of a document.
+     *
+     * @param text The text content of the document. Preferably the concatenation of the title and the content.
+     * @param topk The number of top-K ranked keywords or keyphrases.
+     * @return A dictionary containing each keyphrase and its ranking score s between 0 and 1.
+     * @throws IOException HTTP errors.
+     */
+    public Map<String, Double> keyphraseExtraction(String text, int topk) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("topk", topk);
+        input.put("language", language);
+        //noinspection unchecked
+        return mapper.readValue(post("/keyphrase_extraction", input), LinkedHashMap.class);
+    }
+
+    /**
+     * Keyphrase extraction aims to identify keywords or phrases reflecting the main topics of a document.
+     *
+     * @param text The text content of the document. Preferably the concatenation of the title and the content.
+     * @return A dictionary containing 10 keyphrases and their ranking scores s between 0 and 1.
+     * @throws IOException HTTP errors.
+     */
+    public Map<String, Double> keyphraseExtraction(String text) throws IOException
+    {
+        return keyphraseExtraction(text, 10);
+    }
+
     private String post(String api, Object input_) throws IOException
     {
         URL url = new URL(this.url + api);

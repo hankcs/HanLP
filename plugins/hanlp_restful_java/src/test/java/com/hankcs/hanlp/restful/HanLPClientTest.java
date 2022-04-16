@@ -109,6 +109,14 @@ class HanLPClientTest
     }
 
     @Test
+    void keyphraseExtraction() throws IOException
+    {
+        prettyPrint(client.keyphraseExtraction(
+                "自然语言处理是一门博大精深的学科，掌握理论才能发挥出HanLP的全部性能。" +
+                        "《自然语言处理入门》是一本配套HanLP的NLP入门书，助你零起点上手自然语言处理。", 3));
+    }
+
+    @Test
     void abstractMeaningRepresentationText() throws IOException
     {
         prettyPrint(client.abstractMeaningRepresentation("男孩希望女孩相信他。阿婆主来到北京立方庭参观自然语义科技公司。"));

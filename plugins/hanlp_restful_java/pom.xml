@@ -6,7 +6,7 @@
 
     <groupId>com.hankcs.hanlp.restful</groupId>
     <artifactId>hanlp-restful</artifactId>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
 
     <name>HanLP RESTful Client in Java</name>
     <url>https://github.com/hankcs/HanLP</url>
