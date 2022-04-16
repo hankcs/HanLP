@@ -332,9 +332,12 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                 _input_tokens, _input_ids, _subtoken_offsets = [self.cls_token], [self.cls_token_id], []
                 _offset = 0
                 custom_words = sample['custom_words'] = []
+                char_offset = 0
                 for chunk in chunks:
-                    if isinstance(chunk, str):
+                    if isinstance(chunk, str):  # Use transformed text as it's what models are trained on
+                        chunk = input_tokens[char_offset:char_offset + len(chunk)]
                         tokens, ids, offsets = tokenize_str(chunk, add_special_tokens=False)
+                        char_offset += len(chunk)
                     else:
                         begin, end, label = chunk
                         # chunk offset is in char level
@@ -354,6 +357,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                             tokens, ids, offsets = tokenize_str(input_tokens[begin:end], add_special_tokens=False)
                             # offsets = [(offsets[0][0], offsets[-1][-1])]
                             custom_words.append((len(_input_ids) - 1, len(_input_ids) + len(ids) - 1, label))
+                        char_offset = end
                     _input_tokens.extend(tokens)
                     _input_ids.extend(ids)
                     _subtoken_offsets.extend((x[0] + _offset, x[1] + _offset) for x in offsets)
