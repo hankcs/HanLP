@@ -150,6 +150,9 @@ class HanLPClient(object):
             target_style: Target style.
             language: The language of input text. ``None`` to use the default language.
 
+        Returns:
+            Text or a list of text of the target style.
+
         Examples::
 
             HanLP.text_style_transfer(['国家对中石油抱有很大的期望.', '要用创新去推动高质量的发展。'],
@@ -160,13 +163,10 @@ class HanLPClient(object):
                 '要以创新驱动高质量发展。'
             ]
 
-            HanLP.text_style_transfer('我看到了窗户外面有白色的云和绿色的森林', target_style='modern_poetry')
+            HanLP.text_style_transfer('我看到了窗户外面有白色的云和绿色的森林',
+                                      target_style='modern_poetry')
             # Output:
             '我看见窗外的白云绿林'
-
-        Returns:
-            Text or a list of text of the target style.
-
         """
         response = self._send_post_json(self._url + '/text_style_transfer',
                                         {'text': text, 'target_style': target_style,
@@ -181,6 +181,9 @@ class HanLPClient(object):
             text: A pair or pairs of text.
             language: The language of input text. ``None`` to use the default language.
 
+        Returns:
+            Similarities.
+
         Examples::
 
             HanLP.semantic_textual_similarity([
@@ -190,14 +193,10 @@ class HanLPClient(object):
             ])
             # Output:
             [
-                0.9764469861984253,   # Similarity of ('看图猜一电影名', '看图猜电影')
-                0.0,                  # Similarity of ('无线路由器怎么无线上网', '无线上网卡和无线路由器怎么用')
-                0.003458738327026367  # Similarity of ('北京到上海的动车票', '上海到北京的动车票')
+                0.9764469, # Similarity of ('看图猜一电影名', '看图猜电影')
+                0.0,       # Similarity of ('无线路由器怎么无线上网', '无线上网卡和无线路由器怎么用')
+                0.0034587  # Similarity of ('北京到上海的动车票', '上海到北京的动车票')
             ]
-
-        Returns:
-            Similarities.
-
         """
         response = self._send_post_json(self._url + '/semantic_textual_similarity',
                                         {'text': text, 'language': language or self._language})
@@ -215,17 +214,24 @@ class HanLPClient(object):
             speakers: A list of speakers where each speaker is a ``str`` representing the speaker's ID, e.g., ``Tom``.
             language: The language of input text. ``None`` to use the default language.
 
+        Returns:
+            When ``text`` is specified, return the clusters and tokens. Otherwise just the clusters, In this case, you need to ``sum(tokens, [])`` in order to match the span indices with tokens
+
         Examples::
 
             HanLP.coreference_resolution('我姐送我她的猫。我很喜欢它。')
+            # Output:
             {'clusters': [
                           [['我', 0, 1], ['我', 3, 4], ['我', 8, 9]], # 指代说话人
                           [['我姐', 0, 2], ['她', 4, 5]],             # 指代说话人的姐姐
                           [['她的猫', 4, 7], ['它', 11, 12]]],        # 指代说话人的姐姐的猫
-             'tokens': ['我', '姐', '送', '我', '她', '的', '猫', '。', '我', '很', '喜欢', '它', '。']}
+             'tokens': ['我', '姐', '送', '我', '她', '的', '猫', '。',
+                        '我', '很', '喜欢', '它', '。']}
 
-            HanLP.coreference_resolution(tokens=[['我', '姐', '送', '我', '她', '的', '猫', '。'],
-                                                 ['我', '很', '喜欢', '它', '。']])
+            HanLP.coreference_resolution(
+            tokens=[['我', '姐', '送', '我', '她', '的', '猫', '。'],
+                    ['我', '很', '喜欢', '它', '。']])
+            # Output:
                          [
                           [['我', 0, 1], ['我', 3, 4], ['我', 8, 9]], # 指代说话人
                           [['我姐', 0, 2], ['她', 4, 5]],             # 指代说话人的姐姐
@@ -233,9 +239,6 @@ class HanLPClient(object):
 
         .. image:: https://file.hankcs.com/img/coref_demo_small.png
             :alt: Coreference resolution visualization
-
-        Returns:
-            When ``text`` is specified, return the clusters and tokens. Otherwise just the clusters, In this case, you need to ``sum(tokens, [])`` in order to match the span indices with tokens
         """
         response = self._send_post_json(self._url + '/coreference_resolution',
                                         {'text': text, 'tokens': tokens, 'speakers': speakers,
@@ -251,6 +254,9 @@ class HanLPClient(object):
             text: A document (``str``), or a list of sentences (``List[str]``).
             coarse: Whether to perform coarse-grained or fine-grained tokenization.
             language: The language of input text. ``None`` to use the default language.
+
+        Returns:
+            A list of tokenized sentences.
 
         Examples::
 
@@ -287,9 +293,6 @@ class HanLPClient(object):
               '言語', 'NLP', '技術', 'を', '本番', '環境', 'に', '導入', 'します', '。'],
              ['2021', '年', 'HanLPv2.1', '为', '生产', '环境', '带来', '次世代', '最', '先进的',
               '多', '语种', 'NLP', '技术', '。']]
-
-        Returns:
-            A list of tokenized sentences.
         """
         doc = self.parse(text=text, tasks='tok/coarse' if coarse is True else 'tok', language=language)
         return next(iter(doc.values()))
@@ -348,6 +351,16 @@ class HanLPClient(object):
 
         Returns:
             A dictionary containing each keyword or keyphrase and its ranking score :math:`s`, :math:`s \in [0, 1]`.
+
+        Examples::
+
+            HanLP.keyphrase_extraction(
+                '自然语言处理是一门博大精深的学科，掌握理论才能发挥出HanLP的全部性能。 '
+                '《自然语言处理入门》是一本配套HanLP的NLP入门书，助你零起点上手自然语言处理。', topk=3)
+            # Output:
+            {'自然语言处理': 0.800000011920929,
+             'HanLP的全部性能': 0.5258446335792542,
+             '一门博大精深的学科': 0.421421080827713}
         """
         assert text, 'Text has to be specified.'
         return self._send_post_json(self._url + '/keyphrase_extraction', {
