@@ -75,6 +75,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         # tf models are trained with version < 2.1. To migrate them to 2.1, map their classpath to new locations
         upgrade = {
             'hanlp.components.tok_tf.TransformerTokenizerTF': 'hanlp.components.tokenizers.tok_tf.TransformerTokenizerTF',
+            'hanlp.components.pos.RNNPartOfSpeechTagger': 'hanlp.components.taggers.pos_tf.RNNPartOfSpeechTaggerTF',
             'hanlp.components.pos_tf.RNNPartOfSpeechTaggerTF': 'hanlp.components.taggers.pos_tf.RNNPartOfSpeechTaggerTF',
             'hanlp.components.pos_tf.CNNPartOfSpeechTaggerTF': 'hanlp.components.taggers.pos_tf.CNNPartOfSpeechTaggerTF',
             'hanlp.components.ner_tf.TransformerNamedEntityRecognizerTF': 'hanlp.components.ner.ner_tf.TransformerNamedEntityRecognizerTF',
@@ -105,8 +106,8 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             raise e from None
         else:
             raise ModuleNotFoundError(
-                'Some modules required by this model are missing. Please install the full version:'
-                '\n\n\tpip install hanlp[full]') from None
+                f'Some modules ({e.name} etc.) required by this model are missing. Please install the full version:'
+                '\n\n\tpip install hanlp[full] -U') from None
     except ValueError as e:
         if e.args and isinstance(e.args[0], str) and 'Internet connection' in e.args[0]:
             raise ConnectionError(

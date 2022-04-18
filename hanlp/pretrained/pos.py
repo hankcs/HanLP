@@ -24,7 +24,7 @@ PKU_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_pku_electra_small_20220217_142436.z
 PKU98_POS_ELECTRA_SMALL = HANLP_URL + 'pos/pos_pku_electra_small_20210808_125158.zip'
 'Electra small model (:cite:`clark2020electra`) trained on CTB9 (:cite:`https://doi.org/10.35111/gvd0-xk91`). Accuracy = `97.60`.'
 
-PTB_POS_RNN_FASTTEXT_EN = HANLP_URL + 'pos/ptb_pos_rnn_fasttext_20200103_145337.zip'
+PTB_POS_RNN_FASTTEXT_EN = HANLP_URL + 'pos/ptb_pos_rnn_fasttext_20220418_101708.zip'
 'An old school BiLSTM tagging model with FastText (:cite:`bojanowski2017enriching`) embeddings trained on PTB.'
 
 ALL = {}
