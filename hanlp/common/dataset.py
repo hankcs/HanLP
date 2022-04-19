@@ -439,7 +439,7 @@ class PadSequenceDataLoader(DataLoader):
             if vocab:
                 pad = vocab.safe_pad_token_idx
                 dtype = torch.long
-            elif pad_dict is not None and field in pad_dict:
+            elif pad_dict is not None and pad_dict.get(field, None) is not None:
                 pad = pad_dict[field]
                 dtype = dtype_of(pad)
             elif field.endswith('_offset') or field.endswith('_id') or field.endswith(
