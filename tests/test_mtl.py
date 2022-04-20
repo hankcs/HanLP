@@ -87,6 +87,25 @@ class TestMultiTaskLearning(unittest.TestCase):
         self.assertSequenceEqual(mtl("我的用户ID跟你的用户id不同", tasks=task)[task],
                                  ['我', '的', '用户ID', '跟', '你', '的', '用户', 'id', '不同'])
 
+    def test_tok_offset(self):
+        task = 'tok/fine'
+        tok = mtl[task]
+        tok.config.output_spans = True
+        tok.dict_force = None
+        tok.dict_combine = None
+        sent = '我先去看医生'
+
+        for t, b, e in mtl(sent, tasks=task)[task]:
+            self.assertEqual(t, sent[b:e])
+
+        tok.dict_combine = {'先去'}
+        for t, b, e in mtl(sent, tasks=task)[task]:
+            self.assertEqual(t, sent[b:e])
+
+        tok.config.output_spans = False
+        tok.dict_force = None
+        tok.dict_combine = None
+
 
 if __name__ == '__main__':
     unittest.main()

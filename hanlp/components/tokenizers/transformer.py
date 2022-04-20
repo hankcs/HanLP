@@ -202,7 +202,7 @@ class TransformerTaggingTokenizer(TransformerTagger):
 
     def prediction_to_human(self, pred, vocab, batch, rebuild_span=False):
         output_spans = self.config.get('output_spans', None)
-        tokens = self.spans_to_tokens(pred, batch, rebuild_span)
+        tokens = self.spans_to_tokens(pred, batch, rebuild_span or output_spans)
         if output_spans:
             subtoken_spans = batch['token_subtoken_offsets']
             results = []
