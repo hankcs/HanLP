@@ -117,13 +117,6 @@ mtl.fit(
     eval_trn=False,
 )
 cprint(f'Model saved in [cyan]{save_dir}[/cyan]')
+mtl.evaluate(save_dir)
 mtl.load(save_dir)
-for k, v in tasks.items():
-    v.trn = tasks[k].trn
-    v.dev = tasks[k].dev
-    v.tst = tasks[k].tst
-metric, *_ = mtl.evaluate(save_dir)
-for k, v in tasks.items():
-    print(metric[k], end=' ')
-print()
 print(mtl('华纳音乐旗下的新垣结衣在12月21日于日本武道馆举办歌手出道活动'))
