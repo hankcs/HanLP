@@ -249,6 +249,10 @@ class Document(dict):
                             # warnings.warn(f'Unable to visualize overlapped spans: {pas}')
                             continue
                         block[0].extend(header)
+                        while len(_srl) < length:
+                            _srl.append('')
+                        while len(_type) < length:
+                            _type.append('')
                         for j, (_s, _t) in enumerate(zip(_srl, _type)):
                             block[j + 1].extend((tokens[j], _s, _t))
                     text = condense(block, extras)
