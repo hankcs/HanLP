@@ -294,6 +294,9 @@ class HanLPClient(object):
              ['2021', '年', 'HanLPv2.1', '为', '生产', '环境', '带来', '次世代', '最', '先进的',
               '多', '语种', 'NLP', '技术', '。']]
         """
+        language = language or self._language
+        if coarse and language and language != 'zh':
+            raise NotImplementedError(f'Coarse tokenization not supported for {language}. Please set language="zh".')
         doc = self.parse(text=text, tasks='tok/coarse' if coarse is True else 'tok', language=language)
         return next(iter(doc.values()))
 
