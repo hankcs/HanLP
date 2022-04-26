@@ -24,6 +24,12 @@ FINE_ELECTRA_SMALL_ZH = HANLP_URL + 'tok/fine_electra_small_20220217_190117.zip'
 CTB9_TOK_ELECTRA_SMALL = HANLP_URL + 'tok/ctb9_electra_small_20220215_205427.zip'
 'Electra (:cite:`clark2020electra`) small model trained on CTB9. Its performance is P=97.15% R=97.36% F1=97.26% which is ' \
 'much higher than that of MTL model '
+CTB9_TOK_ELECTRA_BASE = 'http://download.hanlp.com/tok/extra/ctb9_tok_electra_base_20220426_111949.zip'
+'Electra (:cite:`clark2020electra`) base model trained on CTB9. Its performance is ``P: 97.62% R: 97.67% F1: 97.65%`` ' \
+'which is much higher than that of MTL model '
+CTB9_TOK_ELECTRA_BASE_CRF = 'http://download.hanlp.com/tok/extra/ctb9_tok_electra_base_crf_20220426_161255.zip'
+'Electra (:cite:`clark2020electra`) base model trained on CTB9. Its performance is ``P: 97.68% R: 97.71% F1: 97.69%`` ' \
+'which is much higher than that of MTL model '
 
 # Will be filled up during runtime
 ALL = {}
