@@ -14,13 +14,11 @@ class Node(object):
         self._children = {}
         self._value = value
 
-    def _add_child(self, char, value, overwrite=False):
+    def _get_or_add_child(self, char):
         child = self._children.get(char)
         if child is None:
-            child = Node(value)
+            child = Node(None)
             self._children[char] = child
-        elif overwrite:
-            child._value = value
         return child
 
     def transit(self, key):
@@ -79,12 +77,13 @@ class Trie(Node):
 
     def __setitem__(self, key, value):
         state = self
-        for i, char in enumerate(key):
-            if i < len(key) - 1:
-                state = state._add_child(char, None, False)
-            else:
-                state = state._add_child(char, value, True)
-        self._size += 1
+        for char in key[:-1]:
+            state = state._get_or_add_child(char)
+
+        leaf = state._get_or_add_child(key[-1])
+        if leaf._value is None:
+            self._size += 1
+        leaf._value = value
 
     def __delitem__(self, key):
         state = self.transit(key)

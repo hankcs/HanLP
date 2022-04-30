@@ -36,6 +36,16 @@ class TestTrie(unittest.TestCase):
         items = list(trie.items())
         self.assertEqual([('商品', 'goods'), ('和', 'and'), ('和服', 'kimono'), ('服务', 'service'), ('务', 'business')], items)
 
+    def test_len(self):
+        trie = self.build_small_trie()
+        self.assertEqual(len(trie), 5)
+        trie['和'] = '&'
+        self.assertEqual(len(trie), 5)
+        del trie['和']
+        self.assertEqual(len(trie), 4)
+        trie['和'] = '&'
+        self.assertEqual(len(trie), 5)
+
 
 if __name__ == '__main__':
     unittest.main()
