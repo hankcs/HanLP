@@ -377,6 +377,39 @@ public class HanLPClient
     }
 
     /**
+     * Single document summarization is the task of selecting a subset of the sentences which best
+     * represents a summary of the document, with a balance of salience and redundancy.
+     *
+     * @param text The text content of the document.
+     * @return A dictionary containing each sentence and its ranking score s between 0 and 1.
+     * @throws IOException HTTP errors.
+     */
+    public Map<String, Double> extractiveSummarization(String text) throws IOException
+    {
+        return extractiveSummarization(text, 3);
+    }
+
+    /**
+     * Single document summarization is the task of selecting a subset of the sentences which best
+     * represents a summary of the document, with a balance of salience and redundancy.
+     *
+     * @param text The text content of the document.
+     * @param topk The maximum number of top-K ranked sentences. Note that due to Trigram Blocking tricks, the actual
+     *             number of returned sentences could be less than ``topk``.
+     * @return A dictionary containing each sentence and its ranking score s between 0 and 1.
+     * @throws IOException HTTP errors.
+     */
+    public Map<String, Double> extractiveSummarization(String text, int topk) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("topk", topk);
+        input.put("language", language);
+        //noinspection unchecked
+        return mapper.readValue(post("/extractive_summarization", input), LinkedHashMap.class);
+    }
+
+    /**
      * Keyphrase extraction aims to identify keywords or phrases reflecting the main topics of a document.
      *
      * @param text The text content of the document. Preferably the concatenation of the title and the content.
