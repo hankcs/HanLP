@@ -4,7 +4,7 @@
 from hanlp.components.lm.mlm import MaskedLanguageModel
 
 mlm = MaskedLanguageModel()
-mlm.load('Langboat/mengzi-bert-base')
+mlm.load('bert-base-chinese')
 print(mlm('生活的真谛是[MASK]。'))
 
 # Batching is always faster

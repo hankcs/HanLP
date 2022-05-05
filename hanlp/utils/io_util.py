@@ -164,7 +164,7 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
                 # Always prompt user to upgrade whenever a new version is available
                 hints = f'[green]Please upgrade to the latest version ({latest_version}) with:[/green]' \
                         f'\n\n\t[yellow]pip install -U hanlp[/yellow]\n'
-            else:  # Otherwise prompt user to re-try
+            else:  # Otherwise, prompt user to re-try
                 hints = f'[green]Please re-try or download it to {save_path} by yourself '
                 if not windows():
                     hints += f'with:[/green]\n\n\t[yellow]wget {url} -O {save_path}[/yellow]\n\n'

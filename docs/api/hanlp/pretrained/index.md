@@ -21,5 +21,6 @@ sts
 word2vec
 glove
 fasttext
+mlm
 ```
 
