@@ -30,6 +30,9 @@ CTB9_TOK_ELECTRA_BASE = 'http://download.hanlp.com/tok/extra/ctb9_tok_electra_ba
 CTB9_TOK_ELECTRA_BASE_CRF = 'http://download.hanlp.com/tok/extra/ctb9_tok_electra_base_crf_20220426_161255.zip'
 'Electra (:cite:`clark2020electra`) base model trained on CTB9. Its performance is ``P: 97.68% R: 97.71% F1: 97.69%`` ' \
 'which is much higher than that of MTL model '
+MSR_TOK_ELECTRA_BASE_CRF = 'http://download.hanlp.com/tok/extra/msra_crf_electra_base_20220507_113936.zip'
+'Electra (:cite:`clark2020electra`) base model trained on MSR CWS dataset. Its performance is ``P: 98.71% R: 98.64% F1: 98.68%`` ' \
+'which is much higher than that of MTL model '
 
 # Will be filled up during runtime
 ALL = {}
