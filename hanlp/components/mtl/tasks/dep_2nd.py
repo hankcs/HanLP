@@ -59,8 +59,7 @@ class BiaffineSecondaryDependencyParsing(Task, BiaffineSecondaryParser):
     def build_dataloader(self, data, transform: Callable = None, training=False, device=None,
                          logger: logging.Logger = None, gradient_accumulation=1, **kwargs) -> DataLoader:
         dataset = BiaffineSecondaryParser.build_dataset(self, data, transform)
-        if isinstance(data, str):
-            dataset.purge_cache()
+        dataset.purge_cache()
         if self.vocabs.mutable:
             BiaffineSecondaryParser.build_vocabs(self, dataset, logger, transformer=True)
         return PadSequenceDataLoader(

@@ -149,30 +149,28 @@ class Task(ConfigTracker, TorchComponent, ABC):
 
     # noinspection PyMethodMayBeStatic
     def compute_lens(self, data: Union[List[Dict[str, Any]], str], dataset: TransformableDataset,
-                     input_ids='token_input_ids', length_field='token'):
+                     input_ids='token_input_ids'):
         """
 
         Args:
             data: Samples to be measured or path to dataset during training time.
             dataset: During training time, use this dataset to measure the length of each sample inside.
             input_ids: Field name corresponds to input ids.
-            length_field: Fall back to this field during prediction as input_ids may not be generated yet.
 
         Returns:
 
             Length list of this samples
 
         """
+        if not dataset.cache:
+            warnings.warn(f'Caching for the dataset is not enabled, '
+                          f'try `dataset.purge_cache()` if possible. The dataset is {dataset}.')
         if isinstance(data, str):
-            if not dataset.cache:
-                warnings.warn(f'Caching for the dataset is not enabled, '
-                              f'try `dataset.purge_cache()` if possible. The dataset is {dataset}.')
             timer = CountdownTimer(len(dataset))
             for each in dataset:
                 timer.log('Preprocessing and caching samples [blink][yellow]...[/yellow][/blink]')
             timer.erase()
-            return [len(x[input_ids]) for x in dataset]
-        return [len(x[length_field]) for x in data]
+        return [len(x[input_ids]) for x in dataset]
 
     def feed_batch(self,
                    h: torch.FloatTensor,

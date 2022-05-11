@@ -81,6 +81,7 @@ class BiaffineNamedEntityRecognition(Task, BiaffineNamedEntityRecognizer):
         transform = copy(transform)
         transform.append(unpack_ner)
         dataset = BiaffineNamedEntityRecognizer.build_dataset(self, data, self.vocabs, transform)
+        dataset.purge_cache()
         if self.vocabs.mutable:
             BiaffineNamedEntityRecognizer.build_vocabs(self, dataset, logger, self.vocabs)
         return PadSequenceDataLoader(

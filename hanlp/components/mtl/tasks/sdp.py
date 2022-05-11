@@ -114,18 +114,14 @@ class BiaffineSemanticDependencyParsing(Task, BiaffineSemanticDependencyParser):
     def build_dataloader(self, data, transform: TransformList = None, training=False, device=None,
                          logger: logging.Logger = None, gradient_accumulation=1, **kwargs) -> DataLoader:
         dataset = BiaffineSemanticDependencyParser.build_dataset(self, data, transform)
-        if isinstance(data, str):
-            dataset.purge_cache()
-            length_field = 'token'
-        else:
-            length_field = 'FORM'
+        dataset.purge_cache()
         if self.vocabs.mutable:
             BiaffineSemanticDependencyParser.build_vocabs(self, dataset, logger, transformer=True)
-        if dataset.cache:
+        if isinstance(data, str):
             timer = CountdownTimer(len(dataset))
             BiaffineSemanticDependencyParser.cache_dataset(self, dataset, timer, training, logger)
         return PadSequenceDataLoader(
-            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset, length_field=length_field),
+            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset),
                                                      shuffle=training, gradient_accumulation=gradient_accumulation),
             device=device,
             dataset=dataset,

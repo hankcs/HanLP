@@ -74,7 +74,7 @@ class RegressionTokenization(Task):
                          tokenizer: PreTrainedTokenizer = None,
                          **kwargs) -> DataLoader:
         assert tokenizer
-        dataset = TextTokenizingDataset(data, cache=isinstance(data, str), delimiter=self.config.sent_delimiter,
+        dataset = TextTokenizingDataset(data, cache=True, delimiter=self.config.sent_delimiter,
                                         generate_idx=isinstance(data, list),
                                         max_seq_len=self.config.max_seq_len,
                                         sent_delimiter=self.config.sent_delimiter,
@@ -87,7 +87,7 @@ class RegressionTokenization(Task):
                                             FieldLength('text_input_ids', 'text_input_ids_length', delta=-2),
                                             generate_token_span_tuple])
         return PadSequenceDataLoader(
-            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset, 'text_input_ids', 'text'),
+            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset, 'text_input_ids'),
                                                      shuffle=training),
             device=device,
             dataset=dataset)

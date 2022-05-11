@@ -76,13 +76,14 @@ class UniversalDependenciesParsing(Task, UniversalDependenciesParser):
         if isinstance(data, str) and not self.config.punct:
             _transform.append(PunctuationMask('token', 'punct_mask'))
         dataset = UniversalDependenciesParser.build_dataset(self, data, _transform)
+        dataset.purge_cache()
         if self.vocabs.mutable:
             UniversalDependenciesParser.build_vocabs(self, dataset, logger, transformer=True)
         max_seq_len = self.config.get('max_seq_len', None)
         if max_seq_len and isinstance(data, str):
             dataset.prune(lambda x: len(x['token_input_ids']) > max_seq_len, logger)
         return PadSequenceDataLoader(
-            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset, length_field='token'),
+            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset),
                                                      shuffle=training, gradient_accumulation=gradient_accumulation),
             device=device,
             dataset=dataset,

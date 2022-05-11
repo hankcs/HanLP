@@ -122,11 +122,12 @@ class TaggingNamedEntityRecognition(Task, TransformerNamedEntityRecognizer):
                     ['delimiter', 'max_seq_len', 'sent_delimiter', 'char_level', 'hard_constraint'] if k in self.config)
         dataset = self.build_dataset(data, cache=cache, transform=transform, **args)
         dataset.append_transform(self.vocabs)
+        dataset.purge_cache()
         if self.vocabs.mutable:
             self.build_vocabs(dataset, logger)
         return PadSequenceDataLoader(
             batch_sampler=self.sampler_builder.build(
-                self.compute_lens(data, dataset, 'token_input_ids', 'token'),
+                self.compute_lens(data, dataset),
                 shuffle=training, gradient_accumulation=gradient_accumulation),
             device=device,
             dataset=dataset)

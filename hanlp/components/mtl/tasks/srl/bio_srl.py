@@ -67,6 +67,7 @@ class SpanBIOSemanticRoleLabeling(Task, SpanBIOSemanticRoleLabeler):
     def build_dataloader(self, data, transform: Callable = None, training=False, device=None,
                          logger: logging.Logger = None, cache=False, gradient_accumulation=1, **kwargs) -> DataLoader:
         dataset = self.build_dataset(data, transform=[transform, self.vocabs])
+        dataset.purge_cache()
         if self.vocabs.mutable:
             SpanBIOSemanticRoleLabeler.build_vocabs(self, dataset, logger)
         return PadSequenceDataLoader(

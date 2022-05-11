@@ -85,11 +85,10 @@ class CRFConstituencyParsing(Task, CRFConstituencyParser):
                          gradient_accumulation=1,
                          **kwargs) -> DataLoader:
         dataset = CRFConstituencyParsing.build_dataset(self, data, transform)
-        if isinstance(data, str):
-            dataset.purge_cache()
+        dataset.purge_cache()
         if self.vocabs.mutable:
             CRFConstituencyParsing.build_vocabs(self, dataset, logger)
-        if dataset.cache:
+        if isinstance(data, str):
             timer = CountdownTimer(len(dataset))
             # noinspection PyCallByClass
             BiaffineDependencyParser.cache_dataset(self, dataset, timer, training, logger)

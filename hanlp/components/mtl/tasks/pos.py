@@ -121,12 +121,12 @@ class TransformerTagging(Task, TransformerTagger):
                          **kwargs) -> DataLoader:
         args = dict((k, self.config[k]) for k in
                     ['delimiter', 'max_seq_len', 'sent_delimiter', 'char_level', 'hard_constraint'] if k in self.config)
-        dataset = self.build_dataset(data, cache=cache, transform=transform, **args)
+        dataset = self.build_dataset(data, cache=True, transform=transform, **args)
         dataset.append_transform(self.vocabs)
         if self.vocabs.mutable:
             self.build_vocabs(dataset, logger)
         return PadSequenceDataLoader(
-            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset, 'token_input_ids', 'token'),
+            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset),
                                                      shuffle=training, gradient_accumulation=gradient_accumulation),
             device=device,
             dataset=dataset)

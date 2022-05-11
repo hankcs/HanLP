@@ -104,10 +104,11 @@ class TaggingTokenization(Task, TransformerTaggingTokenizer):
             transform.insert(0, self.transform)
         transform.append(self.last_transform())
         dataset = self.build_dataset(data, cache=cache, transform=transform, **args)
+        dataset.purge_cache()
         if self.vocabs.mutable:
             self.build_vocabs(dataset, logger)
         return PadSequenceDataLoader(
-            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset, 'token_input_ids'),
+            batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset),
                                                      shuffle=training, gradient_accumulation=gradient_accumulation),
             device=device,
             dataset=dataset)

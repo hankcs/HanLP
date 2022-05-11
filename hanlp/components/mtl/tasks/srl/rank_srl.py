@@ -75,6 +75,7 @@ class SpanRankingSemanticRoleLabeling(Task, SpanRankingSemanticRoleLabeler):
     def build_dataloader(self, data, transform: Callable = None, training=False, device=None,
                          logger: logging.Logger = None, gradient_accumulation=1, **kwargs) -> DataLoader:
         dataset = self.build_dataset(data, isinstance(data, list), logger, transform)
+        dataset.purge_cache()
         return PadSequenceDataLoader(
             batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset), shuffle=training,
                                                      gradient_accumulation=gradient_accumulation),
