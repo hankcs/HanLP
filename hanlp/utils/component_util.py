@@ -164,8 +164,12 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         import sys
         sys.stderr.flush()
         try:
-            if e.args and isinstance(e.args, tuple) and isinstance(e.args[0], str):
-                e.args = (e.args[0] + f'\n{"ERROR LOG ENDS":=^80}',) + e.args[1:]
+            if e.args and isinstance(e.args, tuple):
+                for i in range(len(e.args)):
+                    if isinstance(e.args[i], str):
+                        from hanlp_common.util import set_tuple_with
+                        e.args = set_tuple_with(e.args, e.args[i] + f'\n{"ERROR LOG ENDS":=^80}', i)
+                        break
         except:
             pass
         raise e from None
