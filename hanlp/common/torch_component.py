@@ -515,9 +515,14 @@ class TorchComponent(Component, ABC):
             logger: Logger for printing progress report, as copying a model from CPU to GPU can takes several seconds.
             verbose: ``True`` to print progress when logger is None.
         """
-        if devices == -1 or devices == [-1]:
+        if devices is None:
+            if getattr(torch, 'has_mps', None):  # mac M1 chips
+                devices = torch.device('mps:0')
+            else:
+                devices = cuda_devices(devices)
+        elif devices == -1 or devices == [-1]:
             devices = []
-        elif isinstance(devices, (int, float)) or devices is None:
+        elif isinstance(devices, (int, float)):
             devices = cuda_devices(devices)
         if devices:
             if logger:
@@ -546,6 +551,10 @@ class TorchComponent(Component, ABC):
                             flash(f'Moving module [yellow]{name}[/yellow] to [on_yellow][magenta][bold]{device}'
                                   f'[/bold][/magenta][/on_yellow]: [red]{regex}[/red]\n')
                             module.to(device)
+            elif isinstance(devices, torch.device):
+                if verbose:
+                    flash(f'Moving model to {devices} [blink][yellow]...[/yellow][/blink]')
+                self.model = self.model.to(devices)
             else:
                 raise ValueError(f'Unrecognized devices {devices}')
             if verbose:

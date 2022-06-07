@@ -56,6 +56,7 @@ setup(
         'pynvml',
         'toposort==1.5',
         'transformers>=4.1.1',
+        'tokenizers==0.11.6',  # The latest tokenizers==0.12.1 failed to compile on macOS Python3.6
         'torch>=1.6.0',
         'hanlp-common>=0.0.13',
         'hanlp-trie>=0.0.4',
