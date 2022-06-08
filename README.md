@@ -31,7 +31,7 @@ The multilingual NLP library for researchers and companies, built on PyTorch and
 state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be
 efficient, user-friendly and extendable.
 
-Thanks to open-access corpora like Universal Dependencies and OntoNotes, HanLP 2.1 now offers 10 joint tasks on 104
+Thanks to open-access corpora like Universal Dependencies and OntoNotes, HanLP 2.1 now offers 10 joint tasks on 130
 languages: tokenization, lemmatization, part-of-speech tagging, token feature extraction, dependency parsing,
 constituency parsing, semantic role labeling, semantic dependency parsing, abstract meaning representation (AMR)
 parsing.
