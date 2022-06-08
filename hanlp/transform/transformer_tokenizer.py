@@ -340,6 +340,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                         char_offset += len(chunk)
                     else:
                         begin, end, label = chunk
+                        _offset = begin
                         # chunk offset is in char level
                         # custom_words.append(chunk)
                         if isinstance(label, list):
