@@ -36,7 +36,7 @@ class TransformerEncoder(nn.Module):
             scalar_mix: Layer attention.
             word_dropout: Dropout rate of randomly replacing a subword with MASK.
             max_sequence_length: The maximum sequence length. Sequence longer than this will be handled by sliding
-                window.
+                window. If ``None``, then the ``max_position_embeddings`` of the transformer will be used.
             ret_raw_hidden_states: ``True`` to return hidden states of each layer.
             transformer_args: Extra arguments passed to the transformer.
             trainable: ``False`` to use static embeddings.
@@ -44,7 +44,6 @@ class TransformerEncoder(nn.Module):
         """
         super().__init__()
         self.ret_raw_hidden_states = ret_raw_hidden_states
-        self.max_sequence_length = max_sequence_length
         self.average_subwords = average_subwords
         if word_dropout:
             oov = transformer_tokenizer.mask_token_id
@@ -72,6 +71,9 @@ class TransformerEncoder(nn.Module):
             transformer_args['output_hidden_states'] = output_hidden_states
             transformer = AutoModel_.from_pretrained(transformer, training=training or not trainable,
                                                      **transformer_args)
+            if max_sequence_length is None:
+                max_sequence_length = transformer.config.max_position_embeddings
+        self.max_sequence_length = max_sequence_length
         if hasattr(transformer, 'encoder') and hasattr(transformer, 'decoder'):
             # For seq2seq model, use its encoder
             transformer = transformer.encoder

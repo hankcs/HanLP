@@ -118,7 +118,7 @@ class TransformerComponent(TorchComponent, ABC):
         transformer = TransformerEncoder(self.config.transformer, self.transformer_tokenizer,
                                          self.config.average_subwords,
                                          self.config.scalar_mix, self.config.word_dropout,
-                                         self.config.max_seq_len, self.config.ret_raw_hidden_states,
+                                         ret_raw_hidden_states=self.config.ret_raw_hidden_states,
                                          training=training)
         transformer_layers = self.config.get('transformer_layers', None)
         if transformer_layers:
