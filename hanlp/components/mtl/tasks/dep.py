@@ -122,7 +122,7 @@ class BiaffineDependencyParsing(Task, BiaffineDependencyParser):
             BiaffineDependencyParser.cache_dataset(self, dataset, timer, training, logger)
         max_seq_len = self.config.get('max_seq_len', None)
         if max_seq_len and isinstance(data, str):
-            dataset.prune(lambda x: len(x['token_input_ids']) > 510, logger)
+            dataset.prune(lambda x: len(x['token_input_ids']) > max_seq_len, logger)
         return PadSequenceDataLoader(
             batch_sampler=self.sampler_builder.build(self.compute_lens(data, dataset),
                                                      shuffle=training, gradient_accumulation=gradient_accumulation),

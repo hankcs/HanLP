@@ -155,7 +155,7 @@ class TransformerTagger(TransformerComponent, Tagger):
     # noinspection PyMethodOverriding
     def build_dataloader(self, data, batch_size, shuffle, device, logger: logging.Logger = None,
                          sampler_builder: SamplerBuilder = None, gradient_accumulation=1,
-                         extra_embeddings: Embedding = None, transform=None, **kwargs) -> DataLoader:
+                         extra_embeddings: Embedding = None, transform=None, max_seq_len=None, **kwargs) -> DataLoader:
         if isinstance(data, TransformableDataset):
             dataset = data
         else:
@@ -177,6 +177,9 @@ class TransformerTagger(TransformerComponent, Tagger):
             dataset.purge_cache()
         if self.vocabs.mutable:
             self.build_vocabs(dataset, logger)
+        if isinstance(data, str) and max_seq_len:
+            token_key = self.config.token_key
+            dataset.prune(lambda x: len(x[token_key]) > max_seq_len, logger)
         if sampler_builder is not None:
             sampler = sampler_builder.build([len(x[f'{self.config.token_key}_input_ids']) for x in dataset], shuffle,
                                             gradient_accumulation=gradient_accumulation if shuffle else 1)
