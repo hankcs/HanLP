@@ -11,10 +11,14 @@ tokenizer_mirrors = {
     'cl-tohoku/bert-base-japanese-char': HANLP_URL + 'transformers/bert-base-japanese-char_20210602_215445.zip',
     'bart5-chinese-small': HANLP_URL + 'transformers/bart5-chinese-small_tok_20210723_180743.zip',
     'ernie-gram': HANLP_URL + 'transformers/ernie-gram_20220207_103518.zip',
+    'xlm-roberta-base-no-space': HANLP_URL + 'transformers/xlm-roberta-base-no-space-tokenizer_20220610_204241.zip',
+    'xlm-roberta-small-no-space': HANLP_URL + 'transformers/xlm-roberta-small-no-space-tokenizer_20220610_235001.zip',
 }
 
 model_mirrors = {
     'bart5-chinese-small': HANLP_URL + 'transformers/bart5-chinese-small_20210723_203923.zip',
+    'xlm-roberta-base-no-space': HANLP_URL + 'transformers/xlm-roberta-base-no-space_20220610_203944.zip',
+    'xlm-roberta-small-no-space': HANLP_URL + 'transformers/xlm-roberta-small-no-space_20220610_234743.zip',
 }
 
 
