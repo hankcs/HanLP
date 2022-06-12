@@ -2,6 +2,7 @@
 
 
 ```{toctree}
+tok/index
 pos/index
 ner/index
 dep/index

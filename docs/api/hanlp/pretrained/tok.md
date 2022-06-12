@@ -16,13 +16,18 @@ kernelspec:
 
 Tokenization is a way of separating a sentence into smaller units called tokens. In lexical analysis, tokens usually refer to words.
 
-To tokenize raw sentences:
-
 ````{margin} Batching is Faster
 ```{hint}
 Tokenize multiple sentences at once for faster speed! 
 ```
 ````
+````{margin} Custom Dictionary Supported
+```{seealso}
+See [this tutorial](https://github.com/hankcs/HanLP/blob/master/plugins/hanlp_demo/hanlp_demo/zh/demo_custom_dict.py) for custom dictionary.
+```
+````
+
+To tokenize raw sentences:
 
 
 ```{code-cell} ipython3
@@ -30,17 +35,11 @@ Tokenize multiple sentences at once for faster speed!
 import hanlp
 
 tok = hanlp.load(hanlp.pretrained.tok.COARSE_ELECTRA_SMALL_ZH)
-tok(['商品和服务。', '阿婆主来到北京立方庭参观自然语义科技公司。'])
+tok(['商品和服务。', '阿婆主来到北京立方庭参观自然语义科技公司'])
 ```
 
 All the pre-trained tokenizers and their details are listed below.
 
-
-````{margin} Custom Dictionary Supported
-```{seealso}
-See [this tutorial](https://github.com/hankcs/HanLP/blob/master/plugins/hanlp_demo/hanlp_demo/zh/demo_custom_dict.py) for custom dictionary.
-```
-````
 
 ```{eval-rst}
 
