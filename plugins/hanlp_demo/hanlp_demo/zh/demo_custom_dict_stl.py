@@ -4,8 +4,8 @@
 import hanlp
 from hanlp.components.tokenizers.transformer import TransformerTaggingTokenizer
 
-# 加载单任务模型：
-tok: TransformerTaggingTokenizer = hanlp.load(hanlp.pretrained.tok.COARSE_ELECTRA_SMALL_ZH)
+# 加载一个旧版本单任务模型演示分词错误（最新版已经修复）：
+tok: TransformerTaggingTokenizer = hanlp.load('https://file.hankcs.com/hanlp/tok/coarse_electra_small_20220220_013548.zip')
 
 tok.dict_force = tok.dict_combine = None
 print(f'不挂词典:\n{tok("首相和川普通电话")}')
