@@ -122,7 +122,7 @@ class TransformerComponent(TorchComponent, ABC):
                                          training=training)
         transformer_layers = self.config.get('transformer_layers', None)
         if transformer_layers:
-            transformer.transformer.encoder.layer = transformer.transformer.encoder.layer[:-transformer_layers]
+            transformer.transformer.encoder.layer = transformer.transformer.encoder.layer[:transformer_layers]
         return transformer
 
 
