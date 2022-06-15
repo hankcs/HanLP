@@ -155,7 +155,8 @@ class TransformerTaggingTokenizer(TransformerTagger):
                                                                      self.config.token_key,
                                                                      ret_subtokens=True,
                                                                      ret_subtokens_group=True,
-                                                                     ret_token_span=False)
+                                                                     ret_token_span=False,
+                                                                     dict_force=self.dict_force)
         return self._tokenizer_transform
 
     def spans_to_tokens(self, spans, batch, rebuild_span=False):
