@@ -29,7 +29,11 @@ def split_sentence(text, best=True):
             yield chunk
             continue
         processed = replace_with_separator(chunk, SEPARATOR, [AB_SENIOR, AB_ACRONYM])
-        for sentence in RE_SENTENCE.finditer(processed):
+        sents = list(RE_SENTENCE.finditer(processed))
+        if not sents:
+            yield chunk
+            continue
+        for sentence in sents:
             sentence = replace_with_separator(sentence.group(), r" ", [UNDO_AB_SENIOR, UNDO_AB_ACRONYM])
             yield sentence
 
