@@ -89,7 +89,7 @@ format-2是基于XML的标注格式：
 
 通用性：尽量遵循国际标准MET-2和ER-992，不同之处在本规范中阐明。
 
-实用性：可用于LSP(LexicalServicePlatform),TTS(TextToSpeechconversion),IR(InformationRetrieval),IE(InformationExtraction),QA(QuestionAnswering),IME(InputMethodEditor)等应用系统。
+实用性：可用于LSP (Lexical Service Platform), TTS (Text To Speech conversion), IR (Information Retrieval), IE (Information Extraction), QA (Question Answering), IME(Input Method Editor)等应用系统。
 
 #### 1.5.2标注对象
 
