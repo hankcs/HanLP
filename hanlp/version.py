@@ -2,7 +2,7 @@
 # Author: hankcs
 # Date: 2019-12-28 19:26
 
-__version__ = '2.1.0-beta.32'
+__version__ = '2.1.0-beta.33'
 """HanLP version"""
 
 
