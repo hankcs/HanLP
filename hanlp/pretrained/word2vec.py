@@ -29,7 +29,7 @@ MERGE_SGNS_BIGRAM_CHAR_300_ZH = 'http://download.hanlp.com/embeddings/extra/merg
 RADICAL_CHAR_EMBEDDING_100 = HANLP_URL + 'embeddings/radical_char_vec_20191229_013849.zip#character.vec.txt'
 'Chinese character embedding enhanced with rich radical information (:cite:`he2018dual`).'
 
-_SUBWORD_ENCODING_CWS = HANLP_URL + 'embeddings/subword_encoding_cws_20200524_190636.zip'
+_SUBWORD_ENCODING_CWS = 'http://download.hanlp.com/embeddings/extra/subword_encoding_cws_20200524_190636.zip'
 SUBWORD_ENCODING_CWS_ZH_WIKI_BPE_50 = _SUBWORD_ENCODING_CWS + '#zh.wiki.bpe.vs200000.d50.w2v.txt'
 SUBWORD_ENCODING_CWS_GIGAWORD_UNI = _SUBWORD_ENCODING_CWS + '#gigaword_chn.all.a2b.uni.ite50.vec'
 SUBWORD_ENCODING_CWS_GIGAWORD_BI = _SUBWORD_ENCODING_CWS + '#gigaword_chn.all.a2b.bi.ite50.vec'
