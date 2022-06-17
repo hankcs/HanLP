@@ -165,7 +165,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
             # as there is no space between some languages like Chinese
             check_space_before = tokenizer_name in ('xlm-roberta-base', 'xlm-roberta-large', 'google/mt5-small',
                                                     'google/mt5-base', 'xlm-roberta-base-no-space',
-                                                    'xlm-roberta-small-no-space')
+                                                    'mMiniLMv2L6-no-space', 'mMiniLMv2L12-no-space')
         self.check_space_before = check_space_before
         self.ret_subtokens_group = ret_subtokens_group
         self.ret_subtokens = ret_subtokens

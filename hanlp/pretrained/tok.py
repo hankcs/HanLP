@@ -34,11 +34,17 @@ MSR_TOK_ELECTRA_BASE_CRF = 'http://download.hanlp.com/tok/extra/msra_crf_electra
 'Electra (:cite:`clark2020electra`) base model trained on MSR CWS dataset. Its performance is ``P: 98.71% R: 98.64% F1: 98.68%`` ' \
 'which is much higher than that of MTL model '
 
-UD_TOK_XLM_SMALL = HANLP_URL + 'tok/ud_tok_xlm_roberta_small_no_space_mul_20220615_213514.zip'
+UD_TOK_MMINILMV2L6 = HANLP_URL + 'tok/ud_tok_mMiniLMv2L6_no_space_mul_20220619_091824.zip'
 '''
-Distilled XLM-R (:cite:`wang-etal-2021-minilmv2`) small version tokenizer trained on UD 2.10.
+mMiniLMv2 (:cite:`wang-etal-2021-minilmv2`) L6xH384 based tokenizer trained on UD 2.10.
 The following 130 languages are supported: ``Afrikaans, Akkadian, Akuntsu, Albanian, Amharic, AncientGreek (to 1453), Ancient Hebrew, Apurinã, Arabic, Armenian, AssyrianNeo-Aramaic, Bambara, Basque, Beja, Belarusian, Bengali, Bhojpuri, Breton, Bulgarian, Catalan, Cebuano, Central Siberian Yupik, Chinese, Chukot, ChurchSlavic, Coptic, Croatian, Czech, Danish, Dutch, Emerillon, English, Erzya, Estonian, Faroese, Finnish, French, Galician, German, Gothic, Guajajára, Guarani, Hebrew, Hindi, Hittite, Hungarian, Icelandic, Indonesian, Irish, Italian, Japanese, Javanese, K\'iche\', Kangri, Karelian, Karo(Brazil), Kazakh, Khunsari, Komi-Permyak, Komi-Zyrian, Korean, Latin, Latvian, Ligurian, LiteraryChinese, Lithuanian, Livvi, LowGerman, Madi, Makuráp, Maltese, Manx, Marathi, MbyáGuaraní, Modern Greek (1453-), Moksha, Mundurukú, Nayini, Neapolitan, Nigerian Pidgin, NorthernKurdish, Northern Sami, Norwegian, OldFrench (842-ca. 1400), OldRussian, Old Turkish, Persian, Polish, Portuguese, Romanian, Russia Buriat, Russian, Sanskrit, ScottishGaelic, Serbian, SkoltSami, Slovak, Slovenian, Soi, South Levantine Arabic, Spanish, Swedish, SwedishSign Language, SwissGerman, Tagalog, Tamil, Tatar, Telugu, Thai, Tupinambá, Turkish, Uighur, Ukrainian, Umbrian, UpperSorbian, Urdu, Urubú-Kaapor, Vietnamese, Warlpiri, Welsh, Western Armenian, WesternFrisian, Wolof, Xibe, Yakut, Yoruba, YueChinese``.
-Performance: ``P: 94.99% R: 94.71% F1: 94.85%``.
+Performance: ``P: 94.99% R: 94.74% F1: 94.86%``.
+'''
+UD_TOK_MMINILMV2L12 = HANLP_URL + 'tok/ud_tok_mMiniLMv2L12_no_space_mul_20220619_091159.zip'
+'''
+mMiniLMv2 (:cite:`wang-etal-2021-minilmv2`) L6xH384 based tokenizer trained on UD 2.10.
+The following 130 languages are supported: ``Afrikaans, Akkadian, Akuntsu, Albanian, Amharic, AncientGreek (to 1453), Ancient Hebrew, Apurinã, Arabic, Armenian, AssyrianNeo-Aramaic, Bambara, Basque, Beja, Belarusian, Bengali, Bhojpuri, Breton, Bulgarian, Catalan, Cebuano, Central Siberian Yupik, Chinese, Chukot, ChurchSlavic, Coptic, Croatian, Czech, Danish, Dutch, Emerillon, English, Erzya, Estonian, Faroese, Finnish, French, Galician, German, Gothic, Guajajára, Guarani, Hebrew, Hindi, Hittite, Hungarian, Icelandic, Indonesian, Irish, Italian, Japanese, Javanese, K\'iche\', Kangri, Karelian, Karo(Brazil), Kazakh, Khunsari, Komi-Permyak, Komi-Zyrian, Korean, Latin, Latvian, Ligurian, LiteraryChinese, Lithuanian, Livvi, LowGerman, Madi, Makuráp, Maltese, Manx, Marathi, MbyáGuaraní, Modern Greek (1453-), Moksha, Mundurukú, Nayini, Neapolitan, Nigerian Pidgin, NorthernKurdish, Northern Sami, Norwegian, OldFrench (842-ca. 1400), OldRussian, Old Turkish, Persian, Polish, Portuguese, Romanian, Russia Buriat, Russian, Sanskrit, ScottishGaelic, Serbian, SkoltSami, Slovak, Slovenian, Soi, South Levantine Arabic, Spanish, Swedish, SwedishSign Language, SwissGerman, Tagalog, Tamil, Tatar, Telugu, Thai, Tupinambá, Turkish, Uighur, Ukrainian, Umbrian, UpperSorbian, Urdu, Urubú-Kaapor, Vietnamese, Warlpiri, Welsh, Western Armenian, WesternFrisian, Wolof, Xibe, Yakut, Yoruba, YueChinese``.
+Performance: ``P: 95.41% R: 95.25% F1: 95.33%``.
 '''
 
 # Will be filled up during runtime
