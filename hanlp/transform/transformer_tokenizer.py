@@ -270,6 +270,10 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                                 fixed_tokens.append(missing_token)
                                 fixed_ids.append(tokenizer.unk_token_id)
                                 fixed_offsets.append((offset, b))
+                        if e == offset:  # LI™ -> LIT + M
+                            if fixed_offsets and fixed_offsets[-1][0] < b:
+                                fixed_offsets[-1] = (fixed_offsets[-1][0], b)
+
                         fixed_tokens.append(token)
                         fixed_ids.append(id)
                         fixed_offsets.append((b, e))
