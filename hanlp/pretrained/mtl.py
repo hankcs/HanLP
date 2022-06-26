@@ -8,7 +8,12 @@ OPEN_TOK_POS_NER_SRL_DEP_SDP_CON_ELECTRA_SMALL_ZH = HANLP_URL + 'mtl/open_tok_po
 OPEN_TOK_POS_NER_SRL_DEP_SDP_CON_ELECTRA_BASE_ZH = HANLP_URL + 'mtl/open_tok_pos_ner_srl_dep_sdp_con_electra_base_20201223_201906.zip'
 "Electra (:cite:`clark2020electra`) base version of joint tok, pos, ner, srl, dep, sdp and con model trained on open-source Chinese corpus."
 CLOSE_TOK_POS_NER_SRL_DEP_SDP_CON_ELECTRA_SMALL_ZH = HANLP_URL + 'mtl/close_tok_pos_ner_srl_dep_sdp_con_electra_small_20210111_124159.zip'
-"Electra (:cite:`clark2020electra`) small version of joint tok, pos, ner, srl, dep, sdp and con model trained on close-source Chinese corpus."
+"Electra (:cite:`clark2020electra`) small version of joint tok, pos, ner, srl, dep (SD Standard), sdp and con model trained on close-source Chinese corpus."
+CLOSE_TOK_POS_NER_SRL_UDEP_SDP_CON_ELECTRA_SMALL_ZH = HANLP_URL + 'mtl/close_tok_pos_ner_srl_dep_sdp_con_electra_small_20220626_175100.zip'
+'''
+Electra (:cite:`clark2020electra`) small version of joint tok, pos, ner, srl, dep (UD Standard), sdp and con model trained on close-source Chinese corpus.
+Performance: ``{con UCM: 39.33% LCM: 35.69% UP: 90.24% UR: 90.28% UF: 90.26% LP: 87.55% LR: 87.59% LF: 87.57%}{dep UAS: 86.80% LAS: 82.82%}{ner/msra P: 95.45% R: 96.65% F1: 96.05%}{ner/ontonotes P: 75.98% R: 79.09% F1: 77.50%}{ner/pku P: 95.77% R: 96.75% F1: 96.26%}{pos/863 Accuracy:94.83%}{pos/ctb Accuracy:96.57%}{pos/pku Accuracy:97.54%}{sdp UF: 85.55% LF: 73.67%}{srl P: 75.71% R: 74.25% F1: 74.97%}{tok/coarse P: 97.77% R: 97.70% F1: 97.74%}{tok/fine P: 97.44% R: 97.32% F1: 97.38%}``.
+'''
 CLOSE_TOK_POS_NER_SRL_DEP_SDP_CON_ELECTRA_BASE_ZH = HANLP_URL + 'mtl/close_tok_pos_ner_srl_dep_sdp_con_electra_base_20210111_124519.zip'
 "Electra (:cite:`clark2020electra`) base version of joint tok, pos, ner, srl, dep, sdp and con model trained on close-source Chinese corpus."
 CLOSE_TOK_POS_NER_SRL_DEP_SDP_CON_ERNIE_GRAM_ZH = HANLP_URL + 'mtl/close_tok_pos_ner_srl_dep_sdp_con_ernie_gram_base_aug_20210904_145403.zip'
