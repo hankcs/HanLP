@@ -437,11 +437,14 @@ class Document(dict):
                         anno_per_sent[i] = translate.get(v, v)
         return self
 
-    def squeeze(self):
+    def squeeze(self, i=0):
         r"""
-        Squeeze the dimension of each field into one. It's intended to convert a nested document like ``[[sent1]]``
-        to ``[sent1]``. When there are multiple sentences, only the first one will be returned. Note this is not an
+        Squeeze the dimension of each field into one. It's intended to convert a nested document like ``[[sent_i]]``
+        to ``[sent_i]``. When there are multiple sentences, only the ``i-th`` one will be returned. Note this is not an
         inplace operation.
+
+        Args:
+            i: Keep the element at ``index`` for all ``list``s.
 
         Returns:
             A squeezed document with only one sentence.
@@ -449,7 +452,7 @@ class Document(dict):
         """
         sq = Document()
         for k, v in self.items():
-            sq[k] = v[0] if isinstance(v, list) else v
+            sq[k] = v[i] if isinstance(v, list) else v
         return sq
 
     def _to_doc_without_spans(self, tok: str):
@@ -476,3 +479,30 @@ class Document(dict):
         d = Document(**self)
         d[tok] = tokens
         return d
+
+    def get_by_prefix(self, prefix: str):
+        """
+        Get value by the prefix of a key.
+
+        Args:
+            prefix: The prefix of a key. If multiple keys are matched, only the first one will be used.
+
+        Returns:
+            The value assigned with the matched key.
+        """
+        key = prefix_match(prefix, self)
+        if not key:
+            return None
+        return self[key]
+
+    def count_sentences(self) -> int:
+        """
+        Count number of sentences in this document.
+
+        Returns:
+            Number of sentences.
+        """
+        tok = self.get_by_prefix('tok')
+        if isinstance(tok[0], str):
+            return 1
+        return len(tok)
