@@ -351,10 +351,10 @@ class Document(dict):
                     for row in cells:
                         cols[-1].append(row[i])
 
-                html = '<div style="display: table; line-height: 128%;">'
+                html = '<div style="display: table; padding-bottom: 1rem;">'
                 for i, each in enumerate(cols):
                     html += '<pre style="display: table-cell; font-family: SFMono-Regular,Menlo,Monaco,Consolas,' \
-                            'Liberation Mono,Courier New,monospace; white-space: nowrap;">'
+                            'Liberation Mono,Courier New,monospace; white-space: nowrap; line-height: 128%; padding: 0;">'
                     if i != len(cols) - 1:
                         each = [x + ' ' for x in each]
                     html += '<br>'.join([x.replace(' ', '&nbsp;') for x in each])
