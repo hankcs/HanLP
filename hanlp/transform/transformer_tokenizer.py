@@ -346,8 +346,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                     else:
                         begin, end, label = chunk
                         _offset = begin
-                        # chunk offset is in char level
-                        # custom_words.append(chunk)
+                        # chunk offset is on char level, at this moment, there is no concept of tokens, just subtokens
                         if isinstance(label, list):
                             tokens, ids, offsets, delta = [], [], [], 0
                             for token in label:
