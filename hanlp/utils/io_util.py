@@ -325,10 +325,7 @@ def get_resource(path: str, save_dir=hanlp_home(), extract=True, prefix=HANLP_UR
             if compressed:
                 pattern = realpath + '.*'
                 files = glob.glob(pattern)
-                files = list(filter(lambda x: not x.endswith('.downloading'), files))
-                zip_path = realpath + compressed
-                if zip_path in files:
-                    files.remove(zip_path)
+                files = list(filter(lambda x: not x.endswith('.downloading') and not x.endswith(compressed), files))
                 if files:
                     if len(files) > 1:
                         logger.debug(f'Found multiple files with {pattern}, will use the first one.')
