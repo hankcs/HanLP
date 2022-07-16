@@ -324,10 +324,10 @@ class HanLPClient(object):
             HanLP.abstract_meaning_representation('The boy wants the girl to believe him.',
                                                   language='en')
 
-        .. image:: https://hanlp.hankcs.com/proxy/amr?tok=%E7%94%B7%E5%AD%A9%20%E5%B8%8C%E6%9C%9B%20%E5%A5%B3%E5%AD%A9%20%E7%9B%B8%E4%BF%A1%20%E4%BB%96%20%E3%80%82&language=zh&scale=1
+        .. image:: https://hanlp.hankcs.com/backend/v2/amr_svg?tokens=%E7%94%B7%E5%AD%A9%20%E5%B8%8C%E6%9C%9B%20%E5%A5%B3%E5%AD%A9%20%E7%9B%B8%E4%BF%A1%20%E4%BB%96%20%E3%80%82&language=zh&scale=1
             :alt: Abstract Meaning Representation
 
-        .. image:: https://hanlp.hankcs.com/proxy/amr?tok=The%20boy%20wants%20the%20girl%20to%20believe%20him%20.&language=en&scale=1
+        .. image:: https://hanlp.hankcs.com/backend/v2/amr_svg?tokens=The%20boy%20wants%20the%20girl%20to%20believe%20him%20.&language=en&scale=1
             :alt: Abstract Meaning Representation
 
         """

@@ -43,7 +43,7 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "language": "zh",
-  "text": "HanLP为生产环境带来次世代最先进的多语种NLP技术。阿婆主来到北京参观自然语义科技公司。"
+  "text": "HanLP为生产环境带来次世代最先进的多语种NLP技术。晓美焰来到北京参观自然语义科技公司。"
 }'
 ```
 
@@ -83,7 +83,7 @@ For example, the following RESTful codes will output such an instance.
 :tags: [output_scroll]
 from hanlp_restful import HanLPClient
 HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None)  # Fill in your auth
-print(HanLP('2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。阿婆主来到北京立方庭参观自然语义科技公司。'))
+print(HanLP('2021年HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。晓美焰来到北京立方庭参观自然语义科技公司。'))
 ```
 
 The outputs above is represented as a `json` dictionary where each key is a task name and its value is 

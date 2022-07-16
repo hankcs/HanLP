@@ -3,7 +3,7 @@
 # Date: 2021-12-28 20:47
 import hanlp
 
-# Pipeline allows to blend multiple callable functions no matter they are a rule, a TensorFlow component or a PyTorch
+# Pipeline allows blending multiple callable functions no matter they are a rule, a TensorFlow component or a PyTorch
 # one. However, it's slower than the MTL framework.
 # pos = hanlp.load(hanlp.pretrained.pos.CTB9_POS_ALBERT_BASE)  # In case both tf and torch are used, load tf first.
 

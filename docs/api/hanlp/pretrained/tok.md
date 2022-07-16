@@ -35,7 +35,7 @@ To tokenize raw sentences:
 import hanlp
 
 tok = hanlp.load(hanlp.pretrained.tok.COARSE_ELECTRA_SMALL_ZH)
-tok(['商品和服务。', '阿婆主来到北京立方庭参观自然语义科技公司'])
+tok(['商品和服务。', '晓美焰来到北京立方庭参观自然语义科技公司'])
 ```
 
 All the pre-trained tokenizers and their details are listed below.
