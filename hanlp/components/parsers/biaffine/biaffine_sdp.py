@@ -122,6 +122,7 @@ class BiaffineSemanticDependencyParser(BiaffineDependencyParser):
             arc_scores_T = arc_scores.transpose(-1, -2)
             arc = ((arc_scores > 0) & (arc_scores_T < arc_scores))
             if self.config.get('no_zero_head', False):
+                arc_scores_T[arc] = -inf  # avoid cycle between a pair of nodes
                 arc_scores_fix = arc_scores_T.argmax(dim=-2).unsqueeze_(-1).expand_as(arc_scores)
                 arc.scatter_(dim=-1, index=arc_scores_fix, value=True)
         else:
