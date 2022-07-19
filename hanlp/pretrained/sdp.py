@@ -8,8 +8,8 @@ SEMEVAL16_NEWS_BIAFFINE_ZH = HANLP_URL + 'sdp/semeval16-news-biaffine_20191231_2
 SEMEVAL16_TEXT_BIAFFINE_ZH = HANLP_URL + 'sdp/semeval16-text-biaffine_20200101_002257.zip'
 'Biaffine SDP (:cite:`he-choi-2019`) trained on SemEval16 text data.'
 
-SEMEVAL16_ALL_ELECTRA_SMALL_ZH = HANLP_URL + 'sdp/semeval16_sdp_electra_small_20220218_140116.zip'
-'Biaffine SDP (:cite:`he-choi-2019`) trained on SemEval16 text and news data. UF=80.82% LF=70.02%.'
+SEMEVAL16_ALL_ELECTRA_SMALL_ZH = HANLP_URL + 'sdp/semeval16_sdp_electra_small_20220719_171433.zip'
+'Biaffine SDP (:cite:`he-choi-2019`) trained on SemEval16 text and news data. Performance: ``UF: 83.03% LF: 72.58%``'
 
 SEMEVAL15_PAS_BIAFFINE_EN = HANLP_URL + 'sdp/semeval15_biaffine_pas_20200103_152405.zip'
 'Biaffine SDP (:cite:`he-choi-2019`) trained on SemEval15 PAS data.'
