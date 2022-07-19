@@ -516,10 +516,10 @@ class TorchComponent(Component, ABC):
             verbose: ``True`` to print progress when logger is None.
         """
         if devices is None:
-            if getattr(torch, 'has_mps', None):  # mac M1 chips
-                devices = torch.device('mps:0')
-            else:
-                devices = cuda_devices(devices)
+            # if getattr(torch, 'has_mps', None):  # mac M1 chips
+            #     devices = torch.device('mps:0')
+            # else:
+            devices = cuda_devices(devices)
         elif devices == -1 or devices == [-1]:
             devices = []
         elif isinstance(devices, (int, float)):
