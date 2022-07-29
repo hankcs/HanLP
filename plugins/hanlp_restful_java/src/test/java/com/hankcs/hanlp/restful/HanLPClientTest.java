@@ -143,6 +143,12 @@ class HanLPClientTest
                 new String[]{"英", "首相", "与", "特朗普", "通", "电话", "讨论", "华为", "与", "苹果", "公司", "。"}}));
     }
 
+    @Test
+    void grammaticalErrorCorrection() throws IOException
+    {
+        prettyPrint(client.grammaticalErrorCorrection(new String[]{"每个青年都应当有远大的报复。", "有的同学对语言很兴趣。"}));
+    }
+
     void prettyPrint(Object object) throws JsonProcessingException
     {
         ObjectMapper mapper = new ObjectMapper();

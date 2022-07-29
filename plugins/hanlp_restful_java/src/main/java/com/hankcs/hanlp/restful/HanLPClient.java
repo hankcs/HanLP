@@ -225,6 +225,56 @@ public class HanLPClient
     }
 
     /**
+     * Grammatical Error Correction (GEC) is the task of correcting different kinds of errors in text such as
+     * spelling, punctuation, grammatical, and word choice errors.
+     *
+     * @param text Text potentially containing different kinds of errors such as spelling, punctuation,
+     *             grammatical, and word choice errors.
+     * @return Corrected text.
+     */
+    public List<String> grammaticalErrorCorrection(List<String> text) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("language", language);
+        //noinspection unchecked
+        return mapper.readValue(post("/grammatical_error_correction", input), List.class);
+    }
+
+    /**
+     * Grammatical Error Correction (GEC) is the task of correcting different kinds of errors in text such as
+     * spelling, punctuation, grammatical, and word choice errors.
+     *
+     * @param text Text potentially containing different kinds of errors such as spelling, punctuation,
+     *             grammatical, and word choice errors.
+     * @return Corrected text.
+     */
+    public String[] grammaticalErrorCorrection(String[] text) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("language", language);
+        //noinspection unchecked
+        return mapper.readValue(post("/grammatical_error_correction", input), String[].class);
+    }
+
+    /**
+     * Grammatical Error Correction (GEC) is the task of correcting different kinds of errors in text such as
+     * spelling, punctuation, grammatical, and word choice errors.
+     *
+     * @param text Text potentially containing different kinds of errors such as spelling, punctuation,
+     *             grammatical, and word choice errors.
+     * @return Corrected text.
+     */
+    public String grammaticalErrorCorrection(String text) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("language", language);
+        return mapper.readValue(post("/grammatical_error_correction", input), String.class);
+    }
+
+    /**
      * Semantic textual similarity deals with determining how similar two pieces of texts are.
      *
      * @param textA The first text.

@@ -412,3 +412,32 @@ class HanLPClient(object):
             'language': language or self._language,
             'topk': topk,
         })
+
+    def grammatical_error_correction(self, text: Union[str, List[str]], language: str = None) \
+            -> Union[str, List[str]]:
+        """ Grammatical Error Correction (GEC) is the task of correcting different kinds of errors in text such as
+        spelling, punctuation, grammatical, and word choice errors.
+
+        Args:
+            text: Text potentially containing different kinds of errors such as spelling, punctuation,
+                grammatical, and word choice errors.
+            language: The language of input text. ``None`` to use the default language.
+
+        Returns:
+            Corrected text.
+
+        Examples::
+
+            HanLP.grammatical_error_correction(['每个青年都应当有远大的报复。',
+                                                '有的同学对语言很兴趣。'])
+            # Output:
+            [
+                '每个青年都应当有远大的抱负。',
+                '有的同学对语言很有兴趣。'
+            ]
+
+        """
+        response = self._send_post_json(self._url + '/grammatical_error_correction',
+                                        {'text': text,
+                                         'language': language or self._language})
+        return response
