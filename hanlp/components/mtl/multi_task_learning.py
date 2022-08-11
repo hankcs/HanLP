@@ -798,3 +798,16 @@ class MultiTaskLearning(TorchComponent):
 
     def items(self):
         yield from self.tasks.items()
+
+    def __setattr__(self, key: str, value):
+        if key and key.startswith('dict') and not hasattr(self, key):
+            please_read_the_doc_ok = f'This MTL component has no {key}.'
+            matched_children = []
+            for name in self.config.task_names:
+                if hasattr(self[name], key):
+                    matched_children.append(name)
+            if matched_children:
+                please_read_the_doc_ok += f' Maybe you are looking for one of its tasks: {matched_children}. ' \
+                              f'For example, HanLP["{matched_children[0]}"].{key} = ...'
+            raise TypeError(please_read_the_doc_ok)
+        object.__setattr__(self, key, value)
