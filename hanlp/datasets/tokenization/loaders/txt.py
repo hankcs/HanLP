@@ -83,28 +83,47 @@ class TextTokenizingDataset(TransformableDataset):
 
 
 def generate_tags_for_subtokens(sample: dict, tagging_scheme='BMES'):
+    """
+    Create a sequence of x for tokenization task. Each x is an atomic subtoken that will be tagged with BMES or BI tags.
+
+    Args:
+        sample: During prediction, it is a dict with 'token' being the input text, 'token_subtoken_offsets' being
+         incremental offsets per each subtoken. During training, it is a dict with 'token' being a sequence of tokens,
+         'token_subtoken_offsets' being non-incremental offsets per each subtoken, 'token_subtoken_offsets_group' being
+         subtoken offsets grouped by each token.
+        tagging_scheme:
+
+    Returns:
+
+    """
     # We could use token_token_span but we don't want token_token_span in the batch
     subtokens_group = sample.get('token_subtoken_offsets_group', None)
     sample['raw_token'] = sample['token']
-    sample['token'] = offsets_to_subtokens(sample.get('token_') or sample['token'], sample['token_subtoken_offsets'],
-                                           subtokens_group)
+    tokens = sample.get('token_') or sample['token']
+
     if subtokens_group:
+        sample['token'] = subtokens_group_to_subtokens(tokens, subtokens_group)
         if tagging_scheme == 'BMES':
             sample['tag'] = words_to_bmes(subtokens_group)
         elif tagging_scheme == 'BI':
             sample['tag'] = words_to_bi(subtokens_group)
         else:
             raise NotImplementedError(f'Unsupported tagging scheme {tagging_scheme}.')
+    else:
+        sample['token'] = subtoken_offsets_to_subtokens(tokens, sample['token_subtoken_offsets'])
     return sample
 
 
-def offsets_to_subtokens(tokens, token_subtoken_offsets, token_input_tokens_group):
+def subtoken_offsets_to_subtokens(text, token_subtoken_offsets):
     results = []
-    if token_input_tokens_group:
-        for subtokens, token in zip(token_input_tokens_group, tokens):
-            for b, e in subtokens:
-                results.append(token[b:e])
-    else:
-        for b, e in token_subtoken_offsets:
-            results.append(tokens[b:e])
+    for b, e in token_subtoken_offsets:
+        results.append(text[b:e])
+    return results
+
+
+def subtokens_group_to_subtokens(tokens, subtoken_offsets_group):
+    results = []
+    for subtoken_offsets, token in zip(subtoken_offsets_group, tokens):
+        for b, e in subtoken_offsets:
+            results.append(token[b:e])
     return results

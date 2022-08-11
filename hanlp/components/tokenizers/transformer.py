@@ -136,19 +136,20 @@ class TransformerTaggingTokenizer(TransformerTagger):
                                 tags[i] = M
                         if end < len(tags):
                             tags[end] = 'B'
-        # Check cases that a single char gets split into multiple subtokens, e.g., ‥ -> . + .
-        offset = -1  # BERT produces 'ᄒ', '##ᅡ', '##ᆫ' for '한' and they share the same span
-        prev_tag = None
-        for tags, subtoken_offsets in zip(batch_tags, batch['token_subtoken_offsets']):
-            for i, (tag, (b, e)) in enumerate(zip(tags, subtoken_offsets)):
-                if b < offset:
-                    if prev_tag == 'S':
-                        tags[i - 1] = 'B'
-                    elif prev_tag == 'E':
-                        tags[i - 1] = 'M'
-                    tags[i] = 'M'
-                offset = e
-                prev_tag = tag
+        if 'token_subtoken_offsets_group' not in batch:  # only check prediction on raw text for now
+            # Check cases that a single char gets split into multiple subtokens, e.g., ‥ -> . + .
+            offset = -1  # BERT produces 'ᄒ', '##ᅡ', '##ᆫ' for '한' and they share the same span
+            prev_tag = None
+            for tags, subtoken_offsets in zip(batch_tags, batch['token_subtoken_offsets']):
+                for i, (tag, (b, e)) in enumerate(zip(tags, subtoken_offsets)):
+                    if b < offset:
+                        if prev_tag == 'S':
+                            tags[i - 1] = 'B'
+                        elif prev_tag == 'E':
+                            tags[i - 1] = 'M'
+                        tags[i] = 'M'
+                    offset = e
+                    prev_tag = tag
         for tags in batch_tags:
             spans.append(bmes_to_spans(tags))
         return spans

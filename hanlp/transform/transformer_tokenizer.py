@@ -464,7 +464,8 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                             subtoken_offsets.append([(0, len(token))])
                     if self.ret_subtokens_group:
                         sample[f'{self.input_key}_subtoken_offsets_group'] = subtoken_offsets
-                    sample[f'{self.input_key}_subtoken_offsets'] = sum(subtoken_offsets, [])
+                    else:
+                        sample[f'{self.input_key}_subtoken_offsets'] = sum(subtoken_offsets, [])
         else:
             input_ids, attention_mask, token_type_ids, prefix_mask = \
                 convert_examples_to_features(input_tokens,
