@@ -608,6 +608,14 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable
                 {
                     processor.hit(begin, i + 1, value);
                 }
+
+                /*如果是最后一位，这里不能直接跳出循环， 要继续从下一个字符开始判断*/
+                if (i == length - 1)
+                {
+                    i = begin;
+                    ++begin;
+                    state = this;
+                }
             }
             else
             {
@@ -639,6 +647,14 @@ public class BinTrie<V> extends BaseNode<V> implements ITrie<V>, Externalizable
                 if (value != null)
                 {
                     processor.hit(begin, i + 1, value);
+                }
+
+                /*如果是最后一位，这里不能直接跳出循环， 要继续从下一个字符开始判断*/
+                if (i == length - 1)
+                {
+                    i = begin;
+                    ++begin;
+                    state = this;
                 }
             }
             else
