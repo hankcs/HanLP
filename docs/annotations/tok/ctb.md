@@ -248,7 +248,7 @@ If it is 1-hl or 2+1 (i.e., N1 has one or two hanzi and N2 has one hanzi), treat
 For other cases, the string is treated as two words.
 
 
-- One word:北京市[Beijing]/NR,研究室[research lab]/NN,发展免[developmental history]/NN,始祖鸟[proto-bird]/NN, 残疾人[the physically challenged]/NN, 清晰度[visibility]/NN, [sense of urgency]/NN, 大奖赛[tournament]/NN,太阳系[the solar system]/NN.
+- One word:北京市[Beijing]/NR,研究室[research lab]/NN,发展史[developmental history]/NN,始祖鸟[proto-bird]/NN, 残疾人[the physically challenged]/NN, 清晰度[visibility]/NN, [sense of urgency]/NN, 大奖赛[tournament]/NN,太阳系[the solar system]/NN.
 - Two words:北京[Beijing]/NR 大学[University]/NN,坑具[toy]/NN 工厂[factory]/NN,合作[collaboration]/NN, 领城[area]/NN,史学[history]/NN 研究[research]/NN.
 
 #### 2.1.9    PN+LC
