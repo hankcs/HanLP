@@ -125,7 +125,7 @@ snippet below shows how to surpass the state-of-the-art tokenizer in 6 minutes.
 
 ```python
 tokenizer = TransformerTaggingTokenizer()
-save_dir = 'data/model/cws/sighan2005_pku_bert_base_96.70'
+save_dir = 'data/model/cws/sighan2005_pku_bert_base_96.7'
 tokenizer.fit(
     SIGHAN2005_PKU_TRAIN_ALL,
     SIGHAN2005_PKU_TEST,  # Conventionally, no devset is used. See Tian et al. (2020).
@@ -140,12 +140,12 @@ tokenizer.fit(
     warmup_steps=0.1,
     weight_decay=0.01,
     word_dropout=0.1,
-    seed=1609836303,
+    seed=1660853059,
 )
 tokenizer.evaluate(SIGHAN2005_PKU_TEST, save_dir)
 ```
 
-The result is guaranteed to be `96.70` as the random seed is fixed. Different from some overclaiming papers and
+The result is guaranteed to be `96.73` as the random seed is fixed. Different from some overclaiming papers and
 projects, HanLP promises every single digit in our scores is reproducible. Any issues on reproducibility will be treated
 and solved as a top-priority fatal bug.
 
