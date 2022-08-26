@@ -411,6 +411,8 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                             # Since non-fast tok generates no mapping, we have to guess
                             char_per_subtoken = max(len(token) // len(subtoken_ids), 1)
                             bes = [(b, b + char_per_subtoken) for b in range(0, len(token), char_per_subtoken)]
+                            if not bes:  # the token is an empty string
+                                bes = [(0, 0)]
                             if len(bes) != len(subtoken_ids):
                                 bes[len(subtoken_ids) - 1] = (bes[len(subtoken_ids) - 1][0], len(token))
                                 del bes[len(subtoken_ids):]
