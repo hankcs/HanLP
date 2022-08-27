@@ -304,7 +304,8 @@ class RelativeTransformer(nn.Module):
         Returns:
 
         """
-
+        if not x.numel():
+            return x
         for layer in self.layers:
             x = layer(x, mask)
         return x

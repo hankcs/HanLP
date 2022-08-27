@@ -168,16 +168,17 @@ class SpanBIOSemanticRoleLabeler(TorchComponent):
     def decode_output(self, pred, mask, batch, decoder=None):
         # naive = self.naive_decode(pred, mask, batch, decoder)
         vocab = self.vocabs['srl'].idx_to_token
-        if self.config.crf:
-            if not decoder:
-                decoder = self.model.decoder
-            crf: CRF = decoder.crf
-            token_index, mask = mask
-            pred = crf.decode(pred, mask)
-            pred = sum(pred, [])
-        else:
-            pred = pred[mask].argmax(-1)
-            pred = pred.tolist()
+        if mask is not None:
+            if self.config.crf:
+                if not decoder:
+                    decoder = self.model.decoder
+                crf: CRF = decoder.crf
+                token_index, mask = mask
+                pred = crf.decode(pred, mask)
+                pred = sum(pred, [])
+            else:
+                pred = pred[mask].argmax(-1)
+                pred = pred.tolist()
         pred = [vocab[x] for x in pred]
         results = []
         offset = 0

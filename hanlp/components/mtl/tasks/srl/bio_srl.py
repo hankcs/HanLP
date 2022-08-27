@@ -106,6 +106,8 @@ class SpanBIOSemanticRoleLabeling(Task, SpanBIOSemanticRoleLabeler):
 
     def feed_batch(self, h: torch.FloatTensor, batch: Dict[str, torch.Tensor], mask: torch.BoolTensor,
                    decoder: torch.nn.Module):
+        if not h.numel():  # No tokens, don't bother to run the decoder
+            return [], None
         pred = decoder(h)
         mask3d = self.compute_mask(mask)
         if self.config.crf:

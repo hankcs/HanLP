@@ -286,7 +286,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                         subtoken_offsets = subtoken_offsets[1 if self.has_cls else 0:-1]
 
                     # Edge case that the input_str is swallowed in whole
-                    if not subtoken_offsets and not input_str.isspace():
+                    if input_str and not subtoken_offsets and not input_str.isspace():
                         __index = 1 if add_special_tokens and self.has_cls else 0
                         input_tokens.insert(__index, input_str)
                         input_ids.insert(__index, tokenizer.unk_token_id)
@@ -320,16 +320,17 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
                     for i, token in enumerate(input_tokens[1:-1] if add_special_tokens else input_tokens):
                         if input_str[subtoken_offsets[i][0]] == ' ':
                             subtoken_offsets[i] = (subtoken_offsets[i][0] + 1, subtoken_offsets[i][1])
-                if add_special_tokens:
-                    if len(input_tokens) == 2:  # bos and eos, meaning that the text contains only some spaces
-                        input_tokens.insert(1, input_str)
-                        input_ids.insert(1, tokenizer.unk_token_id)
-                        subtoken_offsets.append((0, len(input_str)))
-                else:
-                    if not input_ids:  # This chunk might be some control chars getting removed by tokenizer
-                        input_tokens = [input_str]
-                        input_ids = [tokenizer.unk_token_id]
-                        subtoken_offsets = [(0, len(input_str))]
+                # The following block will tokenize each empty string (space) into an unk token
+                # if add_special_tokens:
+                #     if len(input_tokens) == 2:  # bos and eos, meaning that the text contains only some spaces
+                #         input_tokens.insert(1, input_str)
+                #         input_ids.insert(1, tokenizer.unk_token_id)
+                #         subtoken_offsets.append((0, len(input_str)))
+                # else:
+                #     if not input_ids:  # This chunk might be some control chars getting removed by tokenizer
+                #         input_tokens = [input_str]
+                #         input_ids = [tokenizer.unk_token_id]
+                #         subtoken_offsets = [(0, len(input_str))]
                 return input_tokens, input_ids, subtoken_offsets
 
             if self.dict:

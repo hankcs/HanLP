@@ -119,12 +119,15 @@ class CRFConstituencyParser(TorchComponent):
         s_span, s_label = out
         if not decoder:
             decoder = self.model.decoder
-        if span_probs is None:
-            if self.config.mbr:
-                s_span = decoder.crf(s_span, mask, mbr=True)
+        if mask.any().item():
+            if span_probs is None:
+                if self.config.mbr:
+                    s_span = decoder.crf(s_span, mask, mbr=True)
+            else:
+                s_span = span_probs
+            chart_preds = decoder.decode(s_span, s_label, mask)
         else:
-            s_span = span_probs
-        chart_preds = decoder.decode(s_span, s_label, mask)
+            chart_preds = [[]] * len(tokens)
         idx_to_token = self.vocabs.chart.idx_to_token
         if tokens is None:
             tokens = [x[1:-1] for x in batch['token']]
