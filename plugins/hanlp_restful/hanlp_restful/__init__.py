@@ -7,7 +7,7 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from hanlp_common.document import Document
-import ssl
+
 try:
     # noinspection PyUnresolvedReferences
     import requests
@@ -19,12 +19,15 @@ try:
             raise HTTPError(url, response.status_code, response.text, response.headers, None)
         return response.text
 except ImportError:
+    import ssl
+
+
     def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10, verify=True) -> str:
         request = Request(url, json.dumps(form).encode())
         for k, v in headers.items():
             request.add_header(k, v)
         ctx = None
-        if(not verify):
+        if not verify:
             ctx = ssl.create_default_context()
             ctx.check_hostname = False
             ctx.verify_mode = ssl.CERT_NONE
@@ -44,6 +47,8 @@ class HanLPClient(object):
                 Conventionally, ``zh`` is used for Chinese and ``mul`` for multilingual.
                 Leave ``None`` to use the default language on server.
             timeout (int): Maximum waiting time in seconds for a request.
+            verify (bool): ``True`` to enable SSL cert verification. You can also pass ``verify`` the path to a CA_BUNDLE
+                file or directory with certificates of trusted CAs (``requests`` required).
         """
         super().__init__()
         self._language = language
@@ -68,12 +73,28 @@ class HanLPClient(object):
         Args:
             text: A document (str), or a list of sentences (List[str]).
             tokens: A list of sentences where each sentence is a list of tokens.
-            tasks: The tasks to predict.
-            skip_tasks: The tasks to skip.
+            tasks: The tasks to predict. Use ``tasks=[...]`` to run selected tasks only. Dependent tasks will be
+                automatically selected.
+            skip_tasks: The tasks to skip. Use ``skip_tasks='tok/fine'`` to enable coarse tokenization for all tasks.
+                Use ``tasks=['tok/coarse', ...]`` and ``skip_tasks='tok/fine'`` to enable coarse tokenization for
+                selected tasks.
             language: The language of input text or tokens. ``None`` to use the default language on server.
 
         Returns:
             A :class:`~hanlp_common.document.Document`.
+
+        Examples::
+
+            # Use tasks=[...] to run selected tasks only
+            HanLP('晓美焰来到自然语义科技公司', tasks=['pos', 'ner'])
+
+            # Use skip_tasks='tok/fine' to enable coarse tokenization for all tasks
+            HanLP('晓美焰来到自然语义科技公司', skip_tasks='tok/fine')
+
+            # Use tasks=['tok/coarse', ...] and skip_tasks='tok/fine' to enable
+            # coarse tokenization for selected tasks
+            HanLP('晓美焰来到自然语义科技公司', tasks=['tok/coarse','pos'],skip_tasks='tok/fine')
+
 
         Raises:
             HTTPError: Any errors happening on the Internet side or the server side. Refer to the ``code`` and ``msg``

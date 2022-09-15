@@ -10,7 +10,7 @@ with open(join(this_dir, 'README.md'), encoding='utf-8') as file:
 
 setup(
     name='hanlp_restful',
-    version='0.0.18',
+    version='0.0.20',
     description='HanLP: Han Language Processing',
     long_description=long_description,
     long_description_content_type="text/markdown",
