@@ -7,28 +7,33 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from hanlp_common.document import Document
-
+import ssl
 try:
     # noinspection PyUnresolvedReferences
     import requests
 
 
-    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10) -> str:
-        response = requests.post(url, json=form, headers=headers, timeout=timeout)
+    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10, verify=True) -> str:
+        response = requests.post(url, json=form, headers=headers, timeout=timeout, verify=verify)
         if response.status_code != 200:
             raise HTTPError(url, response.status_code, response.text, response.headers, None)
         return response.text
 except ImportError:
-    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10) -> str:
+    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10, verify=True) -> str:
         request = Request(url, json.dumps(form).encode())
         for k, v in headers.items():
             request.add_header(k, v)
-        return urlopen(request, timeout=timeout).read().decode()
+        ctx = None
+        if(not verify):
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+        return urlopen(request, timeout=timeout, context=ctx).read().decode()
 
 
 class HanLPClient(object):
 
-    def __init__(self, url: str, auth: str = None, language=None, timeout=10) -> None:
+    def __init__(self, url: str, auth: str = None, language=None, timeout=10, verify=True) -> None:
         """
 
         Args:
@@ -48,6 +53,7 @@ class HanLPClient(object):
             import os
             auth = os.getenv('HANLP_AUTH', None)
         self._auth = auth
+        self._verify = verify
 
     def parse(self,
               text: Union[str, List[str]] = None,
@@ -126,7 +132,7 @@ class HanLPClient(object):
         headers = dict()
         if self._auth:
             headers['Authorization'] = f'Basic {self._auth}'
-        return json.loads(_post(url, form, headers, self._timeout))
+        return json.loads(_post(url, form, headers, self._timeout, verify=self._verify))
 
     def _send_get(self, url, form: Dict[str, Any]):
         request = Request(url + '?' + urlencode(form))
