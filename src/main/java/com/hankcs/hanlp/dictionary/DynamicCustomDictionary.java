@@ -234,6 +234,10 @@ public class DynamicCustomDictionary
             {
                 splitter = ",";
             }
+            else if (path.endsWith(".tsv"))
+            {
+                splitter = "\t";
+            }
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
             boolean firstLine = true;
