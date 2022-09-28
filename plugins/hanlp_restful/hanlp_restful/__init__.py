@@ -468,3 +468,53 @@ class HanLPClient(object):
                                         {'text': text,
                                          'language': language or self._language})
         return response
+
+    def text_classification(self, text: Union[str, List[str]], model, topk=False, prob=False) -> Union[
+        str, Dict[str, float], List[Union[str, Dict[str, float]]]]:
+        """
+        Text classification is the task of assigning a sentence or document an appropriate category.
+        The categories depend on the chosen dataset and can range from topics.
+
+        Args:
+            text: A document or a list of documents.
+            model: The model to use for prediction.
+            topk: ``True`` or ``int`` to return the top-k labels.
+            prob: Return also probabilities.
+
+        Returns:
+
+            Classification results.
+        """
+        response = self._send_post_json(self._url + '/text_classification',
+                                        {'text': text, 'model': model, 'topk': topk, 'prob': prob})
+        return response
+
+    def language_identification(self, text: Union[str, List[str]], topk=False, prob=False) -> Union[
+        str, Dict[str, float], List[Union[str, Dict[str, float]]]]:
+        """
+        Recognize the language of a given text.
+
+        Args:
+            text: A document or a list of documents.
+            topk: ``True`` or ``int`` to return the top-k languages.
+            prob: Return also probabilities.
+
+        Returns:
+
+            Identified language in `ISO 639-1 codes`_.
+
+        Examples::
+
+            lid('In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environments.')
+            'en'
+            lang, prob = lid('2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。', prob=True)
+            ('ja', 0.9976244568824768)
+            lid('2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。', topk=2)
+            ['zh', 'ja']
+            lid('2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。', topk=2, prob=True)
+            {'zh': 0.3952908217906952, 'en': 0.37189167737960815, 'ja': 0.056213412433862686}
+
+        .. _ISO 639-1 codes:
+           https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+        """
+        return self.text_classification(text, 'lid', topk, prob)

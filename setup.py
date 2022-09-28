@@ -11,19 +11,21 @@ version = {}
 with open(join(this_dir, "hanlp", "version.py")) as fp:
     exec(fp.read(), version)
 
+FASTTEXT = 'fasttext-wheel==0.9.2'
 extras_require = {
     'amr': [
         'penman==1.2.1',
         'networkx>=2.5.1',
         'perin-parser>=0.0.12',
     ],
+    'fasttext': [FASTTEXT],
     'tf': [
-        'fasttext-wheel==0.9.2',
+        FASTTEXT,
         'tensorflow==2.6.0',
         'keras==2.6.0',
     ]
 }
-extras_require['full'] = sum(extras_require.values(), [])
+extras_require['full'] = list(set(sum(extras_require.values(), [])))
 
 setup(
     name='hanlp',

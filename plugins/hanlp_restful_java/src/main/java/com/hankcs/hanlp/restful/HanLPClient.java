@@ -460,6 +460,67 @@ public class HanLPClient
     }
 
     /**
+     * Text classification is the task of assigning a sentence or document an appropriate category.
+     * The categories depend on the chosen dataset and can range from topics.
+     *
+     * @param text  The text content of the document.
+     * @param model The model to use for prediction.
+     * @return Classification results.
+     * @throws IOException HTTP errors.
+     */
+    public String textClassification(String text, String model) throws IOException
+    {
+        return (String) textClassification(text, model, false, false);
+    }
+
+
+    /**
+     * Text classification is the task of assigning a sentence or document an appropriate category.
+     * The categories depend on the chosen dataset and can range from topics.
+     *
+     * @param text  A document or a list of documents.
+     * @param model The model to use for prediction.
+     * @param topk  `true` or `int` to return the top-k languages.
+     * @param prob  Return also probabilities.
+     * @return Classification results.
+     * @throws IOException HTTP errors.
+     */
+    public Object textClassification(Object text, String model, Object topk, boolean prob) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("model", model);
+        input.put("topk", topk);
+        input.put("prob", prob);
+        //noinspection unchecked
+        return mapper.readValue(post("/text_classification", input), Object.class);
+    }
+
+    /**
+     * Recognize the language of a given text.
+     *
+     * @param text The text content of the document.
+     * @return Identified language in <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1 codes</a>.
+     * @throws IOException HTTP errors.
+     */
+    public String languageIdentification(String text) throws IOException
+    {
+        return textClassification(text, "lid");
+    }
+
+    /**
+     * Recognize the language of a given text.
+     *
+     * @param text The text content of the document.
+     * @return Identified language in <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1 codes</a>.
+     * @throws IOException HTTP errors.
+     */
+    public List<String> languageIdentification(String[] text) throws IOException
+    {
+        return (List<String>) textClassification(text, "lid", false, false);
+    }
+
+    /**
      * Keyphrase extraction aims to identify keywords or phrases reflecting the main topics of a document.
      *
      * @param text The text content of the document. Preferably the concatenation of the title and the content.

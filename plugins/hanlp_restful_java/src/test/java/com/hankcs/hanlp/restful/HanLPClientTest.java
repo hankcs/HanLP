@@ -149,6 +149,16 @@ class HanLPClientTest
         prettyPrint(client.grammaticalErrorCorrection(new String[]{"每个青年都应当有远大的报复。", "有的同学对语言很兴趣。"}));
     }
 
+    @Test
+    void languageIdentification() throws IOException
+    {
+        prettyPrint(client.languageIdentification(new String[]{
+                "In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environment.",
+                "2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。",
+                "2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。",
+        }));
+    }
+
     void prettyPrint(Object object) throws JsonProcessingException
     {
         ObjectMapper mapper = new ObjectMapper();

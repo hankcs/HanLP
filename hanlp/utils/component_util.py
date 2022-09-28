@@ -65,6 +65,13 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                        'embed': {'classpath': 'hanlp.layers.embeddings.fast_text.FastTextEmbedding',
                                  'filepath': identifier, 'src': 'token'},
                        'hanlp_version': version.__version__}, metapath)
+        elif identifier in {pretrained.classifiers.LID_176_FASTTEXT_SMALL,
+                            pretrained.classifiers.LID_176_FASTTEXT_BASE}:
+            save_dir = os.path.dirname(save_dir)
+            metapath = os.path.join(save_dir, 'config.json')
+            save_json({'classpath': 'hanlp.components.classifiers.fasttext_classifier.FastTextClassifier',
+                       'model_path': identifier,
+                       'hanlp_version': version.__version__}, metapath)
         else:
             raise FileNotFoundError(f'The identifier {save_dir} resolves to a nonexistent meta file {metapath}. {tips}')
     meta: dict = load_json(metapath)
