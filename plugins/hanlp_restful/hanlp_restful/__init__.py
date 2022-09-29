@@ -492,7 +492,7 @@ class HanLPClient(object):
     def language_identification(self, text: Union[str, List[str]], topk=False, prob=False) -> Union[
         str, Dict[str, float], List[Union[str, Dict[str, float]]]]:
         """
-        Recognize the language of a given text.
+        Identify the language of a given text.
 
         Args:
             text: A document or a list of documents.
@@ -505,13 +505,17 @@ class HanLPClient(object):
 
         Examples::
 
-            lid('In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environments.')
+            HanLP.language_identification(
+            'In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques.')
             'en'
-            lang, prob = lid('2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。', prob=True)
+            lang, prob = HanLP.language_identification(
+            '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。', prob=True)
             ('ja', 0.9976244568824768)
-            lid('2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。', topk=2)
+            HanLP.language_identification(
+            '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。', topk=2)
             ['zh', 'ja']
-            lid('2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。', topk=2, prob=True)
+            HanLP.language_identification(
+            '2021年 HanLPv2.1为生产环境带来次世代最先进的多语种NLP技术。', topk=3, prob=True)
             {'zh': 0.3952908217906952, 'en': 0.37189167737960815, 'ja': 0.056213412433862686}
 
         .. _ISO 639-1 codes:
