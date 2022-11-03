@@ -162,7 +162,7 @@ class Task(ConfigTracker, TorchComponent, ABC):
             Length list of this samples
 
         """
-        if not dataset.cache:
+        if dataset.cache is None:
             warnings.warn(f'Caching for the dataset is not enabled, '
                           f'try `dataset.purge_cache()` if possible. The dataset is {dataset}.')
         if isinstance(data, str):
