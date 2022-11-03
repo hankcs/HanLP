@@ -109,7 +109,7 @@ class Document(dict):
         """
         d = dict(self)
         for k, v in self.items():
-            if not v:
+            if v == [] or v is None:
                 continue
             if k == 'con':
                 if not isinstance(v, Tree) and not isinstance(v[0], Tree):
