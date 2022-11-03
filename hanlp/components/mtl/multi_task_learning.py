@@ -475,10 +475,12 @@ class MultiTaskLearning(TorchComponent):
             A :class:`~hanlp_common.document.Document`.
         """
         doc = Document()
-        if not data or not any(data):
-            return doc
-
         target_tasks = resolved_tasks or self.resolve_tasks(tasks, skip_tasks)
+        if data == []:
+            for group in target_tasks:
+                for task_name in group:
+                    doc[task_name] = []
+            return doc
         flatten_target_tasks = [self.tasks[t] for group in target_tasks for t in group]
         cls_is_bos = any([x.cls_is_bos for x in flatten_target_tasks])
         sep_is_eos = any([x.sep_is_eos for x in flatten_target_tasks])
@@ -808,6 +810,6 @@ class MultiTaskLearning(TorchComponent):
                     matched_children.append(name)
             if matched_children:
                 please_read_the_doc_ok += f' Maybe you are looking for one of its tasks: {matched_children}. ' \
-                              f'For example, HanLP["{matched_children[0]}"].{key} = ...'
+                                          f'For example, HanLP["{matched_children[0]}"].{key} = ...'
             raise TypeError(please_read_the_doc_ok)
         object.__setattr__(self, key, value)
