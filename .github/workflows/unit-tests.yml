@@ -1,6 +1,3 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
 name: Unit Tests
 
 on:
@@ -13,52 +10,56 @@ jobs:
   build:
 
     runs-on: ${{ matrix.os }}
+    env:
+      HANLP_HOME: ${{ github.workspace }}/data
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        python-version: [ 3.6, 3.7, 3.8, 3.9 ]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install -e plugins/hanlp_trie
-        python -m pip install -e plugins/hanlp_common
-        python -m pip install -e .
-        python -m pip install pytest
-#    - name: Lint with flake8
-#      run: |
-#        # stop the build if there are Python syntax errors or undefined names
-#        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-#        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-#        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-#    - name: Set environment variables
-#      run: |
-#        echo "PYTHONPATH=.:plugins/hanlp_trie:plugins/hanlp_common:plugins/hanlp_restful" >> $GITHUB_ENV
-    - name: Test with pytest
-      run: |
-        pytest tests
-        pytest plugins/hanlp_trie/tests
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache dependencies
+        id: cache-pip
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+
+      - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
+        name: Install dependencies
+        run: |
+          python -m pip install -e plugins/hanlp_trie
+          python -m pip install -e plugins/hanlp_common
+          python -m pip install -e .
+          python -m pip install pytest
+
+      - name: Cache data
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.HANLP_HOME }}
+          key: hanlp-data
+
+      - name: Test with pytest
+        run: |
+          pytest tests
+          pytest plugins/hanlp_trie/tests
   deploy:
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-#      - name: Set up Python 3.7
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: 3.7
+      - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
           python -m pip install setuptools wheel twine
       - name: Deploy to PyPI
         run: |
