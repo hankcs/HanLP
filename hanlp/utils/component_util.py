@@ -132,7 +132,7 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             raise version.NotCompatible(you_installed_wrong_versions + '\nPlease reinstall HanLP in the right way:' +
                                         '\n\n\tpip install --upgrade hanlp' + (
                                             f'[{",".join(extras)}]' if extras else '')) from None
-        eprint(f'Failed to load {identifier}.')
+        eprint(f'Failed to load {identifier}')
         from pkg_resources import parse_version
         model_version = meta.get("hanlp_version", '2.0.0-alpha.0')
         if model_version == '2.0.0':  # Quick fix: the first version used a wrong string
