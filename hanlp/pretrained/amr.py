@@ -27,6 +27,32 @@ Meaning Representation 3.0 (:cite:`knight2014abstract`). Its performance is
 Note this parser does NOT perform wikification.
 '''
 
+AMR3_GRAPH_PRETRAIN_PARSER = HANLP_URL + 'amr/amr3_graph_pretrain_parser_20221207_153759.zip'
+'''A seq2seq (:cite:`bevilacqua-etal-2021-one`) BART (:cite:`lewis-etal-2020-bart`) large parser trained on Abstract 
+Meaning Representation 3.0 (:cite:`knight2014abstract`) with graph pre-training (:cite:`bai-etal-2022-graph`). 
+Its performance is ``84.3`` according to their official repository. Using ``amr-evaluation-enhanced``, the performance is
+slightly lower:
+
+ =================== ========= ========= ========= 
+  Metric              P         R         F1       
+ =================== ========= ========= ========= 
+  Smatch             84.4       83.6        84.0       
+  Unlabeled          86.7       85.8        86.2       
+  No WSD             84.9       84.1        84.5       
+  Non_sense_frames   91.8       91.6        91.7       
+  Wikification       83.6       81.7        82.6       
+  Named Ent.         89.3       87.4        88.4       
+  Negations          71.6       72.2        71.9       
+  IgnoreVars         74.6       74.2        74.4       
+  Concepts           90.7       90.0        90.3       
+  Frames             88.8       88.5        88.7       
+  Reentrancies       72.1       72.9        72.5       
+  SRL                80.1       80.7        80.4      
+ =================== ========= ========= ========= 
+    
+Note this parser does NOT perform wikification.
+'''
+
 MRP2020_AMR_ENG_ZHO_XLM_BASE = 'http://download.hanlp.com/amr/extra/amr-eng-zho-xlm-roberta-base_20220412_223756.zip'
 '''A wrapper for the Permutation-invariant Semantic Parser (:cite:`samuel-straka-2020-ufal`) trained on MRP2020 English 
 and Chinese AMR corpus. It was ranked the top in the MRP2020 competition, while this release is a base version. 

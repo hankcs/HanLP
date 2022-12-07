@@ -16,6 +16,7 @@ from hanlp.pretrained import eos
 from hanlp.pretrained import sts
 from hanlp.pretrained import constituency
 from hanlp.pretrained import amr
+from hanlp.pretrained import amr2text
 from hanlp.pretrained import srl
 
 # Will be filled up during runtime

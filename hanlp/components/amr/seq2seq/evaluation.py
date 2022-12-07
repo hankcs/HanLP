@@ -5,7 +5,10 @@ import penman
 
 def write_predictions(predictions_path, tokenizer, graphs):
     pieces = [penman.encode(g) for g in graphs]
-    Path(predictions_path).write_text('\n\n'.join(pieces).replace(tokenizer.INIT, ''))
+    text = '\n\n'.join(pieces)
+    if tokenizer:
+        text = text.replace(tokenizer.INIT, '')
+    Path(predictions_path).write_text(text)
     return predictions_path
 
 
