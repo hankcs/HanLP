@@ -97,7 +97,7 @@ public class DynamicCustomDictionary
     public boolean load(String... path)
     {
         long start = System.currentTimeMillis();
-        if (!loadMainDictionary(path[0], normalization))
+        if (!loadMainDictionary(path[0], path, this.dat, true, normalization))
         {
             logger.warning("自定义词典" + Arrays.toString(path) + "加载失败");
             return false;
@@ -213,7 +213,7 @@ public class DynamicCustomDictionary
      */
     public boolean loadMainDictionary(String mainPath, boolean normalization)
     {
-        return loadMainDictionary(mainPath, HanLP.Config.CustomDictionaryPath, this.dat, true, normalization);
+        return loadMainDictionary(mainPath, this.path, this.dat, true, normalization);
     }
 
 
