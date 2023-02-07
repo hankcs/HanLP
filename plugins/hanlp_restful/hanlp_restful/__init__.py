@@ -440,6 +440,38 @@ class HanLPClient(object):
             'topk': topk,
         })
 
+    def abstractive_summarization(
+            self,
+            text: str,
+            language: str = None,
+    ) -> str:
+        r""" Abstractive Summarization is the task of generating a short and concise summary that captures the
+        salient ideas of the source text. The generated summaries potentially contain new phrases and sentences that
+        may not appear in the source text.
+
+        Args:
+            text: The text content of the document.
+            language: The language of input text or tokens. ``None`` to use the default language on server.
+
+        Returns:
+            Summarization.
+
+        Examples::
+
+            HanLP.abstractive_summarization('''
+            每经AI快讯，2月4日，长江证券研究所金属行业首席分析师王鹤涛表示，2023年海外经济衰退，美债现处于历史高位，
+            黄金的趋势是值得关注的；在国内需求修复的过程中，看好大金属品种中的铜铝钢。
+            此外，在细分的小品种里，建议关注两条主线，一是新能源，比如锂、钴、镍、稀土，二是专精特新主线。（央视财经）
+            ''')
+            # Output:
+            '长江证券：看好大金属品种中的铜铝钢'
+        """
+        assert text, 'Text has to be non-empty.'
+        return self._send_post_json(self._url + '/abstractive_summarization', {
+            'text': text,
+            'language': language or self._language,
+        })
+
     def grammatical_error_correction(self, text: Union[str, List[str]], language: str = None) \
             -> Union[str, List[str]]:
         """ Grammatical Error Correction (GEC) is the task of correcting different kinds of errors in text such as

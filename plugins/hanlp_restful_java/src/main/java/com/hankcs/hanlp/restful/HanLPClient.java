@@ -460,6 +460,24 @@ public class HanLPClient
     }
 
     /**
+     * Abstractive Summarization is the task of generating a short and concise summary that captures the
+     * salient ideas of the source text. The generated summaries potentially contain new phrases and sentences that
+     * may not appear in the source text.
+     *
+     * @param text The text content of the document.
+     * @return Summarization.
+     * @throws IOException HTTP errors.
+     */
+    public String abstractiveSummarization(String text) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("language", language);
+        //noinspection unchecked
+        return mapper.readValue(post("/abstractive_summarization", input), String.class);
+    }
+
+    /**
      * Text classification is the task of assigning a sentence or document an appropriate category.
      * The categories depend on the chosen dataset and can range from topics.
      *
