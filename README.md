@@ -69,7 +69,7 @@ the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licens
   <dependency>
     <groupId>com.hankcs.hanlp.restful</groupId>
     <artifactId>hanlp-restful</artifactId>
-    <version>0.0.13</version>
+    <version>0.0.14</version>
   </dependency>
   ```
 

@@ -493,6 +493,24 @@ public class HanLPClient
 
 
     /**
+     * Sentiment analysis is the task of classifying the polarity of a given text. For instance,
+     * a text-based tweet can be categorized into either "positive", "negative", or "neutral".
+     *
+     * @param text The text content of the document.
+     * @return Sentiment polarity as a numerical value which measures how positive the sentiment is.
+     * @throws IOException HTTP errors.
+     */
+    public Double sentimentAnalysis(String text) throws IOException
+    {
+        Map<String, Object> input = new HashMap<>();
+        input.put("text", text);
+        input.put("language", language);
+        //noinspection unchecked
+        return mapper.readValue(post("/sentiment_analysis", input), Double.class);
+    }
+
+
+    /**
      * Text classification is the task of assigning a sentence or document an appropriate category.
      * The categories depend on the chosen dataset and can range from topics.
      *

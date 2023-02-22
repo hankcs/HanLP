@@ -13,7 +13,7 @@ try:
     import requests
 
 
-    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10, verify=True) -> str:
+    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=60, verify=True) -> str:
         response = requests.post(url, json=form, headers=headers, timeout=timeout, verify=verify)
         if response.status_code != 200:
             raise HTTPError(url, response.status_code, response.text, response.headers, None)
@@ -22,7 +22,7 @@ except ImportError:
     import ssl
 
 
-    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=10, verify=True) -> str:
+    def _post(url, form: Dict[str, Any], headers: Dict[str, Any], timeout=60, verify=True) -> str:
         request = Request(url, json.dumps(form).encode())
         for k, v in headers.items():
             request.add_header(k, v)
@@ -36,7 +36,7 @@ except ImportError:
 
 class HanLPClient(object):
 
-    def __init__(self, url: str, auth: str = None, language=None, timeout=10, verify=True) -> None:
+    def __init__(self, url: str, auth: str = None, language=None, timeout=60, verify=True) -> None:
         """
 
         Args:
@@ -519,6 +519,35 @@ class HanLPClient(object):
         """
         response = self._send_post_json(self._url + '/text_classification',
                                         {'text': text, 'model': model, 'topk': topk, 'prob': prob})
+        return response
+
+    def sentiment_analysis(self, text: Union[str, List[str]], language=None) -> Union[float, List[float]]:
+        r"""
+        Sentiment analysis is the task of classifying the polarity of a given text. For instance,
+        a text-based tweet can be categorized into either "positive", "negative", or "neutral".
+
+        Args:
+            text: A document or a list of documents.
+            language (str): The default language for each :func:`~hanlp_restful.HanLPClient.parse` call.
+                Contact the service provider for the list of languages supported.
+                Conventionally, ``zh`` is used for Chinese and ``mul`` for multilingual.
+                Leave ``None`` to use the default language on server.
+
+        Returns:
+
+            Sentiment polarity as a numerical value which measures how positive the sentiment is.
+
+        Examples::
+
+            HanLP.language_identification('''“这是一部男人必看的电影。”人人都这么说。但单纯从性别区分，就会让这电影变狭隘。
+            《肖申克的救赎》突破了男人电影的局限，通篇几乎充满令人难以置信的温馨基调，而电影里最伟大的主题是“希望”。
+            当我们无奈地遇到了如同肖申克一般囚禁了心灵自由的那种囹圄，我们是无奈的老布鲁克，灰心的瑞德，还是智慧的安迪？
+            运用智慧，信任希望，并且勇敢面对恐惧心理，去打败它？
+            经典的电影之所以经典，因为他们都在做同一件事——让你从不同的角度来欣赏希望的美好。''')
+            0.9505730271339417
+        """
+        response = self._send_post_json(self._url + '/sentiment_analysis',
+                                        {'text': text, 'language': language or self._language})
         return response
 
     def language_identification(self, text: Union[str, List[str]], topk=False, prob=False) -> Union[
