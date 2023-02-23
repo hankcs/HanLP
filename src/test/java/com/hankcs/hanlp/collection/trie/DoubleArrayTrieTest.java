@@ -4,6 +4,7 @@ import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 import java.util.TreeMap;
 
@@ -88,10 +89,10 @@ public class DoubleArrayTrieTest extends TestCase
     public void testTransmit() throws Exception
     {
         DoubleArrayTrie<CoreDictionary.Attribute> dat = CustomDictionary.DEFAULT.dat;
-        int index = dat.transition("龙", 1);
+        int index = dat.transition("钱", 1);
         assertNull(dat.output(index));
-        index = dat.transition("窝", index);
-        assertEquals("nz 183 ", dat.output(index).toString());
+        index = dat.transition("龙", index);
+        assertEquals("n 1 ", dat.output(index).toString());
     }
 
 //    public void testCombine() throws Exception
@@ -169,5 +170,29 @@ public class DoubleArrayTrieTest extends TestCase
         {
             System.out.printf("%d %s\n", searcher.begin, searcher.value);
         }
+    }
+
+    public void testEnableFastBuild() {
+        TreeMap<String, String> map = new TreeMap<String, String>();
+        IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/CoreNatureDictionary.mini.txt");
+        while (iterator.hasNext())
+        {
+            String line = iterator.next();
+            map.put(line, line);
+        }
+
+        long startTimeMillis1 = System.currentTimeMillis();
+        DoubleArrayTrie<String> trie1 = new DoubleArrayTrie<String>();
+        trie1.build(map);
+        long costTimeMillis1 = System.currentTimeMillis() - startTimeMillis1;
+
+        long startTimeMillis2 = System.currentTimeMillis();
+        DoubleArrayTrie<String> trie2 = new DoubleArrayTrie<String>(true);
+        trie2.build(map);
+        long costTimeMillis2 = System.currentTimeMillis() - startTimeMillis2;
+
+        System.out.println("costTimeMillis1=" + costTimeMillis1);
+        System.out.println("costTimeMillis2=" + costTimeMillis2);
+        Assert.assertTrue(costTimeMillis2 < costTimeMillis1);
     }
 }

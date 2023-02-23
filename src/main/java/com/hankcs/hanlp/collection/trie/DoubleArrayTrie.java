@@ -84,15 +84,6 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
     private boolean enableFastBuild;
 
     /**
-     * 开启快速构建，相比普通构建速度更快但内存占用微增，原理详见 https://github.com/hankcs/HanLP/issues/1801
-     *
-     * @param enableFastBuild 是否开启快速构建
-     */
-    public void setEnableFastBuild(boolean enableFastBuild) {
-        this.enableFastBuild = enableFastBuild;
-    }
-
-    /**
      * 拓展数组
      *
      * @param newSize
@@ -283,6 +274,17 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
         allocSize = 0;
         // no_delete_ = false;
         error_ = 0;
+    }
+
+    /**
+     * 开启快速构建，相比普通构建速度更快但内存占用微增，原理详见 https://github.com/hankcs/HanLP/issues/1801
+     *
+     * @param enableFastBuild 是否开启快速构建
+     */
+    public DoubleArrayTrie(boolean enableFastBuild)
+    {
+        this();
+        this.enableFastBuild = enableFastBuild;
     }
 
     /**
