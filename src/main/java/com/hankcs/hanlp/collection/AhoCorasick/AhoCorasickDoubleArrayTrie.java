@@ -59,9 +59,16 @@ public class AhoCorasickDoubleArrayTrie<V>
      */
     protected int size;
 
-    // 开启快速构建，相比普通构建速度更快但内存占用微增，原理详见 https://github.com/hankcs/HanLP/issues/1801
+    /**
+     * 是否开启快速构建
+     */
     private boolean enableFastBuild;
 
+    /**
+     * 开启快速构建，相比普通构建速度更快但内存占用微增，原理详见 https://github.com/hankcs/HanLP/issues/1801
+     *
+     * @param enableFastBuild 是否开启快速构建
+     */
     public void setEnableFastBuild(boolean enableFastBuild) {
         this.enableFastBuild = enableFastBuild;
     }
