@@ -191,8 +191,9 @@ public class DoubleArrayTrieTest extends TestCase
         trie2.build(map);
         long costTimeMillis2 = System.currentTimeMillis() - startTimeMillis2;
 
-        System.out.println("costTimeMillis1=" + costTimeMillis1);
-        System.out.println("costTimeMillis2=" + costTimeMillis2);
-        Assert.assertTrue(costTimeMillis2 < costTimeMillis1);
+        System.out.printf("[trie1]size=%s,costTimeMillis=%s\n", trie1.size, costTimeMillis1);
+        System.out.printf("[trie2]size=%s,costTimeMillis=%s\n", trie2.size, costTimeMillis2);
+        Assert.assertTrue(trie1.size < trie2.size && trie2.size < trie1.size * 1.5);
+        Assert.assertTrue(costTimeMillis2 < costTimeMillis1 / 1.5);
     }
 }
