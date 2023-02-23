@@ -78,6 +78,13 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
     // inline _resize expanded
 
+    // 开启快速构建，相比普通构建速度更快但内存占用微增，原理详见 https://github.com/hankcs/HanLP/issues/1801
+    private boolean enableFastBuild;
+
+    public void setEnableFastBuild(boolean enableFastBuild) {
+        this.enableFastBuild = enableFastBuild;
+    }
+
     /**
      * 拓展数组
      *
@@ -164,7 +171,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
             return 0;
 
         int begin = 0;
-        int pos = Math.max(siblings.get(0).code + 1, nextCheckPos) - 1;
+        int pos = Math.max(siblings.get(0).code + 1, enableFastBuild ? (nextCheckPos + 1) : nextCheckPos) - 1;
         int nonzero_num = 0;
         int first = 0;
 
@@ -221,7 +228,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
 
         //used[begin] = true;
         used.set(begin);
-        
+
         size = (size > begin + siblings.get(siblings.size() - 1).code + 1) ? size
                 : begin + siblings.get(siblings.size() - 1).code + 1;
 
