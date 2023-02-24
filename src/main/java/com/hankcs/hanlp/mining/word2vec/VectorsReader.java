@@ -71,7 +71,7 @@ public final class VectorsReader
                 matrix = Utility.shrink(matrix, new float[words][]);
             }
         }
-        catch (IOException e)
+        finally
         {
             Utility.closeQuietly(br);
             Utility.closeQuietly(r);
