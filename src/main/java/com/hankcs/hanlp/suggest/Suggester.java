@@ -86,7 +86,7 @@ public class Suggester implements ISuggester
             {
                 Double score = scoreMap.get(entry.getKey());
                 if (score == null) score = 0.0;
-                scoreMap.put(entry.getKey(), score / max + entry.getValue() * scorer.boost);
+                scoreMap.put(entry.getKey(), score + entry.getValue() * scorer.boost / max);
             }
         }
         for (Map.Entry<Double, Set<String>> entry : sortScoreMap(scoreMap).entrySet())

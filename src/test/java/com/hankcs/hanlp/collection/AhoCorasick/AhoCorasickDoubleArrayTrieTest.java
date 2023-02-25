@@ -2,8 +2,10 @@ package com.hankcs.hanlp.collection.AhoCorasick;
 
 import com.hankcs.hanlp.algorithm.ahocorasick.trie.Emit;
 import com.hankcs.hanlp.algorithm.ahocorasick.trie.Trie;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 import java.util.*;
 
@@ -92,4 +94,29 @@ public class AhoCorasickDoubleArrayTrieTest extends TestCase
 //        }
 //        System.out.printf("%d ms\n", System.currentTimeMillis() - timeMillis);
 //    }
+
+    public void testEnableFastBuild() {
+        TreeMap<String, String> map = new TreeMap<String, String>();
+        IOUtil.LineIterator iterator = new IOUtil.LineIterator("data/dictionary/CoreNatureDictionary.txt");
+        while (iterator.hasNext())
+        {
+            String line = iterator.next();
+            map.put(line, line);
+        }
+
+        long startTimeMillis1 = System.currentTimeMillis();
+        AhoCorasickDoubleArrayTrie<String> trie1 = new AhoCorasickDoubleArrayTrie<String>();
+        trie1.build(map);
+        long costTimeMillis1 = System.currentTimeMillis() - startTimeMillis1;
+
+        long startTimeMillis2 = System.currentTimeMillis();
+        AhoCorasickDoubleArrayTrie<String> trie2 = new AhoCorasickDoubleArrayTrie<String>(true);
+        trie2.build(map);
+        long costTimeMillis2 = System.currentTimeMillis() - startTimeMillis2;
+
+        System.out.printf("[trie1]size=%s,costTimeMillis=%s\n", trie1.size, costTimeMillis1);
+        System.out.printf("[trie2]size=%s,costTimeMillis=%s\n", trie2.size, costTimeMillis2);
+        Assert.assertTrue(trie1.size < trie2.size && trie2.size < trie1.size * 1.5);
+        Assert.assertTrue(costTimeMillis2 < costTimeMillis1 / 1.5);
+    }
 }

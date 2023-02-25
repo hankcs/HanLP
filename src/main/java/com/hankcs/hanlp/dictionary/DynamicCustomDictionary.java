@@ -48,6 +48,10 @@ public class DynamicCustomDictionary
      */
     public String path[];
 
+    /**
+     * 是否执行字符正规化（繁体->简体，全角->半角，大写->小写），切换配置后必须删CustomDictionary.txt.bin缓存
+     */
+    public boolean normalization = HanLP.Config.Normalization;
 
     /**
      * 构造一份词典对象，并加载{@code com.hankcs.hanlp.HanLP.Config#CustomDictionaryPath}
@@ -93,7 +97,7 @@ public class DynamicCustomDictionary
     public boolean load(String... path)
     {
         long start = System.currentTimeMillis();
-        if (!loadMainDictionary(path[0]))
+        if (!loadMainDictionary(path[0], path, this.dat, true, normalization))
         {
             logger.warning("自定义词典" + Arrays.toString(path) + "加载失败");
             return false;
@@ -113,7 +117,7 @@ public class DynamicCustomDictionary
      * @param path     自定义词典
      * @param isCache  是否缓存结果
      */
-    public static boolean loadMainDictionary(String mainPath, String path[], DoubleArrayTrie<CoreDictionary.Attribute> dat, boolean isCache)
+    public static boolean loadMainDictionary(String mainPath, String path[], DoubleArrayTrie<CoreDictionary.Attribute> dat, boolean isCache, boolean normalization)
     {
         logger.info("自定义词典开始加载:" + mainPath);
         if (loadDat(mainPath, dat)) return true;
@@ -144,7 +148,7 @@ public class DynamicCustomDictionary
                     }
                 }
                 logger.info("以默认词性[" + defaultNature + "]加载自定义词典" + p + "中……");
-                boolean success = load(p, defaultNature, map, customNatureCollector);
+                boolean success = load(p, defaultNature, map, customNatureCollector, normalization);
                 if (!success) logger.warning("失败：" + p);
             }
             if (map.size() == 0)
@@ -207,9 +211,9 @@ public class DynamicCustomDictionary
      * @param mainPath 词典路径（+.bin等于缓存路径）
      * @return
      */
-    public boolean loadMainDictionary(String mainPath)
+    public boolean loadMainDictionary(String mainPath, boolean normalization)
     {
-        return loadMainDictionary(mainPath, HanLP.Config.CustomDictionaryPath, this.dat, true);
+        return loadMainDictionary(mainPath, this.path, this.dat, true, normalization);
     }
 
 
@@ -221,7 +225,7 @@ public class DynamicCustomDictionary
      * @param customNatureCollector 收集用户词性
      * @return
      */
-    public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map, LinkedHashSet<Nature> customNatureCollector)
+    public static boolean load(String path, Nature defaultNature, TreeMap<String, CoreDictionary.Attribute> map, LinkedHashSet<Nature> customNatureCollector, boolean normalization)
     {
         try
         {
@@ -229,6 +233,10 @@ public class DynamicCustomDictionary
             if (path.endsWith(".csv"))
             {
                 splitter = ",";
+            }
+            else if (path.endsWith(".tsv"))
+            {
+                splitter = "\t";
             }
             BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(path), "UTF-8"));
             String line;
@@ -242,7 +250,7 @@ public class DynamicCustomDictionary
                 }
                 String[] param = line.split(splitter);
                 if (param[0].length() == 0) continue;   // 排除空行
-                if (HanLP.Config.Normalization) param[0] = CharTable.convert(param[0]); // 正规化
+                if (normalization) param[0] = CharTable.convert(param[0]); // 正规化
 
                 int natureCount = (param.length - 1) / 2;
                 CoreDictionary.Attribute attribute;
@@ -333,7 +341,7 @@ public class DynamicCustomDictionary
      */
     public boolean add(String word)
     {
-        if (HanLP.Config.Normalization) word = CharTable.convert(word);
+        if (normalization) word = CharTable.convert(word);
         if (contains(word)) return false;
         return insert(word, null);
     }
@@ -349,7 +357,7 @@ public class DynamicCustomDictionary
     public boolean insert(String word, String natureWithFrequency)
     {
         if (word == null) return false;
-        if (HanLP.Config.Normalization) word = CharTable.convert(word);
+        if (normalization) word = CharTable.convert(word);
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
         if (dat.set(word, att)) return true;
@@ -474,7 +482,7 @@ public class DynamicCustomDictionary
      */
     public CoreDictionary.Attribute get(String key)
     {
-        if (HanLP.Config.Normalization) key = CharTable.convert(key);
+        if (normalization) key = CharTable.convert(key);
         CoreDictionary.Attribute attribute = dat.get(key);
         if (attribute != null) return attribute;
         if (trie == null) return null;
@@ -489,7 +497,7 @@ public class DynamicCustomDictionary
      */
     public void remove(String key)
     {
-        if (HanLP.Config.Normalization) key = CharTable.convert(key);
+        if (normalization) key = CharTable.convert(key);
         if (trie == null) return;
         trie.remove(key);
     }
@@ -715,6 +723,6 @@ public class DynamicCustomDictionary
     {
         if (path == null || path.length == 0) return false;
         IOUtil.deleteFile(path[0] + Predefine.BIN_EXT); // 删掉缓存
-        return loadMainDictionary(path[0]);
+        return loadMainDictionary(path[0], normalization);
     }
 }

@@ -59,8 +59,23 @@ public class AhoCorasickDoubleArrayTrie<V>
      */
     protected int size;
 
+    /**
+     * 是否开启快速构建
+     */
+    private boolean enableFastBuild;
+
     public AhoCorasickDoubleArrayTrie()
     {
+    }
+
+    /**
+     * 开启快速构建，相比普通构建速度更快但内存占用微增，原理详见 https://github.com/hankcs/HanLP/issues/1801
+     *
+     * @param enableFastBuild 是否开启快速构建
+     */
+    public AhoCorasickDoubleArrayTrie(boolean enableFastBuild)
+    {
+        this.enableFastBuild = enableFastBuild;
     }
 
     /**
@@ -920,7 +935,7 @@ public class AhoCorasickDoubleArrayTrie<V>
         private int insert(List<Map.Entry<Integer, State>> siblings)
         {
             int begin = 0;
-            int pos = Math.max(siblings.get(0).getKey() + 1, nextCheckPos) - 1;
+            int pos = Math.max(siblings.get(0).getKey() + 1, enableFastBuild ? (nextCheckPos + 1) : nextCheckPos) - 1;
             int nonzero_num = 0;
             int first = 0;
 
