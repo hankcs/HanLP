@@ -23,6 +23,7 @@ extras_require = {
         FASTTEXT,
         'tensorflow==2.6.0',
         'keras==2.6.0',
+        'protobuf<3.19'
     ]
 }
 extras_require['full'] = list(set(sum(extras_require.values(), [])))
