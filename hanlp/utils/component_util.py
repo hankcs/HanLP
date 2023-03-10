@@ -126,10 +126,10 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
         # Some users often install an incompatible tf and put the blame on HanLP. Teach them the basics.
         try:
             you_installed_wrong_versions, extras = check_version_conflicts(extras=('full',) if tf_model else None)
-        except:
+        except Exception as check_e:
             you_installed_wrong_versions, extras = None, None
         if you_installed_wrong_versions:
-            raise version.NotCompatible(you_installed_wrong_versions + '\nPlease reinstall HanLP in the right way:' +
+            raise version.NotCompatible(you_installed_wrong_versions + '\nPlease reinstall HanLP in the proper way:' +
                                         '\n\n\tpip install --upgrade hanlp' + (
                                             f'[{",".join(extras)}]' if extras else '')) from None
         eprint(f'Failed to load {identifier}')
@@ -164,9 +164,13 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
             try:
                 import tensorflow
                 tf_version = tensorflow.__version__
+                eprint(f'TensorFlow: {tf_version}')
             except ModuleNotFoundError:
                 tf_version = 'not installed'
-            eprint(f'TensorFlow: {tf_version}')
+                eprint(f'TensorFlow: {tf_version}')
+            except Exception as tf_e:
+                eprint(f'TensorFlow cannot be imported due to {tf_e.__class__.__name__}: {e}. '
+                       f'Note this is not a bug of HanLP, but rather a compatability issue caused by TensorFlow.')
         eprint(f'HanLP: {version.__version__}')
         import sys
         sys.stderr.flush()
