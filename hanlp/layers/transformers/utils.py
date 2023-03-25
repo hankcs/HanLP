@@ -8,8 +8,7 @@ import torch
 from torch.nn import functional as F
 
 from hanlp.components.parsers.ud import udify_util as util
-from hanlp.layers.transformers.pt_imports import PreTrainedModel, optimization, AdamW, \
-    get_linear_schedule_with_warmup
+from hanlp.layers.transformers.pt_imports import PreTrainedModel
 
 
 def transformer_encode(transformer: PreTrainedModel,
@@ -284,6 +283,7 @@ def build_optimizer_for_pretrained(model: torch.nn.Module,
         {'params': params['non_pretrained']['no_decay'], 'weight_decay': 0.0, 'lr': lr},
     ]
 
+    from transformers import optimization
     return optimization.AdamW(
         grouped_parameters,
         lr=lr,
@@ -311,6 +311,7 @@ def build_optimizer_scheduler_with_transformer(model: torch.nn.Module,
     if isinstance(warmup_steps, float):
         assert 0 < warmup_steps < 1, 'warmup_steps has to fall in range (0, 1) when it is float.'
         warmup_steps = num_training_steps * warmup_steps
+    from transformers import optimization
     scheduler = optimization.get_linear_schedule_with_warmup(optimizer, warmup_steps, num_training_steps)
     return optimizer, scheduler
 
@@ -344,6 +345,7 @@ def get_optimizers(
             "weight_decay": 0.0,
         },
     ]
+    from transformers import AdamW, get_linear_schedule_with_warmup
     optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate, eps=adam_epsilon)
     scheduler = get_linear_schedule_with_warmup(
         optimizer, num_warmup_steps=warmup_steps, num_training_steps=num_training_steps

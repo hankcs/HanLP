@@ -6,14 +6,11 @@ import warnings
 
 from hanlp.layers.transformers.resource import get_tokenizer_mirror, get_model_mirror
 
-if os.environ.get('USE_TF', None) is None:
-    os.environ["USE_TF"] = 'NO'  # saves time loading transformers
 if os.environ.get('TOKENIZERS_PARALLELISM', None) is None:
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-from transformers import BertTokenizer, BertConfig, PretrainedConfig, \
-    AutoConfig, AutoTokenizer, PreTrainedTokenizer, BertTokenizerFast, AlbertConfig, BertModel, AutoModel, \
-    PreTrainedModel, get_linear_schedule_with_warmup, AdamW, AutoModelForSequenceClassification, \
-    AutoModelForTokenClassification, optimization, BartModel
+from transformers import BertTokenizer, BertConfig, PretrainedConfig, AutoConfig, AutoTokenizer, PreTrainedTokenizer, \
+    BertTokenizerFast, AlbertConfig, BertModel, AutoModel, PreTrainedModel, AutoModelForSequenceClassification, \
+    AutoModelForTokenClassification, BartModel
 
 
 class AutoModel_(AutoModel):

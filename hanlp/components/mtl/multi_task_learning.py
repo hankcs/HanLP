@@ -27,7 +27,6 @@ from hanlp.common.transform import FieldLength, TransformList
 from hanlp.components.mtl.tasks import Task
 from hanlp.layers.embeddings.contextual_word_embedding import ContextualWordEmbedding, ContextualWordEmbeddingModule
 from hanlp.layers.embeddings.embedding import Embedding
-from hanlp.layers.transformers.pt_imports import optimization
 from hanlp.layers.transformers.utils import pick_tensor_for_each_token
 from hanlp.metrics.metric import Metric
 from hanlp.metrics.mtl import MetricDict
@@ -251,6 +250,7 @@ class MultiTaskLearning(TorchComponent):
         for _lr, ps in no_decay_by_lr.items():
             parameter_groups.append({"params": ps, 'lr': _lr, 'weight_decay': 0.0})
         # noinspection PyTypeChecker
+        from transformers import optimization
         encoder_optimizer = optimization.AdamW(
             parameter_groups,
             lr=lr,
