@@ -130,7 +130,10 @@ class CRFConstituencyParser(TorchComponent):
             chart_preds = [[]] * len(tokens)
         idx_to_token = self.vocabs.chart.idx_to_token
         if tokens is None:
-            tokens = [x[1:-1] for x in batch['token']]
+            tokens = batch.get('token_', None)  # Use the original tokens if any
+            if tokens is None:
+                tokens = batch['token']
+            tokens = [x[1:-1] for x in tokens]
         trees = [build_tree(token, [(i, j, idx_to_token[label]) for i, j, label in chart]) for token, chart in
                  zip(tokens, chart_preds)]
         # probs = [prob[:i - 1, 1:i].cpu() for i, prob in zip(lens, s_span.unbind())]
