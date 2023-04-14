@@ -23,7 +23,7 @@
 
 See also [The Bracketing Guidelines for the Penn Chinese Treebank (3.0)](https://repository.upenn.edu/cgi/viewcontent.cgi?article=1040&context=ircs_reports).
 
-| Tag | Definition                             | 定义                                     | 例子            |
+| Tag  | Definition                             | 定义                                     | 例子            |
 |------|----------------------------------------------|----------------------------------------------------|-------------------|
 | ADJP | adjective phrase                             | 形容词短语，以形容词为中心词                                     | 不完全、大型            |
 | ADVP | adverbial phrase headed by AD (adverb)       | 副词短语，以副词为中心词                                       | 非常、很              |
@@ -43,7 +43,7 @@ See also [The Bracketing Guidelines for the Penn Chinese Treebank (3.0)](https:/
 | PP   | preposition phrase                           | 介词短语，中心词通常为介词                                      | 在北京、据报道           |
 | PRN  | parenthetical                                | 插入语                                                | ，（张三说)，           |
 | QP   | quantifier phrase                            | 量词短语                                               | 三个、五百辆            |
-| ROOT | root node                                    | 根节点                                                | 根节点               |
+| TOP  | root node                                    | 根节点                                                | 根节点               |
 | UCP  | unidentical coordination phrase              | 不对称的并列短语，指并列词两侧的短语类型不致                             | (养老、医疗）保险         |
 | VCD  | coordinated verb compound                    | 复合动词                                               | 出版发行              |
 | VCP  | verb compounds formed by VV + VC             | VV + VC形式的动词短语                                     | 看作是               |
