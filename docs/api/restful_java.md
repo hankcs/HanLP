@@ -6,7 +6,7 @@ Add the following dependency into the `pom.xml` file of your project.
 <dependency>
   <groupId>com.hankcs.hanlp.restful</groupId>
   <artifactId>hanlp-restful</artifactId>
-  <version>0.0.14</version>
+  <version>0.0.15</version>
 </dependency>
 ```
 

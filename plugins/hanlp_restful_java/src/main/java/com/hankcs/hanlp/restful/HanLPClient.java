@@ -282,12 +282,12 @@ public class HanLPClient
      * @return Their similarity.
      * @throws IOException HTTP errors.
      */
-    public Float semanticTextualSimilarity(String textA, String textB) throws IOException
+    public Double semanticTextualSimilarity(String textA, String textB) throws IOException
     {
         Map<String, Object> input = new HashMap<>();
         input.put("text", new String[]{textA, textB});
         input.put("language", language);
-        return mapper.readValue(post("/semantic_textual_similarity", input), Float.class);
+        return mapper.readValue(post("/semantic_textual_similarity", input), Double.class);
     }
 
     /**
@@ -297,7 +297,7 @@ public class HanLPClient
      * @return Their similarities.
      * @throws IOException HTTP errors.
      */
-    public List<Float> semanticTextualSimilarity(String[][] text) throws IOException
+    public List<Double> semanticTextualSimilarity(String[][] text) throws IOException
     {
         Map<String, Object> input = new HashMap<>();
         input.put("text", text);

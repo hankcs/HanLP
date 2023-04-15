@@ -76,8 +76,16 @@ class HanLPClientTest
     @Test
     void semanticTextualSimilarity() throws IOException
     {
-        Float similarity = client.semanticTextualSimilarity("看图猜一电影名", "看图猜电影");
+        Double similarity = client.semanticTextualSimilarity("看图猜一电影名", "看图猜电影");
         prettyPrint(similarity);
+        List<Double> similarities = client.semanticTextualSimilarity(new String[][]{
+                new String[]{"看图猜一电影名", "看图猜电影"},
+                new String[]{"北京到上海的动车票", "上海到北京的动车票"}
+        });
+        for (Double similarityPerPair : similarities)
+        {
+            prettyPrint(similarityPerPair);
+        }
     }
 
     @Test
