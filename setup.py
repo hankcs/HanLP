@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-12-28 19:26
+import sys
 from os.path import abspath, join, dirname
 from setuptools import find_packages, setup
 
@@ -12,6 +13,11 @@ with open(join(this_dir, "hanlp", "version.py")) as fp:
     exec(fp.read(), version)
 
 FASTTEXT = 'fasttext-wheel==0.9.2'
+if sys.version_info >= (3, 10):
+    TENSORFLOW = ['tensorflow>=2.8.0']
+else:
+    TENSORFLOW = ['tensorflow==2.6.0', 'keras==2.6.0', 'protobuf<3.19']
+
 extras_require = {
     'amr': [
         'penman==1.2.1',
@@ -19,12 +25,7 @@ extras_require = {
         'perin-parser>=0.0.12',
     ],
     'fasttext': [FASTTEXT],
-    'tf': [
-        FASTTEXT,
-        'tensorflow==2.6.0',
-        'keras==2.6.0',
-        'protobuf<3.19'
-    ]
+    'tf': [FASTTEXT, *TENSORFLOW]
 }
 extras_require['full'] = list(set(sum(extras_require.values(), [])))
 
