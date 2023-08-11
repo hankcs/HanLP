@@ -211,7 +211,9 @@ public class ViterbiSegment extends WordBasedSegment
         File file = new File(mainPath);
         mainPath = file.getParent() + "/" + Math.abs(combinePath.toString().hashCode());
         mainPath = mainPath.replace("\\", "/");
-        DynamicCustomDictionary.loadMainDictionary(mainPath, path, dat, isCache, config.normalization);
+        if (DynamicCustomDictionary.loadMainDictionary(mainPath, path, dat, isCache, config.normalization)) {
+            this.customDictionary = new DynamicCustomDictionary(dat, null, null);
+        }
     }
 
     /**
