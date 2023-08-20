@@ -13,7 +13,7 @@
         <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/hanlp?colorB=blue">
     </a>
     <a href="https://pepy.tech/project/hanlp">
-        <img alt="Downloads" src="https://pepy.tech/badge/hanlp">
+        <img alt="Downloads" src="https://static.pepy.tech/badge/hanlp">
     </a>
     <a href="https://colab.research.google.com/drive/1KPX6t1y36TOzRIeB4Kt3uJ1twuj6WuFv?usp=sharing">
         <img alt="Open In Colab" src="https://file.hankcs.com/img/colab-badge.svg">
