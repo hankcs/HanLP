@@ -163,7 +163,7 @@ The performance of multi-task learning models is shown in the following table.
 
 ## Citing
 
-If you use HanLP in your research, please cite this repository.
+If you use HanLP in your research, please cite [our EMNLP paper](https://aclanthology.org/2021.emnlp-main.451):
 
 ```bibtex
 @inproceedings{he-choi-2021-stem,
