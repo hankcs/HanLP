@@ -20,7 +20,7 @@ from hanlp.layers.embeddings.embedding import EmbeddingDim, Embedding
 from hanlp.layers.transformers.encoder import TransformerEncoder
 from hanlp.transform.transformer_tokenizer import TransformerSequenceTokenizer
 from hanlp.utils.time_util import CountdownTimer
-from hanlp.utils.torch_util import clip_grad_norm, lengths_to_mask
+from hanlp.utils.torch_util import clip_grad_norm, lengths_to_mask, filter_state_dict_safely
 from hanlp_common.util import merge_locals_kwargs
 
 
@@ -142,7 +142,8 @@ class TransformerTagger(TransformerComponent, Tagger):
         temperature = temperature_scheduler(logits_S, logits_T)
         return kd_criterion(logits_S, logits_T, temperature)
 
-    def build_model(self, training=True, extra_embeddings: Embedding = None, **kwargs) -> torch.nn.Module:
+    def build_model(self, training=True, extra_embeddings: Embedding = None, finetune=False, logger=None,
+                    **kwargs) -> torch.nn.Module:
         model = TransformerTaggingModel(
             self.build_transformer(training=training),
             len(self.vocabs.tag),
@@ -150,6 +151,19 @@ class TransformerTagger(TransformerComponent, Tagger):
             self.config.get('secondary_encoder', None),
             extra_embeddings=extra_embeddings.module(self.vocabs) if extra_embeddings else None,
         )
+        if finetune:
+            model_state = model.state_dict()
+            load_state = self.model.state_dict()
+            safe_state = filter_state_dict_safely(model_state, load_state)
+            missing_params = model_state.keys() - safe_state.keys()
+            if missing_params:
+                logger.info(f'The following parameters were missing from the checkpoint: '
+                            f'{", ".join(sorted(missing_params))}.')
+            model.load_state_dict(safe_state, strict=False)
+            n = self.model.classifier.bias.size(0)
+            if model.classifier.bias.size(0) != n:
+                model.classifier.weight.data[:n, :] = self.model.classifier.weight.data[:n, :]
+                model.classifier.bias.data[:n] = self.model.classifier.bias.data[:n]
         return model
 
     # noinspection PyMethodOverriding
@@ -203,7 +217,8 @@ class TransformerTagger(TransformerComponent, Tagger):
         return self._tokenizer_transform
 
     def build_vocabs(self, trn, logger, **kwargs):
-        self.vocabs.tag = Vocab(pad_token=None, unk_token=None)
+        if 'tag' not in self.vocabs:
+            self.vocabs.tag = Vocab(pad_token=None, unk_token=None)
         timer = CountdownTimer(len(trn))
         max_seq_len = 0
         token_key = self.config.token_key

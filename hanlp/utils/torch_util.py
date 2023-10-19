@@ -284,3 +284,12 @@ def lengths_to_mask(seq_len, max_len=None):
 
 def activation_from_name(name: str):
     return getattr(torch.nn, name)
+
+
+def filter_state_dict_safely(model_state: dict, load_state: dict):
+    safe_state = dict()
+    for k, v in load_state.items():
+        model_v = model_state.get(k, None)
+        if model_v is not None and model_v.shape == v.shape:
+            safe_state[k] = v
+    return safe_state

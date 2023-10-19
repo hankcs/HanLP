@@ -248,6 +248,8 @@ class TorchComponent(Component, ABC):
                 self.load(finetune, devices=devices)
             else:
                 self.load(save_dir, devices=devices)
+            self.config.finetune = finetune
+            self.vocabs.unlock()  # For extending vocabs
             logger.info(
                 f'Finetune model loaded with {sum(p.numel() for p in self.model.parameters() if p.requires_grad)}'
                 f'/{sum(p.numel() for p in self.model.parameters())} trainable/total parameters.')
@@ -258,13 +260,12 @@ class TorchComponent(Component, ABC):
         dev = self.build_dataloader(**merge_dict(config, data=dev_data, batch_size=batch_size, shuffle=False,
                                                  training=None, device=first_device, logger=logger, vocabs=self.vocabs,
                                                  overwrite=True)) if dev_data else None
-        if not finetune:
-            flash('[yellow]Building model [blink]...[/blink][/yellow]')
-            self.model = self.build_model(**merge_dict(config, training=True))
-            flash('')
-            logger.info(f'Model built with {sum(p.numel() for p in self.model.parameters() if p.requires_grad)}'
-                        f'/{sum(p.numel() for p in self.model.parameters())} trainable/total parameters.')
-            assert self.model, 'build_model is not properly implemented.'
+        flash('[yellow]Building model [blink]...[/blink][/yellow]')
+        self.model = self.build_model(**merge_dict(config, training=True), logger=logger)
+        flash('')
+        logger.info(f'Model built with {sum(p.numel() for p in self.model.parameters() if p.requires_grad)}'
+                    f'/{sum(p.numel() for p in self.model.parameters())} trainable/total parameters.')
+        assert self.model, 'build_model is not properly implemented.'
         _description = repr(self.model)
         if len(_description.split('\n')) < 10:
             logger.info(_description)
