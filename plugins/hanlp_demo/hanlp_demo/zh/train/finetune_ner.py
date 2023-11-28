@@ -26,16 +26,21 @@ IOBES\tO
         )
 
 ner = TransformerNamedEntityRecognizer()
-ner.fit(
-    trn_data=your_training_corpus,
-    dev_data=your_development_corpus,
-    save_dir=save_dir,
-    epochs=50,  # Since the corpus is small, overfit it
-    finetune=hanlp.pretrained.ner.MSRA_NER_ELECTRA_SMALL_ZH,
-    # You MUST set the same parameters with the fine-tuning model:
-    average_subwords=True,
-    transformer='hfl/chinese-electra-180g-small-discriminator',
-)
+if not os.path.exists(save_dir):
+    print('Start fine-tuning ')
+    ner.fit(
+        trn_data=your_training_corpus,
+        dev_data=your_development_corpus,
+        save_dir=save_dir,
+        epochs=50,  # Since the corpus is small, overfit it
+        finetune=hanlp.pretrained.ner.MSRA_NER_ELECTRA_SMALL_ZH,
+        # You MUST set the same parameters with the fine-tuning model:
+        average_subwords=True,
+        transformer='hfl/chinese-electra-180g-small-discriminator',
+    )
+else:
+    print('Load fine-tuned model')
+    ner = hanlp.load(save_dir)
 
 HanLP = hanlp.pipeline()\
     .append(hanlp.load(hanlp.pretrained.tok.FINE_ELECTRA_SMALL_ZH), output_key='tok')\
