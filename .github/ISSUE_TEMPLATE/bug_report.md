@@ -1,6 +1,6 @@
 ---
-name: 🐛Bug report
-about: Create a report to help us improve
+name: 🐛发现一个bug
+about: 需提交版本号、触发代码、错误日志
 title: ''
 labels: bug
 assignees: hankcs
@@ -8,9 +8,7 @@ assignees: hankcs
 ---
 
 <!--
-Thank you for reporting a possible bug in HanLP.
-Please fill in the template below to bypass our spam filter.  
-以下必填，否则恕不受理。
+感谢找出bug，请认真填写下表：
 -->
 
 **Describe the bug**
@@ -37,3 +35,6 @@ A clear and concise description of what you expected to happen.
 Include any logs or source code that would be helpful to diagnose the problem. If including tracebacks, please include the full traceback. Large logs and files should be attached.
 
 * [ ] I've completed this form and searched the web for solutions.
+<!-- ⬆️此处务必勾选，否则你的issue会被机器人自动删除！ -->
+<!-- ⬆️此处务必勾选，否则你的issue会被机器人自动删除！ -->
+<!-- ⬆️此处务必勾选，否则你的issue会被机器人自动删除！ -->
