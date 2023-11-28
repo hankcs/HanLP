@@ -49,11 +49,11 @@ resources.
 By default, models are downloaded from a global CDN we maintain. However, in some regions the downloading speed can 
 be slow occasionally. If you happen to be in one of those regions, you can find some third party mirror sites 
 on our [bbs](https://bbs.hankcs.com/). When you find a working URL, say 
-[https://od.hankcs.com/hanlp/data/](https://od.hankcs.com/hanlp/data/), you can set a `HANLP_URL` 
+[https://ftp.hankcs.com/hanlp/](https://ftp.hankcs.com/hanlp/), you can set a `HANLP_URL` 
 environment variable and HanLP will pick it up at the next startup.
 
 ```bash
-export HANLP_URL=https://od.hankcs.com/hanlp/data/
+export HANLP_URL=https://ftp.hankcs.com/hanlp/
 ```
 
 ## Control Verbosity

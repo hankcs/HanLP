@@ -51,7 +51,7 @@ def get_amr_utils(amr_version):
     elif amr_version == '2.0':
         utils_tar_gz = 'https://www.cs.jhu.edu/~s.zhang/data/AMR/amr_2.0_utils.tar.gz'
     elif amr_version == '3.0':
-        utils_tar_gz = 'https://od.hankcs.com/research/amr2020/amr_3.0_utils.tgz'
+        utils_tar_gz = 'https://file.hankcs.com/research/amr2020/amr_3.0_utils.tgz'
     else:
         raise ValueError(f'Unsupported AMR version {amr_version}')
     return utils_tar_gz

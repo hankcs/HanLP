@@ -397,7 +397,7 @@ def make_ontonotes_language_jsonlines(conll12_ontonotes_path, output_path=None, 
         pprint(stats)
         conll12_json_file = f'{lang_dir}/{split}.{language}.conll12.jsonlines'
         print(f'Applying CoNLL 12 official splits on {v5_json_file} to {conll12_json_file}')
-        id_file = get_resource(f'https://od.hankcs.com/research/emnlp2021/conll.cemantix.org.zip#2012/download/ids/'
+        id_file = get_resource(f'https://file.hankcs.com/research/emnlp2021/conll.cemantix.org.zip#2012/download/ids/'
                                f'{language}/coref/{split}.id')
         filter_data(v5_json_file, conll12_json_file, id_file)
 
