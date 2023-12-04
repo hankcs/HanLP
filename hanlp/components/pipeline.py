@@ -145,15 +145,21 @@ class Pipeline(Component, list):
         for component in self:
             doc = component(doc)
         return doc
-
+    
+    def copy(self):
+        return self.__copy__()
+    
+    def __copy__(self):
+        config = self.meta
+        return Pipeline.from_config(config)
+    
     @property
     def meta(self):
         return {
             'classpath': classpath_of(self),
             'hanlp_version': hanlp.version.__version__,
             'pipes': [pipe.config for pipe in self]
-        }
-
+        }    
     @meta.setter
     def meta(self, value):
         pass
