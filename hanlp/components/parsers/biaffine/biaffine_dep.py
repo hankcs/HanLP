@@ -5,7 +5,7 @@ import os
 from collections import Counter
 from typing import Union, Any, List
 
-from hanlp.layers.transformers.pt_imports import AutoTokenizer, PreTrainedTokenizer, AutoModel_
+from hanlp.layers.transformers.pt_imports import PreTrainedTokenizer, AutoModel_, AutoTokenizer_
 import torch
 from hanlp.utils.torch_util import lengths_to_mask
 from torch import nn
@@ -282,7 +282,7 @@ class BiaffineDependencyParser(TorchComponent):
     def build_transformer_tokenizer(self):
         transformer = self.config.transformer
         if transformer:
-            transformer_tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(transformer, use_fast=True)
+            transformer_tokenizer: PreTrainedTokenizer = AutoTokenizer_.from_pretrained(transformer, use_fast=True)
         else:
             transformer_tokenizer = None
         self.transformer_tokenizer = transformer_tokenizer
