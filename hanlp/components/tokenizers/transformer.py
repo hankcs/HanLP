@@ -147,7 +147,7 @@ class TransformerTaggingTokenizer(TransformerTagger):
                             tags[i - 1] = 'B'
                         elif prev_tag == 'E':
                             tags[i - 1] = 'M'
-                        tags[i] = 'M'
+                        tags[i] = tag = 'M'
                     offset = e
                     prev_tag = tag
         for tags in batch_tags:
