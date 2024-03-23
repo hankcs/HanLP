@@ -10,7 +10,7 @@ with open(join(this_dir, 'README.md'), encoding='utf-8') as file:
 
 setup(
     name='hanlp_common',
-    version='0.0.19',
+    version='0.0.20',
     description='HanLP: Han Language Processing',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -32,7 +32,7 @@ setup(
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
     install_requires=[
-        'phrasetree',
+        'phrasetree>=0.0.9',
     ],
     extras_require={
         # These AMR dependencies might not be necessary for most people.
