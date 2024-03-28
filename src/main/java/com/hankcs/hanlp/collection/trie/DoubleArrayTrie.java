@@ -91,6 +91,9 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
      */
     private int resize(int newSize)
     {
+        // 每次扩容最少变成原来的2倍，避免频繁扩容导致FGC
+        newSize = Math.max(newSize, allocSize * 2);
+
         int[] base2 = new int[newSize];
         int[] check2 = new int[newSize];
         if (allocSize > 0)
