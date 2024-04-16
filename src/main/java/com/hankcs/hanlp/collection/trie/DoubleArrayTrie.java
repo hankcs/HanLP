@@ -83,6 +83,16 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
      */
     private boolean enableFastBuild;
 
+    private double minResizeRatio = 1;
+
+    /**
+     * 控制构建过程中每次扩容的最小比例，避免频繁扩容导致FGC
+     * @param minResizeRatio 扩容比例，取值范围建议(1, 2]
+     */
+    public void setMinResizeRatio(double minResizeRatio) {
+        this.minResizeRatio = minResizeRatio;
+    }
+
     /**
      * 拓展数组
      *
@@ -91,8 +101,7 @@ public class DoubleArrayTrie<V> implements Serializable, ITrie<V>
      */
     private int resize(int newSize)
     {
-        // 每次扩容最少变成原来的2倍，避免频繁扩容导致FGC
-        newSize = Math.max(newSize, allocSize * 2);
+        newSize = Math.max(newSize, ((Double)(allocSize * minResizeRatio)).intValue());
 
         int[] base2 = new int[newSize];
         int[] check2 = new int[newSize];
