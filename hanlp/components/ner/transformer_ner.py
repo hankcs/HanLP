@@ -141,7 +141,7 @@ class TransformerNamedEntityRecognizer(TransformerTagger):
             sampler_builder: SamplerBuilder = None,
             epochs=3,
             tagset=None,
-            token_key=None,
+            token_key='token',
             max_seq_len=None,
             sent_delimiter=None,
             char_level=False,

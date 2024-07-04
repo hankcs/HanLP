@@ -289,6 +289,7 @@ def build_optimizer_for_pretrained(model: torch.nn.Module,
         lr=lr,
         weight_decay=weight_decay,
         eps=eps,
+        no_deprecation_warning=True,  # For backwards compatability
         **kwargs)
 
 

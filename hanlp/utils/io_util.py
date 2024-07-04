@@ -171,9 +171,9 @@ def download(url, save_path=None, save_dir=hanlp_home(), prefix=HANLP_URL, appen
                 else:
                     hints += 'using some decent downloading tools.[/green]\n'
                 if not url.startswith(HANLP_URL):
-                    hints += 'For third party data, you may find it on our mirror site:\n' \
-                             'https://od.hankcs.com/hanlp/data/\n'
-                hints += 'See also https://hanlp.hankcs.com/docs/install.html#install-models for instructions.'
+                    hints += 'For third party data, unrestricted connectivity to the global network may be required.'
+                else:
+                    hints += 'See also https://hanlp.hankcs.com/docs/install.html#install-models for instructions.'
             message = f'Download failed due to [red]{repr(e)}[/red].\n' \
                       f'{hints}'
             if verbose:

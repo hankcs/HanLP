@@ -162,11 +162,19 @@ class VocabDict(SerializableDict):
 
     def lock(self):
         """
-        Lock each vocabs.
+        Lock each vocab.
         """
         for key, value in self.items():
             if isinstance(value, Vocab):
                 value.lock()
+
+    def unlock(self):
+        """
+        Unlock each vocab.
+        """
+        for key, value in self.items():
+            if isinstance(value, Vocab):
+                value.unlock()
 
     @property
     def mutable(self):
