@@ -3,7 +3,7 @@
 <h2 align="center">HanLP: Han Language Processing</h2>
 
 <div align="center">
-    <a href="https://github.com/hankcs/HanLP/actions">
+    <a href="https://github.com/hankcs/HanLP/actions/workflows/unit-tests.yml">
        <img alt="Unit Tests" src="https://github.com/hankcs/hanlp/actions/workflows/unit-tests.yml/badge.svg?branch=master">
     </a>
     <a href="https://pypi.org/project/hanlp/">
