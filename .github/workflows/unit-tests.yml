@@ -15,8 +15,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, macos-latest, windows-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
         python-version: [ 3.6, 3.7, 3.8, 3.9, '3.10' ]
+        exclude:
+          # GHA doesn't list 3.6 for ubuntu-22.04
+          - os: ubuntu-latest
+            python-version: "3.6"
+
+          # MacOS 14.4.1 for arm64 doesn't support Python < 3.8
+          - os: macos-latest
+            python-version: "3.6"
+          - os: macos-latest
+            python-version: "3.7"
+
+        include:
+          # GHA doesn't list 3.6 for ubuntu-22
+          - os: ubuntu-20.04
+            python-version: "3.6"
+
+          # MacOS 13 required for Python < 3.8
+          - os: macos-13
+            python-version: "3.6"
+          - os: macos-13
+            python-version: "3.7"
 
     steps:
       - uses: actions/checkout@v3
