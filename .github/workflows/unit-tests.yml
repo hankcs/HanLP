@@ -47,15 +47,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Cache dependencies
-        id: cache-pip
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
-
-      - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
-        name: Install dependencies
+      - name: Install dependencies
+        shell: bash
         run: |
           python -m pip install -e plugins/hanlp_trie
           python -m pip install -e plugins/hanlp_common
@@ -69,6 +62,7 @@ jobs:
           key: hanlp-data
 
       - name: Test with pytest
+        shell: bash
         run: |
           pytest tests
           pytest plugins/hanlp_trie/tests
