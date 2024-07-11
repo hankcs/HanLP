@@ -20,7 +20,7 @@ else:
     TENSORFLOW = ['tensorflow==2.6.0', 'keras==2.6.0', 'protobuf<3.19']
 
 TOKENIZERS = []
-if (sys_version_info.major, sys_version_info.minor) == (3, 6) and sys.platform == 'darwin':
+if (sys_version_info.major, sys_version_info.minor) == (3, 6) and sys.platform in {'darwin', 'win32'}:
     TOKENIZERS = ['tokenizers==0.10.3']
 
 extras_require = {
