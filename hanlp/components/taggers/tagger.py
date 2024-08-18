@@ -179,7 +179,9 @@ class Tagger(DistillableComponent, ABC):
     def prediction_to_human(self, pred_ids, vocab: List[str], batch):
         if isinstance(pred_ids, torch.Tensor):
             pred_ids = pred_ids.tolist()
-        sents = batch[self.config.token_key]
+        sents = batch.get(f'{self.config.token_key}_')
+        if not sents:
+            sents = batch[self.config.token_key]
         dict_tags: DictInterface = self.dict_tags
         for each, sent in zip(pred_ids, sents):
             tags = [vocab[id] for id in each[:len(sent)]]
