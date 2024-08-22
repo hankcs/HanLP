@@ -14,10 +14,6 @@ with open(join(this_dir, "hanlp", "version.py")) as fp:
 
 FASTTEXT = 'fasttext-wheel==0.9.2'
 sys_version_info = sys.version_info
-if sys_version_info >= (3, 10):
-    TENSORFLOW = ['tensorflow>=2.8.0']
-else:
-    TENSORFLOW = ['tensorflow==2.6.0', 'keras==2.6.0', 'protobuf<3.19']
 
 TOKENIZERS = []
 if (sys_version_info.major, sys_version_info.minor) == (3, 6) and sys.platform in {'darwin', 'win32'}:
@@ -30,7 +26,7 @@ extras_require = {
         'perin-parser>=0.0.12',
     ],
     'fasttext': [FASTTEXT],
-    'tf': [FASTTEXT, *TENSORFLOW]
+    'tf': [FASTTEXT, 'tensorflow>=2.6.0,<2.14']
 }
 extras_require['full'] = list(set(sum(extras_require.values(), [])))
 
