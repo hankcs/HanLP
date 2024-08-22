@@ -200,11 +200,12 @@ class BiaffineDependencyParserTF(KerasComponent):
             scheduler = tf.keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=lr,
                                                                        decay_steps=decay_steps,
                                                                        decay_rate=decay)
-            optimizer = tf.keras.optimizers.Adam(learning_rate=scheduler,
-                                                 beta_1=mu,
-                                                 beta_2=nu,
-                                                 epsilon=epsilon,
-                                                 clipnorm=clip)
+            from hanlp.optimizers.adamw.optimization import AdamTF
+            optimizer = AdamTF(learning_rate=scheduler,
+                               beta_1=mu,
+                               beta_2=nu,
+                               epsilon=epsilon,
+                               clipnorm=clip)
             return optimizer
         return super().build_optimizer(optimizer, **kwargs)
 

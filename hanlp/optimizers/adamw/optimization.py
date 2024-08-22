@@ -95,7 +95,13 @@ def create_optimizer(init_lr, num_train_steps, num_warmup_steps):
     return optimizer
 
 
-class AdamWeightDecay(tf.keras.optimizers.Adam):
+try:
+    AdamTF = tf.keras.optimizers.legacy.Adam  # avoid slowdown when using v2.11+ Keras optimizers on M1/M2 Macs
+except:
+    AdamTF = tf.keras.optimizers.Adam
+
+
+class AdamWeightDecay(AdamTF):
     """Adam enables L2 weight decay and clip_by_global_norm on gradients.
     
       Just adding the square of the weights to the loss function is *not* the

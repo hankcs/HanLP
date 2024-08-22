@@ -736,7 +736,7 @@ class CoNLL_SDP_Transform(CoNLLTransform):
         raw_batch = [[], [], [], []] if use_pos else [[], [], []]
         max_len = len(max([corpus[i] for i in indices], key=len))
         for idx in indices:
-            arc = np.zeros((max_len, max_len), dtype=np.bool)
+            arc = np.zeros((max_len, max_len), dtype=bool)
             rel = np.zeros((max_len, max_len), dtype=np.int64)
             for b in raw_batch[:2]:
                 b.append([])
