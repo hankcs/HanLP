@@ -70,7 +70,7 @@ class RelativeSinusoidalPositionalEmbedding(nn.Module):
         """
         bsz, seq_len = inputs.size()
         max_pos = self.padding_idx + seq_len
-        if max_pos > self.origin_shift:
+        if max_pos >= self.origin_shift:
             # recompute/expand embeddings if needed
             weights = self.get_embedding(
                 max_pos * 2,
