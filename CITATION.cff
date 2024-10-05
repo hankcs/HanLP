@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: He
+  given-names: Han
+  orcid: "https://orcid.org/0009-0005-1778-917X"
+title: "HanLP: Han Language Processing"
+version: 2.1
+date-released: 2015-05-27
+url: "https://github.com/hankcs/HanLP"
+preferred-citation:
+  type: conference-paper
+  authors:
+    - family-names: He
+      given-names: Han
+    - family-names: Choi
+      given-names: Jinho D.
+  title: "The Stem Cell Hypothesis: Dilemma behind Multi-Task Learning with Transformer Encoders"
+  editors:
+    - family-names: Moens
+      given-names: Marie-Francine
+    - family-names: Huang
+      given-names: Xuanjing
+    - family-names: Specia
+      given-names: Lucia
+    - family-names: Yih
+      given-names: Scott Wen-tau
+  year: 2021
+  month: 11
+  date-released: 2021-11
+  conference:
+    name: "2021 Conference on Empirical Methods in Natural Language Processing"
+    place: "Online and Punta Cana, Dominican Republic"
+    url: "https://aclanthology.org/2021.emnlp-main.451"
+  doi: "10.18653/v1/2021.emnlp-main.451"
+  url: "https://aclanthology.org/2021.emnlp-main.451"
+  publisher: "Association for Computational Linguistics"
+  booktitle: "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing"
+  location: "Online and Punta Cana, Dominican Republic"
+  pages: "5555-5577"
