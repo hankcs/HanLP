@@ -90,6 +90,13 @@ def tempdir_human():
     return tempdir(now_filename())
 
 
+def temp_lock(path):
+    from filelock import FileLock
+    import hashlib
+    lock = FileLock(f"{tempdir()}/.{hashlib.md5(path.encode('utf8')).hexdigest()}.lock")
+    return lock
+
+
 def hanlp_home_default():
     """Default data directory depending on the platform and environment variables"""
     if windows():
@@ -292,6 +299,7 @@ def get_resource(path: str, save_dir=hanlp_home(), extract=True, prefix=HANLP_UR
       The real path to the resource.
 
     """
+    _path = path
     path = hanlp.pretrained.ALL.get(path, path)
     anchor: str = None
     compressed = None
@@ -333,12 +341,17 @@ def get_resource(path: str, save_dir=hanlp_home(), extract=True, prefix=HANLP_UR
         # realpath is where its path after exaction
         if compressed:
             realpath += compressed
-        if not os.path.isfile(realpath):
-            path = download(url=path, save_path=realpath, verbose=verbose)
-        else:
-            path = realpath
+        with temp_lock(path):
+            if not os.path.isfile(realpath):
+                path = download(url=path, save_path=realpath, verbose=verbose)
+            else:
+                path = realpath
     if extract and compressed:
-        path = uncompress(path, verbose=verbose)
+        with temp_lock(path):
+            if os.path.isfile(path):
+                path = uncompress(path, verbose=verbose)
+            else:  # other process must have already decompressed it and deleted it
+                return get_resource(_path, save_dir, extract, prefix, append_location, verbose)
         if anchor:
             path = path_join(path, anchor)
 
