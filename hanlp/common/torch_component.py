@@ -97,7 +97,10 @@ class TorchComponent(Component, ABC):
         save_dir = get_resource(save_dir)
         filename = os.path.join(save_dir, filename)
         # flash(f'Loading model: {filename} [blink]...[/blink][/yellow]')
-        self.model_.load_state_dict(torch.load(filename, map_location='cpu'), strict=False)
+        try:
+            self.model_.load_state_dict(torch.load(filename, map_location='cpu', weights_only=True), strict=False)
+        except TypeError:
+            self.model_.load_state_dict(torch.load(filename, map_location='cpu'), strict=False)
         # flash('')
 
     def save_config(self, save_dir, filename='config.json'):
