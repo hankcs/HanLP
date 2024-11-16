@@ -130,7 +130,7 @@ public class CWSEvaluator
                     }
                     A_cap_B_size++;
                     goldLen += wordArray[goldIndex].length();
-                    predLen += wordArray[goldIndex].length();
+                    predLen += predArray[predIndex].length();
                     goldIndex++;
                     predIndex++;
                 }
