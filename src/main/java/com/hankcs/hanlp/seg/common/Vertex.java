@@ -452,7 +452,8 @@ public class Vertex
      */
     public static Vertex newB()
     {
-        return new Vertex(Predefine.TAG_BIGIN, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.TOTAL_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_BIGIN));
+        int wordId = CoreDictionary.BEGIN_WORD_ID;
+        return new Vertex(Predefine.TAG_BIGIN, " ", new CoreDictionary.Attribute(Nature.begin, Predefine.TOTAL_FREQUENCY / 10), wordId);
     }
 
     /**
@@ -461,7 +462,8 @@ public class Vertex
      */
     public static Vertex newE()
     {
-        return new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.end, Predefine.TOTAL_FREQUENCY / 10), CoreDictionary.getWordID(Predefine.TAG_END));
+        int wordId = CoreDictionary.END_WORD_ID;
+        return new Vertex(Predefine.TAG_END, " ", new CoreDictionary.Attribute(Nature.end, Predefine.TOTAL_FREQUENCY / 10), wordId);
     }
 
     public int length()

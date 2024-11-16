@@ -48,6 +48,8 @@ public class CoreDictionary
     }
 
     // 一些特殊的WORD_ID
+    public static final int BEGIN_WORD_ID = getWordID(Predefine.TAG_BIGIN);
+    public static final int END_WORD_ID = getWordID(Predefine.TAG_END);
     public static final int NR_WORD_ID = getWordID(Predefine.TAG_PEOPLE);
     public static final int NS_WORD_ID = getWordID(Predefine.TAG_PLACE);
     public static final int NT_WORD_ID = getWordID(Predefine.TAG_GROUP);
