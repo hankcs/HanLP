@@ -137,7 +137,7 @@ class Document(dict):
         Args:
             tok (str): Field name for tok.
             lem (str): Field name for lem.
-            pos (str): Filed name for upos.
+            pos (str): Field name for upos.
             fea (str): Field name for feats.
             dep (str): Field name for dependency parsing.
             sdp (str): Field name for semantic dependency parsing.
