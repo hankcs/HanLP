@@ -64,7 +64,7 @@ setup(
         'transformers>=4.1.1',
         'sentencepiece>=0.1.91',  # Essential for tokenization_bert_japanese
         'torch>=1.6.0',
-        'hanlp-common>=0.0.20',
+        'hanlp-common>=0.0.21',
         'hanlp-trie>=0.0.4',
         'hanlp-downloader',
         *TOKENIZERS,

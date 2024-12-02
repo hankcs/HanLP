@@ -151,7 +151,7 @@ class TransformerTagger(TransformerComponent, Tagger):
             self.config.get('secondary_encoder', None),
             extra_embeddings=extra_embeddings.module(self.vocabs) if extra_embeddings else None,
         )
-        if finetune:
+        if finetune and self.model:
             model_state = model.state_dict()
             load_state = self.model.state_dict()
             safe_state = filter_state_dict_safely(model_state, load_state)
