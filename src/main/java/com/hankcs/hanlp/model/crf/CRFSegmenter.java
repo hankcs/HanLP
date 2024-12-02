@@ -23,6 +23,7 @@ import com.hankcs.hanlp.tokenizer.lexical.Segmenter;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,6 +50,11 @@ public class CRFSegmenter extends CRFTagger implements Segmenter
         {
             perceptronSegmenter = new PerceptronSegmenter(this.model);
         }
+    }
+    
+    public CRFSegmenter(InputStream inputStream) throws IOException {
+        super(inputStream);
+        perceptronSegmenter = new PerceptronSegmenter(this.model);
     }
 
     @Override
