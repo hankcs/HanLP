@@ -208,7 +208,7 @@ class Document(dict):
         tok = prefix_match(tok, self)
         pos = prefix_match(pos, self)
         ner = prefix_match(ner, self)
-        conlls = self.to_conll(tok, lem, pos, dep, sdp)
+        conlls = self.to_conll(tok=tok, lem=lem, pos=pos, dep=dep, sdp=sdp)
         flat = isinstance(conlls, CoNLLSentence)
         if flat:
             conlls: List[CoNLLSentence] = [conlls]
