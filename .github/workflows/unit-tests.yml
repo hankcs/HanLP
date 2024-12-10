@@ -1,10 +1,12 @@
-name: Unit Tests
+name: unit tests
 
 on:
   push:
     branches: [ "**" ]
   pull_request:
     branches: [ "**" ]
+
+permissions: read-all
 
 jobs:
   build:
@@ -40,10 +42,10 @@ jobs:
             python-version: "3.7"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -56,7 +58,7 @@ jobs:
           python -m pip install pytest
 
       - name: Cache data
-        uses: actions/cache@v3
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
         with:
           path: ${{ env.HANLP_HOME }}
           key: hanlp-data
@@ -72,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Install dependencies
         run: |
           python -m pip install setuptools wheel twine
