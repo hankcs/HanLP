@@ -163,9 +163,11 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
             # These tokenizer is BPE-based which appends a space before each token and tokenizes loving into
             # ['▁lo', 'ving'], tokenize 商品 into ['▁', '商品']. For the later case, the prefix '▁' has to be removed
             # as there is no space between some languages like Chinese
-            check_space_before = tokenizer_name in ('xlm-roberta-base', 'xlm-roberta-large', 'google/mt5-small',
-                                                    'google/mt5-base', 'xlm-roberta-base-no-space',
-                                                    'mMiniLMv2L6-no-space', 'mMiniLMv2L12-no-space')
+            check_space_before = tokenizer_name in (
+                'xlm-roberta-base', 'xlm-roberta-large', 'google/mt5-small', 'google/mt5-base',
+                'xlm-roberta-base-no-space', 'mMiniLMv2L6-no-space', 'mMiniLMv2L12-no-space',
+                "answerdotai/ModernBERT-base", "answerdotai/ModernBERT-large"
+            )
         self.check_space_before = check_space_before
         self.ret_subtokens_group = ret_subtokens_group
         self.ret_subtokens = ret_subtokens
