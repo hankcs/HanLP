@@ -8,6 +8,12 @@ import hanlp.utils.torch_util
 from hanlp.layers.time_distributed import TimeDistributed
 from ...parsers.biaffine.biaffine import Biaffine
 
+try:
+    from torch import sparse_coo_tensor as _sparse_tensor
+except ImportError:
+    # noinspection PyUnresolvedReferences
+    from torch.sparse import LongTensor as _sparse_tensor
+
 
 def initializer_1d(input_tensor, initializer):
     assert len(input_tensor.size()) == 1
@@ -92,10 +98,9 @@ class BiaffineNamedEntityRecognitionDecoder(nn.Module):
         sparse_indices = torch.cat([sentence_indices.unsqueeze(2), span_starts.unsqueeze(2), span_ends.unsqueeze(2)],
                                    dim=2)
         rank = 3
-        dense_labels = torch.sparse.LongTensor(sparse_indices.view(num_sentences * max_spans_num, rank).t(),
-                                               span_labels.view(-1),
-                                               torch.Size([num_sentences] + [max_sentence_length] * (rank - 1))) \
-            .to_dense()
+        dense_labels = _sparse_tensor(sparse_indices.view(num_sentences * max_spans_num, rank).t(),
+                                      span_labels.view(-1),
+                                      torch.Size([num_sentences] + [max_sentence_length] * (rank - 1))).to_dense()
         return dense_labels
 
     def decode(self, contextualized_embeddings, gold_starts, gold_ends, gold_labels, masks, max_sent_length,

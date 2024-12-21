@@ -17,6 +17,13 @@ def initializer_1d(input_tensor, initializer):
     return input_tensor.view(-1)
 
 
+try:
+    from torch import sparse_coo_tensor as _sparse_tensor
+except ImportError:
+    # noinspection PyUnresolvedReferences
+    from torch.sparse import FloatTensor as _sparse_tensor
+
+
 class SpanRankingSRLDecoder(nn.Module):
 
     def __init__(self, context_layer_output_dim, label_space_size, config) -> None:
@@ -387,9 +394,8 @@ class SpanRankingSRLDecoder(nn.Module):
         max_candidate_spans_num_per_sentence = candidate_mask.size()[1]
         sparse_indices = candidate_mask.nonzero(as_tuple=False)
         sparse_values = torch.arange(0, candidate_span_number, device=device)
-        candidate_span_ids = torch.sparse.FloatTensor(sparse_indices.t(), sparse_values,
-                                                      torch.Size([num_sentences,
-                                                                  max_candidate_spans_num_per_sentence])).to_dense()
+        candidate_span_ids = _sparse_tensor(sparse_indices.t(), sparse_values, torch.Size(
+            [num_sentences, max_candidate_spans_num_per_sentence])).to_dense()
         spans_log_mask = torch.log(candidate_mask.to(torch.float))
         predict_dict = {"candidate_starts": candidate_starts, "candidate_ends": candidate_ends,
                         "head_scores": head_scores}
