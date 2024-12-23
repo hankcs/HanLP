@@ -34,6 +34,8 @@ class TestClient(unittest.TestCase):
         print(self.HanLP.tokenize('商品和服务。阿婆主来到北京立方庭参观自然语义科技公司'))
         print(self.HanLP.tokenize('商品和服务。阿婆主来到北京立方庭参观自然语义科技公司', coarse=True))
         print(self.HanLP.tokenize(['商品和服务。', '当下雨天地面积水分外严重']))
+        print(self.HanLP.tokenize('奈須きのこは1973年11月28日に千葉県円空山で生まれ、ゲーム制作会社「ノーツ」の設立者だ。',
+                                  language='ja', coarse=True))
         print(self.HanLP.tokenize(
             ['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP techniques to production environment.',
              '2021年、HanLPv2.1は次世代の最先端多言語NLP技術を本番環境に導入します。',

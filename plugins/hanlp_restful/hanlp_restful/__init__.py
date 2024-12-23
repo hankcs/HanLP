@@ -44,8 +44,8 @@ class HanLPClient(object):
             auth (str): An auth key licenced from a service provider.
             language (str): The default language for each :func:`~hanlp_restful.HanLPClient.parse` call.
                 Contact the service provider for the list of languages supported.
-                Conventionally, ``zh`` is used for Chinese and ``mul`` for multilingual.
-                Leave ``None`` to use the default language on server.
+                Conventionally, ``zh`` is used for Chinese, ``en`` for English, ``ja`` for Japanese and ``mul`` for
+                multilingual. Leave ``None`` to use the default language on server.
             timeout (int): Maximum waiting time in seconds for a request.
             verify (bool): ``True`` to enable SSL cert verification. You can also pass ``verify`` the path to a CA_BUNDLE
                 file or directory with certificates of trusted CAs (``requests`` required).
@@ -279,7 +279,7 @@ class HanLPClient(object):
 
         Args:
             text: A document (``str``), or a list of sentences (``List[str]``).
-            coarse: Whether to perform coarse-grained or fine-grained tokenization.
+            coarse: Whether to perform coarse-grained or fine-grained tokenization. Chinese and Japanese supported.
             language: The language of input text. ``None`` to use the default language.
 
         Returns:
@@ -322,8 +322,8 @@ class HanLPClient(object):
               '多', '语种', 'NLP', '技术', '。']]
         """
         language = language or self._language
-        if coarse and language and language != 'zh':
-            raise NotImplementedError(f'Coarse tokenization not supported for {language}. Please set language="zh".')
+        if coarse and language and language not in {'zh', 'ja'}:
+            raise NotImplementedError(f'Coarse tokenization not supported for {language}. Please set language="zh" or "ja".')
         doc = self.parse(text=text, tasks='tok/coarse' if coarse is True else 'tok', language=language)
         return next(iter(doc.values()))
 
