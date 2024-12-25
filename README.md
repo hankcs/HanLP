@@ -27,8 +27,7 @@
     <a href="https://bbs.hankcs.com/">Forum</a>
 </h4>
 
-The multilingual NLP library for researchers and companies, built on PyTorch and TensorFlow 2.x, for advancing
-state-of-the-art deep learning techniques in both academia and industry. HanLP was designed from day one to be
+HanLP is the multilingual NLP library designed for researchers and enterprises, built on PyTorch and TensorFlow 2.x to advance state-of-the-art deep learning techniques in academia and industry. HanLP was designed from day one to be
 efficient, user-friendly and extendable.
 
 Thanks to open-access corpora like Universal Dependencies and OntoNotes, HanLP 2.1 now offers 10 joint tasks on [130
@@ -58,7 +57,7 @@ the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licens
 
   ```python
   from hanlp_restful import HanLPClient
-  HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul') # mul: multilingual, zh: Chinese
+  HanLP = HanLPClient('https://hanlp.hankcs.com/api', auth=None, language='mul') # Support en, ja, zh, mul
   ```
 
   ### Java
@@ -76,8 +75,7 @@ the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licens
   Create a client with our API endpoint and your auth.
 
   ```java
-  HanLPClient HanLP = new HanLPClient("https://hanlp.hankcs.com/api", null, "mul"); // mul: multilingual, zh: Chinese
-
+  HanLPClient HanLP = new HanLPClient("https://hanlp.hankcs.com/api", null, "mul"); // Support en, ja, zh, mul
   ```
 
   ### Quick Start
@@ -100,7 +98,7 @@ the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) licens
 pip install hanlp
 ```
 
-HanLP requires Python 3.6 or later. GPU/TPU is suggested but not mandatory.
+HanLP requires Python 3.6 or higher. While GPU or TPU acceleration is recommended, it is not mandatory.
 
 ### Quick Start
 
@@ -115,8 +113,8 @@ print(HanLP(['In 2021, HanLPv2.1 delivers state-of-the-art multilingual NLP tech
 
 - In particular, the Python `HanLPClient` can also be used as a callable function following the same semantics.
   See [docs](https://hanlp.hankcs.com/docs/tutorial.html) for visualization, annotation guidelines and more details.
-- To process Chinese or Japanese, HanLP provides mono-lingual models in each language which significantly outperform the
-  multi-lingual model. See [docs](https://hanlp.hankcs.com/docs/api/hanlp/pretrained/index.html) for the list of models.
+- To process English, Chinese or Japanese, HanLP provides mono-lingual models in each language which significantly outperform the
+  multilingual model. See [docs](https://hanlp.hankcs.com/docs/api/hanlp/pretrained/index.html) for the list of models.
 
 ## Train Your Own Models
 
