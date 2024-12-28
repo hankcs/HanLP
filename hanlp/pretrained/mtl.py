@@ -41,5 +41,12 @@ Performance: ``{con UCM: 20.31% LCM: 16.82% UP: 77.50% UR: 76.63% UF: 77.06% LP:
 NPCMJ_UD_KYOTO_TOK_POS_CON_BERT_BASE_CHAR_JA = HANLP_URL + 'mtl/npcmj_ud_kyoto_tok_pos_ner_dep_con_srl_bert_base_char_ja_20210914_133742.zip'
 'BERT (:cite:`devlin-etal-2019-bert`) base char encoder trained on NPCMJ/UD/Kyoto corpora with decoders including tok, pos, ner, dep, con, srl.'
 
+EN_TOK_LEM_POS_NER_SRL_UDEP_SDP_CON_MODERNBERT_BASE = HANLP_URL + 'mtl/en_tok_lem_pos_ner_srl_udep_sdp_con_modernbert_base_prepend_false_20241229_053838.zip'
+'''
+ModernBERT (:cite:`warner2024smarter`) base encoder, joint tok, lem, pos, ner, srl, dep (UD Standard), sdp (DM, PAS, PSD) and con decoders trained on English corpora.
+Performance: ``{con UCM: 58.47% LCM: 53.16% UP: 91.01% UR: 91.10% UF: 91.05% LP: 88.67% LR: 88.76% LF: 88.71%}{dep UAS: 95.09% LAS: 93.21%}{lem Accuracy:99.52%}{ner P: 89.22% R: 80.55% F1: 84.67%}{pos Accuracy:98.00%}{sdp/dm UF: 93.78% LF: 93.08%}{sdp/pas UF: 96.26% LF: 94.65%}{sdp/psd UF: 93.87% LF: 83.36%}{srl [predicate P: 97.77% R: 97.93% F1: 97.85%][e2e P: 94.45% R: 90.75% F1: 92.57%]}{tok P: 99.84% R: 99.90% F1: 99.87%}``
+Requirement: ``transformers>=4.48`` 
+'''
+
 # Will be filled up during runtime
 ALL = {}
