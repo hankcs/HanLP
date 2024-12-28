@@ -42,17 +42,6 @@ public class Predefine
         "水库","隧道","特区","铁路","新村","雪峰","盐场","盐湖","渔场","直辖市",
         "自治区","自治县","自治州"};
 
-    //Seperator type
-    public static String SEPERATOR_C_SENTENCE = "。！？：；…";
-    public static String SEPERATOR_C_SUB_SENTENCE = "、，（）“”‘’";
-    public static String SEPERATOR_E_SENTENCE = "!?:;";
-    public static String SEPERATOR_E_SUB_SENTENCE = ",()*'";
-    //注释：原来程序为",()\042'"，"\042"为10进制42好ASC字符，为*
-    public static String SEPERATOR_LINK = "\n\r 　";
-
-    //Seperator between two words
-    public static String WORD_SEGMENTER = "@";
-
     public static int MAX_SEGMENT_NUM = 10;
 
     public static int TOTAL_FREQUENCY = 25146057; // 现在总词频25146057
