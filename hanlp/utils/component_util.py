@@ -123,15 +123,16 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                 from None
         raise e from None
     except Exception as e:
-        # Some users often install an incompatible tf and put the blame on HanLP. Teach them the basics.
-        try:
-            you_installed_wrong_versions, extras = check_version_conflicts(extras=('full',) if tf_model else None)
-        except Exception as check_e:
-            you_installed_wrong_versions, extras = None, None
-        if you_installed_wrong_versions:
-            raise version.NotCompatible(you_installed_wrong_versions + '\nPlease reinstall HanLP in the proper way:' +
-                                        '\n\n\tpip install --upgrade hanlp' + (
-                                            f'[{",".join(extras)}]' if extras else '')) from None
+        if not e.__traceback__.tb_frame.f_code.co_filename.startswith(os.path.dirname(os.path.dirname(__file__))):
+            # Some users often install an incompatible tf and put the blame on HanLP. Teach them the basics.
+            try:
+                you_installed_wrong_versions, extras = check_version_conflicts(extras=('full',))
+            except Exception as check_e:
+                you_installed_wrong_versions, extras = None, None
+            if you_installed_wrong_versions:
+                raise version.NotCompatible(f'{you_installed_wrong_versions}\nPlease reinstall HanLP in the proper way:'
+                                            '\n\n\tpip install --upgrade hanlp' + (
+                                                f'[{",".join(extras)}]' if extras else '')) from None
         eprint(f'Failed to load {identifier}')
         from pkg_resources import parse_version
         model_version = meta.get("hanlp_version", '2.0.0-alpha.0')
@@ -151,7 +152,8 @@ def load_from_meta_file(save_dir: str, meta_filename='meta.json', transform_only
                 f'Please upgrade HanLP with:\n'
                 f'\n\tpip install --upgrade hanlp\n')
         eprint(
-            'If the problem still persists, please submit an issue to https://github.com/hankcs/HanLP/issues\n'
+            'If the problem persists, please submit an issue to '
+            'https://github.com/hankcs/HanLP/issues/new?labels=bug&template=bug_report.md\n'
             'When reporting an issue, make sure to paste the FULL ERROR LOG below.')
 
         eprint(f'{"ERROR LOG BEGINS":=^80}')
