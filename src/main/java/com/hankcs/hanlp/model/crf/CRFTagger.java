@@ -20,6 +20,7 @@ import com.hankcs.hanlp.model.perceptron.utility.IOUtility;
 import com.hankcs.hanlp.model.perceptron.utility.Utility;
 
 import java.io.BufferedWriter;
+import java.io.InputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -39,6 +40,10 @@ public abstract class CRFTagger
     {
         if (modelPath == null) return; // 训练模式
         model = new LogLinearModel(modelPath);
+    }
+    
+    public CRFTagger(InputStream is) throws IOException {
+        model = new LogLinearModel(is);
     }
 
     /**
