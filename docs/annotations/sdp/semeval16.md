@@ -117,6 +117,7 @@ The following table is a subset of CSDP but offers some examples to illustrate t
 | 范围角色   | Sco           | Scope              | 产品应该比质量 (比 –> 质量)           |
 | 数量角色   | Quan          | Quantity           | 一年有365天 (有 –> 天)            |
 | 数量数组   | Qp            | Quantity-phrase    | 三本书 (三 –> 本)                |
+| 类属标记   | mQuaf | Qualifier | 一**种**方法（“种”作为类属量词 → mQuaf） |
 | 频率角色   | Freq          | Frequency          | 他每天看书 (每天 <– 看)             |
 | 顺序角色   | Seq           | Sequence           | 他跑第一 (跑 –> 第一)              |
 | 描写角色   | Desc(Feat)    | Description        | 他长得胖 (长 –> 胖)               |
