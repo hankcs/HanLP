@@ -1,6 +1,11 @@
 # -*- coding:utf-8 -*-
 # Author: hankcs
 # Date: 2019-06-13 18:05
+import os
+
+# HanLP's TensorFlow components and pretrained models use the Keras 2 serialization format.
+os.environ.setdefault('TF_USE_LEGACY_KERAS', '1')
+
 import hanlp.common
 import hanlp.components
 import hanlp.pretrained

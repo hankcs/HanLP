@@ -158,6 +158,11 @@ class Word2VecEmbeddingTF(tf.keras.layers.Embedding):
         self.expand_vocab = expand_vocab
         self.lowercase = lowercase
 
+    @classmethod
+    def from_config(cls, config):
+        # input_dim and output_dim are reconstructed from vocab and the pretrained embedding file.
+        return cls(**config)
+
     def get_config(self):
         config = {
             'filepath': self.filepath,
