@@ -62,7 +62,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'termcolor',
-        'pynvml',
+        'nvidia-ml-py',
         'toposort==1.5',
         'transformers>=4.1.1',
         'sentencepiece>=0.1.91',  # Essential for tokenization_bert_japanese
