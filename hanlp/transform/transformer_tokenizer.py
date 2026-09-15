@@ -67,7 +67,7 @@ class TransformerTextTokenizer(TransformerTokenizer):
         text_a = sample[self.text_a]
         text_b = sample[self.text_b] if self.text_b else None
         max_seq_length = self.max_seq_length if self.truncate_long_sequences else None
-        encoding = self.tokenizer.encode_plus(text_a, text_b, max_length=max_seq_length)
+        encoding = self.tokenizer(text_a, text_pair=text_b, max_length=max_seq_length)
         results = dict((k, encoding.data.get(k, None)) for k in self._KEY)
         if not self.truncate_long_sequences and len(results['input_ids']) > self.max_seq_length:
             # TODO: other fields should be properly handled too
@@ -253,9 +253,9 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
             # noinspection PyShadowingNames
             def tokenize_str(input_str, add_special_tokens=True):
                 if tokenizer.is_fast:
-                    encoding = tokenizer.encode_plus(input_str,
-                                                     return_offsets_mapping=True,
-                                                     add_special_tokens=add_special_tokens).encodings[0]
+                    encoding = tokenizer(input_str,
+                                         return_offsets_mapping=True,
+                                         add_special_tokens=add_special_tokens).encodings[0]
                     subtoken_offsets = encoding.offsets
                     input_tokens = encoding.tokens
                     input_ids = encoding.ids
@@ -396,7 +396,7 @@ class TransformerSequenceTokenizer(TransformerTokenizer):
             else:
                 if input_tokens:
                     return_offsets_mapping = tokenizer.is_fast and self.ret_subtokens
-                    encodings = tokenizer.batch_encode_plus(
+                    encodings = tokenizer(
                         input_tokens,
                         return_offsets_mapping=return_offsets_mapping,  # Many tokenizers do not offer fast version
                         add_special_tokens=False
