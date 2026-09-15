@@ -442,7 +442,15 @@ class KerasComponent(Component, ABC):
         results = []
         num_samples = 0
         data_is_list = isinstance(data, list)
-        for idx, batch in enumerate(dataset):
+        # Iterating one step past the end of a tf.data.Dataset makes TensorFlow 2.16
+        # emit a noisy local_rendezvous OUT_OF_RANGE warning. For materialized inputs
+        # the sample count tells us when the final batch has already been consumed.
+        iterator = iter(dataset)
+        while not data_is_list or num_samples < len(data):
+            try:
+                batch = next(iterator)
+            except StopIteration:
+                break
             samples_in_batch = tf.shape(batch[-1] if isinstance(batch[-1], tf.Tensor) else batch[-1][0])[0]
             if data_is_list:
                 inputs = data[num_samples:num_samples + samples_in_batch]
