@@ -32,12 +32,12 @@ jobs:
           - os: macos-latest
             python-version: "3.7"
 
-        include:
-          # MacOS 13 required for Python < 3.8
-          - os: macos-13
-            python-version: "3.6"
-          - os: macos-13
-            python-version: "3.7"
+#        include:
+#          # MacOS 13 required for Python < 3.8
+#          - os: macos-13
+#            python-version: "3.6"
+#          - os: macos-13
+#            python-version: "3.7"
 
     steps:
       - uses: actions/checkout@v4
