@@ -726,7 +726,7 @@ def pad(tensors, padding_value=0, total_length=None):
         size[1] = total_length
     out_tensor = tensors[0].data.new(*size).fill_(padding_value)
     for i, tensor in enumerate(tensors):
-        out_tensor[i][[slice(0, i) for i in tensor.size()]] = tensor
+        out_tensor[i][tuple(slice(0, size) for size in tensor.size())] = tensor
     return out_tensor
 
 

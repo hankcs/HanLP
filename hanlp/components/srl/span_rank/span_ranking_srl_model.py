@@ -18,10 +18,19 @@ def initializer_1d(input_tensor, initializer):
 
 
 try:
-    from torch import sparse_coo_tensor as _sparse_tensor
+    from torch import sparse_coo_tensor
 except ImportError:
     # noinspection PyUnresolvedReferences
-    from torch.sparse import FloatTensor as _sparse_tensor
+    from torch.sparse import FloatTensor as sparse_coo_tensor
+
+
+def _sparse_tensor(*args, **kwargs):
+    try:
+        return sparse_coo_tensor(*args, check_invariants=False, **kwargs)
+    except TypeError as e:  # PyTorch versions before check_invariants was added.
+        if 'check_invariants' not in str(e):
+            raise
+        return sparse_coo_tensor(*args, **kwargs)
 
 
 class SpanRankingSRLDecoder(nn.Module):

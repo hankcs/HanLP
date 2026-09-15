@@ -39,12 +39,12 @@ class AutoTokenizer_(AutoTokenizer):
 
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path, use_fast=True,
-                        do_basic_tokenize=True) -> PreTrainedTokenizer:
+                        do_basic_tokenize=True, **kwargs) -> PreTrainedTokenizer:
         if isinstance(pretrained_model_name_or_path, str):
             transformer = pretrained_model_name_or_path
         else:
             transformer = pretrained_model_name_or_path.transformer
-        additional_config = dict()
+        additional_config = dict(kwargs)
         if transformer.startswith('voidful/albert_chinese_') or transformer.startswith('uer/albert'):
             cls = BertTokenizer
         elif transformer == 'cl-tohoku/bert-base-japanese-char':
@@ -60,6 +60,10 @@ class AutoTokenizer_(AutoTokenizer):
             cls = BertTokenizerFast if use_fast else BertTokenizer
         else:
             cls = AutoTokenizer
+        if transformer.startswith(('xlm-roberta', 'mMiniLMv2')):
+            # Transformers 5 can mistake old XLM-R tokenizer.json files for tokenizers affected by the Mistral regex
+            # bug. Applying the Mistral regex would change XLM-R's pre-tokenizer, so explicitly opt out.
+            additional_config.setdefault('fix_mistral_regex', False)
         if use_fast and not do_basic_tokenize:
             warnings.warn('`do_basic_tokenize=False` might not work when `use_fast=True`')
         tokenizer = cls.from_pretrained(get_tokenizer_mirror(transformer), use_fast=use_fast,
