@@ -33,7 +33,9 @@ extras_require = {
            'tensorflow>=2.6.0,<2.14; python_version < "3.12"',
            'tensorflow>=2.16,<2.17; python_version >= "3.12" and python_version < "3.13"',
            'tf-keras>=2.16,<2.17; python_version >= "3.12" and python_version < "3.13"',
-           'transformers<4.55; python_version < "3.13"']  # TF is deprecated in Transformers and no longer maintained
+           'tensorflow>=2.21,<2.22; python_version >= "3.13" and python_version < "3.14" and (sys_platform != "darwin" or platform_machine != "x86_64")',
+           'tf-keras>=2.21,<2.22; python_version >= "3.13" and python_version < "3.14" and (sys_platform != "darwin" or platform_machine != "x86_64")',
+           'transformers<4.55; python_version < "3.14"']  # TF is deprecated in Transformers and no longer maintained
 }
 extras_require['full'] = list(set(sum(extras_require.values(), [])))
 
