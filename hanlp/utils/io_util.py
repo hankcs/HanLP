@@ -201,6 +201,28 @@ def parse_url_path(url):
     return parsed.netloc, path
 
 
+def _safe_extractall(archive, dest, is_zip):
+    """Extract an archive after rejecting members that would escape ``dest``.
+
+    Prevents Tar-Slip / Zip-Slip (CWE-22): a member named ``../../x`` or an
+    absolute path would otherwise be written outside the extraction directory.
+    """
+    dest_real = os.path.realpath(dest)
+    names = archive.namelist() if is_zip else archive.getnames()
+    for name in names:
+        target = os.path.realpath(os.path.join(dest, name))
+        if target != dest_real and not target.startswith(dest_real + os.sep):
+            raise Exception('Unsafe path in archive (path traversal): %r' % name)
+    if not is_zip:
+        for m in archive.getmembers():
+            if m.issym() or m.islnk():
+                link_target = os.path.realpath(
+                    os.path.join(dest, os.path.dirname(m.name), m.linkname))
+                if link_target != dest_real and not link_target.startswith(dest_real + os.sep):
+                    raise Exception('Unsafe link member in archive: %r -> %r' % (m.name, m.linkname))
+    archive.extractall(dest)
+
+
 def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
     """Uncompress a file and clean up uncompressed files once an error is triggered.
 
@@ -249,7 +271,7 @@ def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
                         dest = prefix  # assume zip contains more than one file or folder
                 if verbose:
                     eprint('Decompressing {} to {}'.format(path, dest))
-                archive.extractall(dest)
+                _safe_extractall(archive, dest, file_is_zip)
                 if root_of_folder:
                     if root_of_folder != folder_name:
                         # move root to match folder name

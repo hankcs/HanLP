@@ -51,7 +51,10 @@ class RNNLanguageModel(nn.Module):
     @classmethod
     def load_language_model(cls, model_file):
         model_file = get_resource(model_file)
-        state = torch.load(model_file)
+        try:
+            state = torch.load(model_file, weights_only=True)
+        except TypeError:   # weights_only unsupported on very old PyTorch
+            state = torch.load(model_file)
         model = RNNLanguageModel(state['n_tokens'],
                                  state['is_forward_lm'],
                                  state['hidden_size'],
