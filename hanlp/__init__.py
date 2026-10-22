@@ -15,12 +15,15 @@ from hanlp.version import __version__
 hanlp.utils.ls_resource_in_module(hanlp.pretrained)
 
 
-def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Component:
+def load(save_dir: str, verbose=None, trust_remote_code=False, **kwargs) -> hanlp.common.component.Component:
     """Load a pretrained component from an identifier.
 
     Args:
       save_dir (str): The identifier to the saved component. It could be a remote URL or a local path.
       verbose: ``True`` to print loading progress.
+      trust_remote_code: Allow config classpaths and functions outside the first-party ``hanlp``,
+        ``hanlp_common``, and ``hanlp_trie`` packages. Enable only for custom models whose code you trust. HanLP classes
+        are trusted by default, including their configured resource downloads; this is not a sandbox.
       **kwargs: Arguments passed to :func:`hanlp.common.torch_component.TorchComponent.load`, e.g.,
         ``devices`` is a useful argument to specify which GPU devices a PyTorch component will use.
 
@@ -42,10 +45,12 @@ def load(save_dir: str, verbose=None, **kwargs) -> hanlp.common.component.Compon
     """
     save_dir = hanlp.pretrained.ALL.get(save_dir, save_dir)
     from hanlp.utils.component_util import load_from_meta_file
+    from hanlp_common.reflection import trusted_classpaths
     if verbose is None:
         from hanlp_common.constant import HANLP_VERBOSE
         verbose = HANLP_VERBOSE
-    return load_from_meta_file(save_dir, 'meta.json', verbose=verbose, **kwargs)
+    with trusted_classpaths(trust_remote_code):
+        return load_from_meta_file(save_dir, 'meta.json', verbose=verbose, **kwargs)
 
 
 def pipeline(*pipes) -> hanlp.components.pipeline.Pipeline:
