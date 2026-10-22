@@ -2,7 +2,9 @@
 # Author: hankcs
 # Date: 2020-05-09 15:52
 import os
+import pickle
 import random
+import re
 import time
 from typing import List, Union, Dict, Tuple
 
@@ -14,8 +16,9 @@ from torch.nn.utils.rnn import pad_sequence
 
 from hanlp.utils.io_util import get_resource, replace_ext, TimingFileIterator
 from hanlp.utils.log_util import logger, flash
+from hanlp.utils.embedding_cache import load_embedding_pickle
 from hanlp_common.constant import HANLP_VERBOSE
-from hanlp_common.io import load_pickle, save_pickle
+from hanlp_common.io import save_pickle
 
 
 def gpus_available() -> Dict[int, float]:
@@ -184,15 +187,24 @@ def clip_grad_norm(model: nn.Module, grad_norm, transformer: nn.Module = None, t
 
 
 def load_word2vec(path, delimiter=' ', cache=True) -> Tuple[Dict[str, np.ndarray], int]:
+    """Load text embeddings, accepting legacy caches with a restricted reader.
+
+    Unsupported or malformed caches are rebuilt from the source embeddings.
+    Existing model files and the historical cache format remain supported.
+    """
     realpath = get_resource(path)
     binpath = replace_ext(realpath, '.pkl')
     if cache:
         try:
             flash('Loading word2vec from cache [blink][yellow]...[/yellow][/blink]')
-            word2vec, dim = load_pickle(binpath)
+            word2vec, dim = load_embedding_pickle(binpath, numpy_arrays=True)
+            if (not isinstance(word2vec, dict) or type(dim) is not int or dim < 1 or
+                    not all(isinstance(k, str) and type(v) is np.ndarray and
+                            v.shape == (dim,) and v.dtype.kind == 'f' for k, v in word2vec.items())):
+                raise ValueError('Invalid word2vec cache')
             flash('')
             return word2vec, dim
-        except IOError:
+        except (OSError, pickle.UnpicklingError, EOFError, ValueError, TypeError, AttributeError):
             pass
 
     dim = None
@@ -219,6 +231,11 @@ def load_word2vec(path, delimiter=' ', cache=True) -> Tuple[Dict[str, np.ndarray
 
 
 def load_word2vec_as_vocab_tensor(path, delimiter=' ', cache=True) -> Tuple[Dict[str, int], torch.Tensor]:
+    """Load embeddings without unrestricted pickle or tensor deserialization.
+
+    PyTorch versions before 2.10 rebuild the tensor from word2vec data instead
+    of reading the tensor cache, without requiring an upgrade or new models.
+    """
     realpath = get_resource(path)
     vocab_path = replace_ext(realpath, '.vocab')
     matrix_path = replace_ext(realpath, '.pt')
@@ -226,12 +243,24 @@ def load_word2vec_as_vocab_tensor(path, delimiter=' ', cache=True) -> Tuple[Dict
         try:
             if HANLP_VERBOSE:
                 flash('Loading vocab and matrix from cache [blink][yellow]...[/yellow][/blink]')
-            vocab = load_pickle(vocab_path)
-            matrix = torch.load(matrix_path, map_location='cpu')
+            vocab = load_embedding_pickle(vocab_path)
+            # weights_only itself has known code-execution vulnerabilities in
+            # PyTorch < 2.10 (CVE-2025-32434 and CVE-2026-24747). Older installs
+            # remain supported by rebuilding from text instead of reading .pt.
+            torch_version = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)(?:\+[^\s]+)?', torch.__version__)
+            if not torch_version or tuple(map(int, torch_version.groups())) < (2, 10, 0):
+                raise ValueError('Rebuilding tensor cache on older PyTorch')
+            matrix = torch.load(matrix_path, map_location='cpu', weights_only=True)
+            if (not isinstance(vocab, dict) or
+                    not all(isinstance(k, str) and type(v) is int for k, v in vocab.items()) or
+                    set(vocab.values()) != set(range(len(vocab))) or
+                    type(matrix) is not torch.Tensor or matrix.ndim != 2 or
+                    matrix.shape[0] != len(vocab) or not matrix.is_floating_point()):
+                raise ValueError('Invalid vocabulary or embedding matrix cache')
             if HANLP_VERBOSE:
                 flash('')
             return vocab, matrix
-        except IOError:
+        except (OSError, pickle.UnpicklingError, EOFError, ValueError, TypeError, AttributeError, RuntimeError):
             pass
 
     word2vec, dim = load_word2vec(path, delimiter, cache)
