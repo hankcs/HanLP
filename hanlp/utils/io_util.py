@@ -201,6 +201,43 @@ def parse_url_path(url):
     return parsed.netloc, path
 
 
+def _safe_tar_members(archive, dest):
+    """Validate both archive names and links, including existing filesystem links.
+
+    Check once before writing anything and again immediately before each member
+    is extracted: an earlier member can change how a later path resolves.
+    This also protects Python versions without tarfile extraction filters.
+    """
+    # pathlib resolves Windows symlinks even on Python < 3.8, where
+    # os.path.realpath is only an alias for abspath.
+    root = str(Path(dest).resolve())
+
+    def check_path(name, parent=root):
+        target = str(Path(parent, name).resolve())
+        try:
+            inside = os.path.normcase(os.path.commonpath([root, target])) == os.path.normcase(root)
+        except ValueError:
+            inside = False
+        if os.path.isabs(name) or not inside:
+            raise ValueError('Unsafe TAR path: {!r}'.format(name))
+
+    def check(member):
+        check_path(member.name)
+        if member.issym():
+            check_path(member.linkname, os.path.dirname(os.path.join(root, member.name)))
+        elif member.islnk():
+            check_path(member.linkname)
+        elif not (member.isfile() or member.isdir()):
+            raise ValueError('Unsupported TAR member: {!r}'.format(member.name))
+
+    members = archive.getmembers()
+    for member in members:
+        check(member)
+    for member in members:
+        check(member)
+        yield member
+
+
 def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
     """Uncompress a file and clean up uncompressed files once an error is triggered.
 
@@ -230,6 +267,7 @@ def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
     else:
         try:
             with zipfile.ZipFile(path, "r") if ext == '.zip' else tarfile.open(path, 'r:*') as archive:
+                namelist = []
                 if not dest:
                     namelist = sorted(archive.namelist() if file_is_zip else archive.getnames())
                     if namelist[0] == '.':
@@ -249,7 +287,11 @@ def uncompress(path, dest=None, remove=True, verbose=HANLP_VERBOSE):
                         dest = prefix  # assume zip contains more than one file or folder
                 if verbose:
                     eprint('Decompressing {} to {}'.format(path, dest))
-                archive.extractall(dest)
+                if file_is_zip:
+                    archive.extractall(dest)
+                else:
+                    kwargs = {'filter': 'data'} if hasattr(tarfile, 'data_filter') else {}
+                    archive.extractall(dest, members=_safe_tar_members(archive, dest), **kwargs)
                 if root_of_folder:
                     if root_of_folder != folder_name:
                         # move root to match folder name
