@@ -20,6 +20,7 @@ from hanlp.common.vocab import Vocab
 from hanlp.layers.embeddings.embedding import Embedding, EmbeddingDim
 from hanlp.utils.io_util import get_resource
 from hanlp.utils.torch_util import pad_lists, batched_index_select
+from hanlp.utils.torch_serialization import load_tensor_checkpoint
 from tests import cdroot
 
 
@@ -51,7 +52,7 @@ class RNNLanguageModel(nn.Module):
     @classmethod
     def load_language_model(cls, model_file):
         model_file = get_resource(model_file)
-        state = torch.load(model_file)
+        state = load_tensor_checkpoint(model_file)
         model = RNNLanguageModel(state['n_tokens'],
                                  state['is_forward_lm'],
                                  state['hidden_size'],
